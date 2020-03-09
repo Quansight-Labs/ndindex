@@ -1,6 +1,6 @@
 from numpy import arange
 
-from .helpers import raises_same, check_same
+from .helpers import check_same
 from ..ndindex import Slice, Integer
 
 def test_slice():
