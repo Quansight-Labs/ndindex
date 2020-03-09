@@ -4,6 +4,11 @@ class NDIndex:
     """
     Represents an index into an nd-array (i.e., a numpy array)
     """
+    def __new__(cls, *args):
+        obj = object.__new__(cls)
+        obj.args = args
+        return obj
+
     def __repr__(self):
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
 
@@ -14,7 +19,7 @@ class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array
     """
-    def __init__(self, start, stop=None, step=None):
+    def __new__(cls, start, stop=None, step=None):
         # Canonicalize
         if step is None:
             step = 1
@@ -27,7 +32,9 @@ class Slice(NDIndex):
         stop = index(stop)
         step = index(step)
 
-        self.args = (start, stop, step)
+        args = (start, stop, step)
+
+        return super().__new__(cls, *args)
 
     @property
     def raw(self):
