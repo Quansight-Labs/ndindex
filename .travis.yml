@@ -29,7 +29,7 @@ install:
 script:
   - set -e
   - pyflakes .
-  - python -We:invalid -We::SyntaxWarning -m compileall -f -q versioned_hdf5/
+  - python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
   - pytest
   # # Make sure it installs
   # - python setup.py install
