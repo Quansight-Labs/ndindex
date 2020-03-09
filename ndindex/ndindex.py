@@ -4,6 +4,9 @@ class NDIndex:
     """
     Represents an index into an nd-array (i.e., a numpy array)
     """
+    def __repr__(self):
+        return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
+
     def __hash__(self):
         return hash(self.args)
 
