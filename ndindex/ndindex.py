@@ -33,12 +33,14 @@ class Slice(NDIndex):
         step = index(step)
 
         r = range(start, stop, step)
-        # Range only acts like a slice if the start <= stop (or visa-versa for
-        # negative step). Otherwise, slices are different because of
-        # wrap-around behavior. For example, range(-3, 1) represents [-3, -2,
-        # -1, 0] whereas slice(-3, 1) represents the slice of elements from
-        # the third to last to the first, which is either an empty slice or a
-        # single element slice depending on the shape of the axis.
+        # We can reuse some of the logic built-in to range(), but we have to
+        # be careful. range() only acts like a slice if the start <= stop (or
+        # visa-versa for negative step). Otherwise, slices are different
+        # because of wrap-around behavior. For example, range(-3, 1)
+        # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
+        # of elements from the third to last to the first, which is either an
+        # empty slice or a single element slice depending on the shape of the
+        # axis.
         if len(r) == 0 and (
                 (step > 0 and start <= stop) or
                 (step < 0 and stop <= start)):
