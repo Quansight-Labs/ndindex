@@ -29,5 +29,6 @@ class Slice(NDIndex):
 
         self.args = (start, stop, step)
 
+    @property
     def raw(self):
         return slice(*self.args)
