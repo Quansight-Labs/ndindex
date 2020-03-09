@@ -34,8 +34,24 @@ class Slice(NDIndex):
 
         args = (start, stop, step)
 
+        r = range(start, stop, step)
+        if len(r) == 1:
+            return Integer(r[0])
         return super().__new__(cls, *args)
 
     @property
     def raw(self):
         return slice(*self.args)
+
+class Integer(NDIndex):
+    """
+    Represents an integer index on an axis of an nd-array
+    """
+    def __new__(cls, idx):
+        idx = index(idx)
+
+        return super().__new__(cls, idx)
+
+    @property
+    def raw (self):
+        return self.args[0]
