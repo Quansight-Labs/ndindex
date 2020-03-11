@@ -14,8 +14,7 @@ def test_slice():
                 raw_args = start, stop, step
                 idx_type = Slice
                 idx_args = start, stop, step
-                check_same(a, raw_type, raw_args, idx_type, idx_args,
-                           raises=step == 0)
+                check_same(a, raw_type, raw_args, idx_type, idx_args)
 
 def test_integer():
     a = arange(10)
@@ -24,5 +23,4 @@ def test_integer():
         raw_args = (i,)
         idx_type = Integer
         idx_args = (i,)
-        check_same(a, raw_type, raw_args, idx_type, idx_args,
-                   raises=(i < -10 or i >= 10))
+        check_same(a, raw_type, raw_args, idx_type, idx_args)
