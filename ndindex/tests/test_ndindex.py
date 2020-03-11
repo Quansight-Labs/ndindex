@@ -30,6 +30,8 @@ def test_integer():
         check_same(a, raw_type, raw_args, idx_type, idx_args)
 
 def test_tuple():
+    # Exhaustive tests here have to be very limited because of combinatorial
+    # explosion.
     a = arange(2*2*2).reshape((2, 2, 2))
     types = {
         slice: lambda: _iterslice((-1, 1), (-1, 1), (-1, 1)),
