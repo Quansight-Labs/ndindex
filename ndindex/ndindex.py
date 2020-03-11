@@ -21,6 +21,9 @@ class Slice(NDIndex):
     """
     def __new__(cls, start, stop=None, step=None):
         # Canonicalize
+        if isinstance(start, slice):
+            start, stop, step = start.start, start.stop, start.step
+
         if step is None:
             step = 1
         if step == 0:
