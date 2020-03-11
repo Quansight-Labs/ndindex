@@ -1,5 +1,7 @@
 from operator import index
 
+from numpy import ndarray
+
 class NDIndex:
     """
     Represents an index into an nd-array (i.e., a numpy array)
@@ -74,3 +76,37 @@ class Integer(NDIndex):
     @property
     def raw (self):
         return self.args[0]
+
+class Tuple(NDIndex):
+    """
+    Represents a tuple of single-axis indices
+
+    Single axis indices are
+
+    - Integer
+    - Slice
+    - ellipsis
+    - Newaxis
+    - IntegerArray
+    - BooleanArray
+    """
+    def __new__(cls, *args):
+        newargs = []
+        for arg in args:
+            if isinstance(arg, (tuple, ndarray, type(Ellipsis))):
+                raise NotImplementedError(f"{type(arg)} is not yet supported")
+            elif isinstance(arg, int):
+                newargs.append(Integer(arg))
+            elif isinstance(arg, slice):
+                newargs.append(Slice(arg))
+            else:
+                raise TypeError(f"Unsupported index type {type(arg)}")
+
+        if len(newargs) == 1:
+            return newargs[0]
+
+        return super().__new__(cls, *newargs)
+
+    @property
+    def raw(self):
+        return tuple(i.raw for i in self.args)
