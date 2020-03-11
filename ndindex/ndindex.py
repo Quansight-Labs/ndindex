@@ -49,8 +49,10 @@ class Slice(NDIndex):
                     (step > 0 and start <= stop) or
                     (step < 0 and stop <= start)):
                 start, stop, step = 0, 0, 1
-            if len(r) == 1:
-                return Integer(r[0])
+            # This is not correct because a slice keeps the axis whereas an
+            # integer index removes it.
+            # if len(r) == 1:
+            #     return Integer(r[0])
 
         args = (start, stop, step)
 
