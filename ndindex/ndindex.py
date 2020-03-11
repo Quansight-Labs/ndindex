@@ -25,28 +25,29 @@ class Slice(NDIndex):
             step = 1
         if step == 0:
             raise ValueError("slice step cannot be zero")
-        if stop is None:
-            start, stop = 0, start
 
-        start = index(start)
-        stop = index(stop)
+        if start is not None:
+            start = index(start)
+        if stop is not None:
+            stop = index(stop)
         step = index(step)
 
-        r = range(start, stop, step)
-        # We can reuse some of the logic built-in to range(), but we have to
-        # be careful. range() only acts like a slice if the start <= stop (or
-        # visa-versa for negative step). Otherwise, slices are different
-        # because of wrap-around behavior. For example, range(-3, 1)
-        # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
-        # of elements from the third to last to the first, which is either an
-        # empty slice or a single element slice depending on the shape of the
-        # axis.
-        if len(r) == 0 and (
-                (step > 0 and start <= stop) or
-                (step < 0 and stop <= start)):
-            start, stop, step = 0, 0, 1
-        if len(r) == 1:
-            return Integer(r[0])
+        if start is not None and stop is not None:
+            r = range(start, stop, step)
+            # We can reuse some of the logic built-in to range(), but we have to
+            # be careful. range() only acts like a slice if the start <= stop (or
+            # visa-versa for negative step). Otherwise, slices are different
+            # because of wrap-around behavior. For example, range(-3, 1)
+            # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
+            # of elements from the third to last to the first, which is either an
+            # empty slice or a single element slice depending on the shape of the
+            # axis.
+            if len(r) == 0 and (
+                    (step > 0 and start <= stop) or
+                    (step < 0 and stop <= start)):
+                start, stop, step = 0, 0, 1
+            if len(r) == 1:
+                return Integer(r[0])
 
         args = (start, stop, step)
 

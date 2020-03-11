@@ -1,3 +1,5 @@
+from itertools import chain
+
 from numpy import arange
 
 from .helpers import check_same
@@ -5,9 +7,9 @@ from ..ndindex import Slice, Integer
 
 def test_slice():
     a = arange(100)
-    for start in range(-10, 10):
-        for stop in range(-10, 10):
-            for step in range(-10, 10):
+    for start in chain(range(-10, 10), [None]):
+        for stop in chain(range(-10, 10), [None]):
+            for step in chain(range(-10, 10), [None]):
                 raw_type = slice
                 raw_args = start, stop, step
                 idx_type = Slice
