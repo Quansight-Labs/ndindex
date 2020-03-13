@@ -40,7 +40,6 @@ def test_tuple():
     }
 
     for t1, t2, t3 in product(types, repeat=3):
-        print(t1, t2, t3)
         for t1_args in types[t1]():
             for t2_args in types[t2]():
                 for t3_args in types[t3]():
