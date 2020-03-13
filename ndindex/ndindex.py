@@ -1,4 +1,4 @@
-from operator import index
+import operator
 
 from numpy import ndarray
 
@@ -22,20 +22,20 @@ class Slice(NDIndex):
     Represents a slice on an axis of an nd-array
     """
     def __new__(cls, start, stop=None, step=None):
-        # Canonicalize
         if isinstance(start, slice):
             start, stop, step = start.start, start.stop, start.step
 
+        # Canonicalize
         if step is None:
             step = 1
         if step == 0:
             raise ValueError("slice step cannot be zero")
 
         if start is not None:
-            start = index(start)
+            start = operator.index(start)
         if stop is not None:
-            stop = index(stop)
-        step = index(step)
+            stop = operator.index(stop)
+        step = operator.index(step)
 
         if start is not None and stop is not None:
             r = range(start, stop, step)
@@ -69,12 +69,12 @@ class Integer(NDIndex):
     Represents an integer index on an axis of an nd-array
     """
     def __new__(cls, idx):
-        idx = index(idx)
+        idx = operator.index(idx)
 
         return super().__new__(cls, idx)
 
     @property
-    def raw (self):
+    def raw(self):
         return self.args[0]
 
 class Tuple(NDIndex):
