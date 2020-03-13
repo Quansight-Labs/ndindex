@@ -2,6 +2,21 @@ import operator
 
 from numpy import ndarray
 
+def ndindex(obj):
+    try:
+        # If operator.index() works, use that
+        return Integer(obj)
+    except TypeError:
+        pass
+
+    if isinstance(obj, slice):
+        return Slice(obj)
+
+    if isinstance(obj, tuple):
+        return Tuple(*obj)
+
+    raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
+
 class NDIndex:
     """
     Represents an index into an nd-array (i.e., a numpy array)
