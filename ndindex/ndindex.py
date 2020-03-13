@@ -73,6 +73,9 @@ class Integer(NDIndex):
 
         return super().__new__(cls, idx)
 
+    def __index__(self):
+        return self.raw
+
     @property
     def raw(self):
         return self.args[0]
