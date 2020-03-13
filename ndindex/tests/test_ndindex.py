@@ -14,20 +14,12 @@ def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)
 def test_slice():
     a = arange(100)
     for start, stop, step in _iterslice():
-        raw_type = slice
-        raw_args = start, stop, step
-        idx_type = Slice
-        idx_args = start, stop, step
-        check_same(a, raw_type, raw_args, idx_type, idx_args)
+        check_same(a, slice(start, stop, step))
 
 def test_integer():
     a = arange(10)
     for i in range(-12, 12):
-        raw_type = int
-        raw_args = (i,)
-        idx_type = Integer
-        idx_args = (i,)
-        check_same(a, raw_type, raw_args, idx_type, idx_args)
+        check_same(a, i)
 
 def test_tuple():
     # Exhaustive tests here have to be very limited because of combinatorial
@@ -47,12 +39,9 @@ def test_tuple():
                     idx2 = t2(*t2_args)
                     idx3 = t3(*t3_args)
 
-                    raw_type = lambda *x: tuple(x)
-                    raw_args = idx1, idx2, idx3
-                    idx_type = Tuple
-                    idx_args = raw_args
+                    index = idx1, idx2, idx3
                     # Disable the same exception check because there could be
                     # multiple invalid indices in the tuple, and for instance
                     # numpy may give an IndexError but we would give a
                     # TypeError because we check the type first.
-                    check_same(a, raw_type, raw_args, idx_type, idx_args, same_exception=False)
+                    check_same(a, index, same_exception=False)
