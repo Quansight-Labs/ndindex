@@ -23,7 +23,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy
+  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy hypothesis
   - source activate test-environment
 
 script:

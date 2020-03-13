@@ -1,9 +1,35 @@
+"""
+Tests are extremely important for ndindex. All operations should produce
+correct results. We test this by checking against numpy arange (the array
+values do not matter, so long as they are distinct).
+
+There are two primary types of tests that we employ to verify this
+
+- Exhaustive tests. These test every possible value in some range. See for
+  example test_slice. This is the best type of test, but unfortunately, it is
+  often impossible to do due to combinatorial explosion.
+
+- Hypothesis tests. Hypothesis is a library that can intelligently check a
+  combinatorial search space. This requires writing hypothesis strategies that
+  can generate all the relevant types of indices (see helpers.py). For more
+  information on hypothesis, see
+  https://hypothesis.readthedocs.io/en/latest/index.html.
+
+The basic idea in both cases is the same. Take the pure index and the
+ndindex(index).raw, or in the case of a transformation, the before and after
+raw index, and index an arange with them. If they do not give the same output
+array, or do not both produce the same error, the code is not correct.
+
+"""
+
 from itertools import chain, product
 
-from numpy import arange
+from numpy import arange, prod
 
-from .helpers import check_same
-from ..ndindex import Slice, Integer, Tuple
+from hypothesis import given
+from hypothesis.strategies import integers, lists, one_of
+
+from .helpers import check_same, ints, slices, tuples
 
 def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)):
     for start in chain(range(*start_range), [None]):
@@ -16,10 +42,20 @@ def test_slice():
     for start, stop, step in _iterslice():
         check_same(a, slice(start, stop, step))
 
+@given(slices(), integers(5, 100))
+def test_slice_hypothesis(s, size):
+    a = arange(size)
+    check_same(a, s)
+
 def test_integer():
     a = arange(10)
     for i in range(-12, 12):
         check_same(a, i)
+
+@given(ints(), integers(5, 100))
+def test_integer_hypothesis(idx, size):
+    a = arange(size)
+    check_same(a, idx)
 
 def test_tuple():
     # Exhaustive tests here have to be very limited because of combinatorial
@@ -45,3 +81,12 @@ def test_tuple():
                     # numpy may give an IndexError but we would give a
                     # TypeError because we check the type first.
                     check_same(a, index, same_exception=False)
+
+@given(tuples(one_of(ints(), slices())),
+       lists(integers(0, 10)).filter(
+           # numpy gives errors with empty arrays with large shapes.
+           # See https://github.com/numpy/numpy/issues/15753
+           lambda shape: prod([i for i in shape if i]) < 100000))
+def test_tuples_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, idx, same_exception=False)
