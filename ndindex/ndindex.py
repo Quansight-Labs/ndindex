@@ -45,6 +45,8 @@ class Slice(NDIndex):
             step = 1
         if step == 0:
             raise ValueError("slice step cannot be zero")
+        if start is None and step > 0:
+            start = 0
 
         if start is not None:
             start = operator.index(start)
