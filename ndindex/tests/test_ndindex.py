@@ -23,8 +23,10 @@ array, or do not both produce the same error, the code is not correct.
 """
 
 from itertools import chain, product
+from functools import reduce
+from operator import mul
 
-from numpy import arange, prod
+from numpy import arange
 
 from hypothesis import given
 from hypothesis.strategies import integers, lists, one_of
@@ -81,6 +83,10 @@ def test_tuple():
                     # numpy may give an IndexError but we would give a
                     # TypeError because we check the type first.
                     check_same(a, index, same_exception=False)
+
+# np.prod has overflow and math.prod is Python 3.8+ only
+def prod(seq):
+    return reduce(mul, seq, 1)
 
 @given(tuples(one_of(ints(), slices())),
        lists(integers(0, 10)).filter(
