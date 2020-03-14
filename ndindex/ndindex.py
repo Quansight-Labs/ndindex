@@ -81,6 +81,34 @@ class Slice(NDIndex):
     def raw(self):
         return slice(*self.args)
 
+    @property
+    def start(self):
+        """
+        The start of the slice
+
+        Note that this may be an integer or None.
+        """
+        return self.args[0]
+
+    @property
+    def stop(self):
+        """
+        The stop of the slice
+
+        Note that this may be an integer or None.
+        """
+        return self.args[0]
+
+    @property
+    def step(self):
+        """
+        The step of the slice
+
+        This will be a nonzero integer.
+        """
+
+        return self.args[0]
+
 class Integer(NDIndex):
     """
     Represents an integer index on an axis of an nd-array
