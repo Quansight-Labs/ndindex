@@ -73,6 +73,31 @@ def test_slice_len():
             # with larger arrays.
             assert len(arange(30)[s.raw]) > m, s
 
+@given(slices())
+def test_slice_len_hypothesis(s):
+    try:
+        s = Slice(s)
+    except ValueError:
+        assume(False)
+    try:
+        l = len(s)
+    except ValueError:
+        # No maximum
+        l = 10000
+
+    m = -1
+    for n in range(20):
+        a = arange(n)
+        L = len(a[s.raw])
+        assert L <= l, (s, n)
+        m = max(L, m)
+    if l != 10000:
+        assert m == l, s
+    else:
+        # If there is no maximum, the size of the slice should increase
+        # with larger arrays.
+        assert len(arange(30)[s.raw]) > m, s
+
 def test_integer():
     a = arange(10)
     for i in range(-12, 12):
@@ -87,6 +112,14 @@ def test_integer_reduce():
     a = arange(10)
     for i in range(-12, 12):
         check_same(a, i, func=lambda x: x.reduce((10,)))
+
+@given(integers(0, 10), shapes)
+def test_integer_reduce_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    # The axis argument is tested implicitly in the Tuple.reduce test. It is
+    # difficult to test here because we would have to pass in a Tuple to
+    # check_same.
+    check_same(a, idx, func=lambda x: x.reduce(shape))
 
 def test_tuple():
     # Exhaustive tests here have to be very limited because of combinatorial
