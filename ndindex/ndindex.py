@@ -238,9 +238,9 @@ class Tuple(NDIndex):
         for arg in args:
             if isinstance(arg, (tuple, ndarray, type(Ellipsis))):
                 raise NotImplementedError(f"{type(arg)} is not yet supported")
-            elif isinstance(arg, int):
+            elif isinstance(arg, (int, Integer)):
                 newargs.append(Integer(arg))
-            elif isinstance(arg, slice):
+            elif isinstance(arg, (slice, Slice)):
                 newargs.append(Slice(arg))
             else:
                 raise TypeError(f"Unsupported index type {type(arg)}")
