@@ -32,6 +32,11 @@ class NDIndex:
     def __hash__(self):
         return hash(self.args)
 
+    # TODO: Make NDIndex an abstract base class
+    @property
+    def raw(self):
+        raise NotImplementedError
+
 class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array
