@@ -1,3 +1,6 @@
+from functools import reduce
+from operator import mul
+
 from numpy.testing import assert_equal
 
 from pytest import fail
@@ -11,6 +14,10 @@ from ..ndindex import ndindex
 # here because the hypothesis definitions are too restrictive. For example,
 # hypothesis's slices strategy does not generate slices with negative indices.
 # Similarly, hypothesis.extra.numpy.basic_indices only generates tuples.
+
+# np.prod has overflow and math.prod is Python 3.8+ only
+def prod(seq):
+    return reduce(mul, seq, 1)
 
 ints = lambda: integers(-10, 10)
 
@@ -28,6 +35,11 @@ def tuples(draw, elements, *, min_size=0, max_size=None, unique_by=None,
            unique=False):
     return tuple(draw(lists(elements, min_size=min_size, max_size=max_size,
                             unique_by=unique_by, unique=unique)))
+
+shapes = tuples(integers(0, 10)).filter(
+             # numpy gives errors with empty arrays with large shapes.
+             # See https://github.com/numpy/numpy/issues/15753
+             lambda shape: prod([i for i in shape if i]) < 100000)
 
 def check_same(a, index, func=lambda x: x, same_exception=True):
     exception = None

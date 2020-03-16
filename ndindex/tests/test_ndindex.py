@@ -23,16 +23,14 @@ array, or do not both produce the same error, the code is not correct.
 """
 
 from itertools import chain, product
-from functools import reduce
-from operator import mul
 
 from numpy import arange
 
-from hypothesis import given
-from hypothesis.strategies import integers, lists, one_of
+from hypothesis import given, assume
+from hypothesis.strategies import integers, one_of
 
 from ..ndindex import Slice
-from .helpers import check_same, ints, slices, tuples
+from .helpers import check_same, ints, slices, tuples, prod, shapes
 
 def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)):
     for start in chain(range(*start_range), [None]):
@@ -115,15 +113,7 @@ def test_tuple():
                     # TypeError because we check the type first.
                     check_same(a, index, same_exception=False)
 
-# np.prod has overflow and math.prod is Python 3.8+ only
-def prod(seq):
-    return reduce(mul, seq, 1)
-
-@given(tuples(one_of(ints(), slices())),
-       lists(integers(0, 10)).filter(
-           # numpy gives errors with empty arrays with large shapes.
-           # See https://github.com/numpy/numpy/issues/15753
-           lambda shape: prod([i for i in shape if i]) < 100000))
+@given(tuples(one_of(ints(), slices())), shapes)
 def test_tuples_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx, same_exception=False)
