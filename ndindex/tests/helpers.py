@@ -29,7 +29,7 @@ def tuples(draw, elements, *, min_size=0, max_size=None, unique_by=None,
     return tuple(draw(lists(elements, min_size=min_size, max_size=max_size,
                             unique_by=unique_by, unique=unique)))
 
-def check_same(a, index, same_exception=True):
+def check_same(a, index, func=lambda x: x, same_exception=True):
     exception = None
     try:
         a_raw = a[index]
@@ -38,6 +38,7 @@ def check_same(a, index, same_exception=True):
 
     try:
         idx = ndindex(index)
+        idx = func(idx)
         a_idx = a[idx.raw]
     except Exception as e:
         if not exception:
