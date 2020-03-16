@@ -53,6 +53,8 @@ class Slice(NDIndex):
     Represents a slice on an axis of an nd-array
     """
     def __new__(cls, start, stop=None, step=None):
+        if isinstance(start, Slice):
+            return start
         if isinstance(start, slice):
             start, stop, step = start.start, start.stop, start.step
 
