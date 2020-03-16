@@ -85,6 +85,11 @@ def test_integer_hypothesis(idx, size):
     a = arange(size)
     check_same(a, idx)
 
+def test_integer_reduce():
+    a = arange(10)
+    for i in range(-12, 12):
+        check_same(a, i, func=lambda x: x.reduce((10,)))
+
 def test_tuple():
     # Exhaustive tests here have to be very limited because of combinatorial
     # explosion.

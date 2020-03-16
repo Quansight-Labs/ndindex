@@ -37,6 +37,17 @@ class NDIndex:
     def raw(self):
         raise NotImplementedError
 
+    def reduce(self, shape):
+        """
+        Simplify an index given that it will be applied to an array of a given shape
+
+        Either returns a new index type, which is equivalent on arrays of
+        shape `shape`, or raises IndexError if the index would give index
+        error (for instance, out of bounds integer index or too many indices
+        for array).
+        """
+        raise NotImplementedError
+
 class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array
@@ -111,7 +122,6 @@ class Slice(NDIndex):
 
         This will be a nonzero integer.
         """
-
         return self.args[0]
 
     def __len__(self):
@@ -194,6 +204,19 @@ class Integer(NDIndex):
 
     def __len__(self):
         return 1
+
+    def reduce(self, shape, axis=0):
+        if len(shape) < axis - 1:
+            raise IndexError("too many indices for array")
+
+        size = shape[axis]
+        if self.raw >= size or -size > self.raw < 0:
+            raise IndexError(f"index {self.raw} is out of bounds for axis {axis} with size {size}")
+
+        if self.raw < 0:
+            return self.__class__(size + self.raw)
+
+        return self
 
 class Tuple(NDIndex):
     """
