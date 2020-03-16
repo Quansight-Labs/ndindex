@@ -5,6 +5,7 @@ from numpy.testing import assert_equal
 
 from pytest import fail
 
+from hypothesis import assume
 from hypothesis.strategies import integers, composite, none, one_of, lists
 
 from ..ndindex import ndindex
@@ -35,6 +36,19 @@ def tuples(draw, elements, *, min_size=0, max_size=None, unique_by=None,
            unique=False):
     return tuple(draw(lists(elements, min_size=min_size, max_size=max_size,
                             unique_by=unique_by, unique=unique)))
+
+@composite
+def ndindices(draw):
+    s = draw(one_of(
+        ints(),
+        slices(),
+        tuples(one_of(ints(), slices())),
+    ))
+
+    try:
+        return ndindex(s)
+    except ValueError:
+        assume(False)
 
 shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
