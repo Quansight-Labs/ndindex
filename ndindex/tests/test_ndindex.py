@@ -152,8 +152,8 @@ def test_tuples_hypothesis(idx, shape):
     check_same(a, idx, same_exception=False)
 
 @given(ndindices())
-def test_eq(s):
-    new = type(s)(*s.args)
-    assert new == s
-    assert new.raw == s.raw
-    assert hash(new) == hash(s)
+def test_eq(idx):
+    new = type(idx)(*idx.args)
+    assert new == idx
+    assert new.raw == idx.raw
+    assert hash(new) == hash(idx)
