@@ -192,6 +192,9 @@ class Integer(NDIndex):
     def raw(self):
         return self.args[0]
 
+    def __len__(self):
+        return 1
+
 class Tuple(NDIndex):
     """
     Represents a tuple of single-axis indices
