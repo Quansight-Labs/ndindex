@@ -206,7 +206,7 @@ class Integer(NDIndex):
         return 1
 
     def reduce(self, shape, axis=0):
-        if len(shape) < axis - 1:
+        if len(shape) <= axis:
             raise IndexError("too many indices for array")
 
         size = shape[axis]
