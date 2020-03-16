@@ -30,7 +30,7 @@ from hypothesis import given, assume
 from hypothesis.strategies import integers, one_of
 
 from ..ndindex import Slice
-from .helpers import check_same, ints, slices, tuples, prod, shapes
+from .helpers import check_same, ints, slices, tuples, prod, shapes, ndindices
 
 def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)):
     for start in chain(range(*start_range), [None]):
@@ -150,3 +150,10 @@ def test_tuple():
 def test_tuples_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx, same_exception=False)
+
+@given(ndindices())
+def test_eq(s):
+    new = type(s)(*s.args)
+    assert new == s
+    assert new.raw == s.raw
+    assert hash(new) == hash(s)

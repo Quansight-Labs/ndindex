@@ -29,6 +29,11 @@ class NDIndex:
     def __repr__(self):
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
 
+    def __eq__(self, other):
+        return ((isinstance(other, self.__class__)
+                 or isinstance(self, other.__eq__))
+                and self.args == other.args)
+
     def __hash__(self):
         return hash(self.args)
 
