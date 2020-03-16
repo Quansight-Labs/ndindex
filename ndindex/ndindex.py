@@ -57,7 +57,7 @@ class Slice(NDIndex):
         if start is not None and stop is not None:
             r = range(start, stop, step)
             # We can reuse some of the logic built-in to range(), but we have to
-            # be careful. range() only acts like a slice if the start <= stop (or
+            # be careful. range() only acts like a slice if the 0 <= start <= stop (or
             # visa-versa for negative step). Otherwise, slices are different
             # because of wrap-around behavior. For example, range(-3, 1)
             # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
@@ -108,6 +108,68 @@ class Slice(NDIndex):
         """
 
         return self.args[0]
+
+    def __len__(self):
+        """
+        __len__ gives the maximum size of an axis sliced with self
+
+        An actual array may produce a smaller size if it is smaller than the
+        bounds of the slice. For instance, [1, 2, 3][2:4] only has 1 element
+        but the maximum length of the slice 2:4 is 2.
+        """
+        start, stop, step = self.args
+        error = ValueError("Cannot determine max length of slice")
+        # We reuse the logic in range.__len__. However, it is only correct if
+        # the slice doesn't use wrap around (see the comment in __init__
+        # above).
+        if start is stop is None:
+            raise error
+        if step > 0:
+            # start cannot be None
+            if stop is None:
+                if start >= 0:
+                    # a[n:]. Extends to the end of the array.
+                    raise error
+                else:
+                    # a[-n:]. From n from the end to the end. Same as
+                    # range(-n, 0).
+                    stop = 0
+            elif start < 0 and stop >= 0:
+                # a[-n:m] indexes from nth element from the end to the
+                # m-1th element from the beginning.
+                start, stop = 0, min(-start, stop)
+            elif start >=0 and stop < 0:
+                # a[n:-m]. The max length depends on the size of the array.
+                raise error
+        else:
+            if start is None:
+                if stop is None or stop >= 0:
+                    # a[:m:-1] or a[::-1]. The max length depends on the size of
+                    # the array
+                    raise error
+                else:
+                    # a[:-m:-1]
+                    start, stop = 0, -stop - 1
+                    step = -step
+            elif stop is None:
+                if start >= 0:
+                    # a[n::-1] (start != None by above). Same as range(n, -1, -1)
+                    stop = -1
+                else:
+                    # a[-n::-1]. From n from the end to the beginning of the
+                    # arry backwards. The max length depends on the size of
+                    # the array.
+                    raise error
+            elif start < 0 and stop >= 0:
+                # a[-n:m:-1]. The max length depends on the size of the array
+                raise error
+            elif start >=0 and stop < 0:
+                # a[n:-m:-1] indexes from the nth element backwards to the mth
+                # element from the end.
+                start, stop = 0, min(start+1, -stop - 1)
+                step = -step
+
+        return len(range(start, stop, step))
 
 class Integer(NDIndex):
     """

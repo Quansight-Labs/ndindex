@@ -31,6 +31,7 @@ from numpy import arange
 from hypothesis import given
 from hypothesis.strategies import integers, lists, one_of
 
+from ..ndindex import Slice
 from .helpers import check_same, ints, slices, tuples
 
 def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)):
@@ -48,6 +49,31 @@ def test_slice():
 def test_slice_hypothesis(s, size):
     a = arange(size)
     check_same(a, s)
+
+def test_slice_len():
+    for start, stop, step in _iterslice():
+        try:
+            s = Slice(start, stop, step)
+        except ValueError:
+            continue
+        try:
+            l = len(s)
+        except ValueError:
+            # No maximum
+            l = 10000
+
+        m = -1
+        for n in range(20):
+            a = arange(n)
+            L = len(a[s.raw])
+            assert L <= l, s
+            m = max(L, m)
+        if l != 10000:
+            assert m == l, s
+        else:
+            # If there is no maximum, the size of the slice should increase
+            # with larger arrays.
+            assert len(arange(30)[s.raw]) > m, s
 
 def test_integer():
     a = arange(10)
