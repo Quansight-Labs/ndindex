@@ -182,7 +182,7 @@ class Slice(NDIndex):
                     stop = -1
                 else:
                     # a[-n::-1]. From n from the end to the beginning of the
-                    # arry backwards. The max length depends on the size of
+                    # array backwards. The max length depends on the size of
                     # the array.
                     raise error
             elif start < 0 and stop >= 0:
