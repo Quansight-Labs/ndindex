@@ -3,6 +3,9 @@ import operator
 from numpy import ndarray
 
 def ndindex(obj):
+    if isinstance(obj, NDIndex):
+        return obj
+
     try:
         # If operator.index() works, use that
         return Integer(obj)
