@@ -237,26 +237,16 @@ class Slice(NDIndex):
                 start = 0
         else:
             if stop is None:
-                if start is None:
-                    start = size - 1
-                elif start < 0:
-                    if start < -size:
-                        start = -size - 1
-                    else:
-                        start = start + size
-                else:
-                    start = min(size - 1, start)
                 stop = -size - 1
-            else:
-                if start is None:
-                    start = size - 1
-                if start < 0:
-                    if start >= -size:
-                        start = size + start
-                    else:
-                        start, stop = 0, 0
-                if start >= 0:
-                    start = min(size - 1, start)
+            if start is None:
+                start = size - 1
+            if start < 0:
+                if start >= -size:
+                    start = size + start
+                else:
+                    start, stop = 0, 0
+            if start >= 0:
+                start = min(size - 1, start)
 
         return self.__class__(start, stop, step)
 
