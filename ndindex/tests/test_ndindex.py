@@ -1,3 +1,4 @@
+
 """
 Tests are extremely important for ndindex. All operations should produce
 correct results. We test this by checking against numpy arange (the array
@@ -97,6 +98,48 @@ def test_slice_len_hypothesis(s):
         # If there is no maximum, the size of the slice should increase
         # with larger arrays.
         assert len(arange(30)[s.raw]) > m, s
+
+def test_slice_reduce():
+    for n in range(10):
+        a = arange(n)
+        for start, stop, step in _iterslice():
+            try:
+                s = Slice(start, stop, step)
+            except ValueError:
+                continue
+
+            check_same(a, s.raw, func=lambda x: x.reduce((n,)))
+
+            reduced = s.reduce((n,))
+            assert reduced.start >= 0
+            # We cannot require stop > 0 because if stop = None and step < 0, the
+            # only equivalent stop that includes 0 is negative.
+            assert reduced.stop != None
+            # assert len(reduced) == len(a[reduced.raw]), (s, n)
+
+@given(slices(), shapes)
+def test_slice_reduce_hypothesis(s, shape):
+    a = arange(prod(shape)).reshape(shape)
+    try:
+        s = Slice(s)
+    except ValueError:
+        assume(False)
+
+    # The axis argument is tested implicitly in the Tuple.reduce test. It is
+    # difficult to test here because we would have to pass in a Tuple to
+    # check_same.
+    check_same(a, s.raw, func=lambda x: x.reduce(shape))
+
+    try:
+        reduced = s.reduce(shape)
+    except IndexError:
+        # shape == ()
+        return
+    assert reduced.start >= 0
+    # We cannot require stop > 0 because if stop = None and step < 0, the
+    # only equivalent stop that includes 0 is negative.
+    assert reduced.stop != None
+    # assert len(reduced) == len(a[reduced.raw]), (s, shape)
 
 def test_integer():
     a = arange(10)

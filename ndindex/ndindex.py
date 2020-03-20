@@ -60,7 +60,7 @@ class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array
     """
-    def __new__(cls, start, stop=None, step=None):
+    def __new__(cls, start=None, stop=None, step=None):
         if isinstance(start, Slice):
             return start
         if isinstance(start, slice):
@@ -195,6 +195,71 @@ class Slice(NDIndex):
                 step = -step
 
         return len(range(start, stop, step))
+
+    def reduce(self, shape, axis=0):
+        """
+        Slice.reduce returns a slice where the start and stop are
+        canonicalized.
+
+        Here, canonicalized means the start and stop are not None.
+        Furthermore, start is always nonnegative.
+
+        After running slice.reduce, len() gives the true size of the axis for
+        a sliced array of the given shape, and never raises ValueError.
+
+        """
+        if len(shape) <= axis:
+            raise IndexError("too many indices for array")
+
+        size = shape[axis]
+        start, stop, step = self.args
+
+        # try:
+        #     if len(self) == size:
+        #         return self.__class__(None).reduce(shape, axis=axis)
+        # except ValueError:
+        #     pass
+        if size == 0:
+            start, stop, step = 0, 0, 1
+        elif step > 0:
+            if stop is None:
+                stop = size
+            elif stop < 0:
+                stop = size + stop
+                if stop < 0:
+                    stop = 0
+            else:
+                stop = min(stop, size)
+            # start cannot be None
+            if start < 0:
+                start = size + start
+            if start < 0:
+                start = 0
+        else:
+            if stop is None:
+                if start is None:
+                    start = size - 1
+                elif start < 0:
+                    if start < -size:
+                        start = -size - 1
+                    else:
+                        start = start + size
+                else:
+                    start = min(size - 1, start)
+                stop = -size - 1
+            else:
+                if start is None:
+                    start = size - 1
+                if start < 0:
+                    if start >= -size:
+                        start = size + start
+                    else:
+                        start, stop = 0, 0
+                if start >= 0:
+                    start = min(size - 1, start)
+
+        return self.__class__(start, stop, step)
+
 
 class Integer(NDIndex):
     """
