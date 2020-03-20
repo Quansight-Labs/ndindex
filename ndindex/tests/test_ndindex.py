@@ -39,7 +39,7 @@ def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)
             for step in chain(range(*step_range), [None]):
                 yield (start, stop, step)
 
-def test_slice():
+def test_slice_exhaustive():
     for n in range(100):
         a = arange(n)
         for start, stop, step in _iterslice():
@@ -50,7 +50,7 @@ def test_slice_hypothesis(s, size):
     a = arange(size)
     check_same(a, s)
 
-def test_slice_len():
+def test_slice_len_exhaustive():
     for start, stop, step in _iterslice():
         try:
             s = Slice(start, stop, step)
@@ -100,7 +100,7 @@ def test_slice_len_hypothesis(s):
         # with larger arrays.
         assert len(arange(30)[s.raw]) > m, s
 
-def test_slice_reduce():
+def test_slice_reduce_exhaustive():
     for n in range(10):
         a = arange(n)
         for start, stop, step in _iterslice():
@@ -142,7 +142,7 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.stop != None
     # assert len(reduced) == len(a[reduced.raw]), (s, shape)
 
-def test_integer():
+def test_integer_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
         check_same(a, i)
@@ -152,7 +152,7 @@ def test_integer_hypothesis(idx, size):
     a = arange(size)
     check_same(a, idx)
 
-def test_integer_reduce():
+def test_integer_reduce_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
         check_same(a, i, func=lambda x: x.reduce((10,)))
@@ -165,7 +165,7 @@ def test_integer_reduce_hypothesis(idx, shape):
     # check_same.
     check_same(a, idx, func=lambda x: x.reduce(shape))
 
-def test_tuple():
+def test_tuple_exhaustive():
     # Exhaustive tests here have to be very limited because of combinatorial
     # explosion.
     a = arange(2*2*2).reshape((2, 2, 2))
