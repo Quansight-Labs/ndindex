@@ -224,6 +224,12 @@ class Slice(NDIndex):
         if size == 0:
             start, stop, step = 0, 0, 1
         elif step > 0:
+            # start cannot be None
+            if start < 0:
+                start = size + start
+            if start < 0:
+                start = 0
+
             if stop is None:
                 stop = size
             elif stop < 0:
@@ -232,16 +238,12 @@ class Slice(NDIndex):
                     stop = 0
             else:
                 stop = min(stop, size)
-            # start cannot be None
-            if start < 0:
-                start = size + start
-            if start < 0:
-                start = 0
         else:
-            if stop is None:
-                stop = -size - 1
             if start is None:
                 start = size - 1
+            if stop is None:
+                stop = -size - 1
+
             if start < 0:
                 if start >= -size:
                     start = size + start
