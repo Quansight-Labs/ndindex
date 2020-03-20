@@ -21,6 +21,21 @@ ndindex(index).raw, or in the case of a transformation, the before and after
 raw index, and index an arange with them. If they do not give the same output
 array, or do not both produce the same error, the code is not correct.
 
+Why bother with hypothesis if the same thing is already tested exhaustively?
+The main reason is that hypothesis is much better at producing human-readable
+failure examples. When an exhaustive test fails, the failure will always be
+from the first set of inputs in the loop that produces a failure. Hypothesis
+on the other hand attempts to "shrink" the failure input to smallest input
+that still fails. For example, a failing exhaustive slice test might give
+Slice(-10, -9, -10) as a the failing example, but hypothesis would shrink it
+to Slice(-1, -2, -1). Another reason for the duplication is that hypothesis
+can sometimes test a slightly expanded test space without any additional
+consequences. For example, test_slice_reduce_hypothesis() tests all types of
+array shapes, whereas test_slice_reduce_exhaustive() tests only 1-dimensional
+shapes. This doesn't affect things because hypotheses will always shrink large
+shapes to a 1-dimensional shape in the case of a failure. Consequently every
+exhaustive test should have a corresponding hypothesis test.
+
 """
 
 from itertools import chain, product
