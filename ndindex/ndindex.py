@@ -208,6 +208,8 @@ class Slice(NDIndex):
         a sliced array of the given shape, and never raises ValueError.
 
         """
+        if isinstance(shape, int):
+            shape = (shape,)
         if len(shape) <= axis:
             raise IndexError("too many indices for array")
 
@@ -271,6 +273,8 @@ class Integer(NDIndex):
         return 1
 
     def reduce(self, shape, axis=0):
+        if isinstance(shape, int):
+            shape = (shape,)
         if len(shape) <= axis:
             raise IndexError("too many indices for array")
 
