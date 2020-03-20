@@ -40,11 +40,12 @@ def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)
                 yield (start, stop, step)
 
 def test_slice():
-    a = arange(100)
-    for start, stop, step in _iterslice():
-        check_same(a, slice(start, stop, step))
+    for n in range(100):
+        a = arange(n)
+        for start, stop, step in _iterslice():
+            check_same(a, slice(start, stop, step))
 
-@given(slices(), integers(5, 100))
+@given(slices(), integers(0, 100))
 def test_slice_hypothesis(s, size):
     a = arange(size)
     check_same(a, s)
