@@ -135,7 +135,7 @@ def test_slice_reduce_exhaustive():
             # We cannot require stop > 0 because if stop = None and step < 0, the
             # only equivalent stop that includes 0 is negative.
             assert reduced.stop != None
-            # assert len(reduced) == len(a[reduced.raw]), (s, n)
+            assert len(reduced) == len(a[reduced.raw]), (s, n)
 
 @given(slices(), shapes)
 def test_slice_reduce_hypothesis(s, shape):
@@ -159,7 +159,7 @@ def test_slice_reduce_hypothesis(s, shape):
     # We cannot require stop > 0 because if stop = None and step < 0, the
     # only equivalent stop that includes 0 is negative.
     assert reduced.stop != None
-    # assert len(reduced) == len(a[reduced.raw]), (s, shape)
+    assert len(reduced) == len(a[reduced.raw]), (s, shape)
 
 def test_integer_exhaustive():
     a = arange(10)

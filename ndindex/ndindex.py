@@ -252,6 +252,8 @@ class Slice(NDIndex):
             if start >= 0:
                 start = min(size - 1, start)
 
+            if -size <= stop < 0:
+                stop += size
         return self.__class__(start, stop, step)
 
 
