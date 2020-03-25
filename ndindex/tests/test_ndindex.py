@@ -89,6 +89,11 @@ def test_slice_len_exhaustive():
             # with larger arrays.
             assert len(arange(30)[s.raw]) > m, s
 
+        # TODO
+        # if l == 0:
+        #     # There should only be one canonical length 0 slice
+        #     assert s == Slice(0, 0)
+
 @given(slices())
 def test_slice_len_hypothesis(s):
     try:
