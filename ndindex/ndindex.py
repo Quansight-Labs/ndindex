@@ -199,7 +199,7 @@ class Slice(NDIndex):
     def reduce(self, shape, axis=0):
         """
         Slice.reduce returns a slice where the start and stop are
-        canonicalized.
+        canonicalized for an array of the given shape.
 
         Here, canonicalized means the start and stop are not None.
         Furthermore, start is always nonnegative.
