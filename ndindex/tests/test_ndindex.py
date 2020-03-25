@@ -1,4 +1,3 @@
-
 """
 Tests are extremely important for ndindex. All operations should produce
 correct results. We test this by checking against numpy arange (the array
@@ -28,7 +27,7 @@ from the first set of inputs in the loop that produces a failure. Hypothesis
 on the other hand attempts to "shrink" the failure input to smallest input
 that still fails. For example, a failing exhaustive slice test might give
 Slice(-10, -9, -10) as a the failing example, but hypothesis would shrink it
-to Slice(-1, -2, -1). Another reason for the duplication is that hypothesis
+to Slice(-2, -1, -1). Another reason for the duplication is that hypothesis
 can sometimes test a slightly expanded test space without any additional
 consequences. For example, test_slice_reduce_hypothesis() tests all types of
 array shapes, whereas test_slice_reduce_exhaustive() tests only 1-dimensional
