@@ -1,3 +1,8 @@
+env:
+  global:
+    # Doctr deploy key for Quansight/ndindex
+    - secure: "re3NcmEUC70IlsnSzeSP8SET/Z8VC5r0CLUespXPG0/mDqxulgDRJC3jZMKy/Aa9TkBGW0MTitazIe7zSyuq+UrmNTN1yH8t04fBsQ5Hu8Lh+ed7mhmJqOVBhTX+uaYsHoQ+7LxTaZz4onzfaJBHuzNC7XIchARKPNelz3+TKs8Vlk+K0awtbEgPqpNIo22VOe/dzxs+AtQF1bwdrmfiSRv3LdJNtH+Dzgh1i4euybhylQh+ugWUHVqTKa6FSfXvvvrhZqCUNbVbRjAmGTL2RkucdqRre37Kz3dd6vL7G3zN9tiCI6m6uH+3Z1pEj2rV+y80GZX+CkcSLeGbfqU6S4GewaBW5+p33p4WGKWGvaU2lOu7dJIMwfMTMjzAXPoKSNA42rMzKtArsYAk14mYRKOj082P2sF3bXyy5zvKCG2m6gJseoWQxqU6tZcjUfoKPMUCZQGXJzgHDkzl9vTPfFl2mTY5zvAvC7BYkxUK1uGA6bbTEqGBnfbY9dSDPk5DYDeN5BcAxwBhtnfHiRF+VnhSt2dsG8FE4eL1MyfQn0iSkqd/UHrJOUCBCzGRrw4ZbDhX+S4zv7qNjbonB5UowbpdinePdRf7PUQWGvRvCHoND3se8FITLZktqIcKjB3WvLx7xF9MevVQZhvsRTmOE4MttQ6xbAM0XSzNmehOWVg="
+
 language: python
 
 dist: xenial
@@ -13,6 +18,7 @@ matrix:
     - python: 3.8
       env:
         - TESTS=true
+        - DOCS=true
 
 install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -23,7 +29,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy hypothesis
+  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy hypothesis doctr sphinx recommonmark
   - source activate test-environment
 
 script:
@@ -33,3 +39,9 @@ script:
   - pytest
   # # Make sure it installs
   # - python setup.py install
+  - if [[ "${DOCS}" == "true" ]]; then
+        cd docs;
+        make html;
+        cd ..;
+        doctr deploy .;
+    fi
