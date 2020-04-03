@@ -1,0 +1,25 @@
+{#
+    basic/globaltoc.html
+    ~~~~~~~~~~~~~~~~~~~~
+
+    Sphinx sidebar template: global table of contents.
+
+    :copyright: Copyright 2007-2017 by the Sphinx team, see AUTHORS.
+    :license: BSD, see LICENSE for details.
+
+    Modified to work properly with the index page
+#}
+{% if theme_logo %}
+<p class="logo">
+  <a href="{{ pathto(master_doc) }}">
+    <img class="logo" src="{{ pathto('_static/' ~ theme_logo, 1) }}" alt="Logo"/>
+    {% if theme_logo_name|lower == 'true' %}
+    <h1 class="logo logo-name">{{ project }}</h1>
+    {% endif %}
+  </a>
+</p>
+{% else %}
+<h1 class="logo"><a href="{{ pathto(master_doc) }}">{{ project }}</a></h1>
+{% endif %}
+
+{{ toctree(maxdepth=-1, collapse=False) }}

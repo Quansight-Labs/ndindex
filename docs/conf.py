@@ -75,6 +75,46 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = 'alabaster'
 
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'sphinx'
+
+html_theme_options = {
+    'github_user': 'asmeurer',
+    'github_repo': 'brown-water-python',
+    'github_banner': True,
+    # 'logo': 'logo.jpg',
+    # 'logo_name': True,
+    # 'show_related': True,
+    # Needs a release with https://github.com/bitprophet/alabaster/pull/101 first
+    'show_relbars': True,
+
+    # Colors
+
+    'base_bg': '#EEEEEE',
+    'narrow_sidebar_bg': '#DDDDDD',
+    # Sidebar text
+    'gray_1': '#000000',
+    'narrow_sidebar_link': '#333333',
+    # Doctest background
+    'gray_2': '#F0F8FF',
+
+    # Remove gray background from inline code
+    'code_bg': '#EEEEEE',
+
+    # Originally 940px
+    'page_width': '1000px',
+
+    # Fonts
+    'font_family': "Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
+    'font_size': '18px',
+    'code_font_family': "'Menlo', 'Deja Vu Sans Mono', 'Consolas', 'Bitstream Vera Sans Mono', monospace",
+    'code_font_size': '0.85em',
+    }
+
+html_sidebars = {
+    '**': ['globaltocindex.html', 'searchbox.html'],
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
