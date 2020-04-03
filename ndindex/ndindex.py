@@ -354,7 +354,7 @@ class Slice(NDIndex):
         Furthermore, start is always nonnegative.
 
         The `axis` argument can be used to specify an axis of the shape (by
-        default, axis 0(. For convenience, `shape` can be passed as an integer
+        default, axis 0). For convenience, `shape` can be passed as an integer
         for a single dimension.
 
         After running slice.reduce, len() gives the true size of the axis for
