@@ -188,3 +188,7 @@ test will also have a corresponding hypothesis test.
 ## License
 
 MIT License
+
+## Table of Contents
+
+* [ndindex API](ndindex.md)

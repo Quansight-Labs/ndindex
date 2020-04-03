@@ -1,4 +1,5 @@
 ./_sources/index.md.txt
+./_sources/ndindex.md.txt
 ./_static/alabaster.css
 ./_static/basic.css
 ./_static/custom.css
@@ -16,6 +17,8 @@
 ./_static/underscore.js
 ./genindex.html
 ./index.html
+./ndindex.html
 ./objects.inv
+./py-modindex.html
 ./search.html
 ./searchindex.js
