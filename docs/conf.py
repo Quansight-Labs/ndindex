@@ -85,8 +85,8 @@ html_theme = 'alabaster'
 pygments_style = 'sphinx'
 
 html_theme_options = {
-    'github_user': 'asmeurer',
-    'github_repo': 'brown-water-python',
+    'github_user': 'Quansight',
+    'github_repo': 'ndindex',
     'github_banner': True,
     # 'logo': 'logo.jpg',
     # 'logo_name': True,
