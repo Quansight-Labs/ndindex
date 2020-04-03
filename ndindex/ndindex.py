@@ -56,17 +56,22 @@ class NDIndex:
         """
         raise NotImplementedError
 
+class default:
+    pass
+
 class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array
     """
-    def __new__(cls, start=None, stop=None, step=None):
+    def __new__(cls, start, stop=default, step=None):
         if isinstance(start, Slice):
             return start
         if isinstance(start, slice):
             start, stop, step = start.start, start.stop, start.step
 
         # Canonicalize
+        if stop is default:
+            start, stop = None, start
         if step is None:
             step = 1
         if step == 0:

@@ -39,6 +39,8 @@ exhaustive test should have a corresponding hypothesis test.
 
 from itertools import chain, product
 
+from pytest import raises
+
 from numpy import arange
 
 from hypothesis import given, assume
@@ -52,6 +54,20 @@ def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)
         for stop in chain(range(*stop_range), [None]):
             for step in chain(range(*step_range), [None]):
                 yield (start, stop, step)
+
+def test_slice_args():
+    # Test the behavior when not all three arguments are given
+    # TODO: Incorporate this into the normal slice tests
+    raises(TypeError, lambda: slice())
+    raises(TypeError, lambda: Slice())
+
+    s = Slice(1)
+    assert s == Slice(None, 1) == Slice(None, 1, 1) == Slice(0, 1) == Slice(0, 1, 1)
+    assert s.raw == slice(0, 1, 1)
+
+    s = Slice(0, 1)
+    assert s == Slice(0, 1, 1)
+    assert s.raw == slice(0, 1, 1)
 
 def test_slice_exhaustive():
     for n in range(100):
