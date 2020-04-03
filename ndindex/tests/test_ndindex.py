@@ -46,7 +46,7 @@ from numpy import arange
 from hypothesis import given, assume
 from hypothesis.strategies import integers, one_of
 
-from ..ndindex import Slice
+from ..ndindex import Slice, Integer
 from .helpers import check_same, ints, slices, tuples, prod, shapes, ndindices
 
 def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)):
@@ -192,13 +192,27 @@ def test_integer_reduce_exhaustive():
     for i in range(-12, 12):
         check_same(a, i, func=lambda x: x.reduce((10,)))
 
+        try:
+            reduced = Integer(i).reduce(10)
+        except IndexError:
+            pass
+        else:
+            assert reduced.raw >= 0
+
 @given(integers(0, 10), shapes)
-def test_integer_reduce_hypothesis(idx, shape):
+def test_integer_reduce_hypothesis(i, shape):
     a = arange(prod(shape)).reshape(shape)
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, idx, func=lambda x: x.reduce(shape))
+    check_same(a, i, func=lambda x: x.reduce(shape))
+
+    try:
+        reduced = Integer(i).reduce(shape)
+    except IndexError:
+        pass
+    else:
+        assert reduced.raw >= 0
 
 def test_tuple_exhaustive():
     # Exhaustive tests here have to be very limited because of combinatorial
