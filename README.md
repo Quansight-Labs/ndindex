@@ -91,7 +91,7 @@ implemented:
       >>> s = Slice(0, 2)
       >>> from numpy import arange
       >>> arange(4)[s.raw]
-      [0, 1]
+      array([0, 1])
 
 - `len()` computes the maximum length of an index over a given axis.
 
@@ -112,6 +112,9 @@ implemented:
 
 
 The following things are not yet implemented, but are planned.
+
+- `idx.newshape(shape)` returns the shape of `a[idx]`, assuming `a` has shape
+  `shape`.
 
 - `ellipsis`, `Newaxis`, `IntegerArray`, and `BooleanArray` types, so that all
   types of indexing are support.

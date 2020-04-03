@@ -3,7 +3,7 @@ Tests are extremely important for ndindex. All operations should produce
 correct results. We test this by checking against numpy arange (the array
 values do not matter, so long as they are distinct).
 
-There are two primary types of tests that we employ to verify this
+There are two primary types of tests that we employ to verify this:
 
 - Exhaustive tests. These test every possible value in some range. See for
   example test_slice. This is the best type of test, but unfortunately, it is

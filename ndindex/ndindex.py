@@ -3,6 +3,16 @@ import operator
 from numpy import ndarray
 
 def ndindex(obj):
+    """
+    Convert an object into an ndindex type
+
+    >>> from ndindex import ndindex
+    >>> ndindex(1)
+    Integer(1)
+    >>> ndindex(slice(0, 10))
+    Slice(0, 10, 1)
+    """
+
     if isinstance(obj, NDIndex):
         return obj
 
@@ -23,6 +33,33 @@ def ndindex(obj):
 class NDIndex:
     """
     Represents an index into an nd-array (i.e., a numpy array)
+
+    This is a base class for all ndindex types. All types that subclass this
+    class should redefine the following methods
+
+    - `__new__(cls, *args)` should type-check and canonicalize arguments. If necessary,
+      `__new__` should return a different type. Otherwise, it should return
+      `super().__new__(cls, *args)`. This will automatically set `.args` to
+      the arguments. Classes should always be able to recreate themselves with
+      `.args`, i.e., `type(idx)(*idx.args) == idx` should always hold.
+
+    - `raw` (a @property method) should return the raw index that can be
+      passed as an index to a numpy array.
+
+    In addition other methods should be defined as necessary.
+
+    - `__len__` should return the largest possible shape of an axis sliced by
+      the index (for single-axis indices), or raise ValueError if no such
+      maximum exists.
+
+    - `reduce(shape)` should reduce an index to an equivalent form for arrays
+      of shape `shape`.
+
+    The methods `__eq__` and `__hash__` should *not* be overridden. Equality
+    (and hashability) on NDIndex types is determined by equality of types and
+    `.args`. Equivalent indices should not attempt to redefine equality.
+    Rather they should define canonicalization via `__new__` or `reduce`.
+
     """
     def __new__(cls, *args):
         obj = object.__new__(cls)
@@ -43,25 +80,107 @@ class NDIndex:
     # TODO: Make NDIndex an abstract base class
     @property
     def raw(self):
+        """
+        Return the equivalent of `self` that can be used as an index
+
+        NumPy does not allow custom objects to be used as indices, with the
+        exception of integer indices, so to use an NDIndex object as an index,
+        it is necessary to use `raw`.
+
+        >>> from ndindex import Slice
+        >>> import numpy as np
+        >>> a = np.arange(5)
+        >>> s = Slice(2, 4)
+        >>> a[s]
+        Traceback (most recent call last):
+        ...
+        IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+        >>> a[s.raw]
+        array([2, 3])
+
+        """
         raise NotImplementedError
 
     def reduce(self, shape):
         """
-        Simplify an index given that it will be applied to an array of a given shape
+        Simplify an index given that it will be applied to an array of a given shape.
 
         Either returns a new index type, which is equivalent on arrays of
-        shape `shape`, or raises IndexError if the index would give index
+        shape `shape`, or raises IndexError if the index would give an index
         error (for instance, out of bounds integer index or too many indices
         for array).
+
+        >>> from ndindex import Slice, Integer
+        >>> Slice(0, 10).reduce((5,))
+        Slice(0, 5, 1)
+        >>> Integer(10).reduce((5,))
+        Traceback (most recent call last):
+        ...
+        IndexError: index 10 is out of bounds for axis 0 with size 5
+
+        For single axis indices such as Slice and Tuple, `reduce` takes an
+        optional `axis` argument to specify the axis, defaulting to 0.
+
         """
         raise NotImplementedError
 
 class default:
+    """
+    A default keyword argument value
+
+    Used as the default value for keyword arguments where `None` is also a
+    meaningful value but not the default, so cannot be used to signify the
+    default value.
+
+    """
     pass
 
 class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array
+
+    `Slice(x)` with one argument is equivalent to `Slice(None, x)`.
+
+    `start` and `stop` can be any integer, or `None`. `step` can be any
+    nonzero integer or None.
+
+    `Slice(a, b)` is the same as the syntax `a:b` in an index and `Slice(a, b,
+    c)` is the same as `a:b:c`. An argument being `None` is equivalent to the
+    syntax where the item is omitted, for example, `Slice(None, None, k)` is
+    the same as the syntax `::k`.
+
+    See
+    https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing-and-indexing
+    for a description of the semantic meaning of slices on arrays.
+
+    Slice has attributes `start`, `stop`, and `step` to access the
+    corresponding attributes.
+
+    Note that `start` and `stop` may be `None`, even after canonicalization.
+    This is because some slices are impossible to represent otherwise without
+    making assumptions about the array shape. To get a slice where the
+    `start`, `stop`, and `step` are always integers, use `reduce` with a given
+    array shape.
+
+    Slice objects are canonicalized so that
+
+    - `start` and `stop` are not `None` when possible.
+    - `step` is not `None`
+
+    >>> from ndindex import Slice
+    >>> s = Slice(10)
+    >>> s
+    Slice(0, 10, 1)
+    >>> s.start
+    0
+    >>> s.args
+    (0, 10, 1)
+
+    Note that `Slice` objects that index a single element are not
+    canonicalized to `Integer`, because integer slices always remove an axis
+    whereas slices keep the axis. Furthermore, slices cannot raise IndexError
+    except on arrays with shape equal to `()`.
+
     """
     def __new__(cls, start, stop=default, step=None):
         if isinstance(start, Slice):
@@ -115,7 +234,7 @@ class Slice(NDIndex):
     @property
     def start(self):
         """
-        The start of the slice
+        The start value of the slice.
 
         Note that this may be an integer or None.
         """
@@ -124,7 +243,7 @@ class Slice(NDIndex):
     @property
     def stop(self):
         """
-        The stop of the slice
+        The stop of the slice.
 
         Note that this may be an integer or None.
         """
@@ -133,7 +252,7 @@ class Slice(NDIndex):
     @property
     def step(self):
         """
-        The step of the slice
+        The step of the slice.
 
         This will be a nonzero integer.
         """
@@ -144,8 +263,33 @@ class Slice(NDIndex):
         __len__ gives the maximum size of an axis sliced with self
 
         An actual array may produce a smaller size if it is smaller than the
-        bounds of the slice. For instance, [1, 2, 3][2:4] only has 1 element
+        bounds of the slice. For instance, [0, 1, 2][2:4] only has 1 element
         but the maximum length of the slice 2:4 is 2.
+
+        >>> from ndindex import Slice
+        >>> [0, 1, 2][2:4]
+        [2]
+        >>> len(Slice(2, 4))
+        2
+        >>> [0, 1, 2, 3][2:4]
+        [2, 3]
+
+        If there is no such maximum, raises ValueError.
+
+        >>> # From the second element to the end, which could have any size
+        >>> len(Slice(1, None))
+        Traceback (most recent call last):
+        ...
+        ValueError: Cannot determine max length of slice
+
+        Note that the `Slice.reduce()` method returns a Slice that always has
+        a correct `len` which doesn't raise ValueError.
+
+        >>> Slice(2, 4).reduce(3)
+        Slice(2, 3, 1)
+        >>> len(_)
+        1
+
         """
         start, stop, step = self.args
         error = ValueError("Cannot determine max length of slice")
@@ -209,9 +353,27 @@ class Slice(NDIndex):
         Here, canonicalized means the start and stop are not None.
         Furthermore, start is always nonnegative.
 
+        The `axis` argument can be used to specify an axis of the shape (by
+        default, axis 0(. For convenience, `shape` can be passed as an integer
+        for a single dimension.
+
         After running slice.reduce, len() gives the true size of the axis for
         a sliced array of the given shape, and never raises ValueError.
 
+        >>> from ndindex import Slice
+        >>> s = Slice(1, 10)
+        >>> s.reduce((3,))
+        Slice(1, 3, 1)
+
+        >>> s = Slice(2, None)
+        >>> len(s)
+        Traceback (most recent call last):
+        ...
+        ValueError: Cannot determine max length of slice
+        >>> s.reduce((5,))
+        Slice(2, 5, 1)
+        >>> len(_)
+        3
         """
         if isinstance(shape, int):
             shape = (shape,)
@@ -265,6 +427,21 @@ class Slice(NDIndex):
 class Integer(NDIndex):
     """
     Represents an integer index on an axis of an nd-array
+
+    Any object that implements `__index__` can be used as an integer index.
+
+    >>> from ndindex import Integer
+    >>> idx = Integer(1)
+    >>> [0, 1, 2][idx.raw]
+    1
+    >>> idx = Integer(-3)
+    >>> [0, 1, 2][idx.raw]
+    0
+
+    Note that Integer itself implements `__index__`, so it can be used as an
+    index directly. However, it is still recommended to use `raw` for
+    consistency, as this only works for Integer.
+
     """
     def __new__(cls, idx):
         idx = operator.index(idx)
@@ -279,9 +456,31 @@ class Integer(NDIndex):
         return self.args[0]
 
     def __len__(self):
+        """
+        Returns the number of elements indexed by `self`
+
+        Since `self` is an integer index, this always returns 1. Note that
+        integer indices always remove an axis.
+        """
         return 1
 
     def reduce(self, shape, axis=0):
+        """
+        Reduce an Integer index on an array of shape `shape`
+
+        The result will either be IndexError if the index is invalid for the
+        given shape, or an Integer index where the value is nonnegative.
+
+        >>> from ndindex import Integer
+        >>> idx = Integer(-5)
+        >>> idx.reduce((3,))
+        Traceback (most recent call last):
+        ...
+        IndexError: index -5 is out of bounds for axis 0 with size 3
+        >>> idx.reduce((9,))
+        Integer(4)
+
+        """
         if isinstance(shape, int):
             shape = (shape,)
         if len(shape) <= axis:
@@ -300,7 +499,7 @@ class Tuple(NDIndex):
     """
     Represents a tuple of single-axis indices
 
-    Single axis indices are
+    Valid single axis indices are
 
     - Integer
     - Slice
@@ -308,6 +507,30 @@ class Tuple(NDIndex):
     - Newaxis
     - IntegerArray
     - BooleanArray
+
+    (some of the above are not yet implemented)
+
+    `Tuple(x1, x2, ..., xn)` represents the index `a[x1, x2, ..., xn]` or,
+    equivalently, `a[(x1, x2, ..., xn)]`. `Tuple()` is the empty tuple index,
+    `a[()]`, which returns `a` unchanged.
+
+    >>> from ndindex import Tuple
+    >>> import numpy as np
+    >>> idx = Tuple(0, Slice(2, 4))
+    >>> a = np.arange(10).reshape((2, 5))
+    >>> a
+    array([[0, 1, 2, 3, 4],
+           [5, 6, 7, 8, 9]])
+    >>> a[0, 2:4]
+    array([2, 3])
+    >>> a[idx.raw]
+    array([2, 3])
+
+    A `Tuple` with a single argument is always reduced to that single
+    argument (because `a[idx,]` is the same as `a[idx]`).
+
+    >>> Tuple(Slice(2, 4))
+    Slice(2, 4, 1)
     """
     def __new__(cls, *args):
         newargs = []
