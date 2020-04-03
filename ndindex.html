@@ -15,18 +15,32 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="ndindex" href="index.html" />
+ 
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+ 
   </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">ndindex</a>
+        </li>
+    </ul>
+  </nav>
+              </div>
           
 
           <div class="body" role="main">
@@ -65,8 +79,8 @@ for a description of the semantic meaning of slices on arrays.</p>
 <p>Slice has attributes <code class="code docutils literal notranslate"><span class="pre">start</span></code>, <code class="code docutils literal notranslate"><span class="pre">stop</span></code>, and <code class="code docutils literal notranslate"><span class="pre">step</span></code> to access the
 corresponding attributes.</p>
 <p>Note that <code class="code docutils literal notranslate"><span class="pre">start</span></code> and <code class="code docutils literal notranslate"><span class="pre">stop</span></code> may be <code class="code docutils literal notranslate"><span class="pre">None</span></code>, even after canonicalization.
-This is because some slices are impossible to represent otherwise without
-making assumptions about the array shape. To get a slice where the
+This is because some slices are impossible to represent without <code class="code docutils literal notranslate"><span class="pre">None</span></code>
+without making assumptions about the array shape. To get a slice where the
 <code class="code docutils literal notranslate"><span class="pre">start</span></code>, <code class="code docutils literal notranslate"><span class="pre">stop</span></code>, and <code class="code docutils literal notranslate"><span class="pre">step</span></code> are always integers, use <code class="code docutils literal notranslate"><span class="pre">reduce</span></code> with a given
 array shape.</p>
 <p>Slice objects are canonicalized so that</p>
@@ -112,7 +126,7 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 <dl class="method">
 <dt id="ndindex.Slice.reduce">
 <code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">shape</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.reduce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Slice.reduce returns a slice where the start and stop are
+<dd><p><code class="code docutils literal notranslate"><span class="pre">Slice.reduce</span></code> returns a slice where the start and stop are
 canonicalized for an array of the given shape.</p>
 <p>Here, canonicalized means the start and stop are not None.
 Furthermore, start is always nonnegative.</p>
@@ -285,33 +299,33 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 
 
           </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">ndindex</a>
+        </li>
+    </ul>
+  </nav>
+              </div>
           
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+
 <h1 class="logo"><a href="index.html">ndindex</a></h1>
 
 
-
-
-
-
-
-
-<h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-ndindex">ndindex</a></li>
+</ul>
+</li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">ndindex</a></li>
-  </ul></li>
-</ul>
-</div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -322,14 +336,6 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
     </div>
 </div>
 <script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
@@ -346,6 +352,10 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
           rel="nofollow">Page source</a>
     </div>
 
+    
+    <a href="https://github.com/asmeurer/brown-water-python" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     

@@ -3,9 +3,9 @@
 /* -- page layout ----------------------------------------------------------- */
 
 body {
-    font-family: Georgia, serif;
-    font-size: 17px;
-    background-color: #fff;
+    font-family: Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif;
+    font-size: 18px;
+    background-color: #EEEEEE;
     color: #000;
     margin: 0;
     padding: 0;
@@ -13,7 +13,7 @@ body {
 
 
 div.document {
-    width: 940px;
+    width: 1000px;
     margin: 30px auto 0 auto;
 }
 
@@ -37,7 +37,7 @@ hr {
 }
 
 div.body {
-    background-color: #fff;
+    background-color: #EEEEEE;
     color: #3E4349;
     padding: 0 30px 0 30px;
 }
@@ -47,7 +47,7 @@ div.body > .section {
 }
 
 div.footer {
-    width: 940px;
+    width: 1000px;
     margin: 20px auto 30px auto;
     font-size: 14px;
     color: #888;
@@ -70,7 +70,7 @@ div.relations {
 
 
 div.sphinxsidebar a {
-    color: #444;
+    color: #000000;
     text-decoration: none;
     border-bottom: 1px dotted #999;
 }
@@ -107,8 +107,8 @@ div.sphinxsidebarwrapper p.blurb {
 
 div.sphinxsidebar h3,
 div.sphinxsidebar h4 {
-    font-family: Georgia, serif;
-    color: #444;
+    font-family: Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif;
+    color: #000000;
     font-size: 24px;
     font-weight: normal;
     margin: 0 0 5px 0;
@@ -120,7 +120,7 @@ div.sphinxsidebar h4 {
 }
 
 div.sphinxsidebar h3 a {
-    color: #444;
+    color: #000000;
 }
 
 div.sphinxsidebar p.logo a,
@@ -151,7 +151,7 @@ div.sphinxsidebar ul li.toctree-l2 > a {
 
 div.sphinxsidebar input {
     border: 1px solid #CCC;
-    font-family: Georgia, serif;
+    font-family: Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif;
     font-size: 1em;
 }
 
@@ -197,7 +197,7 @@ div.body h3,
 div.body h4,
 div.body h5,
 div.body h6 {
-    font-family: Georgia, serif;
+    font-family: Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif;
     font-weight: normal;
     margin: 30px 0px 10px 0px;
     padding: 0;
@@ -217,7 +217,7 @@ a.headerlink {
 }
 
 a.headerlink:hover {
-    color: #444;
+    color: #000000;
     background: #EAEAEA;
 }
 
@@ -228,7 +228,7 @@ div.body p, div.body dd, div.body li {
 div.admonition {
     margin: 20px 0px;
     padding: 10px 30px;
-    background-color: #EEE;
+    background-color: #F0F8FF;
     border: 1px solid #CCC;
 }
 
@@ -238,7 +238,7 @@ div.admonition tt.xref, div.admonition code.xref, div.admonition a tt {
 }
 
 div.admonition p.admonition-title {
-    font-family: Georgia, serif;
+    font-family: Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif;
     font-weight: normal;
     font-size: 24px;
     margin: 0 0 10px 0;
@@ -251,7 +251,7 @@ div.admonition p.last {
 }
 
 div.highlight {
-    background-color: #fff;
+    background-color: #EEEEEE;
 }
 
 dt:target, .highlight {
@@ -290,32 +290,32 @@ div.attention {
 }
 
 div.important {
-    background-color: #EEE;
+    background-color: #F0F8FF;
     border: 1px solid #CCC;
 }
 
 div.note {
-    background-color: #EEE;
+    background-color: #F0F8FF;
     border: 1px solid #CCC;
 }
 
 div.tip {
-    background-color: #EEE;
+    background-color: #F0F8FF;
     border: 1px solid #CCC;
 }
 
 div.hint {
-    background-color: #EEE;
+    background-color: #F0F8FF;
     border: 1px solid #CCC;
 }
 
 div.seealso {
-    background-color: #EEE;
+    background-color: #F0F8FF;
     border: 1px solid #CCC;
 }
 
 div.topic {
-    background-color: #EEE;
+    background-color: #F0F8FF;
 }
 
 p.admonition-title {
@@ -327,8 +327,8 @@ p.admonition-title:after {
 }
 
 pre, tt, code {
-    font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
-    font-size: 0.9em;
+    font-family: 'Menlo', 'Deja Vu Sans Mono', 'Consolas', 'Bitstream Vera Sans Mono', monospace;
+    font-size: 0.85em;
 }
 
 .hll {
@@ -350,16 +350,16 @@ tt.descname, code.descname {
 }
 
 img.screenshot {
-    -moz-box-shadow: 2px 2px 4px #EEE;
-    -webkit-box-shadow: 2px 2px 4px #EEE;
-    box-shadow: 2px 2px 4px #EEE;
+    -moz-box-shadow: 2px 2px 4px #F0F8FF;
+    -webkit-box-shadow: 2px 2px 4px #F0F8FF;
+    box-shadow: 2px 2px 4px #F0F8FF;
 }
 
 table.docutils {
     border: 1px solid #888;
-    -moz-box-shadow: 2px 2px 4px #EEE;
-    -webkit-box-shadow: 2px 2px 4px #EEE;
-    box-shadow: 2px 2px 4px #EEE;
+    -moz-box-shadow: 2px 2px 4px #F0F8FF;
+    -webkit-box-shadow: 2px 2px 4px #F0F8FF;
+    box-shadow: 2px 2px 4px #F0F8FF;
 }
 
 table.docutils td, table.docutils th {
@@ -377,7 +377,7 @@ table.field-list, table.footnote {
 table.footnote {
     margin: 15px 0;
     width: 100%;
-    border: 1px solid #EEE;
+    border: 1px solid #F0F8FF;
     background: #FDFDFD;
     font-size: 0.9em;
 }
@@ -439,7 +439,7 @@ ul, ol {
 }
 
 pre {
-    background: #EEE;
+    background: #F0F8FF;
     padding: 7px 30px;
     margin: 15px 0px;
     line-height: 1.3em;
@@ -455,7 +455,7 @@ dl pre, blockquote pre, li pre {
 }
 
 tt, code {
-    background-color: #ecf0f3;
+    background-color: #EEEEEE;
     color: #222;
     /* padding: 1px 2px; */
 }
@@ -564,7 +564,7 @@ a:hover tt, a:hover code {
 
     div.documentwrapper {
         float: none;
-        background: #fff;
+        background: #EEEEEE;
     }
 
     div.sphinxsidebar {
@@ -573,17 +573,17 @@ a:hover tt, a:hover code {
         width: 102.5%;
         margin: 50px -30px -20px -30px;
         padding: 10px 20px;
-        background: #333;
+        background: #DDDDDD;
         color: #FFF;
     }
 
     div.sphinxsidebar h3, div.sphinxsidebar h4, div.sphinxsidebar p,
     div.sphinxsidebar h3 a {
-        color: #fff;
+        color: #EEEEEE;
     }
 
     div.sphinxsidebar a {
-        color: #AAA;
+        color: #333333;
     }
 
     div.sphinxsidebar p.logo {
@@ -663,12 +663,12 @@ table.docutils.citation, table.docutils.citation td, table.docutils.citation th 
 }
 
 .related.top {
-    border-bottom: 1px solid #EEE;
+    border-bottom: 1px solid #F0F8FF;
     margin-bottom: 20px;
 }
 
 .related.bottom {
-    border-top: 1px solid #EEE;
+    border-top: 1px solid #F0F8FF;
 }
 
 .related ul {

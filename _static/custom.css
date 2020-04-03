@@ -1,1 +1,25 @@
-/* This file intentionally left blank. */
+nav#rellinks {
+    float: left;
+    width: 100%;
+}
+
+.related.prev {
+    float: left;
+    text-align: left;
+    width: 50%;
+}
+
+.related.next {
+    float: right;
+    text-align: right;
+    width: 50%
+}
+
+nav#rellinks li+li:before {
+    content: "";
+}
+
+div.sphinxsidebar p.logo {
+    display: inline;
+
+}
