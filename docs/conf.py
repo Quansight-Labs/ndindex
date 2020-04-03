@@ -32,9 +32,25 @@ extensions = [
     'sphinx.ext.autodoc',
 ]
 
+import commonmark
 from recommonmark.transform import AutoStructify
 
+# From
+# https://stackoverflow.com/questions/56062402/force-sphinx-to-interpret-markdown-in-python-docstrings-instead-of-restructuredt
+
+def docstring(app, what, name, obj, options, lines):
+    md  = '\n'.join(lines)
+    ast = commonmark.Parser().parse(md)
+    rst = commonmark.ReStructuredTextRenderer().render(ast)
+    lines.clear()
+    lines += rst.splitlines()
+
 def setup(app):
+    # Uncomment this to make the docstrings use Markdown instead of RST. For
+    # now, we just simulate Markdown by setting default_role = 'code'
+
+    # app.connect('autodoc-process-docstring', docstring)
+
     app.add_config_value('recommonmark_config', {
         'enable_eval_rst': True,
         'auto_toc_tree': True,
@@ -63,3 +79,6 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# Lets us use single backticks for code
+default_role = 'code'
