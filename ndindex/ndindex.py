@@ -157,8 +157,8 @@ class Slice(NDIndex):
     corresponding attributes.
 
     Note that `start` and `stop` may be `None`, even after canonicalization.
-    This is because some slices are impossible to represent otherwise without
-    making assumptions about the array shape. To get a slice where the
+    This is because some slices are impossible to represent without `None`
+    without making assumptions about the array shape. To get a slice where the
     `start`, `stop`, and `step` are always integers, use `reduce` with a given
     array shape.
 
@@ -347,7 +347,7 @@ class Slice(NDIndex):
 
     def reduce(self, shape, axis=0):
         """
-        Slice.reduce returns a slice where the start and stop are
+        `Slice.reduce` returns a slice where the start and stop are
         canonicalized for an array of the given shape.
 
         Here, canonicalized means the start and stop are not None.
