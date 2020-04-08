@@ -1,13 +1,13 @@
 import setuptools
-import _versioneer
+import versioneer
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="ndindex",
-    version=_versioneer.get_version(),
-    cmdclass=_versioneer.get_cmdclass(),
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     author="Quansight",
     description="A Python library for manipulating indices of ndarrays.",
     long_description=long_description,
