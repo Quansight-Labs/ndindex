@@ -19,10 +19,17 @@ def run_tests():
     with run_in_conda_env(['python=3.8', 'pytest', 'numpy', 'hypothesis']):
         pytest
 
+@activity
+def build_docs():
+    with run_in_conda_env(['python=3.8', 'sphinx', 'recommonmark']):
+        cd docs
+        make html
+
 $PROJECT = 'ndindex'
 $ACTIVITIES = [
     'mktmp',
     'run_tests',
+    'build_docs',
     'tag',  # Creates a tag for the new version number
     # 'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     # 'pypi',  # Sends the package to pypi
