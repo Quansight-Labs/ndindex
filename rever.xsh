@@ -6,11 +6,9 @@ def run_tests():
     # overkill and requires installing Docker
     pytest
 
-$ACTIVITIES = ['run_tests']
-
 $PROJECT = 'ndindex'
 $ACTIVITIES = [
-    'run_tests'
+    'run_tests',
     'tag',  # Creates a tag for the new version number
     'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     'pypi',  # Sends the package to pypi
