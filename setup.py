@@ -18,6 +18,10 @@ setuptools.setup(
     install_requires=[
         "numpy",
     ],
+    tests_require=[
+        'pytest',
+        'hypothesis',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
