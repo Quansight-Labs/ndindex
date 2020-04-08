@@ -17,6 +17,8 @@ def run_tests():
     # Don't use the built-in pytest action because that uses Docker, which is
     # overkill and requires installing Docker
     with run_in_conda_env(['python=3.8', 'pytest', 'numpy', 'hypothesis']):
+        pyflakes .
+        python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
         pytest
 
 @activity
