@@ -14,6 +14,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ndindex Changelog" href="changelog.html" />
     <link rel="prev" title="ndindex" href="index.html" />
  
    
@@ -38,6 +39,10 @@
           &larr;
           <a href="index.html" title="Previous document">ndindex</a>
         </li>
+        <li>
+          <a href="changelog.html" title="Next document">ndindex Changelog</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
               </div>
@@ -49,9 +54,9 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-ndindex">
 <span id="ndindex"></span><h2>ndindex<a class="headerlink" href="#module-ndindex" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="ndindex.ndindex">
-<code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ndindex</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ndindex</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert an object into an ndindex type</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -62,7 +67,7 @@
 </div>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="ndindex.Slice">
 <em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Slice</code><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a slice on an axis of an nd-array</p>
@@ -102,7 +107,7 @@ array shape.</p>
 canonicalized to <code class="code docutils literal notranslate"><span class="pre">Integer</span></code>, because integer slices always remove an axis
 whereas slices keep the axis. Furthermore, slices cannot raise IndexError
 except on arrays with shape equal to <code class="code docutils literal notranslate"><span class="pre">()</span></code>.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Slice.raw">
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Slice.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
@@ -123,9 +128,9 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Slice.reduce">
-<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">shape</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.reduce" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.reduce" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="code docutils literal notranslate"><span class="pre">Slice.reduce</span></code> returns a slice where the start and stop are
 canonicalized for an array of the given shape.</p>
 <p>Here, canonicalized means the start and stop are not None.
@@ -154,21 +159,21 @@ a sliced array of the given shape, and never raises ValueError.</p>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Slice.start">
 <em class="property">property </em><code class="sig-name descname">start</code><a class="headerlink" href="#ndindex.Slice.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>The start value of the slice.</p>
 <p>Note that this may be an integer or None.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Slice.step">
 <em class="property">property </em><code class="sig-name descname">step</code><a class="headerlink" href="#ndindex.Slice.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>The step of the slice.</p>
 <p>This will be a nonzero integer.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Slice.stop">
 <em class="property">property </em><code class="sig-name descname">stop</code><a class="headerlink" href="#ndindex.Slice.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>The stop of the slice.</p>
@@ -177,7 +182,7 @@ a sliced array of the given shape, and never raises ValueError.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="ndindex.Integer">
 <em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Integer</code><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an integer index on an axis of an nd-array</p>
@@ -194,7 +199,7 @@ a sliced array of the given shape, and never raises ValueError.</p>
 <p>Note that Integer itself implements <code class="code docutils literal notranslate"><span class="pre">__index__</span></code>, so it can be used as an
 index directly. However, it is still recommended to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code> for
 consistency, as this only works for Integer.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Integer.raw">
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Integer.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
@@ -215,9 +220,9 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Integer.reduce">
-<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">shape</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.reduce" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.reduce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce an Integer index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code></p>
 <p>The result will either be IndexError if the index is invalid for the
 given shape, or an Integer index where the value is nonnegative.</p>
@@ -235,7 +240,7 @@ given shape, or an Integer index where the value is nonnegative.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="ndindex.Tuple">
 <em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Tuple</code><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a tuple of single-axis indices</p>
@@ -271,7 +276,7 @@ argument (because <code class="code docutils literal notranslate"><span class="p
 <span class="go">Slice(2, 4, 1)</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="ndindex.Tuple.raw">
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Tuple.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
@@ -292,6 +297,28 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt id="ndindex.Tuple.reduce">
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.reduce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce an Tuple index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code></p>
+<p>The result will either be IndexError if the index is invalid for the
+given shape, or Tuple where the entries are recursively reduced.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Integer</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">5</span><span class="p">,))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">too many indices for array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">index -3 is out of bounds for axis 1 with size 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="go">Tuple(Slice(0, 5, 1), Integer(0))</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -306,6 +333,10 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
         <li>
           &larr;
           <a href="index.html" title="Previous document">ndindex</a>
+        </li>
+        <li>
+          <a href="changelog.html" title="Next document">ndindex Changelog</a>
+          &rarr;
         </li>
     </ul>
   </nav>
@@ -330,12 +361,26 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 <li class="toctree-l4"><a class="reference internal" href="#module-ndindex">ndindex</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ndindex">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -358,7 +403,7 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
       &copy;2020, Quansight.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

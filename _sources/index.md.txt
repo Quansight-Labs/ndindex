@@ -193,3 +193,4 @@ MIT License
 
 * [ndindex Docs Main Page](index.md)
 * [ndindex API](ndindex.md)
+* [Changelog](changelog.md)
