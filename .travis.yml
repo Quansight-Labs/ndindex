@@ -37,8 +37,8 @@ script:
   - pyflakes .
   - python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
   - pytest
-  # # Make sure it installs
-  # - python setup.py install
+  # Make sure it installs
+  - python setup.py install
   - if [[ "${DOCS}" == "true" ]]; then
         cd docs;
         make html;
