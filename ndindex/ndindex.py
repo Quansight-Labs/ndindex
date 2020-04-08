@@ -552,3 +552,34 @@ class Tuple(NDIndex):
     @property
     def raw(self):
         return tuple(i.raw for i in self.args)
+
+    def reduce(self, shape):
+        """
+        Reduce an Tuple index on an array of shape `shape`
+
+        The result will either be IndexError if the index is invalid for the
+        given shape, or Tuple where the entries are recursively reduced.
+
+        >>> from ndindex import Tuple, Integer, Slice
+        >>> idx = Tuple(Slice(0, 10), Integer(-3))
+        >>> idx.reduce((5,))
+        Traceback (most recent call last):
+        ...
+        IndexError: too many indices for array
+        >>> idx.reduce((5, 2))
+        Traceback (most recent call last):
+        ...
+        IndexError: index -3 is out of bounds for axis 1 with size 2
+        >>> idx.reduce((5, 3))
+        Tuple(Slice(0, 5, 1), Integer(0))
+        """
+        if isinstance(shape, int):
+            shape = (shape,)
+        if len(shape) < len(self.args):
+            raise IndexError("too many indices for array")
+
+        newargs = []
+        for i, s in enumerate(self.args):
+            newargs.append(s.reduce(shape, axis=i))
+
+        return type(self)(*newargs)

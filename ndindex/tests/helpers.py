@@ -37,6 +37,8 @@ def tuples(draw, elements, *, min_size=0, max_size=None, unique_by=None,
     return tuple(draw(lists(elements, min_size=min_size, max_size=max_size,
                             unique_by=unique_by, unique=unique)))
 
+Tuples = tuples(one_of(ints(), slices()))
+
 @composite
 def ndindices(draw):
     s = draw(one_of(

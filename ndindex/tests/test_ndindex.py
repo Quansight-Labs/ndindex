@@ -44,10 +44,10 @@ from pytest import raises
 from numpy import arange
 
 from hypothesis import given, assume
-from hypothesis.strategies import integers, one_of
+from hypothesis.strategies import integers
 
-from ..ndindex import Slice, Integer
-from .helpers import check_same, ints, slices, tuples, prod, shapes, ndindices
+from ..ndindex import Slice, Integer, Tuple
+from .helpers import check_same, ints, slices, Tuples, prod, shapes, ndindices
 
 def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)):
     for start in chain(range(*start_range), [None]):
@@ -239,7 +239,7 @@ def test_tuple_exhaustive():
                     # TypeError because we check the type first.
                     check_same(a, index, same_exception=False)
 
-@given(tuples(one_of(ints(), slices())), shapes)
+@given(Tuples, shapes)
 def test_tuples_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx, same_exception=False)
@@ -250,3 +250,14 @@ def test_eq(idx):
     assert new == idx
     assert new.raw == idx.raw
     assert hash(new) == hash(idx)
+
+@given(Tuples, shapes)
+def test_tuple_reduce_hypothesis(t, shape):
+    a = arange(prod(shape)).reshape(shape)
+    try:
+        idx = Tuple(*t)
+    except ValueError:
+        assume(False)
+
+    check_same(a, idx.raw, func=lambda x: x.reduce(shape),
+               same_exception=False)
