@@ -38,8 +38,8 @@ $ACTIVITIES = [
     'run_tests',
     'build_docs',
     'annotated_tag',  # Creates a tag for the new version number
-    'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     'pypi',  # Sends the package to pypi
+    'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     'ghrelease',  # Creates a Github release entry for the new tag
     'conda_forge',  # Creates a PR into your package's feedstock
 ]
