@@ -26,6 +26,7 @@ def build_docs():
     with run_in_conda_env(['python=3.8', 'sphinx', 'recommonmark']):
         cd docs
         make html
+        cd ..
 
 @activity
 def annotated_tag():
