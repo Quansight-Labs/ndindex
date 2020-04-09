@@ -27,12 +27,17 @@ def build_docs():
         cd docs
         make html
 
+@activity
+def annotated_tag():
+    # https://github.com/regro/rever/issues/212
+    git tag -a -m "$GITHUB_REPO $VERSION release" $VERSION
+
 $PROJECT = 'ndindex'
 $ACTIVITIES = [
     'mktmp',
     'run_tests',
     'build_docs',
-    'tag',  # Creates a tag for the new version number
+    'annotated_tag',  # Creates a tag for the new version number
     'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     'pypi',  # Sends the package to pypi
     'ghrelease'  # Creates a Github release entry for the new tag
