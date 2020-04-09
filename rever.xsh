@@ -34,7 +34,7 @@ def annotated_tag():
 
 $PROJECT = 'ndindex'
 $ACTIVITIES = [
-    'mktmp',
+    # 'mktmp',
     'run_tests',
     'build_docs',
     'annotated_tag',  # Creates a tag for the new version number
