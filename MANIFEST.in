@@ -1,2 +1,3 @@
 include versioneer.py
 include ndindex/_version.py
+include LICENSE
