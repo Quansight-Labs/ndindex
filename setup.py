@@ -12,7 +12,7 @@ setuptools.setup(
     description="A Python library for manipulating indices of ndarrays.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Quansight/ndindex",
+    url="https://quansight.github.io/ndindex/",
     packages=['ndindex', 'ndindex.tests'],
     license="MIT",
     install_requires=[
