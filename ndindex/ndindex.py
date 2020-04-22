@@ -62,8 +62,9 @@ class NDIndex:
     - `reduce(shape=None)` should reduce an index to an equivalent form for
       arrays of shape `shape`, or raise an IndexError. The error messages
       should match numpy as much as possible. The class of the equivalent
-      index may be different. If shape=None, it should return a canonical form
-      that is equivalent for all array shapes (assuming no IndexErrors).
+      index may be different. If `shape` is `None`, it should return a
+      canonical form that is equivalent for all array shapes (assuming no
+      IndexErrors).
 
     The methods `__init__`, `__eq__`, and `__hash__` should *not* be
     overridden. Equality (and hashability) on `NDIndex` subclasses is
@@ -335,9 +336,9 @@ class Slice(NDIndex):
         """
         `Slice.reduce` returns a slice where the start and stop are
         canonicalized for an array of the given shape, or for any shape if
-        `shape=None` (the default).
+        `shape` is `None` (the default).
 
-        - If `shape=None`, the Slice is canonicalized so that
+        - If `shape` is `None`, the Slice is canonicalized so that
 
           - `start` and `stop` are not `None` when possible,
           - `step` is not `None`.
