@@ -41,8 +41,8 @@ their limitations:
   invalid slices like `slice(0.5)` or `slice(0, 10, 0)` are allowed. Also
   slices that would always be equivalent like `slice(None, 10)` and `slice(0,
   10)` are unequal. To contrast, ndindex objects always assume they are
-  indices to numpy arrays and type check their input and canonicalize
-  appropriately.
+  indices to numpy arrays and type check their input. The `reduce` method can
+  be used to put the arguments into canonical form.
 
 - Once you generalizing `slice` objects to more general indices, it is
   difficult to work with them in a uniform way. For example, `a[i]` and
@@ -72,16 +72,19 @@ implemented:
 
 - `Slice`, `Integer`, and `Tuple`
 
-- Constructing a class puts it into canonical form. For example
+- Classes do not canonicalize by default (the constructor only does basic type
+  checking). Objects can be put into canonical form by calling `reduce()`.
 
       >>> from ndindex import Slice
       >>> Slice(None, 12)
+      Slice(None, 12, None)
+      >>> Slice(None, 12).reduce()
       Slice(0, 12, 1)
 
 - Object arguments can be accessed with `idx.args`
 
       >>> Slice(1, 3).args
-      (1, 3, 1)
+      (1, 3, None)
 
 - All ndindex objects are hashable and can be used as dictionary keys.
 
