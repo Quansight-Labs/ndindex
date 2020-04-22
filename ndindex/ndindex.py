@@ -247,7 +247,7 @@ class Slice(NDIndex):
 
         Note that this may be an integer or None.
         """
-        return self.args[0]
+        return self.args[1]
 
     @property
     def step(self):
@@ -256,7 +256,7 @@ class Slice(NDIndex):
 
         This will be a nonzero integer.
         """
-        return self.args[0]
+        return self.args[2]
 
     def __len__(self):
         """
