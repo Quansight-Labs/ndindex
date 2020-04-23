@@ -49,7 +49,22 @@ from hypothesis.strategies import integers
 from ..ndindex import Slice, Integer, Tuple
 from .helpers import check_same, ints, slices, Tuples, prod, shapes, ndindices
 
-def _iterslice(start_range=(-10, 10), stop_range=(-10, 10), step_range=(-10, 10)):
+def _iterslice(start_range=(-10, 10),
+               stop_range=(-10, 10),
+               step_range=(-10, 10),
+               one_two_args=True
+):
+    # one_two_args is unnecessary if the args are being passed to slice(),
+    # since slice() already canonicalizes missing arguments to None. We do it
+    # for Slice to test that behavior.
+    if one_two_args:
+        for start in chain(range(*start_range), [None]):
+            yield (start,)
+
+        for start in chain(range(*start_range), [None]):
+            for stop in chain(range(*stop_range), [None]):
+                yield (start, stop)
+
     for start in chain(range(*start_range), [None]):
         for stop in chain(range(*stop_range), [None]):
             for step in chain(range(*step_range), [None]):
@@ -62,17 +77,23 @@ def test_slice_args():
     raises(TypeError, lambda: Slice())
 
     s = Slice(1)
-    assert s == Slice(None, 1) == Slice(None, 1, 1) == Slice(0, 1) == Slice(0, 1, 1)
-    assert s.raw == slice(0, 1, 1)
+    assert s == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
+    assert s.raw == slice(None, 1, None)
+    assert s.args == (s.start, s.stop, s.step)
 
     s = Slice(0, 1)
-    assert s == Slice(0, 1, 1)
-    assert s.raw == slice(0, 1, 1)
+    assert s == Slice(0, 1, None)
+    assert s.raw == slice(0, 1, None)
+    assert s.args == (s.start, s.stop, s.step)
+
+    s = Slice(0, 1, 2)
+    assert s.raw == slice(0, 1, 2)
+    assert s.args == (s.start, s.stop, s.step)
 
 def test_slice_exhaustive():
     for n in range(100):
         a = arange(n)
-        for start, stop, step in _iterslice():
+        for start, stop, step in _iterslice(one_two_args=False):
             check_same(a, slice(start, stop, step))
 
 @given(slices(), integers(0, 100))
@@ -81,9 +102,9 @@ def test_slice_hypothesis(s, size):
     check_same(a, s)
 
 def test_slice_len_exhaustive():
-    for start, stop, step in _iterslice():
+    for args in _iterslice():
         try:
-            s = Slice(start, stop, step)
+            s = Slice(*args)
         except ValueError:
             continue
         try:
@@ -135,22 +156,66 @@ def test_slice_len_hypothesis(s):
         # with larger arrays.
         assert len(arange(30)[s.raw]) > m, s
 
+
+def test_slice_args_reduce_no_shape():
+    s = Slice(1).reduce()
+    assert s == Slice(None, 1).reduce() == Slice(0, 1, None).reduce() == Slice(0, 1).reduce() == Slice(0, 1, 1)
+
+    s = Slice(0, 1).reduce()
+    assert s == Slice(0, 1, None).reduce() == Slice(0, 1, 1)
+
+def test_slice_reduce_no_shape_exhaustive():
+    for n in range(10):
+        a = arange(n)
+        for args in _iterslice():
+            try:
+                s = Slice(*args)
+            except ValueError:
+                continue
+
+            check_same(a, s.raw, func=lambda x: x.reduce())
+
+            # Check the conditions stated by the Slice.reduce() docstring
+            reduced = s.reduce()
+            # TODO: Test that start and stop are not None when possible
+            assert reduced.step != None
+
+@given(slices(), integers(0, 10))
+def test_slice_reduce_no_shape_hypothesis(s, size):
+    a = arange(size)
+    try:
+        s = Slice(s)
+    except ValueError:
+        assume(False)
+
+    # The axis argument is tested implicitly in the Tuple.reduce test. It is
+    # difficult to test here because we would have to pass in a Tuple to
+    # check_same.
+    check_same(a, s.raw, func=lambda x: x.reduce())
+
+    # Check the conditions stated by the Slice.reduce() docstring
+    reduced = s.reduce()
+    # TODO: Test that start and stop are not None when possible
+    assert reduced.step != None
+
 def test_slice_reduce_exhaustive():
     for n in range(10):
         a = arange(n)
-        for start, stop, step in _iterslice():
+        for args in _iterslice():
             try:
-                s = Slice(start, stop, step)
+                s = Slice(*args)
             except ValueError:
                 continue
 
             check_same(a, s.raw, func=lambda x: x.reduce((n,)))
 
+            # Check the conditions stated by the Slice.reduce() docstring
             reduced = s.reduce((n,))
             assert reduced.start >= 0
             # We cannot require stop > 0 because if stop = None and step < 0, the
             # only equivalent stop that includes 0 is negative.
             assert reduced.stop != None
+            assert reduced.step != None
             assert len(reduced) == len(a[reduced.raw]), (s, n)
 
 @given(slices(), shapes)
@@ -166,15 +231,18 @@ def test_slice_reduce_hypothesis(s, shape):
     # check_same.
     check_same(a, s.raw, func=lambda x: x.reduce(shape))
 
+    # Check the conditions stated by the Slice.reduce() docstring
     try:
         reduced = s.reduce(shape)
     except IndexError:
         # shape == ()
         return
+
     assert reduced.start >= 0
     # We cannot require stop > 0 because if stop = None and step < 0, the
     # only equivalent stop that includes 0 is negative.
     assert reduced.stop != None
+    assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (s, shape)
 
 def test_integer_exhaustive():
@@ -219,7 +287,7 @@ def test_tuple_exhaustive():
     # explosion.
     a = arange(2*2*2).reshape((2, 2, 2))
     types = {
-        slice: lambda: _iterslice((-1, 1), (-1, 1), (-1, 1)),
+        slice: lambda: _iterslice((-1, 1), (-1, 1), (-1, 1), one_two_args=False),
         # slice: _iterslice,
         int: lambda: ((i,) for i in range(-3, 3)),
     }

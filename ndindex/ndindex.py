@@ -10,7 +10,7 @@ def ndindex(obj):
     >>> ndindex(1)
     Integer(1)
     >>> ndindex(slice(0, 10))
-    Slice(0, 10, 1)
+    Slice(0, 10, None)
     """
 
     if isinstance(obj, NDIndex):
@@ -37,13 +37,20 @@ class NDIndex:
     This is a base class for all ndindex types. All types that subclass this
     class should redefine the following methods
 
-    - `__new__(cls, *args)` should type-check and canonicalize arguments. If necessary,
-      `__new__` should return a different type. Otherwise, it should return
-      `super().__new__(cls, *args)`. This will automatically set `.args` to
-      the arguments. Classes should always be able to recreate themselves with
-      `.args`, i.e., `type(idx)(*idx.args) == idx` should always hold.
+    - `_typecheck(self, *args)` should do type checking and basic type
+      canonicalization, and either return a tuple of the new arguments for the
+      class or raise an exception. Type checking means it should raise
+      exceptions for input types that are never semantically meaningful for
+      numpy arrays, for example, floating point indices, using the same
+      exceptions as numpy where possible. Basic type canonicalization means,
+      for instance, converting integers into `int` using `operator.index()`.
+      All other canonicalization should be done in the `reduce()` method. The
+      `NDIndex` base constructor will automatically set `.args` to the
+      arguments returned by this method. Classes should always be able to
+      recreate themselves with `.args`, i.e., `type(idx)(*idx.args) == idx`
+      should always hold.
 
-    - `raw` (a @property method) should return the raw index that can be
+    - `raw` (a **@property** method) should return the raw index that can be
       passed as an index to a numpy array.
 
     In addition other methods should be defined as necessary.
@@ -52,19 +59,26 @@ class NDIndex:
       the index (for single-axis indices), or raise ValueError if no such
       maximum exists.
 
-    - `reduce(shape)` should reduce an index to an equivalent form for arrays
-      of shape `shape`.
+    - `reduce(shape=None)` should reduce an index to an equivalent form for
+      arrays of shape `shape`, or raise an IndexError. The error messages
+      should match numpy as much as possible. The class of the equivalent
+      index may be different. If `shape` is `None`, it should return a
+      canonical form that is equivalent for all array shapes (assuming no
+      IndexErrors).
 
-    The methods `__eq__` and `__hash__` should *not* be overridden. Equality
-    (and hashability) on NDIndex types is determined by equality of types and
-    `.args`. Equivalent indices should not attempt to redefine equality.
-    Rather they should define canonicalization via `__new__` or `reduce`.
+    The methods `__init__`, `__eq__`, and `__hash__` should *not* be
+    overridden. Equality (and hashability) on `NDIndex` subclasses is
+    determined by equality of types and `.args`. Equivalent indices should not
+    attempt to redefine equality. Rather they should define canonicalization
+    via `reduce()`.
 
     """
-    def __new__(cls, *args):
-        obj = object.__new__(cls)
-        obj.args = args
-        return obj
+    def __init__(self, *args):
+        """
+        This method should be called by subclasses (via super()) after type-checking
+        """
+        args = self._typecheck(*args)
+        self.args = args
 
     def __repr__(self):
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
@@ -101,9 +115,13 @@ class NDIndex:
         """
         raise NotImplementedError
 
-    def reduce(self, shape):
+    def reduce(self, shape=None):
         """
         Simplify an index given that it will be applied to an array of a given shape.
+
+        If `shape` is None (the default), the index will be canonicalized as
+        much as possible while still staying equivalent for all array shapes
+        that it does not raise IndexError for.
 
         Either returns a new index type, which is equivalent on arrays of
         shape `shape`, or raises IndexError if the index would give an index
@@ -122,6 +140,7 @@ class NDIndex:
         optional `axis` argument to specify the axis, defaulting to 0.
 
         """
+        # XXX: Should the default be raise NotImplementedError or return self?
         raise NotImplementedError
 
 class default:
@@ -129,8 +148,7 @@ class default:
     A default keyword argument value
 
     Used as the default value for keyword arguments where `None` is also a
-    meaningful value but not the default, so cannot be used to signify the
-    default value.
+    meaningful value but not the default.
 
     """
     pass
@@ -142,12 +160,17 @@ class Slice(NDIndex):
     `Slice(x)` with one argument is equivalent to `Slice(None, x)`.
 
     `start` and `stop` can be any integer, or `None`. `step` can be any
-    nonzero integer or None.
+    nonzero integer or `None`.
 
     `Slice(a, b)` is the same as the syntax `a:b` in an index and `Slice(a, b,
     c)` is the same as `a:b:c`. An argument being `None` is equivalent to the
     syntax where the item is omitted, for example, `Slice(None, None, k)` is
     the same as the syntax `::k`.
+
+    `Slice` always has three arguments, and does not make any distinction
+    between, for instance, `Slice(x, y)` and `Slice(x, y, None)`. This is
+    because Python itself does not make the distinction between x:y and x:y:
+    syntactically.
 
     See
     https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing-and-indexing
@@ -156,76 +179,40 @@ class Slice(NDIndex):
     Slice has attributes `start`, `stop`, and `step` to access the
     corresponding attributes.
 
-    Note that `start` and `stop` may be `None`, even after canonicalization.
-    This is because some slices are impossible to represent without `None`
-    without making assumptions about the array shape. To get a slice where the
-    `start`, `stop`, and `step` are always integers, use `reduce` with a given
-    array shape.
-
-    Slice objects are canonicalized so that
-
-    - `start` and `stop` are not `None` when possible.
-    - `step` is not `None`
-
     >>> from ndindex import Slice
     >>> s = Slice(10)
     >>> s
-    Slice(0, 10, 1)
-    >>> s.start
-    0
+    Slice(None, 10, None)
+    >>> print(s.start)
+    None
     >>> s.args
-    (0, 10, 1)
-
-    Note that `Slice` objects that index a single element are not
-    canonicalized to `Integer`, because integer slices always remove an axis
-    whereas slices keep the axis. Furthermore, slices cannot raise IndexError
-    except on arrays with shape equal to `()`.
+    (None, 10, None)
+    >>> s.raw
+    slice(None, 10, None)
 
     """
-    def __new__(cls, start, stop=default, step=None):
+    def _typecheck(self, start, stop=default, step=None):
         if isinstance(start, Slice):
-            return start
+            return start.args
         if isinstance(start, slice):
             start, stop, step = start.start, start.stop, start.step
 
-        # Canonicalize
         if stop is default:
             start, stop = None, start
-        if step is None:
-            step = 1
+
         if step == 0:
             raise ValueError("slice step cannot be zero")
-        if start is None and step > 0:
-            start = 0
 
         if start is not None:
             start = operator.index(start)
         if stop is not None:
             stop = operator.index(stop)
-        step = operator.index(step)
-
-        if start is not None and stop is not None:
-            r = range(start, stop, step)
-            # We can reuse some of the logic built-in to range(), but we have to
-            # be careful. range() only acts like a slice if the 0 <= start <= stop (or
-            # visa-versa for negative step). Otherwise, slices are different
-            # because of wrap-around behavior. For example, range(-3, 1)
-            # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
-            # of elements from the third to last to the first, which is either an
-            # empty slice or a single element slice depending on the shape of the
-            # axis.
-            if len(r) == 0 and (
-                    (step > 0 and start <= stop) or
-                    (step < 0 and stop <= start)):
-                start, stop, step = 0, 0, 1
-            # This is not correct because a slice keeps the axis whereas an
-            # integer index removes it.
-            # if len(r) == 1:
-            #     return Integer(r[0])
+        if step is not None:
+            step = operator.index(step)
 
         args = (start, stop, step)
 
-        return super().__new__(cls, *args)
+        return args
 
     @property
     def raw(self):
@@ -247,7 +234,7 @@ class Slice(NDIndex):
 
         Note that this may be an integer or None.
         """
-        return self.args[0]
+        return self.args[1]
 
     @property
     def step(self):
@@ -256,7 +243,7 @@ class Slice(NDIndex):
 
         This will be a nonzero integer.
         """
-        return self.args[0]
+        return self.args[2]
 
     def __len__(self):
         """
@@ -291,11 +278,11 @@ class Slice(NDIndex):
         1
 
         """
-        start, stop, step = self.args
+        start, stop, step = self.reduce().args
         error = ValueError("Cannot determine max length of slice")
         # We reuse the logic in range.__len__. However, it is only correct if
-        # the slice doesn't use wrap around (see the comment in __init__
-        # above).
+        # the slice doesn't use wrap around (see the comment in reduce()
+        # below).
         if start is stop is None:
             raise error
         if step > 0:
@@ -345,43 +332,105 @@ class Slice(NDIndex):
 
         return len(range(start, stop, step))
 
-    def reduce(self, shape, axis=0):
+    def reduce(self, shape=None, axis=0):
         """
         `Slice.reduce` returns a slice where the start and stop are
-        canonicalized for an array of the given shape.
+        canonicalized for an array of the given shape, or for any shape if
+        `shape` is `None` (the default).
 
-        Here, canonicalized means the start and stop are not None.
-        Furthermore, start is always nonnegative.
+        - If `shape` is `None`, the Slice is canonicalized so that
 
-        The `axis` argument can be used to specify an axis of the shape (by
-        default, axis 0). For convenience, `shape` can be passed as an integer
-        for a single dimension.
+          - `start` and `stop` are not `None` when possible,
+          - `step` is not `None`.
 
-        After running slice.reduce, len() gives the true size of the axis for
-        a sliced array of the given shape, and never raises ValueError.
+          Note that `start` and `stop` may be `None`, even after
+          canonicalization with `reduce()` with no `shape`. This is because some
+          slices are impossible to represent without `None` without making
+          assumptions about the array shape. To get a slice where the `start`,
+          `stop`, and `step` are always integers, use `reduce(shape)` with an
+          explicit array shape.
 
-        >>> from ndindex import Slice
-        >>> s = Slice(1, 10)
-        >>> s.reduce((3,))
-        Slice(1, 3, 1)
+          Note that `Slice` objects that index a single element are not
+          canonicalized to `Integer`, because integer indices always remove an
+          axis whereas slices keep the axis. Furthermore, slices cannot raise
+          IndexError except on arrays with shape equal to `()`.
 
-        >>> s = Slice(2, None)
-        >>> len(s)
-        Traceback (most recent call last):
-        ...
-        ValueError: Cannot determine max length of slice
-        >>> s.reduce((5,))
-        Slice(2, 5, 1)
-        >>> len(_)
-        3
+          >>> from ndindex import Slice
+          >>> s = Slice(10)
+          >>> s
+          Slice(None, 10, None)
+          >>> s.reduce()
+          Slice(0, 10, 1)
+
+        - If an explicit shape is given, the resulting object is always a
+          `Slice` canonicalized so that
+
+          - `start`, `stop`, and `step` are not `None`,
+          - `start` is nonnegative.
+
+          The `axis` argument can be used to specify an axis of the shape (by
+          default, `axis=0`). For convenience, `shape` can be passed as an integer
+          for a single dimension.
+
+          After running `Slice.reduce(shape)` with an explicit shape, `len()`
+          gives the true size of the axis for a sliced array of the given shape,
+          and never raises ValueError.
+
+          >>> from ndindex import Slice
+          >>> s = Slice(1, 10)
+          >>> s.reduce((3,))
+          Slice(1, 3, 1)
+
+          >>> s = Slice(2, None)
+          >>> len(s)
+          Traceback (most recent call last):
+          ...
+          ValueError: Cannot determine max length of slice
+          >>> s.reduce((5,))
+          Slice(2, 5, 1)
+          >>> len(_)
+          3
+
         """
+        start, stop, step = self.args
+
+        # Canonicalize with no shape
+
+        if step is None:
+            step = 1
+        if start is None and step > 0:
+            start = 0
+
+        if start is not None and stop is not None:
+            r = range(start, stop, step)
+            # We can reuse some of the logic built-in to range(), but we have to
+            # be careful. range() only acts like a slice if the 0 <= start <= stop (or
+            # visa-versa for negative step). Otherwise, slices are different
+            # because of wrap-around behavior. For example, range(-3, 1)
+            # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
+            # of elements from the third to last to the first, which is either an
+            # empty slice or a single element slice depending on the shape of the
+            # axis.
+            if len(r) == 0 and (
+                    (step > 0 and start <= stop) or
+                    (step < 0 and stop <= start)):
+                start, stop, step = 0, 0, 1
+            # This is not correct because a slice keeps the axis whereas an
+            # integer index removes it.
+            # if len(r) == 1:
+            #     return Integer(r[0])
+
+        if shape is None:
+            return type(self)(start, stop, step)
+
+        # Further canonicalize with an explicit array shape
+
         if isinstance(shape, int):
             shape = (shape,)
         if len(shape) <= axis:
             raise IndexError("too many indices for array")
 
         size = shape[axis]
-        start, stop, step = self.args
 
         # try:
         #     if len(self) == size:
@@ -443,10 +492,10 @@ class Integer(NDIndex):
     consistency, as this only works for Integer.
 
     """
-    def __new__(cls, idx):
+    def _typecheck(self, idx):
         idx = operator.index(idx)
 
-        return super().__new__(cls, idx)
+        return (idx,)
 
     def __index__(self):
         return self.raw
@@ -464,7 +513,7 @@ class Integer(NDIndex):
         """
         return 1
 
-    def reduce(self, shape, axis=0):
+    def reduce(self, shape=None, axis=0):
         """
         Reduce an Integer index on an array of shape `shape`
 
@@ -481,6 +530,9 @@ class Integer(NDIndex):
         Integer(4)
 
         """
+        if shape is None:
+            return self
+
         if isinstance(shape, int):
             shape = (shape,)
         if len(shape) <= axis:
@@ -525,14 +577,8 @@ class Tuple(NDIndex):
     array([2, 3])
     >>> a[idx.raw]
     array([2, 3])
-
-    A `Tuple` with a single argument is always reduced to that single
-    argument (because `a[idx,]` is the same as `a[idx]`).
-
-    >>> Tuple(Slice(2, 4))
-    Slice(2, 4, 1)
     """
-    def __new__(cls, *args):
+    def _typecheck(self, *args):
         newargs = []
         for arg in args:
             if isinstance(arg, (tuple, ndarray, type(Ellipsis))):
@@ -544,21 +590,25 @@ class Tuple(NDIndex):
             else:
                 raise TypeError(f"Unsupported index type {type(arg)}")
 
-        if len(newargs) == 1:
-            return newargs[0]
-
-        return super().__new__(cls, *newargs)
+        return tuple(newargs)
 
     @property
     def raw(self):
         return tuple(i.raw for i in self.args)
 
-    def reduce(self, shape):
+    def reduce(self, shape=None):
         """
         Reduce an Tuple index on an array of shape `shape`
 
-        The result will either be IndexError if the index is invalid for the
-        given shape, or Tuple where the entries are recursively reduced.
+        A `Tuple` with a single argument is always reduced to that single
+        argument (because `a[idx,]` is the same as `a[idx]`).
+
+        >>> Tuple(Slice(2, 4)).reduce()
+        Slice(2, 4, 1)
+
+        If an explicit array shape is given, The result will either be
+        IndexError if the index is invalid for the given shape, or Tuple where
+        the entries are recursively reduced.
 
         >>> from ndindex import Tuple, Integer, Slice
         >>> idx = Tuple(Slice(0, 10), Integer(-3))
@@ -572,7 +622,11 @@ class Tuple(NDIndex):
         IndexError: index -3 is out of bounds for axis 1 with size 2
         >>> idx.reduce((5, 3))
         Tuple(Slice(0, 5, 1), Integer(0))
+
         """
+        if len(self.args) == 1:
+            return self.args[0].reduce(shape)
+
         if isinstance(shape, int):
             shape = (shape,)
         if len(shape) < len(self.args):
