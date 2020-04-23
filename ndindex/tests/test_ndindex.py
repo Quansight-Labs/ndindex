@@ -282,6 +282,16 @@ def test_integer_reduce_hypothesis(i, shape):
     else:
         assert reduced.raw >= 0
 
+def test_integer_reduce_no_shape_exhaustive():
+    a = arange(10)
+    for i in range(-12, 12):
+        check_same(a, i, func=lambda x: x.reduce())
+
+@given(integers(0, 10), integers(0, 10))
+def test_integer_reduce_no_shape_hypothesis(i, size):
+    a = arange(size)
+    check_same(a, i, func=lambda x: x.reduce())
+
 def test_tuple_exhaustive():
     # Exhaustive tests here have to be very limited because of combinatorial
     # explosion.
@@ -328,4 +338,17 @@ def test_tuple_reduce_hypothesis(t, shape):
         assume(False)
 
     check_same(a, idx.raw, func=lambda x: x.reduce(shape),
+               same_exception=False)
+
+
+@given(Tuples, integers(0, 10))
+def test_tuple_reduce_no_shape_hypothesis(t, size):
+    a = arange(size)
+
+    try:
+        idx = Tuple(*t)
+    except ValueError:
+        assume(False)
+
+    check_same(a, idx.raw, func=lambda x: x.reduce(),
                same_exception=False)
