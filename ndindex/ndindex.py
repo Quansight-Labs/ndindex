@@ -84,8 +84,14 @@ class NDIndex:
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
 
     def __eq__(self, other):
+        if not isinstance(other, NDIndex):
+            try:
+                other = ndindex(other)
+            except (TypeError, NotImplementedError):
+                return False
+
         return ((isinstance(other, self.__class__)
-                 or isinstance(self, other.__eq__))
+                 or isinstance(self, other.__class__))
                 and self.args == other.args)
 
     def __hash__(self):

@@ -325,9 +325,15 @@ def test_tuples_hypothesis(idx, shape):
 @given(ndindices())
 def test_eq(idx):
     new = type(idx)(*idx.args)
-    assert new == idx
-    assert new.raw == idx.raw
+    assert (new == idx) is True
+    assert (new.raw == idx.raw) is True
     assert hash(new) == hash(idx)
+    assert (idx == idx.raw) is True
+    assert (idx.raw == idx) is True
+    assert (idx == 'a') is False
+    assert ('a' == idx) is False
+    assert (idx != 'a') is True
+    assert ('a' != idx) is True
 
 @given(Tuples, shapes)
 def test_tuple_reduce_hypothesis(t, shape):
