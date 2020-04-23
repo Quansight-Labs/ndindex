@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>API Reference &#8212; ndindex  documentation</title>
@@ -62,51 +62,43 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">Integer(1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="go">Slice(0, 10, 1)</span>
+<span class="go">Slice(0, 10, None)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py class">
 <dt id="ndindex.Slice">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Slice</code><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Slice</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a slice on an axis of an nd-array</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Slice(x)</span></code> with one argument is equivalent to <code class="code docutils literal notranslate"><span class="pre">Slice(None,</span> <span class="pre">x)</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">start</span></code> and <code class="code docutils literal notranslate"><span class="pre">stop</span></code> can be any integer, or <code class="code docutils literal notranslate"><span class="pre">None</span></code>. <code class="code docutils literal notranslate"><span class="pre">step</span></code> can be any
-nonzero integer or None.</p>
+nonzero integer or <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Slice(a,</span> <span class="pre">b)</span></code> is the same as the syntax <code class="code docutils literal notranslate"><span class="pre">a:b</span></code> in an index and <code class="code docutils literal notranslate"><span class="pre">Slice(a,</span> <span class="pre">b,</span>
 <span class="pre">c)</span></code> is the same as <code class="code docutils literal notranslate"><span class="pre">a:b:c</span></code>. An argument being <code class="code docutils literal notranslate"><span class="pre">None</span></code> is equivalent to the
 syntax where the item is omitted, for example, <code class="code docutils literal notranslate"><span class="pre">Slice(None,</span> <span class="pre">None,</span> <span class="pre">k)</span></code> is
 the same as the syntax <code class="code docutils literal notranslate"><span class="pre">::k</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">Slice</span></code> always has three arguments, and does not make any distinction
+between, for instance, <code class="code docutils literal notranslate"><span class="pre">Slice(x,</span> <span class="pre">y)</span></code> and <code class="code docutils literal notranslate"><span class="pre">Slice(x,</span> <span class="pre">y,</span> <span class="pre">None)</span></code>. This is
+because Python itself does not make the distinction between x:y and x:y:
+syntactically.</p>
 <p>See
 <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing-and-indexing">https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing-and-indexing</a>
 for a description of the semantic meaning of slices on arrays.</p>
 <p>Slice has attributes <code class="code docutils literal notranslate"><span class="pre">start</span></code>, <code class="code docutils literal notranslate"><span class="pre">stop</span></code>, and <code class="code docutils literal notranslate"><span class="pre">step</span></code> to access the
 corresponding attributes.</p>
-<p>Note that <code class="code docutils literal notranslate"><span class="pre">start</span></code> and <code class="code docutils literal notranslate"><span class="pre">stop</span></code> may be <code class="code docutils literal notranslate"><span class="pre">None</span></code>, even after canonicalization.
-This is because some slices are impossible to represent without <code class="code docutils literal notranslate"><span class="pre">None</span></code>
-without making assumptions about the array shape. To get a slice where the
-<code class="code docutils literal notranslate"><span class="pre">start</span></code>, <code class="code docutils literal notranslate"><span class="pre">stop</span></code>, and <code class="code docutils literal notranslate"><span class="pre">step</span></code> are always integers, use <code class="code docutils literal notranslate"><span class="pre">reduce</span></code> with a given
-array shape.</p>
-<p>Slice objects are canonicalized so that</p>
-<ul class="simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">start</span></code> and <code class="code docutils literal notranslate"><span class="pre">stop</span></code> are not <code class="code docutils literal notranslate"><span class="pre">None</span></code> when possible.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">step</span></code> is not <code class="code docutils literal notranslate"><span class="pre">None</span></code></p></li>
-</ul>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
-<span class="go">Slice(0, 10, 1)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">start</span>
-<span class="go">0</span>
+<span class="go">Slice(None, 10, None)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
+<span class="go">None</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">args</span>
-<span class="go">(0, 10, 1)</span>
+<span class="go">(None, 10, None)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">raw</span>
+<span class="go">slice(None, 10, None)</span>
 </pre></div>
 </div>
-<p>Note that <code class="code docutils literal notranslate"><span class="pre">Slice</span></code> objects that index a single element are not
-canonicalized to <code class="code docutils literal notranslate"><span class="pre">Integer</span></code>, because integer slices always remove an axis
-whereas slices keep the axis. Furthermore, slices cannot raise IndexError
-except on arrays with shape equal to <code class="code docutils literal notranslate"><span class="pre">()</span></code>.</p>
 <dl class="py method">
 <dt id="ndindex.Slice.raw">
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Slice.raw" title="Permalink to this definition">¶</a></dt>
@@ -130,16 +122,47 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 
 <dl class="py method">
 <dt id="ndindex.Slice.reduce">
-<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.reduce" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.reduce" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="code docutils literal notranslate"><span class="pre">Slice.reduce</span></code> returns a slice where the start and stop are
-canonicalized for an array of the given shape.</p>
-<p>Here, canonicalized means the start and stop are not None.
-Furthermore, start is always nonnegative.</p>
+canonicalized for an array of the given shape, or for any shape if
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default).</p>
+<ul>
+<li><p>If <code class="code docutils literal notranslate"><span class="pre">shape</span></code> is <code class="code docutils literal notranslate"><span class="pre">None</span></code>, the Slice is canonicalized so that</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">start</span></code> and <code class="code docutils literal notranslate"><span class="pre">stop</span></code> are not <code class="code docutils literal notranslate"><span class="pre">None</span></code> when possible,</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">step</span></code> is not <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+<p>Note that <code class="code docutils literal notranslate"><span class="pre">start</span></code> and <code class="code docutils literal notranslate"><span class="pre">stop</span></code> may be <code class="code docutils literal notranslate"><span class="pre">None</span></code>, even after
+canonicalization with <code class="code docutils literal notranslate"><span class="pre">reduce()</span></code> with no <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. This is because some
+slices are impossible to represent without <code class="code docutils literal notranslate"><span class="pre">None</span></code> without making
+assumptions about the array shape. To get a slice where the <code class="code docutils literal notranslate"><span class="pre">start</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">stop</span></code>, and <code class="code docutils literal notranslate"><span class="pre">step</span></code> are always integers, use <code class="code docutils literal notranslate"><span class="pre">reduce(shape)</span></code> with an
+explicit array shape.</p>
+<p>Note that <code class="code docutils literal notranslate"><span class="pre">Slice</span></code> objects that index a single element are not
+canonicalized to <code class="code docutils literal notranslate"><span class="pre">Integer</span></code>, because integer indices always remove an
+axis whereas slices keep the axis. Furthermore, slices cannot raise
+IndexError except on arrays with shape equal to <code class="code docutils literal notranslate"><span class="pre">()</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">Slice(None, 10, None)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+<span class="go">Slice(0, 10, 1)</span>
+</pre></div>
+</div>
+</li>
+<li><p>If an explicit shape is given, the resulting object is always a
+<code class="code docutils literal notranslate"><span class="pre">Slice</span></code> canonicalized so that</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">start</span></code>, <code class="code docutils literal notranslate"><span class="pre">stop</span></code>, and <code class="code docutils literal notranslate"><span class="pre">step</span></code> are not <code class="code docutils literal notranslate"><span class="pre">None</span></code>,</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">start</span></code> is nonnegative.</p></li>
+</ul>
 <p>The <code class="code docutils literal notranslate"><span class="pre">axis</span></code> argument can be used to specify an axis of the shape (by
-default, axis 0). For convenience, <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be passed as an integer
+default, <code class="code docutils literal notranslate"><span class="pre">axis=0</span></code>). For convenience, <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be passed as an integer
 for a single dimension.</p>
-<p>After running slice.reduce, len() gives the true size of the axis for
-a sliced array of the given shape, and never raises ValueError.</p>
+<p>After running <code class="code docutils literal notranslate"><span class="pre">Slice.reduce(shape)</span></code> with an explicit shape, <code class="code docutils literal notranslate"><span class="pre">len()</span></code>
+gives the true size of the axis for a sliced array of the given shape,
+and never raises ValueError.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">3</span><span class="p">,))</span>
@@ -157,6 +180,8 @@ a sliced array of the given shape, and never raises ValueError.</p>
 <span class="go">3</span>
 </pre></div>
 </div>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -184,7 +209,7 @@ a sliced array of the given shape, and never raises ValueError.</p>
 
 <dl class="py class">
 <dt id="ndindex.Integer">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Integer</code><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an integer index on an axis of an nd-array</p>
 <p>Any object that implements <code class="code docutils literal notranslate"><span class="pre">__index__</span></code> can be used as an integer index.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Integer</span>
@@ -222,7 +247,7 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 
 <dl class="py method">
 <dt id="ndindex.Integer.reduce">
-<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.reduce" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.reduce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce an Integer index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code></p>
 <p>The result will either be IndexError if the index is invalid for the
 given shape, or an Integer index where the value is nonnegative.</p>
@@ -242,7 +267,7 @@ given shape, or an Integer index where the value is nonnegative.</p>
 
 <dl class="py class">
 <dt id="ndindex.Tuple">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Tuple</code><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Tuple</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a tuple of single-axis indices</p>
 <p>Valid single axis indices are</p>
 <ul class="simple">
@@ -270,12 +295,6 @@ equivalently, <code class="code docutils literal notranslate"><span class="pre">
 <span class="go">array([2, 3])</span>
 </pre></div>
 </div>
-<p>A <code class="code docutils literal notranslate"><span class="pre">Tuple</span></code> with a single argument is always reduced to that single
-argument (because <code class="code docutils literal notranslate"><span class="pre">a[idx,]</span></code> is the same as <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="go">Slice(2, 4, 1)</span>
-</pre></div>
-</div>
 <dl class="py method">
 <dt id="ndindex.Tuple.raw">
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Tuple.raw" title="Permalink to this definition">¶</a></dt>
@@ -299,10 +318,17 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 
 <dl class="py method">
 <dt id="ndindex.Tuple.reduce">
-<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.reduce" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.reduce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce an Tuple index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code></p>
-<p>The result will either be IndexError if the index is invalid for the
-given shape, or Tuple where the entries are recursively reduced.</p>
+<p>A <code class="code docutils literal notranslate"><span class="pre">Tuple</span></code> with a single argument is always reduced to that single
+argument (because <code class="code docutils literal notranslate"><span class="pre">a[idx,]</span></code> is the same as <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+<span class="go">Slice(2, 4, 1)</span>
+</pre></div>
+</div>
+<p>If an explicit array shape is given, The result will either be
+IndexError if the index is invalid for the given shape, or Tuple where
+the entries are recursively reduced.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Integer</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">5</span><span class="p">,))</span>
@@ -321,6 +347,104 @@ given shape, or Tuple where the entries are recursively reduced.</p>
 
 </dd></dl>
 
+<div class="section" id="internal-api">
+<h3>Internal API<a class="headerlink" href="#internal-api" title="Permalink to this headline">¶</a></h3>
+<p>These classes are only intended for internal use in ndindex.</p>
+<dl class="py class">
+<dt id="ndindex.ndindex.NDIndex">
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.ndindex.</code><code class="sig-name descname">NDIndex</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an index into an nd-array (i.e., a numpy array)</p>
+<p>This is a base class for all ndindex types. All types that subclass this
+class should redefine the following methods</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">_typecheck(self,</span> <span class="pre">*args)</span></code> should do type checking and basic type
+canonicalization, and either return a tuple of the new arguments for the
+class or raise an exception. Type checking means it should raise
+exceptions for input types that are never semantically meaningful for
+numpy arrays, for example, floating point indices, using the same
+exceptions as numpy where possible. Basic type canonicalization means,
+for instance, converting integers into <code class="code docutils literal notranslate"><span class="pre">int</span></code> using <code class="code docutils literal notranslate"><span class="pre">operator.index()</span></code>.
+All other canonicalization should be done in the <code class="code docutils literal notranslate"><span class="pre">reduce()</span></code> method. The
+<code class="code docutils literal notranslate"><span class="pre">NDIndex</span></code> base constructor will automatically set <code class="code docutils literal notranslate"><span class="pre">.args</span></code> to the
+arguments returned by this method. Classes should always be able to
+recreate themselves with <code class="code docutils literal notranslate"><span class="pre">.args</span></code>, i.e., <code class="code docutils literal notranslate"><span class="pre">type(idx)(*idx.args)</span> <span class="pre">==</span> <span class="pre">idx</span></code>
+should always hold.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">raw</span></code> (a <strong>&#64;property</strong> method) should return the raw index that can be
+passed as an index to a numpy array.</p></li>
+</ul>
+<p>In addition other methods should be defined as necessary.</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">__len__</span></code> should return the largest possible shape of an axis sliced by
+the index (for single-axis indices), or raise ValueError if no such
+maximum exists.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">reduce(shape=None)</span></code> should reduce an index to an equivalent form for
+arrays of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, or raise an IndexError. The error messages
+should match numpy as much as possible. The class of the equivalent
+index may be different. If <code class="code docutils literal notranslate"><span class="pre">shape</span></code> is <code class="code docutils literal notranslate"><span class="pre">None</span></code>, it should return a
+canonical form that is equivalent for all array shapes (assuming no
+IndexErrors).</p></li>
+</ul>
+<p>The methods <code class="code docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="code docutils literal notranslate"><span class="pre">__eq__</span></code>, and <code class="code docutils literal notranslate"><span class="pre">__hash__</span></code> should <em>not</em> be
+overridden. Equality (and hashability) on <code class="code docutils literal notranslate"><span class="pre">NDIndex</span></code> subclasses is
+determined by equality of types and <code class="code docutils literal notranslate"><span class="pre">.args</span></code>. Equivalent indices should not
+attempt to redefine equality. Rather they should define canonicalization
+via <code class="code docutils literal notranslate"><span class="pre">reduce()</span></code>.</p>
+<dl class="py method">
+<dt id="ndindex.ndindex.NDIndex.raw">
+<em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.ndindex.NDIndex.raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
+<p>NumPy does not allow custom objects to be used as indices, with the
+exception of integer indices, so to use an NDIndex object as an index,
+it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">raw</span><span class="p">]</span>
+<span class="go">array([2, 3])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ndindex.ndindex.NDIndex.reduce">
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex.reduce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplify an index given that it will be applied to an array of a given shape.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">shape</span></code> is None (the default), the index will be canonicalized as
+much as possible while still staying equivalent for all array shapes
+that it does not raise IndexError for.</p>
+<p>Either returns a new index type, which is equivalent on arrays of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, or raises IndexError if the index would give an index
+error (for instance, out of bounds integer index or too many indices
+for array).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">5</span><span class="p">,))</span>
+<span class="go">Slice(0, 5, 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">5</span><span class="p">,))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">index 10 is out of bounds for axis 0 with size 5</span>
+</pre></div>
+</div>
+<p>For single axis indices such as Slice and Tuple, <code class="code docutils literal notranslate"><span class="pre">reduce</span></code> takes an
+optional <code class="code docutils literal notranslate"><span class="pre">axis</span></code> argument to specify the axis, defaulting to 0.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ndindex.ndindex.default">
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.ndindex.</code><code class="sig-name descname">default</code><a class="headerlink" href="#ndindex.ndindex.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>A default keyword argument value</p>
+<p>Used as the default value for keyword arguments where <code class="code docutils literal notranslate"><span class="pre">None</span></code> is also a
+meaningful value but not the default.</p>
+</dd></dl>
+
+</div>
 </div>
 </div>
 
@@ -358,7 +482,10 @@ given shape, or Tuple where the entries are recursively reduced.</p>
 <li class="toctree-l2"><a class="reference internal" href="index.html#license">License</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ndindex API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#module-ndindex">ndindex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ndindex">ndindex</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#internal-api">Internal API</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a><ul>
@@ -373,7 +500,10 @@ given shape, or Tuple where the entries are recursively reduced.</p>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-ndindex">ndindex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ndindex">ndindex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#internal-api">Internal API</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
@@ -403,7 +533,7 @@ given shape, or Tuple where the entries are recursively reduced.</p>
       &copy;2020, Quansight.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

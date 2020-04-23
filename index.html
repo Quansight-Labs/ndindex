@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
     <title>ndindex &#8212; ndindex  documentation</title>
@@ -82,8 +82,8 @@ type such as <code class="docutils literal notranslate"><span class="pre">tuple<
 <li><p><code class="docutils literal notranslate"><span class="pre">slice</span></code> makes no assumptions about what they are slicing. As a result,
 invalid slices like <code class="docutils literal notranslate"><span class="pre">slice(0.5)</span></code> or <code class="docutils literal notranslate"><span class="pre">slice(0,</span> <span class="pre">10,</span> <span class="pre">0)</span></code> are allowed. Also
 slices that would always be equivalent like <code class="docutils literal notranslate"><span class="pre">slice(None,</span> <span class="pre">10)</span></code> and <code class="docutils literal notranslate"><span class="pre">slice(0,</span> <span class="pre">10)</span></code> are unequal. To contrast, ndindex objects always assume they are
-indices to numpy arrays and type check their input and canonicalize
-appropriately.</p></li>
+indices to numpy arrays and type check their input. The <code class="docutils literal notranslate"><span class="pre">reduce</span></code> method can
+be used to put the arguments into canonical form.</p></li>
 <li><p>Once you generalizing <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects to more general indices, it is
 difficult to work with them in a uniform way. For example, <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> and
 <code class="docutils literal notranslate"><span class="pre">a[(i,)]</span></code> are always equivalent for numpy arrays, but <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">slice</span></code>,
@@ -111,16 +111,19 @@ extensive testing (see below), you can be assured that ndindex is correct.</p>
 implemented:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">Slice</span></code>, <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code></p></li>
-<li><p>Constructing a class puts it into canonical form. For example</p>
+<li><p>Classes do not canonicalize by default (the constructor only does basic type
+checking). Objects can be put into canonical form by calling <code class="docutils literal notranslate"><span class="pre">reduce()</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="go">Slice(None, 12, None)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 <span class="go">Slice(0, 12, 1)</span>
 </pre></div>
 </div>
 </li>
 <li><p>Object arguments can be accessed with <code class="docutils literal notranslate"><span class="pre">idx.args</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
-<span class="go">(1, 3, 1)</span>
+<span class="go">(1, 3, None)</span>
 </pre></div>
 </div>
 </li>
@@ -266,7 +269,10 @@ test will also have a corresponding hypothesis test.</p>
 <li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ndindex.html">ndindex API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ndindex.html#module-ndindex">ndindex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ndindex.html#module-ndindex">ndindex</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ndindex.html#internal-api">Internal API</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a><ul>
@@ -281,7 +287,10 @@ test will also have a corresponding hypothesis test.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ndindex.html">ndindex API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ndindex.html#module-ndindex">ndindex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndindex.html#module-ndindex">ndindex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ndindex.html#internal-api">Internal API</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
@@ -311,7 +320,7 @@ test will also have a corresponding hypothesis test.</p>
       &copy;2020, Quansight.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
