@@ -36,7 +36,7 @@ script:
   - set -e
   - pyflakes .
   - python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
-  - pytest
+  - pytest -v
   # Make sure it installs
   - python setup.py install
   - if [[ "${DOCS}" == "true" ]]; then
