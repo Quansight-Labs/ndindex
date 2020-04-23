@@ -627,6 +627,9 @@ class Tuple(NDIndex):
         if len(self.args) == 1:
             return self.args[0].reduce(shape)
 
+        if shape is None:
+            return self
+
         if isinstance(shape, int):
             shape = (shape,)
         if len(shape) < len(self.args):
