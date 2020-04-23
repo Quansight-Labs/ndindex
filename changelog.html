@@ -47,10 +47,31 @@
             
   <div class="section" id="ndindex-changelog">
 <h1>ndindex Changelog<a class="headerlink" href="#ndindex-changelog" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="version-1-0-2020-04-08">
-<h2>Version 1.0 (2020-04-08)<a class="headerlink" href="#version-1-0-2020-04-08" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="version-1-1-2020-04-23">
+<h2>Version 1.1 (2020-04-23)<a class="headerlink" href="#version-1-1-2020-04-23" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="major-changes">
 <h3>Major Changes<a class="headerlink" href="#major-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>ndindex objects no longer automatically canonicalize on instantiation. To
+canonicalize an index, call <code class="docutils literal notranslate"><span class="pre">idx.reduce()</span></code> with no arguments. This will put
+it in a canonical form that is equivalent for all array shapes (assuming no
+IndexErrors). <code class="docutils literal notranslate"><span class="pre">idx.reduce(shape)</span></code> can be used to further canonicalize an
+index given that it will index an array of shape <code class="docutils literal notranslate"><span class="pre">shape</span></code>.</p></li>
+</ul>
+</div>
+<div class="section" id="minor-changes">
+<h3>Minor Changes<a class="headerlink" href="#minor-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Added internal classes to the Sphinx documentation.</p></li>
+<li><p>Fixed incorrect <code class="docutils literal notranslate"><span class="pre">Slice.stop</span></code> and <code class="docutils literal notranslate"><span class="pre">Slice.step</span></code>.</p></li>
+<li><p>Added the LICENSE file to the source distribution (&#64;synapticarbors).</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="version-1-0-2020-04-08">
+<h2>Version 1.0 (2020-04-08)<a class="headerlink" href="#version-1-0-2020-04-08" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Major Changes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Initial ndindex release</p></li>
 <li><p>Includes support for <code class="docutils literal notranslate"><span class="pre">Slice</span></code>, <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code></p></li>
@@ -98,8 +119,13 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="#major-changes">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id1">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -116,8 +142,13 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#major-changes">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Major Changes</a></li>
 </ul>
 </li>
 </ul>
