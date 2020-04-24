@@ -28,11 +28,19 @@ def ndindex(obj):
     if isinstance(obj, tuple):
         return Tuple(*obj)
 
+    if obj == ellipsis:
+        raise TypeError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
+    if obj is Ellipsis:
+        return ellipsis()
+
+    if isinstance(obj, ndarray):
+        raise NotImplementedError("array indices are not yet supported")
+
     raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
 
 class NDIndex:
     """
-    Represents an index into an nd-array (i.e., a numpy array)
+    Represents an index into an nd-array (i.e., a numpy array).
 
     This is a base class for all ndindex types. All types that subclass this
     class should redefine the following methods
@@ -151,7 +159,7 @@ class NDIndex:
 
 class default:
     """
-    A default keyword argument value
+    A default keyword argument value.
 
     Used as the default value for keyword arguments where `None` is also a
     meaningful value but not the default.
@@ -161,7 +169,7 @@ class default:
 
 class Slice(NDIndex):
     """
-    Represents a slice on an axis of an nd-array
+    Represents a slice on an axis of an nd-array.
 
     `Slice(x)` with one argument is equivalent to `Slice(None, x)`.
 
@@ -481,7 +489,7 @@ class Slice(NDIndex):
 
 class Integer(NDIndex):
     """
-    Represents an integer index on an axis of an nd-array
+    Represents an integer index on an axis of an nd-array.
 
     Any object that implements `__index__` can be used as an integer index.
 
@@ -553,24 +561,81 @@ class Integer(NDIndex):
 
         return self
 
+
+class ellipsis(NDIndex):
+    """
+    Represents an ellipsis index, i.e., `...` (or `Ellipsis`).
+
+    Ellipsis indices by themselves return the full array. Inside of a tuple
+    index, an ellipsis skips 0 or more axes of the array so that everything
+    after the ellipsis indexes the last axes of the array. A tuple index can
+    have at most one ellipsis.
+
+    For example `a[(0, ..., -2)]` would index the first element on the first
+    axis, the second-to-last element in the last axis, and include all the
+    axes in between.
+
+    >>> from numpy import arange
+    >>> a = arange(2*3*4).reshape((2, 3, 4))
+    >>> a
+    array([[[ 0,  1,  2,  3],
+            [ 4,  5,  6,  7],
+            [ 8,  9, 10, 11]],
+           [[12, 13, 14, 15],
+            [16, 17, 18, 19],
+            [20, 21, 22, 23]]])
+    >>> a[0, ..., -2]
+    array([ 2,  6, 10])
+
+    An ellipsis can go at the beginning of end of a tuple index, and is
+    allowed to match 0 axes.
+
+    **Note:** Unlike the standard Python `Ellipsis`, `ellipsis` is the type,
+    not the object (the name is lowercase to avoid conflicting with the
+    built-in). Use `ellipsis()` or `ndindex(...)` to create the object. Also
+    unlike `Ellipsis`, `ellipsis()` is not singletonized.
+
+    """
+    def _typecheck(self):
+        return ()
+
+    def reduce(self, shape=None):
+        """
+        Reduce an ellipsis index
+
+        Since an ellipsis by itself always returns the full array unchanged,
+        `ellipsis().reduce()` returns `Tuple()` as a canonical form (the index
+        `()` also always returns an array unchanged).
+
+        >>> from ndindex import ellipsis
+        >>> ellipsis().reduce()
+        Tuple()
+
+        """
+        return Tuple()
+
+    @property
+    def raw(self):
+        return ...
+
 class Tuple(NDIndex):
     """
-    Represents a tuple of single-axis indices
+    Represents a tuple of single-axis indices.
 
     Valid single axis indices are
 
-    - Integer
-    - Slice
-    - ellipsis
-    - Newaxis
-    - IntegerArray
-    - BooleanArray
+    - `Integer`
+    - `Slice`
+    - `ellipsis`
+    - `Newaxis`
+    - `IntegerArray`
+    - `BooleanArray`
 
     (some of the above are not yet implemented)
 
-    `Tuple(x1, x2, ..., xn)` represents the index `a[x1, x2, ..., xn]` or,
-    equivalently, `a[(x1, x2, ..., xn)]`. `Tuple()` is the empty tuple index,
-    `a[()]`, which returns `a` unchanged.
+    `Tuple(x1, x2, …, xn)` represents the index `a[x1, x2, …, xn]` or,
+    equivalently, `a[(x1, x2, …, xn)]`. `Tuple()` with no arguments is the
+    empty tuple index, `a[()]`, which returns `a` unchanged.
 
     >>> from ndindex import Tuple
     >>> import numpy as np
@@ -583,20 +648,57 @@ class Tuple(NDIndex):
     array([2, 3])
     >>> a[idx.raw]
     array([2, 3])
+
     """
     def _typecheck(self, *args):
         newargs = []
         for arg in args:
-            if isinstance(arg, (tuple, ndarray, type(Ellipsis))):
-                raise NotImplementedError(f"{type(arg)} is not yet supported")
-            elif isinstance(arg, (int, Integer)):
-                newargs.append(Integer(arg))
-            elif isinstance(arg, (slice, Slice)):
-                newargs.append(Slice(arg))
-            else:
-                raise TypeError(f"Unsupported index type {type(arg)}")
+            newarg = ndindex(arg)
+            if isinstance(newarg, Tuple):
+                raise NotImplementedError("tuples of tuples are not yet supported")
+            newargs.append(newarg)
+
+        if newargs.count(ellipsis()) > 1:
+            raise IndexError("an index can only have a single ellipsis ('...')")
 
         return tuple(newargs)
+
+    @property
+    def has_ellipsis(self):
+        """
+        Returns True if self has an ellipsis
+        """
+        return ellipsis() in self.args
+
+    @property
+    def ellipsis_index(self):
+        """
+        Give the index i of `self.args` where the ellipsis is.
+
+        If `self` doesn't have an ellipsis, it gives `len(self.args)`, since
+        tuple indices always implicitly end in an ellipsis.
+
+        The resulting value `i` is such that `self.args[:i]` indexes the
+        beginning axes of an array and `self.args[i+1:]` indexes the end axes
+        of an array.
+
+        >>> from ndindex import Tuple
+        >>> idx = Tuple(0, 1, ..., 2, 3)
+        >>> i = idx.ellipsis_index
+        >>> i
+        2
+        >>> idx.args[:i]
+        (Integer(0), Integer(1))
+        >>> idx.args[i+1:]
+        (Integer(2), Integer(3))
+
+        >>> Tuple(0, 1).ellipsis_index
+        2
+
+        """
+        if self.has_ellipsis:
+            return self.args.index(ellipsis())
+        return len(self.args)
 
     @property
     def raw(self):
@@ -633,16 +735,33 @@ class Tuple(NDIndex):
         if len(self.args) == 1:
             return self.args[0].reduce(shape)
 
+        args = self.args
+        if args and args[-1] == ellipsis():
+            args = args[:-1]
+
         if shape is None:
-            return self
+            return type(self)(*args)
 
         if isinstance(shape, int):
             shape = (shape,)
-        if len(shape) < len(self.args):
+        if (self.has_ellipsis and len(shape) < len(self.args) - 1
+            or not self.has_ellipsis and len(shape) < len(self.args)):
             raise IndexError("too many indices for array")
 
+        ellipsis_i = self.ellipsis_index
+
         newargs = []
-        for i, s in enumerate(self.args):
+        for i, s in enumerate(args[:ellipsis_i]):
             newargs.append(s.reduce(shape, axis=i))
+
+        if ellipsis_i < len(args) and len(args) <= len(shape):
+            # The ellipsis isn't redundant
+            newargs.append(ellipsis())
+
+        endargs = []
+        for i, s in enumerate(reversed(args[ellipsis_i+1:]), start=1):
+            endargs.append(s.reduce(shape, axis=-i))
+
+        newargs = newargs + endargs[::-1]
 
         return type(self)(*newargs)

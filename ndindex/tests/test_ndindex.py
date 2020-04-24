@@ -46,8 +46,9 @@ from numpy import arange
 from hypothesis import given, assume
 from hypothesis.strategies import integers
 
-from ..ndindex import Slice, Integer, Tuple
-from .helpers import check_same, ints, slices, Tuples, prod, shapes, ndindices
+from ..ndindex import Slice, Integer, Tuple, ndindex
+from .helpers import (check_same, ints, slices, Tuples, prod, shapes,
+                      ndindices, ellipses)
 
 def _iterslice(start_range=(-10, 10),
                stop_range=(-10, 10),
@@ -180,9 +181,9 @@ def test_slice_reduce_no_shape_exhaustive():
             # TODO: Test that start and stop are not None when possible
             assert reduced.step != None
 
-@given(slices(), integers(0, 10))
-def test_slice_reduce_no_shape_hypothesis(s, size):
-    a = arange(size)
+@given(slices(), shapes)
+def test_slice_reduce_no_shape_hypothesis(s, shape):
+    a = arange(prod(shape)).reshape(shape)
     try:
         s = Slice(s)
     except ValueError:
@@ -287,10 +288,40 @@ def test_integer_reduce_no_shape_exhaustive():
     for i in range(-12, 12):
         check_same(a, i, func=lambda x: x.reduce())
 
-@given(integers(0, 10), integers(0, 10))
-def test_integer_reduce_no_shape_hypothesis(i, size):
-    a = arange(size)
+@given(integers(0, 10), shapes)
+def test_integer_reduce_no_shape_hypothesis(i, shape):
+    a = arange(prod(shape)).reshape(shape)
     check_same(a, i, func=lambda x: x.reduce())
+
+def test_ellipsis_exhaustive():
+    for n in range(10):
+        a = arange(n)
+    check_same(a, ...)
+
+@given(ellipses(), shapes)
+def test_ellipsis_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, idx)
+
+def test_ellipsis_reduce_exhaustive():
+    for n in range(10):
+        a = arange(n)
+        check_same(a, ..., func=lambda x: x.reduce((n,)))
+
+@given(ellipses(), shapes)
+def test_ellipsis_reduce_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, idx, func=lambda x: x.reduce(shape))
+
+def test_ellipsis_reduce_no_shape_exhaustive():
+    for n in range(10):
+        a = arange(n)
+        check_same(a, ..., func=lambda x: x.reduce())
+
+@given(ellipses(), shapes)
+def test_ellipsis_reduce_no_shape_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, idx, func=lambda x: x.reduce())
 
 def test_tuple_exhaustive():
     # Exhaustive tests here have to be very limited because of combinatorial
@@ -300,6 +331,7 @@ def test_tuple_exhaustive():
         slice: lambda: _iterslice((-1, 1), (-1, 1), (-1, 1), one_two_args=False),
         # slice: _iterslice,
         int: lambda: ((i,) for i in range(-3, 3)),
+        type(...): lambda: ()
     }
 
     for t1, t2, t3 in product(types, repeat=3):
@@ -310,17 +342,56 @@ def test_tuple_exhaustive():
                     idx2 = t2(*t2_args)
                     idx3 = t3(*t3_args)
 
-                    index = idx1, idx2, idx3
+                    index = (idx1, idx2, idx3)
                     # Disable the same exception check because there could be
                     # multiple invalid indices in the tuple, and for instance
                     # numpy may give an IndexError but we would give a
                     # TypeError because we check the type first.
                     check_same(a, index, same_exception=False)
+                    try:
+                        idx = Tuple(*index)
+                    except (IndexError, ValueError):
+                        pass
+                    else:
+                        assert idx.has_ellipsis == (type(...) in (t1, t2, t3))
 
 @given(Tuples, shapes)
 def test_tuples_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx, same_exception=False)
+
+    try:
+        index = ndindex(idx)
+    except (IndexError, ValueError):
+        pass
+    else:
+        if isinstance(idx, Tuple):
+            # Don't know if there is a better way to test ellipsis_idx
+            ellipsis_idx = index.ellipsis_idx
+            assert a[idx.raw] == a[(*idx.raw[:ellipsis_idx], ..., *idx.raw[ellipsis_idx+1:])]
+
+@given(Tuples, shapes)
+def test_tuple_reduce_hypothesis(t, shape):
+    a = arange(prod(shape)).reshape(shape)
+    try:
+        idx = Tuple(*t)
+    except (IndexError, ValueError):
+        assume(False)
+
+    check_same(a, idx.raw, func=lambda x: x.reduce(shape),
+               same_exception=False)
+
+@given(Tuples, shapes)
+def test_tuple_reduce_no_shape_hypothesis(t, shape):
+    a = arange(prod(shape)).reshape(shape)
+
+    try:
+        idx = Tuple(*t)
+    except (IndexError, ValueError):
+        assume(False)
+
+    check_same(a, idx.raw, func=lambda x: x.reduce(),
+               same_exception=False)
 
 @given(ndindices())
 def test_eq(idx):
@@ -334,27 +405,3 @@ def test_eq(idx):
     assert ('a' == idx) is False
     assert (idx != 'a') is True
     assert ('a' != idx) is True
-
-@given(Tuples, shapes)
-def test_tuple_reduce_hypothesis(t, shape):
-    a = arange(prod(shape)).reshape(shape)
-    try:
-        idx = Tuple(*t)
-    except ValueError:
-        assume(False)
-
-    check_same(a, idx.raw, func=lambda x: x.reduce(shape),
-               same_exception=False)
-
-
-@given(Tuples, integers(0, 10))
-def test_tuple_reduce_no_shape_hypothesis(t, size):
-    a = arange(size)
-
-    try:
-        idx = Tuple(*t)
-    except ValueError:
-        assume(False)
-
-    check_same(a, idx.raw, func=lambda x: x.reduce(),
-               same_exception=False)
