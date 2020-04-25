@@ -379,6 +379,9 @@ def test_tuples_hypothesis(t, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, t, same_exception=False)
 
+@given(Tuples, shapes)
+def test_ellipsis_index(t, shape):
+    a = arange(prod(shape)).reshape(shape)
     try:
         idx = ndindex(t)
     except (IndexError, ValueError):
