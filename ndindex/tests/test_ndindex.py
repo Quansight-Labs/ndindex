@@ -375,19 +375,18 @@ def test_tuple_exhaustive():
                         assert idx.has_ellipsis == (type(...) in (t1, t2, t3))
 
 @given(Tuples, shapes)
-def test_tuples_hypothesis(idx, shape):
+def test_tuples_hypothesis(t, shape):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, same_exception=False)
+    check_same(a, t, same_exception=False)
 
     try:
-        index = ndindex(idx)
+        idx = ndindex(t)
     except (IndexError, ValueError):
         pass
     else:
         if isinstance(idx, Tuple):
             # Don't know if there is a better way to test ellipsis_idx
-            ellipsis_idx = index.ellipsis_idx
-            assert a[idx.raw] == a[(*idx.raw[:ellipsis_idx], ..., *idx.raw[ellipsis_idx+1:])]
+            check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
 
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_hypothesis(t, shape):
