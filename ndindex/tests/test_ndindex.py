@@ -41,7 +41,7 @@ from itertools import chain, product
 
 from pytest import raises
 
-from numpy import arange
+from numpy import arange, int64
 
 from hypothesis import given, assume
 from hypothesis.strategies import integers, one_of
@@ -255,6 +255,15 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.stop != None
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
+
+def test_integer_args():
+    zero = Integer(0)
+    assert zero.raw == 0
+    idx = Integer(int64(0))
+    assert idx == zero
+    assert idx.raw == 0
+    assert isinstance(idx.raw, int)
+    assert Integer(zero) == zero
 
 def test_integer_exhaustive():
     a = arange(10)
