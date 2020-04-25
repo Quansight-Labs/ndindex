@@ -44,9 +44,9 @@ from pytest import raises
 from numpy import arange
 
 from hypothesis import given, assume
-from hypothesis.strategies import integers
+from hypothesis.strategies import integers, one_of
 
-from ..ndindex import Slice, Integer, Tuple
+from ..ndindex import Slice, Integer, Tuple, ndindex
 from .helpers import check_same, ints, slices, Tuples, prod, shapes, ndindices
 
 def _iterslice(start_range=(-10, 10),
@@ -255,6 +255,16 @@ def test_integer_hypothesis(idx, size):
     a = arange(size)
     check_same(a, idx)
 
+def test_integer_len_exhaustive():
+    for i in range(-12, 12):
+        idx = Integer(i)
+        assert len(idx) == 1
+
+@given(ints())
+def test_integer_len_hypothesis(i):
+    idx = Integer(i)
+    assert len(idx) == 1
+
 def test_integer_reduce_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
@@ -335,9 +345,12 @@ def test_eq(idx):
     assert (idx != 'a') is True
     assert ('a' != idx) is True
 
-@given(Tuples, shapes)
+@given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_hypothesis(t, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
     try:
         idx = Tuple(*t)
     except ValueError:
@@ -358,3 +371,10 @@ def test_tuple_reduce_no_shape_hypothesis(t, size):
 
     check_same(a, idx.raw, func=lambda x: x.reduce(),
                same_exception=False)
+
+@given(ndindices())
+def test_ndindex(idx):
+    assert ndindex(idx) == idx
+    assert ndindex(idx).raw == idx
+    ix = ndindex(idx)
+    assert ndindex(ix.raw) == ix
