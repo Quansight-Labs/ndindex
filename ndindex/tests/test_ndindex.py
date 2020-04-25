@@ -88,16 +88,17 @@ def test_slice_args():
     raises(TypeError, lambda: Slice())
 
     S = Slice(1)
-    assert S == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
+    assert S == Slice(S) == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
     assert S.raw == slice(None, 1, None)
     assert S.args == (S.start, S.stop, S.step)
 
     S = Slice(0, 1)
-    assert S == Slice(0, 1, None)
+    assert S == Slice(S) == Slice(0, 1, None)
     assert S.raw == slice(0, 1, None)
     assert S.args == (S.start, S.stop, S.step)
 
     S = Slice(0, 1, 2)
+    assert S == Slice(S)
     assert S.raw == slice(0, 1, 2)
     assert S.args == (S.start, S.stop, S.step)
 
