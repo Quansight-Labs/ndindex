@@ -1,0 +1,4 @@
+[report]
+exclude_lines = raise NotImplementedError
+[run]
+omit = ndindex/_version.py
