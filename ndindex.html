@@ -282,7 +282,7 @@ given shape, or an Integer index where the value is nonnegative.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Tuple(x1,</span> <span class="pre">x2,</span> <span class="pre">…,</span> <span class="pre">xn)</span></code> represents the index <code class="code docutils literal notranslate"><span class="pre">a[x1,</span> <span class="pre">x2,</span> <span class="pre">…,</span> <span class="pre">xn]</span></code> or,
 equivalently, <code class="code docutils literal notranslate"><span class="pre">a[(x1,</span> <span class="pre">x2,</span> <span class="pre">…,</span> <span class="pre">xn)]</span></code>. <code class="code docutils literal notranslate"><span class="pre">Tuple()</span></code> with no arguments is the
 empty tuple index, <code class="code docutils literal notranslate"><span class="pre">a[()]</span></code>, which returns <code class="code docutils literal notranslate"><span class="pre">a</span></code> unchanged.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -354,6 +354,9 @@ it is necessary to use <code class="code docutils literal notranslate"><span cla
 <dd><p>Reduce an Tuple index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code></p>
 <p>A <code class="code docutils literal notranslate"><span class="pre">Tuple</span></code> with a single argument is always reduced to that single
 argument (because <code class="code docutils literal notranslate"><span class="pre">a[idx,]</span></code> is the same as <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Slice</span>
+</pre></div>
+</div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 <span class="go">Slice(2, 4, 1)</span>
 </pre></div>
@@ -361,8 +364,7 @@ argument (because <code class="code docutils literal notranslate"><span class="p
 <p>If an explicit array shape is given, The result will either be
 IndexError if the index is invalid for the given shape, or Tuple where
 the entries are recursively reduced.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Slice</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Integer</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Integer</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">5</span><span class="p">,))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
@@ -533,14 +535,6 @@ for array).</p>
 optional <code class="code docutils literal notranslate"><span class="pre">axis</span></code> argument to specify the axis, defaulting to 0.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
-<dt id="ndindex.ndindex.default">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.ndindex.</code><code class="sig-name descname">default</code><a class="headerlink" href="#ndindex.ndindex.default" title="Permalink to this definition">¶</a></dt>
-<dd><p>A default keyword argument value.</p>
-<p>Used as the default value for keyword arguments where <code class="code docutils literal notranslate"><span class="pre">None</span></code> is also a
-meaningful value but not the default.</p>
 </dd></dl>
 
 </div>
