@@ -1,4 +1,5 @@
 import operator
+import inspect
 
 from numpy import ndarray
 
@@ -37,6 +38,12 @@ def ndindex(obj):
         raise NotImplementedError("array indices are not yet supported")
 
     raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
+
+class classproperty(object):
+    def __init__(self, f):
+        self.f = f
+    def __get__(self, obj, owner):
+        return self.f(owner)
 
 class NDIndex:
     """
@@ -87,6 +94,17 @@ class NDIndex:
         """
         args = self._typecheck(*args)
         self.args = args
+
+    @classproperty
+    def __signature__(self):
+        """
+        Allow Python 3's inspect.signature to give a useful signature for
+        NDIndex subclasses.
+        """
+        sig = inspect.signature(self._typecheck)
+        d = dict(sig.parameters)
+        d.pop('self')
+        return inspect.Signature(d.values())
 
     def __repr__(self):
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"

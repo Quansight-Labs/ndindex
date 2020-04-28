@@ -38,6 +38,7 @@ exhaustive test should have a corresponding hypothesis test.
 """
 
 from itertools import chain, product
+import inspect
 
 from pytest import raises
 
@@ -450,3 +451,7 @@ def test_ndindex(idx):
     assert ndindex(idx).raw == idx
     ix = ndindex(idx)
     assert ndindex(ix.raw) == ix
+
+def test_signature():
+    sig = inspect.signature(Integer)
+    assert sig.parameters.keys() == {'idx'}
