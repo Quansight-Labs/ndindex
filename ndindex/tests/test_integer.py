@@ -3,7 +3,7 @@ from numpy import arange, int64
 from hypothesis import given
 from hypothesis.strategies import integers
 
-from ..ndindex import Integer
+from ..integer import Integer
 from .helpers import check_same, ints, prod, shapes
 
 def test_integer_args():

@@ -5,7 +5,7 @@ from numpy import arange
 from hypothesis import given, assume
 from hypothesis.strategies import integers
 
-from ..ndindex import Slice
+from ..slice import Slice
 from .helpers import check_same, slices, prod, shapes, iterslice
 
 def test_slice_args():

@@ -5,7 +5,8 @@ from numpy import arange
 from hypothesis import given, assume
 from hypothesis.strategies import integers, one_of
 
-from ..ndindex import Tuple, ndindex
+from ..ndindex import ndindex
+from ..tuple import Tuple
 from .helpers import check_same, Tuples, prod, shapes, iterslice
 
 

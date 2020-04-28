@@ -2,7 +2,8 @@ import inspect
 
 from hypothesis import given
 
-from ..ndindex import Integer, ndindex
+from ..ndindex import ndindex
+from ..integer import Integer
 from .helpers import ndindices
 
 @given(ndindices())
