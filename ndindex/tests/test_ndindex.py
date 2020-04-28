@@ -38,6 +38,7 @@ exhaustive test should have a corresponding hypothesis test.
 """
 
 from itertools import chain, product
+import inspect
 
 from pytest import raises
 
@@ -329,3 +330,7 @@ def test_tuple_reduce_hypothesis(t, shape):
 
     check_same(a, idx.raw, func=lambda x: x.reduce(shape),
                same_exception=False)
+
+def test_signature():
+    sig = inspect.signature(Integer)
+    assert sig.parameters.keys() == {'idx'}
