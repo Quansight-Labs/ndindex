@@ -6,7 +6,7 @@ from numpy.testing import assert_equal
 from pytest import fail
 
 from hypothesis import assume
-from hypothesis.strategies import integers, composite, none, one_of, lists
+from hypothesis.strategies import integers, composite, none, one_of, lists, just
 
 from ..ndindex import ndindex
 
@@ -30,6 +30,8 @@ def slices(draw, start=ints(), stop=ints(), step=ints()):
         draw(one_of(none(), step)),
     )
 
+ellipses = lambda: just(...)
+
 # hypotheses.strategies.tuples only generates tuples of a fixed size
 @composite
 def tuples(draw, elements, *, min_size=0, max_size=None, unique_by=None,
@@ -37,13 +39,14 @@ def tuples(draw, elements, *, min_size=0, max_size=None, unique_by=None,
     return tuple(draw(lists(elements, min_size=min_size, max_size=max_size,
                             unique_by=unique_by, unique=unique)))
 
-Tuples = tuples(one_of(ints(), slices()))
+Tuples = tuples(one_of(ellipses(), ints(), slices()))
 
 @composite
 def ndindices(draw):
     s = draw(one_of(
         ints(),
         slices(),
+        ellipses(),
         tuples(one_of(ints(), slices())),
     ))
 
