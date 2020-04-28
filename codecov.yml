@@ -5,4 +5,5 @@ coverage:
     project:
       default:
         informational: true
+        if_ci_failed: error
     changes: off
