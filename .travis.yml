@@ -39,7 +39,7 @@ script:
   - python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
   - PYTEST_FLAGS="$PYTEST_FLAGS -v"
   - if [[ "${COVERAGE}" == "true" ]]; then
-        PYTEST_FLAGS="$PYTEST_FLAGS --cov=./";
+        PYTEST_FLAGS="$PYTEST_FLAGS --cov-fail-under=0";
     fi
   - pytest $PYTEST_FLAGS
   # Make sure it installs
@@ -52,4 +52,5 @@ script:
     fi
   - if [[ "${COVERAGE}" == "true" ]]; then
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";
+        coverage report -m;
     fi
