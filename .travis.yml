@@ -51,7 +51,6 @@ script:
   - if [[ "${COVERAGE}" == "true" ]]; then
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";
     fi
-  # Here in case codecov fails. Also codecov won't set a status if the tests
-  # fail, so we have to require the coverage separately after the coverage is
-  # uploaded to codecov.
+  # Here in case codecov fails. This also sets the failing status if the
+  # coverage is not 100%.
   - coverage report -m
