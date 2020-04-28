@@ -1,3 +1,4 @@
+from itertools import chain
 from functools import reduce
 from operator import mul
 
@@ -83,3 +84,26 @@ def check_same(a, index, func=lambda x: x, same_exception=True):
 
     if not exception:
         assert_equal(a_raw, a_idx)
+
+
+
+def iterslice(start_range=(-10, 10),
+               stop_range=(-10, 10),
+               step_range=(-10, 10),
+               one_two_args=True
+):
+    # one_two_args is unnecessary if the args are being passed to slice(),
+    # since slice() already canonicalizes missing arguments to None. We do it
+    # for Slice to test that behavior.
+    if one_two_args:
+        for start in chain(range(*start_range), [None]):
+            yield (start,)
+
+        for start in chain(range(*start_range), [None]):
+            for stop in chain(range(*stop_range), [None]):
+                yield (start, stop)
+
+    for start in chain(range(*start_range), [None]):
+        for stop in chain(range(*stop_range), [None]):
+            for step in chain(range(*step_range), [None]):
+                yield (start, stop, step)
