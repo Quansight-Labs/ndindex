@@ -52,5 +52,5 @@ script:
     fi
   - if [[ "${COVERAGE}" == "true" ]]; then
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";
-        coverage report -m;
     fi
+  - coverage report -m;
