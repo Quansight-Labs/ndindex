@@ -42,13 +42,24 @@ import inspect
 
 from pytest import raises
 
-from numpy import arange
+from numpy import arange, int64
 
 from hypothesis import given, assume
-from hypothesis.strategies import integers
+from hypothesis.strategies import integers, one_of
 
-from ..ndindex import Slice, Integer, Tuple
-from .helpers import check_same, ints, slices, Tuples, prod, shapes, ndindices
+from ..ndindex import Slice, Integer, Tuple, ndindex
+from .helpers import (check_same, ints, slices, Tuples, prod, shapes,
+                      ndindices, ellipses)
+
+# Variable naming conventions in this file:
+
+# a: numpy arange. May be reshaped to be multidimensional
+# shape: a tuple of integers
+# i: integer used as an integer index
+# idx: ndindex type
+# s: slice (Python type)
+# S: Slice (ndindex type)
+# size: integer passed to arange
 
 def _iterslice(start_range=(-10, 10),
                stop_range=(-10, 10),
@@ -77,19 +88,20 @@ def test_slice_args():
     raises(TypeError, lambda: slice())
     raises(TypeError, lambda: Slice())
 
-    s = Slice(1)
-    assert s == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
-    assert s.raw == slice(None, 1, None)
-    assert s.args == (s.start, s.stop, s.step)
+    S = Slice(1)
+    assert S == Slice(S) == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
+    assert S.raw == slice(None, 1, None)
+    assert S.args == (S.start, S.stop, S.step)
 
-    s = Slice(0, 1)
-    assert s == Slice(0, 1, None)
-    assert s.raw == slice(0, 1, None)
-    assert s.args == (s.start, s.stop, s.step)
+    S = Slice(0, 1)
+    assert S == Slice(S) == Slice(0, 1, None)
+    assert S.raw == slice(0, 1, None)
+    assert S.args == (S.start, S.stop, S.step)
 
-    s = Slice(0, 1, 2)
-    assert s.raw == slice(0, 1, 2)
-    assert s.args == (s.start, s.stop, s.step)
+    S = Slice(0, 1, 2)
+    assert S == Slice(S)
+    assert S.raw == slice(0, 1, 2)
+    assert S.args == (S.start, S.stop, S.step)
 
 def test_slice_exhaustive():
     for n in range(100):
@@ -105,11 +117,11 @@ def test_slice_hypothesis(s, size):
 def test_slice_len_exhaustive():
     for args in _iterslice():
         try:
-            s = Slice(*args)
+            S = Slice(*args)
         except ValueError:
             continue
         try:
-            l = len(s)
+            l = len(S)
         except ValueError:
             # No maximum
             l = 10000
@@ -117,15 +129,15 @@ def test_slice_len_exhaustive():
         m = -1
         for n in range(20):
             a = arange(n)
-            L = len(a[s.raw])
-            assert L <= l, s
+            L = len(a[S.raw])
+            assert L <= l, S
             m = max(L, m)
         if l != 10000:
-            assert m == l, s
+            assert m == l, S
         else:
             # If there is no maximum, the size of the slice should increase
             # with larger arrays.
-            assert len(arange(30)[s.raw]) > m, s
+            assert len(arange(30)[S.raw]) > m, S
 
         # TODO
         # if l == 0:
@@ -135,11 +147,11 @@ def test_slice_len_exhaustive():
 @given(slices())
 def test_slice_len_hypothesis(s):
     try:
-        s = Slice(s)
+        S = Slice(s)
     except ValueError:
         assume(False)
     try:
-        l = len(s)
+        l = len(S)
     except ValueError:
         # No maximum
         l = 10000
@@ -147,55 +159,54 @@ def test_slice_len_hypothesis(s):
     m = -1
     for n in range(20):
         a = arange(n)
-        L = len(a[s.raw])
-        assert L <= l, (s, n)
+        L = len(a[S.raw])
+        assert L <= l, (S, n)
         m = max(L, m)
     if l != 10000:
-        assert m == l, s
+        assert m == l, S
     else:
         # If there is no maximum, the size of the slice should increase
         # with larger arrays.
-        assert len(arange(30)[s.raw]) > m, s
-
+        assert len(arange(30)[S.raw]) > m, S
 
 def test_slice_args_reduce_no_shape():
-    s = Slice(1).reduce()
-    assert s == Slice(None, 1).reduce() == Slice(0, 1, None).reduce() == Slice(0, 1).reduce() == Slice(0, 1, 1)
+    S = Slice(1).reduce()
+    assert S == Slice(None, 1).reduce() == Slice(0, 1, None).reduce() == Slice(0, 1).reduce() == Slice(0, 1, 1)
 
-    s = Slice(0, 1).reduce()
-    assert s == Slice(0, 1, None).reduce() == Slice(0, 1, 1)
+    S = Slice(0, 1).reduce()
+    assert S == Slice(0, 1, None).reduce() == Slice(0, 1, 1)
 
 def test_slice_reduce_no_shape_exhaustive():
     for n in range(10):
         a = arange(n)
         for args in _iterslice():
             try:
-                s = Slice(*args)
+                S = Slice(*args)
             except ValueError:
                 continue
 
-            check_same(a, s.raw, func=lambda x: x.reduce())
+            check_same(a, S.raw, func=lambda x: x.reduce())
 
             # Check the conditions stated by the Slice.reduce() docstring
-            reduced = s.reduce()
+            reduced = S.reduce()
             # TODO: Test that start and stop are not None when possible
             assert reduced.step != None
 
-@given(slices(), integers(0, 10))
-def test_slice_reduce_no_shape_hypothesis(s, size):
-    a = arange(size)
+@given(slices(), shapes)
+def test_slice_reduce_no_shape_hypothesis(s, shape):
+    a = arange(prod(shape)).reshape(shape)
     try:
-        s = Slice(s)
+        S = Slice(s)
     except ValueError:
         assume(False)
 
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, s.raw, func=lambda x: x.reduce())
+    check_same(a, S.raw, func=lambda x: x.reduce())
 
     # Check the conditions stated by the Slice.reduce() docstring
-    reduced = s.reduce()
+    reduced = S.reduce()
     # TODO: Test that start and stop are not None when possible
     assert reduced.step != None
 
@@ -204,37 +215,37 @@ def test_slice_reduce_exhaustive():
         a = arange(n)
         for args in _iterslice():
             try:
-                s = Slice(*args)
+                S = Slice(*args)
             except ValueError:
                 continue
 
-            check_same(a, s.raw, func=lambda x: x.reduce((n,)))
+            check_same(a, S.raw, func=lambda x: x.reduce((n,)))
 
             # Check the conditions stated by the Slice.reduce() docstring
-            reduced = s.reduce((n,))
+            reduced = S.reduce((n,))
             assert reduced.start >= 0
             # We cannot require stop > 0 because if stop = None and step < 0, the
             # only equivalent stop that includes 0 is negative.
             assert reduced.stop != None
             assert reduced.step != None
-            assert len(reduced) == len(a[reduced.raw]), (s, n)
+            assert len(reduced) == len(a[reduced.raw]), (S, n)
 
 @given(slices(), shapes)
 def test_slice_reduce_hypothesis(s, shape):
     a = arange(prod(shape)).reshape(shape)
     try:
-        s = Slice(s)
+        S = Slice(s)
     except ValueError:
         assume(False)
 
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, s.raw, func=lambda x: x.reduce(shape))
+    check_same(a, S.raw, func=lambda x: x.reduce(shape))
 
     # Check the conditions stated by the Slice.reduce() docstring
     try:
-        reduced = s.reduce(shape)
+        reduced = S.reduce(shape)
     except IndexError:
         # shape == ()
         return
@@ -244,7 +255,16 @@ def test_slice_reduce_hypothesis(s, shape):
     # only equivalent stop that includes 0 is negative.
     assert reduced.stop != None
     assert reduced.step != None
-    assert len(reduced) == len(a[reduced.raw]), (s, shape)
+    assert len(reduced) == len(a[reduced.raw]), (S, shape)
+
+def test_integer_args():
+    zero = Integer(0)
+    assert zero.raw == 0
+    idx = Integer(int64(0))
+    assert idx == zero
+    assert idx.raw == 0
+    assert isinstance(idx.raw, int)
+    assert Integer(zero) == zero
 
 def test_integer_exhaustive():
     a = arange(10)
@@ -252,9 +272,19 @@ def test_integer_exhaustive():
         check_same(a, i)
 
 @given(ints(), integers(5, 100))
-def test_integer_hypothesis(idx, size):
+def test_integer_hypothesis(i, size):
     a = arange(size)
-    check_same(a, idx)
+    check_same(a, i)
+
+def test_integer_len_exhaustive():
+    for i in range(-12, 12):
+        idx = Integer(i)
+        assert len(idx) == 1
+
+@given(ints())
+def test_integer_len_hypothesis(i):
+    idx = Integer(i)
+    assert len(idx) == 1
 
 def test_integer_reduce_exhaustive():
     a = arange(10)
@@ -283,6 +313,46 @@ def test_integer_reduce_hypothesis(i, shape):
     else:
         assert reduced.raw >= 0
 
+def test_integer_reduce_no_shape_exhaustive():
+    a = arange(10)
+    for i in range(-12, 12):
+        check_same(a, i, func=lambda x: x.reduce())
+
+@given(integers(0, 10), shapes)
+def test_integer_reduce_no_shape_hypothesis(i, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, i, func=lambda x: x.reduce())
+
+def test_ellipsis_exhaustive():
+    for n in range(10):
+        a = arange(n)
+    check_same(a, ...)
+
+@given(ellipses(), shapes)
+def test_ellipsis_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, idx)
+
+def test_ellipsis_reduce_exhaustive():
+    for n in range(10):
+        a = arange(n)
+        check_same(a, ..., func=lambda x: x.reduce((n,)))
+
+@given(ellipses(), shapes)
+def test_ellipsis_reduce_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, idx, func=lambda x: x.reduce(shape))
+
+def test_ellipsis_reduce_no_shape_exhaustive():
+    for n in range(10):
+        a = arange(n)
+        check_same(a, ..., func=lambda x: x.reduce())
+
+@given(ellipses(), shapes)
+def test_ellipsis_reduce_no_shape_hypothesis(idx, shape):
+    a = arange(prod(shape)).reshape(shape)
+    check_same(a, idx, func=lambda x: x.reduce())
+
 def test_tuple_exhaustive():
     # Exhaustive tests here have to be very limited because of combinatorial
     # explosion.
@@ -291,6 +361,7 @@ def test_tuple_exhaustive():
         slice: lambda: _iterslice((-1, 1), (-1, 1), (-1, 1), one_two_args=False),
         # slice: _iterslice,
         int: lambda: ((i,) for i in range(-3, 3)),
+        type(...): lambda: ()
     }
 
     for t1, t2, t3 in product(types, repeat=3):
@@ -301,35 +372,85 @@ def test_tuple_exhaustive():
                     idx2 = t2(*t2_args)
                     idx3 = t3(*t3_args)
 
-                    index = idx1, idx2, idx3
+                    index = (idx1, idx2, idx3)
                     # Disable the same exception check because there could be
                     # multiple invalid indices in the tuple, and for instance
                     # numpy may give an IndexError but we would give a
                     # TypeError because we check the type first.
                     check_same(a, index, same_exception=False)
+                    try:
+                        idx = Tuple(*index)
+                    except (IndexError, ValueError):
+                        pass
+                    else:
+                        assert idx.has_ellipsis == (type(...) in (t1, t2, t3))
 
 @given(Tuples, shapes)
-def test_tuples_hypothesis(idx, shape):
+def test_tuples_hypothesis(t, shape):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, same_exception=False)
-
-@given(ndindices())
-def test_eq(idx):
-    new = type(idx)(*idx.args)
-    assert new == idx
-    assert new.raw == idx.raw
-    assert hash(new) == hash(idx)
+    check_same(a, t, same_exception=False)
 
 @given(Tuples, shapes)
-def test_tuple_reduce_hypothesis(t, shape):
+def test_ellipsis_index(t, shape):
     a = arange(prod(shape)).reshape(shape)
     try:
+        idx = ndindex(t)
+    except (IndexError, ValueError):
+        pass
+    else:
+        if isinstance(idx, Tuple):
+            # Don't know if there is a better way to test ellipsis_idx
+            check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
+
+@given(Tuples, one_of(shapes, integers(0, 10)))
+def test_tuple_reduce_hypothesis(t, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
         idx = Tuple(*t)
-    except ValueError:
+    except (IndexError, ValueError):
         assume(False)
 
     check_same(a, idx.raw, func=lambda x: x.reduce(shape),
                same_exception=False)
+
+@given(Tuples, one_of(shapes, integers(0, 10)))
+def test_tuple_reduce_no_shape_hypothesis(t, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        idx = Tuple(*t)
+    except (IndexError, ValueError):
+        assume(False)
+
+    check_same(a, idx.raw, func=lambda x: x.reduce(),
+               same_exception=False)
+
+@given(ndindices())
+def test_eq(idx):
+    new = type(idx)(*idx.args)
+    assert (new == idx) is True
+    assert (new.raw == idx.raw) is True
+    assert hash(new) == hash(idx)
+    assert (idx == idx.raw) is True
+    assert (idx.raw == idx) is True
+    assert (idx == 'a') is False
+    assert ('a' == idx) is False
+    assert (idx != 'a') is True
+    assert ('a' != idx) is True
+
+@given(ndindices())
+def test_ndindex(idx):
+    assert ndindex(idx) == idx
+    assert ndindex(idx).raw == idx
+    ix = ndindex(idx)
+    assert ndindex(ix.raw) == ix
 
 def test_signature():
     sig = inspect.signature(Integer)
