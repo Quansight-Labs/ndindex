@@ -2,7 +2,9 @@
 omit = ndindex/_version.py
 
 [report]
-exclude_lines = raise NotImplementedError
+exclude_lines =
+    raise NotImplementedError
+    pragma: no cover
 
 # Require full coverage. Lines that cannot be covered can be added as regexes
 # above, or excluded using # pragma: no cover
