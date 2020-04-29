@@ -31,9 +31,14 @@ to Slice(-2, -1, -1). Another reason for the duplication is that hypothesis
 can sometimes test a slightly expanded test space without any additional
 consequences. For example, test_slice_reduce_hypothesis() tests all types of
 array shapes, whereas test_slice_reduce_exhaustive() tests only 1-dimensional
-shapes. This doesn't affect things because hypotheses will always shrink large
+shapes. This doesn't affect things because hypothesis will always shrink large
 shapes to a 1-dimensional shape in the case of a failure. Consequently every
 exhaustive test should have a corresponding hypothesis test.
+
+For things that can only be tested with hypothesis, you can use @example, to
+force certain combinations to be tested. This is useful because we require
+100% test coverage, and hypothesis's randomness can cause this to be flaky
+otherwise.
 
 """
 
