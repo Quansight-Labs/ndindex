@@ -40,6 +40,7 @@ def test_signature():
 @example((1, ..., slice(1, 2)))
 def test_str(idx):
     # The str form should be re-creatable
+    index = ndindex(idx)
     d = {}
     exec("from ndindex import *", d)
-    assert eval(str(idx), d) == idx
+    assert eval(str(index), d) == idx
