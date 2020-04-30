@@ -48,7 +48,7 @@ class Tuple(NDIndex):
         return tuple(newargs)
 
     def __repr__(self):
-        # Since tuples are recursive, we can print the raw form of the args to
+        # Since tuples are nested, we can print the raw form of the args to
         # make them a little more readable.
         def _repr(s):
             if s is Ellipsis:
