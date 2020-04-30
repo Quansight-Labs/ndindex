@@ -1,6 +1,6 @@
 import inspect
 
-from hypothesis import given
+from hypothesis import given, example
 
 from ..ndindex import ndindex
 from ..integer import Integer
@@ -31,6 +31,7 @@ def test_signature():
     assert sig.parameters.keys() == {'idx'}
 
 @given(ndindices())
+@example((1, ..., slice(1, 2)))
 def test_str(idx):
     # The str form should be re-creatable
     d = {}
