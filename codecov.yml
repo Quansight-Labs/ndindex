@@ -1,8 +1,8 @@
 comment: false
 coverage:
   status:
-    project: off
-    patch:
+    patch: off
+    project:
       default:
         informational: true
     changes: off

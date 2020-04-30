@@ -74,13 +74,13 @@ def check_same(a, index, func=lambda x: x, same_exception=True):
         a_idx = a[idx.raw]
     except Exception as e:
         if not exception:
-            fail(f"Raw form does not raise but ndindex form does ({e!r}): {index})")
+            fail(f"Raw form does not raise but ndindex form does ({e!r}): {index})") # pragma: no cover
         if same_exception:
             assert type(e) == type(exception), (e, exception)
             assert e.args == exception.args, (e.args, exception.args)
     else:
         if exception:
-            fail(f"ndindex form did not raise but raw form does ({exception!r}): {index})")
+            fail(f"ndindex form did not raise but raw form does ({exception!r}): {index})") # pragma: no cover
 
     if not exception:
         assert_equal(a_raw, a_idx)
