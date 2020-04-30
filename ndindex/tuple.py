@@ -47,6 +47,15 @@ class Tuple(NDIndex):
 
         return tuple(newargs)
 
+    def __repr__(self):
+        # Since tuples are recursive, we can print the raw form of the args to
+        # make them a little more readable.
+        def _repr(s):
+            if s is Ellipsis:
+                return '...'
+            return repr(s)
+        return f"{self.__class__.__name__}({', '.join(map(_repr, self.raw))})"
+
     @property
     def has_ellipsis(self):
         """
@@ -118,7 +127,7 @@ class Tuple(NDIndex):
         ...
         IndexError: index -3 is out of bounds for axis 1 with size 2
         >>> idx.reduce((5, 3))
-        Tuple(Slice(0, 5, 1), Integer(0))
+        Tuple(slice(0, 5, 1), 0)
 
         """
         from .ellipsis import ellipsis
