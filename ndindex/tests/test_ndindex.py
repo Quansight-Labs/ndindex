@@ -29,3 +29,10 @@ def test_ndindex(idx):
 def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
+
+@given(ndindices())
+def test_str(idx):
+    # The str form should be re-creatable
+    d = {}
+    exec("from ndindex import *", d)
+    assert eval(str(idx), d) == idx
