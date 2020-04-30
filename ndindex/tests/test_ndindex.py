@@ -2,8 +2,11 @@ import inspect
 
 from hypothesis import given
 
+from pytest import raises
+
 from ..ndindex import ndindex
 from ..integer import Integer
+from ..ellipsis import ellipsis
 from .helpers import ndindices
 
 @given(ndindices())
@@ -25,6 +28,9 @@ def test_ndindex(idx):
     assert ndindex(idx).raw == idx
     ix = ndindex(idx)
     assert ndindex(ix.raw) == ix
+
+def test_ndindex_ellipsis():
+    raises(TypeError, lambda: ndindex(ellipsis))
 
 def test_signature():
     sig = inspect.signature(Integer)

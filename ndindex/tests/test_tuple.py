@@ -2,7 +2,7 @@ from itertools import product
 
 from numpy import arange
 
-from hypothesis import given, assume
+from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
@@ -59,6 +59,7 @@ def test_ellipsis_index(t, shape):
             # Don't know if there is a better way to test ellipsis_idx
             check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
 
+@example((0, 1, ..., 2, 3), (5, 5, 5, 5, 5, 5))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_hypothesis(t, shape):
     if isinstance(shape, int):

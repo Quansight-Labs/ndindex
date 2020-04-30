@@ -37,10 +37,8 @@ script:
   - set -e
   - pyflakes .
   - python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
-  - PYTEST_FLAGS="$PYTEST_FLAGS -v"
-  - if [[ "${COVERAGE}" == "true" ]]; then
-        PYTEST_FLAGS="$PYTEST_FLAGS --cov=./";
-    fi
+  # The coverage requirement check is done by the coverage report line below
+  - PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
   - pytest $PYTEST_FLAGS
   # Make sure it installs
   - python setup.py install
@@ -53,3 +51,6 @@ script:
   - if [[ "${COVERAGE}" == "true" ]]; then
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";
     fi
+  # Here in case codecov fails. This also sets the failing status if the
+  # coverage is not 100%.
+  - coverage report -m
