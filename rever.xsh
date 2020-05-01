@@ -42,7 +42,6 @@ $ACTIVITIES = [
     'pypi',  # Sends the package to pypi
     'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     'ghrelease',  # Creates a Github release entry for the new tag
-    'conda_forge',  # Creates a PR into your package's feedstock
 ]
 
 $PUSH_TAG_REMOTE = 'git@github.com:Quansight/ndindex.git'  # Repo to push tags to
