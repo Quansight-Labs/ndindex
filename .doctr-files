@@ -1,6 +1,6 @@
+./_sources/api.md.txt
 ./_sources/changelog.md.txt
 ./_sources/index.md.txt
-./_sources/ndindex.md.txt
 ./_static/alabaster.css
 ./_static/basic.css
 ./_static/copybutton.js
@@ -17,11 +17,10 @@
 ./_static/searchtools.js
 ./_static/underscore-1.3.1.js
 ./_static/underscore.js
+./api.html
 ./changelog.html
 ./genindex.html
 ./index.html
-./ndindex.html
 ./objects.inv
-./py-modindex.html
 ./search.html
 ./searchindex.js
