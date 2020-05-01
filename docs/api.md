@@ -16,6 +16,6 @@ These classes are only intended for internal use in ndindex.
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
 
-.. autoclass:: ndindex.ndindex.default
+.. autoclass:: ndindex.slice.default
 
 ```
