@@ -32,7 +32,8 @@ class ellipsis(NDIndex):
     **Note:** Unlike the standard Python `Ellipsis`, `ellipsis` is the type,
     not the object (the name is lowercase to avoid conflicting with the
     built-in). Use `ellipsis()` or `ndindex(...)` to create the object. Also
-    unlike `Ellipsis`, `ellipsis()` is not singletonized.
+    unlike `Ellipsis`, `ellipsis()` is not singletonized, so you should not
+    use `is` to compare it.
 
     """
     def _typecheck(self):

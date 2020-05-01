@@ -1,5 +1,26 @@
 # ndindex Changelog
 
+## Version 1.2 (2020-05-01)
+
+### Major Changes
+
+- Added `ellipsis` to represent ellipsis indices (`...`). See
+  [ellipsis](api.html#ellipsis).
+
+### Minor Changes
+
+- Make `str(Tuple)` more readable.
+
+- Fix a bug in `==` when comparing against non-ndindex types.
+
+- Make `==` give `True` when comparing against equivalent non-ndindex types.
+
+- Make `inspect.signature` give the correct thing for ndindex types.
+
+- Fix `Tuple.reduce()` with no arguments.
+
+- ndindex now has 100% test coverage.
+
 ## Version 1.1 (2020-04-23)
 
 ### Major Changes

@@ -16,7 +16,8 @@ def mktmp():
 def run_tests():
     # Don't use the built-in pytest action because that uses Docker, which is
     # overkill and requires installing Docker
-    with run_in_conda_env(['python=3.8', 'pytest', 'numpy', 'hypothesis', 'pyflakes']):
+    with run_in_conda_env(['python=3.8', 'pytest', 'numpy', 'hypothesis',
+                           'pyflakes', 'pytest-cov']):
         pyflakes .
         python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
         pytest
@@ -42,7 +43,6 @@ $ACTIVITIES = [
     'pypi',  # Sends the package to pypi
     'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     'ghrelease',  # Creates a Github release entry for the new tag
-    'conda_forge',  # Creates a PR into your package's feedstock
 ]
 
 $PUSH_TAG_REMOTE = 'git@github.com:Quansight/ndindex.git'  # Repo to push tags to
