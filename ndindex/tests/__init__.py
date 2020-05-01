@@ -47,7 +47,8 @@ otherwise.
 # a: numpy arange. May be reshaped to be multidimensional
 # shape: a tuple of integers
 # i: integer used as an integer index
-# idx: ndindex type
+# idx: generic index (Python type)
+# index: generic index (ndindex type)
 # s: slice (Python type)
 # S: Slice (ndindex type)
 # size: integer passed to arange

@@ -1,6 +1,6 @@
 import inspect
 
-from hypothesis import given
+from hypothesis import given, example
 
 from pytest import raises
 
@@ -35,3 +35,12 @@ def test_ndindex_ellipsis():
 def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
+
+@given(ndindices())
+@example((1, ..., slice(1, 2)))
+def test_str(idx):
+    # The str form should be re-creatable
+    index = ndindex(idx)
+    d = {}
+    exec("from ndindex import *", d)
+    assert eval(str(index), d) == idx
