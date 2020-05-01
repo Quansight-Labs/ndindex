@@ -195,5 +195,5 @@ MIT License
 ## Table of Contents
 
 * [ndindex Docs Main Page](index.md)
-* [ndindex API](ndindex.md)
+* [ndindex API](api.md)
 * [Changelog](changelog.md)
