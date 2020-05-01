@@ -2,11 +2,41 @@
 
 ## ndindex
 
+### ndindex
+
 ```eval_rst
-.. automodule:: ndindex
-   :members:
+.. autofunction:: ndindex.ndindex
 
 ```
+
+### Integer
+
+```eval_rst
+.. autoclass:: ndindex.Integer
+   :members:
+```
+
+### Slice
+
+```eval_rst
+.. autoclass:: ndindex.Slice
+   :members:
+```
+
+### ellipsis
+
+```eval_rst
+.. autoclass:: ndindex.ellipsis
+   :members:
+```
+
+### Tuple
+
+```eval_rst
+.. autoclass:: ndindex.Tuple
+   :members:
+```
+
 
 ### Internal API
 
