@@ -59,7 +59,22 @@ def test_ellipsis_index(t, shape):
             # Don't know if there is a better way to test ellipsis_idx
             check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
 
-@example((0, 1, ..., 2, 3), (5, 5, 5, 5, 5, 5))
+@given(Tuples, one_of(shapes, integers(0, 10)))
+def test_tuple_reduce_no_shape_hypothesis(t, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        idx = Tuple(*t)
+    except (IndexError, ValueError):
+        assume(False)
+
+    check_same(a, idx.raw, func=lambda x: x.reduce(),
+               same_exception=False)
+
+@example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_hypothesis(t, shape):
     if isinstance(shape, int):
@@ -75,17 +90,13 @@ def test_tuple_reduce_hypothesis(t, shape):
     check_same(a, idx.raw, func=lambda x: x.reduce(shape),
                same_exception=False)
 
-@given(Tuples, one_of(shapes, integers(0, 10)))
-def test_tuple_reduce_no_shape_hypothesis(t, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
     try:
-        idx = Tuple(*t)
-    except (IndexError, ValueError):
-        assume(False)
-
-    check_same(a, idx.raw, func=lambda x: x.reduce(),
-               same_exception=False)
+        reduced = idx.reduce(shape)
+    except IndexError:
+        pass
+    else:
+        assert ... not in reduced.args
+        if isinstance(shape, tuple) and len(shape) != 1:
+            assert len(reduced.args) == len(shape)
+        else:
+            assert not isinstance(reduced, Tuple)

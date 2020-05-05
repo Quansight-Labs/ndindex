@@ -113,9 +113,15 @@ class Tuple(NDIndex):
         >>> Tuple(Slice(2, 4)).reduce()
         Slice(2, 4, 1)
 
-        If an explicit array shape is given, The result will either be
-        IndexError if the index is invalid for the given shape, or Tuple where
-        the entries are recursively reduced.
+        If an explicit array shape is given, the result will either be
+        IndexError if the index is invalid for the given shape, or will be
+        canonicalized so that
+
+        - All the elements of the tuple are recursively reduced
+        - If the Tuple would have a single argument, that argument is returned
+        - Otherwise, the length of the .args is the same as the length of the
+          shape
+        - The resulting Tuple has no ellipses
 
         >>> idx = Tuple(Slice(0, 10), Integer(-3))
         >>> idx.reduce((5,))
@@ -128,25 +134,24 @@ class Tuple(NDIndex):
         IndexError: index -3 is out of bounds for axis 1 with size 2
         >>> idx.reduce((5, 3))
         Tuple(slice(0, 5, 1), 0)
+        >>> Tuple(0, ..., Slice(0, 10)).reduce((1, 2, 3))
+        Tuple(0, slice(0, 2, 1), slice(0, 3, 1))
 
         """
         from .ellipsis import ellipsis
-
-        if len(self.args) == 1:
-            return self.args[0].reduce(shape)
+        from .slice import Slice
 
         args = self.args
-        if args and args[-1] == ellipsis():
-            args = args[:-1]
-
-        if shape is None:
-            return type(self)(*args)
+        if ellipsis() not in args:
+            return type(self)(*args, ellipsis()).reduce(shape)
 
         if isinstance(shape, int):
             shape = (shape,)
-        if (self.has_ellipsis and len(shape) < len(self.args) - 1
-            or not self.has_ellipsis and len(shape) < len(self.args)):
-            raise IndexError("too many indices for array")
+
+        if shape is not None:
+            if (self.has_ellipsis and len(shape) < len(self.args) - 1
+                or not self.has_ellipsis and len(shape) < len(self.args)):
+                raise IndexError("too many indices for array")
 
         ellipsis_i = self.ellipsis_index
 
@@ -154,8 +159,10 @@ class Tuple(NDIndex):
         for i, s in enumerate(args[:ellipsis_i]):
             newargs.append(s.reduce(shape, axis=i))
 
-        if ellipsis_i < len(args) and len(args) <= len(shape):
-            # The ellipsis isn't redundant
+        if shape is not None:
+            newargs.extend([Slice(None).reduce(shape, axis=i + ellipsis_i) for
+                            i in range(len(shape) - len(args) + 1)])
+        elif ellipsis_i < len(args) - 1:
             newargs.append(ellipsis())
 
         endargs = []
@@ -163,5 +170,8 @@ class Tuple(NDIndex):
             endargs.append(s.reduce(shape, axis=-i))
 
         newargs = newargs + endargs[::-1]
+
+        if len(newargs) == 1:
+            return newargs[0]
 
         return type(self)(*newargs)
