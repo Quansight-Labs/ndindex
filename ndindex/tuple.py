@@ -71,7 +71,8 @@ class Tuple(NDIndex):
         Give the index i of `self.args` where the ellipsis is.
 
         If `self` doesn't have an ellipsis, it gives `len(self.args)`, since
-        tuple indices always implicitly end in an ellipsis.
+        tuple indices without an ellipsis always implicitly end in an
+        ellipsis.
 
         The resulting value `i` is such that `self.args[:i]` indexes the
         beginning axes of an array and `self.args[i+1:]` indexes the end axes
