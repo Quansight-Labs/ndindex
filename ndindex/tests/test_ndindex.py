@@ -1,10 +1,10 @@
 import inspect
 
-from hypothesis import given, example
+from hypothesis import given, example, note
 
 from pytest import raises
 
-from ..ndindex import ndindex
+from ..ndindex import ndindex, isindex
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from .helpers import ndindices
@@ -28,6 +28,11 @@ def test_ndindex(idx):
     assert ndindex(idx).raw == idx
     ix = ndindex(idx)
     assert ndindex(ix.raw) == ix
+
+@given(ndindices())
+def test_isindex(idx):
+    assert isindex(idx, exclude=type(idx)) is False
+    assert isindex(ndindex(idx)) is True
 
 def test_ndindex_ellipsis():
     raises(TypeError, lambda: ndindex(ellipsis))

@@ -39,6 +39,26 @@ def ndindex(obj):
 
     raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
 
+def isindex(obj, exclude=None):
+    """
+    Returns True if object is an index type.
+
+    exclude can be an index type or a tuple of index types.
+
+    >>> from ndindex import isindex, Slice, Tuple, Integer
+    >>> isindex(Slice(0,2))
+    True
+    >>> isindex(ndindex((1,2)), exclude=Tuple)
+    False
+    >>> isindex(Slice(0,2), exclude=(Tuple, Integer))
+    True
+    """
+    if (not isinstance(obj, NDIndex)) or (exclude and isinstance(obj, exclude)):
+        return False
+    else:
+        return True
+
+
 class classproperty(object):
     def __init__(self, f):
         self.f = f

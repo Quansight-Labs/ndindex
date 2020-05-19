@@ -1,6 +1,6 @@
 __all__ = []
 
-from .ndindex import ndindex
+from .ndindex import ndindex, isindex
 
 __all__ += ['ndindex']
 
