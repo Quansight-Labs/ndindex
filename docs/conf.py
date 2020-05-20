@@ -30,6 +30,7 @@ author = 'Quansight'
 extensions = [
     'recommonmark',
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
 ]
 
 import commonmark
