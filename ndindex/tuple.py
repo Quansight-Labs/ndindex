@@ -104,27 +104,36 @@ class Tuple(NDIndex):
 
     def reduce(self, shape=None):
         """
-        Reduce an Tuple index on an array of shape `shape`
+        Reduce a Tuple index on an array of shape `shape`
 
         A `Tuple` with a single argument is always reduced to that single
         argument (because `a[idx,]` is the same as `a[idx]`).
 
-        >>> from ndindex import Tuple, Integer, Slice
+        >>> from ndindex import Tuple
 
-        >>> Tuple(Slice(2, 4)).reduce()
+        >>> Tuple(slice(2, 4)).reduce()
         Slice(2, 4, 1)
 
         If an explicit array shape is given, the result will either be
-        IndexError if the index is invalid for the given shape, or will be
-        canonicalized so that
+        IndexError if the index is invalid for the given shape, or an index
+        that is as simple as possible:
 
-        - All the elements of the tuple are recursively reduced
-        - If the Tuple would have a single argument, that argument is returned
-        - Otherwise, the length of the .args is the same as the length of the
-          shape
-        - The resulting Tuple has no ellipses
+        - All the elements of the tuple are recursively reduced.
+        - Any axes that can be merged into an ellipsis are removed. This
+          includes the implicit ellipsis at the end of a tuple that doesn't
+          contain any explicit ellipses.
+        - Ellipses that don't match any axes are removed.
+        - An ellipsis at the end of the tuple is removed.
+        - If the resulting Tuple would have a single argument, that argument
+          is returned.
 
-        >>> idx = Tuple(Slice(0, 10), Integer(-3))
+        >>> idx = Tuple(0, ..., slice(0, 3))
+        >>> idx.reduce((5, 4))
+        Tuple(0, slice(0, 3, 1))
+        >>> idx.reduce((5, 3))
+        Integer(0)
+
+        >>> idx = Tuple(slice(0, 10), -3)
         >>> idx.reduce((5,))
         Traceback (most recent call last):
         ...
@@ -133,10 +142,31 @@ class Tuple(NDIndex):
         Traceback (most recent call last):
         ...
         IndexError: index -3 is out of bounds for axis 1 with size 2
-        >>> idx.reduce((5, 3))
-        Tuple(slice(0, 5, 1), 0)
-        >>> Tuple(0, ..., Slice(0, 10)).reduce((1, 2, 3))
-        Tuple(0, slice(0, 2, 1), slice(0, 3, 1))
+
+        Note
+        ====
+
+        ndindex presently does not distinguish between scalar objects and
+        rank-0 arrays. It is possible for the original index to produce one
+        and the reduced index to produce the other. In particular, the
+        presence of a redundant ellipsis forces NumPy to return a rank-0 array
+        instead of a scalar.
+
+        >>> import numpy as np
+        >>> a = np.array([0, 1])
+        >>> Tuple(..., 1).reduce(a.shape)
+        Integer(1)
+        >>> a[..., 1]
+        array(1)
+        >>> a[1]
+        1
+
+        See https://github.com/Quansight/ndindex/issues/22.
+
+        See Also
+        ========
+
+        Tuple.expand
 
         """
         from .ellipsis import ellipsis
@@ -156,23 +186,112 @@ class Tuple(NDIndex):
 
         ellipsis_i = self.ellipsis_index
 
+        preargs = []
+        removable = shape is not None
+        for i, s in enumerate(reversed(args[:ellipsis_i]), start=1):
+            reduced = s.reduce(shape, axis=ellipsis_i - i)
+            if removable and isinstance(reduced, Slice) and len(reduced) == shape[ellipsis_i - i]:
+                continue
+            else:
+                removable = False
+                preargs.insert(0, reduced)
+
+        endargs = []
+        removable = shape is not None
+        for i, s in enumerate(args[ellipsis_i+1:]):
+            axis = -len(args) + ellipsis_i + 1 + i
+            if shape is not None:
+                # Make the axis positive so the error messages will match numpy
+                axis += len(shape)
+            reduced = s.reduce(shape, axis=axis)
+            if removable and isinstance(reduced, Slice) and len(reduced) == shape[axis]:
+                continue
+            else:
+                removable = False
+                endargs.append(reduced)
+
+        if shape is None or endargs and len(preargs) + len(endargs) < len(shape):
+            preargs = preargs + [...]
+
+        newargs = preargs + endargs
+
+        if newargs and newargs[-1] == ...:
+            newargs = newargs[:-1]
+
+        if len(newargs) == 1:
+            return newargs[0]
+
+        return type(self)(*newargs)
+
+
+    def expand(self, shape):
+        """
+        Expand a Tuple index on an array of shape `shape`
+
+        An expanded `Tuple` is one where the length of the .args is the same
+        as the given shape, and there are no ellipses.
+
+        The result will either be IndexError if self is invalid for the
+        given shape, or will be canonicalized so that
+
+        - All the elements of the tuple are recursively reduced.
+
+        - The length of the .args is the same as the length of the shape.
+
+        - The resulting Tuple has no ellipses. Axes that would be matched by
+          an ellipsis or an implicit ellipsis at the end of the tuple are
+          replaced by `Slice(0, n)`.
+
+        >>> from ndindex import Tuple
+        >>> idx = Tuple(slice(0, 10), ..., -3)
+
+        >>> idx.expand((5, 3))
+        Tuple(slice(0, 5, 1), 0)
+        >>> idx.expand((1, 2, 3))
+        Tuple(slice(0, 1, 1), slice(0, 2, 1), 0)
+
+        >>> idx.expand((5,))
+        Traceback (most recent call last):
+        ...
+        IndexError: too many indices for array
+        >>> idx.expand((5, 2))
+        Traceback (most recent call last):
+        ...
+        IndexError: index -3 is out of bounds for axis 1 with size 2
+
+        See Also
+        ========
+
+        Tuple.reduce
+
+        """
+        from .ellipsis import ellipsis
+        from .slice import Slice
+
+        args = self.args
+        if ellipsis() not in args:
+            return type(self)(*args, ellipsis()).expand(shape)
+
+        if isinstance(shape, int):
+            shape = (shape,)
+
+        if (self.has_ellipsis and len(shape) < len(self.args) - 1
+            or not self.has_ellipsis and len(shape) < len(self.args)):
+            raise IndexError("too many indices for array")
+
+        ellipsis_i = self.ellipsis_index
+
         newargs = []
         for i, s in enumerate(args[:ellipsis_i]):
             newargs.append(s.reduce(shape, axis=i))
 
-        if shape is not None:
-            newargs.extend([Slice(None).reduce(shape, axis=i + ellipsis_i) for
-                            i in range(len(shape) - len(args) + 1)])
-        elif ellipsis_i < len(args) - 1:
-            newargs.append(ellipsis())
+        newargs.extend([Slice(None).reduce(shape, axis=i + ellipsis_i) for
+                        i in range(len(shape) - len(args) + 1)])
 
         endargs = []
         for i, s in enumerate(reversed(args[ellipsis_i+1:]), start=1):
-            endargs.append(s.reduce(shape, axis=-i))
+            endargs.append(s.reduce(shape, axis=len(shape)-i))
 
         newargs = newargs + endargs[::-1]
-
-        if len(newargs) == 1:
-            return newargs[0]
 
         return type(self)(*newargs)

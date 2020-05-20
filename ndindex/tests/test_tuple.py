@@ -74,7 +74,14 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
     check_same(a, idx.raw, func=lambda x: x.reduce(),
                same_exception=False)
 
+    reduced = idx.reduce()
+    if isinstance(reduced, Tuple):
+        assert len(reduced.args) != 1
+        assert reduced == () or reduced.args[-1] != ...
+
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
+@example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
+@example((0, ..., slice(None)), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_hypothesis(t, shape):
     if isinstance(shape, int):
@@ -95,8 +102,34 @@ def test_tuple_reduce_hypothesis(t, shape):
     except IndexError:
         pass
     else:
-        assert ... not in reduced.args
-        if isinstance(shape, tuple) and len(shape) != 1:
-            assert len(reduced.args) == len(shape)
+        if isinstance(reduced, Tuple):
+            assert len(reduced.args) != 1
+            assert reduced == () or reduced.args[-1] != ...
+        # TODO: Check the other properties from the Tuple.reduce docstring.
+
+@example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
+@given(Tuples, one_of(shapes, integers(0, 10)))
+def test_tuple_expand_hypothesis(t, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        idx = Tuple(*t)
+    except (IndexError, ValueError):
+        assume(False)
+
+    check_same(a, idx.raw, func=lambda x: x.expand(shape),
+               same_exception=False)
+
+    try:
+        expanded = idx.expand(shape)
+    except IndexError:
+        pass
+    else:
+        assert ... not in expanded.args
+        if isinstance(shape, int):
+            assert len(expanded.args) == 1
         else:
-            assert not isinstance(reduced, Tuple)
+            assert len(expanded.args) == len(shape)
