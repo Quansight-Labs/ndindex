@@ -15,7 +15,7 @@ definitions, we mean that the definition of a slice takes on fundamentally
 different meanings if the elements are negative, nonnegative, or `None`. This
 again is done for syntactic convenience, but it means that as a user, you must
 switch your mode of thinking about slices depending on the sign or type of the
-arguments.
+arguments. There is no uniform formula that applies to all slices.
 
 The ndindex library can help with much of this, especially for people
 developing libraries that consume slices. But for end-users the challenge is
@@ -90,6 +90,7 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 >>> a = [0, 1, 2, 3, 4, 5, 6]
 >>> a[3]
 3
+
 ```
 
 For **negative** integers, the indices index from the end of the array. These
@@ -116,6 +117,7 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 >>> a = [0, 1, 2, 3, 4, 5, 6]
 >>> a[-3]
 4
+
 ```
 
 An equivalent way to think about negative indices is that an index `a[-i]`
@@ -129,22 +131,38 @@ axis being sliced). For example, `len(a)` is `7`:
 7
 >>> a[7 - 3]
 4
+
 ```
 
 Therefore, negative indexes are primarily a syntactic convenience that allows
 one to specify parts of an array that would otherwise need to be specified in
 terms of the size of the array.
 
-## 0-based
+## Points of Confusion
 
-## Wraparound (Negative Indexes)
+The full definition of a slice could be written down in a couple of sentences,
+although the branching definitions would necessitate several "if" conditions.
+The [NumPy docs](https://numpy.org/doc/stable/reference/arrays.indexing.html)
+on slices say
 
-## Half-open
+> The basic slice syntax is `i:j:k` where *i* is the starting index, *j* is
+> the stopping index, and *k* is the step ( $k\\neq 0$ ). This selects the `m`
+> elements (in the corresponding dimension) with index values i, i + k, \ldots, i + (m - 1) k where m = q + (r\neq0) and q and r are the quotient and remainder
+> obtained by dividing j - i by k: j - i = q k + r, so that i + (m - 1) k <
+> j."
 
-## Clipping
+### 0-based
 
-## Steps
 
-## Negative Steps
 
-## Omitted Entries (`None`)
+### Wraparound (Negative Indexes)
+
+### Half-open
+
+### Clipping
+
+### Steps
+
+### Negative Steps
+
+### Omitted Entries (`None`)
