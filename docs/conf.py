@@ -30,6 +30,7 @@ author = 'Quansight'
 extensions = [
     'recommonmark',
     'sphinx.ext.autodoc',
+    'sphinx_math_dollar',
 ]
 
 import commonmark
@@ -55,7 +56,7 @@ def setup(app):
         'enable_eval_rst': True,
         'auto_toc_tree': True,
         'enable_math': True,
-        'enable_inline_math': True,
+        'enable_inline_math': False,
         }, True)
     app.add_transform(AutoStructify)
 
