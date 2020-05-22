@@ -54,8 +54,8 @@ def setup(app):
     app.add_config_value('recommonmark_config', {
         'enable_eval_rst': True,
         'auto_toc_tree': True,
-        'enable_math': False,
-        'enable_inline_math': False,
+        'enable_math': True,
+        'enable_inline_math': True,
         }, True)
     app.add_transform(AutoStructify)
 
