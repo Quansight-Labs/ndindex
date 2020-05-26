@@ -2,6 +2,7 @@ import inspect
 
 from numpy import ndarray
 
+
 def ndindex(obj):
     """
     Convert an object into an ndindex type
@@ -30,40 +31,76 @@ def ndindex(obj):
         return Tuple(*obj)
 
     if obj == ellipsis:
-        raise TypeError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
+        raise TypeError("Got ellipsis class. Did you mean to use the instance,"
+                        " ellipsis()?")
     if obj is Ellipsis:
         return ellipsis()
 
     if isinstance(obj, ndarray):
         raise NotImplementedError("array indices are not yet supported")
 
-    raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
+    raise TypeError(f"Don't know how to convert object of type {type(obj)} to"
+                    f" an ndindex object")
+
 
 def isindex(obj, exclude=None):
     """
-    Returns True if object is an index type.
+    Returns True if object is an index type, including built-in objects that
+    can be used as indices.
 
-    exclude can be an index type or a tuple of index types.
+    `exclude` should be a tuple of index types.
 
     >>> from ndindex import isindex, Slice, Tuple, Integer
     >>> isindex(Slice(0,2))
     True
-    >>> isindex(ndindex((1,2)), exclude=Tuple)
+    >>> isindex((1,2), exclude=(tuple,))
     False
     >>> isindex(Slice(0,2), exclude=(Tuple, Integer))
     True
+    >>> isindex([1,2])
+    False
     """
-    if (not isinstance(obj, NDIndex)) or (exclude and isinstance(obj, exclude)):
+    from . import ellipsis, Integer
+
+    try:
+        Integer(obj)
+        if exclude and ((int in exclude) or (Integer in exclude)):
+            return False
+        else:
+            return True
+    except TypeError:
+        pass
+
+    if isinstance(obj, ndarray):
+        if exclude and (ndarray in exclude):
+            return False
+        else:
+            raise NotImplementedError("array indices are not yet supported")
+
+    if obj == ellipsis:
+        raise TypeError("Got ellipsis class. Did you mean to use the instance,"
+                        " ellipsis()?")
+    elif obj is Ellipsis:
+        if exclude and (Ellipsis in exclude):
+            return False
+        else:
+            return True
+
+    possible = (NDIndex, tuple, slice)
+    if (not isinstance(obj, possible)) or \
+            (exclude and isinstance(obj, exclude)):
         return False
-    else:
-        return True
+
+    return True
 
 
 class classproperty(object):
     def __init__(self, f):
         self.f = f
+
     def __get__(self, obj, owner):
         return self.f(owner)
+
 
 class NDIndex:
     """
@@ -110,7 +147,8 @@ class NDIndex:
     """
     def __init__(self, *args):
         """
-        This method should be called by subclasses (via super()) after type-checking
+        This method should be called by subclasses (via super()) after
+        type-checking
         """
         args = self._typecheck(*args)
         self.args = args
@@ -160,7 +198,8 @@ class NDIndex:
         >>> a[s]
         Traceback (most recent call last):
         ...
-        IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+        IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis
+        (`None`) and integer or boolean arrays are valid indices
         >>> a[s.raw]
         array([2, 3])
 
@@ -169,7 +208,8 @@ class NDIndex:
 
     def reduce(self, shape=None):
         """
-        Simplify an index given that it will be applied to an array of a given shape.
+        Simplify an index given that it will be applied to an array of a given
+        shape.
 
         If `shape` is None (the default), the index will be canonicalized as
         much as possible while still staying equivalent for all array shapes

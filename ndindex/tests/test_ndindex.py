@@ -1,6 +1,6 @@
 import inspect
 
-from hypothesis import given, example, note
+from hypothesis import given, example
 
 from pytest import raises
 
@@ -8,6 +8,8 @@ from ..ndindex import ndindex, isindex
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from .helpers import ndindices
+
+from numpy import empty, ndarray
 
 @given(ndindices())
 def test_eq(idx):
@@ -31,8 +33,17 @@ def test_ndindex(idx):
 
 @given(ndindices())
 def test_isindex(idx):
-    assert isindex(idx, exclude=type(idx)) is False
+    assert isindex(idx, exclude=(type(idx),)) is False
     assert isindex(ndindex(idx)) is True
+
+def test_isindex_ellipsis():
+    assert isindex(Ellipsis) is True
+    assert isindex(Ellipsis, exclude=(Ellipsis,)) is False
+    raises(TypeError, lambda: isindex(ellipsis))
+
+def test_isindex_ndarray():
+    assert isindex(empty(1), exclude=(ndarray,)) is False
+    raises(NotImplementedError, lambda: isindex(empty(1)))
 
 def test_ndindex_ellipsis():
     raises(TypeError, lambda: ndindex(ellipsis))

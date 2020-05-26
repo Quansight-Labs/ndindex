@@ -2,7 +2,7 @@ __all__ = []
 
 from .ndindex import ndindex, isindex
 
-__all__ += ['ndindex']
+__all__ += ['ndindex', 'isindex']
 
 from .slice import Slice
 
