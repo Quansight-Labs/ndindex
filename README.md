@@ -194,7 +194,9 @@ MIT License
 
 ## Table of Contents
 
-* [ndindex Docs Main Page](index.md)
-* [ndindex API](api.md)
-* [Slices](slices.rst)
-* [Changelog](changelog.md)
+```{toctree}
+index.md
+api.md
+slices.md
+changelog.md
+```
