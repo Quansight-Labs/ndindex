@@ -69,7 +69,9 @@ To understand slices, it is good to first review how integer indices
 work. Throughout this guide, we will use as an example this prototype
 list:
 
-$$a = [0, 1, 2, 3, 4, 5, 6]$$
+$$
+a = [0, 1, 2, 3, 4, 5, 6].
+$$
 
 `a` is the same as `range(7)` and has 7 elements.
 
@@ -78,7 +80,8 @@ slice indexing, is that it is 0-based. This means that the indexes start
 at 0. This is the case for all **nonnegative** indexes. For example,
 `a[3]` would pick the **fourth** element of `a`, in this case, `3`.
 
-$$\begin{aligned}
+$$
+\begin{aligned}
 \begin{array}{r r r r r r r r}
 a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 \color{red}{\text{index}}
@@ -90,7 +93,8 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
     & \color{red}{5\phantom{,}}
     & \color{red}{6\phantom{,}}\\
 \end{array}
-\end{aligned}$$
+\end{aligned}
+$$
 
 ```py
 >>> a = [0, 1, 2, 3, 4, 5, 6]
@@ -99,12 +103,13 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 ```
 
 For **negative** integers, the indices index from the end of the array.
-These indices are necessary 1-based (or rather, -1-based), since `0`
+These indices are necessary 1-based (or rather, -1-based), since 0
 already refers to the first element of the array. `-1` chooses the last
 element, `-2` the second-to-last, and so on. For example, `a[-3]` picks
 the **third-to-last** element of `a`, in this case, `4`:
 
-$$\begin{aligned}
+$$
+\begin{aligned}
 \begin{array}{r r r r r r r r}
 a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 \color{red}{\text{index}}
@@ -116,7 +121,8 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
     & \color{red}{-2\phantom{,}}
     & \color{red}{-1\phantom{,}}\\
 \end{array}
-\end{aligned}$$
+\end{aligned}
+$$
 
 ```py
 >>> a = [0, 1, 2, 3, 4, 5, 6]
@@ -127,7 +133,8 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 An equivalent way to think about negative indices is that an index
 `a[-i]` picks `a[len(a) - i]`, that is, you can subtract the negative
 index off of the size of the array (for NumPy arrays, replace `len(a)`
-with the size of the axis being sliced). For example, `len(a)` is `7`:
+with the size of the axis being sliced). For example, `len(a)` is `7`, so
+`a[-3]` is the same as `a[7 - 3]`:
 
 ```py
 >>> a = [0, 1, 2, 3, 4, 5, 6]
@@ -142,8 +149,8 @@ allows one to specify parts of an array that would otherwise need to be
 specified in terms of the size of the array.
 
 If an integer index is greater than or equal to the size of the array,
-or less than negative the size of the array (`i \< len(a)`
-or `i \>= len(a)`), then it is out of bounds and will raise
+or less than negative the size of the array (`i < len(a)`
+or `i >= len(a)`), then it is out of bounds and will raise
 an `IndexError`.
 
 ```py
@@ -184,11 +191,12 @@ attempting to demystify them through simple rules.
 
 ### Subarray
 
-A slice always chooses a sub-array. What this means is that a slice will
-always *preserve* the dimension that is sliced. This is true even if a
-slice chooses only a single element, or even if it chooses no elements.
-This is also true for lists and tuples. This is different from integer
-indices, which always remove the dimension that they index.
+A slice always chooses a sub-array (or sub-list, sub-tuple, sub-string, etc.).
+What this means is that a slice will always *preserve* the dimension that is
+sliced. This is true even if a slice chooses only a single element, or even if
+it chooses no elements. This is also true for lists and tuples. This is
+different from integer indices, which always remove the dimension that they
+index.
 
 For example
 
@@ -200,6 +208,12 @@ For example
 [3]
 >>> a[3:3] # Empty slice
 []
+>>> import numpy as np
+>>> arr = np.array([[1, 2], [3, 4]])
+>>> arr[0].shape # Removes the first dimension
+(2,)
+>>> arr[0:1].shape # Preserves the first dimension
+(1, 2)
 ```
 
 One consequence of this is that, unlike integer indices, slices will
@@ -218,7 +232,8 @@ For the slice `a:b`, with `a` and
 0-based, the end slice is not included in the slice. See
 [below](half-open)).
 
-$$\begin{aligned}
+$$
+\begin{aligned}
 \begin{array}{r r r r r r r r}
 a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 \color{red}{\text{index}}
@@ -230,7 +245,8 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
     & \color{red}{5\phantom{,}}
     & \color{red}{6\phantom{,}}\\
 \end{array}
-\end{aligned}$$
+\end{aligned}
+$$
 
 ```py
 >>> a = [0, 1, 2, 3, 4, 5, 6]
