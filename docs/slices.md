@@ -60,6 +60,8 @@ square brackets, but slice objects can be created manually using the
 to perform more advanced operations. The discussions below will just use
 `x:y:z` without the square brackets for simplicity.
 
+(integer-indices)=
+
 Integer indices
 ---------------
 
@@ -211,10 +213,10 @@ that are too large. See also the section on
 For the slice `a:b`, with `a` and
 `b` nonnegative integers, the indexes `a` and
 `b` are 0-based, just as with
-[integer indexing](#integer-indices)
+[integer indexing](integer-indices)
 (although one should be careful that even though `b` is
 0-based, the end slice is not included in the slice. See
-[below](#half-open)).
+[below](half-open)).
 
 $$\begin{aligned}
 \begin{array}{r r r r r r r r}
@@ -236,6 +238,7 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 [3, 4]
 ```
 
+(half-open)=
 ### Half-open
 
 ### Negative Indexes
