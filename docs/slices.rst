@@ -63,6 +63,8 @@ square brackets, but slice objects can be created manually using the
 want to perform more advanced operations. The discussions below will
 just use ``x:y:z`` without the square brackets for simplicity.
 
+.. _integer-indices:
+
 Integer indices
 ---------------
 
@@ -147,6 +149,21 @@ Therefore, negative indexes are primarily a syntactic convenience that
 allows one to specify parts of an array that would otherwise need to be
 specified in terms of the size of the array.
 
+If an integer index is greater than or equal to the size of the array, or less than
+negative the size of the array (`i < len(a)` or `i >= len(a)`), then it is out
+of bounds and will raise an `IndexError`.
+
+.. code:: py
+
+   >>> a[7]
+   Traceback (most recent call last):
+   ...
+   IndexError: list index out of range
+   >>> a[-8]
+   Traceback (most recent call last):
+   ...
+   IndexError: list index out of range
+
 Points of Confusion
 -------------------
 
@@ -159,19 +176,87 @@ slices say
    The basic slice syntax is ``i:j:k`` where *i* is the starting index,
    *j* is the stopping index, and *k* is the step ( $k\neq 0$ ).
    This selects the ``m`` elements (in the corresponding dimension) with
-   index values $i, i + k, \ldots, i + (m - 1) k$ where $m = q
-   + (r\neq0)$ and q and r are the quotient and remainder
-   obtained by dividing j - i by k: j - i = q k + r, so that i + (m - 1)
-   k < j."
+   index values *i, i + k, …, i + (m - 1) k* where $m = q
+   + (r\neq0)$ and *q* and *r* are the quotient and remainder
+   obtained by dividing *j - i* by *k*: *j - i = q k + r*, so that *i + (m - 1)
+   k < j*.
+
+While notes like this may give a technically accurate description of slices,
+they aren't especially helpful to someone who is trying to construct a slice
+from a higher level of abstraction such as "I want to select this particular
+subset of my array".
+
+Instead, we shall examine slices by carefully going over all the various
+aspects of the syntax and semantics that can lead to confusion, and attempting
+to demystify them through simple rules.
+
+
+
+Subarray
+~~~~~~~~
+
+A slice always chooses a sub-array. What this means is that a slice will
+always *preserve* the dimension that is sliced. This is true even if a slice
+chooses only a single element, or even if it chooses no elements. This is also
+true for lists and tuples. This is different from integer indices, which
+always remove the dimension that they index.
+
+For example
+
+.. code:: py
+
+   >>> a = [0, 1, 2, 3, 4, 5, 6]
+   >>> a[3]
+   3
+   >>> a[3:4]
+   [3]
+   >>> a[3:3] # Empty slice
+   []
+
+One consequence of this is that, unlike integer indices, slices will never
+raise `IndexError`. Therefore you cannot rely on runtime errors to alert you
+to coding mistakes relating to slice bounds that are too large. See also the
+section on :ref:`clipping <clipping>` below.
 
 0-based
 ~~~~~~~
 
-Wraparound (Negative Indexes)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For the slice `a:b`, with `a` and `b` nonnegative integers, the indexes `a`
+and `b` are 0-based, just as with :ref:`integer indexing <integer-indices>`
+(although one should be careful that even though `b` is 0-based, the end slice
+is not included in the slice. See :ref:`below <half-open>`).
+
+.. math::
+
+   \begin{array}{r r r r r r r r}
+   a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+   \color{red}{\text{index}}
+       & \color{red}{0\phantom{,}}
+       & \color{red}{1\phantom{,}}
+       & \color{red}{2\phantom{,}}
+       & \color{blue}{3\phantom{,}}
+       & \color{blue}{4\phantom{,}}
+       & \color{red}{5\phantom{,}}
+       & \color{red}{6\phantom{,}}\\
+   \end{array}
+
+.. code:: py
+
+   >>> a = [0, 1, 2, 3, 4, 5, 6]
+   >>> a[3:5]
+   [3, 4]
+
+.. _half-open:
 
 Half-open
 ~~~~~~~~~
+
+
+
+Negative Indexes
+~~~~~~~~~~~~~~~~
+
+.. _clipping:
 
 Clipping
 ~~~~~~~~
