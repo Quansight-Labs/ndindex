@@ -40,6 +40,7 @@ script:
   # The coverage requirement check is done by the coverage report line below
   - PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
   - pytest $PYTEST_FLAGS
+  - ./run_doctests
   # Make sure it installs
   - python setup.py install
   - if [[ "${DOCS}" == "true" ]]; then
