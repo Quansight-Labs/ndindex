@@ -1,45 +1,42 @@
 Slices
 ======
 
-Python's slice syntax is one of the more confusing parts of the
-language, even to experienced developers. In this page, we should
-carefully break down the rules for slicing, and examine just what it is
-that makes it so confusing.
+Python's slice syntax is one of the more confusing parts of the language, even
+to experienced developers. In this page, I carefully break down the rules for
+slicing, and examine just what it is that makes it so confusing.
 
-There are two primary aspects of slices that make the confusing:
-confusing conventions, and split definitions. By confusing conventions,
-we mean that slice semantics have definitions that are often difficult
-to reason about mathematically. These conventions were chosen for
-syntactic convenience, and one can easily see for most of them how they
-lead to concise notation for very common operations, but it remains
-nonetheless true that they can make figuring out the *right* slice to
-use in the first place complicated. By branching definitions, we mean
-that the definition of a slice takes on fundamentally different meanings
-if the elements are negative, nonnegative, or `None`. This again is done
-for syntactic convenience, but it means that as a user, you must switch
-your mode of thinking about slices depending on the sign or type of the
+There are two primary aspects of slices that make the confusing:  confusing
+conventions, and split definitions. By confusing conventions, I mean that
+slice semantics have definitions that are often difficult to reason about
+mathematically. These conventions were chosen for syntactic convenience, and
+one can easily see for most of them how they lead to concise notation for very
+common operations, but it remains nonetheless true that they can make figuring
+out the *right* slice to use in the first place complicated. By branching
+definitions, I mean that the definition of a slice takes on fundamentally
+different meanings if the elements are negative, nonnegative, or `None`. This
+again is done for syntactic convenience, but it means that as a user, you must
+switch your mode of thinking about slices depending on the sign or type of the
 arguments. There is no uniform formula that applies to all slices.
 
 The ndindex library can help with much of this, especially for people
-developing libraries that consume slices. But for end-users the
-challenge is often just to write down a slice. Even if you rarely work
-with NumPy arrays, you will most likely require slices to select parts
-of lists or strings as part of the normal course of Python coding.
+developing libraries that consume slices. But for end-users the challenge is
+often just to write down a slice. Even if you rarely work with NumPy arrays,
+you will most likely require slices to select parts of lists or strings as
+part of the normal course of Python coding.
 
-ndindex focuses on NumPy array index semantics, but everything on this
-page equally applies to sliceable Python builtin objects like lists,
-tuples, and strings. This is because on a single dimension, NumPy slice
-semantics are identical to the Python slice semantics (NumPy only begins
-to differ from Python for multi-dimensional indices).
+ndindex focuses on NumPy array index semantics, but everything on this page
+equally applies to sliceable Python builtin objects like lists, tuples, and
+strings. This is because on a single dimension, NumPy slice semantics are
+identical to the Python slice semantics (NumPy only begins to differ from
+Python for multi-dimensional indices).
 
 What is a slice?
 ----------------
 
-In Python, a slice is a special syntax that is allowed only in an index,
-that is, inside of square brackets proceeding an expression. A slice
-consists of one or two colons, with either an expression or nothing on
-either side of each colon. For example, the following are all valid
-slices on the object `a`:
+In Python, a slice is a special syntax that is allowed only in an index, that
+is, inside of square brackets proceeding an expression. A slice consists of
+one or two colons, with either an expression or nothing on either side of each
+colon. For example, the following are all valid slices on the object `a`:
 
     a[x:y]
     a[x:y:z]
@@ -48,26 +45,24 @@ slices on the object `a`:
     a[x::z]
 
 Furthermore, for a slice `x:y:z` on Python or NumPy objects, there is an
-additional semantic restriction, which is that the expressions `x`, `y`,
-and `z` must be either integers or `None`. A term being `None` is
-syntactically equivalent to it being omitted. For example, `x::` is
-equivalent to `x:None:None`. In the discussions below we shall use
-"`None`" and "omitted" interchangeably.
+additional semantic restriction, which is that the expressions `x`, `y`, and
+`z` must be either integers or `None`. A term being `None` is syntactically
+equivalent to it being omitted. For example, `x::` is equivalent to
+`x:None:None`. In the discussions below I shall use "`None`" and "omitted"
+interchangeably.
 
-It is worth mentioning that the `x:y:z` syntax is not valid outside of
-square brackets, but slice objects can be created manually using the
-`slice` builtin. You can also use the `ndindex.Slice` object if you want
-to perform more advanced operations. The discussions below will just use
-`x:y:z` without the square brackets for simplicity.
+It is worth mentioning that the `x:y:z` syntax is not valid outside of square
+brackets, but slice objects can be created manually using the `slice` builtin.
+You can also use the `ndindex.Slice` object if you want to perform more
+advanced operations. The discussions below will just use `x:y:z` without the
+square brackets for simplicity.
 
 (integer-indices)=
-
 Integer indices
 ---------------
 
-To understand slices, it is good to first review how integer indices
-work. Throughout this guide, we will use as an example this prototype
-list:
+To understand slices, it is good to first review how integer indices work.
+Throughout this guide, I will use as an example this prototype list:
 
 $$
 a = [0, 1, 2, 3, 4, 5, 6].
@@ -167,27 +162,28 @@ IndexError: list index out of range
 Points of Confusion
 -------------------
 
-The full definition of a slice could be written down in a couple of
-sentences, although the branching definitions would necessitate several
-"if" conditions. The [NumPy
-docs](https://numpy.org/doc/stable/reference/arrays.indexing.html) on
-slices say
+The full definition of a slice could be written down in a couple of sentences,
+although the branching definitions would necessitate several "if" conditions.
+The [NumPy docs](https://numpy.org/doc/stable/reference/arrays.indexing.html)
+on slices say
 
-> The basic slice syntax is `i:j:k` where *i* is the starting index, *j*
-> is the stopping index, and *k* is the step ( $k\neq 0$ ). This
-> selects the `m` elements (in the corresponding dimension) with index
-> values *i, i + k, ..., i + (m - 1) k* where $m = q + (r\neq0)$ and
-> *q* and *r* are the quotient and remainder obtained by dividing *j -
-> i* by *k*: *j - i = q k + r*, so that *i + (m - 1) k \< j*.
+(numpy-definition)=
 
-While notes like this may give a technically accurate description of
-slices, they aren't especially helpful to someone who is trying to
-construct a slice from a higher level of abstraction such as "I want to
-select this particular subset of my array".
+> The basic slice syntax is `i:j:k` where *i* is the starting index, *j* is
+> the stopping index, and *k* is the step ( $k\neq 0$ ). This selects the `m`
+> elements (in the corresponding dimension) with index values *i, i + k, ...,
+> i + (m - 1) k* where $m = q + (r\neq0)$ and *q* and *r* are the quotient and
+> remainder obtained by dividing *j - i* by *k*: *j - i = q k + r*, so that
+> *i + (m - 1) k \< j*.
+
+While notes like this may give a technically accurate description of slices,
+they aren't especially helpful to someone who is trying to construct a slice
+from a higher level of abstraction such as "I want to select this particular
+subset of my array".
 
 Instead, we shall examine slices by carefully going over all the various
-aspects of the syntax and semantics that can lead to confusion, and
-attempting to demystify them through simple rules.
+aspects of the syntax and semantics that can lead to confusion, and attempting
+to demystify them through simple rules.
 
 ### Subarray
 
@@ -324,8 +320,8 @@ advantages
 
 #### Wrong Ways of Thinking about Half-open Semantics
 
-A note with half-open semantics. **The proper rule to remember for slices is
-"the end is not included".**
+**The proper rule to remember for half-open semantics is "the end is not
+included".**
 
 There are several alternative ways that one might think of slice semantics,
 but they are all wrong in subtle ways. To be sure, for each of these, one
@@ -337,7 +333,8 @@ these branching rules. By trying to remember a rule that has branching
 conditions, you open yourself up to confusion. The rule becomes much more
 complicated than it appears at first glance, making it hard to remember. You
 may forget the "uncommon" cases and get things wrong when they come up in
-practice.
+practice. You might as well think about slices using the [definition from the
+NumPy docs](numpy-definition).
 
 Rather, it is best to remember the simplest rule possible that is *always*
 correct. That rule is, "the end is not included". That is always right,
@@ -374,10 +371,11 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
     &
     &
     & [\phantom{3,}
-    & \tiny{\text{(reversed)}}
+    &
     & )
     & \\
-\end{array}
+\end{array}\\
+\small{\text{(reversed)}}\phantom{5,\quad 6]}
 \end{aligned}
 $$
 
@@ -434,6 +432,11 @@ values for the range. For example:
 >>> a[3:-2] # Indexes from 3 to the second to last (5)
 [3, 4]
 ```
+
+This rule is tempting because `range()` makes some computations easy. For
+example, you can index or take the `len()` of a range. If you want to perform
+computations on slices, I recommend using `ndindex`. This is what it was
+designed for.
 
 **Wrong Rule 3: Slices count the spaces between the elements of the array.**
 This is a very common rule that is taught for both slices and integer
