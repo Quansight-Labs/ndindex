@@ -328,22 +328,23 @@ A note with half-open semantics. **The proper rule to remember for slices is
 "the end is not included".**
 
 There are several alternative ways that one might think of slice semantics,
-but they are all wrong in subtle ways. For each of these, one could "fix" the
-rule by adding some conditions, "it's this in the case where such and such is
-nonnegative and that when such and such is negative", and so on. But that's
-not the point. The goal here is to *understand* slices. Remember that one of
-the reasons that slices are difficult to understand is these branching rules.
-By trying to remember a rule that has branching conditions, you open
-yourself up to confusion. The rule becomes much more complicated than it
-appears at first glance, making it hard to remember. You may forget the
-"uncommon" cases, and get things wrong when they come up in practice.
+but they are all wrong in subtle ways. To be sure, for each of these, one
+could "fix" the rule by adding some conditions, "it's this in the case where
+such and such is nonnegative and that when such and such is negative, and so
+on". But that's not the point. The goal here is to *understand* slices.
+Remember that one of the reasons that slices are difficult to understand is
+these branching rules. By trying to remember a rule that has branching
+conditions, you open yourself up to confusion. The rule becomes much more
+complicated than it appears at first glance, making it hard to remember. You
+may forget the "uncommon" cases and get things wrong when they come up in
+practice.
 
 Rather, it is best to remember the simplest rule possible that is *always*
-correct. That rule is, "the end is not included".  That is always right,
-regardless of whether the `start`, `end`, or `step` are negative, positive, or
-zero. The only exception is if `end` is `None`/omitted, where the rule
-obviously doesn't apply, and so you can fallback to the next rule about
-omitted start/end (see [below](omitted)).
+correct. That rule is, "the end is not included". That is always right,
+regardless of what the values of `start`, `end`, or `step` are. The only
+exception is if `end` is `None`/omitted. In this case, the rule obviously
+doesn't apply as-is, and so you can fallback to the next rule about omitted
+start/end (see [below](omitted)).
 
 **Wrong Rule 1: "a slice `a[start:end]` slices the half-open interval
 $[\text{start}, \text{end})$ (equivalently, a slice `a[start:end]` picks the
@@ -678,23 +679,25 @@ $$
 - This rule leads to off-by-one errors due to "fencepost" errors. The
   fencepost problem is this: say you want to build a fence that is 100 feet
   long with posts spaced every 10 feet. How many fenceposts do you need? The
-  answer is 11, because the fenceposts go between the 10 feet divisions,
-  including at the ends.
+  naive answer is 10, but the correct answer is 11, because the fenceposts go
+  in between the 10 feet divisions, including at the ends.
 
   <!-- TODO: Find an image to include here -->
 
   Fencepost problems are a leading cause of off-by-one errors. Thinking about
   slices in this way is to think about arrays as separated by fenceposts, and
   is only begging for problems. This will especially be the case if you still
-  find yourself otherwise thinking about the array elements themselves. And
-  given the behavior of negative slices and integer indices under this model,
-  one can hardly blame you for doing so.
+  find yourself otherwise thinking about the indices of array elements
+  themselves, rather than the divisions between them. And given the behavior
+  of negative slices and integer indices under this model, one can hardly
+  blame you for doing so.
 
 Rather than trying to think about dividers between elements, it's much simpler
 to just think about the elements themselves, but being counted with 0-based
 indexing. 0-based indexing itself leads to off-by-one errors, since it is not
 the usually way humans are taught to count things, but these will be far
-fewer, especially as you gain practice in counting that way.
+fewer, especially as you gain practice in counting that way. As long as you
+apply the rule "the end is not included", you will get the correct results.
 
 **Wrong Rule 4: The `end` of a slice `a[start:end]` is 1-based.**
 
