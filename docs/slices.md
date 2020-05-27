@@ -703,7 +703,7 @@ You might get clever and say `a[3:5]` indexes from the 3-rd element with
 is confusing. Not only that, but the rule must necessarily be reversed for
 negative indices. `a[-5:-3]` indexes from the -5-th element with -1-based
 indexing to the -3-rd element with 0-based indexing (and of course, negative
-and nonnegative starts and stops can be mixed, like `a[-5:5]`). Don't get cute
+and nonnegative starts and ends can be mixed, like `a[-5:5]`). Don't get cute
 here. It isn't worth it.
 
 (negative-indices)=
