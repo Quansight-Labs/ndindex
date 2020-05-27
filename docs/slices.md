@@ -206,7 +206,7 @@ For example
 3
 >>> a[3:4]
 [3]
->>> a[3:3] # Empty slice
+>>> a[5:2] # Empty slice
 []
 >>> import numpy as np
 >>> arr = np.array([[1, 2], [3, 4]])
@@ -222,6 +222,7 @@ runtime errors to alert you to coding mistakes relating to slice bounds
 that are too large. See also the section on
 [clipping](#clipping) below.
 
+(0-based)=
 ### 0-based
 
 For the slice `a:b`, with `a` and
@@ -257,12 +258,463 @@ $$
 (half-open)=
 ### Half-open
 
+Slices behave like half-open intervals. What this means is that the `end` in
+`start:end` is *never* included in the slice (the exception is if `end` is
+`None` or omitted, which always slices to the beginning or end of the array,
+see [below](omitted)).
+
+For example, `a[3:5]` slices the elements 3 and 4, but not 5 ([0-based](0-based)).
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r r r r r r r}
+a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    & \color{red}{1\phantom{,}}
+    & \color{red}{2\phantom{,}}
+    & \color{blue}{\enclose{circle}{3}}
+    & \color{blue}{\enclose{circle}{4}}
+    & \color{red}{\enclose{circle}{5}}
+    & \color{red}{6\phantom{,}}\\
+\end{array}
+\end{aligned}
+$$
+
+```py
+>>> a = [0, 1, 2, 3, 4, 5, 6]
+>>> a[3:5]
+[3, 4]
+```
+
+The half-open nature of slices means that you must always remember that the
+`end` slice element is not included in the slice. However, it has a few
+advantages
+
+- The maximum length of a slice `start:end`, when `start` and `end` are
+  nonnegative, is always `end - start` (the caveat "maximum" is here because
+  if `end` extends beyond the end of the array, then `start:end` will only
+  slice up to `len(a) - start`, see [below](clipping)). For example, `a[i:i+n]`
+  will slice `n` elements from the array `a`.
+- `len(a)` can be used as an end value to slice to the end of the array. For
+  example, `a[1:len(a)]` slices from the second element to the end of the
+  array. This is equivalent to `a[1:]`.
+
+  ```py
+  >>> a[1:len(a)]
+  [1, 2, 3, 4, 5, 6]
+  >>> a[1:]
+  [1, 2, 3, 4, 5, 6]
+  ```
+
+- Consecutive slices can be appended to one another by making each successive
+  slice's start the same as the previous slice's end. For example, for our
+  list `a`, `a[2:3] + a[3:5]` is the same as `a[2:5]`.
+
+  ```py
+  >>> a[2:3] + a[3:5]
+  [2, 3, 4]
+  >>> a[2:5]
+  [2, 3, 4]
+  ```
+
+  A common usage of this is to split a slice into two slices. For example, the
+  slice `a[i:j]` can be split as `a[i:k]` and `a[k:j]`.
+
+#### Wrong Ways of Thinking about Half-open Semantics
+
+A note with half-open semantics. **The proper rule to remember for slices is
+"the end is not included".**
+
+There are several alternative ways that one might think of slice semantics,
+but they are all wrong in subtle ways. For each of these, one could "fix" the
+rule by adding some conditions, "it's this in the case where such and such is
+nonnegative and that when such and such is negative", and so on. But that's
+not the point. The goal here is to *understand* slices. Remember that one of
+the reasons that slices are difficult to understand is these branching rules.
+By trying to remember a rule that has branching conditions, you open
+yourself up to confusion. The rule becomes much more complicated than it
+appears at first glance, making it hard to remember. You may forget the
+"uncommon" cases, and get things wrong when they come up in practice.
+
+Rather, it is best to remember the simplest rule possible that is *always*
+correct. That rule is, "the end is not included".  That is always right,
+regardless of whether the `start`, `end`, or `step` are negative, positive, or
+zero. The only exception is if `end` is `None`/omitted, where the rule
+obviously doesn't apply, and so you can fallback to the next rule about
+omitted start/end (see [below](omitted)).
+
+**Wrong Rule 1: "a slice `a[start:end]` slices the half-open interval
+$[\text{start}, \text{end})$ (equivalently, a slice `a[start:end]` picks the
+elements `i` such that `start <= i < end`).** This is *only* the case if the
+step size is positive. It also isn't directly true for negative `start` or
+`end`. For example, with a step of -1, `a[start:end:-1]` slices starting at
+`start` going in reverse order to `end`, but not including `end`.
+Mathematically, this creates a half open interval $(\text{end}, \text{start}]$
+(except reversed).
+
+For example, say way believed that `a[5:3:-1]` sliced the half-open interval
+$[3, 5)$ but in reverse order.
+
+$$
+\begin{aligned}
+\begin{array}{r r r r r r r r}
+a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    & \color{red}{1\phantom{,}}
+    & \color{red}{2\phantom{,}}
+    & \color{blue}{3\phantom{,}}
+    & \color{blue}{4\phantom{,}}
+    & \color{red}{5\phantom{,}}
+    & \color{red}{6\phantom{,}}\\
+\color{red}{\text{WRONG}}&
+    &
+    &
+    & [\phantom{3,}
+    & \tiny{\text{(reversed)}}
+    & )
+    & \\
+\end{array}
+\end{aligned}
+$$
+
+We might assume we would get
+
+```py
+>> a[5:3:-1]
+[4, 3] # WRONG
+```
+
+Actually, what we really get is
+
+```py
+>>> a[5:3:-1]
+[5, 4]
+```
+
+This is because the slice `5:3:-1` starts at index `5` and steps backwards to
+index `3`, but not including `3`.
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r r r r r r r}
+a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    & \color{red}{1\phantom{,}}
+    & \color{red}{2\phantom{,}}
+    & \color{red}{\enclose{circle}{3}}
+    & \leftarrow\color{blue}{\enclose{circle}{4}}
+    & \leftarrow\color{blue}{\enclose{circle}{5}}
+    & \color{red}{6\phantom{,}}\\
+\end{array}
+\end{aligned}
+$$
+
+**Wrong Rule 2: A slice works like `range()`.** There are many similarities
+between the behaviors of slices and the behavior of `range()`. However, they
+do not behave the same. A slice
+`start:end:step` only acts like `range(start, end, step)` if `start` and `end`
+are **nonnegative**. If either of them are negative, the slice wraps around
+and slices from the end of the array (see [below](negative-indices)).
+`range()` on the other hand treats negative numbers as the actual start of end
+values for the range. For example:
+
+```py
+>>> list(range(3, 5))
+[3, 4]
+>>> a[3:5] # a is range(7), and these are the same
+[3, 4]
+>>> list(range(3, -2)) # Empty, because -2 is less than 3
+[]
+>>> a[3:-2] # Indexes from 3 to the second to last (5)
+[3, 4]
+```
+
+**Wrong Rule 3: Slices count the spaces between the elements of the array.**
+This is a very common rule that is taught for both slices and integer
+indexing. The reasoning goes as follows: 0-based indexing is confusing, where
+the first element of an array is indexed by 0, the second by 1, and so on.
+Rather than thinking about that, consider the spaces between the elements:
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{c}
+\begin{array}{r r r r r r r r r r r r r r r r r r}
+a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
+4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}\\
+\color{red}{\text{index}}
+    &
+    & \color{red}{0}
+    &
+    & \color{red}{1}
+    &
+    & \color{red}{2}
+    &
+    & \color{red}{3}
+    &
+    & \color{red}{4}
+    &
+    & \color{red}{5}
+    &
+    & \color{red}{6}
+    &
+    & \color{red}{7}\\
+\end{array}\\
+\small{\text{(not a great way of thinking about indexes)}}
+\end{array}
+\end{aligned}
+$$
+
+Using this way of thinking, the first element of the array is to the left of
+the "1-divider". An integer index `i` produces the element to the right of the
+"`i`-divider", and a slice `i:j` picks the elements between the `i` and `j`
+dividers.
+
+At first glance, this seems like a rather clever way to think about the
+half-open rule. For instance, between the `3` and `5` dividers is the subarray
+`[3, 4]`, which is indeed what we get for `a[3:5]`. However, there are several
+reasons why this way of thinking creates more confusion than it removes.
+
+- As with wrong rule 1, it works well enough if the step is positive, but
+  falls apart when it is negative.
+
+  Consider again the slice `a[5:3:-1]`. Looking at the above figure, we might
+  imagine it to give the same incorrect sub-array that we imagined before.
+
+
+  $$
+  \require{enclose}
+  \begin{aligned}
+  \begin{array}{c}
+  \begin{array}{r r r r r r r r r r r r r r r r r r}
+  a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
+  4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}\\
+  \color{red}{\text{index}}
+      &
+      & \color{red}{0}
+      &
+      & \color{red}{1}
+      &
+      & \color{red}{2}
+      &
+      & \color{blue}{3}
+      &
+      & \color{blue}{4}
+      &
+      & \color{blue}{5}
+      &
+      & \color{red}{6}
+      &
+      & \color{red}{7}\\
+  \end{array}\\
+  \small{\color{red}{\text{THIS IS WRONG!}}}
+  \end{array}
+  \end{aligned}
+  $$
+
+  As before, we might assume we would get
+
+  ```py
+  >> a[5:3:-1]
+  [4, 3] # WRONG
+  ```
+
+  but this is incorrect! What we really get is
+
+  ```py
+  >>> a[5:3:-1]
+  [5, 4]
+  ```
+
+- The rule does work for negative start and step, but only if you think about
+  it correctly. The correct way to think about it is to reverse the indices
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{c}
+\begin{array}{r r r r r r r r r r r r r r r r r r}
+a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
+4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}\\
+\color{red}{\text{index}}
+    &
+    & \color{red}{-7}
+    &
+    & \color{red}{-6}
+    &
+    & \color{red}{-5}
+    &
+    & \color{red}{-4}
+    &
+    & \color{red}{-3}
+    &
+    & \color{red}{-2}
+    &
+    & \color{red}{-1}
+    &
+    & \color{red}{0}\\
+\end{array}\\
+\small{\text{(not a great way of thinking about negative indexes)}}
+\end{array}
+\end{aligned}
+$$
+
+For example, `a[-4:-2]` will give `[3, 4]`
+
+```py
+>>> a[-4:-2]
+[3, 4]
+```
+
+However, it would be quite easy to get confused here, as the "other" way of
+thinking about negative indices (the way I am recommending) is that the end
+starts at -1. So you might mistakenly imagine
+
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{c}
+\begin{array}{r r r r r r r r r r r r r r r r r r}
+a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
+4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}\\
+\color{red}{\text{index}}
+    &
+    & \color{red}{-8}
+    &
+    & \color{red}{-7}
+    &
+    & \color{red}{-6}
+    &
+    & \color{red}{-5}
+    &
+    & \color{red}{-4}
+    &
+    & \color{red}{-3}
+    &
+    & \color{red}{-2}
+    &
+    & \color{red}{-1}\\
+\end{array}\\
+\small{\color{red}{\text{THIS IS WRONG!}}}
+\end{array}
+\end{aligned}
+$$
+
+- The rule "works" for slices, but is harder to imagine for integer indices.
+  The integer index corresponding to the dividers corresponds to the entry to
+  the *right* of the divider. Rules that involve remembering left or right
+  aren't great for the memory.
+
+- This rule leads to off-by-one errors due to "fencepost" errors. The
+  fencepost problem is this: say you want to build a fence that is 100 feet
+  long with posts spaced every 10 feet. How many fenceposts do you need? The
+  answer is 11, because the fenceposts go between the 10 feet divisions,
+  including at the ends.
+
+  <!-- TODO: Find an image to include here -->
+
+  Fencepost problems are a leading cause of off-by-one errors. Thinking about
+  slices in this way is to think about arrays as separated by fenceposts, and
+  is only begging for problems. This will especially be the case if you still
+  find yourself otherwise thinking about the array elements themselves. And
+  given the behavior of negative slices and integer indices under this model,
+  one can hardly blame you for doing so.
+
+Rather than trying to think about dividers between elements, it's much simpler
+to just think about the elements themselves, but being counted with 0-based
+indexing. 0-based indexing itself leads to off-by-one errors, since it is not
+the usually way humans are taught to count things, but these will be far
+fewer, especially as you gain practice in counting that way.
+
+**Wrong Rule 4: The `end` of a slice `a[start:end]` is 1-based.**
+
+You might get clever and say `a[3:5]` indexes from the 3-rd element with
+0-based indexing to the 5-th element with 1-based indexing. Don't do this. It
+is confusing. Not only that, but the rule must necessarily be reversed for
+negative indices. `a[-5:-3]` indexes from the -5-th element with -1-based
+indexing to the -3-rd element with 0-based indexing (and of course, negative
+and nonnegative starts and stops can be mixed, like `a[-5:5]`). Don't get cute
+here. It isn't worth it.
+
+(negative-indices)=
 ### Negative Indexes
 
+(clipping)=
 ### Clipping
 
 ### Steps
 
 ### Negative Steps
 
+(omitted)=
 ### Omitted Entries (`None`)
