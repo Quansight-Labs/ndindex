@@ -221,13 +221,10 @@ that are too large. See also the section on
 (0-based)=
 ### 0-based
 
-For the slice `a:b`, with `a` and
-`b` nonnegative integers, the indexes `a` and
-`b` are 0-based, just as with
-[integer indexing](integer-indices)
-(although one should be careful that even though `b` is
-0-based, the end slice is not included in the slice. See
-[below](half-open)).
+For the slice `start:end`, with `start` and `end` nonnegative integers, the
+indexes `start` and `end` are 0-based, just as with [integer
+indexing](integer-indices) (although one should be careful that even though
+`end` is 0-based, it is not included in the slice. See [below](half-open)).
 
 $$
 \begin{aligned}
@@ -286,7 +283,7 @@ $$
 
 The half-open nature of slices means that you must always remember that the
 `end` slice element is not included in the slice. However, it has a few
-advantages
+advantages:
 
 - The maximum length of a slice `start:end`, when `start` and `end` are
   nonnegative, is always `end - start` (the caveat "maximum" is here because
@@ -570,109 +567,109 @@ reasons why this way of thinking creates more confusion than it removes.
 - The rule does work for negative start and step, but only if you think about
   it correctly. The correct way to think about it is to reverse the indices
 
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{c}
-\begin{array}{r r r r r r r r r r r r r r r r r r}
-a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
-4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
-    &
-    & \color{red}{-7}
-    &
-    & \color{red}{-6}
-    &
-    & \color{red}{-5}
-    &
-    & \color{red}{-4}
-    &
-    & \color{red}{-3}
-    &
-    & \color{red}{-2}
-    &
-    & \color{red}{-1}
-    &
-    & \color{red}{0}\\
-\end{array}\\
-\small{\text{(not a great way of thinking about negative indexes)}}
-\end{array}
-\end{aligned}
-$$
+  $$
+  \require{enclose}
+  \begin{aligned}
+  \begin{array}{c}
+  \begin{array}{r r r r r r r r r r r r r r r r r r}
+  a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
+  4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}\\
+  \color{red}{\text{index}}
+      &
+      & \color{red}{-7}
+      &
+      & \color{red}{-6}
+      &
+      & \color{red}{-5}
+      &
+      & \color{red}{-4}
+      &
+      & \color{red}{-3}
+      &
+      & \color{red}{-2}
+      &
+      & \color{red}{-1}
+      &
+      & \color{red}{0}\\
+  \end{array}\\
+  \small{\text{(not a great way of thinking about negative indexes)}}
+  \end{array}
+  \end{aligned}
+  $$
 
-For example, `a[-4:-2]` will give `[3, 4]`
+  For example, `a[-4:-2]` will give `[3, 4]`
 
-```py
->>> a[-4:-2]
-[3, 4]
-```
+  ```py
+  >>> a[-4:-2]
+  [3, 4]
+  ```
 
-However, it would be quite easy to get confused here, as the "other" way of
-thinking about negative indices (the way I am recommending) is that the end
-starts at -1. So you might mistakenly imagine
+  However, it would be quite easy to get confused here, as the "other" way of
+  thinking about negative indices (the way I am recommending) is that the end
+  starts at -1. So you might mistakenly imagine
 
 
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{c}
-\begin{array}{r r r r r r r r r r r r r r r r r r}
-a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
-4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}
-    &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
-    &
-    & \color{red}{-8}
-    &
-    & \color{red}{-7}
-    &
-    & \color{red}{-6}
-    &
-    & \color{red}{-5}
-    &
-    & \color{red}{-4}
-    &
-    & \color{red}{-3}
-    &
-    & \color{red}{-2}
-    &
-    & \color{red}{-1}\\
-\end{array}\\
-\small{\color{red}{\text{THIS IS WRONG!}}}
-\end{array}
-\end{aligned}
-$$
+  $$
+  \require{enclose}
+  \begin{aligned}
+  \begin{array}{c}
+  \begin{array}{r r r r r r r r r r r r r r r r r r}
+  a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
+  4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}\\
+  \color{red}{\text{index}}
+      &
+      & \color{red}{-8}
+      &
+      & \color{red}{-7}
+      &
+      & \color{red}{-6}
+      &
+      & \color{red}{-5}
+      &
+      & \color{red}{-4}
+      &
+      & \color{red}{-3}
+      &
+      & \color{red}{-2}
+      &
+      & \color{red}{-1}\\
+  \end{array}\\
+  \small{\color{red}{\text{THIS IS WRONG!}}}
+  \end{array}
+  \end{aligned}
+  $$
 
 - The rule "works" for slices, but is harder to imagine for integer indices.
   The integer index corresponding to the dividers corresponds to the entry to
