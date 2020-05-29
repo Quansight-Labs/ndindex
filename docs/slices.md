@@ -285,11 +285,19 @@ The half-open nature of slices means that you must always remember that the
 `end` slice element is not included in the slice. However, it has a few
 advantages:
 
+(sanity-check)=
 - The maximum length of a slice `start:end`, when `start` and `end` are
   nonnegative, is always `end - start` (the caveat "maximum" is here because
   if `end` extends beyond the end of the array, then `start:end` will only
   slice up to `len(a) - start`, see [below](clipping)). For example, `a[i:i+n]`
-  will slice `n` elements from the array `a`.
+  will slice `n` elements from the array `a`. Also be careful that this is
+  only true when `start` and `end` are nonnegative (see
+  [below](nonnegative-indices)). However, given those caveats, this is often a
+  very useful sanity check that a slice is correct. If you expect a slice to
+  have length `n` but `end - start` is clearly different from `n`, then the
+  slice is likely wrong. Length calculations are more complicated when `step
+  != 1`; in those cases, `len(ndindex.Slice(...))` can be useful.
+
 - `len(a)` can be used as an end value to slice to the end of the array. For
   example, `a[1:len(a)]` slices from the second element to the end of the
   array. This is equivalent to `a[1:]`.
@@ -712,8 +720,180 @@ here. It isn't worth it.
 (negative-indices)=
 ### Negative Indexes
 
+Negative indices in slices work the same way they do with [integer
+indices](integer-indices). For `start:end:step`, `start` and `end` cause the
+indexing to go from the end of the array. However, they do not change the
+direction of the slicing---only the `step` does that. The other rules of
+slicing do not change when the `start` or `end` is negative. [The `end` is
+still not included](half-open), values less than `-len(a)` still
+[clip](clipping), and so on.
+
+Note that positive and negative indices can be mixed. The following slices of
+`a` all produce `[3, 4]`:
+
+```py
+>>> a[3:5]
+[3, 4]
+>>> a[-4:-2]
+[3, 4]
+>>> a[3:-2]
+[3, 4]
+>>> a[-4:5]
+[3, 4]
+```
+
+$$
+\begin{aligned}
+\begin{array}{r r r r r r r r}
+a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\color{red}{\text{nonnegative index}}
+    & \color{red}{0\phantom{,}}
+    & \color{red}{1\phantom{,}}
+    & \color{red}{2\phantom{,}}
+    & \color{blue}{3\phantom{,}}
+    & \color{blue}{4\phantom{,}}
+    & \color{red}{5\phantom{,}}
+    & \color{red}{6\phantom{,}}\\
+\color{red}{\text{negative index}}
+    & \color{red}{-7\phantom{,}}
+    & \color{red}{-6\phantom{,}}
+    & \color{red}{-5\phantom{,}}
+    & \color{blue}{-4\phantom{,}}
+    & \color{blue}{-3\phantom{,}}
+    & \color{red}{-2\phantom{,}}
+    & \color{red}{-1\phantom{,}}\\
+\end{array}
+\end{aligned}
+$$
+
+If a negative `end` indexes an element on or before a nonnegative `start`, the
+slice is empty, the same as if `end <= start` when both are nonnegative.
+
+```py
+>>> a[3:-5]
+[]
+>>> a[3:2]
+[]
+```
+
+And as with integer indexes, negative indices `-i` in slices can always be
+replaced `len(a) - i` (replacing `len(a)` with the size of the given axis for
+NumPy arrays), so they are primarily a syntactic convenience.
+
+The negative indexing behavior is convenient, but it can also lead to subtle
+bugs, due to the fundamental discontinuity it produces. This is especially
+likely to happen if the slice entries are arithmetical expressions. **One
+should always double check if the `start` or `end` values of a slice can be
+negative, and if they can, if those values produce the correct results.**
+
+(negative-indices-example)=
+For example, say you wanted to slice `n` values from the middle of `a`.
+Something like the following would work
+
+```py
+>>> midway = len(a)//2
+>>> n = 4
+>>> a[midway - n//2: midway + n//2]
+[1, 2, 3, 4]
+```
+
+From our [sanity check](sanity-check), `midway + n//2 - (midway - n//2)` does
+equal `n` if `n` is even (we could find a similar expression for `n` odd, but
+for now let us assume `n` is even).
+
+However, let's look at what happens when `n` is larger than the size of `a`:
+
+```py
+>>> n = 8
+>>> a[midway - n//2: midway + n//2]
+[6]
+```
+
+This is mostly likely not what we would want. Depending on our use-case, we
+would most likely want either an error or the full list `[0, 1, 2, 3, 4, 5,
+6]`.
+
+What happened here? Let's look at the slice values:
+
+```py
+>>> midway - n//2
+-1
+>>> midway + n//2
+7
+```
+
+The `end` slice value is out of bounds for the array, but this just causes it
+to [clip](clipping) to the end.
+
+But `start` contains a subtraction, which causes it to become negative. Rather
+than clipping to the start, it indexes from the end of the array, producing
+the slice `a[-1:7]`. This picks the elements from the last element (`6`) up to
+but not including the 7th element (0-based). Index 7 is out of bounds for the
+array, so this picks all elements after `6`, which in this case is just `[6]`.
+
+Unfortunately, the "correct" fix here depends on the desired behavior of each
+individual slice. In some cases, the "slice from the end" behavior of negative
+values is in fact what is desired. In others, you might prefer an error, so
+should add a value check or assertion. In others, you might want clipping, in
+which case you could modify the expression to always be nonnegative. For
+example, instead of using `midway - n//2`, we could use `max(midway - n//2,
+0)`.
+
+```py
+>>> n = 8
+>>> a[max(midway - n//2, 0): midway + n//2]
+[0, 1, 2, 3, 4, 5, 6]
+```
+
 (clipping)=
 ### Clipping
+
+Slices can never give an out-of-bounds `IndexError`. This is different from
+[integer indices](integer-indices) which require the index to be in bounds. If
+`start` indexes before the beginning of the array (with a negative index), or
+`end` indexes past the end of the array, the slice will clip to the bounds of
+the array:
+
+```py
+>>> a[-100:100]
+[0, 1, 2, 3, 4, 5, 6]
+```
+
+Furthermore, if the `start` is on or after the `end`, the slice will slice be
+empty.
+
+```py
+>>> a[3:3]
+[]
+>>> a[5:2]
+[]
+```
+
+For NumPy arrays, a consequence of this is that a slice will always keep the
+axis, even if the size of the resulting axis is 0 or 1.
+
+```py
+>>> import numpy as np
+>>> arr = np.array([[1, 2], [3, 4]])
+>>> arr[0].shape # Removes the first dimension
+(2,)
+>>> arr[0:1].shape # Preserves the first dimension
+(1, 2)
+>>> arr[0:0].shape # Preserves the first dimension as an empty dimension
+(0, 2)
+```
+
+An important consequence of the clipping behavior of slices is that you cannot
+rely on runtime checks for out-of-bounds slices. See the [example
+above](negative-indices-example). Another consequence is that you can never
+rely on the length of a slice being `end - start` (for `step = 1` and `start`,
+`end` nonnegative). This is rather the *maximum* length of the slice. It could
+end up slicing something smaller. For example, an empty list will always slice
+to an empty list. `ndindex` can help in calculations here:
+`len(ndindex.Slice(...))` can be used to compute the *maximum* length of a
+slice. If the shape of the input is known,
+`len(ndindex.Slice(...).reduce(shape))` will compute the true length of the
+slice.
 
 ### Steps
 
