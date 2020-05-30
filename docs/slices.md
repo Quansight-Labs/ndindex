@@ -897,6 +897,110 @@ slice.
 
 ### Steps
 
+Thus far, we have only considered slices with the default step size of 1. When
+the step is greater than 1, the slice picks every `step` element contained in
+the bounds of `start` and `end`.
+
+The proper way to think about `step` is that the slice starts at `start` and
+successively adds `step` until it reaches an index that is greater than or
+equal to the `end`, and then stops without including that index.
+
+The important thing to remember about the `step` is that it being non-1 does
+not change the fundamental rules of slices that we have learned so far.
+`start` and `end` still use 0-based indexing. The `start` is always included
+in the slice and the `end` is never included. Negative `start` and `end` index
+from the end of the array. Out-of-bounds `start` and `end` still clip to the
+beginning or end of the array.
+
+Let us consider an example where the step size is `3`.
+
+```
+>>> a[0:6:3]
+[0, 3]
+```
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r r r r r r l}
+a = & [0, & 1, & 2, & 3, & 4, & 5, &\ 6]\\
+\color{red}{\text{index}}
+    & \color{blue}{\enclose{circle}{0}}
+    & \color{red}{1\phantom{,}}
+    & \color{red}{2\phantom{,}}
+    & \color{blue}{\enclose{circle}{3}}
+    & \color{red}{4\phantom{,}}
+    & \color{red}{5\phantom{,}}
+    & \color{red}{\enclose{circle}{6}}\\
+    & \color{blue}{\text{start}}
+    &
+    & \rightarrow
+    & \color{blue}{+3}
+    &
+    & \rightarrow
+    & \color{red}{+3\ (\geq \text{end})}
+\end{array}
+\end{aligned}
+$$
+
+Note that the `start`, `0`, is included, but the `end`, `6`, is *not*
+included, even though it is a multiple of `3` away from the start. This is
+because the `end` is never included.
+
+It can be tempting to think about the `step` in terms of modular arithmetic.
+In fact, it is often the case in practice that you require a `step` greater
+than 1 because you are dealing with modular arithmetic in some way. However,
+this requires care.
+
+Indeed, we can note that resulting indices `0`, `3` of the above slice
+`a[0:6:3]` are all multiples of 3. This is because the `start` index, `0`, is
+a multiple of 3. If we instead choose a start index that is $1 \pmod{3}$ then
+all the indices would also be $1 \pmod{3}$.
+
+```py
+>>> a[1:6:3]
+[1, 4]
+```
+
+However, be careful as this rule is *only* true for nonnegative `start`. If
+`start` is negative, the value of $\text{start} \pmod{\text{step}}$ has no
+bearing on the indices chosen for the slice. This is because an index `-start`
+is equivalent to `len(a) - start`. So the indices chosen by a slice
+`a[-start:stop:step]` will be equivalent to
+
+$$
+\begin{equation}
+\operatorname{len}(a) - \text{start} \pmod{\text{step}}.
+\label{mod-formula}
+\end{equation}
+$$
+
+So the remainder of the indices when divided by `step` depends on both
+`-start` and the size of the list. For example:
+
+
+```py
+>>> list(range(21))[-15::3]
+[6, 9, 12, 15, 18]
+>>> list(range(22))[-15::3]
+[7, 10, 13, 16, 19]
+```
+
+In the first case, `-15` is divisible by 3 and all the indices chosen by the
+slice `-15::3` were also divisible by 3 (remember that the index and the value
+are the same for simple ranges). But this is only because the length of the
+list, `21`, also happened to be a multiple of 3. In the second example if is
+`22` and the resulting indices are not multiples of `3`.
+
+If you need to think about steps in terms of modular arithmetic and the
+`start` is negative, either convert it to be nonnegative or use equation
+$\ref{mod-formula}$. In either case, be aware that the formula is different if
+`start` is negative or nonnegative, so if it can be either, you will need to
+consider both cases (see also the example [above](negative-indices-example)
+for the perils of indices that can be both negative and nonnegative).
+`ndindex.Slice` can also be used to perform various slice calculations so that
+you don't have to come up with the formulas yourself.
+
 ### Negative Steps
 
 (omitted)=
