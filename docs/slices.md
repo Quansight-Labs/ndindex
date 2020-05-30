@@ -6,7 +6,7 @@ to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.
 
 There are two primary aspects of slices that make the confusing:  confusing
-conventions, and split definitions. By confusing conventions, I mean that
+conventions, and branching definitions. By confusing conventions, I mean that
 slice semantics have definitions that are often difficult to reason about
 mathematically. These conventions were chosen for syntactic convenience, and
 one can easily see for most of them how they lead to concise notation for very
@@ -348,6 +348,7 @@ exception is if `end` is `None`/omitted. In this case, the rule obviously
 doesn't apply as-is, and so you can fallback to the next rule about omitted
 start/end (see [below](omitted)).
 
+(wrong-rule-1)=
 **Wrong Rule 1: "a slice `a[start:end]` slices the half-open interval
 $[\text{start}, \text{end})$ (equivalently, a slice `a[start:end]` picks the
 elements `i` such that `start <= i < end`).** This is *only* the case if the
@@ -440,7 +441,7 @@ values for the range. For example:
 
 This rule is tempting because `range()` makes some computations easy. For
 example, you can index or take the `len()` of a range. If you want to perform
-computations on slices, I recommend using `ndindex`. This is what it was
+computations on slices, I recommend using ndindex. This is what it was
 designed for.
 
 **Wrong Rule 3: Slices count the spaces between the elements of the array.**
@@ -776,9 +777,10 @@ slice is empty, the same as if `end <= start` when both are nonnegative.
 []
 ```
 
-And as with integer indexes, negative indices `-i` in slices can always be
-replaced `len(a) - i` (replacing `len(a)` with the size of the given axis for
-NumPy arrays), so they are primarily a syntactic convenience.
+Similar to integer indexes, negative indices `-i` in slices can always be
+replaced by adding `len(a)` to `-i` until it is in the range $[0,
+\operatorname{len}(a))$ (replacing `len(a)` with the size of the given axis
+for NumPy arrays), so they are primarily a syntactic convenience.
 
 The negative indexing behavior is convenient, but it can also lead to subtle
 bugs, due to the fundamental discontinuity it produces. This is especially
@@ -889,7 +891,7 @@ above](negative-indices-example). Another consequence is that you can never
 rely on the length of a slice being `end - start` (for `step = 1` and `start`,
 `end` nonnegative). This is rather the *maximum* length of the slice. It could
 end up slicing something smaller. For example, an empty list will always slice
-to an empty list. `ndindex` can help in calculations here:
+to an empty list. ndindex can help in calculations here:
 `len(ndindex.Slice(...))` can be used to compute the *maximum* length of a
 slice. If the shape of the input is known,
 `len(ndindex.Slice(...).reduce(shape))` will compute the true length of the
@@ -901,9 +903,9 @@ Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every `step` element contained in
 the bounds of `start` and `end`.
 
-The proper way to think about `step` is that the slice starts at `start` and
-successively adds `step` until it reaches an index that is greater than or
-equal to the `end`, and then stops without including that index.
+**The proper way to think about `step` is that the slice starts at `start` and
+successively adds `step` until it reaches an index that is at or past the
+`end`, and then stops without including that index.**
 
 The important thing to remember about the `step` is that it being non-1 does
 not change the fundamental rules of slices that we have learned so far.
@@ -914,7 +916,7 @@ beginning or end of the array.
 
 Let us consider an example where the step size is `3`.
 
-```
+```py
 >>> a[0:6:3]
 [0, 3]
 ```
@@ -964,20 +966,7 @@ all the indices would also be $1 \pmod{3}$.
 
 However, be careful as this rule is *only* true for nonnegative `start`. If
 `start` is negative, the value of $\text{start} \pmod{\text{step}}$ has no
-bearing on the indices chosen for the slice. This is because an index `-start`
-is equivalent to `len(a) - start`. So the indices chosen by a slice
-`a[-start:stop:step]` will be equivalent to
-
-$$
-\begin{equation}
-\operatorname{len}(a) - \text{start} \pmod{\text{step}}.
-\label{mod-formula}
-\end{equation}
-$$
-
-So the remainder of the indices when divided by `step` depends on both
-`-start` and the size of the list. For example:
-
+bearing on the indices chosen for the slice:
 
 ```py
 >>> list(range(21))[-15::3]
@@ -989,19 +978,139 @@ So the remainder of the indices when divided by `step` depends on both
 In the first case, `-15` is divisible by 3 and all the indices chosen by the
 slice `-15::3` were also divisible by 3 (remember that the index and the value
 are the same for simple ranges). But this is only because the length of the
-list, `21`, also happened to be a multiple of 3. In the second example if is
+list, `21`, also happened to be a multiple of 3. In the second example it is
 `22` and the resulting indices are not multiples of `3`.
 
-If you need to think about steps in terms of modular arithmetic and the
-`start` is negative, either convert it to be nonnegative or use equation
-$\ref{mod-formula}$. In either case, be aware that the formula is different if
-`start` is negative or nonnegative, so if it can be either, you will need to
-consider both cases (see also the example [above](negative-indices-example)
-for the perils of indices that can be both negative and nonnegative).
-`ndindex.Slice` can also be used to perform various slice calculations so that
-you don't have to come up with the formulas yourself.
+However, be aware that if the start is [clipped](clipping), the clipping
+occurs *before* the step. That is, if the `start` is less than `len(a)`, it is
+the same as `start = 0` regardless of the `step`.
 
+```py
+>>> a[-100::2]
+[0, 2, 4, 6]
+>>> a[-101::2]
+[0, 2, 4, 6]
+```
+
+If you need to think about steps in terms of modular arithmetic,
+`ndindex.Slice` can be used to perform various slice calculations so that you
+don't have to come up with modulo formulas yourself. If you try to write such
+formulas yourself, chances are you will get them wrong, as it is easy to fail
+to properly account for negative vs. nonnegative indices, clipping, and
+[negative steps](negative-steps). As was noted before, any correct "formula"
+regarding slices will necessarily have many piecewise conditions.
+
+(negative-steps)=
 ### Negative Steps
+
+Recall what I said above:
+
+**The proper way to think about `step` is that the slice starts at `start` and
+successively adds `step` until it reaches an index that is at or past the
+`end`, and then stops without including that index.**
+
+The key thing to remember with negative `step` is that this rule still
+applies. That is, the index starts at `start` then adds the `step` (which
+makes the index smaller), and stops when it is at or past the `end`. Note the
+phrase "at or past". If the `step` is positive this means "greater than or
+equal to", but if the step is negative this means "less than or equal to".
+
+Think of the step as starting at the `start` and sliding along the array,
+jumping along by `step` spitting out elements. Once you see that you are at or
+have gone past the `end` in the direction you are going (left for negative
+`step` and right for positive `step`), you stop.
+
+It's worth pointing out that unlike all other slices we have seen so far, a
+negative `step` reverses the order that the elements are returned relative to
+the original list. In fact, one of the most common uses of a negative step is
+`a[::-1]`, which reverses the list:
+
+```py
+>>> a[::-1]
+[6, 5, 4, 3, 2, 1, 0]
+```
+
+It is tempting therefore to think of a negative `step` as a "reversing"
+operation. However, this is a bad way of thinking about negative steps. The
+reason is that `a[i:j:-1]` is *not* equivalent to `reversed(a[j:i:1])`. The
+reason is basically the same as was described in [wrong rule 1](wrong-rule-1)
+above. The issue is that for `start:end:step`, `end` is *always* the what is
+not included (see the [half-open](half-open) section above). Which means if we
+swap `i` and `j`, we go from "`j` is not included" to "`i` is not included",
+producing a wrong result. For example, as before:
+
+```py
+>>> a[5:3:-1]
+[5, 4]
+>>> list(reversed(a[3:5:1])) # This is not the same thing
+[4, 3]
+```
+
+In the first case, index `3` is not included. In the second case, index `5` is
+not included.
+
+Worse, this way of thinking may even lead one to imagine the completely wrong
+idea that `a[i:j:-1]` is the same as `reversed(a)[j:i]`:
+
+```py
+>>> list(reversed(a))[3:5]
+[3, 2]
+```
+
+Once `a` is reversed, the indices `3` and `5` have nothing to do with the
+original indices `3` and `5`. To see why, consider a much larger list:
+
+```py
+>>> list(range(100))[5:3:-1]
+[5, 4]
+>>> list(reversed(range(100)))[3:5]
+[96, 95]
+```
+
+It is much more robust to think about the slice as starting at `start`, then
+moving across the list by `step` until reaching `end`, which is not included.
+
+Negative steps can of course be less than -1 as well, with similar behavior to
+steps greater than 1, again, keeping in mind that the end is not included.
+
+```py
+>>> a[6:0:-3]
+[6, 3]
+```
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r r r r r r r l}
+a = & [0, & 1, & 2, & 3, & 4, & 5, &\ 6]\\
+\color{red}{\text{index}}
+    & \color{red}{\enclose{circle}{0}}
+    & \color{red}{1\phantom{,}}
+    & \color{red}{2\phantom{,}}
+    & \color{blue}{\enclose{circle}{3}}
+    & \color{red}{4\phantom{,}}
+    & \color{red}{5\phantom{,}}
+    & \color{blue}{\enclose{circle}{6}}\\
+    & \color{red}{-3}
+    &
+    & \leftarrow
+    & \color{blue}{-3}
+    &
+    & \leftarrow
+    & \color{blue}{\text{start}}\\
+    &  (\leq \text{end})
+\end{array}
+\end{aligned}
+$$
+
+The `step` can never be equal to 0. This unconditionally leads to an error:
+
+```py
+>>> a[::0]
+Traceback (most recent call last):
+...
+ValueError: slice step cannot be zero
+```
 
 (omitted)=
 ### Omitted Entries (`None`)
