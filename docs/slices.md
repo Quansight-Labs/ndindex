@@ -13,10 +13,11 @@ one can easily see for most of them how they lead to concise notation for very
 common operations, but it remains nonetheless true that they can make figuring
 out the *right* slice to use in the first place complicated. By branching
 definitions, I mean that the definition of a slice takes on fundamentally
-different meanings if the elements are negative, nonnegative, or `None`. This
-again is done for syntactic convenience, but it means that as a user, you must
-switch your mode of thinking about slices depending on the sign or type of the
-arguments. There is no uniform formula that applies to all slices.
+different meanings if the start, end, or step are negative, nonnegative, or
+omitted. This again is done for syntactic convenience, but it means that as a
+user, you must switch your mode of thinking about slices depending on the sign
+or type of the arguments. There is no uniform formula that applies to all
+slices.
 
 The ndindex library can help with much of this, especially for people
 developing libraries that consume slices. But for end-users the challenge is
@@ -46,10 +47,7 @@ colon. For example, the following are all valid slices on the object `a`:
 
 Furthermore, for a slice `x:y:z` on Python or NumPy objects, there is an
 additional semantic restriction, which is that the expressions `x`, `y`, and
-`z` must be either integers or `None`. A term being `None` is syntactically
-equivalent to it being omitted. For example, `x::` is equivalent to
-`x:None:None`. In the discussions below I shall use "`None`" and "omitted"
-interchangeably.
+`z` must be either integers.
 
 It is worth mentioning that the `x:y:z` syntax is not valid outside of square
 brackets, but slice objects can be created manually using the `slice` builtin.
@@ -253,8 +251,8 @@ $$
 
 Slices behave like half-open intervals. What this means is that the `end` in
 `start:end` is *never* included in the slice (the exception is if `end` is
-`None` or omitted, which always slices to the beginning or end of the array,
-see [below](omitted)).
+omitted, which always slices to the beginning or end of the array, see
+[below](omitted)).
 
 For example, `a[3:5]` slices the elements 3 and 4, but not 5 ([0-based](0-based)).
 
@@ -344,14 +342,14 @@ NumPy docs](numpy-definition).
 Rather, it is best to remember the simplest rule possible that is *always*
 correct. That rule is, "the end is not included". That is always right,
 regardless of what the values of `start`, `end`, or `step` are. The only
-exception is if `end` is `None`/omitted. In this case, the rule obviously
+exception is if `end` is omitted. In this case, the rule obviously
 doesn't apply as-is, and so you can fallback to the next rule about omitted
 start/end (see [below](omitted)).
 
 (wrong-rule-1)=
 **Wrong Rule 1: "a slice `a[start:end]` slices the half-open interval
 $[\text{start}, \text{end})$ (equivalently, a slice `a[start:end]` picks the
-elements `i` such that `start <= i < end`).** This is *only* the case if the
+elements `i` such that `start <= i < end`)."** This is *only* the case if the
 step size is positive. It also isn't directly true for negative `start` or
 `end`. For example, with a step of -1, `a[start:end:-1]` slices starting at
 `start` going in reverse order to `end`, but not including `end`.
@@ -419,7 +417,7 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 \end{aligned}
 $$
 
-**Wrong Rule 2: A slice works like `range()`.** There are many similarities
+**Wrong Rule 2: "A slice works like `range()`."** There are many similarities
 between the behaviors of slices and the behavior of `range()`. However, they
 do not behave the same. A slice
 `start:end:step` only acts like `range(start, end, step)` if `start` and `end`
@@ -444,7 +442,7 @@ example, you can index or take the `len()` of a range. If you want to perform
 computations on slices, I recommend using ndindex. This is what it was
 designed for.
 
-**Wrong Rule 3: Slices count the spaces between the elements of the array.**
+**Wrong Rule 3: "Slices count the spaces between the elements of the array."**
 This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of an array is indexed by 0, the second by 1, and so on.
@@ -708,7 +706,7 @@ the usually way humans are taught to count things, but these will be far
 fewer, especially as you gain practice in counting that way. As long as you
 apply the rule "the end is not included", you will get the correct results.
 
-**Wrong Rule 4: The `end` of a slice `a[start:end]` is 1-based.**
+**Wrong Rule 4: "The `end` of a slice `a[start:end]` is 1-based."**
 
 You might get clever and say `a[3:5]` indexes from the 3-rd element with
 0-based indexing to the 5-th element with 1-based indexing. Don't do this. It
@@ -1113,4 +1111,29 @@ ValueError: slice step cannot be zero
 ```
 
 (omitted)=
-### Omitted Entries (`None`)
+### Omitted Entries
+
+The final point of confusion is omitted entries, or equivalently, entries that
+are `None`. It is rare to see `None` included in a slice, so I will just
+quickly note that `start`, `end`, or `step` being `None` is *syntactically*
+equivalent to it being omitted. That is to say, `a[::]` is a syntax shorthand
+for `a[None:None:None]`.
+
+The easiest one here is the `step`. If the `step` is omitted, it always
+defaults to `1`. If the step is omitted the second colon before the step can
+also be omitted. That is to say, the following are completely equivalent
+
+```py
+a[i:j:1]
+a[i:j:]
+a[i:j]
+```
+
+<!-- TODO: Better wording for this rule? -->
+For the `start` and `end`, the rule is that being omitted extends the slice
+all the way to the edge of the list in the direction being sliced. If the
+`step` is positive, this means `start` extends to the beginning of the list
+and `end` extends to the end. If `step` is negative, it is reversed: `start`
+extends to the end of the array and `end` extends to the beginning.
+
+## Rules
