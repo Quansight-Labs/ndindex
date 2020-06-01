@@ -190,7 +190,9 @@ class Tuple(NDIndex):
         removable = shape is not None
         for i, s in enumerate(reversed(args[:ellipsis_i]), start=1):
             reduced = s.reduce(shape, axis=ellipsis_i - i)
-            if removable and isinstance(reduced, Slice) and len(reduced) == shape[ellipsis_i - i]:
+            if (removable
+                and isinstance(reduced, Slice)
+                and reduced == Slice(0, shape[ellipsis_i - i])):
                 continue
             else:
                 removable = False
@@ -204,7 +206,9 @@ class Tuple(NDIndex):
                 # Make the axis positive so the error messages will match numpy
                 axis += len(shape)
             reduced = s.reduce(shape, axis=axis)
-            if removable and isinstance(reduced, Slice) and len(reduced) == shape[axis]:
+            if (removable
+                and isinstance(reduced, Slice)
+                and reduced == Slice(0, shape[axis])):
                 continue
             else:
                 removable = False
