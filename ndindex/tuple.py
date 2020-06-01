@@ -192,7 +192,7 @@ class Tuple(NDIndex):
             reduced = s.reduce(shape, axis=ellipsis_i - i)
             if (removable
                 and isinstance(reduced, Slice)
-                and reduced == Slice(0, shape[ellipsis_i - i])):
+                and reduced == Slice(0, shape[ellipsis_i - i], 1)):
                 continue
             else:
                 removable = False
@@ -208,7 +208,7 @@ class Tuple(NDIndex):
             reduced = s.reduce(shape, axis=axis)
             if (removable
                 and isinstance(reduced, Slice)
-                and reduced == Slice(0, shape[axis])):
+                and reduced == Slice(0, shape[axis], 1)):
                 continue
             else:
                 removable = False
