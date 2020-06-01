@@ -8,6 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from .helpers import check_same, Tuples, prod, shapes, iterslice
+from ..integer import Integer
 
 
 def test_tuple_exhaustive():
@@ -108,6 +109,28 @@ def test_tuple_reduce_hypothesis(t, shape):
             assert len(reduced.args) != 1
             assert reduced == () or reduced.args[-1] != ...
         # TODO: Check the other properties from the Tuple.reduce docstring.
+
+def test_tuple_reduce_explicit():
+    # Some aspects of Tuple.reduce are hard to test as properties, so include
+    # some explicit tests here.
+
+    # (Before Index, shape): After index
+    tests = {
+        # Make sure redundant slices are removed
+        (Tuple(0, ..., slice(0, 3)), (5, 3)): Integer(0),
+        (Tuple(slice(0, 5), ..., 0), (5, 3)): Tuple(..., Integer(0)),
+        # Ellipsis is removed if unnecessary
+        (Tuple(0, ...), (2, 3)): Integer(0),
+        (Tuple(0, 1, ...), (2, 3)): Tuple(Integer(0), Integer(1)),
+        (Tuple(..., 0, 1), (2, 3)): Tuple(Integer(0), Integer(1)),
+    }
+
+    for (before, shape), after in tests.items():
+        reduced = before.reduce(shape)
+        assert reduced == after
+
+        a = arange(prod(shape)).reshape(shape)
+        check_same(a, before.raw, func=lambda x: x.reduce(shape))
 
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
