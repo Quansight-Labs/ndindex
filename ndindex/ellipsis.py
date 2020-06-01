@@ -53,6 +53,14 @@ class ellipsis(NDIndex):
         >>> ellipsis().reduce()
         Tuple()
 
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .Integer.reduce
+
         """
         return Tuple()
 

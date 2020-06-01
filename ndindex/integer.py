@@ -58,6 +58,14 @@ class Integer(NDIndex):
         >>> idx.reduce((9,))
         Integer(4)
 
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .ellipsis.reduce
+
         """
         if shape is None:
             return self

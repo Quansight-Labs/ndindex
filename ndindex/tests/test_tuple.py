@@ -7,8 +7,8 @@ from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
 from ..tuple import Tuple
-from .helpers import check_same, Tuples, prod, shapes, iterslice
 from ..integer import Integer
+from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
 
 
 def test_tuple_exhaustive():
@@ -153,6 +153,32 @@ def test_tuple_expand_hypothesis(t, shape):
     except IndexError:
         pass
     else:
+        assert isinstance(expanded, Tuple)
+        assert ... not in expanded.args
+        if isinstance(shape, int):
+            assert len(expanded.args) == 1
+        else:
+            assert len(expanded.args) == len(shape)
+
+@given(ndindices(), one_of(shapes, integers(0, 10)))
+def test_ndindex_expand_hypothesis(idx, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    index = ndindex(idx)
+
+    check_same(a, index.raw, func=lambda x: x.expand(shape),
+               same_exception=False)
+
+
+    try:
+        expanded = index.expand(shape)
+    except IndexError:
+        pass
+    else:
+        assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
         if isinstance(shape, int):
             assert len(expanded.args) == 1

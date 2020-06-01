@@ -166,7 +166,11 @@ class Tuple(NDIndex):
         See Also
         ========
 
-        Tuple.expand
+        .Tuple.expand
+        .NDIndex.reduce
+        .Slice.reduce
+        .Integer.reduce
+        .ellipsis.reduce
 
         """
         from .ellipsis import ellipsis
@@ -266,7 +270,8 @@ class Tuple(NDIndex):
         See Also
         ========
 
-        Tuple.reduce
+        .Tuple.reduce
+        .NDIndex.expand
 
         """
         from .ellipsis import ellipsis

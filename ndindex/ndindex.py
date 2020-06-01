@@ -171,6 +171,40 @@ class NDIndex:
         For single axis indices such as Slice and Tuple, `reduce` takes an
         optional `axis` argument to specify the axis, defaulting to 0.
 
+        See Also
+        ========
+
+        .Integer.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .ellipsis.reduce
+
         """
         # XXX: Should the default be raise NotImplementedError or return self?
         raise NotImplementedError
+
+    def expand(self, shape):
+        """
+        Expand an index on an array of shape `shape`
+
+        An expanded index is as explicit as possible. Unlike `reduce`, which
+        tries to simplify an index and remove redundancies, `expand` typically
+        makes an index larger.
+
+        `expand` always returns a `Tuple` whose `.args` is the same length as
+        `shape`. See :meth:`.Tuple.expand` for more details on the behavior of
+        `expand`.
+
+        >>> from ndindex import Slice
+        >>> Slice(None).expand((2, 3))
+        Tuple(slice(0, 2, 1), slice(0, 3, 1))
+
+        See Also
+        ========
+
+        .Tuple.expand
+
+        """
+        from .tuple import Tuple
+
+        return Tuple(self).expand(shape)
