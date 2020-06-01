@@ -92,15 +92,15 @@ def test_tuple_reduce_hypothesis(t, shape):
         a = arange(prod(shape)).reshape(shape)
 
     try:
-        idx = Tuple(*t)
+        index = Tuple(*t)
     except (IndexError, ValueError):
         assume(False)
 
-    check_same(a, idx.raw, func=lambda x: x.reduce(shape),
+    check_same(a, index.raw, func=lambda x: x.reduce(shape),
                same_exception=False)
 
     try:
-        reduced = idx.reduce(shape)
+        reduced = index.reduce(shape)
     except IndexError:
         pass
     else:
@@ -118,15 +118,15 @@ def test_tuple_expand_hypothesis(t, shape):
         a = arange(prod(shape)).reshape(shape)
 
     try:
-        idx = Tuple(*t)
+        index = Tuple(*t)
     except (IndexError, ValueError):
         assume(False)
 
-    check_same(a, idx.raw, func=lambda x: x.expand(shape),
+    check_same(a, index.raw, func=lambda x: x.expand(shape),
                same_exception=False)
 
     try:
-        expanded = idx.expand(shape)
+        expanded = index.expand(shape)
     except IndexError:
         pass
     else:
