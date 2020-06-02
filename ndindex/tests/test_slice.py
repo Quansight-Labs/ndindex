@@ -3,7 +3,7 @@ from pytest import raises
 from numpy import arange
 
 from hypothesis import given, assume
-from hypothesis.strategies import integers
+from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
 from .helpers import check_same, slices, prod, shapes, iterslice
@@ -156,9 +156,13 @@ def test_slice_reduce_exhaustive():
             assert reduced.step != None
             assert len(reduced) == len(a[reduced.raw]), (S, n)
 
-@given(slices(), shapes)
+@given(slices(), one_of(shapes, integers(0, 10)))
 def test_slice_reduce_hypothesis(s, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
     try:
         S = Slice(s)
     except ValueError:
