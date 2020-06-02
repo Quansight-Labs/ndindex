@@ -57,7 +57,7 @@
 <p>Python’s slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.</p>
-<p>There are two primary aspects of slices that make the confusing:  confusing
+<p>There are two primary aspects of slices that make them confusing:  confusing
 conventions, and branching definitions. By confusing conventions, I mean that
 slice semantics have definitions that are often difficult to reason about
 mathematically. These conventions were chosen for syntactic convenience, and
@@ -67,9 +67,8 @@ out the <em>right</em> slice to use in the first place complicated. By branching
 definitions, I mean that the definition of a slice takes on fundamentally
 different meanings if the start, end, or step are negative, nonnegative, or
 omitted. This again is done for syntactic convenience, but it means that as a
-user, you must switch your mode of thinking about slices depending on the sign
-or type of the arguments. There is no uniform formula that applies to all
-slices.</p>
+user, you must switch your mode of thinking about slices depending on value of
+the arguments. There is no uniform formula that applies to all slices.</p>
 <p>The ndindex library can help with much of this, especially for people
 developing libraries that consume slices. But for end-users the challenge is
 often just to write down a slice. Even if you rarely work with NumPy arrays,
@@ -95,17 +94,19 @@ a[x::z]
 </div>
 <p>Furthermore, for a slice <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code> on Python or NumPy objects, there is an
 additional semantic restriction, which is that the expressions <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">z</span></code> must be either integers.</p>
+<code class="docutils literal notranslate"><span class="pre">z</span></code> must be integers.</p>
 <p>It is worth mentioning that the <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code> syntax is not valid outside of square
 brackets, but slice objects can be created manually using the <code class="docutils literal notranslate"><span class="pre">slice</span></code> builtin.
 You can also use the <code class="docutils literal notranslate"><span class="pre">ndindex.Slice</span></code> object if you want to perform more
 advanced operations. The discussions below will just use <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code> without the
 square brackets for simplicity.</p>
+<!-- TODO: Remove this? -->
 </div>
 <div class="section" id="integer-indices">
 <span id="id1"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this headline">¶</a></h2>
 <p>To understand slices, it is good to first review how integer indices work.
 Throughout this guide, I will use as an example this prototype list:</p>
+<!-- TODO: Use a different list where the entries don't match the indices? -->
 <div class="math notranslate nohighlight">
 \[
 a = [0, 1, 2, 3, 4, 5, 6].
@@ -136,11 +137,11 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp; 6]\\
 <span class="go">3</span>
 </pre></div>
 </div>
-<p>For <strong>negative</strong> integers, the indices index from the end of the array.
-These indices are necessary 1-based (or rather, -1-based), since 0
-already refers to the first element of the array. <code class="docutils literal notranslate"><span class="pre">-1</span></code> chooses the last
-element, <code class="docutils literal notranslate"><span class="pre">-2</span></code> the second-to-last, and so on. For example, <code class="docutils literal notranslate"><span class="pre">a[-3]</span></code> picks
-the <strong>third-to-last</strong> element of <code class="docutils literal notranslate"><span class="pre">a</span></code>, in this case, <code class="docutils literal notranslate"><span class="pre">4</span></code>:</p>
+<p>For <strong>negative</strong> integers, the indices index from the end of the array. These
+indices are necessarily 1-based (or rather, -1-based), since 0 already refers
+to the first element of the array. <code class="docutils literal notranslate"><span class="pre">-1</span></code> chooses the last element, <code class="docutils literal notranslate"><span class="pre">-2</span></code> the
+second-to-last, and so on. For example, <code class="docutils literal notranslate"><span class="pre">a[-3]</span></code> picks the <strong>third-to-last</strong>
+element of <code class="docutils literal notranslate"><span class="pre">a</span></code>, in this case, <code class="docutils literal notranslate"><span class="pre">4</span></code>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{aligned}
@@ -1038,14 +1039,19 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp;\ 6]\\
 </div>
 <div class="section" id="omitted-entries">
 <span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this headline">¶</a></h3>
-<p>The final point of confusion is omitted entries, or equivalently, entries that
-are <code class="docutils literal notranslate"><span class="pre">None</span></code>. It is rare to see <code class="docutils literal notranslate"><span class="pre">None</span></code> included in a slice, so I will just
-quickly note that <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">end</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> being <code class="docutils literal notranslate"><span class="pre">None</span></code> is <em>syntactically</em>
-equivalent to it being omitted. That is to say, <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is a syntax shorthand
-for <code class="docutils literal notranslate"><span class="pre">a[None:None:None]</span></code>.</p>
-<p>The easiest one here is the <code class="docutils literal notranslate"><span class="pre">step</span></code>. If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted, it always
-defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>. If the step is omitted the second colon before the step can
-also be omitted. That is to say, the following are completely equivalent</p>
+<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#ommited-none" id="id6">1</a></p>
+<p><strong>The best way to think about omitted entries is just like that, as omitted
+entries.</strong> That is, for a slice like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> think of it as the <code class="docutils literal notranslate"><span class="pre">start</span></code> being
+omitted, and <code class="docutils literal notranslate"><span class="pre">end</span></code> equal to <code class="docutils literal notranslate"><span class="pre">i</span></code>. Conversely, <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> has the <code class="docutils literal notranslate"><span class="pre">start</span></code> as <code class="docutils literal notranslate"><span class="pre">i</span></code>
+and the <code class="docutils literal notranslate"><span class="pre">end</span></code> omitted. The wrong way to think about these is as a colon being
+before or after the index <code class="docutils literal notranslate"><span class="pre">i</span></code>. Thinking about it this way will only lead to
+confusion, because you won’t be thinking about <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>, but rather
+trying to remember some rule based on where a colon is. But the colons in a
+slice are not indicators, they are separators.</p>
+<p>As to the semantic meaning of omitted entries, the easiest one is the <code class="docutils literal notranslate"><span class="pre">step</span></code>.
+If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted, it always defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>. If the step is omitted
+the second colon before the step can also be omitted. That is to say, the
+following are completely equivalent:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">:]</span>
 <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">]</span>
@@ -1061,7 +1067,48 @@ extends to the end of the array and <code class="docutils literal notranslate"><
 </div>
 <div class="section" id="rules">
 <h2>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
+<p>These rules are the ones to keep in mind to understand how slices work. For a
+slice <code class="docutils literal notranslate"><span class="pre">a[start:end:step]</span></code>:</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code> use 0-based indexing from the start of the array when
+they are nonnegative, and -1-based indexing from end of the array when they
+are negative.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end</span></code> is never included in the slice.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> are clipped to the bounds of the array.</p></li>
+<li><p>The slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches
+an index that is at or past <code class="docutils literal notranslate"><span class="pre">end</span></code>, and then stops without including that
+<code class="docutils literal notranslate"><span class="pre">end</span></code> index.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted it defaults to 1.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">end</span></code> are omitted they extend to the start or end of the
+array in the direction being sliced. Slices like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> or <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> should
+be though of as the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">end</span></code> being omitted, not as a colon to the
+left or right of an index.</p></li>
+<li><p>Slicing something never produces an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>, even if the slice is
+empty. For a NumPy array, a slice always keeps the axis being sliced, even
+if the final dimension is 0 or 1.</p></li>
+<li><p>These rules make it syntactically convenient to slice subarrays in useful
+ways, but make it extremely challenging to write down formulas for things
+corresponding to slices that are correct in all cases. Instead of trying to
+do this yourself, use ndindex.</p></li>
+</ol>
 </div>
+</div>
+<div class="section" id="footnotes">
+<h1>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this headline">¶</a></h1>
+<!-- Footnotes are written inline above but markdown will put them here at the
+end of the document. -->
+<hr class="docutils" />
+<dl class="footnote brackets">
+<dt class="label" id="ommited-none"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">end</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> may also be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which is
+syntactically equivalent to them being omitted. That is to say, <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is a
+syntax shorthand for <code class="docutils literal notranslate"><span class="pre">a[None:None:None]</span></code>. It is rare to see <code class="docutils literal notranslate"><span class="pre">None</span></code> in a slice;
+this is only relevant for code that consumes slices, such as a <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>
+method on an object. The <code class="docutils literal notranslate"><span class="pre">slice</span></code> object corresponding to a slice <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is
+<code class="docutils literal notranslate"><span class="pre">slice(None,</span> <span class="pre">None,</span> <span class="pre">None)</span></code>. <code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code> also uses <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate
+omitted entries in the same way.</p>
+</dd>
+</dl>
 </div>
 
 
@@ -1129,6 +1176,7 @@ extends to the end of the array and <code class="docutils literal notranslate"><
 <li class="toctree-l4"><a class="reference internal" href="#rules">Rules</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#footnotes">Footnotes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
@@ -1182,6 +1230,7 @@ extends to the end of the array and <code class="docutils literal notranslate"><
 <li class="toctree-l2"><a class="reference internal" href="#rules">Rules</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#footnotes">Footnotes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
