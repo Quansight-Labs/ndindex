@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>API Reference &#8212; ndindex  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Slices" href="slices.html" />
+    <link rel="prev" title="ndindex" href="index.html" />
+ 
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+ 
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">ndindex</a>
+        </li>
+        <li>
+          <a href="slices.html" title="Next document">Slices</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<p>The ndindex API consists of classes representing the different types of index
+objects (integers, slices, etc.), as well as some helper functions for dealing
+with indices.</p>
+<div class="section" id="ndindex">
+<h2>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>ndindex<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-eval_rst notranslate"><div class="highlight"><pre><span></span>.. autofunction:: ndindex.ndindex
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="integer">
+<h3>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-eval_rst notranslate"><div class="highlight"><pre><span></span>.. autoclass:: ndindex.Integer
+   :members:
+</pre></div>
+</div>
+</div>
+<div class="section" id="slice">
+<h3>Slice<a class="headerlink" href="#slice" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-eval_rst notranslate"><div class="highlight"><pre><span></span>.. autoclass:: ndindex.Slice
+   :members:
+</pre></div>
+</div>
+</div>
+<div class="section" id="ellipsis">
+<h3>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-eval_rst notranslate"><div class="highlight"><pre><span></span>.. autoclass:: ndindex.ellipsis
+   :members:
+</pre></div>
+</div>
+</div>
+<div class="section" id="tuple">
+<h3>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-eval_rst notranslate"><div class="highlight"><pre><span></span>.. autoclass:: ndindex.Tuple
+   :members:
+</pre></div>
+</div>
+</div>
+<div class="section" id="internal-api">
+<h3>Internal API<a class="headerlink" href="#internal-api" title="Permalink to this headline">¶</a></h3>
+<p>These classes are only intended for internal use in ndindex.</p>
+<div class="highlight-eval_rst notranslate"><div class="highlight"><pre><span></span>.. autoclass:: ndindex.ndindex.NDIndex
+   :members:
+
+.. autoclass:: ndindex.slice.default
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">ndindex</a>
+        </li>
+        <li>
+          <a href="slices.html" title="Next document">Slices</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+<h1 class="logo"><a href="index.html">ndindex</a></h1>
+
+
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ndindex</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#license">License</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex">ndindex</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id1">ndindex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#integer">Integer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#slice">Slice</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tuple">Tuple</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#internal-api">Internal API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indexes">Negative Indexes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ndindex">ndindex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">ndindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integer">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slice">Slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tuple">Tuple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#internal-api">Internal API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-indexes">Negative Indexes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Quansight.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/api.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/Quansight/ndindex" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
