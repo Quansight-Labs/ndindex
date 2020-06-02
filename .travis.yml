@@ -47,7 +47,11 @@ script:
         cd docs;
         make html;
         cd ..;
-        doctr deploy .;
+        if [[ "${TRAVIS_BRANCH}" == "master" ]]; then
+            doctr deploy .;
+        else
+            doctr deploy --no-require-master "_docs-$TRAVIS_BRANCH"
+        fi
     fi
   - if [[ "${COVERAGE}" == "true" ]]; then
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";
