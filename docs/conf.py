@@ -32,17 +32,19 @@ extensions = [
     'sphinx.ext.autodoc',
 ]
 
-import commonmark
-
-# From
-# https://stackoverflow.com/questions/56062402/force-sphinx-to-interpret-markdown-in-python-docstrings-instead-of-restructuredt
-
-def docstring(app, what, name, obj, options, lines):
-    md  = '\n'.join(lines)
-    ast = commonmark.Parser().parse(md)
-    rst = commonmark.ReStructuredTextRenderer().render(ast)
-    lines.clear()
-    lines += rst.splitlines()
+# # From
+# # https://stackoverflow.com/questions/56062402/force-sphinx-to-interpret-markdown-in-python-docstrings-instead-of-restructuredt
+#
+# def docstring(app, what, name, obj, options, lines):
+#     import commonmark
+#     md  = '\n'.join(lines)
+#     ast = commonmark.Parser().parse(md)
+#     rst = commonmark.ReStructuredTextRenderer().render(ast)
+#     lines.clear()
+#     lines += rst.splitlines()
+#
+# def setup(app):
+#     app.connect('autodoc-process-docstring', docstring)
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
