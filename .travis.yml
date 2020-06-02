@@ -47,7 +47,7 @@ script:
         if [[ "${TRAVIS_BRANCH}" == "master" ]]; then
             doctr deploy .;
         else
-            doctr deploy --no-require-master "_docs-$TRAVIS_BRANCH"
+            doctr deploy --no-require-master "_docs-$TRAVIS_BRANCH";
         fi
     fi
   - if [[ "${COVERAGE}" == "true" ]]; then
