@@ -5,7 +5,7 @@ Python's slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.
 
-There are two primary aspects of slices that make the confusing:  confusing
+There are two primary aspects of slices that make them confusing:  confusing
 conventions, and branching definitions. By confusing conventions, I mean that
 slice semantics have definitions that are often difficult to reason about
 mathematically. These conventions were chosen for syntactic convenience, and
@@ -15,9 +15,8 @@ out the *right* slice to use in the first place complicated. By branching
 definitions, I mean that the definition of a slice takes on fundamentally
 different meanings if the start, end, or step are negative, nonnegative, or
 omitted. This again is done for syntactic convenience, but it means that as a
-user, you must switch your mode of thinking about slices depending on the sign
-or type of the arguments. There is no uniform formula that applies to all
-slices.
+user, you must switch your mode of thinking about slices depending on value of
+the arguments. There is no uniform formula that applies to all slices.
 
 The ndindex library can help with much of this, especially for people
 developing libraries that consume slices. But for end-users the challenge is
@@ -47,13 +46,14 @@ colon. For example, the following are all valid slices on the object `a`:
 
 Furthermore, for a slice `x:y:z` on Python or NumPy objects, there is an
 additional semantic restriction, which is that the expressions `x`, `y`, and
-`z` must be either integers.
+`z` must be integers.
 
 It is worth mentioning that the `x:y:z` syntax is not valid outside of square
 brackets, but slice objects can be created manually using the `slice` builtin.
 You can also use the `ndindex.Slice` object if you want to perform more
 advanced operations. The discussions below will just use `x:y:z` without the
 square brackets for simplicity.
+<!-- TODO: Remove this? -->
 
 (integer-indices)=
 Integer indices
@@ -61,6 +61,8 @@ Integer indices
 
 To understand slices, it is good to first review how integer indices work.
 Throughout this guide, I will use as an example this prototype list:
+
+<!-- TODO: Use a different list where the entries don't match the indices? -->
 
 $$
 a = [0, 1, 2, 3, 4, 5, 6].
@@ -95,11 +97,11 @@ $$
 3
 ```
 
-For **negative** integers, the indices index from the end of the array.
-These indices are necessary 1-based (or rather, -1-based), since 0
-already refers to the first element of the array. `-1` chooses the last
-element, `-2` the second-to-last, and so on. For example, `a[-3]` picks
-the **third-to-last** element of `a`, in this case, `4`:
+For **negative** integers, the indices index from the end of the array. These
+indices are necessarily 1-based (or rather, -1-based), since 0 already refers
+to the first element of the array. `-1` chooses the last element, `-2` the
+second-to-last, and so on. For example, `a[-3]` picks the **third-to-last**
+element of `a`, in this case, `4`:
 
 $$
 \begin{aligned}
@@ -1113,15 +1115,29 @@ ValueError: slice step cannot be zero
 (omitted)=
 ### Omitted Entries
 
-The final point of confusion is omitted entries, or equivalently, entries that
-are `None`. It is rare to see `None` included in a slice, so I will just
-quickly note that `start`, `end`, or `step` being `None` is *syntactically*
-equivalent to it being omitted. That is to say, `a[::]` is a syntax shorthand
-for `a[None:None:None]`.
+The final point of confusion is omitted entries.[^ommited-none]
 
-The easiest one here is the `step`. If the `step` is omitted, it always
-defaults to `1`. If the step is omitted the second colon before the step can
-also be omitted. That is to say, the following are completely equivalent
+[^ommited-none]: `start`, `end`, or `step` may also be `None`, which is
+syntactically equivalent to them being omitted. That is to say, `a[::]` is a
+syntax shorthand for `a[None:None:None]`. It is rare to see `None` in a slice;
+this is only relevant for code that consumes slices, such as a `__getitem__`
+method on an object. The `slice` object corresponding to a slice `a[::]` is
+`slice(None, None, None)`. `ndindex.Slice()` also uses `None` to indicate
+omitted entries in the same way.
+
+**The best way to think about omitted entries is just like that, as omitted
+entries.** That is, for a slice like `a[:i]` think of it as the `start` being
+omitted, and `end` equal to `i`. Conversely, `a[i:]` has the `start` as `i`
+and the `end` omitted. The wrong way to think about these is as a colon being
+before or after the index `i`. Thinking about it this way will only lead to
+confusion, because you won't be thinking about `start` and `end`, but rather
+trying to remember some rule based on where a colon is. But the colons in a
+slice are not indicators, they are separators.
+
+As to the semantic meaning of omitted entries, the easiest one is the `step`.
+If the `step` is omitted, it always defaults to `1`. If the step is omitted
+the second colon before the step can also be omitted. That is to say, the
+following are completely equivalent:
 
 ```py
 a[i:j:1]
@@ -1137,3 +1153,31 @@ and `end` extends to the end. If `step` is negative, it is reversed: `start`
 extends to the end of the array and `end` extends to the beginning.
 
 ## Rules
+
+These rules are the ones to keep in mind to understand how slices work. For a
+slice `a[start:end:step]`:
+
+1. `start` and `step` use 0-based indexing from the start of the array when
+   they are nonnegative, and -1-based indexing from end of the array when they
+   are negative.
+2. `end` is never included in the slice.
+3. `start` and `end` are clipped to the bounds of the array.
+4. The slice starts at `start` and successively adds `step` until it reaches
+   an index that is at or past `end`, and then stops without including that
+   `end` index.
+5. If `step` is omitted it defaults to 1.
+6. If `start` or `end` are omitted they extend to the start or end of the
+   array in the direction being sliced. Slices like `a[:i]` or `a[i:]` should
+   be though of as the `start` or `end` being omitted, not as a colon to the
+   left or right of an index.
+7. Slicing something never produces an `IndexError`, even if the slice is
+   empty. For a NumPy array, a slice always keeps the axis being sliced, even
+   if the final dimension is 0 or 1.
+8. These rules make it syntactically convenient to slice subarrays in useful
+   ways, but make it extremely challenging to write down formulas for things
+   corresponding to slices that are correct in all cases. Instead of trying to
+   do this yourself, use ndindex.
+
+# Footnotes
+<!-- Footnotes are written inline above but markdown will put them here at the
+end of the document. -->
