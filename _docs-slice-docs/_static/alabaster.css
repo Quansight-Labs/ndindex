@@ -327,7 +327,7 @@ p.admonition-title:after {
 }
 
 pre, tt, code {
-    font-family: 'Menlo', 'Deja Vu Sans Mono', 'Consolas', 'Bitstream Vera Sans Mono', monospace;
+    font-family: 'Menlo', 'DejaVu Sans Mono', 'Consolas', 'Bitstream Vera Sans Mono', monospace;
     font-size: 0.85em;
 }
 
