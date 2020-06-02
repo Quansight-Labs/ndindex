@@ -16,9 +16,9 @@ class Integer(NDIndex):
     >>> [0, 1, 2][idx.raw]
     0
 
-    Note that Integer itself implements `__index__`, so it can be used as an
+    Note that `Integer` itself implements `__index__`, so it can be used as an
     index directly. However, it is still recommended to use `raw` for
-    consistency, as this only works for Integer.
+    consistency, as this only works for `Integer`.
 
     """
     def _typecheck(self, idx):
@@ -57,6 +57,14 @@ class Integer(NDIndex):
         IndexError: index -5 is out of bounds for axis 0 with size 3
         >>> idx.reduce((9,))
         Integer(4)
+
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .ellipsis.reduce
 
         """
         if shape is None:
