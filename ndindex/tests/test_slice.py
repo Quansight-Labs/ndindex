@@ -150,6 +150,8 @@ def test_slice_reduce_exhaustive():
             check_same(a, S.raw, func=lambda x: x.reduce((n,)))
 
             # Check the conditions stated by the Slice.reduce() docstring
+            # TODO: Factor this out so we can also test it in the tuple reduce
+            # tests.
             reduced = S.reduce((n,))
             assert reduced.start >= 0
             # We cannot require stop > 0 because if stop = None and step < 0, the

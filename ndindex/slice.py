@@ -250,6 +250,14 @@ class Slice(NDIndex):
           >>> len(_)
           3
 
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Integer.reduce
+        .ellipsis.reduce
+
         """
         start, stop, step = self.args
 
