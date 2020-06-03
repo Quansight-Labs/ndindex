@@ -184,3 +184,57 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.stop != None
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
+
+def test_slice_as_subindex_slice_exhaustive():
+    a = arange(100)
+    for sargs in iterslice():
+        print(sargs)
+        for indexargs in iterslice():
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            try:
+                Index = Slice(*indexargs)
+            except ValueError:
+                continue
+
+            try:
+                Subindex = S.as_subindex(Index)
+            except NotImplementedError:
+                continue
+
+            aS = a[S.raw]
+            aindex = a[Index.raw]
+            asubindex = aindex[Subindex.raw]
+
+            for i in a:
+                if i in aS and i in aindex:
+                    assert i in asubindex, (S, Index)
+                else:
+                    assert i not in asubindex, (S, Index)
+
+@given(slices(), slices(), integers(0, 100))
+def test_slice_as_subindex_slice_hypothesis(s, index, size):
+    a = arange(size)
+    try:
+        S = Slice(s)
+        Index = Slice(index)
+    except ValueError:
+        assume(False)
+
+    try:
+        Subindex = S.as_subindex(Index)
+    except NotImplementedError:
+        assume(False)
+
+    aS = a[s]
+    aindex = a[index]
+    asubindex = aindex[Subindex.raw]
+
+    for i in a:
+        if i in aS and i in aindex:
+            assert i in asubindex
+        else:
+            assert i not in asubindex

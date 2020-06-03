@@ -338,3 +338,51 @@ class Slice(NDIndex):
             if -size <= stop < 0:
                 stop += size
         return self.__class__(start, stop, step)
+
+    # TODO: Better name?
+    def as_subindex(self, index):
+        """
+        i.as_subindex(j) produces an index k such that a[j][k] produces all of
+        the elements of a[j] that are also in a[i].
+
+        If a[j] is a subset of a[i], then a[j][k] = a[i]. Otherwise, a[j][k] =
+        a[i & j], where i & j is the intersection of i and j, that is, the
+        elements of a that are indexed by both i and j.
+
+        For example, in the below diagram, `i` and `j` index a subset of the array
+        `a`. `k = i.as_subindex(j)` is an index on `a[j]` that gives the
+        subset of `a[j]` also included in `a[i]`::
+
+            +------------ self ------------+
+            |                              |
+        ------------------- a -----------------------
+               |                                 |
+               +------------- index -------------+
+               |                           |
+               +- self.as_subindex(index) -+
+        """
+        from .ndindex import ndindex
+        index = ndindex(index)
+
+        if not isinstance(index, Slice):
+            raise NotImplementedError("Slice.as_subindex is only implemented for slices")
+
+        s = self.reduce()
+        index = index.reduce()
+
+        if s.step != 1 or index.step != 1:
+            raise NotImplementedError
+        step = 1
+
+        # After reducing, start is not None when step > 0
+        if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
+            raise NotImplementedError
+
+        start = max(s.start, index.start) - index.start
+        if start < 0:
+            start = 0
+        stop = min(s.stop, index.stop) - index.start
+        if stop < 0:
+            stop = 0
+
+        return Slice(start, stop, step)
