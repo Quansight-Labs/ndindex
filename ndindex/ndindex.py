@@ -174,3 +174,9 @@ class NDIndex:
         """
         # XXX: Should the default be raise NotImplementedError or return self?
         raise NotImplementedError
+
+    def newshape(self, shape=None):
+        """
+        Returns the shape of `a[idx.raw]`, assuming `a` has shape `shape`.
+        """
+        raise NotImplementedError

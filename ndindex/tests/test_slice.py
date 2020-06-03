@@ -6,6 +6,8 @@ from hypothesis import given, assume
 from hypothesis.strategies import integers
 
 from ..slice import Slice
+from ..integer import Integer
+from ..tuple import Tuple
 from .helpers import check_same, slices, prod, shapes, iterslice
 
 def test_slice_args():
@@ -182,3 +184,22 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.stop != None
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
+
+
+def test_slice_newshape_no_shape():
+    raises(ValueError, lambda: Slice(6).newshape())
+
+
+def test_slice_newshape_Tuple():
+    raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
+
+
+def test_slice_newshape_small_shape():
+    raises(IndexError, lambda: Slice(6).newshape(2))
+    raises(IndexError, lambda: Slice(6).newshape((8, 2), axis=1))
+    raises(IndexError, lambda: Slice(6).newshape((4, 4)))
+
+
+def test_integer_newshape_wrong_axis():
+    raises(IndexError, lambda: Slice(6).newshape(2, axis=1))
+    raises(IndexError, lambda: Slice(6).newshape((4, 2), axis=2))
