@@ -6,7 +6,6 @@ from hypothesis import given, assume
 from hypothesis.strategies import integers
 
 from ..slice import Slice
-from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import check_same, slices, prod, shapes, iterslice
 
