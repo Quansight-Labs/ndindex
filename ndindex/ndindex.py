@@ -2,6 +2,9 @@ import inspect
 
 from numpy import ndarray
 
+newaxis = None
+
+
 def ndindex(obj):
     """
     Convert an object into an ndindex type

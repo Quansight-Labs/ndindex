@@ -4,7 +4,7 @@ from hypothesis import given, example
 
 from pytest import raises
 
-from ..ndindex import ndindex
+from ..ndindex import ndindex, newaxis
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from .helpers import ndindices
@@ -44,3 +44,7 @@ def test_str(idx):
     d = {}
     exec("from ndindex import *", d)
     assert eval(str(index), d) == idx
+
+
+def test_newaxis():
+    assert newaxis is None

@@ -1,8 +1,8 @@
 __all__ = []
 
-from .ndindex import ndindex
+from .ndindex import ndindex, newaxis
 
-__all__ += ['ndindex']
+__all__ += ['ndindex', 'newaxis']
 
 from .slice import Slice
 
