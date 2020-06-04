@@ -74,7 +74,7 @@ def test_slice_len_exhaustive():
 def test_slice_len_hypothesis(s):
     try:
         S = Slice(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
     try:
         l = len(S)
@@ -123,7 +123,7 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
     a = arange(prod(shape)).reshape(shape)
     try:
         S = Slice(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
@@ -163,7 +163,7 @@ def test_slice_reduce_hypothesis(s, shape):
     a = arange(prod(shape)).reshape(shape)
     try:
         S = Slice(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
