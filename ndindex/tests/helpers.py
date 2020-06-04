@@ -21,7 +21,9 @@ from ..ndindex import ndindex
 def prod(seq):
     return reduce(mul, seq, 1)
 
-ints = lambda: integers(-10, 10)
+nonnegative_ints = integers(0, 10)
+negative_ints = integers(-10, -1)
+ints = lambda: one_of(negative_ints, nonnegative_ints)
 
 @composite
 def slices(draw, start=ints(), stop=ints(), step=ints()):
