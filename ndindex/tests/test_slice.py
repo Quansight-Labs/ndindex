@@ -186,10 +186,12 @@ def test_slice_reduce_hypothesis(s, shape):
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
 
 def test_slice_as_subindex_slice_exhaustive():
-    a = arange(100)
-    for sargs in iterslice():
-        print(sargs)
-        for indexargs in iterslice():
+    # We have to restrict the range of the exhaustive test to get something
+    # that finishes in a reasonable amount of time (~30 seconds, vs. 30
+    # minutes for the original ranges).
+    a = arange(5)
+    for sargs in iterslice((-5, 5), (-5, 5), (-5, 5), one_two_args=False):
+        for indexargs in iterslice((-5, 5), (-5, 5), (-5, 5), one_two_args=False):
             try:
                 S = Slice(*sargs)
             except ValueError:
