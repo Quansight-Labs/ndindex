@@ -213,9 +213,9 @@ def test_slice_as_subindex_slice_exhaustive():
 
             for i in a:
                 if i in aS and i in aindex:
-                    assert i in asubindex, (S, Index)
+                    assert i in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
                 else:
-                    assert i not in asubindex, (S, Index)
+                    assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
 
 @given(slices(), slices(), integers(0, 100))
 def test_slice_as_subindex_slice_hypothesis(s, index, size):
