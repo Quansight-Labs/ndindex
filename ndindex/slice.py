@@ -1,4 +1,8 @@
 import operator
+import math
+
+from sympy.ntheory.modular import crt
+from sympy import ilcm, igcd
 
 from .ndindex import NDIndex
 
@@ -370,18 +374,44 @@ class Slice(NDIndex):
         s = self.reduce()
         index = index.reduce()
 
-        if s.step != 1 or index.step != 1:
+        if s.step < 0 or index.step < 0:
             raise NotImplementedError
-        step = 1
 
         # After reducing, start is not None when step > 0
         if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
             raise NotImplementedError
 
-        start = max(s.start, index.start) - index.start
-        if start < 0:
-            start = 0
-        stop = min(s.stop, index.stop) - index.start
+        # Chinese Remainder Theorem. We are looking for a solution to
+        #
+        # x = s.start (mod s.step)
+        # x = index.start (mod index.step)
+        #
+        # If crt() returns None, then there are no solutions (the slices do
+        # not overlap).
+        res = crt([s.step, index.step], [s.start, index.start])
+        if res is None:
+            return Slice(0, 0, 1)
+        common, _ = res
+        lcm = ilcm(s.step, index.step)
+        start = max(s.start, index.start)
+
+        def _smallest(x, a, m):
+            """
+            Gives the smallest integer >= x that equals a (mod m)
+
+            Assumes x >= 0, m >= 1, and 0 <= a < m.
+            """
+            n = int(math.ceil((x - a)/m))
+            return a + n*m
+
+        # Get the smallest lcm multiple of common that is >= start
+        start = _smallest(start, common, lcm)
+        # Finally, we need to shift start so that it is relative to index
+        start = (start - index.start)//index.step
+
+        step = s.step//igcd(s.step, index.step)
+
+        stop = math.ceil((min(s.stop, index.stop) - index.start)/index.step)
         if stop < 0:
             stop = 0
 
