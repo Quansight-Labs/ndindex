@@ -1,55 +1,51 @@
-# API Reference
+===============
+ API Reference
+===============
 
 The ndindex API consists of classes representing the different types of index
 objects (integers, slices, etc.), as well as some helper functions for dealing
 with indices.
 
-## ndindex
 
-### ndindex
+ndindex
+=======
 
-```eval_rst
+
+ndindex
+-------
+
 .. autofunction:: ndindex.ndindex
 
-```
+Integer
+-------
 
-### Integer
-
-```eval_rst
 .. autoclass:: ndindex.Integer
    :members:
-```
 
-### Slice
+Slice
+-----
 
-```eval_rst
 .. autoclass:: ndindex.Slice
    :members:
-```
 
-### ellipsis
+ellipsis
+--------
 
-```eval_rst
 .. autoclass:: ndindex.ellipsis
    :members:
-```
 
-### Tuple
+Tuple
+-----
 
-```eval_rst
 .. autoclass:: ndindex.Tuple
    :members:
-```
 
-
-### Internal API
+Internal API
+------------
 
 These classes are only intended for internal use in ndindex.
 
-```eval_rst
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
 
 .. autoclass:: ndindex.slice.default
-
-```
