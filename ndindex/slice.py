@@ -2,7 +2,7 @@ import operator
 import math
 
 from sympy.ntheory.modular import crt
-from sympy import ilcm, igcd
+from sympy import ilcm
 
 from .ndindex import NDIndex
 
@@ -409,7 +409,7 @@ class Slice(NDIndex):
         # Finally, we need to shift start so that it is relative to index
         start = (start - index.start)//index.step
 
-        step = s.step//igcd(s.step, index.step)
+        step = lcm//index.step # = s.step//igcd(s.step, index.step)
 
         stop = math.ceil((min(s.stop, index.stop) - index.start)/index.step)
         if stop < 0:
