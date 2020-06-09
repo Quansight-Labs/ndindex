@@ -223,8 +223,11 @@ def test_slice_as_subindex_slice_exhaustive():
                 else:
                     assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
 
+positive_slices = slices(start=integers(0, 10), stop=integers(0, 10),
+                         step=integers(1, 10))
+
 # @given(slices(), slices(), integers(0, 100))
-@given(slices(step=integers(1, 10)), slices(step=integers(1, 10)), integers(0, 100))
+@given(positive_slices, positive_slices, integers(0, 100))
 def test_slice_as_subindex_slice_hypothesis(s, index, size):
     a = arange(size)
     try:
