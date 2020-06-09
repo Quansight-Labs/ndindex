@@ -53,7 +53,7 @@ def ndindices(draw):
 
     try:
         return ndindex(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
 shapes = tuples(integers(0, 10)).filter(
