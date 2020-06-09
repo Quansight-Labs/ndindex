@@ -282,9 +282,7 @@ class Slice(NDIndex):
             # of elements from the third to last to the first, which is either an
             # empty slice or a single element slice depending on the shape of the
             # axis.
-            if len(r) == 0 and (
-                    (step > 0 and start <= stop) or
-                    (step < 0 and stop <= start)):
+            if start >= 0 and stop >= 0 and len(r) == 0:
                 start, stop, step = 0, 0, 1
             # This is not correct because a slice keeps the axis whereas an
             # integer index removes it.
