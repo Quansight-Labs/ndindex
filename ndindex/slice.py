@@ -343,26 +343,9 @@ class Slice(NDIndex):
 
     # TODO: Better name?
     def as_subindex(self, index):
-        """
-        i.as_subindex(j) produces an index k such that a[j][k] produces all of
-        the elements of a[j] that are also in a[i].
+        # The docstring of this method is currently on NDindex.as_subindex, as
+        # this is the only method that is actually implemented so far.
 
-        If a[j] is a subset of a[i], then a[j][k] = a[i]. Otherwise, a[j][k] =
-        a[i & j], where i & j is the intersection of i and j, that is, the
-        elements of a that are indexed by both i and j.
-
-        For example, in the below diagram, `i` and `j` index a subset of the array
-        `a`. `k = i.as_subindex(j)` is an index on `a[j]` that gives the
-        subset of `a[j]` also included in `a[i]`::
-
-            +------------ self ------------+
-            |                              |
-        ------------------- a -----------------------
-               |                                 |
-               +------------- index -------------+
-               |                           |
-               +- self.as_subindex(index) -+
-        """
         from .ndindex import ndindex
         index = ndindex(index)
 
