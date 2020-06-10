@@ -54,3 +54,4 @@ script:
   # Here in case codecov fails. This also sets the failing status if the
   # coverage is not 100%.
   - coverage report -m
+  - echo "END TESTS"
