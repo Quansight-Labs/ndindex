@@ -208,3 +208,7 @@ class NDIndex:
         from .tuple import Tuple
 
         return Tuple(self).expand(shape)
+
+def coverage_test():
+    # Testing the coverage on Travis
+    pass
