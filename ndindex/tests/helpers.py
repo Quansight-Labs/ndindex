@@ -24,12 +24,9 @@ def prod(seq):
 ints = lambda: integers(-10, 10)
 
 @composite
-def slices(draw, start=ints(), stop=ints(), step=ints()):
-    return slice(
-        draw(one_of(none(), start)),
-        draw(one_of(none(), stop)),
-        draw(one_of(none(), step)),
-    )
+def slices(draw, start=one_of(none(), ints()), stop=one_of(none(), ints()),
+           step=one_of(none(), ints())):
+    return slice(draw(start), draw(stop), draw(step))
 
 ellipses = lambda: just(...)
 
