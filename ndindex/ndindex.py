@@ -275,7 +275,5 @@ class NDIndex:
         [10, 11, 12, 13, 14]
 
         """
-
-
-        index = ndindex(index)
+        index = ndindex(index) # pragma: no cover
         raise NotImplementedError(f"{type(self).__name__}.as_subindex({type(index).__name__}) isn't implemented yet")

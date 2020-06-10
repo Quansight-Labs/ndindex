@@ -233,12 +233,12 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
     try:
         S = Slice(s)
         Index = Slice(index)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
     try:
         Subindex = S.as_subindex(Index)
-    except NotImplementedError:
+    except NotImplementedError: # pragma: no cover
         assume(False)
 
     aS = a[s]
