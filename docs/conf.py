@@ -74,7 +74,7 @@ pygments_style = 'sphinx'
 html_theme_options = {
     'github_user': 'Quansight',
     'github_repo': 'ndindex',
-    'github_banner': True,
+    'github_banner': False,
     # 'logo': 'logo.jpg',
     # 'logo_name': True,
     # 'show_related': True,
