@@ -53,5 +53,5 @@ script:
     fi
   # Here in case codecov fails. This also sets the failing status if the
   # coverage is not 100%.
-  - coverage report -m
+  - coverage report -m || echo "ERROR: Coverage is not 100%"
   - echo "END TESTS"
