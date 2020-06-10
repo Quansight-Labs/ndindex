@@ -53,7 +53,7 @@ script:
     fi
   # Here in case codecov fails. This also sets the failing status if the
   # coverage is not 100%.
-  - coverage report -m || echo "ERROR: Coverage is not 100%"
+  - "coverage report -m || echo 'ERROR: Coverage is not 100%'"
   # Travis sometimes cuts off the last command, so run a dummy command at the
   # end.
   - echo "END TESTS"
