@@ -184,3 +184,69 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.stop != None
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
+
+def test_slice_as_subindex_slice_exhaustive():
+    # We have to restrict the range of the exhaustive test to get something
+    # that finishes in a reasonable amount of time (~30 seconds, vs. 30
+    # minutes for the original ranges).
+
+    # a = arange(10)
+    # for sargs in iterslice():
+    #     for indexargs in iterslice():
+
+    a = arange(5)
+    for sargs in iterslice((-5, 5), (-5, 5), (-5, 5), one_two_args=False):
+        for indexargs in iterslice((-5, 5), (-5, 5), (-5, 5), one_two_args=False):
+
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            try:
+                Index = Slice(*indexargs)
+            except ValueError:
+                continue
+
+            try:
+                Subindex = S.as_subindex(Index)
+            except NotImplementedError:
+                continue
+
+            aS = a[S.raw]
+            aindex = a[Index.raw]
+            asubindex = aindex[Subindex.raw]
+
+            for i in a:
+                if i in aS and i in aindex:
+                    assert i in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+                else:
+                    assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+
+positive_slices = slices(start=integers(0, 10), stop=integers(0, 10),
+                         step=integers(1, 10))
+
+# @given(slices(), slices(), integers(0, 100))
+@given(positive_slices, positive_slices, integers(0, 100))
+def test_slice_as_subindex_slice_hypothesis(s, index, size):
+    a = arange(size)
+    try:
+        S = Slice(s)
+        Index = Slice(index)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = S.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        assume(False)
+
+    aS = a[s]
+    aindex = a[index]
+    asubindex = aindex[Subindex.raw]
+
+    for i in a:
+        if i in aS and i in aindex:
+            assert i in asubindex
+        else:
+            assert i not in asubindex
