@@ -21,15 +21,14 @@ from ..ndindex import ndindex
 def prod(seq):
     return reduce(mul, seq, 1)
 
-ints = lambda: integers(-10, 10)
+nonnegative_ints = integers(0, 10)
+negative_ints = integers(-10, -1)
+ints = lambda: one_of(negative_ints, nonnegative_ints)
 
 @composite
-def slices(draw, start=ints(), stop=ints(), step=ints()):
-    return slice(
-        draw(one_of(none(), start)),
-        draw(one_of(none(), stop)),
-        draw(one_of(none(), step)),
-    )
+def slices(draw, start=one_of(none(), ints()), stop=one_of(none(), ints()),
+           step=one_of(none(), ints())):
+    return slice(draw(start), draw(stop), draw(step))
 
 ellipses = lambda: just(...)
 
@@ -53,7 +52,7 @@ def ndindices(draw):
 
     try:
         return ndindex(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
 shapes = tuples(integers(0, 10)).filter(

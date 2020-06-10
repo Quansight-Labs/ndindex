@@ -1,4 +1,8 @@
 import operator
+import math
+
+from sympy.ntheory.modular import crt
+from sympy import ilcm
 
 from .ndindex import NDIndex
 
@@ -278,9 +282,7 @@ class Slice(NDIndex):
             # of elements from the third to last to the first, which is either an
             # empty slice or a single element slice depending on the shape of the
             # axis.
-            if len(r) == 0 and (
-                    (step > 0 and start <= stop) or
-                    (step < 0 and stop <= start)):
+            if start >= 0 and stop >= 0 and len(r) == 0:
                 start, stop, step = 0, 0, 1
             # This is not correct because a slice keeps the axis whereas an
             # integer index removes it.
@@ -390,3 +392,60 @@ class Slice(NDIndex):
                         newshape = list(shape)
                         newshape[axis] = len(idx)
                         return tuple(newshape)
+
+    # TODO: Better name?
+    def as_subindex(self, index):
+        # The docstring of this method is currently on NDindex.as_subindex, as
+        # this is the only method that is actually implemented so far.
+
+        from .ndindex import ndindex
+        index = ndindex(index)
+
+        if not isinstance(index, Slice):
+            raise NotImplementedError("Slice.as_subindex is only implemented for slices")
+
+        s = self.reduce()
+        index = index.reduce()
+
+        if s.step < 0 or index.step < 0:
+            raise NotImplementedError("Slice.as_subindex is only implemented for slices with positive steps")
+
+        # After reducing, start is not None when step > 0
+        if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
+            raise NotImplementedError("Slice.as_subindex is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+
+        # Chinese Remainder Theorem. We are looking for a solution to
+        #
+        # x = s.start (mod s.step)
+        # x = index.start (mod index.step)
+        #
+        # If crt() returns None, then there are no solutions (the slices do
+        # not overlap).
+        res = crt([s.step, index.step], [s.start, index.start])
+        if res is None:
+            return Slice(0, 0, 1)
+        common, _ = res
+        lcm = ilcm(s.step, index.step)
+        start = max(s.start, index.start)
+
+        def _smallest(x, a, m):
+            """
+            Gives the smallest integer >= x that equals a (mod m)
+
+            Assumes x >= 0, m >= 1, and 0 <= a < m.
+            """
+            n = int(math.ceil((x - a)/m))
+            return a + n*m
+
+        # Get the smallest lcm multiple of common that is >= start
+        start = _smallest(start, common, lcm)
+        # Finally, we need to shift start so that it is relative to index
+        start = (start - index.start)//index.step
+
+        step = lcm//index.step # = s.step//igcd(s.step, index.step)
+
+        stop = math.ceil((min(s.stop, index.stop) - index.start)/index.step)
+        if stop < 0:
+            stop = 0
+
+        return Slice(start, stop, step)

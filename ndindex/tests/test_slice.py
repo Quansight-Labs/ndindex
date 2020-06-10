@@ -75,7 +75,7 @@ def test_slice_len_exhaustive():
 def test_slice_len_hypothesis(s):
     try:
         S = Slice(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
     try:
         l = len(S)
@@ -124,7 +124,7 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
     a = arange(prod(shape)).reshape(shape)
     try:
         S = Slice(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
@@ -164,7 +164,7 @@ def test_slice_reduce_hypothesis(s, shape):
     a = arange(prod(shape)).reshape(shape)
     try:
         S = Slice(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
@@ -186,7 +186,6 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
 
-
 def test_slice_newshape_no_shape():
     raises(ValueError, lambda: Slice(6).newshape())
 
@@ -204,3 +203,69 @@ def test_slice_newshape_small_shape():
 def test_integer_newshape_wrong_axis():
     raises(IndexError, lambda: Slice(6).newshape(2, axis=1))
     raises(IndexError, lambda: Slice(6).newshape((4, 2), axis=2))
+
+def test_slice_as_subindex_slice_exhaustive():
+    # We have to restrict the range of the exhaustive test to get something
+    # that finishes in a reasonable amount of time (~30 seconds, vs. 30
+    # minutes for the original ranges).
+
+    # a = arange(10)
+    # for sargs in iterslice():
+    #     for indexargs in iterslice():
+
+    a = arange(5)
+    for sargs in iterslice((-5, 5), (-5, 5), (-5, 5), one_two_args=False):
+        for indexargs in iterslice((-5, 5), (-5, 5), (-5, 5), one_two_args=False):
+
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            try:
+                Index = Slice(*indexargs)
+            except ValueError:
+                continue
+
+            try:
+                Subindex = S.as_subindex(Index)
+            except NotImplementedError:
+                continue
+
+            aS = a[S.raw]
+            aindex = a[Index.raw]
+            asubindex = aindex[Subindex.raw]
+
+            for i in a:
+                if i in aS and i in aindex:
+                    assert i in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+                else:
+                    assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+
+positive_slices = slices(start=integers(0, 10), stop=integers(0, 10),
+                         step=integers(1, 10))
+
+# @given(slices(), slices(), integers(0, 100))
+@given(positive_slices, positive_slices, integers(0, 100))
+def test_slice_as_subindex_slice_hypothesis(s, index, size):
+    a = arange(size)
+    try:
+        S = Slice(s)
+        Index = Slice(index)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = S.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        assume(False)
+
+    aS = a[s]
+    aindex = a[index]
+    asubindex = aindex[Subindex.raw]
+
+    for i in a:
+        if i in aS and i in aindex:
+            assert i in asubindex
+        else:
+            assert i not in asubindex

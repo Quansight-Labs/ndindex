@@ -69,7 +69,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
 
     try:
         idx = Tuple(*t)
-    except (IndexError, ValueError):
+    except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
     check_same(a, idx.raw, func=lambda x: x.reduce(),
@@ -94,7 +94,7 @@ def test_tuple_reduce_hypothesis(t, shape):
 
     try:
         index = Tuple(*t)
-    except (IndexError, ValueError):
+    except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
     check_same(a, index.raw, func=lambda x: x.reduce(shape),
@@ -142,7 +142,7 @@ def test_tuple_expand_hypothesis(t, shape):
 
     try:
         index = Tuple(*t)
-    except (IndexError, ValueError):
+    except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
     check_same(a, index.raw, func=lambda x: x.expand(shape),
