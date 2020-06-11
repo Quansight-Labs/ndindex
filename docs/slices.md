@@ -75,8 +75,8 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. `start` and `step` use **`0`-based indexing** from the **start** of the array
-   when they are **nonnegative**, and **`-1`-based indexing** from **end** of
+1. `start` and `step` use **0-based indexing** from the **start** of the array
+   when they are **nonnegative**, and **−1-based indexing** from **end** of
    the array when they are **negative**. ({ref}`0-based` and
    {ref}`negative-indices`)
 2. `stop` is never included in the slice. ({ref}`half-open`)
@@ -135,7 +135,7 @@ $$
 ```
 
 For **negative** integers, the indices index from the end of the array. These
-indices are necessarily 1-based (or rather, -1-based), since 0 already refers
+indices are necessarily 1-based (or rather, −1-based), since `0` already refers
 to the first element of the array. `-1` chooses the last element, `-2` the
 second-to-last, and so on. For example, `a[-3]` picks the **third-to-last**
 element of `a`, in this case, `4`:
@@ -752,11 +752,11 @@ apply the rule "the `stop` is not included", you will get the correct results.
 
 **Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."**
 
-You might get clever and say `a[3:5]` indexes from the 3-rd element with
-0-based indexing to the 5-th element with 1-based indexing. Don't do this. It
+You might get clever and say `a[3:5]` indexes from the 3rd element with
+0-based indexing to the 5th element with 1-based indexing. Don't do this. It
 is confusing. Not only that, but the rule must necessarily be reversed for
-negative indices. `a[-5:-3]` indexes from the -5-th element with -1-based
-indexing to the -3-rd element with 0-based indexing (and of course, negative
+negative indices. `a[-5:-3]` indexes from the (−5)th element with −1-based
+indexing to the (−3)rd element with 0-based indexing (and of course, negative
 and nonnegative starts and stops can be mixed, like `a[-5:5]`). Don't get cute
 here. It isn't worth it.
 
