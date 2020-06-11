@@ -138,6 +138,7 @@ And more. If there is something you would like to see this library be able to
 do, please [open an issue](https://github.com/quansight/ndindex/issues). Pull
 requests are welcome as well.
 
+(testing)=
 ## Testing and correctness
 
 The most important priority for a library like this is correctness. Index
