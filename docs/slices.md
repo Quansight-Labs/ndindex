@@ -58,36 +58,40 @@ a[start:stop:step]
 I will use these names throughout this guide.
 
 It is worth mentioning that the `x:y:z` syntax is not valid outside of square
-brackets, but slice objects can be created manually using the `slice` builtin.
-You can also use the [`ndindex.Slice`](slice-api) object if you want to
-perform more advanced operations.
+brackets. However, slice objects can be created manually using the `slice()`
+builtin (`a[x:y:z]` is the same as `a[slice(x, y, z)]`). You can also use the
+[`ndindex.Slice`](slice-api) object if you want to perform more advanced
+operations.
 
 ## Rules
 
-These rules are the ones to keep in mind to understand how slices work. For a
-slice `a[start:stop:step]`. Each of these is explained in detail below, but if
-you take away anything from this, it should be this:
+These are the rules to keep in mind to understand how slices work. Each of
+these is explained in detail below. Many of the detailed descriptions below
+also outline several *wrong* rules which are bad ways of thinking about
+slices, which you may be tempted to think about as rules. The below 7 rules
+are always correct.
 
-1. `start` and `step` use 0-based indexing from the start of the array when
-   they are nonnegative, and -1-based indexing from stop of the array when they
-   are negative. ({ref}`0-based` and {ref}`negative-indices`)
+In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
+
+For a slice `a[start:stop:step]`:
+
+1. `start` and `step` use **`0`-based indexing** from the **start** of the array
+   when they are **nonnegative**, and **`-1`-based indexing** from **end** of
+   the array when they are **negative**. ({ref}`0-based` and
+   {ref}`negative-indices`)
 2. `stop` is never included in the slice. ({ref}`half-open`)
 3. `start` and `stop` are clipped to the bounds of the array. ({ref}`clipping`)
 4. The slice starts at `start` and successively adds `step` until it reaches
    an index that is at or past `stop`, and then stops without including that
    `stop` index. ({ref}`steps` and {ref}`negative-steps`)
-5. If `step` is omitted it defaults to 1. ({ref}`omitted`)
-6. If `start` or `stop` are omitted they extend to the start or stop of the
+5. If `step` is omitted it defaults to `1`. ({ref}`omitted`)
+6. If `start` or `stop` are omitted they extend to the start or end of the
    array in the direction being sliced. Slices like `a[:i]` or `a[i:]` should
    be though of as the `start` or `stop` being omitted, not as a colon to the
    left or right of an index. ({ref}`omitted`)
 7. Slicing something never produces an `IndexError`, even if the slice is
    empty. For a NumPy array, a slice always keeps the axis being sliced, even
    if the final dimension is 0 or 1. ({ref}`subarray`)
-8. These rules make it syntactically convenient to slice subarrays in useful
-   ways, but make it extremely challenging to write down formulas for things
-   corresponding to slices that are correct in all cases. Instead of trying to
-   do this yourself, use ndindex.
 
 (integer-indices)=
 ## Integer indices
@@ -212,6 +216,11 @@ While notes like this may give a technically accurate description of slices,
 they aren't especially helpful to someone who is trying to construct a slice
 from a higher level of abstraction such as "I want to select this particular
 subset of my array".
+
+And indeed, if you do want to manipulate slices in a mathematical way, the
+above doesn't help very much for that either, since it isn't always valid,
+e.g., when `i` or `j` are negative. Instead of trying to derive formulas for
+mathematically manipulating slices, use ndindex.
 
 Instead, we shall examine slices by carefully going over all the various
 aspects of the syntax and semantics that can lead to confusion, and attempting
