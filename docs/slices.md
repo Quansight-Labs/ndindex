@@ -86,21 +86,21 @@ For a slice `a[start:stop:step]`:
 
 1. `start` and `step` use **0-based indexing** from the **start** of the array
    when they are **nonnegative**, and **−1-based indexing** from **end** of
-   the array when they are **negative**. ({ref}`0-based` and
+   the array when they are **negative**. (Sections {ref}`0-based` and
    {ref}`negative-indices`)
-2. `stop` is never included in the slice. ({ref}`half-open`)
-3. `start` and `stop` are clipped to the bounds of the array. ({ref}`clipping`)
+2. `stop` is never included in the slice. (Section {ref}`half-open`)
+3. `start` and `stop` are clipped to the bounds of the array. (Section {ref}`clipping`)
 4. The slice starts at `start` and successively adds `step` until it reaches
    an index that is at or past `stop`, and then stops without including that
-   `stop` index. ({ref}`steps` and {ref}`negative-steps`)
-5. If `step` is omitted it defaults to `1`. ({ref}`omitted`)
+   `stop` index. (Sections {ref}`steps` and {ref}`negative-steps`)
+5. If `step` is omitted it defaults to `1`. (Section {ref}`omitted`)
 6. If `start` or `stop` are omitted they extend to the start or end of the
    array in the direction being sliced. Slices like `a[:i]` or `a[i:]` should
    be though of as the `start` or `stop` being omitted, not as a colon to the
-   left or right of an index. ({ref}`omitted`)
+   left or right of an index. (Section {ref}`omitted`)
 7. Slicing something never produces an `IndexError`, even if the slice is
    empty. For a NumPy array, a slice always keeps the axis being sliced, even
-   if the final dimension is 0 or 1. ({ref}`subarray`)
+   if the final dimension is 0 or 1. (Section {ref}`subarray`)
 
 (integer-indices)=
 ## Integer indices
