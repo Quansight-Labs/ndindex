@@ -101,40 +101,42 @@ expressions <code class="docutils literal notranslate"><span class="pre">x</span
 </div>
 <p>I will use these names throughout this guide.</p>
 <p>It is worth mentioning that the <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code> syntax is not valid outside of square
-brackets, but slice objects can be created manually using the <code class="docutils literal notranslate"><span class="pre">slice</span></code> builtin.
-You can also use the <a class="reference internal" href="api.html#slice-api"><span class="std std-ref">ndindex.Slice</span></a> object if you want to
-perform more advanced operations.</p>
+brackets. However, slice objects can be created manually using the <code class="docutils literal notranslate"><span class="pre">slice()</span></code>
+builtin (<code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[slice(x,</span> <span class="pre">y,</span> <span class="pre">z)]</span></code>). You can also use the
+<a class="reference internal" href="api.html#slice-api"><span class="std std-ref">ndindex.Slice</span></a> object if you want to perform more advanced
+operations.</p>
 </div>
 <div class="section" id="rules">
-<h2>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
-<p>These rules are the ones to keep in mind to understand how slices work. For a
-slice <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>. Each of these is explained in detail below, but if
-you take away anything from this, it should be this:</p>
+<span id="id1"></span><h2>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
+<p>These are the rules to keep in mind to understand how slices work. Each of
+these is explained in detail below. Many of the detailed descriptions below
+also outline several <em>wrong</em> rules which are bad ways of thinking about
+slices, which you may be tempted to think about as rules. The below 7 rules
+are always correct.</p>
+<p>In this document, “<em>nonnegative</em>” means <span class="math notranslate nohighlight">\(\geq 0\)</span> and “<em>negative</em>” means <span class="math notranslate nohighlight">\(&lt; 0\)</span>.</p>
+<p>For a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>:</p>
 <ol class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code> use 0-based indexing from the start of the array when
-they are nonnegative, and -1-based indexing from stop of the array when they
-are negative. (<a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a> and <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indexes</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code> use <strong>0-based indexing</strong> from the <strong>start</strong> of the array
+when they are <strong>nonnegative</strong>, and <strong>−1-based indexing</strong> from <strong>end</strong> of
+the array when they are <strong>negative</strong>. (<a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a> and
+<a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indexes</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stop</span></code> is never included in the slice. (<a class="reference internal" href="#half-open"><span class="std std-ref">Half-open</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are clipped to the bounds of the array. (<a class="reference internal" href="#clipping"><span class="std std-ref">Clipping</span></a>)</p></li>
 <li><p>The slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches
 an index that is at or past <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without including that
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> index. (<a class="reference internal" href="#steps"><span class="std std-ref">Steps</span></a> and <a class="reference internal" href="#negative-steps"><span class="std std-ref">Negative Steps</span></a>)</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted it defaults to 1. (<a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are omitted they extend to the start or stop of the
+<li><p>If <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted it defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>. (<a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are omitted they extend to the start or end of the
 array in the direction being sliced. Slices like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> or <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> should
 be though of as the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> being omitted, not as a colon to the
 left or right of an index. (<a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
 <li><p>Slicing something never produces an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>, even if the slice is
 empty. For a NumPy array, a slice always keeps the axis being sliced, even
 if the final dimension is 0 or 1. (<a class="reference internal" href="#subarray"><span class="std std-ref">Subarray</span></a>)</p></li>
-<li><p>These rules make it syntactically convenient to slice subarrays in useful
-ways, but make it extremely challenging to write down formulas for things
-corresponding to slices that are correct in all cases. Instead of trying to
-do this yourself, use ndindex.</p></li>
 </ol>
 </div>
 <div class="section" id="integer-indices">
-<span id="id1"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this headline">¶</a></h2>
 <p>To understand slices, it is good to first review how integer indices work.
 Throughout this guide, I will use as an example this prototype list:</p>
 <!-- TODO: Use a different list where the entries don't match the indices? -->
@@ -169,7 +171,7 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp; 6]\\
 </pre></div>
 </div>
 <p>For <strong>negative</strong> integers, the indices index from the end of the array. These
-indices are necessarily 1-based (or rather, -1-based), since 0 already refers
+indices are necessarily 1-based (or rather, −1-based), since <code class="docutils literal notranslate"><span class="pre">0</span></code> already refers
 to the first element of the array. <code class="docutils literal notranslate"><span class="pre">-1</span></code> chooses the last element, <code class="docutils literal notranslate"><span class="pre">-2</span></code> the
 second-to-last, and so on. For example, <code class="docutils literal notranslate"><span class="pre">a[-3]</span></code> picks the <strong>third-to-last</strong>
 element of <code class="docutils literal notranslate"><span class="pre">a</span></code>, in this case, <code class="docutils literal notranslate"><span class="pre">4</span></code>:</p>
@@ -242,11 +244,15 @@ remainder obtained by dividing <em>j - i</em> by <em>k</em>: <em>j - i = q k + r
 they aren’t especially helpful to someone who is trying to construct a slice
 from a higher level of abstraction such as “I want to select this particular
 subset of my array”.</p>
+<p>And indeed, if you do want to manipulate slices in a mathematical way, the
+above doesn’t help very much for that either, since it isn’t always valid,
+e.g., when <code class="docutils literal notranslate"><span class="pre">i</span></code> or <code class="docutils literal notranslate"><span class="pre">j</span></code> are negative. Instead of trying to derive formulas for
+mathematically manipulating slices, use ndindex.</p>
 <p>Instead, we shall examine slices by carefully going over all the various
 aspects of the syntax and semantics that can lead to confusion, and attempting
 to demystify them through simple rules.</p>
 <div class="section" id="subarray">
-<span id="id2"></span><h3>Subarray<a class="headerlink" href="#subarray" title="Permalink to this headline">¶</a></h3>
+<span id="id3"></span><h3>Subarray<a class="headerlink" href="#subarray" title="Permalink to this headline">¶</a></h3>
 <p>A slice always chooses a sub-array (or sub-list, sub-tuple, sub-string, etc.).
 What this means is that a slice will always <em>preserve</em> the dimension that is
 sliced. This is true even if a slice chooses only a single element, or even if
@@ -276,7 +282,7 @@ that are too large. See also the section on
 <a class="reference external" href="#clipping">clipping</a> below.</p>
 </div>
 <div class="section" id="based">
-<span id="id3"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this headline">¶</a></h3>
+<span id="id4"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this headline">¶</a></h3>
 <p>For the slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code>, with <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> nonnegative integers, the
 indexes <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are 0-based, just as with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
 indexing</span></a> (although one should be careful that even though
@@ -304,7 +310,7 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp; 6]\\
 </div>
 </div>
 <div class="section" id="half-open">
-<span id="id4"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this headline">¶</a></h3>
+<span id="id5"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this headline">¶</a></h3>
 <p>Slices behave like half-open intervals. What this means is that the <code class="docutils literal notranslate"><span class="pre">stop</span></code> in
 <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is <em>never</em> included in the slice (the exception is if <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
 omitted, which always slices to the beginning or end of the array, see
@@ -476,7 +482,7 @@ values for the range. For example:</p>
 example, you can index or take the <code class="docutils literal notranslate"><span class="pre">len()</span></code> of a range. If you want to perform
 computations on slices, I recommend using ndindex. This is what it was
 designed for.</p>
-<p><strong>Wrong Rule 3: “Slices count the spaces between the elements of the array.”</strong>
+<p id="wrong-rule-3"><strong>Wrong Rule 3: “Slices count the spaces between the elements of the array.”</strong>
 This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of an array is indexed by 0, the second by 1, and so on.
@@ -726,11 +732,11 @@ the usually way humans are taught to count things, but these will be far
 fewer, especially as you gain practice in counting that way. As long as you
 apply the rule “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not included”, you will get the correct results.</p>
 <p><strong>Wrong Rule 4: “The <code class="docutils literal notranslate"><span class="pre">stop</span></code> of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is 1-based.”</strong></p>
-<p>You might get clever and say <code class="docutils literal notranslate"><span class="pre">a[3:5]</span></code> indexes from the 3-rd element with
-0-based indexing to the 5-th element with 1-based indexing. Don’t do this. It
+<p>You might get clever and say <code class="docutils literal notranslate"><span class="pre">a[3:5]</span></code> indexes from the 3rd element with
+0-based indexing to the 5th element with 1-based indexing. Don’t do this. It
 is confusing. Not only that, but the rule must necessarily be reversed for
-negative indices. <code class="docutils literal notranslate"><span class="pre">a[-5:-3]</span></code> indexes from the -5-th element with -1-based
-indexing to the -3-rd element with 0-based indexing (and of course, negative
+negative indices. <code class="docutils literal notranslate"><span class="pre">a[-5:-3]</span></code> indexes from the (−5)th element with −1-based
+indexing to the (−3)rd element with 0-based indexing (and of course, negative
 and nonnegative starts and stops can be mixed, like <code class="docutils literal notranslate"><span class="pre">a[-5:5]</span></code>). Don’t get cute
 here. It isn’t worth it.</p>
 </div>
@@ -843,7 +849,7 @@ example, instead of using <code class="docutils literal notranslate"><span class
 </div>
 </div>
 <div class="section" id="clipping">
-<span id="id5"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this headline">¶</a></h3>
+<span id="id6"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this headline">¶</a></h3>
 <p>Slices can never give an out-of-bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This is different from
 <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer indices</span></a> which require the index to be in bounds. If
 <code class="docutils literal notranslate"><span class="pre">start</span></code> indexes before the beginning of the array (with a negative index), or
@@ -886,7 +892,7 @@ slice. If the shape of the input is known,
 slice.</p>
 </div>
 <div class="section" id="steps">
-<span id="id6"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+<span id="id7"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <p>Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every <code class="docutils literal notranslate"><span class="pre">step</span></code> element contained in
 the bounds of <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>.</p>
@@ -975,7 +981,7 @@ to properly account for negative vs. nonnegative indices, clipping, and
 regarding slices will necessarily have many piecewise conditions.</p>
 </div>
 <div class="section" id="negative-steps">
-<span id="id7"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this headline">¶</a></h3>
+<span id="id8"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this headline">¶</a></h3>
 <p>Recall what I said above:</p>
 <p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and
 successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches an index that is at or past the
@@ -1070,7 +1076,7 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp;\ 6]\\
 </div>
 <div class="section" id="omitted-entries">
 <span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this headline">¶</a></h3>
-<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#ommited-none" id="id8">1</a></p>
+<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#ommited-none" id="id9">1</a></p>
 <p><strong>The best way to think about omitted entries is just like that, as omitted
 entries.</strong> That is, for a slice like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> think of it as the <code class="docutils literal notranslate"><span class="pre">start</span></code> being
 omitted, and <code class="docutils literal notranslate"><span class="pre">stop</span></code> equal to <code class="docutils literal notranslate"><span class="pre">i</span></code>. Conversely, <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> has the <code class="docutils literal notranslate"><span class="pre">start</span></code> as <code class="docutils literal notranslate"><span class="pre">i</span></code>
@@ -1096,14 +1102,163 @@ and <code class="docutils literal notranslate"><span class="pre">stop</span></co
 extends to the end of the array and <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends to the beginning.</p>
 </div>
 </div>
+<div class="section" id="soapbox">
+<h2>Soapbox<a class="headerlink" href="#soapbox" title="Permalink to this headline">¶</a></h2>
+<p>While this guide is opinionated about the right and wrong ways to think about
+slices in Python, I have tried to stay neutral regarding the merits of the
+rules themselves. But I want to take a moment to give my views on them. I have
+worked with slice objects quite a bit in building ndindex, as well as just
+general usage with Python and NumPy.</p>
+<p>Python’s slice syntax is, without a doubt, extremely expressive, and has a
+straightforward and simple syntax. However, simply put, the semantic rules for
+slices are completely bonkers. They lend themselves to several invalid
+interpretations, which I have outlined above, which seem valid at first glance
+but fall apart in corner cases. The “correct” ways to think about slices are
+very particular. I have tried to <a class="reference internal" href="#rules"><span class="std std-ref">outline</span></a> them carefully, but one gets
+the impression that unless one works with slices regularly, it will be hard to
+remember the “right” ways and not fallback to thinking about the “wrong” ways,
+or, as most Python programmers probably do simply “guessing and checking”.</p>
+<p>Furthermore, the branching definition nature of slices not only makes it hard
+to remember how slices work, but it makes it <em>extremely</em> hard to write slice
+arithmetic. If you are unconvinced of this, take a look at the <a class="reference external" href="https://github.com/Quansight/ndindex/blob/master/ndindex/slice.py">source
+code</a> for
+<code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code>. You will see lots of nested <code class="docutils literal notranslate"><span class="pre">if</span></code> blocks. This is because
+slices have <em>fundamentally</em> different definitions if the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, negative, or nonnegative. Furthermore, <code class="docutils literal notranslate"><span class="pre">None</span></code> is not an integer, so
+one must always be careful to either check for it first, or to be certain that
+it cannot happen, before performing any arithmetical operation or numerical
+comparison. Under each <code class="docutils literal notranslate"><span class="pre">if</span></code> block you will see some formula or other. Many of
+these formulas were difficult to come up with. In many cases they are
+asymmetrical in surprising ways. It is only through the rigorous
+<a class="reference internal" href="index.html#testing"><span class="std std-ref">testing</span></a> that ndindex uses that I can have confidence the formulas
+are correct for all corner cases.</p>
+<p>It is my opinion that Python’s slicing semantics could be just as expressive,
+but much less confusing and difficult to work with, both for end-users of
+slices and people writing slice arithmetic (a typical user of ndindex). The
+changes I would make to improve the semantics would be</p>
+<ol class="simple">
+<li><p>Remove the special meaning of negative numbers</p></li>
+<li><p>Use 1-based indexing instead of 0-based indexing</p></li>
+<li><p>Make a slice always include both the start and the stop</p></li>
+</ol>
+<p>The special meaning of negative numbers, to index from the end of the array,
+is by far the biggest problem. It is a fundamental discontinuity in the
+definition of an index. This makes it completely impossible to write a formula
+for almost anything relating to slices, which will not end up having branching
+<code class="docutils literal notranslate"><span class="pre">if</span></code> conditions. But the problem isn’t just for code that manipulates slices.
+The <a class="reference internal" href="#negative-indices-example"><span class="std std-ref">example above</span></a> shows how negative indices can
+easily lead to bugs in end-user code. Effectively, any time you have a slice
+<code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> and <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> are nontrivial expressions, <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> must be
+checked to ensure they do not go negative. It is virtually never the case that
+the slice will just happen to be what you want even if they go negative. This
+is because the discontinuity disagrees with the concept of
+<a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a>, which is a very good idea. <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> will slice “as far
+as it can” if <code class="docutils literal notranslate"><span class="pre">j</span></code> is “too big” (greater than <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>), but it does something
+completely different if <code class="docutils literal notranslate"><span class="pre">i</span></code> is “too small” as soon as “too small” means negative.</p>
+<p>Negative indexing is, strictly speaking, a syntactic sugar only.
+Slicing/indexing from the end of the array can always be done in terms of the
+length of the array. <code class="docutils literal notranslate"><span class="pre">a[-x]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> (when using 0-based
+indexing), but the problem is that it is tedious to write <code class="docutils literal notranslate"><span class="pre">a</span></code> twice, and <code class="docutils literal notranslate"><span class="pre">a</span></code>
+may in fact be a larger expression, so writing <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> would require
+assigning it to a variable. However, I think it would be possible to introduce
+a special syntax to mean “reversed” or “from the end of the array” indexing,
+and leave negative numbers to simply extend beyond the left side of the array.
+Since this is a moot point for Python—I don’t expect Python’s indexing
+semantics to change, they are already baked into the language—I won’t
+suggest any syntax. Perhaps this can inspire people writing new languages or
+DSLs to come up with better semantics backed by good syntax.</p>
+<p>The second point, on using 1-based indexing instead of 0-based indexing, will
+likely be the most controversial. 0-based indexing certainly has its uses. In
+C, where an index is literally a syntactic macro for adding two pointers,
+0-based indexing makes sense, since <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> literally means <code class="docutils literal notranslate"><span class="pre">*(a</span> <span class="pre">+</span> <span class="pre">i)</span></code> under
+those semantics. However, for higher level languages such as Python, people
+think of indexing as pointing to specific numbered elements of a collection,
+not as pointer arithemetic. Every human being is taught from an early age to
+count from 1. If you show someone the list “a, b, c”, they will tell you that
+“a” is the 1st, “b” is the 2nd, and “c” is the 3rd. 0-based indexing requires
+a shift in thinking from the way that you have been taught to count from
+childhood to grade school. Counting is a very fundamental thing for any human,
+but especially so for a programmer. Forcing someone to learn a new way to do
+this is a huge cognitive burden, and so one shouldn’t do this without a very
+good reason. In a language like C, one can argue there is a good reason, just
+as one can argue that it is beneficial to learn new base number systems
+(base-2 and base-16).</p>
+<p>But for Python, what is truly the benefit of counting starting at 0? The main
+benefit is that the implementation is easier, because Python is itself written
+in C, which uses 0-based indexing, so one does not need to handle shifting in
+the translation. But this has never been a valid argument for Python
+semantics. The whole point of Python is to provide higher level semantics than
+C, and leave those hard details of translating them to the interpreter and
+library code. In fact, Python’s slices themselves are much more complicated
+than what is avaiable in C, and the interpreter code to handle them is more
+than just a trivial translation to C. Adding shifts to this translation code
+would not be much additional complexity.</p>
+<p>To me, the ideal indexing system defaults to 1-based, but allows starting at
+any index. That way, if someone is dealing with a use-case where 0-based
+indexing really does make more sense, they can easily do that. They should
+also be able to start at any other number, including negative numbers (which
+is another reason to remove the special meaning of negative indices). An
+example of a use-case where 0-based indexing truly is more natural than
+1-based indexing is polynomials. Say we have a polynomial <span class="math notranslate nohighlight">\(a_0 + a_1x +
+a_2x^2 + \cdots\)</span>. Then we can represent the coefficients <span class="math notranslate nohighlight">\(a_0, a_1, a_2,
+\ldots\)</span> in a list <code class="docutils literal notranslate"><span class="pre">[a0,</span> <span class="pre">a1,</span> <span class="pre">a2,</span> <span class="pre">...]</span></code>. Since a polynomial naturally has a 0th
+coefficient, it makes sense to index the list starting at 0 (and one must
+still be careful about off-by-one errors; a degree-<span class="math notranslate nohighlight">\(n\)</span> polynomial has <span class="math notranslate nohighlight">\(n+1\)</span>
+coefficients).</p>
+<p>If this seems like absurd idea, note that this is how Fortran works (see
+https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering).
+Fortran predates Python by many decades, but is still in use today,
+particularly in scientific applications. And many Python libraries themselves
+are backed by Fortran code, such as SciPy.</p>
+<p>Finally, the idea of half-open semantics, where the <code class="docutils literal notranslate"><span class="pre">stop</span></code> value of a slice is
+never included, is bad, for many of the same reasons that 0-based indexing is
+bad. In most contexts outside of programming, when one sees a range of values,
+it is implicitly assumed that both endpoints are included in the range. For
+example, if you see a phrase like “ages 7 to 12”, “the letters A to Z”,
+or “groups 1 through 3”, without any further qualification you assume that
+both endpoints are included in the range.</p>
+<p>It is true that this can lead to fencepost errors, but I contend that it is
+more natural to think about a range as including both endpoints. Half-open
+semantics are often tied to 0-based indexing, since it is a convenient way to
+allow the range 0–N to contain N values, by not including N. I see this as
+taking a bad decision (0-based indexing) and putting a bad bandaid on it that
+makes it worse. But certainly this argument goes away for 1-based indexing.
+The range 1–N contains N values exactly when N <em>is</em> included in the range.</p>
+<p>A commonly touted benefit of half-open slicing semantics is that you can
+“glue” half-open intervals together. For example, <code class="docutils literal notranslate"><span class="pre">a[0:N]</span> <span class="pre">+</span> <span class="pre">a[N:M]</span></code> is the
+same as <code class="docutils literal notranslate"><span class="pre">a[0:M]</span></code>. But <code class="docutils literal notranslate"><span class="pre">a[1:N]</span> <span class="pre">+</span> <span class="pre">a[N+1:M]</span></code> is just as clear. People are
+perfectly used to adding 1 to get to the next term in a sequence. Both
+endpoints being included in a range are the standard semantics in both
+mathematics and everyday language. The first n numbers are <span class="math notranslate nohighlight">\(1\ldots n\)</span>. The
+next n numbers are <span class="math notranslate nohighlight">\(n+1\ldots 2n\)</span>. “The 70s” refers to the years 1970–1979.
+If you were to rewrite the previous two sentences using half-open semantics,
+anyone would tell you they were phrased wrong.</p>
+<p>Another benefit of half-open intervals is that they allow the range <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code>
+to contain <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">-</span> <span class="pre">i</span></code> elements (assuming <code class="docutils literal notranslate"><span class="pre">j</span> <span class="pre">&gt;</span> <span class="pre">i</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">a</span></code> is large enough).
+However, I contend people are perfectly used to the usual fencepost offset
+that a range i–j contains j - i + 1 numbers. Half-open semantics replace this
+fencepost error with more subtle ones, which arise from forgetting that the
+range doesn’t include the endpoint, unlike most natural ranges that occur in
+day-to-day life. See <a class="reference internal" href="#wrong-rule-3"><span class="std std-ref">wrong rule 3</span></a> above for an example of how
+half-open semantics can lead to subtle fencepost errors. It is understood that
+the years 2010–2020 consist of 11 years. Look at any chart where the x-axis
+is decades, and you will see ranges like “2000–2009”, not “2000–2010”.</p>
+<p>The fencepost problem is fundamentally unavoidable. A 100 foot fence truly has
+one more fencepost than fence lengths. The best way to deal with the fencepost
+problem is not to try to change the way we count fenceposts, so that somehow
+11 fenceposts is really only 10. It is rather to reuse the most natural and
+intuitive way of thinking about the problem, which occurs both in programming
+and non-programming contexts.</p>
+<p>Half-open semantics are also particularly confusing when combined with
+negative number indexing (see <a class="reference internal" href="#half-open"><span class="std std-ref">above</span></a>).</p>
 </div>
 <div class="section" id="footnotes">
-<h1>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this headline">¶</a></h1>
+<h2>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this headline">¶</a></h2>
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
 <hr class="docutils" />
 <dl class="footnote brackets">
-<dt class="label" id="ommited-none"><span class="brackets"><a class="fn-backref" href="#id8">1</a></span></dt>
+<dt class="label" id="ommited-none"><span class="brackets"><a class="fn-backref" href="#id9">1</a></span></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> may also be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which is
 syntactically equivalent to them being omitted. That is to say, <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is a
 syntax shorthand for <code class="docutils literal notranslate"><span class="pre">a[None:None:None]</span></code>. It is rare to see <code class="docutils literal notranslate"><span class="pre">None</span></code> in a slice;
@@ -1113,6 +1268,7 @@ method on an object. The <code class="docutils literal notranslate"><span class=
 omitted entries in the same way.</p>
 </dd>
 </dl>
+</div>
 </div>
 
 
@@ -1178,9 +1334,10 @@ omitted entries in the same way.</p>
 <li class="toctree-l5"><a class="reference internal" href="#omitted-entries">Omitted Entries</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="#soapbox">Soapbox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#footnotes">Footnotes</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#footnotes">Footnotes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
@@ -1232,9 +1389,10 @@ omitted entries in the same way.</p>
 <li class="toctree-l3"><a class="reference internal" href="#omitted-entries">Omitted Entries</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#soapbox">Soapbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#footnotes">Footnotes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#footnotes">Footnotes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
