@@ -1,6 +1,14 @@
 Slices
 ======
 
+<!-- TODOS:
+
+- Regularize the type of a in discussions(list vs. array)
+- Convert a to something other than range(7)
+- Fencepost image
+- Better wording for omitted rule
+
+-->
 Python's slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.
