@@ -22,6 +22,8 @@ Integer
 .. autoclass:: ndindex.Integer
    :members:
 
+.. _slice-api:
+
 Slice
 -----
 

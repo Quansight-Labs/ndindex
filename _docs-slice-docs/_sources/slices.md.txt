@@ -50,9 +50,10 @@ additional semantic restriction, which is that the expressions `x`, `y`, and
 
 It is worth mentioning that the `x:y:z` syntax is not valid outside of square
 brackets, but slice objects can be created manually using the `slice` builtin.
-You can also use the `ndindex.Slice` object if you want to perform more
-advanced operations. The discussions below will just use `x:y:z` without the
-square brackets for simplicity.
+You can also use the [`ndindex.Slice`](slice-api) object if you want to
+perform more advanced operations. The discussions below will just use `x:y:z`
+without the square brackets for simplicity.
+
 <!-- TODO: Remove this? -->
 
 (integer-indices)=
