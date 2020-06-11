@@ -85,21 +85,25 @@ Python for multi-dimensional indices).</p>
 is, inside of square brackets proceeding an expression. A slice consists of
 one or two colons, with either an expression or nothing on either side of each
 colon. For example, the following are all valid slices on the object <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>a[x:y]
-a[x:y:z]
-a[:]
-a[x::]
-a[x::z]
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span>
+<span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">:</span><span class="n">z</span><span class="p">]</span>
+<span class="n">a</span><span class="p">[:]</span>
+<span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">::]</span>
+<span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">::</span><span class="n">z</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Furthermore, for a slice <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code> on Python or NumPy objects, there is an
-additional semantic restriction, which is that the expressions <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">z</span></code> must be integers.</p>
+<p>Furthermore, for a slice <code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code> on a Python built-in objects or NumPy
+array, there is an additional semantic restriction, which is that the
+expressions <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code> must be integers.</p>
+<p>The three arguments to a slice are called, <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and <code class="docutils literal notranslate"><span class="pre">step</span></code>:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">:</span><span class="n">step</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>I will use these names throughout this guide.</p>
 <p>It is worth mentioning that the <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code> syntax is not valid outside of square
 brackets, but slice objects can be created manually using the <code class="docutils literal notranslate"><span class="pre">slice</span></code> builtin.
 You can also use the <a class="reference internal" href="api.html#slice-api"><span class="std std-ref">ndindex.Slice</span></a> object if you want to
-perform more advanced operations. The discussions below will just use <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code>
-without the square brackets for simplicity. <!-- TODO: Remove this? --></p>
+perform more advanced operations.</p>
 </div>
 <div class="section" id="rules">
 <h2>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
@@ -273,7 +277,7 @@ that are too large. See also the section on
 </div>
 <div class="section" id="based">
 <span id="id3"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this headline">¶</a></h3>
-<p>For the slice <code class="docutils literal notranslate"><span class="pre">start:stop</span></code>, with <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> nonnegative integers, the
+<p>For the slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code>, with <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> nonnegative integers, the
 indexes <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are 0-based, just as with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
 indexing</span></a> (although one should be careful that even though
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> is 0-based, it is not included in the slice. See <a class="reference internal" href="#half-open"><span class="std std-ref">below</span></a>).</p>
@@ -302,7 +306,7 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp; 6]\\
 <div class="section" id="half-open">
 <span id="id4"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this headline">¶</a></h3>
 <p>Slices behave like half-open intervals. What this means is that the <code class="docutils literal notranslate"><span class="pre">stop</span></code> in
-<code class="docutils literal notranslate"><span class="pre">start:stop</span></code> is <em>never</em> included in the slice (the exception is if <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
+<code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is <em>never</em> included in the slice (the exception is if <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
 omitted, which always slices to the beginning or end of the array, see
 <a class="reference internal" href="#omitted"><span class="std std-ref">below</span></a>).</p>
 <p>For example, <code class="docutils literal notranslate"><span class="pre">a[3:5]</span></code> slices the elements 3 and 4, but not 5 (<a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a>).</p>
@@ -332,9 +336,9 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp; 6]\\
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> slice element is not included in the slice. However, it has a few
 advantages:</p>
 <ul id="sanity-check">
-<li><p>The maximum length of a slice <code class="docutils literal notranslate"><span class="pre">start:stop</span></code>, when <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are
+<li><p>The maximum length of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code>, when <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are
 nonnegative, is always <code class="docutils literal notranslate"><span class="pre">stop</span> <span class="pre">-</span> <span class="pre">start</span></code> (the caveat “maximum” is here because
-if <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends beyond the end of the array, then <code class="docutils literal notranslate"><span class="pre">start:stop</span></code> will only
+if <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends beyond the end of the array, then <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> will only
 slice up to <code class="docutils literal notranslate"><span class="pre">len(a)</span> <span class="pre">-</span> <span class="pre">start</span></code>, see <a class="reference internal" href="#clipping"><span class="std std-ref">below</span></a>). For example, <code class="docutils literal notranslate"><span class="pre">a[i:i+n]</span></code>
 will slice <code class="docutils literal notranslate"><span class="pre">n</span></code> elements from the array <code class="docutils literal notranslate"><span class="pre">a</span></code>. Also be careful that this is
 only true when <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are nonnegative (see
@@ -453,7 +457,7 @@ a = &amp; [0, &amp; 1, &amp; 2, &amp; 3, &amp; 4, &amp; 5, &amp; 6]\\
 <p><strong>Wrong Rule 2: “A slice works like <code class="docutils literal notranslate"><span class="pre">range()</span></code>.”</strong> There are many similarities
 between the behaviors of slices and the behavior of <code class="docutils literal notranslate"><span class="pre">range()</span></code>. However, they
 do not behave the same. A slice
-<code class="docutils literal notranslate"><span class="pre">start:stop:step</span></code> only acts like <code class="docutils literal notranslate"><span class="pre">range(start,</span> <span class="pre">stop,</span> <span class="pre">step)</span></code> if <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>
+<code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code> only acts like <code class="docutils literal notranslate"><span class="pre">range(start,</span> <span class="pre">stop,</span> <span class="pre">step)</span></code> if <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>
 are <strong>nonnegative</strong>. If either of them are negative, the slice wraps around
 and slices from the end of the array (see <a class="reference internal" href="#negative-indices"><span class="std std-ref">below</span></a>).
 <code class="docutils literal notranslate"><span class="pre">range()</span></code> on the other hand treats negative numbers as the actual start of end
@@ -525,7 +529,7 @@ a = &amp; [&amp;\phantom{|}&amp;0, &amp;\phantom{|} &amp;1, &amp; \phantom{|}&am
 \end{split}\]</div>
 <p>Using this way of thinking, the first element of the array is to the left of
 the “1-divider”. An integer index <code class="docutils literal notranslate"><span class="pre">i</span></code> produces the element to the right of the
-“<code class="docutils literal notranslate"><span class="pre">i</span></code>-divider”, and a slice <code class="docutils literal notranslate"><span class="pre">i:j</span></code> picks the elements between the <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>
+“<code class="docutils literal notranslate"><span class="pre">i</span></code>-divider”, and a slice <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> picks the elements between the <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>
 dividers.</p>
 <p>At first glance, this seems like a rather clever way to think about the
 half-open rule. For instance, between the <code class="docutils literal notranslate"><span class="pre">3</span></code> and <code class="docutils literal notranslate"><span class="pre">5</span></code> dividers is the subarray
@@ -734,7 +738,7 @@ here. It isn’t worth it.</p>
 <div class="section" id="negative-indexes">
 <span id="negative-indices"></span><h3>Negative Indexes<a class="headerlink" href="#negative-indexes" title="Permalink to this headline">¶</a></h3>
 <p>Negative indices in slices work the same way they do with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
-indices</span></a>. For <code class="docutils literal notranslate"><span class="pre">start:stop:step</span></code>, <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> cause the
+indices</span></a>. For <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>, <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> cause the
 indexing to go from the end of the array. However, they do not change the
 direction of the slicing—only the <code class="docutils literal notranslate"><span class="pre">step</span></code> does that. The other rules of
 slicing do not change when the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> is negative. <a class="reference internal" href="#half-open"><span class="std std-ref">The stop is
@@ -997,7 +1001,7 @@ the original list. In fact, one of the most common uses of a negative step is
 operation. However, this is a bad way of thinking about negative steps. The
 reason is that <code class="docutils literal notranslate"><span class="pre">a[i:j:-1]</span></code> is <em>not</em> equivalent to <code class="docutils literal notranslate"><span class="pre">reversed(a[j:i:1])</span></code>. The
 reason is basically the same as was described in <a class="reference internal" href="#wrong-rule-1"><span class="std std-ref">wrong rule 1</span></a>
-above. The issue is that for <code class="docutils literal notranslate"><span class="pre">start:stop:step</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code> is <em>always</em> the what is
+above. The issue is that for <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code> is <em>always</em> the what is
 not included (see the <a class="reference internal" href="#half-open"><span class="std std-ref">half-open</span></a> section above). Which means if we
 swap <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>, we go from “<code class="docutils literal notranslate"><span class="pre">j</span></code> is not included” to “<code class="docutils literal notranslate"><span class="pre">i</span></code> is not included”,
 producing a wrong result. For example, as before:</p>
