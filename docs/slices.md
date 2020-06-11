@@ -226,11 +226,6 @@ they aren't especially helpful to someone who is trying to construct a slice
 from a higher level of abstraction such as "I want to select this particular
 subset of my array".
 
-And indeed, if you do want to manipulate slices in a mathematical way, the
-above doesn't help very much for that either, since it isn't always valid,
-e.g., when `i` or `j` are negative. Instead of trying to derive formulas for
-mathematically manipulating slices, use ndindex.
-
 Instead, we shall examine slices by carefully going over all the various
 aspects of the syntax and semantics that can lead to confusion, and attempting
 to demystify them through simple rules.
