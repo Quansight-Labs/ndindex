@@ -307,7 +307,8 @@ Slices behave like half-open intervals. What this means is that the `stop` in
 omitted, which always slices to the beginning or end of the array, see
 [below](omitted)).
 
-For example, `a[3:5]` slices the elements 3 and 4, but not 5 ([0-based](0-based)).
+For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
+([0-based](0-based)).
 
 $$
 \require{enclose}
@@ -1244,9 +1245,9 @@ but much less confusing and difficult to work with, both for end-users of
 slices and people writing slice arithmetic (a typical user of ndindex). The
 changes I would make to improve the semantics would be
 
-1. Remove the special meaning of negative numbers
-2. Use 1-based indexing instead of 0-based indexing
-3. Make a slice always include both the start and the stop
+1. Remove the special meaning of negative numbers.
+2. Use 1-based indexing instead of 0-based indexing.
+3. Make a slice always include both the start and the stop.
 
 The special meaning of negative numbers, to index from the end of the array,
 is by far the biggest problem. It is a fundamental discontinuity in the
@@ -1268,13 +1269,15 @@ Slicing/indexing from the end of the array can always be done in terms of the
 length of the array. `a[-x]` is the same as `a[len(a)-x]` (when using 0-based
 indexing), but the problem is that it is tedious to write `a` twice, and `a`
 may in fact be a larger expression, so writing `a[len(a)-x]` would require
-assigning it to a variable. However, I think it would be possible to introduce
-a special syntax to mean "reversed" or "from the end of the array" indexing,
-and leave negative numbers to simply extend beyond the left side of the array.
-Since this is a moot point for Python---I don't expect Python's indexing
-semantics to change, they are already baked into the language---I won't
-suggest any syntax. Perhaps this can inspire people writing new languages or
-DSLs to come up with better semantics backed by good syntax.
+assigning it to a variable. It also becomes more complicated when `a` is a
+NumPy array and the slice apears as part of a larger multidimensional (tuple)
+index. However, I think it would be possible to introduce a special syntax to
+mean "reversed" or "from the end of the array" indexing, and leave negative
+numbers to simply extend beyond the left side of the array. Since this is a
+moot point for Python---I don't expect Python's indexing semantics to change,
+they are already baked into the language---I won't suggest any syntax. Perhaps
+this can inspire people writing new languages or DSLs to come up with better
+semantics backed by good syntax.
 
 The second point, on using 1-based indexing instead of 0-based indexing, will
 likely be the most controversial. 0-based indexing certainly has its uses. In
@@ -1325,34 +1328,40 @@ are backed by Fortran code, such as SciPy.
 
 Finally, the idea of half-open semantics, where the `stop` value of a slice is
 never included, is bad, for many of the same reasons that 0-based indexing is
-bad. In most contexts outside of programming, when one sees a range of values,
-it is implicitly assumed that both endpoints are included in the range. For
-example, if you see a phrase like "ages 7 to 12", "the letters A to Z",
-or "groups 1 through 3", without any further qualification you assume that
-both endpoints are included in the range.
+bad. In most contexts outside of programming, including virtually all
+mathematical contexts, when one sees a range of values, it is implicitly
+assumed that both endpoints are included in the range. For example, if you see
+a phrase like "ages 7 to 12", "the letters A to Z", or "sum of the numbers
+from 1 to 10", without any further qualification you assume that both
+endpoints are included in the range.
 
 It is true that this can lead to fencepost errors, but I contend that it is
 more natural to think about a range as including both endpoints. Half-open
 semantics are often tied to 0-based indexing, since it is a convenient way to
-allow the range 0--N to contain N values, by not including N. I see this as
+allow the range 0--N to contain N values, by not including N.[^python-history-note] I see this as
 taking a bad decision (0-based indexing) and putting a bad bandaid on it that
 makes it worse. But certainly this argument goes away for 1-based indexing.
 The range 1--N contains N values exactly when N *is* included in the range.
+
+[^python-history-note]: In fact, the original reason that Python uses 0-based
+indexing is that Guide preferred the half-open semantics, which only work out
+well when combined with 0-based indexing
+([reference](https://web.archive.org/web/20190321101606/https://plus.google.com/115212051037621986145/posts/YTUxbXYZyfi)).
 
 A commonly touted benefit of half-open slicing semantics is that you can
 "glue" half-open intervals together. For example, `a[0:N] + a[N:M]` is the
 same as `a[0:M]`. But `a[1:N] + a[N+1:M]` is just as clear. People are
 perfectly used to adding 1 to get to the next term in a sequence. Both
 endpoints being included in a range are the standard semantics in both
-mathematics and everyday language. The first n numbers are $1\ldots n$. The
-next n numbers are $n+1\ldots 2n$. "The 70s" refers to the years 1970--1979.
+mathematics and everyday language. The first $n$ numbers are $1\ldots n$; the
+next $n$ numbers are $n+1\ldots 2n$. "The 70s" refers to the years 1970--1979.
 If you were to rewrite the previous two sentences using half-open semantics,
 anyone would tell you they were phrased wrong.
 
 Another benefit of half-open intervals is that they allow the range `a[i:j]`
-to contain `j - i` elements (assuming `j > i > 0` and `a` is large enough).
+to contain $j - i$ elements (assuming $j > i > 0$ and `a` is large enough).
 However, I contend people are perfectly used to the usual fencepost offset
-that a range i--j contains j - i + 1 numbers. Half-open semantics replace this
+that a range $i\ldots j$ contains $j - i + 1$ numbers. Half-open semantics replace this
 fencepost error with more subtle ones, which arise from forgetting that the
 range doesn't include the endpoint, unlike most natural ranges that occur in
 day-to-day life. See [wrong rule 3](wrong-rule-3) above for an example of how
@@ -1367,9 +1376,23 @@ problem is not to try to change the way we count fenceposts, so that somehow
 intuitive way of thinking about the problem, which occurs both in programming
 and non-programming contexts.
 
-Half-open semantics are also particularly confusing when combined with
-negative number indexing (see [above](half-open)).
+Half-open semantics become particularly confusing when the step is negative.
+This is because one must remember that the end that is not included in the
+half-open interval is the second index in the slice, *not* the larger index
+(see wrong rules [1](wrong-rule-1) and [3](wrong-rule-3) above). Were both
+endpoints included, this confusion would be impossible, because positive and
+negative steps would be symmetric in this regard.
 
+Again, there is no way Python itself can change any of these things at this
+point. It would be way too big of a change to the language, far bigger than
+any change that was made as part of Python 3 (and the Python developers have
+already stated that they will never do a big breaking change like Python 3
+again). But I hope I can inspire new languages and DSLs that include slicing
+semantics to be written in clearer ways. And I also hope that I can break some
+of the cognitive dissonance that leads people to believe that the Python
+slicing rules are superior, despite the endless confusion that they provide.
+And I also believe that simply understanding that Python has made these
+decisions will help you to remember the slicing [rules](rules).
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
