@@ -3,7 +3,7 @@ from numpy import arange, int64
 from pytest import raises
 
 from hypothesis import given
-from hypothesis.strategies import integers
+from hypothesis.strategies import integers, one_of
 
 from ..integer import Integer
 from ..ndindex import ndindex
@@ -100,11 +100,13 @@ def test_integer_newshape_exhaustive():
 
         check_same(a, i, func=func, assert_equal=assert_equal)
 
-@given(ints(), shapes)
+@given(ints(), one_of(shapes, integers(0, 10)))
 def test_integer_newshape_hypothesis(i, shape):
     # The axis argument is tested implicitly in Tuple.newshape
-
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
 
     def assert_equal(x, y):
         newshape = ndindex(i).newshape(shape)

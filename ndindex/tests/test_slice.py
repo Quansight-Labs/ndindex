@@ -3,7 +3,7 @@ from pytest import raises
 from numpy import arange
 
 from hypothesis import given, assume
-from hypothesis.strategies import integers
+from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
 from ..tuple import Tuple
@@ -212,9 +212,13 @@ def test_slice_newshape_exhaustive():
             check_same(a, S.raw, func=func, assert_equal=assert_equal)
 
 
-@given(slices(), shapes)
+@given(slices(), one_of(shapes, integers(0, 10)))
 def test_slice_newshape_hypothesis(s, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
     try:
         S = Slice(s)
     except ValueError: # pragma: no cover
