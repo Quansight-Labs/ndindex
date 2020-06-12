@@ -186,19 +186,54 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
 
-def test_slice_newshape_no_shape():
-    raises(ValueError, lambda: Slice(6).newshape())
 
+def test_slice_newshape_exhaustive():
+    for n in range(10):
+        shape = n
+        a = arange(n)
+        for sargs in iterslice():
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            # Call newshape so we can see if any exceptions match
+            def func(S):
+                S.newshape(shape)
+                return S
+
+            def assert_equal(x, y):
+                newshape = S.newshape(shape)
+                assert x.shape == y.shape == newshape
+
+            # The axis argument is tested implicitly in the Tuple.newshape
+            # tests
+            check_same(a, S.raw, func=func, assert_equal=assert_equal)
+
+
+@given(slices(), shapes)
+def test_slice_newshape_hypothesis(s, shape):
+    a = arange(prod(shape)).reshape(shape)
+    try:
+        S = Slice(s)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    # Call newshape so we can see if any exceptions match
+    def func(S):
+        S.newshape(shape)
+        return S
+
+    def assert_equal(x, y):
+        newshape = S.newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    # The axis argument is tested implicitly in the Tuple.newshape
+    # tests
+    check_same(a, S.raw, func=func, assert_equal=assert_equal)
 
 def test_slice_newshape_Tuple():
     raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
-
-
-def test_slice_newshape_small_shape():
-    raises(IndexError, lambda: Slice(6).newshape(2))
-    raises(IndexError, lambda: Slice(6).newshape((8, 2), axis=1))
-    raises(IndexError, lambda: Slice(6).newshape((4, 4)))
-
 
 def test_integer_newshape_wrong_axis():
     raises(IndexError, lambda: Slice(6).newshape(2, axis=1))

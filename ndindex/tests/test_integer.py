@@ -126,7 +126,6 @@ def test_integer_newshape_small_shape():
     raises(IndexError, lambda: Integer(6).newshape((8, 4), axis=1))
     raises(IndexError, lambda: Integer(6).newshape((4, 4)))
 
-
 def test_integer_newshape_wrong_axis():
     raises(IndexError, lambda: Integer(6).newshape(2, axis=1))
     raises(IndexError, lambda: Integer(6).newshape((4, 2), axis=2))

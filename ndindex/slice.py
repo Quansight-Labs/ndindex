@@ -346,10 +346,8 @@ class Slice(NDIndex):
         `Slice.newshape(shape)` returns the shape of `a[idx.raw]`, assuming `a`
         has shape `shape`.
 
-        `shape` can be an int, a tuple of ints, an Integer or a tuple of ints
-        or Integers.
-
-        A ValueError is raised if `shape` is `None`.
+        `shape` should be a tuple of ints, or an int, which is equivalent to a
+        1-D shape.
 
         >>> from ndindex import Slice, Integer, Tuple
         >>> idx = Slice(6)
@@ -360,38 +358,22 @@ class Slice(NDIndex):
         >>> idx.newshape((8, 10), axis=1)
         (8, 6)
         """
-        from . import Tuple
+        from . import Integer, Tuple
 
-        idx = self.reduce()
-
-        if shape is None:
-            raise ValueError("shape can't be None")
-        elif isinstance(shape, Tuple):
-            raise TypeError("Tuple is not meant to be used as a shape - "
+        if isinstance(shape, (Tuple, Integer)):
+            raise TypeError("ndindex types are not meant to be used as a shape - "
                             "did you mean to use the built-in tuple type?")
-        else:
-            try:
-                shape = shape.raw
-            except:
-                pass
-            if isinstance(shape, int):
-                if len(idx) >= shape:
-                    raise IndexError(f"{idx} out of bounds for array with shape"
-                                     f" ({shape},)")
-                else:
-                    return tuple([len(idx)])
-            else:
-                if isinstance(shape, tuple):
-                    if axis >= len(shape):
-                        raise IndexError(f"axis {axis} out of bounds for array"
-                                         f" with shape {shape}")
-                    if len(idx) >= shape[axis]:
-                        raise IndexError(f"{idx} out of bounds for array with"
-                                         f" shape {shape}")
-                    else:
-                        newshape = list(shape)
-                        newshape[axis] = len(idx)
-                        return tuple(newshape)
+        if isinstance(shape, int):
+            shape = (shape,)
+        if len(shape) <= axis:
+            raise IndexError("too many indices for array")
+
+        idx = self.reduce(shape, axis=axis)
+
+        newshape = list(shape)
+        # len() won't raise an error after reducing with a shape
+        newshape[axis] = len(idx)
+        return tuple(newshape)
 
     # TODO: Better name?
     def as_subindex(self, index):
