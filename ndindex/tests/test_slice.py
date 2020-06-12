@@ -7,6 +7,7 @@ from hypothesis.strategies import integers
 
 from ..slice import Slice
 from ..tuple import Tuple
+from ..integer import Integer
 from .helpers import check_same, slices, prod, shapes, iterslice
 
 def test_slice_args():
@@ -232,8 +233,9 @@ def test_slice_newshape_hypothesis(s, shape):
     # tests
     check_same(a, S.raw, func=func, assert_equal=assert_equal)
 
-def test_slice_newshape_Tuple():
+def test_slice_newshape_ndindex_input():
     raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
+    raises(TypeError, lambda: Slice(6).newshape(Integer(2)))
 
 def test_integer_newshape_wrong_axis():
     raises(IndexError, lambda: Slice(6).newshape(2, axis=1))

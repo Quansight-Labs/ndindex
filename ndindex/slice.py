@@ -349,7 +349,10 @@ class Slice(NDIndex):
         `shape` should be a tuple of ints, or an int, which is equivalent to a
         1-D shape.
 
-        >>> from ndindex import Slice, Integer, Tuple
+        Raises IndexError if `self` would be out of shape for an array of
+        shape `shape`.
+
+        >>> from ndindex import Slice
         >>> idx = Slice(6)
         >>> idx.newshape((8, 2))
         (6, 2)

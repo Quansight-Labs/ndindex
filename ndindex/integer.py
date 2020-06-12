@@ -92,7 +92,10 @@ class Integer(NDIndex):
         `shape` should be a tuple of ints, or an int, which is equivalent to a
         1-D shape.
 
-        >>> from ndindex import Integer, Tuple
+        Raises IndexError if `self` would be out of shape for an array of
+        shape `shape`.
+
+        >>> from ndindex import Integer
         >>> idx = Integer(6)
         >>> idx.newshape(7)
         ()

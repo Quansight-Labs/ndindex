@@ -117,7 +117,7 @@ def test_integer_newshape_hypothesis(i, shape):
 
     check_same(a, i, func=func, assert_equal=assert_equal)
 
-def test_integer_newshape_Tuple():
+def test_integer_newshape_ndindex_input():
     raises(TypeError, lambda: Integer(1).newshape(Tuple(2, 1)))
     raises(TypeError, lambda: Integer(1).newshape(Integer(2)))
 
