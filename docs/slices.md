@@ -4,11 +4,13 @@ Slices
 <!-- TODOS:
 
 - Regularize the type of a in discussions(list vs. array)
-- Convert a to something other than range(7)
 - Fencepost image
 - Better wording for omitted rule
+- Always underline stop in the diagrams?
+- Add the slice as a caption to each figure.
 
 -->
+
 Python's slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.
@@ -108,8 +110,6 @@ For a slice `a[start:stop:step]`:
 To understand slices, it is good to first review how integer indices work.
 Throughout this guide, I will use as an example this prototype list:
 
-<!-- TODO: Use a different list where the entries don't match the indices? -->
-
 $$
 a = [\mathtt{{"}a{"}},\ \mathtt{{"}b{"}},\ \mathtt{{"}c{"}},\
 \mathtt{{"}d{"}},\ \mathtt{{"}e{"}},\ \mathtt{{"}f{"}},\ \mathtt{{"}g{"}}]
@@ -126,6 +126,8 @@ slice indexing, is that it is 0-based. This means that the indexes start
 at 0. This is the case for all **nonnegative** indexes. For example,
 `a[3]` would pick the **fourth** element of `a`, in this case, `"c"`.
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3] == 'd'</code>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
@@ -141,6 +143,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 ```py
 >>> a = ["a", "b", "c", "d", "e", "f", "g"]
@@ -158,6 +161,8 @@ to the first element of the array. `-1` chooses the last element, `-2` the
 second-to-last, and so on. For example, `a[-3]` picks the **third-to-last**
 element of `a`, in this case, `"e"`:
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[-3] == 'e'</code>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
@@ -173,6 +178,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 ```py
 >>> a[-3]
@@ -281,6 +287,8 @@ indexes `start` and `stop` are 0-based, just as with [integer
 indexing](integer-indices) (although one should be careful that even though
 `stop` is 0-based, it is not included in the slice. See [below](half-open)).
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
@@ -296,6 +304,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 ```py
 >>> a = ["a", "b", "c", "d", "e", "f", "g"]
@@ -314,6 +323,8 @@ omitted, which always slices to the beginning or end of the array, see
 For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
 ([0-based](0-based)).
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
 $$
 \require{enclose}
 \begin{aligned}
@@ -330,6 +341,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 ```py
 >>> a = ["a", "b", "c", "d", "e", "f", "g"]
@@ -417,6 +429,10 @@ Mathematically, this creates a half open interval $(\text{stop}, \text{start}]$
 For example, say way believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
 
+<!-- TODO: improve this -->
+<div style="text-align:center" >
+<code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
+<div style="color:red">(WRONG)</div>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
@@ -440,6 +456,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \small{\text{(reversed)}}\hspace{4.2em}
 \end{aligned}
 $$
+</div>
 
 We might assume we would get
 
@@ -458,6 +475,8 @@ Actually, what we really get is
 This is because the slice `5:3:-1` starts at index `5` and steps backwards to
 index `3`, but not including `3`.
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
 $$
 \require{enclose}
 \begin{aligned}
@@ -474,6 +493,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 **Wrong Rule 2: "A slice works like `range()`."** There are many similarities
 between the behaviors of slices and the behavior of `range()`. However, they
@@ -511,10 +531,11 @@ Rather than thinking about that, consider the spaces between the elements:
 <!-- a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} & -->
 <!-- 4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\ -->
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
 $$
 \require{enclose}
 \begin{aligned}
-\begin{array}{c}
 \begin{array}{r r r r r r r r r r r r r r r r r r}
 a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
     &
@@ -551,10 +572,10 @@ a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{
     &
     & \color{red}{7}\\
 \end{array}\\
-\small{\text{(not a great way of thinking about indexes)}}
-\end{array}
 \end{aligned}
 $$
+<i>(not a great way of thinking about indexes)</i>
+</div>
 
 Using this way of thinking, the first element of the array is to the left of
 the "1-divider". An integer index `i` produces the element to the right of the
@@ -572,7 +593,9 @@ reasons why this way of thinking creates more confusion than it removes.
   Consider again the slice `a[5:3:-1]`. Looking at the above figure, we might
   imagine it to give the same incorrect sub-array that we imagined before.
 
-
+  <div style="text-align:center">
+  <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
+  <div style="color:red">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -617,6 +640,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \end{array}
   \end{aligned}
   $$
+  </div>
 
   As before, we might assume we would get
 
@@ -635,6 +659,8 @@ reasons why this way of thinking creates more confusion than it removes.
 - The rule does work for negative start and step, but only if you think about
   it correctly. The correct way to think about it is to reverse the indices
 
+  <div style="text-align:center" >
+  <code style="font-size: 16pt;">a[-4:-2] == ['d', 'e']</code>
   $$
   \require{enclose}
   \begin{aligned}
@@ -679,8 +705,9 @@ reasons why this way of thinking creates more confusion than it removes.
   \end{array}
   \end{aligned}
   $$
+  </div>
 
-  For example, `a[-4:-2]` will give `[3, 4]`
+  For example, `a[-4:-2]` will give `['d', 'e']`
 
   ```py
   >>> a[-4:-2]
@@ -689,9 +716,11 @@ reasons why this way of thinking creates more confusion than it removes.
 
   However, it would be quite easy to get confused here, as the "other" way of
   thinking about negative indices (the way I am recommending) is that the end
-  starts at -1. So you might mistakenly imagine
+  starts at -1. So you might mistakenly imagine something like this:
 
-
+  <div style="text-align:center" >
+  <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
+  <div style="color:red">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -736,6 +765,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \end{array}
   \end{aligned}
   $$
+  </div>
 
 - The rule "works" for slices, but is harder to imagine for integer indices.
   The integer index corresponding to the dividers corresponds to the entry to
@@ -801,6 +831,10 @@ Note that positive and negative indices can be mixed. The following slices of
 ['d', 'e']
 ```
 
+<!-- TODO: Add circles here? -->
+<div style="text-align:center">
+<div style="font-size: 16pt;"><code>a[3:5] == a[-4:-2] == a[3:-2] == a[-4:5]
+== ['d', 'e']</code></div>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
@@ -824,6 +858,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 If a negative `stop` indexes an element on or before a nonnegative `start`, the
 slice is empty, the same as if `stop <= start` when both are nonnegative.
@@ -986,6 +1021,8 @@ Let us consider an example where the step size is `3`.
 ['a', 'd']
 ```
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[0:6:3] == ['a', 'd']</code>
 $$
 \require{enclose}
 \begin{aligned}
@@ -1009,6 +1046,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 Note that the `start` index, `0`, is included, but the `stop` index, `6`
 (corresponding to `'g'`), is *not* included, even though it is a multiple of
@@ -1024,7 +1062,8 @@ Indeed, we can note that resulting indices `0`, `3` of the above slice
 a multiple of 3. If we instead choose a start index that is $1 \pmod{3}$ then
 all the indices would also be $1 \pmod{3}$.
 
-
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[1:6:3] == ['b', 'e']</code>
 $$
 \require{enclose}
 \begin{aligned}
@@ -1050,6 +1089,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 ```py
 >>> a[1:6:3]
@@ -1171,23 +1211,25 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
 ['g', 'd']
 ```
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[6:0:-3] == ['g', 'd']</code>
 $$
 \require{enclose}
 \begin{aligned}
-\begin{array}{r c c c c c c c l}
+\begin{array}{r r c c c c c c l}
 a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
-    & \color{red}{\enclose{circle}{0}}
+    & \color{red}{\enclose{circle}{0}\phantom{,}}
     & \color{red}{1\phantom{,}}
     & \color{red}{2\phantom{,}}
     & \color{blue}{\enclose{circle}{3}}
     & \color{red}{4\phantom{,}}
     & \color{red}{5\phantom{,}}
     & \color{blue}{\enclose{circle}{6}}\\
-    & \color{red}{-3}
+    & \color{red}{-3}\phantom{\mathtt{{"},}}
     & \leftarrow
     &
-    & \color{blue}{-3}
+    & \color{blue}{-3}\phantom{\mathtt{{"},}}
     & \leftarrow
     &
     & \color{blue}{\text{start}}\\
@@ -1195,6 +1237,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
 \end{array}
 \end{aligned}
 $$
+</div>
 
 The `step` can never be equal to 0. This unconditionally leads to an error:
 
