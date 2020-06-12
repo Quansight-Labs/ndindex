@@ -341,7 +341,7 @@ class Slice(NDIndex):
                 stop += size
         return self.__class__(start, stop, step)
 
-    def newshape(self, shape, axis=0):
+    def newshape(self, shape):
         """
         `Slice.newshape(shape)` returns the shape of `a[idx.raw]`, assuming `a`
         has shape `shape`.
@@ -358,8 +358,6 @@ class Slice(NDIndex):
         (6, 2)
         >>> idx.newshape(10)
         (6,)
-        >>> idx.newshape((8, 10), axis=1)
-        (8, 6)
         """
         from . import Integer, Tuple
 
@@ -368,15 +366,11 @@ class Slice(NDIndex):
                             "did you mean to use the built-in tuple type?")
         if isinstance(shape, int):
             shape = (shape,)
-        if len(shape) <= axis:
-            raise IndexError("too many indices for array")
 
-        idx = self.reduce(shape, axis=axis)
+        idx = self.reduce(shape)
 
-        newshape = list(shape)
         # len() won't raise an error after reducing with a shape
-        newshape[axis] = len(idx)
-        return tuple(newshape)
+        return (len(idx),) + shape[1:]
 
     # TODO: Better name?
     def as_subindex(self, index):

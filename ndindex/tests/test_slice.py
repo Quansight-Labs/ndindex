@@ -207,8 +207,6 @@ def test_slice_newshape_exhaustive():
                 newshape = S.newshape(shape)
                 assert x.shape == y.shape == newshape
 
-            # The axis argument is tested implicitly in the Tuple.newshape
-            # tests
             check_same(a, S.raw, func=func, assert_equal=assert_equal)
 
 
@@ -233,17 +231,11 @@ def test_slice_newshape_hypothesis(s, shape):
         newshape = S.newshape(shape)
         assert x.shape == y.shape == newshape
 
-    # The axis argument is tested implicitly in the Tuple.newshape
-    # tests
     check_same(a, S.raw, func=func, assert_equal=assert_equal)
 
 def test_slice_newshape_ndindex_input():
     raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
     raises(TypeError, lambda: Slice(6).newshape(Integer(2)))
-
-def test_integer_newshape_wrong_axis():
-    raises(IndexError, lambda: Slice(6).newshape(2, axis=1))
-    raises(IndexError, lambda: Slice(6).newshape((4, 2), axis=2))
 
 def test_slice_as_subindex_slice_exhaustive():
     # We have to restrict the range of the exhaustive test to get something

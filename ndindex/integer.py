@@ -84,7 +84,7 @@ class Integer(NDIndex):
 
         return self
 
-    def newshape(self, shape, axis=0):
+    def newshape(self, shape):
         """
         `Integer.newshape(shape)` returns the shape of `a[idx.raw]`, assuming
          `a` has shape `shape`.
@@ -105,8 +105,6 @@ class Integer(NDIndex):
         IndexError: index 6 is out of bounds for axis 0 with size 2
         >>> idx.newshape((8, 4))
         (4,)
-        >>> idx.newshape((8, 10), axis=1)
-        (8,)
         """
         from . import Tuple
 
@@ -115,12 +113,8 @@ class Integer(NDIndex):
                             "did you mean to use the built-in tuple type?")
         if isinstance(shape, int):
             shape = (shape,)
-        if len(shape) <= axis:
-            raise IndexError("too many indices for array")
 
         # reduce will raise IndexError if it should be raised
-        self.reduce(shape, axis=axis)
+        self.reduce(shape)
 
-        newshape = list(shape)
-        del newshape[axis]
-        return tuple(newshape)
+        return shape[1:]

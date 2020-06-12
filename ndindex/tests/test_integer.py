@@ -84,7 +84,6 @@ def test_integer_reduce_no_shape_hypothesis(i, shape):
     check_same(a, i, func=lambda x: x.reduce())
 
 def test_integer_newshape_exhaustive():
-    # The axis argument is tested implicitly in Tuple.newshape
     shape = 5
     a = arange(shape)
 
@@ -102,7 +101,6 @@ def test_integer_newshape_exhaustive():
 
 @given(ints(), one_of(shapes, integers(0, 10)))
 def test_integer_newshape_hypothesis(i, shape):
-    # The axis argument is tested implicitly in Tuple.newshape
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -125,9 +123,4 @@ def test_integer_newshape_ndindex_input():
 
 def test_integer_newshape_small_shape():
     raises(IndexError, lambda: Integer(6).newshape(2))
-    raises(IndexError, lambda: Integer(6).newshape((8, 4), axis=1))
     raises(IndexError, lambda: Integer(6).newshape((4, 4)))
-
-def test_integer_newshape_wrong_axis():
-    raises(IndexError, lambda: Integer(6).newshape(2, axis=1))
-    raises(IndexError, lambda: Integer(6).newshape((4, 2), axis=2))
