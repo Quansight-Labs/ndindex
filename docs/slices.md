@@ -111,20 +111,25 @@ Throughout this guide, I will use as an example this prototype list:
 <!-- TODO: Use a different list where the entries don't match the indices? -->
 
 $$
-a = [0, 1, 2, 3, 4, 5, 6].
+a = [\mathtt{{"}a{"}},\ \mathtt{{"}b{"}},\ \mathtt{{"}c{"}},\
+\mathtt{{"}d{"}},\ \mathtt{{"}e{"}},\ \mathtt{{"}f{"}},\ \mathtt{{"}g{"}}]
 $$
 
-`a` is the same as `range(7)` and has 7 elements.
+The list `a` has 7 elements.
+
+The elements of `a` are strings, but the indexes and slices on `a` will always
+use integers. An index or slice is never based on the value of the elements,
+but rather the position of the elements in the list.
 
 The key thing to remember about indexing in Python, both for integer and
 slice indexing, is that it is 0-based. This means that the indexes start
 at 0. This is the case for all **nonnegative** indexes. For example,
-`a[3]` would pick the **fourth** element of `a`, in this case, `3`.
+`a[3]` would pick the **fourth** element of `a`, in this case, `"c"`.
 
 $$
 \begin{aligned}
-\begin{array}{r r r r r r r r}
-a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\begin{array}{r c c c c c c c}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -138,21 +143,25 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 $$
 
 ```py
->>> a = [0, 1, 2, 3, 4, 5, 6]
+>>> a = ["a", "b", "c", "d", "e", "f", "g"]
 >>> a[3]
-3
+'d'
 ```
+
+0-based indexing is different from how people typically count things, which is
+1-based (1, 2, 3, ...). Thinking in terms of 0-based indexing requires some
+practice.
 
 For **negative** integers, the indices index from the end of the array. These
 indices are necessarily 1-based (or rather, −1-based), since `0` already refers
 to the first element of the array. `-1` chooses the last element, `-2` the
 second-to-last, and so on. For example, `a[-3]` picks the **third-to-last**
-element of `a`, in this case, `4`:
+element of `a`, in this case, `"e"`:
 
 $$
 \begin{aligned}
-\begin{array}{r r r r r r r r}
-a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\begin{array}{r c c c c c c c}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
     & \color{red}{-7\phantom{,}}
     & \color{red}{-6\phantom{,}}
@@ -166,9 +175,8 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 $$
 
 ```py
->>> a = [0, 1, 2, 3, 4, 5, 6]
 >>> a[-3]
-4
+'e'
 ```
 
 An equivalent way to think about negative indices is that an index
@@ -178,11 +186,10 @@ with the size of the axis being sliced). For example, `len(a)` is `7`, so
 `a[-3]` is the same as `a[7 - 3]`:
 
 ```py
->>> a = [0, 1, 2, 3, 4, 5, 6]
 >>> len(a)
 7
 >>> a[7 - 3]
-4
+'e'
 ```
 
 Therefore, negative indexes are primarily a syntactic convenience that
@@ -243,15 +250,17 @@ index.
 For example
 
 ```py
->>> a = [0, 1, 2, 3, 4, 5, 6]
+>>> a = ["a", "b", "c", "d", "e", "f", "g"]
 >>> a[3]
-3
+'d'
 >>> a[3:4]
-[3]
+['d']
 >>> a[5:2] # Empty slice
 []
 >>> import numpy as np
 >>> arr = np.array([[1, 2], [3, 4]])
+>>> arr.shape
+(2, 2)
 >>> arr[0].shape # Removes the first dimension
 (2,)
 >>> arr[0:1].shape # Preserves the first dimension
@@ -274,8 +283,8 @@ indexing](integer-indices) (although one should be careful that even though
 
 $$
 \begin{aligned}
-\begin{array}{r r r r r r r r}
-a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\begin{array}{r c c c c c c c}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -289,9 +298,9 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 $$
 
 ```py
->>> a = [0, 1, 2, 3, 4, 5, 6]
+>>> a = ["a", "b", "c", "d", "e", "f", "g"]
 >>> a[3:5]
-[3, 4]
+['d', 'e']
 ```
 
 (half-open)=
@@ -308,8 +317,8 @@ For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
 $$
 \require{enclose}
 \begin{aligned}
-\begin{array}{r r r r r r r r}
-a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\begin{array}{r c c c c c c c}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -323,9 +332,9 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
 $$
 
 ```py
->>> a = [0, 1, 2, 3, 4, 5, 6]
+>>> a = ["a", "b", "c", "d", "e", "f", "g"]
 >>> a[3:5]
-[3, 4]
+['d', 'e']
 ```
 
 The half-open nature of slices means that you must always remember that the
@@ -351,9 +360,9 @@ advantages:
 
   ```py
   >>> a[1:len(a)]
-  [1, 2, 3, 4, 5, 6]
+  ['b', 'c', 'd', 'e', 'f', 'g']
   >>> a[1:]
-  [1, 2, 3, 4, 5, 6]
+  ['b', 'c', 'd', 'e', 'f', 'g']
   ```
 
 - Consecutive slices can be appended to one another by making each successive
@@ -362,9 +371,9 @@ advantages:
 
   ```py
   >>> a[2:3] + a[3:5]
-  [2, 3, 4]
+  ['c', 'd', 'e']
   >>> a[2:5]
-  [2, 3, 4]
+  ['c', 'd', 'e']
   ```
 
   A common usage of this is to split a slice into two slices. For example, the
@@ -410,8 +419,8 @@ $[3, 5)$ but in reverse order.
 
 $$
 \begin{aligned}
-\begin{array}{r r r r r r r r}
-a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\begin{array}{r c c c c c c c}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -428,7 +437,7 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
     & )
     & \\
 \end{array}\\
-\small{\text{(reversed)}}\phantom{5,\quad 6]}
+\small{\text{(reversed)}}\hspace{4.2em}
 \end{aligned}
 $$
 
@@ -436,14 +445,14 @@ We might assume we would get
 
 ```py
 >> a[5:3:-1]
-[4, 3] # WRONG
+['e', 'd'] # WRONG
 ```
 
 Actually, what we really get is
 
 ```py
 >>> a[5:3:-1]
-[5, 4]
+['f', 'e']
 ```
 
 This is because the slice `5:3:-1` starts at index `5` and steps backwards to
@@ -453,15 +462,15 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r r r r r r r r}
-a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{red}{\enclose{circle}{3}}
-    & \leftarrow\color{blue}{\enclose{circle}{4}}
-    & \leftarrow\color{blue}{\enclose{circle}{5}}
-    & \color{red}{6\phantom{,}}\\
+    & \color{red}{0\phantom{{"},}}
+    & \color{red}{1\phantom{{"},}}
+    & \color{red}{2\phantom{{"},}}
+    & \color{red}{\enclose{circle}{3}\phantom{,}}
+    & \leftarrow\color{blue}{\enclose{circle}{4}\phantom{,}}
+    & \leftarrow\color{blue}{\enclose{circle}{5}\phantom{,}}
+    & \color{red}{6\phantom{{"},}}\\
 \end{array}
 \end{aligned}
 $$
@@ -478,11 +487,12 @@ values for the range. For example:
 ```py
 >>> list(range(3, 5))
 [3, 4]
->>> a[3:5] # a is range(7), and these are the same
+>>> b = list(range(7))
+>>> b[3:5] # b is range(7), and these are the same
 [3, 4]
 >>> list(range(3, -2)) # Empty, because -2 is less than 3
 []
->>> a[3:-2] # Indexes from 3 to the second to last (5)
+>>> b[3:-2] # Indexes from 3 to the second to last (5)
 [3, 4]
 ```
 
@@ -498,13 +508,15 @@ indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of an array is indexed by 0, the second by 1, and so on.
 Rather than thinking about that, consider the spaces between the elements:
 
+<!-- a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} & -->
+<!-- 4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\ -->
+
 $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{c}
 \begin{array}{r r r r r r r r r r r r r r r r r r}
-a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
-4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
     &
     & \color{red}{|}
     &
@@ -512,11 +524,11 @@ a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\ph
     &
     & \color{red}{|}
     &
-    & \color{red}{|}
+    & \color{blue}{|}
     &
-    & \color{red}{|}
+    & \color{blue}{|}
     &
-    & \color{red}{|}
+    & \color{blue}{|}
     &
     & \color{red}{|}
     &
@@ -529,11 +541,11 @@ a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\ph
     &
     & \color{red}{2}
     &
-    & \color{red}{3}
+    & \color{blue}{3}
     &
-    & \color{red}{4}
+    & \color{blue}{4}
     &
-    & \color{red}{5}
+    & \color{blue}{5}
     &
     & \color{red}{6}
     &
@@ -551,7 +563,7 @@ dividers.
 
 At first glance, this seems like a rather clever way to think about the
 half-open rule. For instance, between the `3` and `5` dividers is the subarray
-`[3, 4]`, which is indeed what we get for `a[3:5]`. However, there are several
+`['d', 'e']`, which is indeed what we get for `a[3:5]`. However, there are several
 reasons why this way of thinking creates more confusion than it removes.
 
 - As with wrong rule 1, it works well enough if the step is positive, but
@@ -566,8 +578,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-  a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
-  4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -602,7 +613,7 @@ reasons why this way of thinking creates more confusion than it removes.
       &
       & \color{red}{7}\\
   \end{array}\\
-  \small{\color{red}{\text{THIS IS WRONG!}}}
+  \small{\color{red}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -611,14 +622,14 @@ reasons why this way of thinking creates more confusion than it removes.
 
   ```py
   >> a[5:3:-1]
-  [4, 3] # WRONG
+  ['e', 'd'] # WRONG
   ```
 
   but this is incorrect! What we really get is
 
   ```py
   >>> a[5:3:-1]
-  [5, 4]
+  ['f', 'e']
   ```
 
 - The rule does work for negative start and step, but only if you think about
@@ -629,8 +640,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-  a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
-  4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -638,11 +648,11 @@ reasons why this way of thinking creates more confusion than it removes.
       &
       & \color{red}{|}
       &
-      & \color{red}{|}
+      & \color{blue}{|}
       &
-      & \color{red}{|}
+      & \color{blue}{|}
       &
-      & \color{red}{|}
+      & \color{blue}{|}
       &
       & \color{red}{|}
       &
@@ -655,11 +665,11 @@ reasons why this way of thinking creates more confusion than it removes.
       &
       & \color{red}{-5}
       &
-      & \color{red}{-4}
+      & \color{blue}{-4}
       &
-      & \color{red}{-3}
+      & \color{blue}{-3}
       &
-      & \color{red}{-2}
+      & \color{blue}{-2}
       &
       & \color{red}{-1}
       &
@@ -674,7 +684,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   ```py
   >>> a[-4:-2]
-  [3, 4]
+  ['d', 'e']
   ```
 
   However, it would be quite easy to get confused here, as the "other" way of
@@ -687,8 +697,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-  a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} &
-  4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\
+    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -698,11 +707,11 @@ reasons why this way of thinking creates more confusion than it removes.
       &
       & \color{red}{|}
       &
-      & \color{red}{|}
+      & \color{blue}{|}
       &
-      & \color{red}{|}
+      & \color{blue}{|}
       &
-      & \color{red}{|}
+      & \color{blue}{|}
       &
       & \color{red}{|}\\
   \color{red}{\text{index}}
@@ -715,15 +724,15 @@ reasons why this way of thinking creates more confusion than it removes.
       &
       & \color{red}{-5}
       &
-      & \color{red}{-4}
+      & \color{blue}{-4}
       &
-      & \color{red}{-3}
+      & \color{blue}{-3}
       &
-      & \color{red}{-2}
+      & \color{blue}{-2}
       &
       & \color{red}{-1}\\
   \end{array}\\
-  \small{\color{red}{\text{THIS IS WRONG!}}}
+  \small{\color{red}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -731,7 +740,7 @@ reasons why this way of thinking creates more confusion than it removes.
 - The rule "works" for slices, but is harder to imagine for integer indices.
   The integer index corresponding to the dividers corresponds to the entry to
   the *right* of the divider. Rules that involve remembering left or right
-  aren't great for the memory.
+  aren't great when it comes to memorability.
 
 - This rule leads to off-by-one errors due to "fencepost" errors. The
   fencepost problem is this: say you want to build a fence that is 100 feet
@@ -778,23 +787,24 @@ still not included](half-open), values less than `-len(a)` still
 [clip](clipping), and so on.
 
 Note that positive and negative indices can be mixed. The following slices of
-`a` all produce `[3, 4]`:
+`a` all produce `['d', 'e']`:
 
 ```py
+>>> a = ["a", "b", "c", "d", "e", "f", "g"]
 >>> a[3:5]
-[3, 4]
+['d', 'e']
 >>> a[-4:-2]
-[3, 4]
+['d', 'e']
 >>> a[3:-2]
-[3, 4]
+['d', 'e']
 >>> a[-4:5]
-[3, 4]
+['d', 'e']
 ```
 
 $$
 \begin{aligned}
-\begin{array}{r r r r r r r r}
-a = & [0, & 1, & 2, & 3, & 4, & 5, & 6]\\
+\begin{array}{r c c c c c c c}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{nonnegative index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -844,7 +854,7 @@ Something like the following would work
 >>> midway = len(a)//2
 >>> n = 4
 >>> a[midway - n//2: midway + n//2]
-[1, 2, 3, 4]
+['b', 'c', 'd', 'e']
 ```
 
 From our [sanity check](sanity-check), `midway + n//2 - (midway - n//2)` does
@@ -856,12 +866,12 @@ However, let's look at what happens when `n` is larger than the size of `a`:
 ```py
 >>> n = 8
 >>> a[midway - n//2: midway + n//2]
-[6]
+['g']
 ```
 
 This is mostly likely not what we would want. Depending on our use-case, we
-would most likely want either an error or the full list `[0, 1, 2, 3, 4, 5,
-6]`.
+would most likely want either an error or the full list `['a', 'b', 'c', 'd',
+'e', 'f', 'g']`.
 
 What happened here? Let's look at the slice values:
 
@@ -877,9 +887,10 @@ to [clip](clipping) to the end.
 
 But `start` contains a subtraction, which causes it to become negative. Rather
 than clipping to the start, it indexes from the end of the array, producing
-the slice `a[-1:7]`. This picks the elements from the last element (`6`) up to
-but not including the 7th element (0-based). Index 7 is out of bounds for the
-array, so this picks all elements after `6`, which in this case is just `[6]`.
+the slice `a[-1:7]`. This picks the elements from the last element (`'g'`) up
+to but not including the 7th element (0-based). Index `7` is out of bounds for
+the array, so this picks all elements including and after `'g'`, which in this
+case is just `['g']`.
 
 Unfortunately, the "correct" fix here depends on the desired behavior of each
 individual slice. In some cases, the "slice from the end" behavior of negative
@@ -892,7 +903,7 @@ example, instead of using `midway - n//2`, we could use `max(midway - n//2,
 ```py
 >>> n = 8
 >>> a[max(midway - n//2, 0): midway + n//2]
-[0, 1, 2, 3, 4, 5, 6]
+['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
 (clipping)=
@@ -905,8 +916,9 @@ Slices can never give an out-of-bounds `IndexError`. This is different from
 the array:
 
 ```py
+>>> a = ["a", "b", "c", "d", "e", "f", "g"]
 >>> a[-100:100]
-[0, 1, 2, 3, 4, 5, 6]
+['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
 Furthermore, if the `start` is on or after the `stop`, the slice will slice be
@@ -925,7 +937,9 @@ axis, even if the size of the resulting axis is 0 or 1.
 ```py
 >>> import numpy as np
 >>> arr = np.array([[1, 2], [3, 4]])
->>> arr[0].shape # Removes the first dimension
+>>> arr.shape
+(2, 2)
+>>> arr[0].shape # Integer index removes the first dimension
 (2,)
 >>> arr[0:1].shape # Preserves the first dimension
 (1, 2)
@@ -943,7 +957,9 @@ to an empty list. ndindex can help in calculations here:
 `len(ndindex.Slice(...))` can be used to compute the *maximum* length of a
 slice. If the shape of the input is known,
 `len(ndindex.Slice(...).reduce(shape))` will compute the true length of the
-slice.
+slice. Of course, given a NumPy array, one can also just slice the array and
+check the shape (slicing a NumPy array always produces a view on the array, so
+it is a very inexpensive operation).
 
 (steps)=
 ### Steps
@@ -967,14 +983,14 @@ Let us consider an example where the step size is `3`.
 
 ```py
 >>> a[0:6:3]
-[0, 3]
+['a', 'd']
 ```
 
 $$
 \require{enclose}
 \begin{aligned}
-\begin{array}{r r r r r r r l}
-a = & [0, & 1, & 2, & 3, & 4, & 5, &\ 6]\\
+\begin{array}{r c c c c c c l}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
     & \color{blue}{\enclose{circle}{0}}
     & \color{red}{1\phantom{,}}
@@ -994,9 +1010,9 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, &\ 6]\\
 \end{aligned}
 $$
 
-Note that the `start`, `0`, is included, but the `stop`, `6`, is *not*
-included, even though it is a multiple of `3` away from the start. This is
-because the `stop` is never included.
+Note that the `start` index, `0`, is included, but the `stop` index, `6`
+(corresponding to `'g'`), is *not* included, even though it is a multiple of
+`3` away from the start. This is because the `stop` is never included.
 
 It can be tempting to think about the `step` in terms of modular arithmetic.
 In fact, it is often the case in practice that you require a `step` greater
@@ -1008,13 +1024,40 @@ Indeed, we can note that resulting indices `0`, `3` of the above slice
 a multiple of 3. If we instead choose a start index that is $1 \pmod{3}$ then
 all the indices would also be $1 \pmod{3}$.
 
+
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r c c c c c c c l}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    & \color{blue}{\enclose{circle}{1}}
+    & \color{red}{2\phantom{,}}
+    & \color{red}{3\phantom{,}}
+    & \color{blue}{\enclose{circle}{4}}
+    & \color{red}{5\phantom{,}}
+    & \color{red}{\underline{6}\phantom{,}}
+    & \color{red}{\enclose{circle}{\phantom{7}}}\\
+    &
+    & \color{blue}{\text{start}}
+    &
+    & \rightarrow
+    & \color{blue}{+3}
+    &
+    & \rightarrow
+    & \color{red}{+3\ (\geq \text{stop})}
+\end{array}
+\end{aligned}
+$$
+
 ```py
 >>> a[1:6:3]
-[1, 4]
+['b', 'e']
 ```
 
 However, be careful as this rule is *only* true for nonnegative `start`. If
-`start` is negative, the value of $\text{start} \pmod{\text{step}}$ has no
+`start` is negative, the value of `start (mod step)` has no
 bearing on the indices chosen for the slice:
 
 ```py
@@ -1030,15 +1073,15 @@ are the same for simple ranges). But this is only because the length of the
 list, `21`, also happened to be a multiple of 3. In the second example it is
 `22` and the resulting indices are not multiples of `3`.
 
-However, be aware that if the start is [clipped](clipping), the clipping
-occurs *before* the step. That is, if the `start` is less than `len(a)`, it is
-the same as `start = 0` regardless of the `step`.
+Another thing to be aware of is that if the start is [clipped](clipping), the
+clipping occurs *before* the step. That is, if the `start` is less than
+`len(a)`, it is the same as `start = 0` regardless of the `step`.
 
 ```py
 >>> a[-100::2]
-[0, 2, 4, 6]
+['a', 'c', 'e', 'g']
 >>> a[-101::2]
-[0, 2, 4, 6]
+['a', 'c', 'e', 'g']
 ```
 
 If you need to think about steps in terms of modular arithmetic,
@@ -1046,7 +1089,7 @@ If you need to think about steps in terms of modular arithmetic,
 don't have to come up with modulo formulas yourself. If you try to write such
 formulas yourself, chances are you will get them wrong, as it is easy to fail
 to properly account for negative vs. nonnegative indices, clipping, and
-[negative steps](negative-steps). As was noted before, any correct "formula"
+[negative steps](negative-steps). As noted before, any correct "formula"
 regarding slices will necessarily have many piecewise conditions.
 
 (negative-steps)=
@@ -1075,8 +1118,9 @@ the original list. In fact, one of the most common uses of a negative step is
 `a[::-1]`, which reverses the list:
 
 ```py
+>>> a = ["a", "b", "c", "d", "e", "f", "g"]
 >>> a[::-1]
-[6, 5, 4, 3, 2, 1, 0]
+['g', 'f', 'e', 'd', 'c', 'b', 'a']
 ```
 
 It is tempting therefore to think of a negative `step` as a "reversing"
@@ -1090,9 +1134,9 @@ producing a wrong result. For example, as before:
 
 ```py
 >>> a[5:3:-1]
-[5, 4]
+['f', 'e']
 >>> list(reversed(a[3:5:1])) # This is not the same thing
-[4, 3]
+['e', 'd']
 ```
 
 In the first case, index `3` is not included. In the second case, index `5` is
@@ -1103,7 +1147,7 @@ idea that `a[i:j:-1]` is the same as `reversed(a)[j:i]`:
 
 ```py
 >>> list(reversed(a))[3:5]
-[3, 2]
+['d', 'c']
 ```
 
 Once `a` is reversed, the indices `3` and `5` have nothing to do with the
@@ -1124,14 +1168,14 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
 
 ```py
 >>> a[6:0:-3]
-[6, 3]
+['g', 'd']
 ```
 
 $$
 \require{enclose}
 \begin{aligned}
-\begin{array}{r r r r r r r r l}
-a = & [0, & 1, & 2, & 3, & 4, & 5, &\ 6]\\
+\begin{array}{r c c c c c c c l}
+a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
 \color{red}{\text{index}}
     & \color{red}{\enclose{circle}{0}}
     & \color{red}{1\phantom{,}}
@@ -1141,13 +1185,13 @@ a = & [0, & 1, & 2, & 3, & 4, & 5, &\ 6]\\
     & \color{red}{5\phantom{,}}
     & \color{blue}{\enclose{circle}{6}}\\
     & \color{red}{-3}
-    &
     & \leftarrow
+    &
     & \color{blue}{-3}
-    &
     & \leftarrow
+    &
     & \color{blue}{\text{start}}\\
-    &  (\leq \text{stop})
+    &  \color{red}{(\leq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1201,6 +1245,7 @@ all the way to the edge of the list in the direction being sliced. If the
 and `stop` extends to the end. If `step` is negative, it is reversed: `start`
 extends to the end of the array and `stop` extends to the beginning.
 
+<!-- TODO: Add examples with a here. -->
 
 ## Soapbox
 
@@ -1265,7 +1310,7 @@ length of the array. `a[-x]` is the same as `a[len(a)-x]` (when using 0-based
 indexing), but the problem is that it is tedious to write `a` twice, and `a`
 may in fact be a larger expression, so writing `a[len(a)-x]` would require
 assigning it to a variable. It also becomes more complicated when `a` is a
-NumPy array and the slice apears as part of a larger multidimensional (tuple)
+NumPy array and the slice appears as part of a larger multidimensional (tuple)
 index. However, I think it would be possible to introduce a special syntax to
 mean "reversed" or "from the end of the array" indexing, and leave negative
 numbers to simply extend beyond the left side of the array. Since this is a
@@ -1298,7 +1343,7 @@ the translation. But this has never been a valid argument for Python
 semantics. The whole point of Python is to provide higher level semantics than
 C, and leave those hard details of translating them to the interpreter and
 library code. In fact, Python's slices themselves are much more complicated
-than what is avaiable in C, and the interpreter code to handle them is more
+than what is available in C, and the interpreter code to handle them is more
 than just a trivial translation to C. Adding shifts to this translation code
 would not be much additional complexity.
 
