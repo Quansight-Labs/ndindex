@@ -112,6 +112,8 @@ class Integer(NDIndex):
                             "did you mean to use the built-in tuple type?")
         if isinstance(shape, int):
             shape = (shape,)
+        if len(shape) <= axis:
+            raise IndexError("too many indices for array")
 
         # reduce will raise IndexError if it should be raised
         self.reduce(shape, axis=axis)
