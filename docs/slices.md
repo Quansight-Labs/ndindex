@@ -8,6 +8,7 @@ Slices
 - Better wording for omitted rule
 - Always underline stop in the diagrams?
 - Add the slice as a caption to each figure.
+- Replace double quotes with single quotes
 
 -->
 
@@ -1356,11 +1357,12 @@ assigning it to a variable. It also becomes more complicated when `a` is a
 NumPy array and the slice appears as part of a larger multidimensional (tuple)
 index. However, I think it would be possible to introduce a special syntax to
 mean "reversed" or "from the end of the array" indexing, and leave negative
-numbers to simply extend beyond the left side of the array. Since this is a
-moot point for Python---I don't expect Python's indexing semantics to change,
-they are already baked into the language---I won't suggest any syntax. Perhaps
-this can inspire people writing new languages or DSLs to come up with better
-semantics backed by good syntax.
+numbers to simply extend beyond the left side of the array. For example, in
+Julia, one can use `a[end]` to index the last element of an array (Julia also
+uses 1-based indexing). Since this is a moot point for Python---I don't expect
+Python's indexing semantics to change, they are already baked into the
+language---I won't suggest any syntax. Perhaps this can inspire people writing
+new languages or DSLs to come up with better semantics backed by good syntax.
 
 The second point, on using 1-based indexing instead of 0-based indexing, will
 likely be the most controversial. 0-based indexing certainly has its uses. In
@@ -1368,7 +1370,7 @@ C, where an index is literally a syntactic macro for adding two pointers,
 0-based indexing makes sense, since `a[i]` literally means `*(a + i)` under
 those semantics. However, for higher level languages such as Python, people
 think of indexing as pointing to specific numbered elements of a collection,
-not as pointer arithemetic. Every human being is taught from an early age to
+not as pointer arithmetic. Every human being is taught from an early age to
 count from 1. If you show someone the list "a, b, c", they will tell you that
 "a" is the 1st, "b" is the 2nd, and "c" is the 3rd. 0-based indexing requires
 a shift in thinking from the way that you have been taught to count from
@@ -1421,13 +1423,14 @@ endpoints are included in the range.
 It is true that this can lead to fencepost errors, but I contend that it is
 more natural to think about a range as including both endpoints. Half-open
 semantics are often tied to 0-based indexing, since it is a convenient way to
-allow the range 0--N to contain N values, by not including N.[^python-history-note] I see this as
-taking a bad decision (0-based indexing) and putting a bad bandaid on it that
-makes it worse. But certainly this argument goes away for 1-based indexing.
-The range 1--N contains N values exactly when N *is* included in the range.
+allow the range 0--N to contain N values, by not including
+N.[^python-history-note] I see this as taking a bad decision (0-based
+indexing) and putting a bad bandaid on it that makes it worse. But certainly
+this argument goes away for 1-based indexing. The range 1--N contains N values
+exactly when N *is* included in the range.
 
 [^python-history-note]: In fact, the original reason that Python uses 0-based
-indexing is that Guide preferred the half-open semantics, which only work out
+indexing is that Guido preferred the half-open semantics, which only work out
 well when combined with 0-based indexing
 ([reference](https://web.archive.org/web/20190321101606/https://plus.google.com/115212051037621986145/posts/YTUxbXYZyfi)).
 
