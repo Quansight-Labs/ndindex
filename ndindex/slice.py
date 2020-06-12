@@ -341,7 +341,7 @@ class Slice(NDIndex):
                 stop += size
         return self.__class__(start, stop, step)
 
-    def newshape(self, shape=None, axis=0):
+    def newshape(self, shape, axis=0):
         """
         `Slice.newshape(shape)` returns the shape of `a[idx.raw]`, assuming `a`
         has shape `shape`.

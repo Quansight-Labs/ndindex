@@ -84,61 +84,38 @@ class Integer(NDIndex):
 
         return self
 
-    def newshape(self, shape=None, axis=0):
+    def newshape(self, shape, axis=0):
         """
         `Integer.newshape(shape)` returns the shape of `a[idx.raw]`, assuming
          `a` has shape `shape`.
 
-        `shape` can be an int, a tuple of ints, an Integer or a Tuple of ints
-        or Integers.
-
-        A ValueError is raised if `shape` is `None`.
+        `shape` should be a tuple of ints, or an int, which is equivalent to a
+        1-D shape.
 
         >>> from ndindex import Integer, Tuple
         >>> idx = Integer(6)
-        >>> idx.newshape(Integer(7))
+        >>> idx.newshape(7)
         ()
         >>> idx.newshape(2)
         Traceback (most recent call last):
         ...
-        IndexError: index 6 out of bounds for array with shape (2,)
+        IndexError: index 6 is out of bounds for axis 0 with size 2
         >>> idx.newshape((8, 4))
         (4,)
         >>> idx.newshape((8, 10), axis=1)
         (8,)
         """
-
         from . import Tuple
 
-        #XXX: what if idx is a negative integer?
-
-        idx = self
-
-        if shape is None:
-            raise ValueError("shape can't be None")
-        elif isinstance(shape, Tuple):
-            raise TypeError("Tuple is not meant to be used as a shape - "
+        if isinstance(shape, (Tuple, Integer)):
+            raise TypeError("ndindex types are not meant to be used as a shape - "
                             "did you mean to use the built-in tuple type?")
-        else:
-            try:
-                shape = shape.raw
-            except:
-                pass
-            if isinstance(shape, int):
-                if idx.raw >= shape:
-                    raise IndexError(f"index {idx.raw} out of bounds for array"
-                                     f" with shape ({shape},)")
-                else:
-                    return tuple([])
-            else:
-                if isinstance(shape, tuple):
-                    if axis >= len(shape):
-                        raise IndexError(f"axis {axis} out of bounds for array"
-                                         f" with shape {shape}")
-                    if idx.raw >= shape[axis]:
-                        raise IndexError(f"index {idx.raw} out of bounds for"
-                                         f" array with shape {shape}")
-                    else:
-                        newshape = list(shape)
-                        del newshape[axis]
-                        return tuple(newshape)
+        if isinstance(shape, int):
+            shape = (shape,)
+
+        # reduce will raise IndexError if it should be raised
+        self.reduce(shape, axis=axis)
+
+        newshape = list(shape)
+        del newshape[axis]
+        return tuple(newshape)

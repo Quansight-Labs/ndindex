@@ -6,6 +6,7 @@ from hypothesis import given
 from hypothesis.strategies import integers
 
 from ..integer import Integer
+from ..ndindex import ndindex
 from ..tuple import Tuple
 from .helpers import check_same, ints, prod, shapes
 
@@ -57,7 +58,7 @@ def test_integer_reduce_exhaustive():
             assert reduced.raw >= 0
 
 
-@given(integers(0, 10), shapes)
+@given(ints(), shapes)
 def test_integer_reduce_hypothesis(i, shape):
     a = arange(prod(shape)).reshape(shape)
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
@@ -72,26 +73,53 @@ def test_integer_reduce_hypothesis(i, shape):
     else:
         assert reduced.raw >= 0
 
-
 def test_integer_reduce_no_shape_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
         check_same(a, i, func=lambda x: x.reduce())
 
-
-@given(integers(0, 10), shapes)
+@given(ints(), shapes)
 def test_integer_reduce_no_shape_hypothesis(i, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, i, func=lambda x: x.reduce())
 
+def test_integer_newshape_exhaustive():
+    # The axis argument is tested implicitly in Tuple.newshape
+    shape = 5
+    a = arange(shape)
 
-def test_integer_newshape_no_shape():
-    raises(ValueError, Integer(1).newshape)
+    for i in range(-10, 10):
+        def assert_equal(x, y):
+            newshape = ndindex(i).newshape(shape)
+            assert x.shape == y.shape == newshape
 
+        # Call newshape so we can see if any exceptions match
+        def func(i):
+            i.newshape(shape)
+            return i
+
+        check_same(a, i, func=func, assert_equal=assert_equal)
+
+@given(ints(), shapes)
+def test_integer_newshape_hypothesis(i, shape):
+    # The axis argument is tested implicitly in Tuple.newshape
+
+    a = arange(prod(shape)).reshape(shape)
+
+    def assert_equal(x, y):
+        newshape = ndindex(i).newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    # Call newshape so we can see if any exceptions match
+    def func(i):
+        i.newshape(shape)
+        return i
+
+    check_same(a, i, func=func, assert_equal=assert_equal)
 
 def test_integer_newshape_Tuple():
     raises(TypeError, lambda: Integer(1).newshape(Tuple(2, 1)))
-
+    raises(TypeError, lambda: Integer(1).newshape(Integer(2)))
 
 def test_integer_newshape_small_shape():
     raises(IndexError, lambda: Integer(6).newshape(2))
