@@ -67,3 +67,14 @@ class ellipsis(NDIndex):
     @property
     def raw(self):
         return ...
+
+    def newshape(self, shape):
+        from . import Integer
+
+        if isinstance(shape, (Tuple, Integer)):
+            raise TypeError("ndindex types are not meant to be used as a shape - "
+                            "did you mean to use the built-in tuple type?")
+        if isinstance(shape, int):
+            shape = (shape,)
+
+        return shape
