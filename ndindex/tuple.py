@@ -307,27 +307,7 @@ class Tuple(NDIndex):
 
 
     def newshape(self, shape):
-        """
-        Returns the shape of `a[idx.raw]`, assuming `a` has shape `shape`.
-
-        `shape` should be a tuple of ints, or an int, which is equivalent to a
-        1-D shape.
-
-        Raises IndexError if `self` would be out of shape for an array of
-        shape `shape`.
-
-        >>> from ndindex import Tuple, Slice
-        >>> shape = (6, 7, 8)
-        >>> Tuple(1, ...).newshape(shape)
-        (7, 8)
-        >>> Tuple(0, 10).newshape(shape)
-        Traceback (most recent call last):
-        ...
-        IndexError: index 10 is out of bounds for axis 1 with size 7
-        >>> Tuple(0, ..., Slice(1, 3)).newshape(shape)
-        (7, 2)
-
-        """
+        # The docstring for this method is on the NDIndex base class
         from . import Integer
 
         if isinstance(shape, (Tuple, Integer)):

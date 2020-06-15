@@ -69,6 +69,7 @@ class ellipsis(NDIndex):
         return ...
 
     def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
         from . import Integer
 
         if isinstance(shape, (Tuple, Integer)):

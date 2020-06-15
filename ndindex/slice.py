@@ -342,23 +342,7 @@ class Slice(NDIndex):
         return self.__class__(start, stop, step)
 
     def newshape(self, shape):
-        """
-        `Slice.newshape(shape)` returns the shape of `a[idx.raw]`, assuming `a`
-        has shape `shape`.
-
-        `shape` should be a tuple of ints, or an int, which is equivalent to a
-        1-D shape.
-
-        Raises IndexError if `self` would be out of shape for an array of
-        shape `shape`.
-
-        >>> from ndindex import Slice
-        >>> idx = Slice(6)
-        >>> idx.newshape((8, 2))
-        (6, 2)
-        >>> idx.newshape(10)
-        (6,)
-        """
+        # The docstring for this method is on the NDIndex base class
         from . import Integer, Tuple
 
         if isinstance(shape, (Tuple, Integer)):
