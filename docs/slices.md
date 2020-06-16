@@ -430,9 +430,9 @@ For example, say way believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
 
 <!-- TODO: improve this -->
-<div style="text-align:center" >
+<div style="text-align:center;" >
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-<div style="color:red">(WRONG)</div>
+<div style="font-size: 16pt;color:red;">(WRONG)</div>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
@@ -595,7 +595,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-  <div style="color:red">(WRONG)</div>
+  <div style="font-size: 16pt;color:red;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -720,7 +720,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
-  <div style="color:red">(WRONG)</div>
+  <div style="font-size: 16pt;color:red;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
