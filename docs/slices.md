@@ -6,8 +6,6 @@ Slices
 - Regularize the type of a in discussions(list vs. array)
 - Fencepost image
 - Better wording for omitted rule
-- Always underline stop in the diagrams?
-- Add the slice as a caption to each figure.
 
 -->
 
