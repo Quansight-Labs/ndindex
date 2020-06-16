@@ -453,7 +453,7 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
     & )
     & \\
 \end{array}\\
-\small{\text{(reversed)}}\hspace{4.2em}
+\small{\text{(reversed)}}\hspace{3.5em}
 \end{aligned}
 $$
 </div>
