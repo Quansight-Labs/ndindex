@@ -417,9 +417,12 @@ apply as-is, and so you can fallback to the rule about omitted `start`/`stop`
 (see [below](omitted)).
 
 (wrong-rule-1)=
-**Wrong Rule 1: "a slice `a[start:stop]` slices the half-open interval
+<strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: "a slice `a[start:stop]` slices the half-open interval
 $[\text{start}, \text{stop})$ (equivalently, a slice `a[start:stop]` picks the
-elements `i` such that `start <= i < stop`)."** This is *only* the case if the
+elements `i` such that `start <= i < stop`)." <a class="headerlink"
+href="#wrong-rule-1" title="Permalink to this headline">¶</a> </strong>
+
+This is *only* the case if the
 step size is positive. It also isn't directly true for negative `start` or
 `stop`. For example, with a step of -1, `a[start:stop:-1]` slices starting at
 `start` going in reverse order to `stop`, but not including `stop`.
@@ -495,12 +498,15 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
 $$
 </div>
 
-**Wrong Rule 2: "A slice works like `range()`."** There are many similarities
-between the behaviors of slices and the behavior of `range()`. However, they
-do not behave the same. A slice
-`a[start:stop:step]` only acts like `range(start, stop, step)` if `start` and `stop`
-are **nonnegative**. If either of them are negative, the slice wraps around
-and slices from the end of the array (see [below](negative-indices)).
+(wrong-rule-2)=
+<strong style="font-size:120%;">Wrong Rule 2: "A slice works like `range()`." <a class="headerlink"
+href="#wrong-rule-2" title="Permalink to this headline">¶</a> </strong>
+
+There are many similarities between the behaviors of slices and the behavior
+of `range()`. However, they do not behave the same. A slice
+`a[start:stop:step]` only acts like `range(start, stop, step)` if `start` and
+`stop` are **nonnegative**. If either of them are negative, the slice wraps
+around and slices from the end of the array (see [below](negative-indices)).
 `range()` on the other hand treats negative numbers as the actual start of end
 values for the range. For example:
 
@@ -522,7 +528,9 @@ computations on slices, I recommend using ndindex. This is what it was
 designed for.
 
 (wrong-rule-3)=
-**Wrong Rule 3: "Slices count the spaces between the elements of the array."**
+<strong style="font-size:120%;">Wrong Rule 3: "Slices count the spaces between the elements of the array."<a class="headerlink"
+href="#wrong-rule-3" title="Permalink to this headline">¶</a> </strong>
+
 This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of an array is indexed by 0, the second by 1, and so on.
@@ -587,8 +595,8 @@ half-open rule. For instance, between the `3` and `5` dividers is the subarray
 `['d', 'e']`, which is indeed what we get for `a[3:5]`. However, there are several
 reasons why this way of thinking creates more confusion than it removes.
 
-- As with wrong rule 1, it works well enough if the step is positive, but
-  falls apart when it is negative.
+- As with [wrong rule 1](wrong-rule-1), it works well enough if the step is
+  positive, but falls apart when it is negative.
 
   Consider again the slice `a[5:3:-1]`. Looking at the above figure, we might
   imagine it to give the same incorrect sub-array that we imagined before.
@@ -795,7 +803,9 @@ the usually way humans are taught to count things, but these will be far
 fewer, especially as you gain practice in counting that way. As long as you
 apply the rule "the `stop` is not included", you will get the correct results.
 
-**Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."**
+(wrong-rule-4)=
+<strong style="font-size:120%;">Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."<a class="headerlink"
+href="#wrong-rule-4" title="Permalink to this headline">¶</a> </strong>
 
 You might get clever and say `a[3:5]` indexes from the 3rd element with
 0-based indexing to the 5th element with 1-based indexing. Don't do this. It

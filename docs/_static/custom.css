@@ -86,3 +86,7 @@ div.sphinxsidebar p.logo {
         display: none;
     }
 }
+
+strong:hover > a.headerlink {
+    visibility: visible;
+}
