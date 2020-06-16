@@ -6,9 +6,6 @@ Slices
 - Regularize the type of a in discussions(list vs. array)
 - Fencepost image
 - Better wording for omitted rule
-- Always underline stop in the diagrams?
-- Add the slice as a caption to each figure.
-- Replace double quotes with single quotes
 
 -->
 
@@ -112,8 +109,8 @@ To understand slices, it is good to first review how integer indices work.
 Throughout this guide, I will use as an example this prototype list:
 
 $$
-a = [\mathtt{{"}a{"}},\ \mathtt{{"}b{"}},\ \mathtt{{"}c{"}},\
-\mathtt{{"}d{"}},\ \mathtt{{"}e{"}},\ \mathtt{{"}f{"}},\ \mathtt{{"}g{"}}]
+a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
+\mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
 $$
 
 The list `a` has 7 elements.
@@ -125,14 +122,14 @@ but rather the position of the elements in the list.
 The key thing to remember about indexing in Python, both for integer and
 slice indexing, is that it is 0-based. This means that the indexes start
 at 0. This is the case for all **nonnegative** indexes. For example,
-`a[3]` would pick the **fourth** element of `a`, in this case, `"c"`.
+`a[3]` would pick the **fourth** element of `a`, in this case, `'c'`.
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3] == 'd'</code>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -147,7 +144,7 @@ $$
 </div>
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3]
 'd'
 ```
@@ -160,14 +157,14 @@ For **negative** integers, the indices index from the end of the array. These
 indices are necessarily 1-based (or rather, −1-based), since `0` already refers
 to the first element of the array. `-1` chooses the last element, `-2` the
 second-to-last, and so on. For example, `a[-3]` picks the **third-to-last**
-element of `a`, in this case, `"e"`:
+element of `a`, in this case, `'e'`:
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[-3] == 'e'</code>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{-7\phantom{,}}
     & \color{red}{-6\phantom{,}}
@@ -257,7 +254,7 @@ index.
 For example
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3]
 'd'
 >>> a[3:4]
@@ -293,7 +290,7 @@ indexing](integer-indices) (although one should be careful that even though
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -308,7 +305,7 @@ $$
 </div>
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3:5]
 ['d', 'e']
 ```
@@ -330,7 +327,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -345,7 +342,7 @@ $$
 </div>
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3:5]
 ['d', 'e']
 ```
@@ -418,9 +415,12 @@ apply as-is, and so you can fallback to the rule about omitted `start`/`stop`
 (see [below](omitted)).
 
 (wrong-rule-1)=
-**Wrong Rule 1: "a slice `a[start:stop]` slices the half-open interval
+<strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: "a slice `a[start:stop]` slices the half-open interval
 $[\text{start}, \text{stop})$ (equivalently, a slice `a[start:stop]` picks the
-elements `i` such that `start <= i < stop`)."** This is *only* the case if the
+elements `i` such that `start <= i < stop`)." <a class="headerlink"
+href="#wrong-rule-1" title="Permalink to this headline">¶</a> </strong>
+
+This is *only* the case if the
 step size is positive. It also isn't directly true for negative `start` or
 `stop`. For example, with a step of -1, `a[start:stop:-1]` slices starting at
 `start` going in reverse order to `stop`, but not including `stop`.
@@ -431,13 +431,13 @@ For example, say way believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
 
 <!-- TODO: improve this -->
-<div style="text-align:center" >
+<div style="text-align:center;" >
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-<div style="color:red">(WRONG)</div>
+<div style="font-size: 16pt;color:red;">(WRONG)</div>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -454,7 +454,7 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
     & )
     & \\
 \end{array}\\
-\small{\text{(reversed)}}\hspace{4.2em}
+\small{\text{(reversed)}}\hspace{3.5em}
 \end{aligned}
 $$
 </div>
@@ -482,26 +482,29 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r r r r r r r r}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
-    & \color{red}{0\phantom{{"},}}
-    & \color{red}{1\phantom{{"},}}
-    & \color{red}{2\phantom{{"},}}
+    & \color{red}{0\phantom{\textsf{'},}}
+    & \color{red}{1\phantom{\textsf{'},}}
+    & \color{red}{2\phantom{\textsf{'},}}
     & \color{red}{\enclose{circle}{3}\phantom{,}}
     & \leftarrow\color{blue}{\enclose{circle}{4}\phantom{,}}
     & \leftarrow\color{blue}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{{"},}}\\
+    & \color{red}{6\phantom{\textsf{'},}}\\
 \end{array}
 \end{aligned}
 $$
 </div>
 
-**Wrong Rule 2: "A slice works like `range()`."** There are many similarities
-between the behaviors of slices and the behavior of `range()`. However, they
-do not behave the same. A slice
-`a[start:stop:step]` only acts like `range(start, stop, step)` if `start` and `stop`
-are **nonnegative**. If either of them are negative, the slice wraps around
-and slices from the end of the array (see [below](negative-indices)).
+(wrong-rule-2)=
+<strong style="font-size:120%;">Wrong Rule 2: "A slice works like `range()`." <a class="headerlink"
+href="#wrong-rule-2" title="Permalink to this headline">¶</a> </strong>
+
+There are many similarities between the behaviors of slices and the behavior
+of `range()`. However, they do not behave the same. A slice
+`a[start:stop:step]` only acts like `range(start, stop, step)` if `start` and
+`stop` are **nonnegative**. If either of them are negative, the slice wraps
+around and slices from the end of the array (see [below](negative-indices)).
 `range()` on the other hand treats negative numbers as the actual start of end
 values for the range. For example:
 
@@ -523,7 +526,9 @@ computations on slices, I recommend using ndindex. This is what it was
 designed for.
 
 (wrong-rule-3)=
-**Wrong Rule 3: "Slices count the spaces between the elements of the array."**
+<strong style="font-size:120%;">Wrong Rule 3: "Slices count the spaces between the elements of the array."<a class="headerlink"
+href="#wrong-rule-3" title="Permalink to this headline">¶</a> </strong>
+
 This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of an array is indexed by 0, the second by 1, and so on.
@@ -538,7 +543,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r r r r r r r r r r r r r r r r r r}
-a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
     & \color{red}{|}
     &
@@ -588,21 +593,21 @@ half-open rule. For instance, between the `3` and `5` dividers is the subarray
 `['d', 'e']`, which is indeed what we get for `a[3:5]`. However, there are several
 reasons why this way of thinking creates more confusion than it removes.
 
-- As with wrong rule 1, it works well enough if the step is positive, but
-  falls apart when it is negative.
+- As with [wrong rule 1](wrong-rule-1), it works well enough if the step is
+  positive, but falls apart when it is negative.
 
   Consider again the slice `a[5:3:-1]`. Looking at the above figure, we might
   imagine it to give the same incorrect sub-array that we imagined before.
 
   <div style="text-align:center">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-  <div style="color:red">(WRONG)</div>
+  <div style="font-size: 16pt;color:red;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -667,7 +672,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -721,13 +726,13 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
-  <div style="color:red">(WRONG)</div>
+  <div style="font-size: 16pt;color:red;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -796,7 +801,9 @@ the usually way humans are taught to count things, but these will be far
 fewer, especially as you gain practice in counting that way. As long as you
 apply the rule "the `stop` is not included", you will get the correct results.
 
-**Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."**
+(wrong-rule-4)=
+<strong style="font-size:120%;">Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."<a class="headerlink"
+href="#wrong-rule-4" title="Permalink to this headline">¶</a> </strong>
 
 You might get clever and say `a[3:5]` indexes from the 3rd element with
 0-based indexing to the 5th element with 1-based indexing. Don't do this. It
@@ -821,7 +828,7 @@ Note that positive and negative indices can be mixed. The following slices of
 `a` all produce `['d', 'e']`:
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3:5]
 ['d', 'e']
 >>> a[-4:-2]
@@ -839,7 +846,7 @@ Note that positive and negative indices can be mixed. The following slices of
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{nonnegative index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -952,7 +959,7 @@ Slices can never give an out-of-bounds `IndexError`. This is different from
 the array:
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[-100:100]
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
@@ -1028,7 +1035,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r c c c c c c l}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{blue}{\enclose{circle}{0}}
     & \color{red}{1\phantom{,}}
@@ -1069,7 +1076,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r c c c c c c c l}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{blue}{\enclose{circle}{1}}
@@ -1159,7 +1166,7 @@ the original list. In fact, one of the most common uses of a negative step is
 `a[::-1]`, which reverses the list:
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[::-1]
 ['g', 'f', 'e', 'd', 'c', 'b', 'a']
 ```
@@ -1218,7 +1225,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r r c c c c c c l}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{\enclose{circle}{0}\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -1227,10 +1234,10 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
     & \color{red}{4\phantom{,}}
     & \color{red}{5\phantom{,}}
     & \color{blue}{\enclose{circle}{6}}\\
-    & \color{red}{-3}\phantom{\mathtt{{"},}}
+    & \color{red}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{-3}\phantom{\mathtt{{"},}}
+    & \color{blue}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
     & \color{blue}{\text{start}}\\
