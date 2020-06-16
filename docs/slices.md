@@ -8,7 +8,6 @@ Slices
 - Better wording for omitted rule
 - Always underline stop in the diagrams?
 - Add the slice as a caption to each figure.
-- Replace double quotes with single quotes
 
 -->
 
@@ -112,8 +111,8 @@ To understand slices, it is good to first review how integer indices work.
 Throughout this guide, I will use as an example this prototype list:
 
 $$
-a = [\mathtt{{"}a{"}},\ \mathtt{{"}b{"}},\ \mathtt{{"}c{"}},\
-\mathtt{{"}d{"}},\ \mathtt{{"}e{"}},\ \mathtt{{"}f{"}},\ \mathtt{{"}g{"}}]
+a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
+\mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
 $$
 
 The list `a` has 7 elements.
@@ -125,14 +124,14 @@ but rather the position of the elements in the list.
 The key thing to remember about indexing in Python, both for integer and
 slice indexing, is that it is 0-based. This means that the indexes start
 at 0. This is the case for all **nonnegative** indexes. For example,
-`a[3]` would pick the **fourth** element of `a`, in this case, `"c"`.
+`a[3]` would pick the **fourth** element of `a`, in this case, `'c'`.
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3] == 'd'</code>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -147,7 +146,7 @@ $$
 </div>
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3]
 'd'
 ```
@@ -160,14 +159,14 @@ For **negative** integers, the indices index from the end of the array. These
 indices are necessarily 1-based (or rather, −1-based), since `0` already refers
 to the first element of the array. `-1` chooses the last element, `-2` the
 second-to-last, and so on. For example, `a[-3]` picks the **third-to-last**
-element of `a`, in this case, `"e"`:
+element of `a`, in this case, `'e'`:
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[-3] == 'e'</code>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{-7\phantom{,}}
     & \color{red}{-6\phantom{,}}
@@ -257,7 +256,7 @@ index.
 For example
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3]
 'd'
 >>> a[3:4]
@@ -293,7 +292,7 @@ indexing](integer-indices) (although one should be careful that even though
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -308,7 +307,7 @@ $$
 </div>
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3:5]
 ['d', 'e']
 ```
@@ -330,7 +329,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -345,7 +344,7 @@ $$
 </div>
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3:5]
 ['d', 'e']
 ```
@@ -437,7 +436,7 @@ $[3, 5)$ but in reverse order.
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -482,15 +481,15 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r r r r r r r r}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
-    & \color{red}{0\phantom{{"},}}
-    & \color{red}{1\phantom{{"},}}
-    & \color{red}{2\phantom{{"},}}
+    & \color{red}{0\phantom{\textsf{'},}}
+    & \color{red}{1\phantom{\textsf{'},}}
+    & \color{red}{2\phantom{\textsf{'},}}
     & \color{red}{\enclose{circle}{3}\phantom{,}}
     & \leftarrow\color{blue}{\enclose{circle}{4}\phantom{,}}
     & \leftarrow\color{blue}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{{"},}}\\
+    & \color{red}{6\phantom{\textsf{'},}}\\
 \end{array}
 \end{aligned}
 $$
@@ -538,7 +537,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r r r r r r r r r r r r r r r r r r}
-a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
     & \color{red}{|}
     &
@@ -602,7 +601,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -667,7 +666,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -727,7 +726,7 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{c}
   \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{{"}a{"}}, &\phantom{|}& \mathtt{{"}b{"}}, &\phantom{|}& \mathtt{{"}c{"}}, &\phantom{|}& \mathtt{{"}d{"}}, &\phantom{|}& \mathtt{{"}e{"}}, &\phantom{|}& \mathtt{{"}f{"}}, &\phantom{|}& \mathtt{{"}g{"}}&\phantom{|}&]&\\
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
       & \color{red}{|}
       &
@@ -821,7 +820,7 @@ Note that positive and negative indices can be mixed. The following slices of
 `a` all produce `['d', 'e']`:
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[3:5]
 ['d', 'e']
 >>> a[-4:-2]
@@ -839,7 +838,7 @@ Note that positive and negative indices can be mixed. The following slices of
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{nonnegative index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -952,7 +951,7 @@ Slices can never give an out-of-bounds `IndexError`. This is different from
 the array:
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[-100:100]
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
@@ -1028,7 +1027,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r c c c c c c l}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{blue}{\enclose{circle}{0}}
     & \color{red}{1\phantom{,}}
@@ -1069,7 +1068,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r c c c c c c c l}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{0\phantom{,}}
     & \color{blue}{\enclose{circle}{1}}
@@ -1159,7 +1158,7 @@ the original list. In fact, one of the most common uses of a negative step is
 `a[::-1]`, which reverses the list:
 
 ```py
->>> a = ["a", "b", "c", "d", "e", "f", "g"]
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 >>> a[::-1]
 ['g', 'f', 'e', 'd', 'c', 'b', 'a']
 ```
@@ -1218,7 +1217,7 @@ $$
 \require{enclose}
 \begin{aligned}
 \begin{array}{r r c c c c c c l}
-a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{"}}, & \mathtt{{"}e{"}}, & \mathtt{{"}f{"}}, & \mathtt{{"}g{"}}]\\
+a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
 \color{red}{\text{index}}
     & \color{red}{\enclose{circle}{0}\phantom{,}}
     & \color{red}{1\phantom{,}}
@@ -1227,10 +1226,10 @@ a = & [\mathtt{{"}a{"}}, & \mathtt{{"}b{"}}, & \mathtt{{"}c{"}}, & \mathtt{{"}d{
     & \color{red}{4\phantom{,}}
     & \color{red}{5\phantom{,}}
     & \color{blue}{\enclose{circle}{6}}\\
-    & \color{red}{-3}\phantom{\mathtt{{"},}}
+    & \color{red}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{-3}\phantom{\mathtt{{"},}}
+    & \color{blue}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
     & \color{blue}{\text{start}}\\
