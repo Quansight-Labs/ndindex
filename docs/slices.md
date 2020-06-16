@@ -4,7 +4,6 @@ Slices
 <!-- TODOS:
 
 - Regularize the type of a in discussions(list vs. array)
-- Fencepost image
 - Better wording for omitted rule
 
 -->
@@ -784,7 +783,13 @@ reasons why this way of thinking creates more confusion than it removes.
   naive answer is 10, but the correct answer is 11, because the fenceposts go
   in between the 10 feet divisions, including at the ends.
 
-  <!-- TODO: Find an image to include here -->
+
+  ```{figure} imgs/jeff-burak-lPO0VzF_4s8-unsplash.jpg
+  A section of a fence that has 6 segments and 7 fenceposts.[^fencepost-jeff-burbak]
+
+  [^fencepost-jeff-burbak]: Image credit [Jeff Burak,
+  Unsplash](https://unsplash.com/photos/lPO0VzF_4s8)  .
+  ```
 
   Fencepost problems are a leading cause of off-by-one errors. Thinking about
   slices in this way is to think about arrays as separated by fenceposts, and
