@@ -8,7 +8,8 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
+from ..slice import Slice
+from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices, positive_slices
 
 
 def test_tuple_exhaustive():
@@ -184,3 +185,34 @@ def test_ndindex_expand_hypothesis(idx, shape):
             assert len(expanded.args) == 1
         else:
             assert len(expanded.args) == len(shape)
+
+
+@given(Tuples, positive_slices, shapes)
+def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
+    a = arange(prod(shape)).reshape(shape)
+
+    try:
+        T = Tuple(*t)
+        Index = Slice(index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = T.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        assume(False)
+
+    try:
+        aT = a[t]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    for i in a.flat:
+        if i in aT and i in aindex:
+            assert i in asubindex
+        else:
+            assert i not in asubindex
+
+    # TODO: How can we test that the shape is correct?

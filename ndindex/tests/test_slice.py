@@ -6,7 +6,7 @@ from hypothesis import given, assume
 from hypothesis.strategies import integers
 
 from ..slice import Slice
-from .helpers import check_same, slices, prod, shapes, iterslice
+from .helpers import check_same, slices, prod, shapes, iterslice, positive_slices
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -222,9 +222,6 @@ def test_slice_as_subindex_slice_exhaustive():
                     assert i in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
                 else:
                     assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
-
-positive_slices = slices(start=integers(0, 10), stop=integers(0, 10),
-                         step=integers(1, 10))
 
 # @given(slices(), slices(), integers(0, 100))
 @given(positive_slices, positive_slices, integers(0, 100))

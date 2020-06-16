@@ -304,3 +304,18 @@ class Tuple(NDIndex):
         newargs = newargs + endargs[::-1]
 
         return type(self)(*newargs)
+
+    def as_subindex(self, index):
+        from .ndindex import ndindex
+        from .slice import Slice
+
+        index = ndindex(index)
+
+        if not isinstance(index, Slice):
+            raise NotImplementedError("Tuple.as_subindex is only implemented for slices")
+
+        if not self.args:
+            return self
+
+        first = self.args[0]
+        return Tuple(first.as_subindex(index), *self.args[1:])

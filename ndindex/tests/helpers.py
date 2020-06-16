@@ -30,6 +30,9 @@ def slices(draw, start=one_of(none(), ints()), stop=one_of(none(), ints()),
            step=one_of(none(), ints())):
     return slice(draw(start), draw(stop), draw(step))
 
+positive_slices = slices(start=integers(0, 10), stop=integers(0, 10),
+                         step=integers(1, 10))
+
 ellipses = lambda: just(...)
 
 # hypotheses.strategies.tuples only generates tuples of a fixed size
