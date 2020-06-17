@@ -1,8 +1,10 @@
 from numpy import arange
 
-from hypothesis import given
+from hypothesis import given, assume
 
-from .helpers import check_same, prod, shapes, ellipses
+from ..ndindex import ndindex
+from ..slice import Slice
+from .helpers import check_same, prod, shapes, ellipses, positive_slices
 
 def test_ellipsis_exhaustive():
     for n in range(10):
@@ -33,3 +35,27 @@ def test_ellipsis_reduce_no_shape_exhaustive():
 def test_ellipsis_reduce_no_shape_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx, func=lambda x: x.reduce())
+
+@given(ellipses(), positive_slices, shapes)
+def test_tuple_as_subindex_slice_hypothesis(idx, index, shape):
+    a = arange(prod(shape)).reshape(shape)
+
+    E = ndindex(idx)
+    try:
+        Index = Slice(index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = E.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        assume(False)
+
+    try:
+        aE = set(a[idx].flat)
+        aindex = set(a[index].flat)
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = set(a[index][Subindex.raw].flat)
+
+    assert asubindex == aE.intersection(aindex)

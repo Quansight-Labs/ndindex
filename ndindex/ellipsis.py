@@ -67,3 +67,6 @@ class ellipsis(NDIndex):
     @property
     def raw(self):
         return ...
+
+    def as_subindex(self, index):
+        return Tuple().as_subindex(index)
