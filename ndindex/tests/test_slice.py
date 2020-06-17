@@ -213,15 +213,13 @@ def test_slice_as_subindex_slice_exhaustive():
             except NotImplementedError:
                 continue
 
-            aS = a[S.raw]
-            aindex = a[Index.raw]
-            asubindex = aindex[Subindex.raw]
+            aS = set(a[S.raw].flat)
+            aindex = set(a[Index.raw].flat)
+            asubindex = set(a[Index.raw][Subindex.raw].flat)
 
-            for i in a:
-                if i in aS and i in aindex:
-                    assert i in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
-                else:
-                    assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+            # TODO: This doesn't check that the order of the elements is correct.
+
+            assert asubindex == aS.intersection(aindex)
 
 # @given(slices(), slices(), integers(0, 100))
 @given(positive_slices, positive_slices, integers(0, 100))
@@ -238,12 +236,10 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
     except NotImplementedError: # pragma: no cover
         assume(False)
 
-    aS = a[s]
-    aindex = a[index]
-    asubindex = aindex[Subindex.raw]
+    aS = set(a[s].flat)
+    aindex = set(a[index].flat)
+    asubindex = set(a[index][Subindex.raw].flat)
 
-    for i in a:
-        if i in aS and i in aindex:
-            assert i in asubindex
-        else:
-            assert i not in asubindex
+    # TODO: This doesn't check that the order of the elements is correct.
+
+    assert asubindex == aS.intersection(aindex)

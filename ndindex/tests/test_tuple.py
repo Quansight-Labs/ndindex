@@ -203,16 +203,12 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
         assume(False)
 
     try:
-        aT = a[t]
-        aindex = a[index]
+        aT = set(a[t].flat)
+        aindex = set(a[index].flat)
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = aindex[Subindex.raw]
+    asubindex = set(a[index][Subindex.raw].flat)
 
-    for i in a.flat:
-        if i in aT and i in aindex:
-            assert i in asubindex
-        else:
-            assert i not in asubindex
+    assert asubindex == aT.intersection(aindex)
 
     # TODO: How can we test that the shape is correct?
