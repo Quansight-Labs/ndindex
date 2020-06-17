@@ -6,7 +6,9 @@ from hypothesis import given, assume
 from hypothesis.strategies import integers
 
 from ..slice import Slice
-from .helpers import check_same, slices, prod, shapes, iterslice, positive_slices
+from ..tuple import Tuple
+from .helpers import (check_same, slices, prod, shapes, iterslice,
+                      positive_slices, Tuples)
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -238,6 +240,31 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
 
     aS = set(a[s].flat)
     aindex = set(a[index].flat)
+    asubindex = set(a[index][Subindex.raw].flat)
+
+    # TODO: This doesn't check that the order of the elements is correct.
+
+    assert asubindex == aS.intersection(aindex)
+
+@given(positive_slices, Tuples, integers(0, 100))
+def test_slice_as_subindex_tuple_hypothesis(s, index, size):
+    a = arange(size)
+    try:
+        S = Slice(s)
+        Index = Tuple(*index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = S.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        assume(False)
+
+    try:
+        aS = set(a[s].flat)
+        aindex = set(a[index].flat)
+    except IndexError: # pgrama: no cover
+        assume(False)
     asubindex = set(a[index][Subindex.raw].flat)
 
     # TODO: This doesn't check that the order of the elements is correct.

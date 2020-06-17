@@ -5,8 +5,9 @@ from hypothesis.strategies import integers
 
 from ..integer import Integer
 from ..slice import Slice
+from ..tuple import Tuple
 from .helpers import (check_same, ints, prod, shapes, iterslice,
-                      positive_slices)
+                      positive_slices, Tuples)
 
 def test_integer_args():
     zero = Integer(0)
@@ -104,7 +105,7 @@ def test_integer_as_subindex_slice_exhaustive():
 
 # @given(slices(), slices(), integers(0, 100))
 @given(ints(), positive_slices, integers(0, 100))
-def test_slice_as_subindex_slice_hypothesis(i, index, size):
+def test_integer_as_subindex_slice_hypothesis(i, index, size):
     a = arange(size)
     try:
         idx = Integer(i)
@@ -122,6 +123,30 @@ def test_slice_as_subindex_slice_hypothesis(i, index, size):
     except IndexError:
         assume(False)
     aindex = set(a[index].flat)
+    asubindex = set(a[index][Subindex.raw].flat)
+
+    assert asubindex == aidx.intersection(aindex)
+
+
+@given(ints(), Tuples, integers(0, 100))
+def test_integer_as_subindex_tuple_hypothesis(i, index, size):
+    a = arange(size)
+    try:
+        idx = Integer(i)
+        Index = Tuple(*index)
+    except (ValueError, IndexError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = idx.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        assume(False)
+
+    try:
+        aidx = set(a[idx].flat)
+        aindex = set(a[index].flat)
+    except IndexError:
+        assume(False)
     asubindex = set(a[index][Subindex.raw].flat)
 
     assert asubindex == aidx.intersection(aindex)

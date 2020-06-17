@@ -187,13 +187,13 @@ def test_ndindex_expand_hypothesis(idx, shape):
             assert len(expanded.args) == len(shape)
 
 
-@given(Tuples, positive_slices, shapes)
+@given(Tuples, Tuples, shapes)
 def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     a = arange(prod(shape)).reshape(shape)
 
     try:
         T = Tuple(*t)
-        Index = Slice(index)
+        Index = ndindex(index)
     except (IndexError, ValueError): # pragma: no cover
         assume(False)
 

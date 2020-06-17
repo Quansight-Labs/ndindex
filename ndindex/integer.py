@@ -87,8 +87,12 @@ class Integer(NDIndex):
     def as_subindex(self, index):
         from .ndindex import ndindex
         from .slice import Slice
+        from .tuple import Tuple
 
         index = ndindex(index)
+
+        if isinstance(index, Tuple):
+            return Tuple(self).as_subindex(index)
 
         if not isinstance(index, Slice):
             raise NotImplementedError("Tuple.as_subindex is only implemented for slices")

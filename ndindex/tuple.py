@@ -311,11 +311,16 @@ class Tuple(NDIndex):
 
         index = ndindex(index)
 
-        if not isinstance(index, Slice):
-            raise NotImplementedError("Tuple.as_subindex is only implemented for slices")
+        if isinstance(index, Slice):
+            if not self.args:
+                return self
 
-        if not self.args:
-            return self
-
-        first = self.args[0]
-        return Tuple(first.as_subindex(index), *self.args[1:])
+            first = self.args[0]
+            return Tuple(first.as_subindex(index), *self.args[1:])
+        elif isinstance(index, Tuple):
+            new_args = []
+            for self_arg, index_arg in zip(self.args, index.args):
+                new_args.append(self_arg.as_subindex(index_arg))
+            return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
+        else:
+            raise NotImplementedError("Tuple.as_subindex() is only implemented for slices and tuples")

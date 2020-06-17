@@ -347,7 +347,12 @@ class Slice(NDIndex):
         # this is the only method that is actually implemented so far.
 
         from .ndindex import ndindex
+        from .tuple import Tuple
+
         index = ndindex(index)
+
+        if isinstance(index, Tuple):
+            return Tuple(self).as_subindex(index)
 
         if not isinstance(index, Slice):
             raise NotImplementedError("Slice.as_subindex is only implemented for slices")
