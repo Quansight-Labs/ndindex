@@ -1,10 +1,12 @@
 from numpy import arange, int64
 
-from hypothesis import given
+from hypothesis import given, assume
 from hypothesis.strategies import integers
 
 from ..integer import Integer
-from .helpers import check_same, ints, prod, shapes
+from ..slice import Slice
+from .helpers import (check_same, ints, prod, shapes, iterslice,
+                      positive_slices)
 
 def test_integer_args():
     zero = Integer(0)
@@ -71,3 +73,55 @@ def test_integer_reduce_no_shape_exhaustive():
 def test_integer_reduce_no_shape_hypothesis(i, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, i, func=lambda x: x.reduce())
+
+def test_integer_as_subindex_slice_exhaustive():
+    for n in range(10):
+        a = arange(n)
+        for i in range(-10, 10):
+            try:
+                a[i]
+            except IndexError:
+                continue
+
+            for indexargs in iterslice():
+                idx = Integer(i)
+
+                try:
+                    Index = Slice(*indexargs)
+                except ValueError:
+                    continue
+
+                try:
+                    Subindex = idx.as_subindex(Index)
+                except NotImplementedError:
+                    continue
+
+                aidx = set(a[idx.raw].flat)
+                aindex = set(a[Index.raw].flat)
+                asubindex = set(a[Index.raw][Subindex.raw].flat)
+
+                assert asubindex == aidx.intersection(aindex)
+
+# @given(slices(), slices(), integers(0, 100))
+@given(ints(), positive_slices, integers(0, 100))
+def test_slice_as_subindex_slice_hypothesis(i, index, size):
+    a = arange(size)
+    try:
+        idx = Integer(i)
+        Index = Slice(index)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = idx.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        assume(False)
+
+    try:
+        aidx = set(a[idx].flat)
+    except IndexError:
+        assume(False)
+    aindex = set(a[index].flat)
+    asubindex = set(a[index][Subindex.raw].flat)
+
+    assert asubindex == aidx.intersection(aindex)
