@@ -57,7 +57,6 @@
 <!-- TODOS:
 
 - Regularize the type of a in discussions(list vs. array)
-- Fencepost image
 - Better wording for omitted rule
 
 -->
@@ -745,12 +744,17 @@ $$
 The integer index corresponding to the dividers corresponds to the entry to
 the <em>right</em> of the divider. Rules that involve remembering left or right
 aren’t great when it comes to memorability.</p></li>
+</ul>
+<ul id="fencepost">
 <li><p>This rule leads to off-by-one errors due to “fencepost” errors. The
 fencepost problem is this: say you want to build a fence that is 100 feet
 long with posts spaced every 10 feet. How many fenceposts do you need? The
 naive answer is 10, but the correct answer is 11, because the fenceposts go
 in between the 10 feet divisions, including at the ends.</p>
-<!-- TODO: Find an image to include here -->
+<div class="figure align-default" id="id13">
+<img alt="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" src="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" />
+<p class="caption"><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak" id="id6">1</a></span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
 <p>Fencepost problems are a leading cause of off-by-one errors. Thinking about
 slices in this way is to think about arrays as separated by fenceposts, and
 is only begging for problems. This will especially be the case if you still
@@ -761,11 +765,12 @@ blame you for doing so.</p>
 </li>
 </ul>
 <p>Rather than trying to think about dividers between elements, it’s much simpler
-to just think about the elements themselves, but being counted with 0-based
-indexing. 0-based indexing itself leads to off-by-one errors, since it is not
-the usually way humans are taught to count things, but these will be far
-fewer, especially as you gain practice in counting that way. As long as you
-apply the rule “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not included”, you will get the correct results.</p>
+to just think about the elements themselves, but being counted starting at 0.
+To be sure, 0-based indexing itself leads to off-by-one errors, since it is
+not the usually way humans are taught to count things, but this is nonetheless
+the best way to think about things, especially as you gain practice in
+counting that way. As long as you apply the rule “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not included”,
+you will get the correct results.</p>
 <p id="wrong-rule-4"><strong style="font-size:120%;">Wrong Rule 4: “The <code class="docutils literal notranslate"><span class="pre">stop</span></code> of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is 1-based.”<a class="headerlink"
 href="#wrong-rule-4" title="Permalink to this headline">¶</a> </strong></p>
 <p>You might get clever and say <code class="docutils literal notranslate"><span class="pre">a[3:5]</span></code> indexes from the 3rd element with
@@ -891,7 +896,7 @@ example, instead of using <code class="docutils literal notranslate"><span class
 </div>
 </div>
 <div class="section" id="clipping">
-<span id="id6"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this headline">¶</a></h3>
+<span id="id7"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this headline">¶</a></h3>
 <p>Slices can never give an out-of-bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This is different from
 <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer indices</span></a> which require the index to be in bounds. If
 <code class="docutils literal notranslate"><span class="pre">start</span></code> indexes before the beginning of the array (with a negative index), or
@@ -939,7 +944,7 @@ check the shape (slicing a NumPy array always produces a view on the array, so
 it is a very inexpensive operation).</p>
 </div>
 <div class="section" id="steps">
-<span id="id7"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+<span id="id8"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <p>Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every <code class="docutils literal notranslate"><span class="pre">step</span></code> element contained in
 the bounds of <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>.</p>
@@ -1058,7 +1063,7 @@ to properly account for negative vs. nonnegative indices, clipping, and
 regarding slices will necessarily have many piecewise conditions.</p>
 </div>
 <div class="section" id="negative-steps">
-<span id="id8"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this headline">¶</a></h3>
+<span id="id9"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this headline">¶</a></h3>
 <p>Recall what I said above:</p>
 <p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and
 successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches an index that is at or past the
@@ -1156,7 +1161,7 @@ $$
 </div>
 <div class="section" id="omitted-entries">
 <span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this headline">¶</a></h3>
-<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#ommited-none" id="id9">1</a></p>
+<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#ommited-none" id="id10">2</a></p>
 <p><strong>The best way to think about omitted entries is just like that, as omitted
 entries.</strong> That is, for a slice like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> think of it as the <code class="docutils literal notranslate"><span class="pre">start</span></code> being
 omitted, and <code class="docutils literal notranslate"><span class="pre">stop</span></code> equal to <code class="docutils literal notranslate"><span class="pre">i</span></code>. Conversely, <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> has the <code class="docutils literal notranslate"><span class="pre">start</span></code> as <code class="docutils literal notranslate"><span class="pre">i</span></code>
@@ -1235,7 +1240,8 @@ the slice will just happen to be what you want even if they go negative. This
 is because the discontinuity disagrees with the concept of
 <a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a>, which is a very good idea. <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> will slice “as far
 as it can” if <code class="docutils literal notranslate"><span class="pre">j</span></code> is “too big” (greater than <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>), but it does something
-completely different if <code class="docutils literal notranslate"><span class="pre">i</span></code> is “too small” as soon as “too small” means negative.</p>
+completely different if <code class="docutils literal notranslate"><span class="pre">i</span></code> is “too small” as soon as “too small” means
+“negative”.</p>
 <p>Negative indexing is, strictly speaking, a syntactic sugar only.
 Slicing/indexing from the end of the array can always be done in terms of the
 length of the array. <code class="docutils literal notranslate"><span class="pre">a[-x]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> (when using 0-based
@@ -1248,26 +1254,34 @@ mean “reversed” or “from the end of the array” indexing, and leave negat
 numbers to simply extend beyond the left side of the array. For example, in
 Julia, one can use <code class="docutils literal notranslate"><span class="pre">a[end]</span></code> to index the last element of an array (Julia also
 uses 1-based indexing). Since this is a moot point for Python—I don’t expect
-Python’s indexing semantics to change, they are already baked into the
+Python’s indexing semantics to change; they are already baked into the
 language—I won’t suggest any syntax. Perhaps this can inspire people writing
 new languages or DSLs to come up with better semantics backed by good syntax.</p>
 <p>The second point, on using 1-based indexing instead of 0-based indexing, will
-likely be the most controversial. 0-based indexing certainly has its uses. In
-C, where an index is literally a syntactic macro for adding two pointers,
-0-based indexing makes sense, since <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> literally means <code class="docutils literal notranslate"><span class="pre">*(a</span> <span class="pre">+</span> <span class="pre">i)</span></code> under
-those semantics. However, for higher level languages such as Python, people
-think of indexing as pointing to specific numbered elements of a collection,
-not as pointer arithmetic. Every human being is taught from an early age to
-count from 1. If you show someone the list “a, b, c”, they will tell you that
-“a” is the 1st, “b” is the 2nd, and “c” is the 3rd. 0-based indexing requires
-a shift in thinking from the way that you have been taught to count from
-childhood to grade school. Counting is a very fundamental thing for any human,
-but especially so for a programmer. Forcing someone to learn a new way to do
-this is a huge cognitive burden, and so one shouldn’t do this without a very
-good reason. In a language like C, one can argue there is a good reason, just
-as one can argue that it is beneficial to learn new base number systems
-(base-2 and base-16).</p>
-<p>But for Python, what is truly the benefit of counting starting at 0? The main
+likely be the most controversial. For many people reading this, the notion
+that 0-based indexing is superior has been preached as irreproachable gospel.
+I encourage you to open your mind and try to unlearn what you have been taught
+and take a fresh view of the matter (or don’t. These are just my opinions
+after all, and none of it changes the fact that Python is what it is and isn’t
+going to change).</p>
+<p>0-based indexing certainly has its uses. In C, where an index is literally a
+syntactic macro for adding two pointers, 0-based indexing makes sense, since
+<code class="docutils literal notranslate"><span class="pre">a[i]</span></code> literally means <code class="docutils literal notranslate"><span class="pre">*(a</span> <span class="pre">+</span> <span class="pre">i)</span></code> under those semantics. However, for higher
+level languages such as Python, people think of indexing as pointing to
+specific numbered elements of a collection, not as pointer arithmetic. Every
+human being is taught from an early age to count from 1. If you show someone
+the list “a, b, c”, they will tell you that “a” is the 1st, “b” is the 2nd,
+and “c” is the 3rd. Sentences in the above guide like “<code class="docutils literal notranslate"><span class="pre">a[3]</span></code> would pick the
+fourth element of <code class="docutils literal notranslate"><span class="pre">a</span></code>” sound very off, even for those of us used to 0-based
+indexing. 0-based indexing requires a shift in thinking from the way that you
+have been taught to count from childhood to grade school. Counting is a very
+fundamental thing for any human, but especially so for a programmer. Forcing
+someone to learn a new way to do this is a huge cognitive burden, and so it
+shouldn’t be done without a very good reason. In a language like C, one can
+argue there is a good reason, just as one can argue that it is beneficial to
+learn new base number systems (base-2 and base-16) when doing certain kinds of
+programming.</p>
+<p>But for Python, what truly is the benefit of counting starting at 0? The main
 benefit is that the implementation is easier, because Python is itself written
 in C, which uses 0-based indexing, so one does not need to handle shifting in
 the translation. But this has never been a valid argument for Python
@@ -1293,7 +1307,12 @@ coefficients).</p>
 https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering).
 Fortran predates Python by many decades, but is still in use today,
 particularly in scientific applications. And many Python libraries themselves
-are backed by Fortran code, such as SciPy.</p>
+are backed by Fortran code, such as SciPy. Many other popular programming
+languages, including many used in scientific applications (where arrays and
+hence advanced indexing tends to be more common) such as Julia, MATLAB,
+Mathematica, R, Lua, and
+[others[(https://en.wikipedia.org/wiki/Comparison_of_programming_languages_(array)#Array_system_cross-reference_list)
+use 1-based indexing.</p>
 <p>Finally, the idea of half-open semantics, where the <code class="docutils literal notranslate"><span class="pre">stop</span></code> value of a slice is
 never included, is bad, for many of the same reasons that 0-based indexing is
 bad. In most contexts outside of programming, including virtually all
@@ -1302,14 +1321,47 @@ assumed that both endpoints are included in the range. For example, if you see
 a phrase like “ages 7 to 12”, “the letters A to Z”, or “sum of the numbers
 from 1 to 10”, without any further qualification you assume that both
 endpoints are included in the range.</p>
-<p>It is true that this can lead to fencepost errors, but I contend that it is
-more natural to think about a range as including both endpoints. Half-open
-semantics are often tied to 0-based indexing, since it is a convenient way to
-allow the range 0–N to contain N values, by not including
-N.<a class="footnote-reference brackets" href="#python-history-note" id="id10">2</a> I see this as taking a bad decision (0-based
+<p>It is true that this can lead to <a class="reference internal" href="#fencepost"><span class="std std-ref">fencepost errors</span></a>, but I contend
+that it is more natural to think about a range as including both endpoints.
+Half-open semantics are often tied to 0-based indexing, since it is a
+convenient way to allow the range 0–N to contain N values, by not including
+N.<a class="footnote-reference brackets" href="#python-history-note" id="id11">3</a> I see this as taking a bad decision (0-based
 indexing) and putting a bad bandaid on it that makes it worse. But certainly
 this argument goes away for 1-based indexing. The range 1–N contains N values
 exactly when N <em>is</em> included in the range.</p>
+<p>One might argue that there are instances in everyday life where 0-based
+counting is used. For example, in the West, the reckoning of a person’s age is
+typically done in a way that matches half-open 0-based indexing semantics. If
+has been less than 1 year since a person’s birthdate, one would say they are
+“zero years old” (although typically they might use a smaller unit of measure
+such as months to avoid this). And if tomorrow is my 30th birthday, then today
+I will say, “I am 29 years old”, even though I am actually 29.99 years old (I
+may continue to say “I am 29 years old” tomorrow, but at least today no one
+would accuse me of lying). This matches the “half-open” semantics used by
+slices. The end date of an age, the birthday, is not accounted for until it
+has passed.</p>
+<p>This example shows that half-open semantics does indeed go nicely with 0-based
+counting, and it’s indeed typically good to use one when using the other. But
+let us look closer at why ages are counted this way. The most typical instance
+where some reckoning starts at 0 instead of 1 is when measuring a distance.
+The distance from your house to the nearest pub may be “2 miles”, but the
+distance from your house to itself is “0 miles”. Age is also a distance: the
+distance in time from the present to your birthdate. On the other hand, when
+counting or enumerating individual objects, one always starts at 1. The notion
+of a “zeroth” object doesn’t make sense because you are counting the objects
+themselves, not some quantity relating them. It doesn’t make sense to start at
+0 with an “unobject” because you are only counting objects, not non-objects.
+To put another way, when you teach a child how to count things, you teach them
+to enumerate the items starting at 1 (“1, 2, 3, …”). The number that is
+enumerated for the final object is equal to the number of items. This only
+works if you start at 1.</p>
+<p>So the question then becomes, should indexing work like a measurement of
+distance, which would naturally start at 0, or like an enumeration of distinct
+terms, which would naturally start at 0. If we think of an index as a pointer
+offset, as C does, then it is indeed a measurement of a distance. But if we
+instead think of an indexable array as a discrete ordered collection of items,
+then the notion of a measurement of distance is harder to justify. But
+enumeration is a natural concept for any ordered discrete collection.</p>
 <p>A commonly touted benefit of half-open slicing semantics is that you can
 “glue” half-open intervals together. For example, <code class="docutils literal notranslate"><span class="pre">a[0:N]</span> <span class="pre">+</span> <span class="pre">a[N:M]</span></code> is the
 same as <code class="docutils literal notranslate"><span class="pre">a[0:M]</span></code>. But <code class="docutils literal notranslate"><span class="pre">a[1:N]</span> <span class="pre">+</span> <span class="pre">a[N+1:M]</span></code> is just as clear. People are
@@ -1320,7 +1372,7 @@ next <span class="math notranslate nohighlight">\(n\)</span> numbers are <span c
 If you were to rewrite the previous two sentences using half-open semantics,
 anyone would tell you they were phrased wrong.</p>
 <p>Another benefit of half-open intervals is that they allow the range <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code>
-to contain <span class="math notranslate nohighlight">\(j - i\)</span> elements (assuming <span class="math notranslate nohighlight">\(j &gt; i &gt; 0\)</span> and <code class="docutils literal notranslate"><span class="pre">a</span></code> is large enough).
+to contain <span class="math notranslate nohighlight">\(j - i\)</span> elements (assuming <span class="math notranslate nohighlight">\(0 \leq i \leq j\)</span> and <code class="docutils literal notranslate"><span class="pre">a</span></code> is large enough).
 However, I contend people are perfectly used to the usual fencepost offset
 that a range <span class="math notranslate nohighlight">\(i\ldots j\)</span> contains <span class="math notranslate nohighlight">\(j - i + 1\)</span> numbers. Half-open semantics replace this
 fencepost error with more subtle ones, which arise from forgetting that the
@@ -1332,7 +1384,7 @@ is decades, and you will see ranges like “2000–2009”, not “2000–2010�
 <p>The fencepost problem is fundamentally unavoidable. A 100 foot fence truly has
 one more fencepost than fence lengths. The best way to deal with the fencepost
 problem is not to try to change the way we count fenceposts, so that somehow
-11 fenceposts is really only 10. It is rather to reuse the most natural and
+11 fenceposts is really only 10.<a class="footnote-reference brackets" href="#fencepost-note" id="id12">4</a> It is rather to reuse the most natural and
 intuitive way of thinking about the problem, which occurs both in programming
 and non-programming contexts.</p>
 <p>Half-open semantics become particularly confusing when the step is negative.
@@ -1358,7 +1410,11 @@ decisions will help you to remember the slicing <a class="reference internal" hr
 end of the document. -->
 <hr class="docutils" />
 <dl class="footnote brackets">
-<dt class="label" id="ommited-none"><span class="brackets"><a class="fn-backref" href="#id9">1</a></span></dt>
+<dt class="label" id="fencepost-jeff-burbak"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
+<dd><p>Image credit <a class="reference external" href="https://unsplash.com/photos/lPO0VzF_4s8">Jeff Burak,
+Unsplash</a>  .</p>
+</dd>
+<dt class="label" id="ommited-none"><span class="brackets"><a class="fn-backref" href="#id10">2</a></span></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> may also be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which is
 syntactically equivalent to them being omitted. That is to say, <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is a
 syntax shorthand for <code class="docutils literal notranslate"><span class="pre">a[None:None:None]</span></code>. It is rare to see <code class="docutils literal notranslate"><span class="pre">None</span></code> in a slice;
@@ -1367,11 +1423,16 @@ method on an object. The <code class="docutils literal notranslate"><span class=
 <code class="docutils literal notranslate"><span class="pre">slice(None,</span> <span class="pre">None,</span> <span class="pre">None)</span></code>. <code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code> also uses <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate
 omitted entries in the same way.</p>
 </dd>
-<dt class="label" id="python-history-note"><span class="brackets"><a class="fn-backref" href="#id10">2</a></span></dt>
+<dt class="label" id="python-history-note"><span class="brackets"><a class="fn-backref" href="#id11">3</a></span></dt>
 <dd><p>In fact, the original reason that Python uses 0-based
 indexing is that Guido preferred the half-open semantics, which only work out
 well when combined with 0-based indexing
 (<a class="reference external" href="https://web.archive.org/web/20190321101606/https://plus.google.com/115212051037621986145/posts/YTUxbXYZyfi">reference</a>).</p>
+</dd>
+<dt class="label" id="fencepost-note"><span class="brackets"><a class="fn-backref" href="#id12">4</a></span></dt>
+<dd><p><a class="reference external" href="https://betterexplained.com/articles/learning-how-to-count-avoiding-the-fencepost-problem/">This blog
+post</a>
+has a nice writeup of <em>why</em> the fencepost problem exists.</p>
 </dd>
 </dl>
 </div>
