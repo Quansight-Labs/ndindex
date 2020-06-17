@@ -93,4 +93,9 @@ class Integer(NDIndex):
         if not isinstance(index, Slice):
             raise NotImplementedError("Tuple.as_subindex is only implemented for slices")
 
-        return Slice(self.args[0], self.args[0] + 1).as_subindex(index)
+        s = Slice(self.args[0], self.args[0] + 1).as_subindex(index)
+        if s == Slice(0, 0, 1):
+            # Return a slice so that the result doesn't produce an IndexError
+            return s
+        assert len(s) == 1
+        return Integer(s.args[0])
