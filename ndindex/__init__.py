@@ -1,8 +1,8 @@
 __all__ = []
 
-from .ndindex import ndindex, newaxis
+from .ndindex import ndindex
 
-__all__ += ['ndindex', 'newaxis']
+__all__ += ['ndindex']
 
 from .slice import Slice
 
@@ -19,6 +19,10 @@ __all__ += ['Tuple']
 from .ellipsis import ellipsis
 
 __all__ += ['ellipsis']
+
+from .newaxis import Newaxis
+
+__all__ += ['Newaxis']
 
 from ._version import get_versions
 __version__ = get_versions()['version']

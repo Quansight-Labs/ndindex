@@ -31,6 +31,7 @@ def slices(draw, start=one_of(none(), ints()), stop=one_of(none(), ints()),
     return slice(draw(start), draw(stop), draw(step))
 
 ellipses = lambda: just(...)
+newaxes = lambda: just(None)
 
 # hypotheses.strategies.tuples only generates tuples of a fixed size
 @composite

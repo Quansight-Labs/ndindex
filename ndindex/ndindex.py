@@ -1,8 +1,6 @@
 import inspect
 
-from numpy import ndarray
-
-newaxis = None
+from numpy import ndarray, newaxis
 
 
 def ndindex(obj):
@@ -15,7 +13,7 @@ def ndindex(obj):
     >>> ndindex(slice(0, 10))
     Slice(0, 10, None)
     """
-    from . import Integer, Slice, Tuple, ellipsis
+    from . import Integer, Slice, Tuple, ellipsis, Newaxis
 
     if isinstance(obj, NDIndex):
         return obj
@@ -36,6 +34,9 @@ def ndindex(obj):
         raise TypeError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
     if obj is Ellipsis:
         return ellipsis()
+
+    if obj is newaxis:
+        return Newaxis()
 
     if isinstance(obj, ndarray):
         raise NotImplementedError("array indices are not yet supported")
