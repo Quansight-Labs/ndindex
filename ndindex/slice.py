@@ -396,4 +396,4 @@ class Slice(NDIndex):
         if stop < 0:
             stop = 0
 
-        return Slice(start, stop, step)
+        return Slice(start, stop, step).reduce()
