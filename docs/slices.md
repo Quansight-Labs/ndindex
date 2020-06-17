@@ -1428,18 +1428,20 @@ changes I would make to improve the semantics would be
 The special meaning of negative numbers, to index from the end of the array,
 is by far the biggest problem. It is a fundamental discontinuity in the
 definition of an index. This makes it completely impossible to write a formula
-for almost anything relating to slices, which will not end up having branching
+for almost anything relating to slices that will not end up having branching
 `if` conditions. But the problem isn't just for code that manipulates slices.
 The [example above](negative-indices-example) shows how negative indices can
 easily lead to bugs in end-user code. Effectively, any time you have a slice
-`a[i:j]` and `i` and `j` are nontrivial expressions, `i` and `j` must be
-checked to ensure they do not go negative. It is virtually never the case that
-the slice will just happen to be what you want even if they go negative. This
-is because the discontinuity disagrees with the concept of
-[clipping](clipping), which is a very good idea. `a[i:j]` will slice "as far
-as it can" if `j` is "too big" (greater than `len(a)`), but it does something
-completely different if `i` is "too small" as soon as "too small" means
-"negative".
+`a[i:j]`, if `i` and `j` are nontrivial expressions they must be checked to
+ensure they do not go negative. If they can be both negative and nonnegative,
+it is virtually never the case that the slice will give you what you want in
+both cases. This is because the discontinuity inherent in the definition of
+[negative indexing](negative-indices) disagrees with the concept of
+[clipping](clipping). `a[i:j]` will slice "as far as it can" if `j` is "too
+big" (greater than `len(a)`), but it does something completely different if
+`i` is "too small" as soon as "too small" means "negative". Clipping is a good
+idea. It tends to lead to behavior that gives what you would want slices that
+go out of bounds.
 
 Negative indexing is, strictly speaking, a syntactic sugar only.
 Slicing/indexing from the end of the array can always be done in terms of the
@@ -1624,8 +1626,9 @@ again). But I hope I can inspire new languages and DSLs that include slicing
 semantics to be written in clearer ways. And I also hope that I can break some
 of the cognitive dissonance that leads people to believe that the Python
 slicing rules are superior, despite the endless confusion that they provide.
-And I also believe that simply understanding that Python has made these
-decisions will help you to remember the slicing [rules](rules).
+Finally, I believe that simply understanding that Python has made these
+decisions, whether you agree with them or not, will help you to remember the
+slicing [rules](rules), and that's my true goal here.
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
