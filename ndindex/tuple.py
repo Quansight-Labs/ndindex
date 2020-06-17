@@ -304,3 +304,39 @@ class Tuple(NDIndex):
         newargs = newargs + endargs[::-1]
 
         return type(self)(*newargs)
+
+
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        from . import Integer
+
+        if isinstance(shape, (Tuple, Integer)):
+            raise TypeError("ndindex types are not meant to be used as a shape - "
+                            "did you mean to use the built-in tuple type?")
+        if isinstance(shape, int):
+            shape = (shape,)
+
+        if self == Tuple():
+            return shape
+
+        # This will raise any IndexErrors
+        self.reduce(shape)
+
+        ellipsis_i = self.ellipsis_index
+
+        newshape = []
+        for i, s in enumerate(self.args[:ellipsis_i]):
+            newshape.extend(list(s.newshape(shape[i])))
+
+        if ... in self.args:
+            midshape = list(shape[ellipsis_i:len(shape)+ellipsis_i-len(self.args)+1])
+        else:
+            midshape = list(shape[len(self.args):])
+
+        endshape = []
+        for i, s in enumerate(reversed(self.args[ellipsis_i+1:]), start=1):
+            endshape.extend(list(s.newshape(shape[len(shape)-i])))
+
+        newshape = newshape + midshape + endshape[::-1]
+
+        return tuple(newshape)

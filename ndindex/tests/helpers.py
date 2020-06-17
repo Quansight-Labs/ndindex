@@ -60,7 +60,7 @@ shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < 100000)
 
-def check_same(a, index, func=lambda x: x, same_exception=True):
+def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None
     try:
         a_raw = a[index]

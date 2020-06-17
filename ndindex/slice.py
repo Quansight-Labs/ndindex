@@ -341,6 +341,21 @@ class Slice(NDIndex):
                 stop += size
         return self.__class__(start, stop, step)
 
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        from . import Integer, Tuple
+
+        if isinstance(shape, (Tuple, Integer)):
+            raise TypeError("ndindex types are not meant to be used as a shape - "
+                            "did you mean to use the built-in tuple type?")
+        if isinstance(shape, int):
+            shape = (shape,)
+
+        idx = self.reduce(shape)
+
+        # len() won't raise an error after reducing with a shape
+        return (len(idx),) + shape[1:]
+
     # TODO: Better name?
     def as_subindex(self, index):
         # The docstring of this method is currently on NDindex.as_subindex, as
