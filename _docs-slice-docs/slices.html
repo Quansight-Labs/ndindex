@@ -1293,18 +1293,20 @@ changes I would make to improve the semantics would be</p>
 <p>The special meaning of negative numbers, to index from the end of the array,
 is by far the biggest problem. It is a fundamental discontinuity in the
 definition of an index. This makes it completely impossible to write a formula
-for almost anything relating to slices, which will not end up having branching
+for almost anything relating to slices that will not end up having branching
 <code class="docutils literal notranslate"><span class="pre">if</span></code> conditions. But the problem isn’t just for code that manipulates slices.
 The <a class="reference internal" href="#negative-indices-example"><span class="std std-ref">example above</span></a> shows how negative indices can
 easily lead to bugs in end-user code. Effectively, any time you have a slice
-<code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> and <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> are nontrivial expressions, <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> must be
-checked to ensure they do not go negative. It is virtually never the case that
-the slice will just happen to be what you want even if they go negative. This
-is because the discontinuity disagrees with the concept of
-<a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a>, which is a very good idea. <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> will slice “as far
-as it can” if <code class="docutils literal notranslate"><span class="pre">j</span></code> is “too big” (greater than <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>), but it does something
-completely different if <code class="docutils literal notranslate"><span class="pre">i</span></code> is “too small” as soon as “too small” means
-“negative”.</p>
+<code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code>, if <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> are nontrivial expressions they must be checked to
+ensure they do not go negative. If they can be both negative and nonnegative,
+it is virtually never the case that the slice will give you what you want in
+both cases. This is because the discontinuity inherent in the definition of
+<a class="reference internal" href="#negative-indices"><span class="std std-ref">negative indexing</span></a> disagrees with the concept of
+<a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a>. <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> will slice “as far as it can” if <code class="docutils literal notranslate"><span class="pre">j</span></code> is “too
+big” (greater than <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>), but it does something completely different if
+<code class="docutils literal notranslate"><span class="pre">i</span></code> is “too small” as soon as “too small” means “negative”. Clipping is a good
+idea. It tends to lead to behavior that gives what you would want slices that
+go out of bounds.</p>
 <p>Negative indexing is, strictly speaking, a syntactic sugar only.
 Slicing/indexing from the end of the array can always be done in terms of the
 length of the array. <code class="docutils literal notranslate"><span class="pre">a[-x]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> (when using 0-based
@@ -1464,8 +1466,9 @@ again). But I hope I can inspire new languages and DSLs that include slicing
 semantics to be written in clearer ways. And I also hope that I can break some
 of the cognitive dissonance that leads people to believe that the Python
 slicing rules are superior, despite the endless confusion that they provide.
-And I also believe that simply understanding that Python has made these
-decisions will help you to remember the slicing <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>.</p>
+Finally, I believe that simply understanding that Python has made these
+decisions, whether you agree with them or not, will help you to remember the
+slicing <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>, and that’s my true goal here.</p>
 </div>
 <div class="section" id="footnotes">
 <h2>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this headline">¶</a></h2>
