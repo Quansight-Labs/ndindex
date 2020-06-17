@@ -21,6 +21,7 @@ Integer
 
 .. autoclass:: ndindex.Integer
    :members:
+   :special-members:
 
 .. _slice-api:
 
@@ -29,18 +30,21 @@ Slice
 
 .. autoclass:: ndindex.Slice
    :members:
+   :special-members:
 
 ellipsis
 --------
 
 .. autoclass:: ndindex.ellipsis
    :members:
+   :special-members:
 
 Tuple
 -----
 
 .. autoclass:: ndindex.Tuple
    :members:
+   :special-members:
 
 Internal API
 ------------
