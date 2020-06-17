@@ -779,6 +779,61 @@ reasons why this way of thinking creates more confusion than it removes.
   the *right* of the divider. Rules that involve remembering left or right
   aren't great when it comes to memorability.
 
+- If the `step` is greater than 1, you must again think about "left or right",
+  since not every element between the `start` and `stop` is selected. For
+  example
+
+  <div style="text-align:center">
+  <code style="font-size: 16pt;">a[0:5:3] == ['a', 'd']</code>
+  $$
+  \require{enclose}
+  \begin{aligned}
+  \begin{array}{r r r r r r r r r r r r r r r r r r}
+  a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
+      &
+      & \color{blue}{|}
+      & \color{blue}{\enclose{circle}{\phantom{\mathtt{\textsf{'}a\textsf{'}}}}}
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      & \color{blue}{\enclose{circle}{\phantom{\mathtt{\textsf{'}d\textsf{'}}}}}
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}\\
+  \color{red}{\text{index}}
+      &
+      & \color{blue}{0}
+      &
+      & \color{blue}{1}
+      &
+      & \color{blue}{2}
+      &
+      & \color{blue}{3}
+      &
+      & \color{blue}{4}
+      &
+      & \color{blue}{5}
+      &
+      & \color{red}{6}
+      &
+      & \color{red}{7}\\
+  \end{array}\\
+  \end{aligned}
+  $$
+  <i>(not a great way of thinking about slices)</i>
+  </div>
+
+  ```py
+  >>> a[0:5:3]
+  ['a', 'd']
+  ```
+
 (fencepost)=
 - This rule leads to off-by-one errors due to "fencepost" errors. The
   fencepost problem is this: say you want to build a fence that is 100 feet
