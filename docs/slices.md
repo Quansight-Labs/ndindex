@@ -5,6 +5,7 @@ Slices
 
 - Regularize the type of a in discussions(list vs. array)
 - Better wording for omitted rule
+- First person?
 
 -->
 
@@ -13,12 +14,12 @@ to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.
 
 There are two primary aspects of slices that make them confusing:  confusing
-conventions, and branching definitions. By confusing conventions, I mean that
-slice semantics have definitions that are often difficult to reason about
+conventions, and discontinuous definitions. By confusing conventions, I mean
+that slice semantics have definitions that are often difficult to reason about
 mathematically. These conventions were chosen for syntactic convenience, and
 one can easily see for most of them how they lead to concise notation for very
 common operations, but it remains nonetheless true that they can make figuring
-out the *right* slice to use in the first place complicated. By branching
+out the *right* slice to use in the first place complicated. By discontinuous
 definitions, I mean that the definition of a slice takes on fundamentally
 different meanings if the start, stop, or step are negative, nonnegative, or
 omitted. This again is done for syntactic convenience, but it means that as a
@@ -218,9 +219,10 @@ IndexError: list index out of range
 ## Points of Confusion
 
 The full definition of a slice could be written down in a couple of sentences,
-although the branching definitions would necessitate several "if" conditions.
-The [NumPy docs](https://numpy.org/doc/stable/reference/arrays.indexing.html)
-on slices say
+although the discontinuous definitions would necessitate several "if"
+conditions. The [NumPy
+docs](https://numpy.org/doc/stable/reference/arrays.indexing.html) on slices
+say
 
 (numpy-definition)=
 
@@ -1323,9 +1325,12 @@ the impression that unless one works with slices regularly, it will be hard to
 remember the "right" ways and not fallback to thinking about the "wrong" ways,
 or, as most Python programmers probably do simply "guessing and checking".
 
-Furthermore, the branching definition nature of slices not only makes it hard
-to remember how slices work, but it makes it *extremely* hard to write slice
-arithmetic. If you are unconvinced of this, take a look at the [source
+Furthermore, the discontinuous nature of the `start` and `stop` parameters not
+only makes it hard to remember how slices work, but it makes it *extremely*
+hard to write slice arithmetic. The arithmetic is hard already in many cases
+due to the modular nature of `step`, but the discontinuous aspect of `start`
+and `stop` increase this tenfold. If you are unconvinced of this, take a look
+at the [source
 code](https://github.com/Quansight/ndindex/blob/master/ndindex/slice.py) for
 `ndindex.Slice()`. You will see lots of nested `if` blocks. This is because
 slices have *fundamentally* different definitions if the `start` or `stop` are
