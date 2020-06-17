@@ -6,6 +6,7 @@ Slices
 - Regularize the type of a in discussions(list vs. array)
 - Better wording for omitted rule
 - First person?
+- Indexes vs. indices
 
 -->
 
@@ -13,20 +14,21 @@ Python's slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.
 
-There are two primary aspects of slices that make them confusing:  confusing
-conventions, and discontinuous definitions. By confusing conventions, I mean
-that slice semantics have definitions that are often difficult to reason about
-mathematically. These conventions were chosen for syntactic convenience, and
-one can easily see for most of them how they lead to concise notation for very
-common operations, but it remains nonetheless true that they can make figuring
-out the *right* slice to use in the first place complicated. By discontinuous
-definitions, I mean that the definition of a slice takes on fundamentally
-different meanings if the start, stop, or step are negative, nonnegative, or
-omitted. This again is done for syntactic convenience, but it means that as a
-user, you must switch your mode of thinking about slices depending on value of
-the arguments. There is no uniform formula that applies to all slices.
+There are two primary aspects of slices that make them difficult to
+understand: confusing conventions, and discontinuous definitions. By confusing
+conventions, I mean that slice semantics have definitions that are often
+difficult to reason about mathematically. These conventions were chosen for
+syntactic convenience, and one can easily see for most of them how they lead
+to concise notation for very common operations, but it remains nonetheless
+true that they can make figuring out the *right* slice to use in the first
+place complicated. By discontinuous definitions, I mean that the definition of
+a slice takes on fundamentally different meanings if the start, stop, or step
+are negative, nonnegative, or omitted. This again is done for syntactic
+convenience, but it means that as a user, you must switch your mode of
+thinking about slices depending on value of the arguments. There are no
+uniform formulas that apply to all slices.
 
-The ndindex library can help with much of this, especially for people
+The [ndindex](index) library can help with much of this, especially for people
 developing libraries that consume slices. But for end-users the challenge is
 often just to write down a slice. Even if you rarely work with NumPy arrays,
 you will most likely require slices to select parts of lists or strings as
@@ -53,11 +55,12 @@ a[x::]
 a[x::z]
 ```
 
-Furthermore, for a slice `a[x:y:z]` on a Python built-in objects or NumPy
+Furthermore, for a slice `a[x:y:z]` on Python built-in objects or a NumPy
 array, there is an additional semantic restriction, which is that the
 expressions `x`, `y`, and `z` must be integers.
 
-The three arguments to a slice are called, `start`, `stop`, and `step`:
+The three arguments to a slice are traditionally called `start`, `stop`, and
+`step`:
 
 ```py
 a[start:stop:step]
@@ -65,10 +68,10 @@ a[start:stop:step]
 
 I will use these names throughout this guide.
 
-It is worth mentioning that the `x:y:z` syntax is not valid outside of square
+It is worth noting that the `x:y:z` syntax is not valid outside of square
 brackets. However, slice objects can be created manually using the `slice()`
 builtin (`a[x:y:z]` is the same as `a[slice(x, y, z)]`). You can also use the
-[`ndindex.Slice`](slice-api) object if you want to perform more advanced
+[`ndindex.Slice()`](slice-api) object if you want to perform more advanced
 operations.
 
 (rules)=
@@ -76,8 +79,8 @@ operations.
 
 These are the rules to keep in mind to understand how slices work. Each of
 these is explained in detail below. Many of the detailed descriptions below
-also outline several *wrong* rules which are bad ways of thinking about
-slices, which you may be tempted to think about as rules. The below 7 rules
+also outline several *wrong* rules, which are bad ways of thinking about
+slices but which you may be tempted to think about as rules. The below 7 rules
 are always correct.
 
 In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
@@ -86,21 +89,21 @@ For a slice `a[start:stop:step]`:
 
 1. `start` and `step` use **0-based indexing** from the **start** of the array
    when they are **nonnegative**, and **−1-based indexing** from **end** of
-   the array when they are **negative**. (Sections {ref}`0-based` and
+   the array when they are **negative**. (See sections {ref}`0-based` and
    {ref}`negative-indices`)
-2. `stop` is never included in the slice. (Section {ref}`half-open`)
-3. `start` and `stop` are clipped to the bounds of the array. (Section {ref}`clipping`)
+2. `stop` is never included in the slice. (See section {ref}`half-open`)
+3. `start` and `stop` are clipped to the bounds of the array. (See section {ref}`clipping`)
 4. The slice starts at `start` and successively adds `step` until it reaches
    an index that is at or past `stop`, and then stops without including that
-   `stop` index. (Sections {ref}`steps` and {ref}`negative-steps`)
-5. If `step` is omitted it defaults to `1`. (Section {ref}`omitted`)
-6. If `start` or `stop` are omitted they extend to the start or end of the
+   `stop` index. (See sections {ref}`steps` and {ref}`negative-steps`)
+5. If `step` is omitted it defaults to `1`. (See section {ref}`omitted`)
+6. If `start` or `stop` are omitted they extend to the beginning or end of the
    array in the direction being sliced. Slices like `a[:i]` or `a[i:]` should
    be though of as the `start` or `stop` being omitted, not as a colon to the
-   left or right of an index. (Section {ref}`omitted`)
-7. Slicing something never produces an `IndexError`, even if the slice is
-   empty. For a NumPy array, a slice always keeps the axis being sliced, even
-   if the final dimension is 0 or 1. (Section {ref}`subarray`)
+   left or right of an index. (See section {ref}`omitted`)
+7. Slicing something never raises an `IndexError`, even if the slice is empty.
+   For a NumPy array, a slice always keeps the axis being sliced, even if that
+   means the resulting dimension will be 0 or 1. (See section {ref}`subarray`)
 
 (integer-indices)=
 ## Integer indices
@@ -117,12 +120,21 @@ The list `a` has 7 elements.
 
 The elements of `a` are strings, but the indexes and slices on `a` will always
 use integers. An index or slice is never based on the value of the elements,
-but rather the position of the elements in the list.
+but rather the position of the elements in the list.[^dict-footnote]
+
+[^dict-footnote]: If you are looking for something that allows non-integer
+indices or indexes by value, you may want a `dict`. Despite using similar
+syntax, `dict`s do not allow slicing.
+
+An integer index picks a single element from the list `a`. For NumPy arrays,
+integer indices pick a subarray corresponding to a particular element from a
+given axis (and as a result, an integer index always reduces the
+dimensionality of an array by one).
 
 The key thing to remember about indexing in Python, both for integer and
 slice indexing, is that it is 0-based. This means that the indexes start
 at 0. This is the case for all **nonnegative** indexes. For example,
-`a[3]` would pick the **fourth** element of `a`, in this case, `'c'`.
+`a[3]` would pick the **fourth** element of `a`, in this case, `'d'`.
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3] == 'd'</code>
@@ -153,11 +165,11 @@ $$
 1-based (1, 2, 3, ...). Thinking in terms of 0-based indexing requires some
 practice.
 
-For **negative** integers, the indices index from the end of the array. These
-indices are necessarily 1-based (or rather, −1-based), since `0` already refers
-to the first element of the array. `-1` chooses the last element, `-2` the
-second-to-last, and so on. For example, `a[-3]` picks the **third-to-last**
-element of `a`, in this case, `'e'`:
+For **negative** integers, indices index from the end of the array. These
+indices are necessarily 1-based (or rather, −1-based), since `0` already
+refers to the first element of the array. `-1` chooses the last element, `-2`
+the second-to-last, and so on. For example, `a[-3]` picks the
+**third-to-last** element of `a`, in this case, `'e'`:
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[-3] == 'e'</code>
@@ -200,10 +212,9 @@ Therefore, negative indexes are primarily a syntactic convenience that
 allows one to specify parts of an array that would otherwise need to be
 specified in terms of the size of the array.
 
-If an integer index is greater than or equal to the size of the array,
-or less than negative the size of the array (`i < len(a)`
-or `i >= len(a)`), then it is out of bounds and will raise
-an `IndexError`.
+If an integer index is greater than or equal to the size of the array, or less
+than negative the size of the array (`i >= len(a)` or `i < len(a)`), then it
+is out of bounds and will raise an `IndexError`.
 
 ```py
 >>> a[7]
@@ -218,9 +229,9 @@ IndexError: list index out of range
 
 ## Points of Confusion
 
-The full definition of a slice could be written down in a couple of sentences,
-although the discontinuous definitions would necessitate several "if"
-conditions. The [NumPy
+Now let us come back to slices. The full definition of a slice could be
+written down in a couple of sentences, although the discontinuous definitions
+would necessitate several "if" conditions. The [NumPy
 docs](https://numpy.org/doc/stable/reference/arrays.indexing.html) on slices
 say
 
@@ -233,22 +244,28 @@ say
 > remainder obtained by dividing *j - i* by *k*: *j - i = q k + r*, so that
 > *i + (m - 1) k \< j*.
 
-While notes like this may give a technically accurate description of slices,
-they aren't especially helpful to someone who is trying to construct a slice
-from a higher level of abstraction such as "I want to select this particular
-subset of my array".
+While definitions like this may give a technically accurate description of
+slices, they aren't especially helpful to someone who is trying to construct a
+slice from a higher level of abstraction such as "I want to select this
+particular subset of my array".[^numpy-definition-footnote]
+
+[^numpy-definition-footnote]: This formultion actually isn't particularly
+helpful for formulating higher level slice formulas such as the ones used by
+ndindex either.
 
 Instead, we shall examine slices by carefully going over all the various
 aspects of the syntax and semantics that can lead to confusion, and attempting
-to demystify them through simple rules.
+to demystify them through simple [rules](rules).
 
 (subarray)=
 ### Subarray
 
-A slice always chooses a sub-array (or sub-list, sub-tuple, sub-string, etc.).
-What this means is that a slice will always *preserve* the dimension that is
-sliced. This is true even if a slice chooses only a single element, or even if
-it chooses no elements. This is also true for lists and tuples. This is
+**A slice always produces a subarray (or sub-list, sub-tuple, sub-string,
+etc.). For NumPy arrays, this means that a slice will always *preserve* the
+dimension that is sliced.** This is true even if the slice chooses only a
+single element, or even if it chooses no elements. This is also true for
+lists, tuples, and strings, in the sense that a slice on a list, tuple, or
+string will always produce a list, tuple, or string. This behavior is
 different from integer indices, which always remove the dimension that they
 index.
 
@@ -266,25 +283,27 @@ For example
 >>> arr = np.array([[1, 2], [3, 4]])
 >>> arr.shape
 (2, 2)
->>> arr[0].shape # Removes the first dimension
+>>> arr[0].shape # Integer index removes the first dimension
 (2,)
->>> arr[0:1].shape # Preserves the first dimension
+>>> arr[0:1].shape # Slice preserves the first dimension
 (1, 2)
 ```
 
-One consequence of this is that, unlike integer indices, slices will
-never raise `IndexError`. Therefore you cannot rely on
-runtime errors to alert you to coding mistakes relating to slice bounds
-that are too large. See also the section on
+One consequence of this is that, unlike integer indices, **slices will never
+raise `IndexError`, even if the slice is empty**. Therefore you cannot rely on
+runtime errors to alert you to coding mistakes relating to slice bounds that
+are too large. A slice cannot be "out of bounds." See the section on
 [clipping](#clipping) below.
 
 (0-based)=
 ### 0-based
 
-For the slice `a[start:stop]`, with `start` and `stop` nonnegative integers, the
-indexes `start` and `stop` are 0-based, just as with [integer
+For the slice `a[start:stop]`, with `start` and `stop` nonnegative integers,
+the indexes `start` and `stop` are 0-based, just as with [integer
 indexing](integer-indices) (although one should be careful that even though
-`stop` is 0-based, it is not included in the slice. See [below](half-open)).
+`stop` is 0-based, it is not included in the slice, see [below](half-open)).
+
+For example:
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
@@ -311,13 +330,18 @@ $$
 ['d', 'e']
 ```
 
+Do not be if you find 0-based indexing hard to get used to, or if you find
+yourself forgetting about it. Even experienced Python developers (this author
+included) still find themselves writing `a[3]` instead of `a[2]` from time to
+time. The best way to learn to use 0-based indexing is to practice using it
+enough that you use it automatically without thinking about it.
+
 (half-open)=
 ### Half-open
 
 Slices behave like half-open intervals. What this means is that the `stop` in
-`a[start:stop]` is *never* included in the slice (the exception is if `stop` is
-omitted, which always slices to the beginning or end of the array, see
-[below](omitted)).
+`a[start:stop]` is *never* included in the slice (the exception is if the
+`stop` is omitted, see [below](omitted)).
 
 For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
 ([0-based](0-based)).
@@ -354,20 +378,20 @@ advantages:
 
 (sanity-check)=
 - The maximum length of a slice `a[start:stop]`, when `start` and `stop` are
-  nonnegative, is always `stop - start` (the caveat "maximum" is here because
-  if `stop` extends beyond the end of the array, then `a[start:stop]` will only
-  slice up to `len(a) - start`, see [below](clipping)). For example, `a[i:i+n]`
-  will slice `n` elements from the array `a`. Also be careful that this is
-  only true when `start` and `stop` are nonnegative (see
-  [below](nonnegative-indices)). However, given those caveats, this is often a
-  very useful sanity check that a slice is correct. If you expect a slice to
+  nonnegative, is always `stop - start`. For example, `a[i:i+n]` will slice
+  `n` elements from `a`. The caveat "maximum" is here because if `stop`
+  extends beyond the end of the array, then `a[start:stop]` will only slice up
+  to `len(a) - start` (see {ref}`clipping` below). Also be careful that this
+  is only true when `start` and `stop` are nonnegative (see
+  {ref}`negative-indices` below). However, given those caveats, this is often
+  a very useful sanity check that a slice is correct. If you expect a slice to
   have length `n` but `stop - start` is clearly different from `n`, then the
   slice is likely wrong. Length calculations are more complicated when `step
-  != 1`; in those cases, `len(ndindex.Slice(...))` can be useful.
+  != 1`; in those cases, {meth}`len(ndindex.Slice(...)) <ndindex.Slice.__len__>` can be useful.
 
-- `len(a)` can be used as an `stop` value to slice to the end of the array. For
+- `len(a)` can be used as a `stop` value to slice to the end of the array. For
   example, `a[1:len(a)]` slices from the second element to the end of the
-  array. This is equivalent to `a[1:]`.
+  array (this is equivalent to `a[1:]`, see {ref}`omitted`)
 
   ```py
   >>> a[1:len(a)]
@@ -409,11 +433,11 @@ practice. You might as well think about slices using the [definition from the
 NumPy docs](numpy-definition).
 
 Rather, it is best to remember the simplest rule possible that is *always*
-correct. That rule is, "the `stop` is not included". That is always right,
-regardless of what the values of `start`, `stop`, or `step` are. The only
-exception is if `stop` is omitted. In this case, the rule obviously doesn't
-apply as-is, and so you can fallback to the rule about omitted `start`/`stop`
-(see [below](omitted)).
+correct. That rule is, "the `stop` is not included". This rule is extremely
+simple, and is always right, regardless of what the values of `start`, `stop`,
+or `step` are. The only exception is if `stop` is omitted. In this case, the
+rule obviously doesn't apply as-is, and so you can fallback to the rule about
+omitted `start`/`stop` (see {ref}`omitted` below).
 
 (wrong-rule-1)=
 <strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: "a slice `a[start:stop]` slices the half-open interval
@@ -421,12 +445,11 @@ $[\text{start}, \text{stop})$ (equivalently, a slice `a[start:stop]` picks the
 elements `i` such that `start <= i < stop`)." <a class="headerlink"
 href="#wrong-rule-1" title="Permalink to this headline">¶</a> </strong>
 
-This is *only* the case if the
-step size is positive. It also isn't directly true for negative `start` or
-`stop`. For example, with a step of -1, `a[start:stop:-1]` slices starting at
-`start` going in reverse order to `stop`, but not including `stop`.
-Mathematically, this creates a half open interval $(\text{stop}, \text{start}]$
-(except reversed).
+This is *only* the case if the `step` is positive. It also isn't directly true
+for negative `start` or `stop`. For example, with a `step` of `-1`,
+`a[start:stop:-1]` slices starting at `start` going in reverse order to
+`stop`, but not including `stop`. Mathematically, this creates a half open
+interval $(\text{stop}, \text{start}]$ (except reversed).
 
 For example, say way believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
@@ -505,9 +528,9 @@ There are many similarities between the behaviors of slices and the behavior
 of `range()`. However, they do not behave the same. A slice
 `a[start:stop:step]` only acts like `range(start, stop, step)` if `start` and
 `stop` are **nonnegative**. If either of them are negative, the slice wraps
-around and slices from the end of the array (see [below](negative-indices)).
-`range()` on the other hand treats negative numbers as the actual start of end
-values for the range. For example:
+around and slices from the end of the array (see {ref}`negative-indices`
+below). `range()` on the other hand treats negative numbers as the actual
+start of end values for the range. For example:
 
 ```py
 >>> list(range(3, 5))
@@ -523,20 +546,17 @@ values for the range. For example:
 
 This rule is tempting because `range()` makes some computations easy. For
 example, you can index or take the `len()` of a range. If you want to perform
-computations on slices, I recommend using ndindex. This is what it was
-designed for.
+computations on slices, I recommend using [ndindex](slice-api). This is what
+it was designed for.
 
 (wrong-rule-3)=
-<strong style="font-size:120%;">Wrong Rule 3: "Slices count the spaces between the elements of the array."<a class="headerlink"
+<strong style="font-size:120%;">Wrong Rule 3: "Slices index the spaces between the elements of the array."<a class="headerlink"
 href="#wrong-rule-3" title="Permalink to this headline">¶</a> </strong>
 
 This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of an array is indexed by 0, the second by 1, and so on.
 Rather than thinking about that, consider the spaces between the elements:
-
-<!-- a = & [&\phantom{|}&0, &\phantom{|} &1, & \phantom{|}& 2, &\phantom{|} & 3, &\phantom{|} & -->
-<!-- 4, &\phantom{|}& 5, &\phantom{|} & 6 &\phantom{|} &] &\\ -->
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
@@ -663,8 +683,54 @@ reasons why this way of thinking creates more confusion than it removes.
   ['f', 'e']
   ```
 
-- The rule does work for negative start and step, but only if you think about
-  it correctly. The correct way to think about it is to reverse the indices
+  If you've ever espoused the "spaces between elements" way of thinking about
+  indices, this should give you serious pause. One can see from the above
+  diagram that there is clearly no way to salvage this rule to see `a[5:3:-1]`
+  as giving `['f', 'e']`. Contrast the same slice when simply thinking about
+  it as stepping backwards from index `5` to index `3`, but not including
+  index `3`.
+
+  <div style="text-align:center">
+  <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
+  $$
+  \require{enclose}
+  \begin{aligned}
+  \begin{array}{r r c c c c c c c c c c c c l}
+  a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+  \color{red}{\text{index}}
+      & \color{red}{0\phantom{,}}
+      &
+      & \color{red}{1\phantom{,}}
+      &
+      & \color{red}{2\phantom{,}}
+      &
+      & \color{red}{\enclose{circle}{3}}
+      &
+      & \color{blue}{\enclose{circle}{4}}
+      &
+      & \color{blue}{\enclose{circle}{5}}
+      &
+      & \color{red}{6\phantom{,}}\\
+      &
+      & \phantom{\leftarrow}
+      &
+      & \phantom{\leftarrow}
+      &
+      & \phantom{\leftarrow}
+      & \color{red}{-1}
+      & \leftarrow
+      & \color{blue}{-1}
+      & \leftarrow
+      & \color{blue}{\text{start}}
+  \end{array}
+  \end{aligned}
+  $$
+  </div>
+
+
+- The rule does work for negative `start` and `step`, but only if you think
+  about it correctly. The correct way to think about it is to reverse the
+  indices:
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-4:-2] == ['d', 'e']</code>
@@ -775,23 +841,26 @@ reasons why this way of thinking creates more confusion than it removes.
   </div>
 
 - The rule "works" for slices, but is harder to imagine for integer indices.
-  The integer index corresponding to the dividers corresponds to the entry to
-  the *right* of the divider. Rules that involve remembering left or right
-  aren't great when it comes to memorability.
+  In the divider way of thinking, an integer index `n` corresponds to the
+  entry to the *right* of the `n` divider. Rules that involve remembering left
+  or right aren't great when it comes to memorability.
 
 (fencepost)=
 - This rule leads to off-by-one errors due to "fencepost" errors. The
   fencepost problem is this: say you want to build a fence that is 100 feet
-  long with posts spaced every 10 feet. How many fenceposts do you need? The
-  naive answer is 10, but the correct answer is 11, because the fenceposts go
-  in between the 10 feet divisions, including at the ends.
+  long with posts spaced every 10 feet. How many fenceposts do you need?
+
+  The naive answer is 10, but the correct answer is 11. The reason is the
+  fenceposts go in between the 10 feet divisions, including at the end points.
+  So there is an "extra" fencepost compared to the number of fence sections.
 
 
   ```{figure} imgs/jeff-burak-lPO0VzF_4s8-unsplash.jpg
-  A section of a fence that has 6 segments and 7 fenceposts.[^fencepost-jeff-burbak]
+  A section of a fence that has 6 segments and 7 fenceposts.[^fencepost-jeff-burbak-footnote]
 
-  [^fencepost-jeff-burbak]: Image credit [Jeff Burak,
-  Unsplash](https://unsplash.com/photos/lPO0VzF_4s8)  .
+  [^fencepost-jeff-burbak-footnote]: Image credit [Jeff Burak via
+  Unsplash](https://unsplash.com/photos/lPO0VzF_4s8). The image is of
+  Chautauqua Park in Boulder, Colorado.
   ```
 
   Fencepost problems are a leading cause of off-by-one errors. Thinking about
@@ -800,14 +869,14 @@ reasons why this way of thinking creates more confusion than it removes.
   find yourself otherwise thinking about the indices of array elements
   themselves, rather than the divisions between them. And given the behavior
   of negative slices and integer indices under this model, one can hardly
-  blame you for doing so.
+  blame you for doing so (see the previous two bullet points).
 
 Rather than trying to think about dividers between elements, it's much simpler
 to just think about the elements themselves, but being counted starting at 0.
 To be sure, 0-based indexing itself leads to off-by-one errors, since it is
 not the usually way humans are taught to count things, but this is nonetheless
 the best way to think about things, especially as you gain practice in
-counting that way. As long as you apply the rule "the `stop` is not included",
+counting that way. As long as you apply the rule "the `stop` is not included,"
 you will get the correct results.
 
 (wrong-rule-4)=
@@ -819,19 +888,19 @@ You might get clever and say `a[3:5]` indexes from the 3rd element with
 is confusing. Not only that, but the rule must necessarily be reversed for
 negative indices. `a[-5:-3]` indexes from the (−5)th element with −1-based
 indexing to the (−3)rd element with 0-based indexing (and of course, negative
-and nonnegative starts and stops can be mixed, like `a[-5:5]`). Don't get cute
+and nonnegative starts and stops can be mixed, like `a[3:-3]`). Don't get cute
 here. It isn't worth it.
 
 (negative-indices)=
 ### Negative Indexes
 
 Negative indices in slices work the same way they do with [integer
-indices](integer-indices). For `a[start:stop:step]`, `start` and `stop` cause the
-indexing to go from the end of the array. However, they do not change the
-direction of the slicing---only the `step` does that. The other rules of
-slicing do not change when the `start` or `stop` is negative. [The `stop` is
-still not included](half-open), values less than `-len(a)` still
-[clip](clipping), and so on.
+indices](integer-indices). **For `a[start:stop:step]`, negative `start` or
+`stop` use −1-based indexing from the end of `a`.** However, negative `start`
+or `stop` does *not* change the order of the slicing---only the `step` does
+that. The other [rules](rules) of slicing do not change when the `start` or
+`stop` is negative. [The `stop` is still not included](half-open), values less
+than `-len(a)` still [clip](clipping), and so on.
 
 Note that positive and negative indices can be mixed. The following slices of
 `a` all produce `['d', 'e']`:
@@ -903,13 +972,13 @@ For example, say you wanted to slice `n` values from the middle of `a`.
 Something like the following would work
 
 ```py
->>> midway = len(a)//2
+>>> mid = len(a)//2
 >>> n = 4
->>> a[midway - n//2: midway + n//2]
+>>> a[mid - n//2: mid + n//2]
 ['b', 'c', 'd', 'e']
 ```
 
-From our [sanity check](sanity-check), `midway + n//2 - (midway - n//2)` does
+From our [sanity check](sanity-check), `mid + n//2 - (mid - n//2)` does
 equal `n` if `n` is even (we could find a similar expression for `n` odd, but
 for now let us assume `n` is even).
 
@@ -917,7 +986,7 @@ However, let's look at what happens when `n` is larger than the size of `a`:
 
 ```py
 >>> n = 8
->>> a[midway - n//2: midway + n//2]
+>>> a[mid - n//2: mid + n//2]
 ['g']
 ```
 
@@ -928,9 +997,9 @@ would most likely want either an error or the full list `['a', 'b', 'c', 'd',
 What happened here? Let's look at the slice values:
 
 ```py
->>> midway - n//2
+>>> mid - n//2
 -1
->>> midway + n//2
+>>> mid + n//2
 7
 ```
 
@@ -944,17 +1013,16 @@ to but not including the 7th element (0-based). Index `7` is out of bounds for
 the array, so this picks all elements including and after `'g'`, which in this
 case is just `['g']`.
 
-Unfortunately, the "correct" fix here depends on the desired behavior of each
+Unfortunately, the "correct" fix here depends on the desired behavior for each
 individual slice. In some cases, the "slice from the end" behavior of negative
 values is in fact what is desired. In others, you might prefer an error, so
 should add a value check or assertion. In others, you might want clipping, in
 which case you could modify the expression to always be nonnegative. For
-example, instead of using `midway - n//2`, we could use `max(midway - n//2,
-0)`.
+example, instead of using `mid - n//2`, we could use `max(mid - n//2, 0)`.
 
 ```py
 >>> n = 8
->>> a[max(midway - n//2, 0): midway + n//2]
+>>> a[max(mid - n//2, 0): mid + n//2]
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
@@ -962,10 +1030,9 @@ example, instead of using `midway - n//2`, we could use `max(midway - n//2,
 ### Clipping
 
 Slices can never give an out-of-bounds `IndexError`. This is different from
-[integer indices](integer-indices) which require the index to be in bounds. If
-`start` indexes before the beginning of the array (with a negative index), or
-`stop` indexes past the end of the array, the slice will clip to the bounds of
-the array:
+[integer indices](integer-indices) which require the index to be in bounds.
+**If `start` or `stop` index before the beginning or after the end of the
+array, they will clip to the bounds of the array**:
 
 ```py
 >>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
@@ -993,23 +1060,24 @@ axis, even if the size of the resulting axis is 0 or 1.
 (2, 2)
 >>> arr[0].shape # Integer index removes the first dimension
 (2,)
->>> arr[0:1].shape # Preserves the first dimension
+>>> arr[0:1].shape # Slice preserves the first dimension
 (1, 2)
->>> arr[0:0].shape # Preserves the first dimension as an empty dimension
+>>> arr[0:0].shape # Slice preserves the first dimension as an empty dimension
 (0, 2)
 ```
 
 An important consequence of the clipping behavior of slices is that you cannot
 rely on runtime checks for out-of-bounds slices. See the [example
 above](negative-indices-example). Another consequence is that you can never
-rely on the length of a slice being `stop - start` (for `step = 1` and `start`,
-`stop` nonnegative). This is rather the *maximum* length of the slice. It could
-end up slicing something smaller. For example, an empty list will always slice
-to an empty list. ndindex can help in calculations here:
+rely on the length of a slice being `stop - start` (for `step = 1` and
+`start`, `stop` nonnegative). This is rather the *maximum* length of the
+slice. It could end up slicing something smaller. For example, an empty list
+will always slice to an empty list. ndindex can help in calculations here:
 `len(ndindex.Slice(...))` can be used to compute the *maximum* length of a
 slice. If the shape of the input is known,
 `len(ndindex.Slice(...).reduce(shape))` will compute the true length of the
-slice. Of course, given a NumPy array, one can also just slice the array and
+slice (see {meth}`ndindex.Slice.__len__` and {meth}`ndindex.Slice.reduce`). Of
+course, if you already have a NumPy array, you can just slice the array and
 check the shape (slicing a NumPy array always produces a view on the array, so
 it is a very inexpensive operation).
 
@@ -1025,18 +1093,14 @@ successively adds `step` until it reaches an index that is at or past the
 `stop`, and then stops without including that index.**
 
 The important thing to remember about the `step` is that it being non-1 does
-not change the fundamental rules of slices that we have learned so far.
-`start` and `stop` still use 0-based indexing. The `start` is always included
-in the slice and the `stop` is never included. Negative `start` and `stop` index
-from the end of the array. Out-of-bounds `start` and `stop` still clip to the
+not change the fundamental [rules](rules) of slices that we have learned so
+far. `start` and `stop` still use [0-based indexing](0-based). The `start` is
+always included in the slice and the `stop` is [never included](half-open).
+[Negative](negative-indices) `start` and `stop` index from the end of the
+array. Out-of-bounds `start` and `stop` still [clip](clipping) to the
 beginning or end of the array.
 
 Let us consider an example where the step size is `3`.
-
-```py
->>> a[0:6:3]
-['a', 'd']
-```
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[0:6:3] == ['a', 'd']</code>
@@ -1065,9 +1129,15 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
 $$
 </div>
 
+```py
+>>> a[0:6:3]
+['a', 'd']
+```
+
 Note that the `start` index, `0`, is included, but the `stop` index, `6`
 (corresponding to `'g'`), is *not* included, even though it is a multiple of
-`3` away from the start. This is because the `stop` is never included.
+`3` away from the start. This is because the `stop` is [never
+included](half-open).
 
 It can be tempting to think about the `step` in terms of modular arithmetic.
 In fact, it is often the case in practice that you require a `step` greater
@@ -1125,7 +1195,7 @@ bearing on the indices chosen for the slice:
 ```
 
 In the first case, `-15` is divisible by 3 and all the indices chosen by the
-slice `-15::3` were also divisible by 3 (remember that the index and the value
+slice `-15::3` were also divisible by 3 (remember that indices and values
 are the same for simple ranges). But this is only because the length of the
 list, `21`, also happened to be a multiple of 3. In the second example it is
 `22` and the resulting indices are not multiples of `3`.
@@ -1142,17 +1212,18 @@ clipping occurs *before* the step. That is, if the `start` is less than
 ```
 
 If you need to think about steps in terms of modular arithmetic,
-`ndindex.Slice` can be used to perform various slice calculations so that you
-don't have to come up with modulo formulas yourself. If you try to write such
-formulas yourself, chances are you will get them wrong, as it is easy to fail
-to properly account for negative vs. nonnegative indices, clipping, and
-[negative steps](negative-steps). As noted before, any correct "formula"
-regarding slices will necessarily have many piecewise conditions.
+[`ndindex.Slice()`](slice-api) can be used to perform various slice
+calculations so that you don't have to come up with modulo formulas yourself.
+If you try to write such formulas yourself, chances are you will get them
+wrong, as it is easy to fail to properly account for [negative vs. nonnegative
+indices](negative-indices), [clipping](clipping), and [negative
+steps](negative-steps). As noted before, any correct "formula" regarding
+slices will necessarily have many piecewise conditions.
 
 (negative-steps)=
 ### Negative Steps
 
-Recall what I said above:
+Recall what I said [above](steps):
 
 **The proper way to think about `step` is that the slice starts at `start` and
 successively adds `step` until it reaches an index that is at or past the
@@ -1164,10 +1235,10 @@ makes the index smaller), and stops when it is at or past the `stop`. Note the
 phrase "at or past". If the `step` is positive this means "greater than or
 equal to", but if the step is negative this means "less than or equal to".
 
-Think of the step as starting at the `start` and sliding along the array,
-jumping along by `step` spitting out elements. Once you see that you are at or
-have gone past the `stop` in the direction you are going (left for negative
-`step` and right for positive `step`), you stop.
+Think of a slice as starting at the `start` and sliding along the array,
+jumping along by `step`, and spitting out elements. Once you see that you are
+at or have gone past the `stop` in the direction you are going (left for
+negative `step` and right for positive `step`), you stop.
 
 It's worth pointing out that unlike all other slices we have seen so far, a
 negative `step` reverses the order that the elements are returned relative to
@@ -1184,10 +1255,10 @@ It is tempting therefore to think of a negative `step` as a "reversing"
 operation. However, this is a bad way of thinking about negative steps. The
 reason is that `a[i:j:-1]` is *not* equivalent to `reversed(a[j:i:1])`. The
 reason is basically the same as was described in [wrong rule 1](wrong-rule-1)
-above. The issue is that for `a[start:stop:step]`, `stop` is *always* the what is
-not included (see the [half-open](half-open) section above). Which means if we
-swap `i` and `j`, we go from "`j` is not included" to "`i` is not included",
-producing a wrong result. For example, as before:
+above. The issue is that for `a[start:stop:step]`, `stop` is *always* what is
+[not included](half-open). Which means if we swap `i` and `j`, we go from "`j`
+is not included" to "`i` is not included", producing a wrong result. For
+example, as [before](wrong-rule-1):
 
 ```py
 >>> a[5:3:-1]
@@ -1256,7 +1327,7 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
 $$
 </div>
 
-The `step` can never be equal to 0. This unconditionally leads to an error:
+The `step` can never be equal to 0. This unconditionally produces an error:
 
 ```py
 >>> a[::0]
@@ -1268,18 +1339,18 @@ ValueError: slice step cannot be zero
 (omitted)=
 ### Omitted Entries
 
-The final point of confusion is omitted entries.[^ommited-none]
+The final point of confusion is omitted entries.[^ommited-none-footnote]
 
-[^ommited-none]: `start`, `stop`, or `step` may also be `None`, which is
-syntactically equivalent to them being omitted. That is to say, `a[::]` is a
-syntax shorthand for `a[None:None:None]`. It is rare to see `None` in a slice;
-this is only relevant for code that consumes slices, such as a `__getitem__`
-method on an object. The `slice` object corresponding to a slice `a[::]` is
-`slice(None, None, None)`. `ndindex.Slice()` also uses `None` to indicate
-omitted entries in the same way.
+[^ommited-none-footnote]: `start`, `stop`, or `step` may also be `None`, which
+is syntactically equivalent to them being omitted. That is to say, `a[::]` is
+a syntatic shorthand for `a[None:None:None]`. It is rare to see `None` in a
+slice. This is only relevant for code that consumes slices, such as a
+`__getitem__` method on an object. The `slice()` object corresponding to
+`a[::]` is `slice(None, None, None)`. [`ndindex.Slice()`](slice-api) also uses
+`None` to indicate omitted entries in the same way.
 
 **The best way to think about omitted entries is just like that, as omitted
-entries.** That is, for a slice like `a[:i]` think of it as the `start` being
+entries.** That is, for a slice like `a[:i]`, think of it as the `start` being
 omitted, and `stop` equal to `i`. Conversely, `a[i:]` has the `start` as `i`
 and the `stop` omitted. The wrong way to think about these is as a colon being
 before or after the index `i`. Thinking about it this way will only lead to
@@ -1288,9 +1359,9 @@ trying to remember some rule based on where a colon is. But the colons in a
 slice are not indicators, they are separators.
 
 As to the semantic meaning of omitted entries, the easiest one is the `step`.
-If the `step` is omitted, it always defaults to `1`. If the step is omitted
-the second colon before the step can also be omitted. That is to say, the
-following are completely equivalent:
+**If the `step` is omitted, it always defaults to `1`.** If the `step` is
+omitted the second colon before the `step` can also be omitted. That is to
+say, the following are completely equivalent:
 
 ```py
 a[i:j:1]
@@ -1299,11 +1370,13 @@ a[i:j]
 ```
 
 <!-- TODO: Better wording for this rule? -->
-For the `start` and `stop`, the rule is that being omitted extends the slice
-all the way to the edge of the list in the direction being sliced. If the
-`step` is positive, this means `start` extends to the beginning of the list
-and `stop` extends to the end. If `step` is negative, it is reversed: `start`
-extends to the end of the array and `stop` extends to the beginning.
+
+**For the `start` and `stop`, the rule is that being omitted extends the slice
+all the way to the beginning or end of the array in the direction being
+sliced.** If the `step` is positive, this means `start` extends to the
+beginning of the list and `stop` extends to the end. If `step` is negative, it
+is reversed: `start` extends to the end of the array and `stop` extends to the
+beginning.
 
 <!-- TODO: Add examples with a here. -->
 
@@ -1458,14 +1531,14 @@ It is true that this can lead to [fencepost errors](fencepost), but I contend
 that it is more natural to think about a range as including both endpoints.
 Half-open semantics are often tied to 0-based indexing, since it is a
 convenient way to allow the range 0--N to contain N values, by not including
-N.[^python-history-note] I see this as taking a bad decision (0-based
+N.[^python-history-footnote] I see this as taking a bad decision (0-based
 indexing) and putting a bad bandaid on it that makes it worse. But certainly
 this argument goes away for 1-based indexing. The range 1--N contains N values
 exactly when N *is* included in the range.
 
-[^python-history-note]: In fact, the original reason that Python uses 0-based
-indexing is that Guido preferred the half-open semantics, which only work out
-well when combined with 0-based indexing
+[^python-history-footnote]: In fact, the original reason that Python uses
+0-based indexing is that Guido preferred the half-open semantics, which only
+work out well when combined with 0-based indexing
 ([reference](https://web.archive.org/web/20190321101606/https://plus.google.com/115212051037621986145/posts/YTUxbXYZyfi)).
 
 One might argue that there are instances in everyday life where 0-based
@@ -1528,11 +1601,11 @@ is decades, and you will see ranges like "2000--2009", not "2000--2010".
 The fencepost problem is fundamentally unavoidable. A 100 foot fence truly has
 one more fencepost than fence lengths. The best way to deal with the fencepost
 problem is not to try to change the way we count fenceposts, so that somehow
-11 fenceposts is really only 10.[^fencepost-note] It is rather to reuse the most natural and
-intuitive way of thinking about the problem, which occurs both in programming
-and non-programming contexts.
+11 fenceposts is really only 10.[^fencepost-footnote] It is rather to reuse
+the most natural and intuitive way of thinking about the problem, which occurs
+both in programming and non-programming contexts.
 
-[^fencepost-note]: [This blog
+[^fencepost-footnote]: [This blog
  post](https://betterexplained.com/articles/learning-how-to-count-avoiding-the-fencepost-problem/)
  has a nice writeup of *why* the fencepost problem exists.
 
