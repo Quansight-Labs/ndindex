@@ -171,6 +171,135 @@ class NDIndex:
         For single axis indices such as Slice and Tuple, `reduce` takes an
         optional `axis` argument to specify the axis, defaulting to 0.
 
+        See Also
+        ========
+
+        .Integer.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .ellipsis.reduce
+
         """
         # XXX: Should the default be raise NotImplementedError or return self?
         raise NotImplementedError
+
+    def expand(self, shape):
+        """
+        Expand an index on an array of shape `shape`
+
+        An expanded index is as explicit as possible. Unlike `reduce`, which
+        tries to simplify an index and remove redundancies, `expand` typically
+        makes an index larger.
+
+        `expand` always returns a `Tuple` whose `.args` is the same length as
+        `shape`. See :meth:`.Tuple.expand` for more details on the behavior of
+        `expand`.
+
+        >>> from ndindex import Slice
+        >>> Slice(None).expand((2, 3))
+        Tuple(slice(0, 2, 1), slice(0, 3, 1))
+
+        See Also
+        ========
+
+        .Tuple.expand
+
+        """
+        from .tuple import Tuple
+
+        return Tuple(self).expand(shape)
+
+    def newshape(self, shape):
+        """
+        Returns the shape of `a[idx.raw]`, assuming `a` has shape `shape`.
+
+        `shape` should be a tuple of ints, or an int, which is equivalent to a
+        1-D shape.
+
+        Raises IndexError if `self` would be out of shape for an array of
+        shape `shape`.
+
+        >>> from ndindex import Slice, Integer, Tuple
+        >>> shape = (6, 7, 8)
+        >>> Integer(1).newshape(shape)
+        (7, 8)
+        >>> Integer(10).newshape(shape)
+        Traceback (most recent call last):
+        ...
+        IndexError: index 10 is out of bounds for axis 0 with size 6
+        >>> Slice(2, 5).newshape(shape)
+        (3, 7, 8)
+        >>> Tuple(0, ..., Slice(1, 3)).newshape(shape)
+        (7, 2)
+
+        """
+        raise NotImplementedError
+
+    def as_subindex(self, index):
+        """
+        `i.as_subindex(j)` produces an index `k` such that `a[j][k]` gives all of
+        the elements of `a[j]` that are also in `a[i]`.
+
+        If `a[j]` is a subset of `a[i]`, then `a[j][k] == a[i]`. Otherwise,
+        `a[j][k] == a[i & j]`, where `i & j` is the intersection of `i` and
+        `j`, that is, the elements of `a` that are indexed by both `i` and
+        `j`.
+
+        For example, in the below diagram, `i` and `j` index a subset of the
+        array `a`. `k = i.as_subindex(j)` is an index on `a[j]` that gives the
+        subset of `a[j]` also included in `a[i]`::
+
+             +------------ self ------------+
+             |                              |
+         ------------------- a -----------------------
+                |                                 |
+                +------------- index -------------+
+                |                           |
+                +- self.as_subindex(index) -+
+
+        `i.as_subindex(j)` is currently only implemented when `i` and `j` are
+        slices with positive steps and nonnegative start and stop. To use it
+        with slices with negative start or stop, call :meth:`reduce` with a shape
+        first.
+
+        `as_subindex` can be seen as the left-inverse of composition, that is,
+        if `i = j[k]`, that is, `a[i] = a[j][k]`, then `k = i.as_subindex(j)`,
+        so that `k "=" (j^-1)[i]` (this only works as a true inverse if
+        `j` is a subset of `i`).
+
+        An example usage of `as_subindex` is to split an index up into
+        subindices of chunks of an array. For example, say a 1-D array `a` is
+        chunked up into chunks of size `N`, so that `a[0:N]`, `a[N:2*N]`,
+        `[2*N:3*N]`, etc. are stored separately. Then an index `a[i]` can be
+        reindexed onto the chunks via `i.as_subindex(Slice(0, N))`,
+        `i.as_subindex(Slice(N, 2*N))`, etc. See the example below.
+
+        Examples
+        ========
+
+        >>> from ndindex import Slice
+        >>> i = Slice(5, 15)
+        >>> j1 = Slice(0, 10)
+        >>> j2 = Slice(10, 20)
+        >>> a = list(range(20))
+        >>> a[i.raw]
+        [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        >>> a[j1.raw]
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> a[j2.raw]
+        [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+        >>> k1 = i.as_subindex(j1)
+        >>> k1
+        Slice(5, 10, 1)
+        >>> k2 = i.as_subindex(j2)
+        >>> k2
+        Slice(0, 5, 1)
+        >>> a[j1.raw][k1.raw]
+        [5, 6, 7, 8, 9]
+        >>> a[j2.raw][k2.raw]
+        [10, 11, 12, 13, 14]
+
+        """
+        index = ndindex(index) # pragma: no cover
+        raise NotImplementedError(f"{type(self).__name__}.as_subindex({type(index).__name__}) isn't implemented yet")

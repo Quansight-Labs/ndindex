@@ -27,7 +27,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov
+  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov
   - source activate test-environment
 
 script:
@@ -56,3 +56,6 @@ script:
   # Here in case codecov fails. This also sets the failing status if the
   # coverage is not 100%.
   - coverage report -m
+  # Travis sometimes cuts off the last command, so run a dummy command at the
+  # end.
+  - echo "END TESTS"

@@ -3,7 +3,7 @@ Tests are extremely important for ndindex. All operations should produce
 correct results. We test this by checking against numpy arange (the array
 values do not matter, so long as they are distinct).
 
-There are two primary types of tests that we employ to verify this:
+There are three primary types of tests that we employ to verify this:
 
 - Exhaustive tests. These test every possible value in some range. See for
   example test_slice. This is the best type of test, but unfortunately, it is
@@ -14,6 +14,12 @@ There are two primary types of tests that we employ to verify this:
   can generate all the relevant types of indices (see helpers.py). For more
   information on hypothesis, see
   https://hypothesis.readthedocs.io/en/latest/index.html.
+
+- Explicit tests. These are hand crafted tests that test that the output of a
+  function is some exact value. These are used when a property-based test is
+  difficult to write, and it is simpler to test the exact output value. These
+  tests still include a correctness check (check_same()) to make sure the
+  hard-coded output is actually correct.
 
 The basic idea in both cases is the same. Take the pure index and the
 ndindex(index).raw, or in the case of a transformation, the before and after

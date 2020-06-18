@@ -16,9 +16,9 @@ class Integer(NDIndex):
     >>> [0, 1, 2][idx.raw]
     0
 
-    Note that Integer itself implements `__index__`, so it can be used as an
+    Note that `Integer` itself implements `__index__`, so it can be used as an
     index directly. However, it is still recommended to use `raw` for
-    consistency, as this only works for Integer.
+    consistency, as this only works for `Integer`.
 
     """
     def _typecheck(self, idx):
@@ -58,6 +58,14 @@ class Integer(NDIndex):
         >>> idx.reduce((9,))
         Integer(4)
 
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .ellipsis.reduce
+
         """
         if shape is None:
             return self
@@ -75,3 +83,18 @@ class Integer(NDIndex):
             return self.__class__(size + self.raw)
 
         return self
+
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        from . import Tuple
+
+        if isinstance(shape, (Tuple, Integer)):
+            raise TypeError("ndindex types are not meant to be used as a shape - "
+                            "did you mean to use the built-in tuple type?")
+        if isinstance(shape, int):
+            shape = (shape,)
+
+        # reduce will raise IndexError if it should be raised
+        self.reduce(shape)
+
+        return shape[1:]

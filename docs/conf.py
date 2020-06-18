@@ -30,6 +30,7 @@ author = 'Quansight'
 extensions = [
     'myst_parser',
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
 ]
 
 # # From

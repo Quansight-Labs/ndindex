@@ -7,7 +7,7 @@ from numpy.testing import assert_equal
 from pytest import fail
 
 from hypothesis import assume
-from hypothesis.strategies import integers, composite, none, one_of, lists, just
+from hypothesis.strategies import integers, composite, none, one_of, lists, just, builds
 
 from ..ndindex import ndindex
 
@@ -21,24 +21,20 @@ from ..ndindex import ndindex
 def prod(seq):
     return reduce(mul, seq, 1)
 
-ints = lambda: integers(-10, 10)
+nonnegative_ints = integers(0, 10)
+negative_ints = integers(-10, -1)
+ints = lambda: one_of(negative_ints, nonnegative_ints)
 
-@composite
-def slices(draw, start=ints(), stop=ints(), step=ints()):
-    return slice(
-        draw(one_of(none(), start)),
-        draw(one_of(none(), stop)),
-        draw(one_of(none(), step)),
-    )
+def slices(start=one_of(none(), ints()), stop=one_of(none(), ints()),
+           step=one_of(none(), ints())):
+    return builds(slice, start, stop, step)
 
 ellipses = lambda: just(...)
 
 # hypotheses.strategies.tuples only generates tuples of a fixed size
-@composite
-def tuples(draw, elements, *, min_size=0, max_size=None, unique_by=None,
-           unique=False):
-    return tuple(draw(lists(elements, min_size=min_size, max_size=max_size,
-                            unique_by=unique_by, unique=unique)))
+def tuples(elements, *, min_size=0, max_size=None, unique_by=None, unique=False):
+    return lists(elements, min_size=min_size, max_size=max_size,
+                 unique_by=unique_by, unique=unique).map(tuple)
 
 Tuples = tuples(one_of(ellipses(), ints(), slices()))
 
@@ -53,7 +49,7 @@ def ndindices(draw):
 
     try:
         return ndindex(s)
-    except ValueError:
+    except ValueError: # pragma: no cover
         assume(False)
 
 shapes = tuples(integers(0, 10)).filter(
@@ -61,7 +57,7 @@ shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < 100000)
 
-def check_same(a, index, func=lambda x: x, same_exception=True):
+def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None
     try:
         a_raw = a[index]
