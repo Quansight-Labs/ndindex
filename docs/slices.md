@@ -916,7 +916,6 @@ Note that positive and negative indices can be mixed. The following slices of
 ['d', 'e']
 ```
 
-<!-- TODO: Add circles here? -->
 <div style="text-align:center">
 <div style="font-size: 16pt;"><code>a[3:5] == a[-4:-2] == a[3:-2] == a[-4:5]
 == ['d', 'e']</code></div>
@@ -927,18 +926,18 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
 \color{red}{\text{nonnegative index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
+    & \color{red}{\enclose{circle}{2}\phantom{,}}
     & \color{blue}{3\phantom{,}}
     & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
+    & \color{red}{\enclose{circle}{5}\phantom{,}}
     & \color{red}{6\phantom{,}}\\
 \color{red}{\text{negative index}}
     & \color{red}{-7\phantom{,}}
     & \color{red}{-6\phantom{,}}
-    & \color{red}{-5\phantom{,}}
+    & \color{red}{\enclose{circle}{-5}\phantom{,}}
     & \color{blue}{-4\phantom{,}}
     & \color{blue}{-3\phantom{,}}
-    & \color{red}{-2\phantom{,}}
+    & \color{red}{\enclose{circle}{-2}\phantom{,}}
     & \color{red}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
