@@ -56,7 +56,6 @@
 <h1>Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h1>
 <!-- TODOS:
 
-- Regularize the type of a in discussions (list vs. array)
 - Better wording for omitted rule
 
 -->
@@ -99,8 +98,8 @@ colon. For example, the following are all valid slices on the object <code class
 <span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">::</span><span class="n">z</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Furthermore, for a slice <code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code> on Python built-in objects or a NumPy
-array, there is an additional semantic restriction, which is that the
+<p>Furthermore, for a slice <code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code>, if <code class="docutils literal notranslate"><span class="pre">a</span></code> is a Python built-in object or a
+NumPy array, there is an additional semantic restriction, which is that the
 expressions <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code> must be integers.</p>
 <p>The three arguments to a slice are traditionally called <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">step</span></code>:</p>
@@ -124,19 +123,19 @@ are always correct.</p>
 <p>In this document, “<em>nonnegative</em>” means <span class="math notranslate nohighlight">\(\geq 0\)</span> and “<em>negative</em>” means <span class="math notranslate nohighlight">\(&lt; 0\)</span>.</p>
 <p>For a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>:</p>
 <ol class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code> use <strong>0-based indexing</strong> from the <strong>start</strong> of the array
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code> use <strong>0-based indexing</strong> from the <strong>start</strong> of <code class="docutils literal notranslate"><span class="pre">a</span></code>
 when they are <strong>nonnegative</strong>, and <strong>−1-based indexing</strong> from <strong>end</strong> of
-the array when they are <strong>negative</strong>. (See sections <a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a> and
+<code class="docutils literal notranslate"><span class="pre">a</span></code> when they are <strong>negative</strong>. (See sections <a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a> and
 <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stop</span></code> is never included in the slice. (See section <a class="reference internal" href="#half-open"><span class="std std-ref">Half-open</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are clipped to the bounds of the array. (See section <a class="reference internal" href="#clipping"><span class="std std-ref">Clipping</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are clipped to the bounds of <code class="docutils literal notranslate"><span class="pre">a</span></code>. (See section <a class="reference internal" href="#clipping"><span class="std std-ref">Clipping</span></a>)</p></li>
 <li><p>The slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches
 an index that is at or past <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without including that
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> index. (See sections <a class="reference internal" href="#steps"><span class="std std-ref">Steps</span></a> and <a class="reference internal" href="#negative-steps"><span class="std std-ref">Negative Steps</span></a>)</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted it defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>. (See section <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are omitted they extend to the beginning or end of the
-array in the direction being sliced. Slices like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> or <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> should
-be though of as the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> being omitted, not as a colon to the
+<li><p>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are omitted they extend to the beginning or end of <code class="docutils literal notranslate"><span class="pre">a</span></code>
+in the direction being sliced. Slices like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> or <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> should be
+though of as the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> being omitted, not as a colon to the
 left or right of an index. (See section <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
 <li><p>Slicing something never raises an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>, even if the slice is empty.
 For a NumPy array, a slice always keeps the axis being sliced, even if that
@@ -190,9 +189,9 @@ $$
 <p>0-based indexing is different from how people typically count things, which is
 1-based (1, 2, 3, …). Thinking in terms of 0-based indexing requires some
 practice.</p>
-<p>For <strong>negative</strong> integers, indices index from the end of the array. These
+<p>For <strong>negative</strong> integers, indices index from the end of the list. These
 indices are necessarily 1-based (or rather, −1-based), since <code class="docutils literal notranslate"><span class="pre">0</span></code> already
-refers to the first element of the array. <code class="docutils literal notranslate"><span class="pre">-1</span></code> chooses the last element, <code class="docutils literal notranslate"><span class="pre">-2</span></code>
+refers to the first element of the list. <code class="docutils literal notranslate"><span class="pre">-1</span></code> chooses the last element, <code class="docutils literal notranslate"><span class="pre">-2</span></code>
 the second-to-last, and so on. For example, <code class="docutils literal notranslate"><span class="pre">a[-3]</span></code> picks the
 <strong>third-to-last</strong> element of <code class="docutils literal notranslate"><span class="pre">a</span></code>, in this case, <code class="docutils literal notranslate"><span class="pre">'e'</span></code>:</p>
 <div style="text-align:center">
@@ -219,7 +218,7 @@ $$
 </div>
 <p>An equivalent way to think about negative indices is that an index
 <code class="docutils literal notranslate"><span class="pre">a[-i]</span></code> picks <code class="docutils literal notranslate"><span class="pre">a[len(a)</span> <span class="pre">-</span> <span class="pre">i]</span></code>, that is, you can subtract the negative
-index off of the size of the array (for NumPy arrays, replace <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>
+index off of the size of <code class="docutils literal notranslate"><span class="pre">a</span></code> (for a NumPy array, replace <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>
 with the size of the axis being sliced). For example, <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> is <code class="docutils literal notranslate"><span class="pre">7</span></code>, so
 <code class="docutils literal notranslate"><span class="pre">a[-3]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[7</span> <span class="pre">-</span> <span class="pre">3]</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
@@ -229,10 +228,10 @@ with the size of the axis being sliced). For example, <code class="docutils lite
 </pre></div>
 </div>
 <p>Therefore, negative indices are primarily a syntactic convenience that
-allows one to specify parts of an array that would otherwise need to be
-specified in terms of the size of the array.</p>
-<p>If an integer index is greater than or equal to the size of the array, or less
-than negative the size of the array (<code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&gt;=</span> <span class="pre">len(a)</span></code> or <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">len(a)</span></code>), then it
+allows one to specify parts of a list that would otherwise need to be
+specified in terms of the size of the list.</p>
+<p>If an integer index is greater than or equal to the size of the list, or less
+than negative the size of the list (<code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&gt;=</span> <span class="pre">len(a)</span></code> or <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">len(a)</span></code>), then it
 is out of bounds and will raise an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
 <span class="gt">Traceback (most recent call last):</span>
@@ -256,7 +255,7 @@ say</p>
 <div><p>The basic slice syntax is <code class="docutils literal notranslate"><span class="pre">i:j:k</span></code> where <em>i</em> is the starting index, <em>j</em> is
 the stopping index, and <em>k</em> is the step ( <span class="math notranslate nohighlight">\(k\neq 0\)</span> ). This selects the <code class="docutils literal notranslate"><span class="pre">m</span></code>
 elements (in the corresponding dimension) with index values <em>i, i + k, …,
-i + (m - 1) k</em> where <span class="math notranslate nohighlight">\(m = q + (r\neq0)\)</span> and <em>q</em> and <em>r</em> are the quotient and
+i + (m - 1) k</em> where <span class="math notranslate nohighlight">\(m = q + (r\neq 0)\)</span> and <em>q</em> and <em>r</em> are the quotient and
 remainder obtained by dividing <em>j - i</em> by <em>k</em>: <em>j - i = q k + r</em>, so that
 <em>i + (m - 1) k &lt; j</em>.</p>
 </div></blockquote>
@@ -375,16 +374,16 @@ advantages:</p>
 <li><p>The maximum length of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code>, when <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are
 nonnegative, is always <code class="docutils literal notranslate"><span class="pre">stop</span> <span class="pre">-</span> <span class="pre">start</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">a[i:i+n]</span></code> will slice
 <code class="docutils literal notranslate"><span class="pre">n</span></code> elements from <code class="docutils literal notranslate"><span class="pre">a</span></code>. The caveat “maximum” is here because if <code class="docutils literal notranslate"><span class="pre">stop</span></code>
-extends beyond the end of the array, then <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> will only slice up
+extends beyond the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>, then <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> will only slice up
 to <code class="docutils literal notranslate"><span class="pre">len(a)</span> <span class="pre">-</span> <span class="pre">start</span></code> (see <a class="reference internal" href="#clipping"><span class="std std-ref">Clipping</span></a> below). Also be careful that this
 is only true when <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are nonnegative (see
 <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a> below). However, given those caveats, this is often
 a very useful sanity check that a slice is correct. If you expect a slice to
 have length <code class="docutils literal notranslate"><span class="pre">n</span></code> but <code class="docutils literal notranslate"><span class="pre">stop</span> <span class="pre">-</span> <span class="pre">start</span></code> is clearly different from <code class="docutils literal notranslate"><span class="pre">n</span></code>, then the
 slice is likely wrong. Length calculations are more complicated when <code class="docutils literal notranslate"><span class="pre">step</span> <span class="pre">!=</span> <span class="pre">1</span></code>; in those cases, <a class="reference internal" href="api.html#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">len(ndindex.Slice(...))</span></code></a> can be useful.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">len(a)</span></code> can be used as a <code class="docutils literal notranslate"><span class="pre">stop</span></code> value to slice to the end of the array. For
-example, <code class="docutils literal notranslate"><span class="pre">a[1:len(a)]</span></code> slices from the second element to the end of the
-array (this is equivalent to <code class="docutils literal notranslate"><span class="pre">a[1:]</span></code>, see <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">len(a)</span></code> can be used as a <code class="docutils literal notranslate"><span class="pre">stop</span></code> value to slice to the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>. For
+example, <code class="docutils literal notranslate"><span class="pre">a[1:len(a)]</span></code> slices from the second element to the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>
+(this is equivalent to <code class="docutils literal notranslate"><span class="pre">a[1:]</span></code>, see <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
 <span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -503,7 +502,7 @@ href="#wrong-rule-2" title="Permalink to this headline">¶</a> </strong></p>
 of <code class="docutils literal notranslate"><span class="pre">range()</span></code>. However, they do not behave the same. A slice
 <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code> only acts like <code class="docutils literal notranslate"><span class="pre">range(start,</span> <span class="pre">stop,</span> <span class="pre">step)</span></code> if <code class="docutils literal notranslate"><span class="pre">start</span></code> and
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> are <strong>nonnegative</strong>. If either of them are negative, the slice wraps
-around and slices from the end of the array (see <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a>
+around and slices from the end of the list (see <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a>
 below). <code class="docutils literal notranslate"><span class="pre">range()</span></code> on the other hand treats negative numbers as the actual
 start of end values for the range. For example:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -513,7 +512,7 @@ start of end values for the range. For example:</p>
 <span class="go">[3, 4]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># Empty, because -2 is less than 3</span>
 <span class="go">[]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Indeces from 3 to the second to last (5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Indexes from 3 to the second to last (5)</span>
 <span class="go">[3, 4]</span>
 </pre></div>
 </div>
@@ -521,11 +520,11 @@ start of end values for the range. For example:</p>
 example, you can index or take the <code class="docutils literal notranslate"><span class="pre">len()</span></code> of a range. If you want to perform
 computations on slices, we recommend using <a class="reference internal" href="api.html#slice-api"><span class="std std-ref">ndindex</span></a>. This is what
 it was designed for.</p>
-<p id="wrong-rule-3"><strong style="font-size:120%;">Wrong Rule 3: “Slices index the spaces between the elements of the array.”<a class="headerlink"
+<p id="wrong-rule-3"><strong style="font-size:120%;">Wrong Rule 3: “Slices index the spaces between the elements of the list.”<a class="headerlink"
 href="#wrong-rule-3" title="Permalink to this headline">¶</a> </strong></p>
 <p>This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
-the first element of an array is indexed by 0, the second by 1, and so on.
+the first element of a list is indexed by 0, the second by 1, and so on.
 Rather than thinking about that, consider the spaces between the elements:</p>
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
@@ -572,7 +571,7 @@ a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\texts
 $$
 <i>(not a great way of thinking about indices)</i>
 </div>
-<p>Using this way of thinking, the first element of the array is to the left of
+<p>Using this way of thinking, the first element of <code class="docutils literal notranslate"><span class="pre">a</span></code> is to the left of
 the “1-divider”. An integer index <code class="docutils literal notranslate"><span class="pre">i</span></code> produces the element to the right of the
 “<code class="docutils literal notranslate"><span class="pre">i</span></code>-divider”, and a slice <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> picks the elements between the <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>
 dividers.</p>
@@ -584,7 +583,7 @@ reasons why this way of thinking creates more confusion than it removes.</p>
 <li><p>As with <a class="reference internal" href="#wrong-rule-1"><span class="std std-ref">wrong rule 1</span></a>, it works well enough if the step is
 positive, but falls apart when it is negative.</p>
 <p>Consider again the slice <code class="docutils literal notranslate"><span class="pre">a[5:3:-1]</span></code>. Looking at the above figure, we might
-imagine it to give the same incorrect sub-array that we imagined before.</p>
+imagine it to give the same incorrect subarray that we imagined before.</p>
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
 <div style="font-size: 16pt;color:red;">(WRONG)</div>
@@ -810,9 +809,9 @@ So there is an “extra” fencepost compared to the number of fence sections.</
 <p class="caption"><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak-footnote" id="id8">3</a></span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
 </div>
 <p>Fencepost problems are a leading cause of off-by-one errors. Thinking about
-slices in this way is to think about arrays as separated by fenceposts, and
+slices in this way is to think about lists as separated by fenceposts, and
 is only begging for problems. This will especially be the case if you still
-find yourself otherwise thinking about the indices of array elements
+find yourself otherwise thinking about indices as pointing to list elements
 themselves, rather than the divisions between them. And given the behavior
 of negative slices and integer indices under this model, one can hardly
 blame you for doing so (see the previous two bullet points).</p>
@@ -847,18 +846,6 @@ that. The other <a class="reference internal" href="#rules"><span class="std std
 than <code class="docutils literal notranslate"><span class="pre">-len(a)</span></code> still <a class="reference internal" href="#clipping"><span class="std std-ref">clip</span></a>, and so on.</p>
 <p>Note that positive and negative indices can be mixed. The following slices of
 <code class="docutils literal notranslate"><span class="pre">a</span></code> all produce <code class="docutils literal notranslate"><span class="pre">['d',</span> <span class="pre">'e']</span></code>:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
-</pre></div>
-</div>
-<!-- TODO: Add circles here? -->
 <div style="text-align:center">
 <div style="font-size: 16pt;"><code>a[3:5] == a[-4:-2] == a[3:-2] == a[-4:5]
 == ['d', 'e']</code></div>
@@ -869,22 +856,33 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
 \color{red}{\text{nonnegative index}}
     & \color{red}{0\phantom{,}}
     & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
+    & \color{red}{\enclose{circle}{2}\phantom{,}}
     & \color{blue}{3\phantom{,}}
     & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
+    & \color{red}{\enclose{circle}{5}\phantom{,}}
     & \color{red}{6\phantom{,}}\\
 \color{red}{\text{negative index}}
     & \color{red}{-7\phantom{,}}
     & \color{red}{-6\phantom{,}}
-    & \color{red}{-5\phantom{,}}
+    & \color{red}{\enclose{circle}{-5}\phantom{,}}
     & \color{blue}{-4\phantom{,}}
     & \color{blue}{-3\phantom{,}}
-    & \color{red}{-2\phantom{,}}
+    & \color{red}{\enclose{circle}{-2}\phantom{,}}
     & \color{red}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+</pre></div>
 </div>
 <p>If a negative <code class="docutils literal notranslate"><span class="pre">stop</span></code> indexes an element on or before a nonnegative <code class="docutils literal notranslate"><span class="pre">start</span></code>, the
 slice is empty, the same as if <code class="docutils literal notranslate"><span class="pre">stop</span> <span class="pre">&lt;=</span> <span class="pre">start</span></code> when both are nonnegative.</p>
@@ -929,14 +927,14 @@ would most likely want either an error or the full list <code class="docutils li
 <span class="go">7</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">stop</span></code> slice value is out of bounds for the array, but this just causes it
+<p>The <code class="docutils literal notranslate"><span class="pre">stop</span></code> slice value is out of bounds for <code class="docutils literal notranslate"><span class="pre">a</span></code>, but this just causes it
 to <a class="reference internal" href="#clipping"><span class="std std-ref">clip</span></a> to the end.</p>
 <p>But <code class="docutils literal notranslate"><span class="pre">start</span></code> contains a subtraction, which causes it to become negative. Rather
-than clipping to the start, it indexes from the end of the array, producing
-the slice <code class="docutils literal notranslate"><span class="pre">a[-1:7]</span></code>. This picks the elements from the last element (<code class="docutils literal notranslate"><span class="pre">'g'</span></code>) up
-to but not including the 7th element (0-based). Index <code class="docutils literal notranslate"><span class="pre">7</span></code> is out of bounds for
-the array, so this picks all elements including and after <code class="docutils literal notranslate"><span class="pre">'g'</span></code>, which in this
-case is just <code class="docutils literal notranslate"><span class="pre">['g']</span></code>.</p>
+than clipping to the start, it indexes from the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>, producing the
+slice <code class="docutils literal notranslate"><span class="pre">a[-1:7]</span></code>. This picks the elements from the last element (<code class="docutils literal notranslate"><span class="pre">'g'</span></code>) up to
+but not including the 7th element (0-based). Index <code class="docutils literal notranslate"><span class="pre">7</span></code> is out of bounds for
+<code class="docutils literal notranslate"><span class="pre">a</span></code>, so this picks all elements including and after <code class="docutils literal notranslate"><span class="pre">'g'</span></code>, which in this case
+is just <code class="docutils literal notranslate"><span class="pre">['g']</span></code>.</p>
 <p>Unfortunately, the “correct” fix here depends on the desired behavior for each
 individual slice. In some cases, the “slice from the end” behavior of negative
 values is in fact what is desired. In others, you might prefer an error, so
@@ -954,7 +952,7 @@ example, instead of using <code class="docutils literal notranslate"><span class
 <p>Slices can never give an out-of-bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This is different from
 <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer indices</span></a> which require the index to be in bounds.
 <strong>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> index before the beginning or after the end of the
-array, they will clip to the bounds of the array</strong>:</p>
+<code class="docutils literal notranslate"><span class="pre">a</span></code>, they will clip to the bounds of <code class="docutils literal notranslate"><span class="pre">a</span></code></strong>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span>
 <span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
@@ -969,7 +967,7 @@ empty.</p>
 </pre></div>
 </div>
 <p>For NumPy arrays, a consequence of this is that a slice will always keep the
-axis, even if the size of the resulting axis is 0 or 1.</p>
+axis being sliced, even if the size of the resulting axis is 0 or 1.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span>
@@ -1007,11 +1005,10 @@ successively adds <code class="docutils literal notranslate"><span class="pre">s
 <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without including that index.</strong></p>
 <p>The important thing to remember about the <code class="docutils literal notranslate"><span class="pre">step</span></code> is that it being non-1 does
 not change the fundamental <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a> of slices that we have learned so
-far. <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> still use <a class="reference internal" href="#based"><span class="std std-ref">0-based indexing</span></a>. The <code class="docutils literal notranslate"><span class="pre">start</span></code> is
-always included in the slice and the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is <a class="reference internal" href="#half-open"><span class="std std-ref">never included</span></a>.
-<a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative</span></a> <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> index from the end of the
-array. Out-of-bounds <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> still <a class="reference internal" href="#clipping"><span class="std std-ref">clip</span></a> to the
-beginning or end of the array.</p>
+far. <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> still use <a class="reference internal" href="#based"><span class="std std-ref">0-based indexing</span></a>. The <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
+<a class="reference internal" href="#half-open"><span class="std std-ref">never included</span></a> in the slice. <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative</span></a> <code class="docutils literal notranslate"><span class="pre">start</span></code>
+and <code class="docutils literal notranslate"><span class="pre">stop</span></code> index from the end of the list. Out-of-bounds <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>
+still <a class="reference internal" href="#clipping"><span class="std std-ref">clip</span></a> to the beginning or end of the list.</p>
 <p>Let us consider an example where the step size is <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[0:6:3] == ['a', 'd']</code>
@@ -1130,7 +1127,7 @@ applies. That is, the index starts at <code class="docutils literal notranslate"
 makes the index smaller), and stops when it is at or past the <code class="docutils literal notranslate"><span class="pre">stop</span></code>. Note the
 phrase “at or past”. If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive this means “greater than or
 equal to”, but if the step is negative this means “less than or equal to”.</p>
-<p>Think of a slice as starting at the <code class="docutils literal notranslate"><span class="pre">start</span></code> and sliding along the array,
+<p>Think of a slice as starting at the <code class="docutils literal notranslate"><span class="pre">start</span></code> and sliding along the list,
 jumping along by <code class="docutils literal notranslate"><span class="pre">step</span></code>, and spitting out elements. Once you see that you are
 at or have gone past the <code class="docutils literal notranslate"><span class="pre">stop</span></code> in the direction you are going (left for
 negative <code class="docutils literal notranslate"><span class="pre">step</span></code> and right for positive <code class="docutils literal notranslate"><span class="pre">step</span></code>), you stop.</p>
@@ -1218,7 +1215,7 @@ $$
 </div>
 <div class="section" id="omitted-entries">
 <span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this headline">¶</a></h3>
-<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#ommited-none-footnote" id="id13">4</a></p>
+<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#omitted-none-footnote" id="id13">4</a></p>
 <p><strong>The best way to think about omitted entries is just like that, as omitted
 entries.</strong> That is, for a slice like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code>, think of it as the <code class="docutils literal notranslate"><span class="pre">start</span></code> being
 omitted, and <code class="docutils literal notranslate"><span class="pre">stop</span></code> equal to <code class="docutils literal notranslate"><span class="pre">i</span></code>. Conversely, <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> has the <code class="docutils literal notranslate"><span class="pre">start</span></code> as <code class="docutils literal notranslate"><span class="pre">i</span></code>
@@ -1238,12 +1235,178 @@ say, the following are completely equivalent:</p>
 </div>
 <!-- TODO: Better wording for this rule? -->
 <p><strong>For the <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the rule is that being omitted extends the slice
-all the way to the beginning or end of the array in the direction being
-sliced.</strong> If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive, this means <code class="docutils literal notranslate"><span class="pre">start</span></code> extends to the
-beginning of the list and <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends to the end. If <code class="docutils literal notranslate"><span class="pre">step</span></code> is negative, it
-is reversed: <code class="docutils literal notranslate"><span class="pre">start</span></code> extends to the end of the array and <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends to the
-beginning.</p>
-<!-- TODO: Add examples with a here. -->
+all the way to the beginning or end of <code class="docutils literal notranslate"><span class="pre">a</span></code> in the direction being sliced.</strong> If
+the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive, this means <code class="docutils literal notranslate"><span class="pre">start</span></code> extends to the beginning of <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">stop</span></code> extends to the end. If <code class="docutils literal notranslate"><span class="pre">step</span></code> is negative, it is reversed: <code class="docutils literal notranslate"><span class="pre">start</span></code>
+extends to the end of <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends to the beginning.</p>
+<!-- TODO: Add latex version of this example. -->
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[:3] == a[:3:1] == ['a', 'b', 'c']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{blue}{\enclose{circle}{0}}
+    &
+    & \color{blue}{\enclose{circle}{1}}
+    &
+    & \color{blue}{\enclose{circle}{2}}
+    &
+    & \color{red}{\enclose{circle}{3}}
+    &
+    & \color{red}{4\phantom{,}}
+    &
+    & \color{red}{5\phantom{,}}
+    &
+    & \color{red}{6\phantom{,}}\\
+    \color{blue}{\text{start}}
+    & \color{blue}{\text{(beginning)}}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{red}{\text{stop}}
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+\end{array}
+\end{aligned}
+$$
+</div>
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3:] == a[3::1] ['d', 'e', 'f', 'g']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    &
+    & \color{red}{1\phantom{,}}
+    &
+    & \color{red}{2\phantom{,}}
+    &
+    & \color{blue}{\enclose{circle}{3}}
+    &
+    & \color{blue}{\enclose{circle}{4}}
+    &
+    & \color{blue}{\enclose{circle}{5}}
+    &
+    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+    & \color{blue}{\text{start}}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{blue}{\text{stop}}
+    & \color{blue}{\text{(end)}}
+\end{array}
+\end{aligned}
+$$
+</div>
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[:3:-1] == ['g', 'f', 'e']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    &
+    & \color{red}{1\phantom{,}}
+    &
+    & \color{red}{2\phantom{,}}
+    &
+    & \color{red}{\enclose{circle}{3}}
+    &
+    & \color{blue}{\enclose{circle}{4}}
+    &
+    & \color{blue}{\enclose{circle}{5}}
+    &
+    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+    & \color{red}{\text{stop}}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{\text{start}}
+    & \color{blue}{\text{(end)}}
+\end{array}
+\end{aligned}
+$$
+</div>
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3::-1] == ['d', 'c', 'b', 'a']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{blue}{\enclose{circle}{0}}
+    &
+    & \color{blue}{\enclose{circle}{1}}
+    &
+    & \color{blue}{\enclose{circle}{2}}
+    &
+    & \color{blue}{\enclose{circle}{3}}
+    &
+    & \color{red}{4\phantom{,}}
+    &
+    & \color{red}{5\phantom{,}}
+    &
+    & \color{red}{6\phantom{,}}\\
+    \color{blue}{\text{stop}}
+    & \color{blue}{\text{(beginning)}}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{\text{start}}
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+\end{array}
+\end{aligned}
+$$
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># From the beginning to index 3 (but not including index 3)</span>
+<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="c1"># From index 3 to the end</span>
+<span class="go">[&#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># From the end to index 3 (but not including index 3), reversed</span>
+<span class="go">[&#39;g&#39;, &#39;f&#39;, &#39;e&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># From index 3 to the beginning, reversed</span>
+<span class="go">[&#39;d&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;]</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="soapbox">
@@ -1289,7 +1452,7 @@ changes I would make to improve the semantics would be</p>
 <li><p>Make a slice always include both the start and the stop.</p></li>
 </ol>
 <p><strong>Negative numbers.</strong> The special meaning of negative numbers, to index from
-the end of the array, is by far the biggest problem with Python’s slice
+the end of the list, is by far the biggest problem with Python’s slice
 semantics. It is a fundamental discontinuity in the definition of an index.
 This makes it completely impossible to write a formula for almost anything
 relating to slices that will not end up having branching <code class="docutils literal notranslate"><span class="pre">if</span></code> conditions. But
@@ -1307,15 +1470,15 @@ big” (greater than <code class="docutils literal notranslate"><span class="pre
 idea. It tends to lead to behavior that gives what you would want slices that
 go out of bounds.</p>
 <p>Negative indexing is, strictly speaking, a syntactic sugar only.
-Slicing/indexing from the end of the array can always be done in terms of the
-length of the array. <code class="docutils literal notranslate"><span class="pre">a[-x]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> (when using 0-based
+Slicing/indexing from the end of a list can always be done in terms of the
+length of the list. <code class="docutils literal notranslate"><span class="pre">a[-x]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> (when using 0-based
 indexing), but the problem is that it is tedious to write <code class="docutils literal notranslate"><span class="pre">a</span></code> twice, and <code class="docutils literal notranslate"><span class="pre">a</span></code>
 may in fact be a larger expression, so writing <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> would require
 assigning it to a variable. It also becomes more complicated when <code class="docutils literal notranslate"><span class="pre">a</span></code> is a
 NumPy array and the slice appears as part of a larger multidimensional (tuple)
 index. However, I think it would be possible to introduce a special syntax to
-mean “reversed” or “from the end of the array” indexing, and leave negative
-numbers to simply extend beyond the left side of the array with clipping. For
+mean “reversed” or “from the end the list” indexing, and leave negative
+numbers to simply extend beyond the left side of a list with clipping. For
 example, in <a class="reference external" href="https://julialang.org/">Julia</a>, one can use <code class="docutils literal notranslate"><span class="pre">a[end]</span></code> to index the
 last element of an array (Julia also uses 1-based indexing). Since this is a
 moot point for Python—I don’t expect Python’s indexing semantics to change;
@@ -1387,7 +1550,7 @@ non-apples.</p>
 distance, which would naturally start at 0, or like an enumeration of distinct
 terms, which would naturally start at 0. If we think of an index as a pointer
 offset, as C does, then it is indeed a measurement of a distance. But if we
-instead think of an indexable array as a discrete ordered collection of items,
+instead think of an indexable list as a discrete ordered collection of items,
 then the notion of a measurement of distance is harder to justify. But
 enumeration is a natural concept for any ordered discrete collection.</p>
 <p>What are the benefits of 0-based indexing?</p>
@@ -1560,7 +1723,7 @@ indices or that indexes by value, you may want a <code class="docutils literal n
 syntax, <code class="docutils literal notranslate"><span class="pre">dict</span></code>s do not allow slicing.</p>
 </dd>
 <dt class="label" id="numpy-definition-footnote"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
-<dd><p>This formultion actually isn’t particularly
+<dd><p>This formulation actually isn’t particularly
 helpful for formulating higher level slice formulas such as the ones used by
 ndindex either.</p>
 </dd>
@@ -1569,10 +1732,10 @@ ndindex either.</p>
 Unsplash</a>. The image is of
 Chautauqua Park in Boulder, Colorado.</p>
 </dd>
-<dt class="label" id="ommited-none-footnote"><span class="brackets"><a class="fn-backref" href="#id13">4</a></span></dt>
+<dt class="label" id="omitted-none-footnote"><span class="brackets"><a class="fn-backref" href="#id13">4</a></span></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> may also be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which
 is syntactically equivalent to them being omitted. That is to say, <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is
-a syntatic shorthand for <code class="docutils literal notranslate"><span class="pre">a[None:None:None]</span></code>. It is rare to see <code class="docutils literal notranslate"><span class="pre">None</span></code> in a
+a syntactic shorthand for <code class="docutils literal notranslate"><span class="pre">a[None:None:None]</span></code>. It is rare to see <code class="docutils literal notranslate"><span class="pre">None</span></code> in a
 slice. This is only relevant for code that consumes slices, such as a
 <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> method on an object. The <code class="docutils literal notranslate"><span class="pre">slice()</span></code> object corresponding to
 <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is <code class="docutils literal notranslate"><span class="pre">slice(None,</span> <span class="pre">None,</span> <span class="pre">None)</span></code>. <a class="reference internal" href="api.html#slice-api"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code></span></a> also uses
