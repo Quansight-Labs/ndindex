@@ -5,7 +5,6 @@ Slices
 
 - Regularize the type of a in discussions (list vs. array)
 - Better wording for omitted rule
-- First person?
 
 -->
 
@@ -15,14 +14,14 @@ slicing, and examine just what it is that makes it so confusing.
 
 There are two primary aspects of slices that make them difficult to
 understand: confusing conventions, and discontinuous definitions. By confusing
-conventions, I mean that slice semantics have definitions that are often
+conventions, we mean that slice semantics have definitions that are often
 difficult to reason about mathematically. These conventions were chosen for
 syntactic convenience, and one can easily see for most of them how they lead
 to concise notation for very common operations, but it remains nonetheless
 true that they can make figuring out the *right* slice to use in the first
-place complicated. By discontinuous definitions, I mean that the definition of
-a slice takes on fundamentally different meanings if the start, stop, or step
-are negative, nonnegative, or omitted. This again is done for syntactic
+place complicated. By discontinuous definitions, we mean that the definition
+of a slice takes on fundamentally different meanings if the start, stop, or
+step are negative, nonnegative, or omitted. This again is done for syntactic
 convenience, but it means that as a user, you must switch your mode of
 thinking about slices depending on value of the arguments. There are no
 uniform formulas that apply to all slices.
@@ -65,7 +64,7 @@ The three arguments to a slice are traditionally called `start`, `stop`, and
 a[start:stop:step]
 ```
 
-I will use these names throughout this guide.
+We will use these names throughout this guide.
 
 It is worth noting that the `x:y:z` syntax is not valid outside of square
 brackets. However, slice objects can be created manually using the `slice()`
@@ -108,7 +107,7 @@ For a slice `a[start:stop:step]`:
 ## Integer indices
 
 To understand slices, it is good to first review how integer indices work.
-Throughout this guide, I will use as an example this prototype list:
+Throughout this guide, we will use as an example this prototype list:
 
 $$
 a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
@@ -545,7 +544,7 @@ start of end values for the range. For example:
 
 This rule is tempting because `range()` makes some computations easy. For
 example, you can index or take the `len()` of a range. If you want to perform
-computations on slices, I recommend using [ndindex](slice-api). This is what
+computations on slices, we recommend using [ndindex](slice-api). This is what
 it was designed for.
 
 (wrong-rule-3)=
@@ -787,8 +786,8 @@ reasons why this way of thinking creates more confusion than it removes.
   ```
 
   However, it would be quite easy to get confused here, as the "other" way of
-  thinking about negative indices (the way I am recommending) is that the end
-  starts at -1. So you might mistakenly imagine something like this:
+  thinking about negative indices (the way we are recommending) is that the
+  end starts at -1. So you might mistakenly imagine something like this:
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
@@ -1222,7 +1221,7 @@ slices will necessarily have many piecewise conditions.
 (negative-steps)=
 ### Negative Steps
 
-Recall what I said [above](steps):
+Recall what we said [above](steps):
 
 **The proper way to think about `step` is that the slice starts at `start` and
 successively adds `step` until it reaches an index that is at or past the
