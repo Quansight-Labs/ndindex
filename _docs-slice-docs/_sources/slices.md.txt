@@ -1,12 +1,6 @@
 Slices
 ======
 
-<!-- TODOS:
-
-- Better wording for omitted rule
-
--->
-
 Python's slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.
@@ -1372,8 +1366,6 @@ all the way to the beginning or end of `a` in the direction being sliced.** If
 the `step` is positive, this means `start` extends to the beginning of `a` and
 `stop` extends to the end. If `step` is negative, it is reversed: `start`
 extends to the end of `a` and `stop` extends to the beginning.
-
-<!-- TODO: Add latex version of this example. -->
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[:3] == a[:3:1] == ['a', 'b', 'c']</code>
