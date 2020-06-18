@@ -3,6 +3,7 @@ _docs-slice-docs/_sources/api.rst.txt
 _docs-slice-docs/_sources/changelog.md.txt
 _docs-slice-docs/_sources/index.md.txt
 _docs-slice-docs/_sources/slices.md.txt
+_docs-slice-docs/_sources/style.md.txt
 _docs-slice-docs/_static/alabaster.css
 _docs-slice-docs/_static/basic.css
 _docs-slice-docs/_static/copybutton.js
@@ -27,3 +28,4 @@ _docs-slice-docs/objects.inv
 _docs-slice-docs/search.html
 _docs-slice-docs/searchindex.js
 _docs-slice-docs/slices.html
+_docs-slice-docs/style.html
