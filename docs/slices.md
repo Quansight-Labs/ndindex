@@ -903,18 +903,6 @@ than `-len(a)` still [clip](clipping), and so on.
 Note that positive and negative indices can be mixed. The following slices of
 `a` all produce `['d', 'e']`:
 
-```py
->>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
->>> a[3:5]
-['d', 'e']
->>> a[-4:-2]
-['d', 'e']
->>> a[3:-2]
-['d', 'e']
->>> a[-4:5]
-['d', 'e']
-```
-
 <div style="text-align:center">
 <div style="font-size: 16pt;"><code>a[3:5] == a[-4:-2] == a[3:-2] == a[-4:5]
 == ['d', 'e']</code></div>
@@ -942,6 +930,18 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
 \end{aligned}
 $$
 </div>
+
+```py
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+>>> a[3:5]
+['d', 'e']
+>>> a[-4:-2]
+['d', 'e']
+>>> a[3:-2]
+['d', 'e']
+>>> a[-4:5]
+['d', 'e']
+```
 
 If a negative `stop` indexes an element on or before a nonnegative `start`, the
 slice is empty, the same as if `stop <= start` when both are nonnegative.
@@ -1375,18 +1375,6 @@ extends to the end of `a` and `stop` extends to the beginning.
 
 <!-- TODO: Add latex version of this example. -->
 
-```py
->>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
->>> a[:3] # From the beginning to index 3 (but not including index 3)
-['a', 'b', 'c']
->>> a[3:] # From index 3 to the end
-['d', 'e', 'f', 'g']
->>> a[:3:-1] # From the end to index 3 (but not including index 3), reversed
-['g', 'f', 'e']
->>> a[3::-1] # From index 3 to the beginning, reversed
-['d', 'c', 'b', 'a']
-```
-
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[:3] == a[:3:1] == ['a', 'b', 'c']</code>
 $$
@@ -1546,6 +1534,18 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \ma
 \end{aligned}
 $$
 </div>
+
+```py
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+>>> a[:3] # From the beginning to index 3 (but not including index 3)
+['a', 'b', 'c']
+>>> a[3:] # From index 3 to the end
+['d', 'e', 'f', 'g']
+>>> a[:3:-1] # From the end to index 3 (but not including index 3), reversed
+['g', 'f', 'e']
+>>> a[3::-1] # From index 3 to the beginning, reversed
+['d', 'c', 'b', 'a']
+```
 
 ## Soapbox
 
