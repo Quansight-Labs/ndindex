@@ -1387,6 +1387,166 @@ extends to the end of `a` and `stop` extends to the beginning.
 ['d', 'c', 'b', 'a']
 ```
 
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[:3] == a[:3:1] == ['a', 'b', 'c']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{blue}{\enclose{circle}{0}}
+    &
+    & \color{blue}{\enclose{circle}{1}}
+    &
+    & \color{blue}{\enclose{circle}{2}}
+    &
+    & \color{red}{\enclose{circle}{3}}
+    &
+    & \color{red}{4\phantom{,}}
+    &
+    & \color{red}{5\phantom{,}}
+    &
+    & \color{red}{6\phantom{,}}\\
+    \color{blue}{\text{start}}
+    & \color{blue}{\text{(beginning)}}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{red}{\text{stop}}
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+\end{array}
+\end{aligned}
+$$
+</div>
+
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3:] == a[3::1] ['d', 'e', 'f', 'g']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    &
+    & \color{red}{1\phantom{,}}
+    &
+    & \color{red}{2\phantom{,}}
+    &
+    & \color{blue}{\enclose{circle}{3}}
+    &
+    & \color{blue}{\enclose{circle}{4}}
+    &
+    & \color{blue}{\enclose{circle}{5}}
+    &
+    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+    &
+    & \phantom{\rightarrow}
+    & \color{blue}{\text{start}}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{blue}{+1}
+    & \rightarrow
+    & \color{blue}{\text{stop}}
+    & \color{blue}{\text{(end)}}
+\end{array}
+\end{aligned}
+$$
+</div>
+
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[:3:-1] == ['g', 'f', 'e']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{red}{0\phantom{,}}
+    &
+    & \color{red}{1\phantom{,}}
+    &
+    & \color{red}{2\phantom{,}}
+    &
+    & \color{red}{\enclose{circle}{3}}
+    &
+    & \color{blue}{\enclose{circle}{4}}
+    &
+    & \color{blue}{\enclose{circle}{5}}
+    &
+    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+    & \color{red}{\text{stop}}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{\text{start}}
+    & \color{blue}{\text{(end)}}
+\end{array}
+\end{aligned}
+$$
+</div>
+
+<div style="text-align:center">
+<code style="font-size: 16pt;">a[3::-1] == ['d', 'c', 'b', 'a']</code>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{r r c c c c c c c c c c c c l}
+a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
+\color{red}{\text{index}}
+    & \color{blue}{\enclose{circle}{0}}
+    &
+    & \color{blue}{\enclose{circle}{1}}
+    &
+    & \color{blue}{\enclose{circle}{2}}
+    &
+    & \color{blue}{\enclose{circle}{3}}
+    &
+    & \color{red}{4\phantom{,}}
+    &
+    & \color{red}{5\phantom{,}}
+    &
+    & \color{red}{6\phantom{,}}\\
+    \color{blue}{\text{stop}}
+    & \color{blue}{\text{(beginning)}}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{-1}
+    & \leftarrow
+    & \color{blue}{\text{start}}
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+    &
+    & \phantom{\leftarrow}
+\end{array}
+\end{aligned}
+$$
+</div>
+
 ## Soapbox
 
 While this guide is opinionated about the right and wrong ways to think about
