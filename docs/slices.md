@@ -1377,7 +1377,19 @@ beginning of the list and `stop` extends to the end. If `step` is negative, it
 is reversed: `start` extends to the end of the array and `stop` extends to the
 beginning.
 
-<!-- TODO: Add examples with a here. -->
+<!-- TODO: Add latex version of this example. -->
+
+```py
+>>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+>>> a[:3] # From the beginning to index 3 (but not including index 3)
+['a', 'b', 'c']
+>>> a[3:] # From index 3 to the end
+['d', 'e', 'f', 'g']
+>>> a[:3:-1] # From the end to index 3 (but not including index 3), reversed
+['g', 'f', 'e']
+>>> a[3::-1] # From index 3 to the beginning, reversed
+['d', 'c', 'b', 'a']
+```
 
 ## Soapbox
 
