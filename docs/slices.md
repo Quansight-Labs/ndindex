@@ -3,10 +3,9 @@ Slices
 
 <!-- TODOS:
 
-- Regularize the type of a in discussions(list vs. array)
+- Regularize the type of a in discussions (list vs. array)
 - Better wording for omitted rule
 - First person?
-- Indexes vs. indices
 
 -->
 
@@ -118,12 +117,12 @@ $$
 
 The list `a` has 7 elements.
 
-The elements of `a` are strings, but the indexes and slices on `a` will always
+The elements of `a` are strings, but the indices and slices on `a` will always
 use integers. An index or slice is never based on the value of the elements,
 but rather the position of the elements in the list.[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
-indices or indexes by value, you may want a `dict`. Despite using similar
+indices or that indexes by value, you may want a `dict`. Despite using similar
 syntax, `dict`s do not allow slicing.
 
 An integer index picks a single element from the list `a`. For NumPy arrays,
@@ -132,8 +131,8 @@ given axis (and as a result, an integer index always reduces the
 dimensionality of an array by one).
 
 The key thing to remember about indexing in Python, both for integer and
-slice indexing, is that it is 0-based. This means that the indexes start
-at 0. This is the case for all **nonnegative** indexes. For example,
+slice indexing, is that it is 0-based. This means that the indices start
+at 0. This is the case for all **nonnegative** indices. For example,
 `a[3]` would pick the **fourth** element of `a`, in this case, `'d'`.
 
 <div style="text-align:center">
@@ -208,7 +207,7 @@ with the size of the axis being sliced). For example, `len(a)` is `7`, so
 'e'
 ```
 
-Therefore, negative indexes are primarily a syntactic convenience that
+Therefore, negative indices are primarily a syntactic convenience that
 allows one to specify parts of an array that would otherwise need to be
 specified in terms of the size of the array.
 
@@ -299,7 +298,7 @@ are too large. A slice cannot be "out of bounds." See the section on
 ### 0-based
 
 For the slice `a[start:stop]`, with `start` and `stop` nonnegative integers,
-the indexes `start` and `stop` are 0-based, just as with [integer
+the indices `start` and `stop` are 0-based, just as with [integer
 indexing](integer-indices) (although one should be careful that even though
 `stop` is 0-based, it is not included in the slice, see [below](half-open)).
 
@@ -540,7 +539,7 @@ start of end values for the range. For example:
 [3, 4]
 >>> list(range(3, -2)) # Empty, because -2 is less than 3
 []
->>> b[3:-2] # Indexes from 3 to the second to last (5)
+>>> b[3:-2] # Indeces from 3 to the second to last (5)
 [3, 4]
 ```
 
@@ -601,7 +600,7 @@ a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\texts
 \end{array}\\
 \end{aligned}
 $$
-<i>(not a great way of thinking about indexes)</i>
+<i>(not a great way of thinking about indices)</i>
 </div>
 
 Using this way of thinking, the first element of the array is to the left of
@@ -774,7 +773,7 @@ reasons why this way of thinking creates more confusion than it removes.
       &
       & \color{red}{0}\\
   \end{array}\\
-  \small{\text{(not a great way of thinking about negative indexes)}}
+  \small{\text{(not a great way of thinking about negative indices)}}
   \end{array}
   \end{aligned}
   $$
@@ -892,7 +891,7 @@ and nonnegative starts and stops can be mixed, like `a[3:-3]`). Don't get cute
 here. It isn't worth it.
 
 (negative-indices)=
-### Negative Indexes
+### Negative Indices
 
 Negative indices in slices work the same way they do with [integer
 indices](integer-indices). **For `a[start:stop:step]`, negative `start` or
@@ -956,7 +955,7 @@ slice is empty, the same as if `stop <= start` when both are nonnegative.
 []
 ```
 
-Similar to integer indexes, negative indices `-i` in slices can always be
+Similar to integer indices, negative indices `-i` in slices can always be
 replaced by adding `len(a)` to `-i` until it is in the range $[0,
 \operatorname{len}(a))$ (replacing `len(a)` with the size of the given axis
 for NumPy arrays), so they are primarily a syntactic convenience.
