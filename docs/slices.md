@@ -238,7 +238,7 @@ say
 > The basic slice syntax is `i:j:k` where *i* is the starting index, *j* is
 > the stopping index, and *k* is the step ( $k\neq 0$ ). This selects the `m`
 > elements (in the corresponding dimension) with index values *i, i + k, ...,
-> i + (m - 1) k* where $m = q + (r\neq0)$ and *q* and *r* are the quotient and
+> i + (m - 1) k* where $m = q + (r\neq 0)$ and *q* and *r* are the quotient and
 > remainder obtained by dividing *j - i* by *k*: *j - i = q k + r*, so that
 > *i + (m - 1) k \< j*.
 
@@ -247,7 +247,7 @@ slices, they aren't especially helpful to someone who is trying to construct a
 slice from a higher level of abstraction such as "I want to select this
 particular subset of my array".[^numpy-definition-footnote]
 
-[^numpy-definition-footnote]: This formultion actually isn't particularly
+[^numpy-definition-footnote]: This formulation actually isn't particularly
 helpful for formulating higher level slice formulas such as the ones used by
 ndindex either.
 
@@ -538,7 +538,7 @@ start of end values for the range. For example:
 [3, 4]
 >>> list(range(3, -2)) # Empty, because -2 is less than 3
 []
->>> b[3:-2] # Indeces from 3 to the second to last (5)
+>>> b[3:-2] # Indexes from 3 to the second to last (5)
 [3, 4]
 ```
 
@@ -1335,11 +1335,11 @@ ValueError: slice step cannot be zero
 (omitted)=
 ### Omitted Entries
 
-The final point of confusion is omitted entries.[^ommited-none-footnote]
+The final point of confusion is omitted entries.[^omitted-none-footnote]
 
-[^ommited-none-footnote]: `start`, `stop`, or `step` may also be `None`, which
+[^omitted-none-footnote]: `start`, `stop`, or `step` may also be `None`, which
 is syntactically equivalent to them being omitted. That is to say, `a[::]` is
-a syntatic shorthand for `a[None:None:None]`. It is rare to see `None` in a
+a syntactic shorthand for `a[None:None:None]`. It is rare to see `None` in a
 slice. This is only relevant for code that consumes slices, such as a
 `__getitem__` method on an object. The `slice()` object corresponding to
 `a[::]` is `slice(None, None, None)`. [`ndindex.Slice()`](slice-api) also uses
