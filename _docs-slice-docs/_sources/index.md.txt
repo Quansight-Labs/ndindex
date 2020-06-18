@@ -200,5 +200,5 @@ index.md
 api.md
 slices.md
 changelog.md
-style.md
+style-guide.md
 ```
