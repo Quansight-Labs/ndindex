@@ -129,10 +129,11 @@ integer indices pick a subarray corresponding to a particular element from a
 given axis (and as a result, an integer index always reduces the
 dimensionality of an array by one).
 
+(fourth-sentence)=
 The key thing to remember about indexing in Python, both for integer and
 slice indexing, is that it is 0-based. This means that the indices start
-at 0. This is the case for all **nonnegative** indices. For example,
-`a[3]` would pick the **fourth** element of `a`, in this case, `'d'`.
+at 0. This is the case for all **nonnegative** indices.
+For example, `a[3]` would pick the **fourth** element of `a`, in this case, `'d'`.
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3] == 'd'</code>
@@ -1394,25 +1395,31 @@ but fall apart in corner cases. The "correct" ways to think about slices are
 very particular. I have tried to [outline](rules) them carefully, but one gets
 the impression that unless one works with slices regularly, it will be hard to
 remember the "right" ways and not fallback to thinking about the "wrong" ways,
-or, as most Python programmers probably do simply "guessing and checking".
+or, as most Python programmers probably do, simply "guessing and checking".
 
 Furthermore, the discontinuous nature of the `start` and `stop` parameters not
 only makes it hard to remember how slices work, but it makes it *extremely*
-hard to write slice arithmetic. The arithmetic is hard already in many cases
-due to the modular nature of `step`, but the discontinuous aspect of `start`
-and `stop` increase this tenfold. If you are unconvinced of this, take a look
-at the [source
+hard to write slice arithmetic. The arithmetic is already hard enough due to
+the modular nature of `step`, but the discontinuous aspect of `start` and
+`stop` increases this tenfold. If you are unconvinced of this, take a look at
+the [source
 code](https://github.com/Quansight/ndindex/blob/master/ndindex/slice.py) for
-`ndindex.Slice()`. You will see lots of nested `if` blocks. This is because
-slices have *fundamentally* different definitions if the `start` or `stop` are
-`None`, negative, or nonnegative. Furthermore, `None` is not an integer, so
-one must always be careful to either check for it first, or to be certain that
-it cannot happen, before performing any arithmetical operation or numerical
-comparison. Under each `if` block you will see some formula or other. Many of
-these formulas were difficult to come up with. In many cases they are
-asymmetrical in surprising ways. It is only through the rigorous
-[testing](testing) that ndindex uses that I can have confidence the formulas
-are correct for all corner cases.
+`ndindex.Slice()`. You will see lots of nested `if` blocks.[^source-footnote]
+This is because slices have *fundamentally* different definitions if the
+`start` or `stop` are `None`, negative, or nonnegative. Furthermore, `None` is
+not an integer, so one must always be careful to either check for it first or
+to be certain that it cannot happen, before performing any arithmetical
+operation or numerical comparison. Under each `if` block you will see some
+formula or other. Many of these formulas were difficult to come up with. In
+many cases they are asymmetrical in surprising ways. It is only through the
+rigorous [testing](testing) that ndindex uses that I can have confidence the
+formulas are correct for all corner cases.
+
+[^source-footnote]: To be sure, I make no claims that the source of any
+function in ndindex cannot be simplified. In writing ndindex, I have primarily
+focused on making the logic correct, and less on making it elegant. I welcome
+any pull requests that simplifies the logic of a function. The extensive
+[testing](testing) should ensure that any rewritten function remains correct.
 
 It is my opinion that Python's slicing semantics could be just as expressive,
 but much less confusing and difficult to work with, both for end-users of
@@ -1423,18 +1430,19 @@ changes I would make to improve the semantics would be
 2. Use 1-based indexing instead of 0-based indexing.
 3. Make a slice always include both the start and the stop.
 
-The special meaning of negative numbers, to index from the end of the array,
-is by far the biggest problem. It is a fundamental discontinuity in the
-definition of an index. This makes it completely impossible to write a formula
-for almost anything relating to slices that will not end up having branching
-`if` conditions. But the problem isn't just for code that manipulates slices.
-The [example above](negative-indices-example) shows how negative indices can
-easily lead to bugs in end-user code. Effectively, any time you have a slice
-`a[i:j]`, if `i` and `j` are nontrivial expressions they must be checked to
-ensure they do not go negative. If they can be both negative and nonnegative,
-it is virtually never the case that the slice will give you what you want in
-both cases. This is because the discontinuity inherent in the definition of
-[negative indexing](negative-indices) disagrees with the concept of
+**Negative numbers.** The special meaning of negative numbers, to index from
+the end of the array, is by far the biggest problem with Python's slice
+semantics. It is a fundamental discontinuity in the definition of an index.
+This makes it completely impossible to write a formula for almost anything
+relating to slices that will not end up having branching `if` conditions. But
+the problem isn't just for code that manipulates slices. The [example
+above](negative-indices-example) shows how negative indices can easily lead to
+bugs in end-user code. Effectively, any time you have a slice `a[i:j]`, if `i`
+and `j` are nontrivial expressions, they must be checked to ensure they do not
+go negative. If they can be both negative and nonnegative, it is virtually
+never the case that the slice will give you what you want in both cases. This
+is because the discontinuity inherent in the definition of [negative
+indexing](negative-indices) disagrees with the concept of
 [clipping](clipping). `a[i:j]` will slice "as far as it can" if `j` is "too
 big" (greater than `len(a)`), but it does something completely different if
 `i` is "too small" as soon as "too small" means "negative". Clipping is a good
@@ -1450,20 +1458,22 @@ assigning it to a variable. It also becomes more complicated when `a` is a
 NumPy array and the slice appears as part of a larger multidimensional (tuple)
 index. However, I think it would be possible to introduce a special syntax to
 mean "reversed" or "from the end of the array" indexing, and leave negative
-numbers to simply extend beyond the left side of the array. For example, in
-Julia, one can use `a[end]` to index the last element of an array (Julia also
-uses 1-based indexing). Since this is a moot point for Python---I don't expect
-Python's indexing semantics to change; they are already baked into the
-language---I won't suggest any syntax. Perhaps this can inspire people writing
-new languages or DSLs to come up with better semantics backed by good syntax.
+numbers to simply extend beyond the left side of the array with clipping. For
+example, in [Julia](https://julialang.org/), one can use `a[end]` to index the
+last element of an array (Julia also uses 1-based indexing). Since this is a
+moot point for Python---I don't expect Python's indexing semantics to change;
+they are already baked into the language---I won't suggest any syntax. Perhaps
+this can inspire people writing new languages or DSLs to come up with better
+semantics backed by good syntax (again, I think Python slicing has good
+*syntax*. I only take issue with some of its *semantics*.).
 
-The second point, on using 1-based indexing instead of 0-based indexing, will
-likely be the most controversial. For many people reading this, the notion
-that 0-based indexing is superior has been preached as irreproachable gospel.
-I encourage you to open your mind and try to unlearn what you have been taught
-and take a fresh view of the matter (or don't. These are just my opinions
-after all, and none of it changes the fact that Python is what it is and isn't
-going to change).
+**0-based vs. 1-based indexing.** The second point, on using 1-based indexing
+instead of 0-based indexing, will likely be the most controversial. For many
+people reading this, the notion that 0-based indexing is superior has been
+preached as irreproachable gospel. I encourage you to open your mind and try
+to unlearn what you have been taught and take a fresh view of the matter (or
+don't. These are just my opinions after all, and none of it changes the fact
+that Python is what it is and isn't going to change).
 
 0-based indexing certainly has its uses. In C, where an index is literally a
 syntactic macro for adding two pointers, 0-based indexing makes sense, since
@@ -1472,21 +1482,21 @@ level languages such as Python, people think of indexing as pointing to
 specific numbered elements of a collection, not as pointer arithmetic. Every
 human being is taught from an early age to count from 1. If you show someone
 the list "a, b, c", they will tell you that "a" is the 1st, "b" is the 2nd,
-and "c" is the 3rd. Sentences in the above guide like "`a[3]` would pick the
-fourth element of `a`" sound very off, even for those of us used to 0-based
-indexing. 0-based indexing requires a shift in thinking from the way that you
-have been taught to count from childhood to grade school. Counting is a very
-fundamental thing for any human, but especially so for a programmer. Forcing
-someone to learn a new way to do this is a huge cognitive burden, and so it
-shouldn't be done without a very good reason. In a language like C, one can
-argue there is a good reason, just as one can argue that it is beneficial to
-learn new base number systems (base-2 and base-16) when doing certain kinds of
-programming.
+and "c" is the 3rd. [Sentences](fourth-sentence) in the above guide like
+"`a[3]` would pick the fourth element of `a`" sound very off, even for those
+of us used to 0-based indexing. 0-based indexing requires a shift in thinking
+from the way that you have been taught to count from early childhood. Counting
+is a very fundamental thing for any human, but especially so for a programmer.
+Forcing someone to learn a new way to do such a foundational thing is a huge
+cognitive burden, and so it shouldn't be done without a very good reason. In a
+language like C, one can argue there is a good reason, just as one can argue
+that it is beneficial to learn new base number systems like base-2 and base-16
+when doing certain kinds of programming.
 
 But for Python, what truly is the benefit of counting starting at 0? The main
 benefit is that the implementation is easier, because Python is itself written
-in C, which uses 0-based indexing, so one does not need to handle shifting in
-the translation. But this has never been a valid argument for Python
+in C, which uses 0-based indexing, so Python does not need to handle shifting
+in the translation. But this has never been a valid argument for Python
 semantics. The whole point of Python is to provide higher level semantics than
 C, and leave those hard details of translating them to the interpreter and
 library code. In fact, Python's slices themselves are much more complicated
@@ -1494,41 +1504,108 @@ than what is available in C, and the interpreter code to handle them is more
 than just a trivial translation to C. Adding shifts to this translation code
 would not be much additional complexity.
 
+Even experienced programmers of languages like Python that use 0-based
+indexing must occasionally stop themselves from writing something like `a[3]`
+instead of `a[2]` to get the third element of `a`. It is very difficult to
+"unlearn" 1-based counting," which was not only the first way that you learned
+to count, but is also the way that you and everyone else around you continues
+to count outside of programming contexts.
+
+When you teach a child how to count things, you teach them to enumerate the
+items starting at 1 ("1, 2, 3, ..."). The number that is enumerated for the
+final object is equal to the number of items (the final ordinal is equal to
+the cardinal). This only works if you start at 1. If the child instead starts
+at 0 ("0, 1, 2, ...") the final ordinal (the last number spoken aloud) would
+not match the cardinal (the number of items). The distinction between ordinals
+and cardinals is not something most people think about often, because the
+convention of counting starting at 1 makes it so that they are equal. But as
+programmers in a language that rejects this elegant convention, we are forced
+to think about such philosophical distinctions just to solve whatever problem
+we are trying to solve.
+
+In most instances (outside of programming) where a reckoning starts at 0
+instead of 1, it is because it is measuring a distance. The distance from your
+house to the nearest pub may be "2 miles", but the distance from your house to
+itself is "0 miles". On the other hand, when counting or enumerating
+individual objects, counting always starts at 1. The notion of a "zeroth"
+object doesn't make sense when counting say apples, because you are counting
+the apples themselves, not some quantity relating them. It doesn't make sense
+to start at 0 with an "un-apple" because you are only counting apples, not
+non-apples.
+
+So the question then becomes, should indexing work like a measurement of
+distance, which would naturally start at 0, or like an enumeration of distinct
+terms, which would naturally start at 0. If we think of an index as a pointer
+offset, as C does, then it is indeed a measurement of a distance. But if we
+instead think of an indexable array as a discrete ordered collection of items,
+then the notion of a measurement of distance is harder to justify. But
+enumeration is a natural concept for any ordered discrete collection.
+
+What are the benefits of 0-based indexing?
+
+- It makes translation to lower level code (like C or machine code) easier.
+  But as I already argued, this is not a valid argument for Python, which aims
+  to be high-level and abstract away translation complexities that make coding
+  more difficult. The translation that necessarily takes place in the
+  interpreter itself can afford this complexity if it means making the
+  language itself simpler.
+- It makes translation of code written in other languages that use 0-based
+  indexing simpler. If Python used 1-based indexing, then to translate a C
+  algorithm to Python, for instance, one would have to adapt all the places
+  that use indexing, which would be a bug-prone task. But Python's primary
+  mantra is having syntax and semantics that make code easy to read and easy
+  to write. Being similar to other existing languages is second to this, and
+  should not take priority when it conflicts with it. Translation of code from
+  other languages to Python does happen, but it is much rarer than novel code
+  written in Python. Furthermore, automated tooling could be used to avoid
+  translation bugs. Such tooling would help avoid other translation bugs
+  unrelated to indexing as well.
+- It works nicely with half-open semantics. It is true that half-open
+  semantics and 0-based indexing, while technically distinct, are virtually
+  always implemented together because they play so nicely with each other.
+  However, as I argue below, half-open semantics are just as absurd as 0-based
+  indexing, and abandoning both for the more standard closed-closed/1-based
+  semantics is very reasonable.
+
 To me, the ideal indexing system defaults to 1-based, but allows starting at
-any index. That way, if someone is dealing with a use-case where 0-based
-indexing really does make more sense, they can easily do that. They should
-also be able to start at any other number, including negative numbers (which
-is another reason to remove the special meaning of negative indices). An
-example of a use-case where 0-based indexing truly is more natural than
-1-based indexing is polynomials. Say we have a polynomial $a_0 + a_1x +
-a_2x^2 + \cdots$. Then we can represent the coefficients $a_0, a_1, a_2,
-\ldots$ in a list `[a0, a1, a2, ...]`. Since a polynomial naturally has a 0th
-coefficient, it makes sense to index the list starting at 0 (and one must
-still be careful about off-by-one errors; a degree-$n$ polynomial has $n+1$
-coefficients).
+any index. That way, if you are dealing with a use-case where 0-based indexing
+really does make more sense, you can easily use it. Indices should also be
+able to start at any other number, including negative numbers (which is
+another reason to remove the special meaning of negative indices). An example
+of a use-case where 0-based indexing truly is more natural than 1-based
+indexing is polynomials. Say we have a polynomial $a_0 + a_1x + a_2x^2 +
+\cdots$. Then we can represent the coefficients $a_0, a_1, a_2, \ldots$ in a
+list `[a0, a1, a2, ...]`. Since a polynomial naturally has a 0th coefficient,
+it makes sense to index the list starting at 0 (and one must still be careful
+about off-by-one errors; a degree-$n$ polynomial has $n+1$ coefficients).
 
 If this seems like absurd idea, note that this is how Fortran works (see
-https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering).
-Fortran predates Python by many decades, but is still in use today,
-particularly in scientific applications. And many Python libraries themselves
-are backed by Fortran code, such as SciPy. Many other popular programming
-languages, including many used in scientific applications (where arrays and
-hence advanced indexing tends to be more common) such as Julia, MATLAB,
+<https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering>).
+In Fortran, arrays index starting at 1 by default, but any integer can be used
+as a starting index. Fortran predates Python by many decades, but is still in
+use today, particularly in scientific applications, and many Python libraries
+themselves such as SciPy are backed by Fortran code. Many other popular
+programming languages use 1-based indexing, such as Julia, MATLAB,
 Mathematica, R, Lua, and
-[others[(https://en.wikipedia.org/wiki/Comparison_of_programming_languages_(array)#Array_system_cross-reference_list)
-use 1-based indexing.
+[others](https://en.wikipedia.org/wiki/Comparison_of_programming_languages_(array)#Array_system_cross-reference_list).
+In fact, a majority of the popular programming languages that use 1-based
+indexing are languages that are primarily used for scientific applications.
+Scientific applications tend to make much heavier use of arrays than most
+other programming tasks, and hence a heavy use of indexing.
 
-Finally, the idea of half-open semantics, where the `stop` value of a slice is
-never included, is bad, for many of the same reasons that 0-based indexing is
-bad. In most contexts outside of programming, including virtually all
-mathematical contexts, when one sees a range of values, it is implicitly
-assumed that both endpoints are included in the range. For example, if you see
-a phrase like "ages 7 to 12", "the letters A to Z", or "sum of the numbers
-from 1 to 10", without any further qualification you assume that both
-endpoints are included in the range.
+**Half-open semantics.** Finally, the idea of half-open semantics, where the
+`stop` value of a slice is never included, is bad, for many of the same
+reasons that 0-based indexing is bad. In most contexts outside of programming,
+including virtually all mathematical contexts, when one sees a range of
+values, it is implicitly assumed that both endpoints are included in the
+range. For example, if you see a phrase like "ages 7 to 12", "the letters A to
+Z", or "sum of the numbers from 1 to 10", without any further qualification
+you assume that both endpoints are included in the range. Half-open semantics
+also break down when considering non-numeric quantities. For example, one
+cannot represent the set of letters "from A to Z" except by including both
+endpoints, as there is no letter after Z to not include.
 
-It is true that this can lead to [fencepost errors](fencepost), but I contend
-that it is more natural to think about a range as including both endpoints.
+It is simply more natural to think about a range as including both endpoints.
 Half-open semantics are often tied to 0-based indexing, since it is a
 convenient way to allow the range 0--N to contain N values, by not including
 N.[^python-history-footnote] I see this as taking a bad decision (0-based
@@ -1541,80 +1618,91 @@ exactly when N *is* included in the range.
 work out well when combined with 0-based indexing
 ([reference](https://web.archive.org/web/20190321101606/https://plus.google.com/115212051037621986145/posts/YTUxbXYZyfi)).
 
-One might argue that there are instances in everyday life where 0-based
-counting is used. For example, in the West, the reckoning of a person's age is
-typically done in a way that matches half-open 0-based indexing semantics. If
-has been less than 1 year since a person's birthdate, one would say they are
-"zero years old" (although typically they might use a smaller unit of measure
-such as months to avoid this). And if tomorrow is my 30th birthday, then today
-I will say, "I am 29 years old", even though I am actually 29.99 years old (I
-may continue to say "I am 29 years old" tomorrow, but at least today no one
-would accuse me of lying). This matches the "half-open" semantics used by
-slices. The end date of an age, the birthday, is not accounted for until it
-has passed.
+You might argue that there are instances in everyday life where half-open as
+well as 0-based semantics are used. For example, in the West, the reckoning of
+a person's age is typically done in a way that matches half-open 0-based
+indexing semantics. If has been less than 1 year since a person's birthdate,
+you might say they are "zero years old" (although typically you use a smaller
+unit of measure such as months to avoid this). And if tomorrow is my 30th
+birthday, then today I will say, "I am 29 years old", even though I am
+actually 29.99 years old (I may continue to say "I am 29 years old" tomorrow,
+but at least today no one would accuse me of lying). This matches the
+"half-open" semantics used by slices. The end date of an age, the birthday, is
+not accounted for until it has passed. This example shows that half-open
+semantics do indeed go nicely with 0-based counting, and it's indeed typically
+good to use one when using the other. But age is a distance. It is the
+distance in time since a person's birthdate. So 0-based indexing makes sense
+for it. Half-open semantics play nicely with age not just because it lets us
+lie to ourselves about being younger than we really are, but because age is a
+continuous quantity which is reckoned by integer values for convenience. Since
+people rarely concern themselves with fractional ages, they must increment an
+age counter at some point, and doing so on a birthday, which leads to a
+"half-open" semantic, makes sense. But a collection of items like a list,
+array, or string in Python usually does not represent a continuous quantity
+which is discretized, but rather a quantity that is naturally discrete. So
+while half-open 0-indexed semantics are perfectly reasonable for human ages,
+the same argument doesn't make sense for collections in Python.
 
-This example shows that half-open semantics does indeed go nicely with 0-based
-counting, and it's indeed typically good to use one when using the other. But
-let us look closer at why ages are counted this way. The most typical instance
-where some reckoning starts at 0 instead of 1 is when measuring a distance.
-The distance from your house to the nearest pub may be "2 miles", but the
-distance from your house to itself is "0 miles". Age is also a distance: the
-distance in time from the present to your birthdate. On the other hand, when
-counting or enumerating individual objects, one always starts at 1. The notion
-of a "zeroth" object doesn't make sense because you are counting the objects
-themselves, not some quantity relating them. It doesn't make sense to start at
-0 with an "unobject" because you are only counting objects, not non-objects.
-To put another way, when you teach a child how to count things, you teach them
-to enumerate the items starting at 1 ("1, 2, 3, ..."). The number that is
-enumerated for the final object is equal to the number of items. This only
-works if you start at 1.
+When it comes to indexing, half-open semantics are problematic for a few
+reasons:
 
-So the question then becomes, should indexing work like a measurement of
-distance, which would naturally start at 0, or like an enumeration of distinct
-terms, which would naturally start at 0. If we think of an index as a pointer
-offset, as C does, then it is indeed a measurement of a distance. But if we
-instead think of an indexable array as a discrete ordered collection of items,
-then the notion of a measurement of distance is harder to justify. But
-enumeration is a natural concept for any ordered discrete collection.
+- A commonly touted benefit of half-open slicing semantics is that you can
+  "glue" half-open intervals together. For example, `a[0:N] + a[N:M]` is the
+  same as `a[0:M]`. But `a[1:N] + a[N+1:M]` is just as clear. People are
+  perfectly used to adding 1 to get to the next term in a sequence, and it is
+  more natural to see `[1:N]` and `[N+1:M]` as being non-overlapping if they
+  do not share endpoint values. Ranges that include both endpoints are
+  standard in both mathematics and everyday language. $\sum_{i=1}^n$ means a
+  summation from $1$ to $n$ inclusive. Formulas like $\sum_{i=1}^n a_i =
+  \sum_{i=1}^k a_i + \sum_{i=k+1}^n a_i$ are natural to anyone who has studied
+  enough mathematics. If you were to rewrite the sentences "the first $n$
+  numbers are $1\ldots n$; the next $n$ numbers are $n+1\ldots 2n$", or "'the
+  70s' refers to the years 1970--1979" using half-open semantics, anyone would
+  tell you they were phrased wrong.
 
-A commonly touted benefit of half-open slicing semantics is that you can
-"glue" half-open intervals together. For example, `a[0:N] + a[N:M]` is the
-same as `a[0:M]`. But `a[1:N] + a[N+1:M]` is just as clear. People are
-perfectly used to adding 1 to get to the next term in a sequence. Both
-endpoints being included in a range are the standard semantics in both
-mathematics and everyday language. The first $n$ numbers are $1\ldots n$; the
-next $n$ numbers are $n+1\ldots 2n$. "The 70s" refers to the years 1970--1979.
-If you were to rewrite the previous two sentences using half-open semantics,
-anyone would tell you they were phrased wrong.
+- Another benefit of half-open intervals is that they allow the range `a[i:j]`
+  to contain $j - i$ elements (assuming $0 \leq i \leq j$ and `a` is large
+  enough). I tout this myself in the guide above, since it is a useful [sanity
+  check](sanity-check). However, as useful as it is, it isn't worth the more
+  general confusion caused by half-open semantics. I contend people are
+  perfectly used to the usual [fencepost](fencepost) offset that a range
+  $i\ldots j$ contains $j - i + 1$ numbers. Half-open semantics replace this
+  fencepost error with more subtle ones, which arise from forgetting that the
+  range doesn't include the endpoint, unlike most natural ranges that occur in
+  day-to-day life. See [wrong rule 3](wrong-rule-3) above for an example of how
+  half-open semantics can lead to subtle fencepost errors.
 
-Another benefit of half-open intervals is that they allow the range `a[i:j]`
-to contain $j - i$ elements (assuming $0 \leq i \leq j$ and `a` is large enough).
-However, I contend people are perfectly used to the usual fencepost offset
-that a range $i\ldots j$ contains $j - i + 1$ numbers. Half-open semantics replace this
-fencepost error with more subtle ones, which arise from forgetting that the
-range doesn't include the endpoint, unlike most natural ranges that occur in
-day-to-day life. See [wrong rule 3](wrong-rule-3) above for an example of how
-half-open semantics can lead to subtle fencepost errors. It is understood that
-the years 2010--2020 consist of 11 years. Look at any chart where the x-axis
-is decades, and you will see ranges like "2000--2009", not "2000--2010".
-
-The fencepost problem is fundamentally unavoidable. A 100 foot fence truly has
-one more fencepost than fence lengths. The best way to deal with the fencepost
-problem is not to try to change the way we count fenceposts, so that somehow
-11 fenceposts is really only 10.[^fencepost-footnote] It is rather to reuse
-the most natural and intuitive way of thinking about the problem, which occurs
-both in programming and non-programming contexts.
+  It is true that including both endpoints in range can lead to [fencepost
+  errors](fencepost). But the fencepost problem is fundamentally unavoidable. A
+  100 foot fence truly has one more fencepost than fence lengths. The best way
+  to deal with the fencepost problem is not to try to change the way we count
+  fenceposts, so that somehow 11 fenceposts is really only
+  10.[^fencepost-footnote] It is rather to reuse the most natural and intuitive
+  way of thinking about the problem, which occurs both in programming and
+  non-programming contexts, which is that certain quantities, like the number of
+  elements in a range $1\ldots N$ will require an extra "+ 1" to be correct.
 
 [^fencepost-footnote]: [This blog
  post](https://betterexplained.com/articles/learning-how-to-count-avoiding-the-fencepost-problem/)
- has a nice writeup of *why* the fencepost problem exists.
+ has a nice writeup of *why* the fencepost problem exists. It's related to the
+ difference between measurement and enumeration that I touched on earlier.
 
-Half-open semantics become particularly confusing when the step is negative.
-This is because one must remember that the end that is not included in the
-half-open interval is the second index in the slice, *not* the larger index
-(see wrong rules [1](wrong-rule-1) and [3](wrong-rule-3) above). Were both
-endpoints included, this confusion would be impossible, because positive and
-negative steps would be symmetric in this regard.
+- Half-open semantics become particularly confusing when the step is negative.
+  This is because one must remember that the end that is not included in the
+  half-open interval is the second index in the slice, *not* the larger index
+  (see wrong rules [1](wrong-rule-1) and [3](wrong-rule-3) above). Were both
+  endpoints included, this confusion would be impossible, because positive and
+  negative steps would be symmetric in this regard.
+
+
+In general, half-open semantics are naively superior because they have some
+properties that appear to be nice (easy unions, no +1s in length formulas).
+But the "niceness" of these properties ignores the fact that most people are
+already used to closed-closed intervals from mathematics and from everyday
+life, and so are used to accounting for them already. So while these
+properties are nice, they also break the natural intuition of how ranges work.
+Half-open semantics are also closely tied to 0-based indexing, which as I
+argued above, is itself problematic for many of the same reasons.
 
 Again, there is no way Python itself can change any of these things at this
 point. It would be way too big of a change to the language, far bigger than
