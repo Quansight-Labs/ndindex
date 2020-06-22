@@ -11,7 +11,7 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import (check_same, Tuples, prod, shapes, iterslice, ndindices, positive_slices)
+from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices, slices
 
 
 def test_tuple_exhaustive():
@@ -219,7 +219,7 @@ def test_tuple_newshape_ndindex_input():
     raises(TypeError, lambda: Tuple(1).newshape(Integer(2)))
 
 
-@given(Tuples, positive_slices, shapes)
+@given(Tuples, slices(), shapes)
 def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     a = arange(prod(shape)).reshape(shape)
 

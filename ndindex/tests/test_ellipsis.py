@@ -11,7 +11,7 @@ from ..tuple import Tuple
 from ..slice import Slice
 from ..integer import Integer
 from ..ellipsis import ellipsis
-from .helpers import (check_same, prod, shapes, ellipses, positive_slices, Tuples)
+from .helpers import check_same, prod, shapes, ellipses, slices, Tuples
 
 def test_ellipsis_exhaustive():
     for n in range(10):
@@ -67,7 +67,7 @@ def test_ellipsis_newshape_ndindex_input():
     raises(TypeError, lambda: ellipsis().newshape(Tuple(2, 1)))
     raises(TypeError, lambda: ellipsis().newshape(Integer(2)))
 
-@given(ellipses(), positive_slices, shapes)
+@given(ellipses(), slices(), shapes)
 def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
     a = arange(prod(shape)).reshape(shape)
 

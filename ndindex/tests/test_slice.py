@@ -9,8 +9,7 @@ from hypothesis.strategies import integers, one_of
 from ..slice import Slice
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import (check_same, slices, prod, shapes, iterslice,
-                      positive_slices, Tuples)
+from .helpers import check_same, slices, prod, shapes, iterslice, Tuples
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -274,8 +273,7 @@ def test_slice_as_subindex_slice_exhaustive():
 
             assert_equal(asubindex, aS[isin(aS, aindex)])
 
-# @given(slices(), slices(), integers(0, 100))
-@given(positive_slices, positive_slices, integers(0, 100))
+@given(slices(), slices(), integers(0, 100))
 def test_slice_as_subindex_slice_hypothesis(s, index, size):
     a = arange(size)
     try:
@@ -295,7 +293,7 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
 
     assert_equal(asubindex, aS[isin(aS, aindex)])
 
-@given(positive_slices, Tuples, integers(0, 100))
+@given(slices(), Tuples, integers(0, 100))
 def test_slice_as_subindex_tuple_hypothesis(s, index, size):
     a = arange(size)
     try:

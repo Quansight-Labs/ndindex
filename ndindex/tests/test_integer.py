@@ -10,8 +10,7 @@ from ..integer import Integer
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..slice import Slice
-from .helpers import (check_same, ints, prod, shapes, iterslice,
-                      positive_slices, Tuples)
+from .helpers import check_same, ints, prod, shapes, iterslice, slices, Tuples
 
 
 def test_integer_args():
@@ -155,8 +154,7 @@ def test_integer_as_subindex_slice_exhaustive():
 
                 assert_equal(asubindex, aidx[isin(aidx, aindex)])
 
-# @given(slices(), slices(), integers(0, 100))
-@given(ints(), positive_slices, integers(0, 100))
+@given(ints(), slices(), integers(0, 100))
 def test_integer_as_subindex_slice_hypothesis(i, index, size):
     a = arange(size)
     try:
