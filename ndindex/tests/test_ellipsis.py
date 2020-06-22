@@ -38,7 +38,7 @@ def test_ellipsis_reduce_no_shape_hypothesis(idx, shape):
     check_same(a, idx, func=lambda x: x.reduce())
 
 @given(ellipses(), positive_slices, shapes)
-def test_tuple_as_subindex_slice_hypothesis(idx, index, shape):
+def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
     a = arange(prod(shape)).reshape(shape)
 
     E = ndindex(idx)
@@ -62,7 +62,7 @@ def test_tuple_as_subindex_slice_hypothesis(idx, index, shape):
     assert asubindex == aE.intersection(aindex)
 
 @given(ellipses(), Tuples, shapes)
-def test_tuple_as_subindex_tuple_hypothesis(idx, index, shape):
+def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
     a = arange(prod(shape)).reshape(shape)
 
     E = ndindex(idx)
