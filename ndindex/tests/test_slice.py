@@ -310,7 +310,7 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, size):
     try:
         aS = a[s]
         aindex = a[index]
-    except IndexError: # pgrama: no cover
+    except IndexError: # pragma: no cover
         assume(False)
     asubindex = aindex[Subindex.raw]
 
