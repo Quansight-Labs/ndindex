@@ -200,7 +200,7 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     try:
         Subindex = T.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
+        return
 
     try:
         aT = a[t]

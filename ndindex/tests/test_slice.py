@@ -235,8 +235,7 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
     try:
         Subindex = S.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
-
+        return
 
     aS = a[s]
     aindex = a[index]
@@ -256,7 +255,7 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, size):
     try:
         Subindex = S.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
+        return
 
     try:
         aS = a[s]

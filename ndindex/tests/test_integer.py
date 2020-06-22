@@ -117,7 +117,7 @@ def test_integer_as_subindex_slice_hypothesis(i, index, size):
     try:
         Subindex = idx.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
+        return
 
     try:
         aidx = a[idx]
@@ -140,7 +140,7 @@ def test_integer_as_subindex_tuple_hypothesis(i, index, size):
     try:
         Subindex = idx.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
+        return
 
     try:
         aidx = a[idx]

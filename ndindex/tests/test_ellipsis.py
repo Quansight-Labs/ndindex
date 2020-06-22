@@ -51,7 +51,7 @@ def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
     try:
         Subindex = E.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
+        return
 
     try:
         aE = a[idx]
@@ -75,7 +75,7 @@ def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
     try:
         Subindex = E.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
+        return
 
     try:
         aE = a[idx]
