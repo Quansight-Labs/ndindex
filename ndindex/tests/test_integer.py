@@ -1,4 +1,5 @@
-from numpy import arange, int64
+from numpy import arange, int64, isin
+from numpy.testing import assert_equal
 
 from hypothesis import given, assume
 from hypothesis.strategies import integers
@@ -97,11 +98,11 @@ def test_integer_as_subindex_slice_exhaustive():
                 except NotImplementedError:
                     continue
 
-                aidx = set(a[idx.raw].flat)
-                aindex = set(a[Index.raw].flat)
-                asubindex = set(a[Index.raw][Subindex.raw].flat)
+                aidx = a[idx.raw]
+                aindex = a[Index.raw]
+                asubindex = aindex[Subindex.raw]
 
-                assert asubindex == aidx.intersection(aindex)
+                assert_equal(asubindex, aidx[isin(aidx, aindex)])
 
 # @given(slices(), slices(), integers(0, 100))
 @given(ints(), positive_slices, integers(0, 100))
@@ -119,14 +120,13 @@ def test_integer_as_subindex_slice_hypothesis(i, index, size):
         assume(False)
 
     try:
-        aidx = set(a[idx].flat)
+        aidx = a[idx]
     except IndexError:
         assume(False)
-    aindex = set(a[index].flat)
-    asubindex = set(a[index][Subindex.raw].flat)
+    aindex = a[index]
+    asubindex = aindex[Subindex.raw]
 
-    assert asubindex == aidx.intersection(aindex)
-
+    assert_equal(asubindex, aidx[isin(aidx, aindex)])
 
 @given(ints(), Tuples, integers(0, 100))
 def test_integer_as_subindex_tuple_hypothesis(i, index, size):
@@ -143,10 +143,10 @@ def test_integer_as_subindex_tuple_hypothesis(i, index, size):
         assume(False)
 
     try:
-        aidx = set(a[idx].flat)
-        aindex = set(a[index].flat)
+        aidx = a[idx]
+        aindex = a[index]
     except IndexError:
         assume(False)
-    asubindex = set(a[index][Subindex.raw].flat)
+    asubindex = aindex[Subindex.raw]
 
-    assert asubindex == aidx.intersection(aindex)
+    assert_equal(asubindex, aidx[isin(aidx, aindex)])

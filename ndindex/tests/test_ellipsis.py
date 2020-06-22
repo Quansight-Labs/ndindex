@@ -1,4 +1,5 @@
-from numpy import arange
+from numpy import arange, isin
+from numpy.testing import assert_equal
 
 from hypothesis import given, assume
 
@@ -53,13 +54,13 @@ def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
         assume(False)
 
     try:
-        aE = set(a[idx].flat)
-        aindex = set(a[index].flat)
+        aE = a[idx]
+        aindex = a[index]
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = set(a[index][Subindex.raw].flat)
+    asubindex = aindex[Subindex.raw]
 
-    assert asubindex == aE.intersection(aindex)
+    assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
 
 @given(ellipses(), Tuples, shapes)
 def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
@@ -77,10 +78,10 @@ def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
         assume(False)
 
     try:
-        aE = set(a[idx].flat)
-        aindex = set(a[index].flat)
+        aE = a[idx]
+        aindex = a[index]
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = set(a[index][Subindex.raw].flat)
+    asubindex = aindex[Subindex.raw]
 
-    assert asubindex == aE.intersection(aindex)
+    assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])

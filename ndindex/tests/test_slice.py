@@ -1,6 +1,7 @@
 from pytest import raises
 
-from numpy import arange
+from numpy import arange, isin
+from numpy.testing import assert_equal
 
 from hypothesis import given, assume
 from hypothesis.strategies import integers
@@ -215,13 +216,11 @@ def test_slice_as_subindex_slice_exhaustive():
             except NotImplementedError:
                 continue
 
-            aS = set(a[S.raw].flat)
-            aindex = set(a[Index.raw].flat)
-            asubindex = set(a[Index.raw][Subindex.raw].flat)
+            aS = a[S.raw]
+            aindex = a[Index.raw]
+            asubindex = aindex[Subindex.raw]
 
-            # TODO: This doesn't check that the order of the elements is correct.
-
-            assert asubindex == aS.intersection(aindex)
+            assert_equal(asubindex, aS[isin(aS, aindex)])
 
 # @given(slices(), slices(), integers(0, 100))
 @given(positive_slices, positive_slices, integers(0, 100))
@@ -238,13 +237,12 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
     except NotImplementedError: # pragma: no cover
         assume(False)
 
-    aS = set(a[s].flat)
-    aindex = set(a[index].flat)
-    asubindex = set(a[index][Subindex.raw].flat)
 
-    # TODO: This doesn't check that the order of the elements is correct.
+    aS = a[s]
+    aindex = a[index]
+    asubindex = aindex[Subindex.raw]
 
-    assert asubindex == aS.intersection(aindex)
+    assert_equal(asubindex, aS[isin(aS, aindex)])
 
 @given(positive_slices, Tuples, integers(0, 100))
 def test_slice_as_subindex_tuple_hypothesis(s, index, size):
@@ -261,12 +259,10 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, size):
         assume(False)
 
     try:
-        aS = set(a[s].flat)
-        aindex = set(a[index].flat)
+        aS = a[s]
+        aindex = a[index]
     except IndexError: # pgrama: no cover
         assume(False)
-    asubindex = set(a[index][Subindex.raw].flat)
+    asubindex = aindex[Subindex.raw]
 
-    # TODO: This doesn't check that the order of the elements is correct.
-
-    assert asubindex == aS.intersection(aindex)
+    assert_equal(asubindex, aS[isin(aS, aindex)])

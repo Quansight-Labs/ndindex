@@ -1,6 +1,7 @@
 from itertools import product
 
-from numpy import arange
+from numpy import arange, isin
+from numpy.testing import assert_equal
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
@@ -8,7 +9,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
+from .helpers import (check_same, Tuples, prod, shapes, iterslice, ndindices, positive_slices)
 
 
 def test_tuple_exhaustive():
@@ -202,12 +203,13 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
         assume(False)
 
     try:
-        aT = set(a[t].flat)
-        aindex = set(a[index].flat)
+        aT = a[t]
+        aindex = a[index]
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = set(a[index][Subindex.raw].flat)
+    asubindex = aindex[Subindex.raw]
 
-    assert asubindex == aT.intersection(aindex)
+    # TODO: how can we check that the shape is correct?
+    assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
 
-    # TODO: How can we test that the shape is correct?
+
