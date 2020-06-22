@@ -1,14 +1,18 @@
 from numpy import arange, int64, isin
 from numpy.testing import assert_equal
 
+from pytest import raises
+
 from hypothesis import given, assume
-from hypothesis.strategies import integers
+from hypothesis.strategies import integers, one_of
 
 from ..integer import Integer
-from ..slice import Slice
+from ..ndindex import ndindex
 from ..tuple import Tuple
+from ..slice import Slice
 from .helpers import (check_same, ints, prod, shapes, iterslice,
                       positive_slices, Tuples)
+
 
 def test_integer_args():
     zero = Integer(0)
@@ -19,25 +23,30 @@ def test_integer_args():
     assert isinstance(idx.raw, int)
     assert Integer(zero) == zero
 
+
 def test_integer_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
         check_same(a, i)
+
 
 @given(ints(), integers(5, 100))
 def test_integer_hypothesis(i, size):
     a = arange(size)
     check_same(a, i)
 
+
 def test_integer_len_exhaustive():
     for i in range(-12, 12):
         idx = Integer(i)
         assert len(idx) == 1
 
+
 @given(ints())
 def test_integer_len_hypothesis(i):
     idx = Integer(i)
     assert len(idx) == 1
+
 
 def test_integer_reduce_exhaustive():
     a = arange(10)
@@ -51,7 +60,8 @@ def test_integer_reduce_exhaustive():
         else:
             assert reduced.raw >= 0
 
-@given(integers(0, 10), shapes)
+
+@given(ints(), shapes)
 def test_integer_reduce_hypothesis(i, shape):
     a = arange(prod(shape)).reshape(shape)
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
@@ -71,10 +81,51 @@ def test_integer_reduce_no_shape_exhaustive():
     for i in range(-12, 12):
         check_same(a, i, func=lambda x: x.reduce())
 
-@given(integers(0, 10), shapes)
+@given(ints(), shapes)
 def test_integer_reduce_no_shape_hypothesis(i, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, i, func=lambda x: x.reduce())
+
+def test_integer_newshape_exhaustive():
+    shape = 5
+    a = arange(shape)
+    def assert_equal(x, y):
+        newshape = ndindex(i).newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    # Call newshape so we can see if any exceptions match
+    def func(i):
+        i.newshape(shape)
+        return i
+
+    for i in range(-10, 10):
+        check_same(a, i, func=func, assert_equal=assert_equal)
+
+@given(ints(), one_of(shapes, integers(0, 10)))
+def test_integer_newshape_hypothesis(i, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    def assert_equal(x, y):
+        newshape = ndindex(i).newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    # Call newshape so we can see if any exceptions match
+    def func(i):
+        i.newshape(shape)
+        return i
+
+    check_same(a, i, func=func, assert_equal=assert_equal)
+
+def test_integer_newshape_ndindex_input():
+    raises(TypeError, lambda: Integer(1).newshape(Tuple(2, 1)))
+    raises(TypeError, lambda: Integer(1).newshape(Integer(2)))
+
+def test_integer_newshape_small_shape():
+    raises(IndexError, lambda: Integer(6).newshape(2))
+    raises(IndexError, lambda: Integer(6).newshape((4, 4)))
 
 def test_integer_as_subindex_slice_exhaustive():
     for n in range(10):

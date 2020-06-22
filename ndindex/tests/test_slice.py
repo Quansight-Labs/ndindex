@@ -4,10 +4,11 @@ from numpy import arange, isin
 from numpy.testing import assert_equal
 
 from hypothesis import given, assume
-from hypothesis.strategies import integers
+from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
 from ..tuple import Tuple
+from ..integer import Integer
 from .helpers import (check_same, slices, prod, shapes, iterslice,
                       positive_slices, Tuples)
 
@@ -187,6 +188,57 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.stop != None
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
+
+
+def test_slice_newshape_exhaustive():
+    # Call newshape so we can see if any exceptions match
+    def func(S):
+        S.newshape(shape)
+        return S
+
+    def assert_equal(x, y):
+        newshape = S.newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    for n in range(10):
+        shape = n
+        a = arange(n)
+
+        for sargs in iterslice():
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            check_same(a, S.raw, func=func, assert_equal=assert_equal)
+
+
+@given(slices(), one_of(shapes, integers(0, 10)))
+def test_slice_newshape_hypothesis(s, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        S = Slice(s)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    # Call newshape so we can see if any exceptions match
+    def func(S):
+        S.newshape(shape)
+        return S
+
+    def assert_equal(x, y):
+        newshape = S.newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    check_same(a, S.raw, func=func, assert_equal=assert_equal)
+
+def test_slice_newshape_ndindex_input():
+    raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
+    raises(TypeError, lambda: Slice(6).newshape(Integer(2)))
 
 def test_slice_as_subindex_slice_exhaustive():
     # We have to restrict the range of the exhaustive test to get something

@@ -84,6 +84,21 @@ class Integer(NDIndex):
 
         return self
 
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        from . import Tuple
+
+        if isinstance(shape, (Tuple, Integer)):
+            raise TypeError("ndindex types are not meant to be used as a shape - "
+                            "did you mean to use the built-in tuple type?")
+        if isinstance(shape, int):
+            shape = (shape,)
+
+        # reduce will raise IndexError if it should be raised
+        self.reduce(shape)
+
+        return shape[1:]
+
     def as_subindex(self, index):
         from .ndindex import ndindex
         from .slice import Slice

@@ -6,6 +6,8 @@ from numpy.testing import assert_equal
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
+from pytest import raises
+
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
@@ -161,6 +163,8 @@ def test_tuple_expand_hypothesis(t, shape):
         else:
             assert len(expanded.args) == len(shape)
 
+# This is here because expand() always returns a Tuple, so it is very similar
+# to the test_tuple_expand_hypothesis test.
 @given(ndindices(), one_of(shapes, integers(0, 10)))
 def test_ndindex_expand_hypothesis(idx, shape):
     if isinstance(shape, int):
@@ -185,6 +189,34 @@ def test_ndindex_expand_hypothesis(idx, shape):
             assert len(expanded.args) == 1
         else:
             assert len(expanded.args) == len(shape)
+
+@given(Tuples, one_of(shapes, integers(0, 10)))
+def test_tuple_newshape_hypothesis(t, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        index = Tuple(*t)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    # Call newshape so we can see if any exceptions match
+    def func(t):
+        t.newshape(shape)
+        return t
+
+    def assert_equal(x, y):
+        newshape = index.newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    check_same(a, index.raw, func=func, assert_equal=assert_equal,
+               same_exception=False)
+
+def test_tuple_newshape_ndindex_input():
+    raises(TypeError, lambda: Tuple(1).newshape(Tuple(2, 1)))
+    raises(TypeError, lambda: Tuple(1).newshape(Integer(2)))
 
 
 @given(Tuples, positive_slices, shapes)
