@@ -187,7 +187,7 @@ def test_ndindex_expand_hypothesis(idx, shape):
             assert len(expanded.args) == len(shape)
 
 
-@given(Tuples, Tuples, shapes)
+@given(Tuples, positive_slices, shapes)
 def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     a = arange(prod(shape)).reshape(shape)
 
@@ -212,4 +212,29 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     # TODO: how can we check that the shape is correct?
     assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
 
+@example((), (slice(None, None, -1),), (2,))
+@example((), (..., slice(None, None, -1),), (2,))
+@given(Tuples, Tuples, shapes)
+def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
+    a = arange(prod(shape)).reshape(shape)
 
+    try:
+        T = Tuple(*t)
+        Index = ndindex(index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = T.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aT = a[t]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    # TODO: how can we check that the shape is correct?
+    assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
