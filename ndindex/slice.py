@@ -355,17 +355,17 @@ class Slice(NDIndex):
             return Tuple(self).as_subindex(index)
 
         if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples and slices")
 
         s = self.reduce()
         index = index.reduce()
 
         if s.step < 0 or index.step < 0:
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices with positive steps")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
 
         # After reducing, start is not None when step > 0
         if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
         # Chinese Remainder Theorem. We are looking for a solution to
         #
