@@ -8,8 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from ..slice import Slice
-from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices, positive_slices
+from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
 
 
 def test_tuple_exhaustive():
