@@ -322,11 +322,11 @@ $$
 ['d', 'e']
 ```
 
-Do not be if you find 0-based indexing hard to get used to, or if you find
-yourself forgetting about it. Even experienced Python developers (this author
-included) still find themselves writing `a[3]` instead of `a[2]` from time to
-time. The best way to learn to use 0-based indexing is to practice using it
-enough that you use it automatically without thinking about it.
+Do not be worried if you find 0-based indexing hard to get used to, or if you
+find yourself forgetting about it. Even experienced Python developers (this
+author included) still find themselves writing `a[3]` instead of `a[2]` from
+time to time. The best way to learn to use 0-based indexing is to practice
+using it enough that you use it automatically without thinking about it.
 
 (half-open)=
 ### Half-open
