@@ -147,9 +147,9 @@ a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\
 \mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
 \]</div>
 <p>The list <code class="docutils literal notranslate"><span class="pre">a</span></code> has 7 elements.</p>
-<p>The elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> are strings, but the indices and slices on <code class="docutils literal notranslate"><span class="pre">a</span></code> will always
-use integers. An index or slice is never based on the value of the elements,
-but rather the position of the elements in the list.<a class="footnote-reference brackets" href="#dict-footnote" id="id3">1</a></p>
+<p>The elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> are strings, but the indices and slices on the list <code class="docutils literal notranslate"><span class="pre">a</span></code>
+will always use integers. An index or slice is never based on the value of the
+elements, but rather the position of the elements in the list.<a class="footnote-reference brackets" href="#dict-footnote" id="id3">1</a></p>
 <p>An integer index picks a single element from the list <code class="docutils literal notranslate"><span class="pre">a</span></code>. For NumPy arrays,
 integer indices pick a subarray corresponding to a particular element from a
 given axis (and as a result, an integer index always reduces the
@@ -953,7 +953,7 @@ example, instead of using <code class="docutils literal notranslate"><span class
 <span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
 </pre></div>
 </div>
-<p>Furthermore, if the <code class="docutils literal notranslate"><span class="pre">start</span></code> is on or after the <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the slice will slice be
+<p>Furthermore, if the <code class="docutils literal notranslate"><span class="pre">start</span></code> is on or after the <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the slice will be
 empty.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 <span class="go">[]</span>
@@ -1274,7 +1274,7 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \ma
 $$
 </div>
 <div style="text-align:center">
-<code style="font-size: 16pt;">a[3:] == a[3::1] ['d', 'e', 'f', 'g']</code>
+<code style="font-size: 16pt;">a[3:] == a[3::1] == ['d', 'e', 'f', 'g']</code>
 $$
 \require{enclose}
 \begin{aligned}

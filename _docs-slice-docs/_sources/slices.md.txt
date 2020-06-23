@@ -109,9 +109,9 @@ $$
 
 The list `a` has 7 elements.
 
-The elements of `a` are strings, but the indices and slices on `a` will always
-use integers. An index or slice is never based on the value of the elements,
-but rather the position of the elements in the list.[^dict-footnote]
+The elements of `a` are strings, but the indices and slices on the list `a`
+will always use integers. An index or slice is never based on the value of the
+elements, but rather the position of the elements in the list.[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a `dict`. Despite using similar
@@ -1031,7 +1031,7 @@ Slices can never give an out-of-bounds `IndexError`. This is different from
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
-Furthermore, if the `start` is on or after the `stop`, the slice will slice be
+Furthermore, if the `start` is on or after the `stop`, the slice will be
 empty.
 
 ```py
@@ -1408,7 +1408,7 @@ $$
 </div>
 
 <div style="text-align:center">
-<code style="font-size: 16pt;">a[3:] == a[3::1] ['d', 'e', 'f', 'g']</code>
+<code style="font-size: 16pt;">a[3:] == a[3::1] == ['d', 'e', 'f', 'g']</code>
 $$
 \require{enclose}
 \begin{aligned}
