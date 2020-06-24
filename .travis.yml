@@ -30,12 +30,11 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx recommonmark sphinx_rtd_theme pytest-cov
+  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx recommonmark sphinx_rtd_theme pytest-cov pytest-flakes
   - source activate test-environment
 
 script:
   - set -e
-  - pyflakes .
   - python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
   # The coverage requirement check is done by the coverage report line below
   - PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
