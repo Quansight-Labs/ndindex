@@ -786,6 +786,117 @@ $$
 \end{aligned}
 $$
 </div>
+<p>But things are even worse than that. If we combine negative <code class="docutils literal notranslate"><span class="pre">start</span></code> and
+<code class="docutils literal notranslate"><span class="pre">stop</span></code> and negative <code class="docutils literal notranslate"><span class="pre">step</span></code>, things get even more confusing. Consider the
+slice <code class="docutils literal notranslate"><span class="pre">a[-2:-4:-1]</span></code>. This gives <code class="docutils literal notranslate"><span class="pre">['f',</span> <span class="pre">'e']</span></code>:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">[&#39;f&#39;, &#39;e&#39;]</span>
+</pre></div>
+</div>
+<p>To get this with the “spacers” idea, we have to use the above “wrong”
+diagram:</p>
+<div style="text-align:center" >
+<code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
+<div style="font-size: 16pt;color:blue;">NOW RIGHT!</div>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{c}
+\begin{array}{r r r r r r r r r r r r r r r r r r}
+  a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{blue}{|}
+    &
+    & \color{blue}{|}
+    &
+    & \color{blue}{|}
+    &
+    & \color{red}{|}\\
+\color{red}{\text{index}}
+    &
+    & \color{red}{-8}
+    &
+    & \color{red}{-7}
+    &
+    & \color{red}{-6}
+    &
+    & \color{red}{-5}
+    &
+    & \color{blue}{-4}
+    &
+    & \color{blue}{-3}
+    &
+    & \color{blue}{-2}
+    &
+    & \color{red}{-1}\\
+\end{array}\\
+\small{\text{(not a great way of thinking about negative indices)}}
+\end{array}
+\end{aligned}
+$$
+</div>
+<div style="text-align:center" >
+<code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
+<div style="font-size: 16pt;color:red;">(WRONG)</div>
+$$
+\require{enclose}
+\begin{aligned}
+\begin{array}{c}
+\begin{array}{r r r r r r r r r r r r r r r r r r}
+  a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{blue}{|}
+    &
+    & \color{blue}{|}
+    &
+    & \color{blue}{|}
+    &
+    & \color{red}{|}
+    &
+    & \color{red}{|}\\
+\color{red}{\text{index}}
+    &
+    & \color{red}{-7}
+    &
+    & \color{red}{-6}
+    &
+    & \color{red}{-5}
+    &
+    & \color{blue}{-4}
+    &
+    & \color{blue}{-3}
+    &
+    & \color{blue}{-2}
+    &
+    & \color{red}{-1}
+    &
+    & \color{red}{0}\\
+\end{array}\\
+\small{\color{red}{\textbf{THIS IS WRONG!}}}
+\end{array}
+\end{aligned}
+$$
+</div>
+<p>In other words, the “right” way to think of spacers with negative <code class="docutils literal notranslate"><span class="pre">start</span></code>
+and <code class="docutils literal notranslate"><span class="pre">stop</span></code> depends if the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive or negative.</p>
+<p>This is because the correct half-open rule is based on not including the
+<code class="docutils literal notranslate"><span class="pre">stop</span></code>. It <em>isn’t</em> based on not including the larger end of the interval. If
+the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive, the <code class="docutils literal notranslate"><span class="pre">stop</span></code> will be larger, but if it is
+<a class="reference internal" href="#negative-steps"><span class="std std-ref">negative</span></a>, the <code class="docutils literal notranslate"><span class="pre">start</span></code> will be larger.</p>
 </li>
 <li><p>The rule “works” for slices, but is harder to imagine for integer indices.
 In the divider way of thinking, an integer index <code class="docutils literal notranslate"><span class="pre">n</span></code> corresponds to the
