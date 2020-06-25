@@ -719,7 +719,6 @@ reasons why this way of thinking creates more confusion than it removes.
   $$
   </div>
 
-
 - The rule does work for negative `start` and `step`, but only if you think
   about it correctly. The correct way to think about it is to reverse the
   indices:
@@ -831,6 +830,125 @@ reasons why this way of thinking creates more confusion than it removes.
   \end{aligned}
   $$
   </div>
+
+
+  But things are even worse than that. If we combine negative `start` and
+  `stop` and negative `step`, things get even more confusing. Consider the
+  slice `a[-2:-4:-1]`. This gives `['f', 'e']`:
+
+  ```py
+  >>> a[-2:-4:-1]
+  ['f', 'e']
+  ```
+
+  To get this with the "spacers" idea, we have to use the above "wrong"
+  diagram:
+
+  <div style="text-align:center" >
+  <code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
+  <div style="font-size: 16pt;color:blue;">NOW RIGHT!</div>
+  $$
+  \require{enclose}
+  \begin{aligned}
+  \begin{array}{c}
+  \begin{array}{r r r r r r r r r r r r r r r r r r}
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{red}{|}\\
+  \color{red}{\text{index}}
+      &
+      & \color{red}{-8}
+      &
+      & \color{red}{-7}
+      &
+      & \color{red}{-6}
+      &
+      & \color{red}{-5}
+      &
+      & \color{blue}{-4}
+      &
+      & \color{blue}{-3}
+      &
+      & \color{blue}{-2}
+      &
+      & \color{red}{-1}\\
+  \end{array}\\
+  \small{\text{(not a great way of thinking about negative indices)}}
+  \end{array}
+  \end{aligned}
+  $$
+  </div>
+
+  <div style="text-align:center" >
+  <code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
+  <div style="font-size: 16pt;color:red;">(WRONG)</div>
+  $$
+  \require{enclose}
+  \begin{aligned}
+  \begin{array}{c}
+  \begin{array}{r r r r r r r r r r r r r r r r r r}
+    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{blue}{|}
+      &
+      & \color{red}{|}
+      &
+      & \color{red}{|}\\
+  \color{red}{\text{index}}
+      &
+      & \color{red}{-7}
+      &
+      & \color{red}{-6}
+      &
+      & \color{red}{-5}
+      &
+      & \color{blue}{-4}
+      &
+      & \color{blue}{-3}
+      &
+      & \color{blue}{-2}
+      &
+      & \color{red}{-1}
+      &
+      & \color{red}{0}\\
+  \end{array}\\
+  \small{\color{red}{\textbf{THIS IS WRONG!}}}
+  \end{array}
+  \end{aligned}
+  $$
+  </div>
+
+  In other words, the "right" way to think of spacers with negative `start`
+  and `stop` depends if the `step` is positive or negative.
+
+  This is because the correct half-open rule is based on not including the
+  `stop`. It *isn't* based on not including the larger end of the interval. If
+  the `step` is positive, the `stop` will be larger, but if it is
+  [negative](negative-steps), the `start` will be larger.
 
 - The rule "works" for slices, but is harder to imagine for integer indices.
   In the divider way of thinking, an integer index `n` corresponds to the
