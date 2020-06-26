@@ -114,3 +114,37 @@ def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
     asubindex = aindex[Subindex.raw]
 
     assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
+
+
+@given(ellipses(), one_of(shapes, integers(0, 10)))
+def test_ellipsis_isempty_hypothesis(idx, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    E = ndindex(idx)
+
+    # Call isempty to see if the exceptions are the same
+    def func(E):
+        E.isempty(shape)
+        return E
+
+    def assert_equal(a_raw, a_idx):
+        isempty = E.isempty()
+
+        aempty = (a_raw.size == 0)
+        assert aempty == (a_idx.size == 0)
+
+        # If isempty is True then a[s] should be empty
+        if isempty:
+            assert aempty, (E, shape)
+        # We cannot test the converse with hypothesis. isempty may be False but
+        # a[s] could still be empty for this specific a (e.g., if a is already
+        # itself empty).
+
+        # isempty() should always give the correct result for a specific
+        # array after reduction
+        assert E.isempty(shape) == aempty, (E, shape)
+
+    check_same(a, idx, func=func, assert_equal=assert_equal)

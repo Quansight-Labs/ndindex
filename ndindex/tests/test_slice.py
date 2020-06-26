@@ -319,3 +319,64 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, size):
     asubindex = aindex[Subindex.raw]
 
     assert_equal(asubindex, aS[isin(aS, aindex)])
+
+def test_slice_isempty_exhaustive():
+    for args in iterslice():
+        try:
+            S = Slice(*args)
+        except ValueError:
+            continue
+
+        isempty = S.isempty()
+
+        aempty = True
+        for n in range(30):
+            a = arange(n)
+
+            aS = a[S.raw]
+            if aS.size != 0:
+                if isempty:
+                    raise AssertionError(f"Slice s = {S}.isempty() gave True, a[s] is not empty for a = range({n}).")
+                else:
+                    aempty = False
+            # isempty() should always give the correct result for a specific
+            # array shape
+            assert S.isempty(n) == (aS.size == 0)
+
+        assert isempty == aempty, S
+
+@given(slices(), one_of(shapes, integers(0, 10)))
+def test_slice_isempty_hypothesis(s, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        S = Slice(s)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    # Call isempty to see if the exceptions are the same
+    def func(S):
+        S.isempty(shape)
+        return S
+
+    def assert_equal(a_raw, a_idx):
+        isempty = S.isempty()
+
+        aempty = (a_raw.size == 0)
+        assert aempty == (a_idx.size == 0)
+
+        # If isempty is True then a[s] should be empty
+        if isempty:
+            assert aempty, (S, shape)
+        # We cannot test the converse with hypothesis. isempty may be False but
+        # a[s] could still be empty for this specific a (e.g., if a is already
+        # itself empty).
+
+        # isempty() should always give the correct result for a specific
+        # array after reduction
+        assert S.isempty(shape) == aempty, (S, shape)
+
+    check_same(a, s, func=func, assert_equal=assert_equal)

@@ -199,3 +199,77 @@ def test_integer_as_subindex_tuple_hypothesis(i, index, size):
     asubindex = aindex[Subindex.raw]
 
     assert_equal(asubindex, aidx[isin(aidx, aindex)])
+
+def test_integer_isempty_exhaustive():
+    for i in range(-10, 10):
+        try:
+            idx = Integer(i)
+        except ValueError:
+            continue
+
+        isempty = idx.isempty()
+
+        aempty = True
+        for n in range(30):
+            a = arange(n)
+
+            exception = False
+            try:
+                aidx = a[idx.raw]
+            except IndexError:
+                exception = True
+            else:
+                if aidx.size != 0:
+                    if isempty:
+                        raise AssertionError(f"Integer idx = {idx}.isempty() gave True, a[idx] is not empty for a = range({n}).")
+                    else:
+                        aempty = False
+            # isempty() should always give the correct result for a specific
+            # array shape
+            try:
+                isemptyn = idx.isempty(n)
+            except IndexError:
+                if not exception:
+                    raise AssertionError(f"idx.isempty(n) raised but a[idx] did not (idx = {idx}, n = {n}).")
+            else:
+                if exception:
+                    raise AssertionError(f"a[idx] raised but idx.isempty(n) did not (idx = {idx}, n = {n}).")
+                assert isemptyn == (aidx.size == 0)
+
+        assert isempty == aempty, idx
+
+@given(ints(), one_of(shapes, integers(0, 10)))
+def test_integer_isempty_hypothesis(i, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        idx = Integer(i)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    # Call isempty to see if the exceptions are the same
+    def func(idx):
+        idx.isempty(shape)
+        return idx
+
+    def assert_equal(a_raw, a_idx):
+        isempty = idx.isempty()
+
+        aempty = (a_raw.size == 0)
+        assert aempty == (a_idx.size == 0)
+
+        # If isempty is True then a[s] should be empty
+        if isempty:
+            assert aempty, (idx, shape)
+        # We cannot test the converse with hypothesis. isempty may be False but
+        # a[s] could still be empty for this specific a (e.g., if a is already
+        # itself empty).
+
+        # isempty() should always give the correct result for a specific
+        # array after reduction
+        assert idx.isempty(shape) == aempty, (idx, shape)
+
+    check_same(a, i, func=func, assert_equal=assert_equal)
