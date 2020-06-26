@@ -1,8 +1,3 @@
-env:
-  global:
-    # Doctr deploy key for Quansight/ndindex
-    - secure: "re3NcmEUC70IlsnSzeSP8SET/Z8VC5r0CLUespXPG0/mDqxulgDRJC3jZMKy/Aa9TkBGW0MTitazIe7zSyuq+UrmNTN1yH8t04fBsQ5Hu8Lh+ed7mhmJqOVBhTX+uaYsHoQ+7LxTaZz4onzfaJBHuzNC7XIchARKPNelz3+TKs8Vlk+K0awtbEgPqpNIo22VOe/dzxs+AtQF1bwdrmfiSRv3LdJNtH+Dzgh1i4euybhylQh+ugWUHVqTKa6FSfXvvvrhZqCUNbVbRjAmGTL2RkucdqRre37Kz3dd6vL7G3zN9tiCI6m6uH+3Z1pEj2rV+y80GZX+CkcSLeGbfqU6S4GewaBW5+p33p4WGKWGvaU2lOu7dJIMwfMTMjzAXPoKSNA42rMzKtArsYAk14mYRKOj082P2sF3bXyy5zvKCG2m6gJseoWQxqU6tZcjUfoKPMUCZQGXJzgHDkzl9vTPfFl2mTY5zvAvC7BYkxUK1uGA6bbTEqGBnfbY9dSDPk5DYDeN5BcAxwBhtnfHiRF+VnhSt2dsG8FE4eL1MyfQn0iSkqd/UHrJOUCBCzGRrw4ZbDhX+S4zv7qNjbonB5UowbpdinePdRf7PUQWGvRvCHoND3se8FITLZktqIcKjB3WvLx7xF9MevVQZhvsRTmOE4MttQ6xbAM0XSzNmehOWVg="
-
 language: python
 
 dist: xenial
@@ -19,7 +14,9 @@ matrix:
       env:
         - TESTS=true
         - DOCS=true
-        - COVERAGE=true
+        - CODECOV=true
+        # Doctr deploy key for Quansight/ndindex
+        - secure: "re3NcmEUC70IlsnSzeSP8SET/Z8VC5r0CLUespXPG0/mDqxulgDRJC3jZMKy/Aa9TkBGW0MTitazIe7zSyuq+UrmNTN1yH8t04fBsQ5Hu8Lh+ed7mhmJqOVBhTX+uaYsHoQ+7LxTaZz4onzfaJBHuzNC7XIchARKPNelz3+TKs8Vlk+K0awtbEgPqpNIo22VOe/dzxs+AtQF1bwdrmfiSRv3LdJNtH+Dzgh1i4euybhylQh+ugWUHVqTKa6FSfXvvvrhZqCUNbVbRjAmGTL2RkucdqRre37Kz3dd6vL7G3zN9tiCI6m6uH+3Z1pEj2rV+y80GZX+CkcSLeGbfqU6S4GewaBW5+p33p4WGKWGvaU2lOu7dJIMwfMTMjzAXPoKSNA42rMzKtArsYAk14mYRKOj082P2sF3bXyy5zvKCG2m6gJseoWQxqU6tZcjUfoKPMUCZQGXJzgHDkzl9vTPfFl2mTY5zvAvC7BYkxUK1uGA6bbTEqGBnfbY9dSDPk5DYDeN5BcAxwBhtnfHiRF+VnhSt2dsG8FE4eL1MyfQn0iSkqd/UHrJOUCBCzGRrw4ZbDhX+S4zv7qNjbonB5UowbpdinePdRf7PUQWGvRvCHoND3se8FITLZktqIcKjB3WvLx7xF9MevVQZhvsRTmOE4MttQ6xbAM0XSzNmehOWVg="
 
 install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -30,7 +27,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx recommonmark sphinx_rtd_theme pytest-cov pytest-flakes
+  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes
   - source activate test-environment
 
 script:
@@ -39,13 +36,18 @@ script:
   # The coverage requirement check is done by the coverage report line below
   - PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
   - pytest $PYTEST_FLAGS
+  - ./run_doctests
   # Make sure it installs
   - python setup.py install
   - if [[ "${DOCS}" == "true" ]]; then
         cd docs;
         make html;
         cd ..;
-        doctr deploy .;
+        if [[ "${TRAVIS_BRANCH}" == "master" ]]; then
+            doctr deploy .;
+        else
+            doctr deploy --no-require-master "_docs-$TRAVIS_BRANCH";
+        fi
     fi
   - if [[ "${COVERAGE}" == "true" ]]; then
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";

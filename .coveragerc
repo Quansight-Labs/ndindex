@@ -1,5 +1,7 @@
 [run]
-omit = ndindex/_version.py
+omit =
+    ndindex/_version.py
+    ndindex/tests/doctest.py
 
 [report]
 exclude_lines =

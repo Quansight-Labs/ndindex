@@ -28,37 +28,24 @@ author = 'Quansight'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'recommonmark',
+    'myst_parser',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
 ]
 
-import commonmark
-from recommonmark.transform import AutoStructify
-
-# From
-# https://stackoverflow.com/questions/56062402/force-sphinx-to-interpret-markdown-in-python-docstrings-instead-of-restructuredt
-
-def docstring(app, what, name, obj, options, lines):
-    md  = '\n'.join(lines)
-    ast = commonmark.Parser().parse(md)
-    rst = commonmark.ReStructuredTextRenderer().render(ast)
-    lines.clear()
-    lines += rst.splitlines()
-
-def setup(app):
-    # Uncomment this to make the docstrings use Markdown instead of RST. For
-    # now, we just simulate Markdown by setting default_role = 'code'
-
-    # app.connect('autodoc-process-docstring', docstring)
-
-    app.add_config_value('recommonmark_config', {
-        'enable_eval_rst': True,
-        'auto_toc_tree': True,
-        'enable_math': False,
-        'enable_inline_math': False,
-        }, True)
-    app.add_transform(AutoStructify)
+# # From
+# # https://stackoverflow.com/questions/56062402/force-sphinx-to-interpret-markdown-in-python-docstrings-instead-of-restructuredt
+#
+# def docstring(app, what, name, obj, options, lines):
+#     import commonmark
+#     md  = '\n'.join(lines)
+#     ast = commonmark.Parser().parse(md)
+#     rst = commonmark.ReStructuredTextRenderer().render(ast)
+#     lines.clear()
+#     lines += rst.splitlines()
+#
+# def setup(app):
+#     app.connect('autodoc-process-docstring', docstring)
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -88,7 +75,7 @@ pygments_style = 'sphinx'
 html_theme_options = {
     'github_user': 'Quansight',
     'github_repo': 'ndindex',
-    'github_banner': True,
+    'github_banner': False,
     # 'logo': 'logo.jpg',
     # 'logo_name': True,
     # 'show_related': True,
@@ -114,12 +101,20 @@ html_theme_options = {
     # Fonts
     'font_family': "Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
     'font_size': '18px',
-    'code_font_family': "'Menlo', 'Deja Vu Sans Mono', 'Consolas', 'Bitstream Vera Sans Mono', monospace",
+    'code_font_family': "'Menlo', 'DejaVu Sans Mono', 'Consolas', 'Bitstream Vera Sans Mono', monospace",
     'code_font_size': '0.85em',
     }
 
 html_sidebars = {
     '**': ['globaltocindex.html', 'searchbox.html'],
+}
+
+mathjax_config = {
+  'TeX': {
+      'equationNumbers': {
+          'autoNumber': "AMS",
+      },
+  },
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

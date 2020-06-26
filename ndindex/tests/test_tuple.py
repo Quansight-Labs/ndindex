@@ -189,6 +189,7 @@ def test_ndindex_expand_hypothesis(idx, shape):
         else:
             assert len(expanded.args) == len(shape)
 
+@example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_newshape_hypothesis(t, shape):
     if isinstance(shape, int):

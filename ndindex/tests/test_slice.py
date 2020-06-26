@@ -160,9 +160,13 @@ def test_slice_reduce_exhaustive():
             assert reduced.step != None
             assert len(reduced) == len(a[reduced.raw]), (S, n)
 
-@given(slices(), shapes)
+@given(slices(), one_of(shapes, integers(0, 10)))
 def test_slice_reduce_hypothesis(s, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
     try:
         S = Slice(s)
     except ValueError: # pragma: no cover

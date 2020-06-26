@@ -138,6 +138,7 @@ And more. If there is something you would like to see this library be able to
 do, please [open an issue](https://github.com/quansight/ndindex/issues). Pull
 requests are welcome as well.
 
+(testing)=
 ## Testing and correctness
 
 The most important priority for a library like this is correctness. Index
@@ -169,7 +170,7 @@ There are two primary types of tests that we employ to verify this:
   combinatorial search space of inputs. This requires writing hypothesis
   strategies that can generate all the relevant types of indices (see
   ndindex/tests/helpers.py). For more information on hypothesis, see
-  https://hypothesis.readthedocs.io/en/latest/index.html. All tests have
+  <https://hypothesis.readthedocs.io/en/latest/index.html>. All tests have
   hypothesis tests, even if they are also tested exhaustively.
 
 Why bother with hypothesis if the same thing is already tested exhaustively?
@@ -194,6 +195,10 @@ MIT License
 
 ## Table of Contents
 
-* [ndindex Docs Main Page](index.md)
-* [ndindex API](api.md)
-* [Changelog](changelog.md)
+```{toctree}
+index.md
+api.md
+slices.md
+changelog.md
+style-guide.md
+```
