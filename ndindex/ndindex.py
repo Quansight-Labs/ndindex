@@ -330,5 +330,9 @@ class NDIndex:
         >>> Slice(5, 10).isempty(4)
         True
 
+        See Also
+        ========
+        ndindex.Slice.__len__
+
         """
         raise NotImplementedError
