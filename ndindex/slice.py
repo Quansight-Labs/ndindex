@@ -35,9 +35,8 @@ class Slice(NDIndex):
     because Python itself does not make the distinction between x:y and x:y:
     syntactically.
 
-    See
-    https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing-and-indexing
-    for a description of the semantic meaning of slices on arrays.
+    See :ref:`slices-docs` for a description of the semantic meaning of slices
+    on arrays.
 
     Slice has attributes `start`, `stop`, and `step` to access the
     corresponding attributes.
