@@ -1,14 +1,16 @@
-from numpy import arange, int64
+from numpy import arange, int64, isin
+from numpy.testing import assert_equal
 
 from pytest import raises
 
-from hypothesis import given
+from hypothesis import given, assume
 from hypothesis.strategies import integers, one_of
 
 from ..integer import Integer
 from ..ndindex import ndindex
 from ..tuple import Tuple
-from .helpers import check_same, ints, prod, shapes
+from ..slice import Slice
+from .helpers import check_same, ints, prod, shapes, iterslice, slices, Tuples
 
 
 def test_integer_args():
@@ -86,17 +88,16 @@ def test_integer_reduce_no_shape_hypothesis(i, shape):
 def test_integer_newshape_exhaustive():
     shape = 5
     a = arange(shape)
+    def assert_equal(x, y):
+        newshape = ndindex(i).newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    # Call newshape so we can see if any exceptions match
+    def func(i):
+        i.newshape(shape)
+        return i
 
     for i in range(-10, 10):
-        def assert_equal(x, y):
-            newshape = ndindex(i).newshape(shape)
-            assert x.shape == y.shape == newshape
-
-        # Call newshape so we can see if any exceptions match
-        def func(i):
-            i.newshape(shape)
-            return i
-
         check_same(a, i, func=func, assert_equal=assert_equal)
 
 @given(ints(), one_of(shapes, integers(0, 10)))
@@ -124,3 +125,77 @@ def test_integer_newshape_ndindex_input():
 def test_integer_newshape_small_shape():
     raises(IndexError, lambda: Integer(6).newshape(2))
     raises(IndexError, lambda: Integer(6).newshape((4, 4)))
+
+def test_integer_as_subindex_slice_exhaustive():
+    for n in range(10):
+        a = arange(n)
+        for i in range(-10, 10):
+            try:
+                a[i]
+            except IndexError:
+                continue
+
+            for indexargs in iterslice():
+                idx = Integer(i)
+
+                try:
+                    Index = Slice(*indexargs)
+                except ValueError:
+                    continue
+
+                try:
+                    Subindex = idx.as_subindex(Index)
+                except NotImplementedError:
+                    continue
+
+                aidx = a[idx.raw]
+                aindex = a[Index.raw]
+                asubindex = aindex[Subindex.raw]
+
+                assert_equal(asubindex, aidx[isin(aidx, aindex)])
+
+@given(ints(), slices(), integers(0, 100))
+def test_integer_as_subindex_slice_hypothesis(i, index, size):
+    a = arange(size)
+    try:
+        idx = Integer(i)
+        Index = Slice(index)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = idx.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aidx = a[idx]
+    except IndexError: # pragma: no cover
+        assume(False)
+    aindex = a[index]
+    asubindex = aindex[Subindex.raw]
+
+    assert_equal(asubindex, aidx[isin(aidx, aindex)])
+
+@given(ints(), Tuples, integers(0, 100))
+def test_integer_as_subindex_tuple_hypothesis(i, index, size):
+    a = arange(size)
+    try:
+        idx = Integer(i)
+        Index = Tuple(*index)
+    except (ValueError, IndexError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = idx.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aidx = a[idx]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    assert_equal(asubindex, aidx[isin(aidx, aindex)])

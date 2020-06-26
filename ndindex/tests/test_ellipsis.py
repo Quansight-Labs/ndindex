@@ -1,15 +1,17 @@
-from numpy import arange
+from numpy import arange, isin
+from numpy.testing import assert_equal
 
-from hypothesis import given
+from hypothesis import given, assume
 from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
 from ..ndindex import ndindex
 from ..tuple import Tuple
+from ..slice import Slice
 from ..integer import Integer
 from ..ellipsis import ellipsis
-from .helpers import check_same, prod, shapes, ellipses
+from .helpers import check_same, prod, shapes, ellipses, slices, Tuples
 
 def test_ellipsis_exhaustive():
     for n in range(10):
@@ -64,3 +66,51 @@ def test_ellipsis_newshape_hypothesis(idx, shape):
 def test_ellipsis_newshape_ndindex_input():
     raises(TypeError, lambda: ellipsis().newshape(Tuple(2, 1)))
     raises(TypeError, lambda: ellipsis().newshape(Integer(2)))
+
+@given(ellipses(), slices(), shapes)
+def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
+    a = arange(prod(shape)).reshape(shape)
+
+    E = ndindex(idx)
+    try:
+        Index = Slice(index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = E.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aE = a[idx]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
+
+@given(ellipses(), Tuples, shapes)
+def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
+    a = arange(prod(shape)).reshape(shape)
+
+    E = ndindex(idx)
+    try:
+        Index = Tuple(*index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = E.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aE = a[idx]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])

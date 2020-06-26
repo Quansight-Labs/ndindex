@@ -257,10 +257,10 @@ class NDIndex:
                 |                           |
                 +- self.as_subindex(index) -+
 
-        `i.as_subindex(j)` is currently only implemented when `i` and `j` are
-        slices with positive steps and nonnegative start and stop. To use it
-        with slices with negative start or stop, call :meth:`reduce` with a shape
-        first.
+        `i.as_subindex(j)` is currently only implemented when `j` is a slices
+        with positive steps and nonnegative start and stop, or a Tuple of the
+        same. To use it with slices with negative start or stop, call
+        :meth:`reduce` with a shape first.
 
         `as_subindex` can be seen as the left-inverse of composition, that is,
         if `i = j[k]`, that is, `a[i] = a[j][k]`, then `k = i.as_subindex(j)`,

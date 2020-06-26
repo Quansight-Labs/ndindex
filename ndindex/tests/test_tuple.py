@@ -1,6 +1,7 @@
 from itertools import product
 
-from numpy import arange
+from numpy import arange, isin
+from numpy.testing import assert_equal
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
@@ -10,7 +11,7 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
+from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices, slices
 
 
 def test_tuple_exhaustive():
@@ -189,6 +190,7 @@ def test_ndindex_expand_hypothesis(idx, shape):
         else:
             assert len(expanded.args) == len(shape)
 
+@example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_newshape_hypothesis(t, shape):
     if isinstance(shape, int):
@@ -216,3 +218,56 @@ def test_tuple_newshape_hypothesis(t, shape):
 def test_tuple_newshape_ndindex_input():
     raises(TypeError, lambda: Tuple(1).newshape(Tuple(2, 1)))
     raises(TypeError, lambda: Tuple(1).newshape(Integer(2)))
+
+
+@given(Tuples, slices(), shapes)
+def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
+    a = arange(prod(shape)).reshape(shape)
+
+    try:
+        T = Tuple(*t)
+        Index = ndindex(index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = T.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aT = a[t]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    # TODO: how can we check that the shape is correct?
+    assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
+
+@example((), (slice(None, None, -1),), (2,))
+@example((), (..., slice(None, None, -1),), (2,))
+@given(Tuples, Tuples, shapes)
+def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
+    a = arange(prod(shape)).reshape(shape)
+
+    try:
+        T = Tuple(*t)
+        Index = ndindex(index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = T.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aT = a[t]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    # TODO: how can we check that the shape is correct?
+    assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])

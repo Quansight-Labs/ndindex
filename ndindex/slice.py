@@ -35,9 +35,8 @@ class Slice(NDIndex):
     because Python itself does not make the distinction between x:y and x:y:
     syntactically.
 
-    See
-    https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing-and-indexing
-    for a description of the semantic meaning of slices on arrays.
+    See :ref:`slices-docs` for a description of the semantic meaning of slices
+    on arrays.
 
     Slice has attributes `start`, `stop`, and `step` to access the
     corresponding attributes.
@@ -362,20 +361,25 @@ class Slice(NDIndex):
         # this is the only method that is actually implemented so far.
 
         from .ndindex import ndindex
+        from .tuple import Tuple
+
         index = ndindex(index)
 
+        if isinstance(index, Tuple):
+            return Tuple(self).as_subindex(index)
+
         if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples and slices")
 
         s = self.reduce()
         index = index.reduce()
 
         if s.step < 0 or index.step < 0:
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices with positive steps")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
 
         # After reducing, start is not None when step > 0
         if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
         # Chinese Remainder Theorem. We are looking for a solution to
         #
@@ -411,4 +415,4 @@ class Slice(NDIndex):
         if stop < 0:
             stop = 0
 
-        return Slice(start, stop, step)
+        return Slice(start, stop, step).reduce()
