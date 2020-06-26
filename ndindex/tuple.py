@@ -340,3 +340,28 @@ class Tuple(NDIndex):
         newshape = newshape + midshape + endshape[::-1]
 
         return tuple(newshape)
+
+    def as_subindex(self, index):
+        from .ndindex import ndindex
+        from .slice import Slice
+
+        index = ndindex(index).reduce()
+
+        if isinstance(index, Slice):
+            if not self.args:
+                if index.step < 0:
+                    raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
+                return self
+
+            first = self.args[0]
+            return Tuple(first.as_subindex(index), *self.args[1:])
+        elif isinstance(index, Tuple):
+            new_args = []
+            if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
+                    raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
+
+            for self_arg, index_arg in zip(self.args, index.args):
+                new_args.append(self_arg.as_subindex(index_arg))
+            return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
+        else:
+            raise NotImplementedError("Tuple.as_subindex() is only implemented for slices and tuples")

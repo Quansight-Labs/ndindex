@@ -79,3 +79,6 @@ class ellipsis(NDIndex):
             shape = (shape,)
 
         return shape
+
+    def as_subindex(self, index):
+        return Tuple().as_subindex(index)

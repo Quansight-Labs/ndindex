@@ -1,6 +1,7 @@
 from pytest import raises
 
-from numpy import arange
+from numpy import arange, isin
+from numpy.testing import assert_equal
 
 from hypothesis import given, assume
 from hypothesis.strategies import integers, one_of
@@ -8,7 +9,7 @@ from hypothesis.strategies import integers, one_of
 from ..slice import Slice
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, slices, prod, shapes, iterslice
+from .helpers import check_same, slices, prod, shapes, iterslice, Tuples
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -193,23 +194,24 @@ def test_slice_reduce_hypothesis(s, shape):
 
 
 def test_slice_newshape_exhaustive():
+    # Call newshape so we can see if any exceptions match
+    def func(S):
+        S.newshape(shape)
+        return S
+
+    def assert_equal(x, y):
+        newshape = S.newshape(shape)
+        assert x.shape == y.shape == newshape
+
     for n in range(10):
         shape = n
         a = arange(n)
+
         for sargs in iterslice():
             try:
                 S = Slice(*sargs)
             except ValueError:
                 continue
-
-            # Call newshape so we can see if any exceptions match
-            def func(S):
-                S.newshape(shape)
-                return S
-
-            def assert_equal(x, y):
-                newshape = S.newshape(shape)
-                assert x.shape == y.shape == newshape
 
             check_same(a, S.raw, func=func, assert_equal=assert_equal)
 
@@ -273,17 +275,9 @@ def test_slice_as_subindex_slice_exhaustive():
             aindex = a[Index.raw]
             asubindex = aindex[Subindex.raw]
 
-            for i in a:
-                if i in aS and i in aindex:
-                    assert i in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
-                else:
-                    assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+            assert_equal(asubindex, aS[isin(aS, aindex)])
 
-positive_slices = slices(start=integers(0, 10), stop=integers(0, 10),
-                         step=integers(1, 10))
-
-# @given(slices(), slices(), integers(0, 100))
-@given(positive_slices, positive_slices, integers(0, 100))
+@given(slices(), slices(), integers(0, 100))
 def test_slice_as_subindex_slice_hypothesis(s, index, size):
     a = arange(size)
     try:
@@ -295,14 +289,33 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
     try:
         Subindex = S.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
-        assume(False)
+        return
 
     aS = a[s]
     aindex = a[index]
     asubindex = aindex[Subindex.raw]
 
-    for i in a:
-        if i in aS and i in aindex:
-            assert i in asubindex
-        else:
-            assert i not in asubindex
+    assert_equal(asubindex, aS[isin(aS, aindex)])
+
+@given(slices(), Tuples, integers(0, 100))
+def test_slice_as_subindex_tuple_hypothesis(s, index, size):
+    a = arange(size)
+    try:
+        S = Slice(s)
+        Index = Tuple(*index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = S.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aS = a[s]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+    asubindex = aindex[Subindex.raw]
+
+    assert_equal(asubindex, aS[isin(aS, aindex)])
