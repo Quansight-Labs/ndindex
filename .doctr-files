@@ -1,6 +1,9 @@
-./_sources/api.md.txt
+./_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg
+./_sources/api.rst.txt
 ./_sources/changelog.md.txt
 ./_sources/index.md.txt
+./_sources/slices.md.txt
+./_sources/style-guide.md.txt
 ./_static/alabaster.css
 ./_static/basic.css
 ./_static/copybutton.js
@@ -8,7 +11,7 @@
 ./_static/doctools.js
 ./_static/documentation_options.js
 ./_static/file.png
-./_static/jquery-3.5.1.js
+./_static/jquery-3.4.1.js
 ./_static/jquery.js
 ./_static/language_data.js
 ./_static/minus.png
@@ -24,3 +27,5 @@
 ./objects.inv
 ./search.html
 ./searchindex.js
+./slices.html
+./style-guide.html

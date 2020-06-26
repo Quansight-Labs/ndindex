@@ -1,10 +1,9 @@
 
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ndindex &#8212; ndindex  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -13,6 +12,8 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Reference" href="api.html" />
@@ -114,46 +115,46 @@ implemented:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">Slice</span></code>, <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code></p></li>
 <li><p>Classes do not canonicalize by default (the constructor only does basic type
 checking). Objects can be put into canonical form by calling <code class="docutils literal notranslate"><span class="pre">reduce()</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-<span class="go">Slice(None, 12, None)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
-<span class="go">Slice(0, 12, 1)</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from ndindex import Slice
+&gt;&gt;&gt; Slice(None, 12)
+Slice(None, 12, None)
+&gt;&gt;&gt; Slice(None, 12).reduce()
+Slice(0, 12, 1)
 </pre></div>
 </div>
 </li>
 <li><p>Object arguments can be accessed with <code class="docutils literal notranslate"><span class="pre">idx.args</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
-<span class="go">(1, 3, None)</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; Slice(1, 3).args
+(1, 3, None)
 </pre></div>
 </div>
 </li>
 <li><p>All ndindex objects are hashable and can be used as dictionary keys.</p></li>
 <li><p>A real index object can be accessed with <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>. Use this to use an
 ndindex to index an array.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">arange</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)[</span><span class="n">s</span><span class="o">.</span><span class="n">raw</span><span class="p">]</span>
-<span class="go">array([0, 1])</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; s = Slice(0, 2)
+&gt;&gt;&gt; from numpy import arange
+&gt;&gt;&gt; arange(4)[s.raw]
+array([0, 1])
 </pre></div>
 </div>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">len()</span></code> computes the maximum length of an index over a given axis.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="go">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
-<span class="go">3</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; len(Slice(2, 10, 3))
+3
+&gt;&gt;&gt; len(arange(10)[2:10:3])
+3
 </pre></div>
 </div>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">idx.reduce(shape)</span></code> reduces an index to an equivalent index over an array
 with the given shape.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">10</span><span class="p">,))</span>
-<span class="go">Slice(2, 9, 1)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">array([2, 3, 4, 5, 6, 7, 8])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="mi">9</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">array([2, 3, 4, 5, 6, 7, 8])</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; Slice(2, -1).reduce((10,))
+Slice(2, 9, 1)
+&gt;&gt;&gt; arange(10)[2:-1]
+array([2, 3, 4, 5, 6, 7, 8])
+&gt;&gt;&gt; arange(10)[2:9:1]
+array([2, 3, 4, 5, 6, 7, 8])
 </pre></div>
 </div>
 </li>
@@ -178,7 +179,7 @@ do, please <a class="reference external" href="https://github.com/quansight/ndin
 requests are welcome as well.</p>
 </div>
 <div class="section" id="testing-and-correctness">
-<h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Permalink to this headline">¶</a></h2>
+<span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Permalink to this headline">¶</a></h2>
 <p>The most important priority for a library like this is correctness. Index
 manipulations, and especially slice manipulations, are complicated to code
 correctly, and the code for them typically involves dozens of different
@@ -205,7 +206,7 @@ testing due to combinatorial explosion.</p></li>
 combinatorial search space of inputs. This requires writing hypothesis
 strategies that can generate all the relevant types of indices (see
 ndindex/tests/helpers.py). For more information on hypothesis, see
-https://hypothesis.readthedocs.io/en/latest/index.html. All tests have
+<a class="reference external" href="https://hypothesis.readthedocs.io/en/latest/index.html">https://hypothesis.readthedocs.io/en/latest/index.html</a>. All tests have
 hypothesis tests, even if they are also tested exhaustively.</p></li>
 </ul>
 <p>Why bother with hypothesis if the same thing is already tested exhaustively?
@@ -232,9 +233,128 @@ test will also have a corresponding hypothesis test.</p>
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex Docs Main Page</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">ndindex API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -263,13 +383,13 @@ test will also have a corresponding hypothesis test.</p>
 
 
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex Docs Main Page</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html">ndindex API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
@@ -281,7 +401,29 @@ test will also have a corresponding hypothesis test.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
@@ -298,11 +440,16 @@ test will also have a corresponding hypothesis test.</p>
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">ndindex API</a><ul>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
@@ -314,7 +461,29 @@ test will also have a corresponding hypothesis test.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
@@ -329,6 +498,11 @@ test will also have a corresponding hypothesis test.</p>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
 </ul>
 </li>
 </ul>
@@ -347,11 +521,12 @@ test will also have a corresponding hypothesis test.</p>
       </div>
       <div class="clearer"></div>
     </div>
+    
     <div class="footer">
       &copy;2020, Quansight.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
@@ -360,11 +535,8 @@ test will also have a corresponding hypothesis test.</p>
     </div>
 
     
-    <a href="https://github.com/Quansight/ndindex" class="github">
-        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
-    </a>
-    
 
     
+    <span id="forkongithub"><a href="https://github.com/Quansight/ndindex">Fork me on GitHub</a></span>
   </body>
 </html>
