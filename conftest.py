@@ -11,6 +11,7 @@ def pytest_addoption(parser):
     # Add an option to change the Hypothesis max_examples setting.
     parser.addoption(
         "--hypothesis-max-examples",
+        "--max-examples",
         action="store",
         default=None,
         help="set the Hypothesis max_examples setting",
