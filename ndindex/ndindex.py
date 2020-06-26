@@ -304,26 +304,31 @@ class NDIndex:
         index = ndindex(index) # pragma: no cover
         raise NotImplementedError(f"{type(self).__name__}.as_subindex({type(index).__name__}) isn't implemented yet")
 
-    def isempty(self):
+    def isempty(self, shape=None):
         """
         Returns whether self always indexes an empty array
 
-        An empty array is an array whose shape contains at least one 0.
+        An empty array is an array whose shape contains at least one 0. Note
+        that scalars (arrays with shape `()`) are not considered empty.
 
-        >>> from ndindex import Tuple
+        `shape` can be `None` (the default), or an array shape. If it is
+        `None`, isempty() will return `True` when `self` is always empty for
+        any array shape. However, if it gives `False`, it could still give an
+        empty array for some array shapes, but not all. If you know the shape
+        of the array that will be indexed, you can call `idx.isempty(shape)`
+        first and the result will be correct for arrays of shape `shape`. If
+        `shape` is given and `self` would raise an `IndexError` on an array of
+        shape `shape`, `isempty()` also raises `IndexError`.
+
+        >>> from ndindex import Tuple, Slice
         >>> Tuple(0, slice(0, 1)).isempty()
         False
         >>> Tuple(0, slice(0, 0)).isempty()
         True
+        >>> Slice(5, 10).isempty()
+        False
+        >>> Slice(5, 10).isempty(4)
+        True
 
-        Note that an index could still give an empty array for some array
-        shapes, but not all. In that case, isempty() returns False. If you
-        know the shape of the array that will be indexed, you can call
-        `idx.reduce(shape)` first and the resulting index will give a correct
-        result for `isempty()` on that array.
         """
-        try:
-            l = len(self)
-        except (TypeError, ValueError):
-            return False
-        return l == 0
+        raise NotImplementedError

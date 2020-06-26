@@ -82,3 +82,6 @@ class ellipsis(NDIndex):
 
     def as_subindex(self, index):
         return Tuple().as_subindex(index)
+
+    def isempty(self, shape=None):
+        return Tuple().isempty(shape=shape)

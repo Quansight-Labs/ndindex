@@ -416,3 +416,18 @@ class Slice(NDIndex):
             stop = 0
 
         return Slice(start, stop, step).reduce()
+
+    def isempty(self, shape=None):
+        idx = self
+        if shape is not None:
+            if isinstance(shape, int):
+                shape = (shape,)
+            if 0 in shape:
+                return True
+            idx = self.reduce(shape)
+
+        try:
+            l = len(idx)
+        except (TypeError, ValueError):
+            return False
+        return l == 0
