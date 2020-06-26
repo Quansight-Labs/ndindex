@@ -340,3 +340,6 @@ class Tuple(NDIndex):
         newshape = newshape + midshape + endshape[::-1]
 
         return tuple(newshape)
+
+    def isempty(self):
+        return any(i.isempty() for i in self.args)
