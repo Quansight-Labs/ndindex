@@ -1,3 +1,4 @@
+(slices-docs)=
 Slices
 ======
 

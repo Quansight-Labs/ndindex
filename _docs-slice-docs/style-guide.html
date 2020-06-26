@@ -90,8 +90,8 @@ use <a class="reference external" href="https://myst-parser.readthedocs.io/en/la
 generally preferred over RST, although in some cases RST is required if
 something isn’t supported by MyST.</p></li>
 <li><p>Both RST and MyST support cross references. In RST, a cross reference looks
-like :ref:<code class="docutils literal notranslate"><span class="pre">reference</span></code>. In MyST, use either <span class="xref myst">link text</span> or
-<span class="xref std std-ref">link text</span>. See the <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/using/syntax.html">MyST
+like <code class="docutils literal notranslate"><span class="pre">:ref:`reference`</span></code>. In MyST, use either <code class="docutils literal notranslate"><span class="pre">[link</span> <span class="pre">text](reference)</span></code>
+or <code class="docutils literal notranslate"><span class="pre">{ref}`link</span> <span class="pre">text</span> <span class="pre">&lt;reference&gt;`</span></code>. See the <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/using/syntax.html">MyST
 docs</a> and
 the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html">RST
 docs</a>
@@ -101,9 +101,8 @@ like <code class="docutils literal notranslate"><span class="pre">`code`</span><
 Note that only single backticks are required even for RST as the default
 role is set to <code class="docutils literal notranslate"><span class="pre">'code'</span></code>.</p></li>
 <li><p>Inline mathematical formulas can be formatted with single dollar signs, like
-<code class="docutils literal notranslate"><span class="pre">$x</span> <span class="pre">+</span> <span class="pre">1$</span></code> which creates <span class="math notranslate nohighlight">\(x + 1\)</span>. Display formulas, which appear on their own
-line, should use  the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">math::</span></code> directive for RST or <code class="docutils literal notranslate"><span class="pre">```{math}</span></code>
-for Markdown.</p></li>
+<code class="docutils literal notranslate"><span class="pre">$x^2</span> <span class="pre">+</span> <span class="pre">1$</span></code>, which creates <span class="math notranslate nohighlight">\(x^2 + 1\)</span>. Display formulas, which appear on
+their own line, should use the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">math::</span></code> directive for RST or <code class="docutils literal notranslate"><span class="pre">```{math}</span></code> for Markdown.</p></li>
 <li><p>Docstrings are currently written in RST. We may move to Markdown at some
 point. Docstrings use the napoleon extension, meaning they can be written in
 numpydoc format.</p></li>

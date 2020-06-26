@@ -39,8 +39,8 @@ This is a style guide for the ndindex documentation.
   generally preferred over RST, although in some cases RST is required if
   something isn't supported by MyST.
 - Both RST and MyST support cross references. In RST, a cross reference looks
-  like :ref:`reference`. In MyST, use either [link text](reference) or
-  {ref}`link text <reference>`. See the [MyST
+  like ``` :ref:`reference` ```. In MyST, use either `[link text](reference)`
+  or ``` {ref}`link text <reference>` ```. See the [MyST
   docs](https://myst-parser.readthedocs.io/en/latest/using/syntax.html) and
   the [RST
   docs](https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html)
@@ -50,9 +50,9 @@ This is a style guide for the ndindex documentation.
   Note that only single backticks are required even for RST as the default
   role is set to `'code'`.
 - Inline mathematical formulas can be formatted with single dollar signs, like
-  `$x + 1$` which creates $x + 1$. Display formulas, which appear on their own
-  line, should use  the `.. math::` directive for RST or ```` ```{math} ````
-  for Markdown.
+  `$x^2 + 1$`, which creates $x^2 + 1$. Display formulas, which appear on
+  their own line, should use the `.. math::` directive for RST or ````
+  ```{math} ```` for Markdown.
 - Docstrings are currently written in RST. We may move to Markdown at some
   point. Docstrings use the napoleon extension, meaning they can be written in
   numpydoc format.
