@@ -53,8 +53,6 @@ script:
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";
     fi
   # Here in case codecov fails. This also sets the failing status if the
-  # coverage is not 100%.
-  - coverage report -m
-  # Travis sometimes cuts off the last command, so run a dummy command at the
-  # end.
-  - echo "END TESTS"
+  # coverage is not 100%. Travis sometimes cuts off the last command, so run a
+  # dummy command at the end.
+  - coverage report -m; echo "END TESTS"
