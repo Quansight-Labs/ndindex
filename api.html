@@ -166,6 +166,37 @@ reindexed onto the chunks via <code class="code docutils literal notranslate"><s
 </dd></dl>
 
 <dl class="method">
+<dt id="ndindex.Integer.isempty">
+<code class="sig-name descname">isempty</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.isempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether self always indexes an empty array</p>
+<p>An empty array is an array whose shape contains at least one 0. Note
+that scalars (arrays with shape <code class="code docutils literal notranslate"><span class="pre">()</span></code>) are not considered empty.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default), or an array shape. If it is
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, isempty() will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> when <code class="code docutils literal notranslate"><span class="pre">self</span></code> is always empty for
+any array shape. However, if it gives <code class="code docutils literal notranslate"><span class="pre">False</span></code>, it could still give an
+empty array for some array shapes, but not all. If you know the shape
+of the array that will be indexed, you can call <code class="code docutils literal notranslate"><span class="pre">idx.isempty(shape)</span></code>
+first and the result will be correct for arrays of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. If
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is given and <code class="code docutils literal notranslate"><span class="pre">self</span></code> would raise an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> on an array of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, <code class="code docutils literal notranslate"><span class="pre">isempty()</span></code> also raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ndindex.Slice.__len__()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="ndindex.Integer.newshape">
 <code class="sig-name descname">newshape</code><span class="sig-paren">(</span><em class="sig-param">shape</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.newshape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
@@ -271,10 +302,10 @@ corresponding attributes.</p>
 <dl class="method">
 <dt id="ndindex.Slice.__len__">
 <code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.__len__" title="Permalink to this definition">¶</a></dt>
-<dd><p>__len__ gives the maximum size of an axis sliced with self</p>
+<dd><p><code class="code docutils literal notranslate"><span class="pre">len()</span></code> gives the maximum size of an axis sliced with self</p>
 <p>An actual array may produce a smaller size if it is smaller than the
-bounds of the slice. For instance, [0, 1, 2][2:4] only has 1 element
-but the maximum length of the slice 2:4 is 2.</p>
+bounds of the slice. For instance, <code class="code docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2][2:4]</span></code> only has 1 element
+but the maximum length of the slice <code class="code docutils literal notranslate"><span class="pre">2:4</span></code> is 2.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
 <span class="go">[2]</span>
@@ -284,7 +315,7 @@ but the maximum length of the slice 2:4 is 2.</p>
 <span class="go">[2, 3]</span>
 </pre></div>
 </div>
-<p>If there is no such maximum, raises ValueError.</p>
+<p>If there is no such maximum, it raises <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># From the second element to the end, which could have any size</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
@@ -293,12 +324,21 @@ but the maximum length of the slice 2:4 is 2.</p>
 </pre></div>
 </div>
 <p>Note that the <code class="code docutils literal notranslate"><span class="pre">Slice.reduce()</span></code> method returns a Slice that always has
-a correct <code class="code docutils literal notranslate"><span class="pre">len</span></code> which doesn’t raise ValueError.</p>
+a correct <code class="code docutils literal notranslate"><span class="pre">len</span></code> which doesn’t raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">Slice(2, 3, 1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
 <span class="go">1</span>
 </pre></div>
+</div>
+<p>Be aware that <code class="code docutils literal notranslate"><span class="pre">len(Slice)</span></code> only gives the size of the axis being
+sliced. It does not say anything about the total shape of the array.
+In particular, the array may be empty after slicing if one of its
+dimensions is 0, but the other dimensions may be nonzero. To check if
+an array will empty after indexing, use <a class="reference internal" href="#ndindex.Slice.isempty" title="ndindex.Slice.isempty"><code class="xref py py-meth docutils literal notranslate"><span class="pre">isempty()</span></code></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.Slice.isempty" title="ndindex.Slice.isempty"><code class="xref py py-meth docutils literal notranslate"><span class="pre">isempty()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -362,6 +402,37 @@ reindexed onto the chunks via <code class="code docutils literal notranslate"><s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">j2</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">k2</span><span class="o">.</span><span class="n">raw</span><span class="p">]</span>
 <span class="go">[10, 11, 12, 13, 14]</span>
 </pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.Slice.isempty">
+<code class="sig-name descname">isempty</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.isempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether self always indexes an empty array</p>
+<p>An empty array is an array whose shape contains at least one 0. Note
+that scalars (arrays with shape <code class="code docutils literal notranslate"><span class="pre">()</span></code>) are not considered empty.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default), or an array shape. If it is
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, isempty() will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> when <code class="code docutils literal notranslate"><span class="pre">self</span></code> is always empty for
+any array shape. However, if it gives <code class="code docutils literal notranslate"><span class="pre">False</span></code>, it could still give an
+empty array for some array shapes, but not all. If you know the shape
+of the array that will be indexed, you can call <code class="code docutils literal notranslate"><span class="pre">idx.isempty(shape)</span></code>
+first and the result will be correct for arrays of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. If
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is given and <code class="code docutils literal notranslate"><span class="pre">self</span></code> would raise an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> on an array of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, <code class="code docutils literal notranslate"><span class="pre">isempty()</span></code> also raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ndindex.Slice.__len__()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -597,6 +668,37 @@ reindexed onto the chunks via <code class="code docutils literal notranslate"><s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">j2</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">k2</span><span class="o">.</span><span class="n">raw</span><span class="p">]</span>
 <span class="go">[10, 11, 12, 13, 14]</span>
 </pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.ellipsis.isempty">
+<code class="sig-name descname">isempty</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ellipsis.isempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether self always indexes an empty array</p>
+<p>An empty array is an array whose shape contains at least one 0. Note
+that scalars (arrays with shape <code class="code docutils literal notranslate"><span class="pre">()</span></code>) are not considered empty.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default), or an array shape. If it is
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, isempty() will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> when <code class="code docutils literal notranslate"><span class="pre">self</span></code> is always empty for
+any array shape. However, if it gives <code class="code docutils literal notranslate"><span class="pre">False</span></code>, it could still give an
+empty array for some array shapes, but not all. If you know the shape
+of the array that will be indexed, you can call <code class="code docutils literal notranslate"><span class="pre">idx.isempty(shape)</span></code>
+first and the result will be correct for arrays of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. If
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is given and <code class="code docutils literal notranslate"><span class="pre">self</span></code> would raise an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> on an array of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, <code class="code docutils literal notranslate"><span class="pre">isempty()</span></code> also raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ndindex.Slice.__len__()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -842,6 +944,37 @@ replaced by <code class="code docutils literal notranslate"><span class="pre">Sl
 </dd></dl>
 
 <dl class="method">
+<dt id="ndindex.Tuple.isempty">
+<code class="sig-name descname">isempty</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.isempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether self always indexes an empty array</p>
+<p>An empty array is an array whose shape contains at least one 0. Note
+that scalars (arrays with shape <code class="code docutils literal notranslate"><span class="pre">()</span></code>) are not considered empty.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default), or an array shape. If it is
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, isempty() will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> when <code class="code docutils literal notranslate"><span class="pre">self</span></code> is always empty for
+any array shape. However, if it gives <code class="code docutils literal notranslate"><span class="pre">False</span></code>, it could still give an
+empty array for some array shapes, but not all. If you know the shape
+of the array that will be indexed, you can call <code class="code docutils literal notranslate"><span class="pre">idx.isempty(shape)</span></code>
+first and the result will be correct for arrays of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. If
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is given and <code class="code docutils literal notranslate"><span class="pre">self</span></code> would raise an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> on an array of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, <code class="code docutils literal notranslate"><span class="pre">isempty()</span></code> also raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ndindex.Slice.__len__()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="ndindex.Tuple.newshape">
 <code class="sig-name descname">newshape</code><span class="sig-paren">(</span><em class="sig-param">shape</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.newshape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
@@ -1081,6 +1214,37 @@ makes an index larger.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#ndindex.Tuple.expand" title="ndindex.Tuple.expand"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.expand()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.ndindex.NDIndex.isempty">
+<code class="sig-name descname">isempty</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex.isempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether self always indexes an empty array</p>
+<p>An empty array is an array whose shape contains at least one 0. Note
+that scalars (arrays with shape <code class="code docutils literal notranslate"><span class="pre">()</span></code>) are not considered empty.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default), or an array shape. If it is
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, isempty() will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> when <code class="code docutils literal notranslate"><span class="pre">self</span></code> is always empty for
+any array shape. However, if it gives <code class="code docutils literal notranslate"><span class="pre">False</span></code>, it could still give an
+empty array for some array shapes, but not all. If you know the shape
+of the array that will be indexed, you can call <code class="code docutils literal notranslate"><span class="pre">idx.isempty(shape)</span></code>
+first and the result will be correct for arrays of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. If
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is given and <code class="code docutils literal notranslate"><span class="pre">self</span></code> would raise an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> on an array of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, <code class="code docutils literal notranslate"><span class="pre">isempty()</span></code> also raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ndindex.Slice.__len__()</span></code></a></p>
 </div>
 </dd></dl>
 
