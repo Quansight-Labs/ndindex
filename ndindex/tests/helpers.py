@@ -82,7 +82,6 @@ def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=ass
         assert_equal(a_raw, a_idx)
 
 
-
 def iterslice(start_range=(-10, 10),
                stop_range=(-10, 10),
                step_range=(-10, 10),

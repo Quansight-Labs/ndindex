@@ -272,6 +272,7 @@ def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
     # TODO: how can we check that the shape is correct?
     assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
 
+@example((0, slice(0, 0)), (1, 2))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_isempty_hypothesis(t, shape):
     if isinstance(shape, int):
@@ -295,11 +296,11 @@ def test_tuple_isempty_hypothesis(t, shape):
         aempty = (a_raw.size == 0)
         assert aempty == (a_idx.size == 0)
 
-        # If isempty is True then aT should be empty
+        # If isempty is True then a[t] should be empty
         if isempty:
             assert aempty, (T, shape)
         # We cannot test the converse with hypothesis. isempty may be False
-        # but a[T] could still be empty for this specific a (e.g., if a is
+        # but a[t] could still be empty for this specific a (e.g., if a is
         # already itself empty).
 
         # isempty() should always give the correct result for a specific

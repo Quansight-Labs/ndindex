@@ -136,12 +136,8 @@ def test_ellipsis_isempty_hypothesis(idx, shape):
         aempty = (a_raw.size == 0)
         assert aempty == (a_idx.size == 0)
 
-        # If isempty is True then a[s] should be empty
-        if isempty:
-            assert aempty, (E, shape)
-        # We cannot test the converse with hypothesis. isempty may be False but
-        # a[s] could still be empty for this specific a (e.g., if a is already
-        # itself empty).
+        # Since idx is an ellipsis, it should never be unconditionally empty
+        assert not isempty
 
         # isempty() should always give the correct result for a specific
         # array after reduction

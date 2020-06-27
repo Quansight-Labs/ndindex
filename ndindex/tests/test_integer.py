@@ -3,7 +3,7 @@ from numpy.testing import assert_equal
 
 from pytest import raises
 
-from hypothesis import given, assume
+from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..integer import Integer
@@ -202,14 +202,10 @@ def test_integer_as_subindex_tuple_hypothesis(i, index, size):
 
 def test_integer_isempty_exhaustive():
     for i in range(-10, 10):
-        try:
-            idx = Integer(i)
-        except ValueError:
-            continue
+        idx = Integer(i)
 
         isempty = idx.isempty()
 
-        aempty = True
         for n in range(30):
             a = arange(n)
 
@@ -220,10 +216,8 @@ def test_integer_isempty_exhaustive():
                 exception = True
             else:
                 if aidx.size != 0:
-                    if isempty:
-                        raise AssertionError(f"Integer idx = {idx}.isempty() gave True, a[idx] is not empty for a = range({n}).")
-                    else:
-                        aempty = False
+                    # If a[i] doesn't give an index error, it should always be nonempty
+                    assert not isempty
             # isempty() should always give the correct result for a specific
             # array shape
             try:
@@ -236,8 +230,7 @@ def test_integer_isempty_exhaustive():
                     raise AssertionError(f"a[idx] raised but idx.isempty(n) did not (idx = {idx}, n = {n}).")
                 assert isemptyn == (aidx.size == 0)
 
-        assert isempty == aempty, idx
-
+@example(1, (2, 0))
 @given(ints(), one_of(shapes, integers(0, 10)))
 def test_integer_isempty_hypothesis(i, shape):
     if isinstance(shape, int):
@@ -245,10 +238,7 @@ def test_integer_isempty_hypothesis(i, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    try:
-        idx = Integer(i)
-    except (IndexError, ValueError): # pragma: no cover
-        assume(False)
+    idx = Integer(i)
 
     # Call isempty to see if the exceptions are the same
     def func(idx):
@@ -261,12 +251,8 @@ def test_integer_isempty_hypothesis(i, shape):
         aempty = (a_raw.size == 0)
         assert aempty == (a_idx.size == 0)
 
-        # If isempty is True then a[s] should be empty
-        if isempty:
-            assert aempty, (idx, shape)
-        # We cannot test the converse with hypothesis. isempty may be False but
-        # a[s] could still be empty for this specific a (e.g., if a is already
-        # itself empty).
+        # idx is an integer, so it should never be empty
+        assert not isempty
 
         # isempty() should always give the correct result for a specific
         # array after reduction

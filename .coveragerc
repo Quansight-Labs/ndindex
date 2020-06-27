@@ -7,6 +7,7 @@ omit =
 exclude_lines =
     raise NotImplementedError
     pragma: no cover
+    raise AssertionError
 
 # Require full coverage. Lines that cannot be covered can be added as regexes
 # above, or excluded using # pragma: no cover
