@@ -309,3 +309,6 @@ def test_tuple_isempty_hypothesis(t, shape):
 
     check_same(a, t, func=func, assert_equal=assert_equal,
                same_exception=False)
+
+def bad_coverage():
+    pass
