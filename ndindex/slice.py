@@ -109,11 +109,11 @@ class Slice(NDIndex):
 
     def __len__(self):
         """
-        __len__ gives the maximum size of an axis sliced with self
+        `len()` gives the maximum size of an axis sliced with self
 
         An actual array may produce a smaller size if it is smaller than the
-        bounds of the slice. For instance, [0, 1, 2][2:4] only has 1 element
-        but the maximum length of the slice 2:4 is 2.
+        bounds of the slice. For instance, `[0, 1, 2][2:4]` only has 1 element
+        but the maximum length of the slice `2:4` is 2.
 
         >>> from ndindex import Slice
         >>> [0, 1, 2][2:4]
@@ -123,7 +123,7 @@ class Slice(NDIndex):
         >>> [0, 1, 2, 3][2:4]
         [2, 3]
 
-        If there is no such maximum, raises ValueError.
+        If there is no such maximum, it raises `ValueError`.
 
         >>> # From the second element to the end, which could have any size
         >>> len(Slice(1, None))
@@ -132,12 +132,22 @@ class Slice(NDIndex):
         ValueError: Cannot determine max length of slice
 
         Note that the `Slice.reduce()` method returns a Slice that always has
-        a correct `len` which doesn't raise ValueError.
+        a correct `len` which doesn't raise `ValueError`.
 
         >>> Slice(2, 4).reduce(3)
         Slice(2, 3, 1)
         >>> len(_)
         1
+
+        Be aware that `len(Slice)` only gives the size of the axis being
+        sliced. It does not say anything about the total shape of the array.
+        In particular, the array may be empty after slicing if one of its
+        dimensions is 0, but the other dimensions may be nonzero. To check if
+        an array will empty after indexing, use :meth:`isempty`.
+
+        See Also
+        ========
+        isempty
 
         """
         start, stop, step = self.reduce().args
@@ -416,3 +426,18 @@ class Slice(NDIndex):
             stop = 0
 
         return Slice(start, stop, step).reduce()
+
+    def isempty(self, shape=None):
+        idx = self
+        if shape is not None:
+            if isinstance(shape, int):
+                shape = (shape,)
+            if 0 in shape:
+                return True
+            idx = self.reduce(shape)
+
+        try:
+            l = len(idx)
+        except (TypeError, ValueError):
+            return False
+        return l == 0

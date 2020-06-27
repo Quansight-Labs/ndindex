@@ -118,3 +118,14 @@ class Integer(NDIndex):
             return s
         assert len(s) == 1
         return Integer(s.args[0])
+
+    def isempty(self, shape=None):
+        if shape is not None:
+            if isinstance(shape, int):
+                shape = (shape,)
+            # Raise IndexError if necessary
+            self.reduce(shape)
+            if 0 in shape:
+                return True
+
+        return False

@@ -365,3 +365,16 @@ class Tuple(NDIndex):
             return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
         else:
             raise NotImplementedError("Tuple.as_subindex() is only implemented for slices and tuples")
+
+    def isempty(self, shape=None):
+        idx = self
+        if shape is not None:
+            if isinstance(shape, int):
+                shape = (shape,)
+            if 0 in shape:
+                return True
+            idx = self.reduce(shape)
+            if not isinstance(idx, Tuple):
+                idx = Tuple(idx)
+
+        return any(i.isempty() for i in idx.args)
