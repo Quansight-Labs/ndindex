@@ -79,7 +79,7 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. `start` and `stop` use **0-based indexing** from the **start** of `a`
+1. `start` and `stop` use **0-based indexing** from the **beginning** of `a`
    when they are **nonnegative**, and **−1-based indexing** from **end** of
    `a` when they are **negative**. (See sections {ref}`0-based` and
    {ref}`negative-indices`)
@@ -523,7 +523,7 @@ of `range()`. However, they do not behave the same. A slice
 `stop` are **nonnegative**. If either of them are negative, the slice wraps
 around and slices from the end of the list (see {ref}`negative-indices`
 below). `range()` on the other hand treats negative numbers as the actual
-start of end values for the range. For example:
+start and stop values for the range. For example:
 
 ```py
 >>> list(range(3, 5))
