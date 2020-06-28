@@ -720,7 +720,7 @@ reasons why this way of thinking creates more confusion than it removes.
   $$
   </div>
 
-- The rule does work for negative `start` and `step`, but only if you think
+- The rule does work for negative `start` and `stop`, but only if you think
   about it correctly. The correct way to think about it is to reverse the
   indices:
 
