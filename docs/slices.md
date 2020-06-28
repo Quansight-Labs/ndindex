@@ -1342,7 +1342,7 @@ The key thing to remember with negative `step` is that this rule still
 applies. That is, the index starts at `start` then adds the `step` (which
 makes the index smaller), and stops when it is at or past the `stop`. Note the
 phrase "at or past". If the `step` is positive this means "greater than or
-equal to", but if the step is negative this means "less than or equal to".
+equal to", but if the `step` is negative this means "less than or equal to".
 
 Think of a slice as starting at the `start` and sliding along the list,
 jumping along by `step`, and spitting out elements. Once you see that you are
@@ -1351,7 +1351,7 @@ negative `step` and right for positive `step`), you stop.
 
 It's worth pointing out that unlike all other slices we have seen so far, a
 negative `step` reverses the order that the elements are returned relative to
-the original list. In fact, one of the most common uses of a negative step is
+the original list. In fact, one of the most common uses of a negative `step` is
 `a[::-1]`, which reverses the list:
 
 ```py
