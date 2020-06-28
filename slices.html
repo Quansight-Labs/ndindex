@@ -118,7 +118,7 @@ are always correct.</p>
 <p>In this document, “<em>nonnegative</em>” means <span class="math notranslate nohighlight">\(\geq 0\)</span> and “<em>negative</em>” means <span class="math notranslate nohighlight">\(&lt; 0\)</span>.</p>
 <p>For a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>:</p>
 <ol class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code> use <strong>0-based indexing</strong> from the <strong>start</strong> of <code class="docutils literal notranslate"><span class="pre">a</span></code>
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> use <strong>0-based indexing</strong> from the <strong>beginning</strong> of <code class="docutils literal notranslate"><span class="pre">a</span></code>
 when they are <strong>nonnegative</strong>, and <strong>−1-based indexing</strong> from <strong>end</strong> of
 <code class="docutils literal notranslate"><span class="pre">a</span></code> when they are <strong>negative</strong>. (See sections <a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a> and
 <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a>)</p></li>
@@ -499,7 +499,7 @@ of <code class="docutils literal notranslate"><span class="pre">range()</span></
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> are <strong>nonnegative</strong>. If either of them are negative, the slice wraps
 around and slices from the end of the list (see <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a>
 below). <code class="docutils literal notranslate"><span class="pre">range()</span></code> on the other hand treats negative numbers as the actual
-start of end values for the range. For example:</p>
+start and stop values for the range. For example:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="go">[3, 4]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
@@ -680,7 +680,7 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \ma
 $$
 </div>
 </li>
-<li><p>The rule does work for negative <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code>, but only if you think
+<li><p>The rule does work for negative <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>, but only if you think
 about it correctly. The correct way to think about it is to reverse the
 indices:</p>
 <div style="text-align:center" >
@@ -1232,14 +1232,14 @@ successively adds <code class="docutils literal notranslate"><span class="pre">s
 applies. That is, the index starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> then adds the <code class="docutils literal notranslate"><span class="pre">step</span></code> (which
 makes the index smaller), and stops when it is at or past the <code class="docutils literal notranslate"><span class="pre">stop</span></code>. Note the
 phrase “at or past”. If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive this means “greater than or
-equal to”, but if the step is negative this means “less than or equal to”.</p>
+equal to”, but if the <code class="docutils literal notranslate"><span class="pre">step</span></code> is negative this means “less than or equal to”.</p>
 <p>Think of a slice as starting at the <code class="docutils literal notranslate"><span class="pre">start</span></code> and sliding along the list,
 jumping along by <code class="docutils literal notranslate"><span class="pre">step</span></code>, and spitting out elements. Once you see that you are
 at or have gone past the <code class="docutils literal notranslate"><span class="pre">stop</span></code> in the direction you are going (left for
 negative <code class="docutils literal notranslate"><span class="pre">step</span></code> and right for positive <code class="docutils literal notranslate"><span class="pre">step</span></code>), you stop.</p>
 <p>It’s worth pointing out that unlike all other slices we have seen so far, a
 negative <code class="docutils literal notranslate"><span class="pre">step</span></code> reverses the order that the elements are returned relative to
-the original list. In fact, one of the most common uses of a negative step is
+the original list. In fact, one of the most common uses of a negative <code class="docutils literal notranslate"><span class="pre">step</span></code> is
 <code class="docutils literal notranslate"><span class="pre">a[::-1]</span></code>, which reverses the list:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
