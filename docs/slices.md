@@ -79,7 +79,7 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. `start` and `step` use **0-based indexing** from the **start** of `a`
+1. `start` and `stop` use **0-based indexing** from the **beginning** of `a`
    when they are **nonnegative**, and **−1-based indexing** from **end** of
    `a` when they are **negative**. (See sections {ref}`0-based` and
    {ref}`negative-indices`)
@@ -523,7 +523,7 @@ of `range()`. However, they do not behave the same. A slice
 `stop` are **nonnegative**. If either of them are negative, the slice wraps
 around and slices from the end of the list (see {ref}`negative-indices`
 below). `range()` on the other hand treats negative numbers as the actual
-start of end values for the range. For example:
+start and stop values for the range. For example:
 
 ```py
 >>> list(range(3, 5))
@@ -720,7 +720,7 @@ reasons why this way of thinking creates more confusion than it removes.
   $$
   </div>
 
-- The rule does work for negative `start` and `step`, but only if you think
+- The rule does work for negative `start` and `stop`, but only if you think
   about it correctly. The correct way to think about it is to reverse the
   indices:
 
@@ -1342,7 +1342,7 @@ The key thing to remember with negative `step` is that this rule still
 applies. That is, the index starts at `start` then adds the `step` (which
 makes the index smaller), and stops when it is at or past the `stop`. Note the
 phrase "at or past". If the `step` is positive this means "greater than or
-equal to", but if the step is negative this means "less than or equal to".
+equal to", but if the `step` is negative this means "less than or equal to".
 
 Think of a slice as starting at the `start` and sliding along the list,
 jumping along by `step`, and spitting out elements. Once you see that you are
@@ -1351,7 +1351,7 @@ negative `step` and right for positive `step`), you stop.
 
 It's worth pointing out that unlike all other slices we have seen so far, a
 negative `step` reverses the order that the elements are returned relative to
-the original list. In fact, one of the most common uses of a negative step is
+the original list. In fact, one of the most common uses of a negative `step` is
 `a[::-1]`, which reverses the list:
 
 ```py
