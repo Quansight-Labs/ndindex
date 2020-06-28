@@ -79,7 +79,7 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. `start` and `step` use **0-based indexing** from the **start** of `a`
+1. `start` and `stop` use **0-based indexing** from the **start** of `a`
    when they are **nonnegative**, and **−1-based indexing** from **end** of
    `a` when they are **negative**. (See sections {ref}`0-based` and
    {ref}`negative-indices`)
