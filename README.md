@@ -28,9 +28,6 @@ are
 
 ## Examples
 
-ndindex is still a work in progress. The following things are currently
-implemented:
-
 **Canonicalize a slice**
 
 
