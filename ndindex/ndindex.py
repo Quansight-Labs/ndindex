@@ -130,8 +130,8 @@ class NDIndex:
         Return the equivalent of `self` that can be used as an index
 
         NumPy does not allow custom objects to be used as indices, with the
-        exception of integer indices, so to use an NDIndex object as an index,
-        it is necessary to use `raw`.
+        exception of integer indices, so to use an ndindex object as an
+        index, it is necessary to use `raw`.
 
         >>> from ndindex import Slice
         >>> import numpy as np

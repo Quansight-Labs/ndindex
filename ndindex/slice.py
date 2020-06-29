@@ -109,7 +109,7 @@ class Slice(NDIndex):
 
     def __len__(self):
         """
-        `len()` gives the maximum size of an axis sliced with self
+        `len()` gives the maximum size of an axis sliced with `self`.
 
         An actual array may produce a smaller size if it is smaller than the
         bounds of the slice. For instance, `[0, 1, 2][2:4]` only has 1 element
@@ -131,8 +131,8 @@ class Slice(NDIndex):
         ...
         ValueError: Cannot determine max length of slice
 
-        Note that the `Slice.reduce()` method returns a Slice that always has
-        a correct `len` which doesn't raise `ValueError`.
+        The :meth:`Slice.reduce` method returns a Slice that always has a
+        correct `len` which doesn't raise `ValueError`.
 
         >>> Slice(2, 4).reduce(3)
         Slice(2, 3, 1)

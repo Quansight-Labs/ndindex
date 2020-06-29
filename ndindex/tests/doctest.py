@@ -46,14 +46,15 @@ DOCS = os.path.realpath(os.path.join(__file__, os.path.pardir, os.path.pardir,
                                      os.pardir, 'docs'))
 MARKDOWN = glob.glob(os.path.join(DOCS, '**', '*.md'), recursive=True)
 RST = glob.glob(os.path.join(DOCS, '**', '*.rst'), recursive=True)
-
+README = os.path.realpath(os.path.join(__file__, os.path.pardir, os.path.pardir,
+                                     os.pardir, 'README.md'))
 def load_tests(loader, tests, ignore):
     for mod in sys.modules:
         if mod.startswith('ndindex'):
             # globs={} makes the doctests not include module names
             tests.addTests(DocTestSuite(sys.modules[mod], globs={},
                                         optionflags=NORMALIZE_WHITESPACE))
-    tests.addTests(DocFileSuite(*MARKDOWN, *RST,
+    tests.addTests(DocFileSuite(*MARKDOWN, *RST, README,
                                 optionflags=NORMALIZE_WHITESPACE,
                                 module_relative=False))
     return tests
