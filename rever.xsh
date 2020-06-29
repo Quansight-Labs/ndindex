@@ -20,6 +20,7 @@ def run_tests():
                            'pyflakes', 'pytest-cov', 'pytest-flakes']):
         pyflakes .
         python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
+        ./run_doctests
         pytest
 
 @activity
