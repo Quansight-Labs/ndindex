@@ -40,7 +40,7 @@ implemented:
 Slice(0, 10, 1)
 ```
 
-**Compute the maximum length of a slice**
+**Compute the maximum length of a sliced axis**
 
 
 ```py
@@ -51,7 +51,7 @@ Slice(0, 10, 1)
 3
 ```
 
-**Compute the shape of an array of shape (10, 20) indexed by `[0, 0:10]`**
+**Compute the shape of an array of shape `(10, 20)` indexed by `[0, 0:10]`**
 
 ```py
 >>> Tuple(0, slice(0, 10)).newshape((10, 20))
