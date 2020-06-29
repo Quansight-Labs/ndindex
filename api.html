@@ -225,8 +225,8 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Integer.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
 <p>NumPy does not allow custom objects to be used as indices, with the
-exception of integer indices, so to use an NDIndex object as an index,
-it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
+exception of integer indices, so to use an ndindex object as an
+index, it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -302,7 +302,7 @@ corresponding attributes.</p>
 <dl class="method">
 <dt id="ndindex.Slice.__len__">
 <code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.__len__" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="code docutils literal notranslate"><span class="pre">len()</span></code> gives the maximum size of an axis sliced with self</p>
+<dd><p><code class="code docutils literal notranslate"><span class="pre">len()</span></code> gives the maximum size of an axis sliced with <code class="code docutils literal notranslate"><span class="pre">self</span></code>.</p>
 <p>An actual array may produce a smaller size if it is smaller than the
 bounds of the slice. For instance, <code class="code docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2][2:4]</span></code> only has 1 element
 but the maximum length of the slice <code class="code docutils literal notranslate"><span class="pre">2:4</span></code> is 2.</p>
@@ -323,8 +323,8 @@ but the maximum length of the slice <code class="code docutils literal notransla
 <span class="gr">ValueError</span>: <span class="n">Cannot determine max length of slice</span>
 </pre></div>
 </div>
-<p>Note that the <code class="code docutils literal notranslate"><span class="pre">Slice.reduce()</span></code> method returns a Slice that always has
-a correct <code class="code docutils literal notranslate"><span class="pre">len</span></code> which doesn’t raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+<p>The <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a> method returns a Slice that always has a
+correct <code class="code docutils literal notranslate"><span class="pre">len</span></code> which doesn’t raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">Slice(2, 3, 1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
@@ -465,8 +465,8 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Slice.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
 <p>NumPy does not allow custom objects to be used as indices, with the
-exception of integer indices, so to use an NDIndex object as an index,
-it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
+exception of integer indices, so to use an ndindex object as an
+index, it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -731,8 +731,8 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.ellipsis.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
 <p>NumPy does not allow custom objects to be used as indices, with the
-exception of integer indices, so to use an NDIndex object as an index,
-it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
+exception of integer indices, so to use an ndindex object as an
+index, it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -1003,8 +1003,8 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.Tuple.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
 <p>NumPy does not allow custom objects to be used as indices, with the
-exception of integer indices, so to use an NDIndex object as an index,
-it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
+exception of integer indices, so to use an ndindex object as an
+index, it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -1277,8 +1277,8 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.ndindex.NDIndex.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
 <p>NumPy does not allow custom objects to be used as indices, with the
-exception of integer indices, so to use an NDIndex object as an index,
-it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
+exception of integer indices, so to use an ndindex object as an
+index, it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
