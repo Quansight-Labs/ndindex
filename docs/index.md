@@ -19,8 +19,9 @@ are
   is that ndindex assumes that any given index will not raise IndexError (for
   instance, from an out of bounds integer index or from too few dimensions).
   For those operations where the array shape is known, there is a
-  [`reduce()`](NDIndex.reduce) method to reduce an index to a simpler index that is
-  equivalent for the given shape.
+  [`reduce()`](NDIndex.reduce)
+  method to reduce an index to a simpler index that is equivalent for the
+  given shape.
 
 - Enable useful transformation and manipulation functions on index objects.
 
@@ -57,9 +58,13 @@ their limitations:
   whether the step is positive or negative and the start and stop are
   positive, negative, or None. Consider, for example, the meaning of the slice
   `a[4:-2:-2]`, where `a` is a one-dimensional array. This slices every other
-  element from the third element to the second from the last. The resulting
-  array will have shape `(0,)` if the original shape is less than 1 or greater
-  than 5, and shape `(1,)` otherwise.
+  element from the third element to the second from the last, but not
+  including the second from last. The resulting array will have shape `(0,)`
+  if the original shape is less than 1 or greater than 5, and shape `(1,)`
+  otherwise. In ndindex, one can use `len(Slice(4, -2, -2))` to compute the
+  maximum length of this slice (`1`), or `len(Slice(4, -2, -2).reduce(shape))`
+  to compute the length for a specific array shape. See
+  {meth}`ndindex.Slice.__len__` and {meth}`ndindex.Slice.reduce`.
 
   ndindex pre-codes common slice arithmetic into useful abstractions so you
   don't have to try to figure out all the different cases yourself. And due to
@@ -70,16 +75,29 @@ their limitations:
 ndindex is still a work in progress. The following things are currently
 implemented:
 
-- `Slice`, `Integer`, and `Tuple`
+- {any}`Slice`, {any}`Integer`, {any}`ellipsis`, and {any}`Tuple`
 
 - Classes do not canonicalize by default (the constructor only does basic type
-  checking). Objects can be put into canonical form by calling `reduce()`.
+  checking). Objects can be put into canonical form by calling
+  [`reduce()`](NDIndex.reduce).
 
       >>> from ndindex import Slice
       >>> Slice(None, 12)
       Slice(None, 12, None)
       >>> Slice(None, 12).reduce()
       Slice(0, 12, 1)
+
+  `reduce()` can also be called with a `shape` argument.
+  [`idx.reduce(shape)`](NDIndex.reduce) reduces an index to an equivalent
+  index over an array with the given shape.
+
+      >>> from numpy import arange
+      >>> Slice(2, -1).reduce((10,))
+      Slice(2, 9, 1)
+      >>> arange(10)[2:-1]
+      array([2, 3, 4, 5, 6, 7, 8])
+      >>> arange(10)[2:9:1]
+      array([2, 3, 4, 5, 6, 7, 8])
 
 - Object arguments can be accessed with `idx.args`
 
@@ -88,51 +106,70 @@ implemented:
 
 - All ndindex objects are hashable and can be used as dictionary keys.
 
-- A real index object can be accessed with `idx.raw`. Use this to use an
-  ndindex to index an array.
+- A real index object can be accessed with [`idx.raw`](NDIndex.raw). Use this
+  to use an ndindex index to index an array.
 
       >>> s = Slice(0, 2)
-      >>> from numpy import arange
       >>> arange(4)[s.raw]
       array([0, 1])
 
-- `len()` computes the maximum length of an index over a given axis.
+- [`len()`](__len__) computes the maximum length of an index over a given axis.
 
       >>> len(Slice(2, 10, 3))
       3
       >>> len(arange(10)[2:10:3])
       3
 
-- `idx.reduce(shape)` reduces an index to an equivalent index over an array
-  with the given shape.
+- [`idx.isempty()`](NDIndex.isempty) returns True if an index always indexes
+  to an empty array (an array with a 0 in its shape). `isempty` can also be
+  called with a shape like `idx.isempty(shape)`.
 
-      >>> Slice(2, -1).reduce((10,))
-      Slice(2, 9, 1)
-      >>> arange(10)[2:-1]
-      array([2, 3, 4, 5, 6, 7, 8])
-      >>> arange(10)[2:9:1]
-      array([2, 3, 4, 5, 6, 7, 8])
+      >>> Slice(0, 0).isempty()
+      True
 
+- [`idx.expand(shape)`](NDIndex.expand) expands an index so that it is as
+  explicit as possible. An expanded index is always a {ref}`Tuple` where each
+  indexed axis is indexed explicitly.
+
+      >>> from ndindex import Tuple
+      >>> Tuple(Slice(0, 10), ..., Slice(1, None)).expand((10, 11, 12))
+      Tuple(slice(0, 10, 1), slice(0, 11, 1), slice(1, 12, 1))
+
+- [`idx.newshape(shape)`](NDIndex.newshape) returns the shape of `a[idx]`,
+  assuming `a` has shape `shape`.
+
+      >>> Tuple(0, ..., Slice(0, 5)).newshape((10, 10, 10))
+      (10, 5)
+
+- [`i.as_subindex(j)`](NDIndex.as_subindex) produces an index `k` such that
+  `a[j][k]` gives all the elements of `a[j]` that are also in `a[i]` (see the
+  [documentation](NDIndex.as_subindex) for more information). This is useful
+  for re-indexing an index onto chunks of an array.
+
+      >>> chunks = [Slice(0, 100), Slice(100, 200)]
+      >>> idx = Slice(50, 160)
+      >>> idx.as_subindex(chunks[0])
+      Slice(50, 100, 1)
+      >>> idx.as_subindex(chunks[1])
+      Slice(0, 60, 1)
 
 The following things are not yet implemented, but are planned.
 
-- `idx.newshape(shape)` returns the shape of `a[idx]`, assuming `a` has shape
-  `shape`.
-
-- `ellipsis`, `Newaxis`, `IntegerArray`, and `BooleanArray` types, so that all
+- `Newaxis`, `IntegerArray`, and `BooleanArray` types, so that all
   types of indexing are support.
 
-- `i1[i2]` will create a new ndindex `i3` (when possible) so that
-  `a[i1][i2] == a[i3]`.
+- Composition: `i1[i2]` will create a new ndindex object `i3` (when possible)
+  so that `a[i1][i2] == a[i3]`.
 
-- `split(i0, [i1, i2, ...])` will return a list of indices `[j1, j2, ...]`
-  such that `a[i0] = concat(a[i1][j1], a[i2][j2], ...)`
-
-- `i1 + i2` will produce a single index so that `a[i1 + i2]` gives all the
-  elements of `a[i1]` and `a[i2]`.
+- Various set-like operations on indices, including "contains", "union", and
+  "intersection". For example, `i1 + i2` will produce a single index so that
+  `a[i1 + i2]` gives all the elements of `a[i1]` and `a[i2]`.
 
 - Support [NEP 21 advanced
   indexing](https://numpy.org/neps/nep-0021-advanced-indexing.html).
+
+- Support for generating symbolic formulas for the above operations using
+  [SymPy](https://www.sympy.org/).
 
 And more. If there is something you would like to see this library be able to
 do, please [open an issue](https://github.com/quansight/ndindex/issues). Pull
@@ -153,7 +190,7 @@ transformation, the before and after raw index, and index a `numpy.arange`
 with them (the input array itself doesn't matter, so long as its values are
 distinct). If they do not give the same output array, or do not both produce
 the same error (like an `IndexError`), the code is not correct. For example,
-the `reduce` method can be verified by checking that `a[idx.raw]` and
+the `reduce()` method can be verified by checking that `a[idx.raw]` and
 `a[idx.reduce(a.shape).raw]` produce the same sub-arrays for all possible
 input arrays `a` and ndindex objects `idx`.
 
@@ -169,7 +206,8 @@ There are two primary types of tests that we employ to verify this:
 - Hypothesis tests. Hypothesis is a library that can intelligently check a
   combinatorial search space of inputs. This requires writing hypothesis
   strategies that can generate all the relevant types of indices (see
-  ndindex/tests/helpers.py). For more information on hypothesis, see
+  [ndindex/tests/helpers.py](https://github.com/Quansight/ndindex/blob/master/ndindex/tests/helpers.py)).
+  For more information on hypothesis, see
   <https://hypothesis.readthedocs.io/en/latest/index.html>. All tests have
   hypothesis tests, even if they are also tested exhaustively.
 
@@ -182,12 +220,14 @@ that still fails. For example, a failing exhaustive slice test might give
 `Slice(-10, -9, -10)` as a the failing example, but hypothesis would shrink it
 to `Slice(-2, -1, -1)`. Another reason for the duplication is that hypothesis
 can sometimes test a slightly expanded test space without any additional
-consequences. For example, `test_slice_reduce_hypothesis()` in
-ndindex/tests/test_ndindex.py tests all types of array shapes, whereas
-`test_slice_reduce_exhaustive()` tests only 1-dimensional shapes. This doesn't
-affect things because hypotheses will always shrink large shapes to a
-1-dimensional shape in the case of a failure. Consequently every exhaustive
-test will also have a corresponding hypothesis test.
+consequences. For example,
+[`test_slice_reduce_hypothesis()`](https://github.com/Quansight/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L165)
+in tests all types of array shapes, whereas
+[`test_slice_reduce_exhaustive()`](https://github.com/Quansight/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L142)
+tests only 1-dimensional shapes. This doesn't affect things because hypotheses
+will always shrink large shapes to a 1-dimensional shape in the case of a
+failure. Consequently every exhaustive test will also have a corresponding
+hypothesis test.
 
 ## License
 
