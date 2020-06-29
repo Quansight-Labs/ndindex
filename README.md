@@ -18,9 +18,9 @@ are
   correct for all possible input array shapes. The only exception to this rule
   is that ndindex assumes that any given index will not raise IndexError (for
   instance, from an out of bounds integer index or from too few dimensions).
-  For those operations where the array shape is known, there is a `reduce`
-  method to reduce an index to a simpler index that is equivalent for the
-  given shape.
+  For those operations where the array shape is known, there is a
+  [`reduce()`](NDIndex.reduce) method to reduce an index to a simpler index that is
+  equivalent for the given shape.
 
 - Enable useful transformation and manipulation functions on index objects.
 
