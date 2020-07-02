@@ -372,14 +372,23 @@ class Slice(NDIndex):
 
         from .ndindex import ndindex
         from .tuple import Tuple
+        from .integer import Integer
 
         index = ndindex(index)
 
         if isinstance(index, Tuple):
             return Tuple(self).as_subindex(index)
 
+        if isinstance(index, Integer):
+            s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
+            if s == Slice(0, 0, 1):
+                # Return a slice so that the result doesn't produce an IndexError
+                return s
+            assert len(s) == 1
+            return Integer(s.args[0])
+
         if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples and slices")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
 
         s = self.reduce()
         index = index.reduce()

@@ -344,6 +344,7 @@ class Tuple(NDIndex):
     def as_subindex(self, index):
         from .ndindex import ndindex
         from .slice import Slice
+        from .integer import Integer
 
         index = ndindex(index).reduce()
 
@@ -355,16 +356,22 @@ class Tuple(NDIndex):
 
             first = self.args[0]
             return Tuple(first.as_subindex(index), *self.args[1:])
-        elif isinstance(index, Tuple):
+        if isinstance(index, Integer):
+            index = Tuple(index)
+        if isinstance(index, Tuple):
             new_args = []
             if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
                     raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
 
             for self_arg, index_arg in zip(self.args, index.args):
-                new_args.append(self_arg.as_subindex(index_arg))
+                subindex = self_arg.as_subindex(index_arg)
+                if subindex == Slice(0, 0, 1):
+                    return subindex
+                if isinstance(self_arg, Slice) and isinstance(index_arg, Integer):
+                    continue
+                new_args.append(subindex)
             return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
-        else:
-            raise NotImplementedError("Tuple.as_subindex() is only implemented for slices and tuples")
+        raise NotImplementedError("Tuple.as_subindex() is only implemented for slices and tuples")
 
     def isempty(self, shape=None):
         idx = self

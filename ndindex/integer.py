@@ -110,7 +110,7 @@ class Integer(NDIndex):
             return Tuple(self).as_subindex(index)
 
         if not isinstance(index, Slice):
-            raise NotImplementedError("Tuple.as_subindex is only implemented for slices")
+            raise NotImplementedError("Integer.as_subindex is only implemented for slices")
 
         s = Slice(self.args[0], self.args[0] + 1).as_subindex(index)
         if s == Slice(0, 0, 1):
