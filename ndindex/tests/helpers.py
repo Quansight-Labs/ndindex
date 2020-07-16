@@ -64,6 +64,8 @@ def assert_equal(actual, desired, err_msg='', verbose=True):
     """
     numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
                                verbose=verbose)
+    if not err_msg:
+        err_msg = f"{actual.shape} != {desired.shape}"
     assert actual.shape == desired.shape, err_msg
 
 def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
