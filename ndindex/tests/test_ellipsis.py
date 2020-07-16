@@ -122,7 +122,10 @@ def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
 
     assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
 
-    subindex2 = Index.as_subindex(E)
+    try:
+        subindex2 = Index.as_subindex(E)
+    except NotImplementedError:
+        return
     asubindex2 = aE[subindex2.raw]
     assert_equal(asubindex2, asubindex)
 

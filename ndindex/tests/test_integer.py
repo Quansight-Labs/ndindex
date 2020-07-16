@@ -245,7 +245,10 @@ def test_integer_as_subindex_tuple_hypothesis(i, index, shape):
 
         assert_equal(asubindex.flatten(), aidx[isin(aidx, aindex)])
 
-        subindex2 = Index.as_subindex(idx)
+        try:
+            subindex2 = Index.as_subindex(idx)
+        except NotImplementedError:
+            return
         asubindex2 = aidx[subindex2.raw]
         assert_equal(asubindex2, asubindex)
 

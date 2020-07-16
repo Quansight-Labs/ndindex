@@ -348,6 +348,9 @@ class Tuple(NDIndex):
 
         index = ndindex(index).reduce()
 
+        if ... in self.args:
+            raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
+
         if isinstance(index, Slice):
             if not self.args:
                 if index.step < 0:
@@ -362,7 +365,8 @@ class Tuple(NDIndex):
             new_args = []
             if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
                     raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
-
+            if ... in index.args:
+                raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
             for self_arg, index_arg in zip(self.args, index.args):
                 subindex = self_arg.as_subindex(index_arg)
                 if isinstance(subindex, Tuple):
