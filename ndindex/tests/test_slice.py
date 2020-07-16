@@ -5,11 +5,13 @@ from numpy import arange, isin
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
+from ..ndindex import ndindex
 from ..slice import Slice
 from ..tuple import Tuple
 from ..integer import Integer
+from ..ellipsis import ellipsis
 from .helpers import (check_same, slices, prod, shapes, iterslice, Tuples,
-                      ints, assert_equal)
+                      ints, assert_equal, ellipses)
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -427,6 +429,70 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, shape):
             return
         asubindex2 = aS[subindex2.raw]
         assert_equal(asubindex2, asubindex)
+
+def test_slice_as_subindex_ellipsis_exhaustive():
+    a = arange(10)
+    for sargs in iterslice():
+        try:
+            S = Slice(*sargs)
+        except ValueError:
+            continue
+
+        Index = ellipsis()
+
+        try:
+            Subindex = S.as_subindex(Index)
+        except NotImplementedError: # pragma: no cover
+            continue
+
+        aS = a[S.raw]
+        aindex = a[...]
+
+        asubindex = aindex[Subindex.raw]
+
+        assert_equal(asubindex.flatten(), aS[isin(aS, aindex)])
+
+        try:
+            subindex2 = Index.as_subindex(S)
+        except NotImplementedError: # pragma: no cover
+            continue
+        asubindex2 = aS[subindex2.raw]
+        assert_equal(asubindex2, asubindex)
+
+@given(slices(), ellipses(), one_of(shapes, integers(0, 10)))
+def test_slice_as_subindex_ellipsis_hypothesis(s, index, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        S = Slice(s)
+        Index = ndindex(index)
+    except (IndexError, ValueError): # pragma: no cover
+        assume(False)
+
+    try:
+        Subindex = S.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+
+    try:
+        aS = a[s]
+        aindex = a[index]
+    except IndexError: # pragma: no cover
+        assume(False)
+
+    asubindex = aindex[Subindex.raw]
+
+    assert_equal(asubindex.flatten(), aS[isin(aS, aindex)])
+
+    try:
+        subindex2 = Index.as_subindex(S)
+    except NotImplementedError: # pragma: no cover
+        return
+    asubindex2 = aS[subindex2.raw]
+    assert_equal(asubindex2, asubindex)
 
 def test_slice_isempty_exhaustive():
     for args in iterslice():

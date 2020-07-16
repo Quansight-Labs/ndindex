@@ -376,6 +376,9 @@ class Slice(NDIndex):
 
         index = ndindex(index)
 
+        s = self.reduce()
+        index = index.reduce()
+
         if isinstance(index, Tuple):
             return Tuple(self).as_subindex(index)
 
@@ -402,9 +405,6 @@ class Slice(NDIndex):
 
         if not isinstance(index, Slice):
             raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
-
-        s = self.reduce()
-        index = index.reduce()
 
         if s.step < 0 or index.step < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
