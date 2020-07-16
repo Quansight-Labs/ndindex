@@ -91,6 +91,13 @@ def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
 
     assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
 
+    try:
+        subindex2 = Index.as_subindex(E)
+    except NotImplementedError:
+        return
+    asubindex2 = aE[subindex2.raw]
+    assert_equal(asubindex2, asubindex)
+
 @given(ellipses(), Tuples, shapes)
 def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
     a = arange(prod(shape)).reshape(shape)
@@ -115,6 +122,9 @@ def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
 
     assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
 
+    subindex2 = Index.as_subindex(E)
+    asubindex2 = aE[subindex2.raw]
+    assert_equal(asubindex2, asubindex)
 
 @given(ellipses(), one_of(shapes, integers(0, 10)))
 def test_ellipsis_isempty_hypothesis(idx, shape):

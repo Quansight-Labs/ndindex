@@ -252,11 +252,16 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     if empty:
         assert not isin(aT, aindex).any()
         assert not isin(aindex, aT).any()
+        with raises(ValueError, match="do not intersect"):
+            Index.as_subindex(T)
     else:
         asubindex = aindex[Subindex.raw]
 
-        # TODO: how can we check that the shape is correct?
         assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
+
+        subindex2 = Index.as_subindex(T)
+        asubindex2 = aT[subindex2.raw]
+        assert_equal(asubindex2, asubindex)
 
 @example((), (slice(None, None, -1),), (2,))
 @example((), (..., slice(None, None, -1),), (2,))
@@ -291,11 +296,19 @@ def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
     if empty:
         assert not isin(aT, aindex).any()
         assert not isin(aindex, aT).any()
+        with raises(ValueError, match="do not intersect"):
+            Index.as_subindex(T)
     else:
         asubindex = aindex[Subindex.raw]
 
-        # TODO: how can we check that the shape is correct?
         assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
+
+        try:
+            subindex2 = Index.as_subindex(T)
+        except NotImplementedError:
+            return
+        asubindex2 = aT[subindex2.raw]
+        assert_equal(asubindex2, asubindex)
 
 @example((0, slice(0, 0)), (1, 2))
 @given(Tuples, one_of(shapes, integers(0, 10)))

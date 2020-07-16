@@ -156,10 +156,16 @@ def test_integer_as_subindex_slice_exhaustive():
                 if empty:
                     assert not isin(aidx, aindex).any()
                     assert not isin(aindex, aidx).any()
+                    with raises(ValueError, match="do not intersect"):
+                        Index.as_subindex(idx)
                 else:
                     asubindex = aindex[Subindex.raw]
 
-                    assert_equal(asubindex, aidx[isin(aidx, aindex)])
+                    assert_equal(asubindex.flatten(), aidx[isin(aidx, aindex)])
+
+                    subindex2 = Index.as_subindex(idx)
+                    asubindex2 = aidx[subindex2.raw]
+                    assert_equal(asubindex2, asubindex)
 
 @example(0, slice(0, 1), 1)
 @given(ints(), slices(), integers(0, 100))
@@ -189,10 +195,16 @@ def test_integer_as_subindex_slice_hypothesis(i, index, size):
     if empty:
         assert not isin(aidx, aindex).any()
         assert not isin(aindex, aidx).any()
+        with raises(ValueError, match="do not intersect"):
+            Index.as_subindex(idx)
     else:
         asubindex = aindex[Subindex.raw]
 
-        assert_equal(asubindex, aidx[isin(aidx, aindex)])
+        assert_equal(asubindex.flatten(), aidx[isin(aidx, aindex)])
+
+        subindex2 = Index.as_subindex(idx)
+        asubindex2 = aidx[subindex2.raw]
+        assert_equal(asubindex2, asubindex)
 
 @example(0, (slice(1, 2),), 1)
 @given(ints(), Tuples, one_of(shapes, integers(0, 100)))
@@ -226,10 +238,16 @@ def test_integer_as_subindex_tuple_hypothesis(i, index, shape):
     if empty:
         assert not isin(aidx, aindex).any()
         assert not isin(aindex, aidx).any()
+        with raises(ValueError, match="do not intersect"):
+            Index.as_subindex(idx)
     else:
         asubindex = aindex[Subindex.raw]
 
         assert_equal(asubindex.flatten(), aidx[isin(aidx, aindex)])
+
+        subindex2 = Index.as_subindex(idx)
+        asubindex2 = aidx[subindex2.raw]
+        assert_equal(asubindex2, asubindex)
 
 def test_integer_isempty_exhaustive():
     for i in range(-10, 10):
