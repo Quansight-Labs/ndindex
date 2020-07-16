@@ -180,7 +180,7 @@ def test_integer_as_subindex_slice_hypothesis(i, index, size):
     empty = False
     try:
         Subindex = idx.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
     except ValueError as e:
         assert "do not intersect" in e.args[0]
@@ -223,7 +223,7 @@ def test_integer_as_subindex_tuple_hypothesis(i, index, shape):
     empty = False
     try:
         Subindex = idx.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
     except ValueError as e:
         assert "do not intersect" in e.args[0]

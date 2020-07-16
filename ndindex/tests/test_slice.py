@@ -294,7 +294,7 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
 
     try:
         Subindex = S.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
 
     aS = a[s]
@@ -322,7 +322,7 @@ def test_slice_as_subindex_integer_exhaustive():
             empty = False
             try:
                 Subindex = S.as_subindex(Index)
-            except NotImplementedError: # pragma: no cover
+            except NotImplementedError:
                 continue
             except ValueError as e:
                 assert "do not intersect" in e.args[0]
@@ -358,7 +358,7 @@ def test_slice_as_subindex_integer_hypothesis(s, i, size):
     empty = False
     try:
         Subindex = S.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
     except ValueError as e:
         assert "do not intersect" in e.args[0]
@@ -401,7 +401,7 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, shape):
     empty = False
     try:
         Subindex = S.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
     except ValueError as e:
         assert "do not intersect" in e.args[0]
@@ -425,7 +425,7 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, shape):
 
         try:
             subindex2 = Index.as_subindex(S)
-        except NotImplementedError: # pragma: no cover
+        except NotImplementedError:
             return
         asubindex2 = aS[subindex2.raw]
         assert_equal(asubindex2, asubindex)
@@ -442,7 +442,7 @@ def test_slice_as_subindex_ellipsis_exhaustive():
 
         try:
             Subindex = S.as_subindex(Index)
-        except NotImplementedError: # pragma: no cover
+        except NotImplementedError:
             continue
 
         aS = a[S.raw]
@@ -454,7 +454,7 @@ def test_slice_as_subindex_ellipsis_exhaustive():
 
         try:
             subindex2 = Index.as_subindex(S)
-        except NotImplementedError: # pragma: no cover
+        except NotImplementedError:
             continue
         asubindex2 = aS[subindex2.raw]
         assert_equal(asubindex2, asubindex)
@@ -474,7 +474,7 @@ def test_slice_as_subindex_ellipsis_hypothesis(s, index, shape):
 
     try:
         Subindex = S.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
 
     try:
@@ -489,7 +489,7 @@ def test_slice_as_subindex_ellipsis_hypothesis(s, index, shape):
 
     try:
         subindex2 = Index.as_subindex(S)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
     asubindex2 = aS[subindex2.raw]
     assert_equal(asubindex2, asubindex)

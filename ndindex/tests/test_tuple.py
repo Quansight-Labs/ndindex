@@ -237,7 +237,7 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     empty = False
     try:
         Subindex = T.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
     except ValueError as e:
         assert "do not intersect" in e.args[0]
@@ -280,7 +280,7 @@ def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
     empty = False
     try:
         Subindex = T.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
     except ValueError as e:
         assert "do not intersect" in e.args[0]
@@ -305,7 +305,7 @@ def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
 
         try:
             subindex2 = Index.as_subindex(T)
-        except NotImplementedError: # pragma: no cover
+        except NotImplementedError:
             return
         asubindex2 = aT[subindex2.raw]
         assert_equal(asubindex2, asubindex)
