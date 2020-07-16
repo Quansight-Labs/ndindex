@@ -1,5 +1,4 @@
 from numpy import arange, int64, isin
-from numpy.testing import assert_equal
 
 from pytest import raises
 
@@ -10,8 +9,8 @@ from ..integer import Integer
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..slice import Slice
-from .helpers import check_same, ints, prod, shapes, iterslice, slices, Tuples
-
+from .helpers import (check_same, ints, prod, shapes, iterslice, slices,
+                      Tuples, assert_equal)
 
 def test_integer_args():
     zero = Integer(0)

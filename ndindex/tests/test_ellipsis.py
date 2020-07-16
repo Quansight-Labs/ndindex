@@ -1,5 +1,4 @@
 from numpy import arange, isin
-from numpy.testing import assert_equal
 
 from hypothesis import given, assume
 from hypothesis.strategies import one_of, integers
@@ -11,7 +10,8 @@ from ..tuple import Tuple
 from ..slice import Slice
 from ..integer import Integer
 from ..ellipsis import ellipsis
-from .helpers import check_same, prod, shapes, ellipses, slices, Tuples
+from .helpers import (check_same, prod, shapes, ellipses, slices, Tuples,
+                      assert_equal)
 
 def test_ellipsis_exhaustive():
     for n in range(10):

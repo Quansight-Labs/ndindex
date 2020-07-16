@@ -1,7 +1,6 @@
 from itertools import product
 
 from numpy import arange, isin
-from numpy.testing import assert_equal
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
@@ -11,7 +10,8 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices, slices
+from .helpers import (check_same, Tuples, prod, shapes, iterslice, ndindices,
+                      slices, assert_equal)
 
 
 def test_tuple_exhaustive():

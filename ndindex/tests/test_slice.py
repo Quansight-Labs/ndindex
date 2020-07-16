@@ -1,7 +1,6 @@
 from pytest import raises
 
 from numpy import arange, isin
-from numpy.testing import assert_equal
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
@@ -9,7 +8,8 @@ from hypothesis.strategies import integers, one_of
 from ..slice import Slice
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, slices, prod, shapes, iterslice, Tuples, ints
+from .helpers import (check_same, slices, prod, shapes, iterslice, Tuples,
+                      ints, assert_equal)
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
