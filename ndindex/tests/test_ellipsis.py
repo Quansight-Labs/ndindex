@@ -93,7 +93,7 @@ def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
 
     try:
         subindex2 = Index.as_subindex(E)
-    except NotImplementedError:
+    except NotImplementedError: # pragma: no cover
         return
     asubindex2 = aE[subindex2.raw]
     assert_equal(asubindex2, asubindex)

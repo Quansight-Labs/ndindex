@@ -305,7 +305,7 @@ def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
 
         try:
             subindex2 = Index.as_subindex(T)
-        except NotImplementedError:
+        except NotImplementedError: # pragma: no cover
             return
         asubindex2 = aT[subindex2.raw]
         assert_equal(asubindex2, asubindex)
