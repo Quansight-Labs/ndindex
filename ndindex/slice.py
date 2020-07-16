@@ -382,10 +382,23 @@ class Slice(NDIndex):
         if isinstance(index, Integer):
             s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
             if s == Slice(0, 0, 1):
-                # Return a slice so that the result doesn't produce an IndexError
-                return s
+                # There is no index that we can return here. The intersection
+                # of `self` and `index` is empty. Ideally we want to give an
+                # index that gives an empty array, but we cannot make the
+                # shape match. If a is dimension 1, then a[index] is dimension
+                # 0, so a[index][slice(0, 0)] will not work. A possibility
+                # would be to return False, which would add a length-0
+                # dimension to the array. But
+                #
+                # 1. this isn't implemented yet, and
+                # 2. a False can only add a length-0 dimension once, so it
+                #    still wouldn't work in every case. For example,
+                #    Tuple(slice(0), slice(0)).as_subindex((0, 0)) would need
+                #    to return an index that replaces the first two
+                #    dimensions with length-0 dimensions.
+                raise ValueError(f"{self} and {index} do not intersect")
             assert len(s) == 1
-            return Integer(s.args[0])
+            return Tuple()
 
         if not isinstance(index, Slice):
             raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")

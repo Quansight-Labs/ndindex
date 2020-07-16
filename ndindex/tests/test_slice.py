@@ -3,13 +3,13 @@ from pytest import raises
 from numpy import arange, isin
 from numpy.testing import assert_equal
 
-from hypothesis import given, assume
+from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, slices, prod, shapes, iterslice, Tuples
+from .helpers import check_same, slices, prod, shapes, iterslice, Tuples, ints
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -297,28 +297,107 @@ def test_slice_as_subindex_slice_hypothesis(s, index, size):
 
     assert_equal(asubindex, aS[isin(aS, aindex)])
 
-@given(slices(), Tuples, integers(0, 100))
-def test_slice_as_subindex_tuple_hypothesis(s, index, size):
+def test_slice_as_subindex_integer_exhaustive():
+    a = arange(10)
+    for sargs in iterslice():
+        for i in range(-10, 10):
+
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            Index = Integer(i)
+
+            empty = False
+            try:
+                Subindex = S.as_subindex(Index)
+            except NotImplementedError: # pragma: no cover
+                continue
+            except ValueError as e:
+                assert "do not intersect" in e.args[0]
+                empty = True
+
+            aS = a[S.raw]
+            aindex = a[i]
+
+            if empty:
+                assert not isin(aS, aindex).any()
+                assert not isin(aindex, aS).any()
+            else:
+                asubindex = aindex[Subindex.raw]
+
+                assert_equal(asubindex, aS[isin(aS, aindex)])
+
+@example(slice(0, 5), 2, 10)
+@given(slices(), ints(), integers(0, 100))
+def test_slice_as_subindex_integer_hypothesis(s, i, size):
     a = arange(size)
+    try:
+        S = Slice(s)
+        Index = Integer(i)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    empty = False
+    try:
+        Subindex = S.as_subindex(Index)
+    except NotImplementedError: # pragma: no cover
+        return
+    except ValueError as e:
+        assert "do not intersect" in e.args[0]
+        empty = True
+
+    try:
+        aS = a[S.raw]
+        aindex = a[i]
+    except IndexError: # pragma: no cover
+        assume(False)
+
+    if empty:
+        assert not isin(aS, aindex).any()
+        assert not isin(aindex, aS).any()
+    else:
+        asubindex = aindex[Subindex.raw]
+
+        assert_equal(asubindex, aS[isin(aS, aindex)])
+
+@example(slice(0, 1), (2,), 3)
+@given(slices(), Tuples, one_of(shapes, integers(0, 10)))
+def test_slice_as_subindex_tuple_hypothesis(s, index, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
     try:
         S = Slice(s)
         Index = Tuple(*index)
     except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
+    empty = False
     try:
         Subindex = S.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
         return
+    except ValueError as e:
+        assert "do not intersect" in e.args[0]
+        empty = True
 
     try:
         aS = a[s]
         aindex = a[index]
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = aindex[Subindex.raw]
 
-    assert_equal(asubindex, aS[isin(aS, aindex)])
+    if empty:
+        assert not isin(aS, aindex).any()
+        assert not isin(aindex, aS).any()
+    else:
+        asubindex = aindex[Subindex.raw]
+
+        assert_equal(asubindex.flatten(), aS[isin(aS, aindex)])
 
 def test_slice_isempty_exhaustive():
     for args in iterslice():

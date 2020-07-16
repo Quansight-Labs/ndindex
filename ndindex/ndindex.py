@@ -267,15 +267,23 @@ class NDIndex:
         so that `k "=" (j^-1)[i]` (this only works as a true inverse if
         `j` is a subset of `i`).
 
+        Note that due to symmetry, `a[j][i.as_subindex(j)]` and
+        `a[i][j.as_subindex(i)]` will give the same subarrays of `a`, which
+        will be the array that includes the elements indexed by both `a[i]`
+        and `a[j]`.
+
+        `i.as_subindex(j)` may raise `ValueError` in the case that the indices
+        `i` and `j` do not intersect at all.
+
+        Examples
+        ========
+
         An example usage of `as_subindex` is to split an index up into
         subindices of chunks of an array. For example, say a 1-D array `a` is
         chunked up into chunks of size `N`, so that `a[0:N]`, `a[N:2*N]`,
         `[2*N:3*N]`, etc. are stored separately. Then an index `a[i]` can be
         reindexed onto the chunks via `i.as_subindex(Slice(0, N))`,
-        `i.as_subindex(Slice(N, 2*N))`, etc. See the example below.
-
-        Examples
-        ========
+        `i.as_subindex(Slice(N, 2*N))`, etc.
 
         >>> from ndindex import Slice
         >>> i = Slice(5, 15)

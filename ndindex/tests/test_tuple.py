@@ -220,9 +220,13 @@ def test_tuple_newshape_ndindex_input():
     raises(TypeError, lambda: Tuple(1).newshape(Integer(2)))
 
 
-@given(Tuples, slices(), shapes)
+@example((0,), (slice(1, 2),), 3)
+@given(Tuples, slices(), one_of(shapes, integers(0, 10)))
 def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
 
     try:
         T = Tuple(*t)
@@ -230,23 +234,34 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
+    empty = False
     try:
         Subindex = T.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
         return
+    except ValueError as e:
+        assert "do not intersect" in e.args[0]
+        empty = True
 
     try:
         aT = a[t]
         aindex = a[index]
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = aindex[Subindex.raw]
 
-    # TODO: how can we check that the shape is correct?
-    assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
+    if empty:
+        assert not isin(aT, aindex).any()
+        assert not isin(aindex, aT).any()
+    else:
+        asubindex = aindex[Subindex.raw]
+
+        # TODO: how can we check that the shape is correct?
+        assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
 
 @example((), (slice(None, None, -1),), (2,))
 @example((), (..., slice(None, None, -1),), (2,))
+@example((slice(0, 1),), (2,), (3,))
+@example((slice(0, 5), slice(0, 5)), (slice(3, 10), slice(3, 10)), (20, 20))
 @given(Tuples, Tuples, shapes)
 def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
     a = arange(prod(shape)).reshape(shape)
@@ -257,20 +272,30 @@ def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
     except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
+    empty = False
     try:
         Subindex = T.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
         return
+    except ValueError as e:
+        assert "do not intersect" in e.args[0]
+        empty = True
+
 
     try:
         aT = a[t]
         aindex = a[index]
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = aindex[Subindex.raw]
 
-    # TODO: how can we check that the shape is correct?
-    assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
+    if empty:
+        assert not isin(aT, aindex).any()
+        assert not isin(aindex, aT).any()
+    else:
+        asubindex = aindex[Subindex.raw]
+
+        # TODO: how can we check that the shape is correct?
+        assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
 
 @example((0, slice(0, 0)), (1, 2))
 @given(Tuples, one_of(shapes, integers(0, 10)))

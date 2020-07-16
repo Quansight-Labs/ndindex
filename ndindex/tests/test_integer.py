@@ -143,17 +143,26 @@ def test_integer_as_subindex_slice_exhaustive():
                 except ValueError:
                     continue
 
+                empty = False
                 try:
                     Subindex = idx.as_subindex(Index)
                 except NotImplementedError:
                     continue
+                except ValueError as e:
+                    assert "do not intersect" in e.args[0]
+                    empty = True
 
                 aidx = a[idx.raw]
                 aindex = a[Index.raw]
-                asubindex = aindex[Subindex.raw]
+                if empty:
+                    assert not isin(aidx, aindex).any()
+                    assert not isin(aindex, aidx).any()
+                else:
+                    asubindex = aindex[Subindex.raw]
 
-                assert_equal(asubindex, aidx[isin(aidx, aindex)])
+                    assert_equal(asubindex, aidx[isin(aidx, aindex)])
 
+@example(0, slice(0, 1), 1)
 @given(ints(), slices(), integers(0, 100))
 def test_integer_as_subindex_slice_hypothesis(i, index, size):
     a = arange(size)
@@ -163,42 +172,65 @@ def test_integer_as_subindex_slice_hypothesis(i, index, size):
     except ValueError: # pragma: no cover
         assume(False)
 
+    empty = False
     try:
         Subindex = idx.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
         return
+    except ValueError as e:
+        assert "do not intersect" in e.args[0]
+        empty = True
 
     try:
         aidx = a[idx]
     except IndexError: # pragma: no cover
         assume(False)
     aindex = a[index]
-    asubindex = aindex[Subindex.raw]
 
-    assert_equal(asubindex, aidx[isin(aidx, aindex)])
+    if empty:
+        assert not isin(aidx, aindex).any()
+        assert not isin(aindex, aidx).any()
+    else:
+        asubindex = aindex[Subindex.raw]
 
-@given(ints(), Tuples, integers(0, 100))
-def test_integer_as_subindex_tuple_hypothesis(i, index, size):
-    a = arange(size)
+        assert_equal(asubindex, aidx[isin(aidx, aindex)])
+
+@example(0, (slice(1, 2),), 1)
+@given(ints(), Tuples, one_of(shapes, integers(0, 100)))
+def test_integer_as_subindex_tuple_hypothesis(i, index, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
     try:
         idx = Integer(i)
         Index = Tuple(*index)
     except (ValueError, IndexError): # pragma: no cover
         assume(False)
 
+    empty = False
     try:
         Subindex = idx.as_subindex(Index)
     except NotImplementedError: # pragma: no cover
         return
+    except ValueError as e:
+        assert "do not intersect" in e.args[0]
+        empty = True
 
     try:
         aidx = a[idx]
         aindex = a[index]
     except IndexError: # pragma: no cover
         assume(False)
-    asubindex = aindex[Subindex.raw]
 
-    assert_equal(asubindex, aidx[isin(aidx, aindex)])
+    if empty:
+        assert not isin(aidx, aindex).any()
+        assert not isin(aindex, aidx).any()
+    else:
+        asubindex = aindex[Subindex.raw]
+
+        assert_equal(asubindex.flatten(), aidx[isin(aidx, aindex)])
 
 def test_integer_isempty_exhaustive():
     for i in range(-10, 10):

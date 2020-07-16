@@ -365,13 +365,11 @@ class Tuple(NDIndex):
 
             for self_arg, index_arg in zip(self.args, index.args):
                 subindex = self_arg.as_subindex(index_arg)
-                if subindex == Slice(0, 0, 1):
-                    return subindex
-                if isinstance(self_arg, Slice) and isinstance(index_arg, Integer):
+                if isinstance(subindex, Tuple):
                     continue
                 new_args.append(subindex)
             return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
-        raise NotImplementedError("Tuple.as_subindex() is only implemented for slices and tuples")
+        raise NotImplementedError(f"Tuple.as_subindex() is not implemented for type '{type(index).__name__}")
 
     def isempty(self, shape=None):
         idx = self
