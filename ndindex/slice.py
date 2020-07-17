@@ -4,7 +4,7 @@ import math
 from sympy.ntheory.modular import crt
 from sympy import ilcm
 
-from .ndindex import NDIndex
+from .ndindex import NDIndex, asshape
 
 class default:
     """
@@ -303,8 +303,7 @@ class Slice(NDIndex):
 
         # Further canonicalize with an explicit array shape
 
-        if isinstance(shape, int):
-            shape = (shape,)
+        shape = asshape(shape)
         if len(shape) <= axis:
             raise IndexError("too many indices for array")
 
@@ -357,8 +356,7 @@ class Slice(NDIndex):
         if isinstance(shape, (Tuple, Integer)):
             raise TypeError("ndindex types are not meant to be used as a shape - "
                             "did you mean to use the built-in tuple type?")
-        if isinstance(shape, int):
-            shape = (shape,)
+        shape = asshape(shape)
 
         idx = self.reduce(shape)
 
@@ -430,8 +428,7 @@ class Slice(NDIndex):
     def isempty(self, shape=None):
         idx = self
         if shape is not None:
-            if isinstance(shape, int):
-                shape = (shape,)
+            shape = asshape(shape)
             if 0 in shape:
                 return True
             idx = self.reduce(shape)

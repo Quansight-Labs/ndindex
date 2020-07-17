@@ -1,4 +1,6 @@
 import inspect
+import operator
+import numbers
 
 from numpy import ndarray
 
@@ -336,3 +338,39 @@ class NDIndex:
 
         """
         raise NotImplementedError
+
+def asshape(shape):
+    """
+    Cast `shape` as a valid NumPy shape.
+
+    The input can be an integer `n`, which is equivalent to `(n,)`, or a tuple
+    of integers.
+
+    The resulting shape is always a tuple of nonnegative integers.
+
+    All ndindex code that takes a shape should use
+
+        shape = asindex(shape)
+
+    """
+    if isinstance(shape, numbers.Number):
+        shape = (operator.index(shape),)
+
+    try:
+        l = len(shape)
+        if l < 0:
+            raise TypeError
+    except TypeError:
+        raise TypeError("expected sequence object with len >= 0 or a single integer")
+
+    newshape = []
+    # numpy uses __getitem__ rather than __iter__ to index into shape, so we
+    # match that
+    for i in range(l):
+        # Raise TypeError if invalid
+        newshape.append(operator.index(shape[i]))
+
+        if shape[i] < 0:
+            raise ValueError("unknown (negative) dimensions are not supported")
+
+    return tuple(newshape)
