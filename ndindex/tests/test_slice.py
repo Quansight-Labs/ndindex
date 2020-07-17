@@ -3,7 +3,7 @@ from pytest import raises
 from numpy import arange, isin
 from numpy.testing import assert_equal
 
-from hypothesis import given, assume
+from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
@@ -345,6 +345,7 @@ def test_slice_isempty_exhaustive():
 
         assert isempty == aempty, S
 
+@example(slice(None, None, None), ())
 @given(slices(), one_of(shapes, integers(0, 10)))
 def test_slice_isempty_hypothesis(s, shape):
     if isinstance(shape, int):
