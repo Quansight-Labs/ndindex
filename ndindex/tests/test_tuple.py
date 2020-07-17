@@ -311,6 +311,7 @@ def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
         asubindex2 = aT[subindex2.raw]
         assert_equal(asubindex2, asubindex)
 
+@example((slice(0, 0),), 2)
 @example((0, slice(0, 0)), (1, 2))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_isempty_hypothesis(t, shape):
