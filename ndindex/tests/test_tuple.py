@@ -267,6 +267,7 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
 @example((), (..., slice(None, None, -1),), (2,))
 @example((slice(0, 1),), (2,), (3,))
 @example((slice(0, 5), slice(0, 5)), (slice(3, 10), slice(3, 10)), (20, 20))
+@example((slice(0, 5), slice(0, 5)), (1, 1), (10, 10))
 @given(Tuples, Tuples, shapes)
 def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
     a = arange(prod(shape)).reshape(shape)
