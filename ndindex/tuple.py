@@ -180,9 +180,8 @@ class Tuple(NDIndex):
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).reduce(shape)
 
-        shape = asshape(shape)
-
         if shape is not None:
+            shape = asshape(shape)
             if (self.has_ellipsis and len(shape) < len(self.args) - 1
                 or not self.has_ellipsis and len(shape) < len(self.args)):
                 raise IndexError("too many indices for array")

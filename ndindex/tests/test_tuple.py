@@ -8,7 +8,7 @@ from hypothesis.strategies import integers, one_of
 
 from pytest import raises
 
-from ..ndindex import ndindex, asshape
+from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
 from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices, slices
