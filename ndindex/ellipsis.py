@@ -1,4 +1,4 @@
-from .ndindex import NDIndex
+from .ndindex import NDIndex, asshape
 from .tuple import Tuple
 
 class ellipsis(NDIndex):
@@ -75,8 +75,7 @@ class ellipsis(NDIndex):
         if isinstance(shape, (Tuple, Integer)):
             raise TypeError("ndindex types are not meant to be used as a shape - "
                             "did you mean to use the built-in tuple type?")
-        if isinstance(shape, int):
-            shape = (shape,)
+        shape = asshape(shape)
 
         return shape
 

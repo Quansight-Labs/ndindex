@@ -1,6 +1,6 @@
 import operator
 
-from .ndindex import NDIndex
+from .ndindex import NDIndex, asshape
 
 class Integer(NDIndex):
     """
@@ -70,8 +70,7 @@ class Integer(NDIndex):
         if shape is None:
             return self
 
-        if isinstance(shape, int):
-            shape = (shape,)
+        shape = asshape(shape)
         if len(shape) <= axis:
             raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
 
@@ -91,8 +90,7 @@ class Integer(NDIndex):
         if isinstance(shape, (Tuple, Integer)):
             raise TypeError("ndindex types are not meant to be used as a shape - "
                             "did you mean to use the built-in tuple type?")
-        if isinstance(shape, int):
-            shape = (shape,)
+        shape = asshape(shape)
 
         # reduce will raise IndexError if it should be raised
         self.reduce(shape)
@@ -121,8 +119,7 @@ class Integer(NDIndex):
 
     def isempty(self, shape=None):
         if shape is not None:
-            if isinstance(shape, int):
-                shape = (shape,)
+            shape = asshape(shape)
             # Raise IndexError if necessary
             self.reduce(shape)
             if 0 in shape:

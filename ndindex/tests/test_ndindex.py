@@ -1,10 +1,12 @@
 import inspect
 
+import numpy as np
+
 from hypothesis import given, example
 
 from pytest import raises
 
-from ..ndindex import ndindex
+from ..ndindex import ndindex, asshape
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from .helpers import ndindices
@@ -44,3 +46,19 @@ def test_str(idx):
     d = {}
     exec("from ndindex import *", d)
     assert eval(str(index), d) == idx
+
+def test_asshape():
+    assert asshape(1) == (1,)
+    assert asshape(np.int64(2)) == (2,)
+    assert type(asshape(np.int64(2))[0]) == int
+    assert asshape((1, 2)) == (1, 2)
+    assert asshape([1, 2]) == (1, 2)
+    assert asshape((np.int64(1), np.int64(2))) == (1, 2)
+    assert type(asshape((np.int64(1), np.int64(2)))[0]) == int
+    assert type(asshape((np.int64(1), np.int64(2)))[1]) == int
+
+    raises(TypeError, lambda: asshape(1.0))
+    raises(TypeError, lambda: asshape((1.0,)))
+    raises(ValueError, lambda: asshape(-1))
+    raises(ValueError, lambda: asshape((1, -1)))
+    raises(TypeError, lambda: asshape(...))
