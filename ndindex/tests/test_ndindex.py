@@ -61,9 +61,3 @@ def test_asshape():
     raises(TypeError, lambda: asshape((1.0,)))
     raises(ValueError, lambda: asshape(-1))
     raises(ValueError, lambda: asshape((1, -1)))
-
-    class NegativeLen:
-        def __len__(self):
-            return -1
-
-    raises(TypeError, lambda: asshape(NegativeLen()))

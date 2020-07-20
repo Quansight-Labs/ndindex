@@ -358,8 +358,6 @@ def asshape(shape):
 
     try:
         l = len(shape)
-        if l < 0:
-            raise TypeError
     except TypeError:
         raise TypeError("expected sequence object with len >= 0 or a single integer")
 
