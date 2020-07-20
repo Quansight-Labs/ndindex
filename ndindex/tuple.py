@@ -137,7 +137,7 @@ class Tuple(NDIndex):
         >>> idx.reduce((5,))
         Traceback (most recent call last):
         ...
-        IndexError: too many indices for array
+        IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
         >>> idx.reduce((5, 2))
         Traceback (most recent call last):
         ...
@@ -182,9 +182,9 @@ class Tuple(NDIndex):
 
         if shape is not None:
             shape = asshape(shape)
-            if (self.has_ellipsis and len(shape) < len(self.args) - 1
-                or not self.has_ellipsis and len(shape) < len(self.args)):
-                raise IndexError("too many indices for array")
+            indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
+            if len(shape) < indexed_args:
+                raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {indexed_args} were indexed")
 
         ellipsis_i = self.ellipsis_index
 
@@ -259,7 +259,7 @@ class Tuple(NDIndex):
         >>> idx.expand((5,))
         Traceback (most recent call last):
         ...
-        IndexError: too many indices for array
+        IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
         >>> idx.expand((5, 2))
         Traceback (most recent call last):
         ...
@@ -281,9 +281,9 @@ class Tuple(NDIndex):
 
         shape = asshape(shape)
 
-        if (self.has_ellipsis and len(shape) < len(self.args) - 1
-            or not self.has_ellipsis and len(shape) < len(self.args)):
-            raise IndexError("too many indices for array")
+        indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
+        if len(shape) < indexed_args:
+            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {indexed_args} were indexed")
 
         ellipsis_i = self.ellipsis_index
 
