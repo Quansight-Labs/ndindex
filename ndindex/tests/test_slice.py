@@ -277,6 +277,7 @@ def test_slice_as_subindex_slice_exhaustive():
 
             assert_equal(asubindex, aS[isin(aS, aindex)])
 
+@example(slice(0, 10), slice(5, 15), 20)
 @given(slices(), slices(), integers(0, 100))
 def test_slice_as_subindex_slice_hypothesis(s, index, size):
     a = arange(size)
