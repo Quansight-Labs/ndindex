@@ -20,7 +20,11 @@
 - `ndindex(list/array/bool/None)` now correctly raise `NotImplementedError`
   instead of `TypeError`.
 
-- Update "too many indices for array" error messages to match NumPy 1.19.
+- `ndindex()` now raises `IndexError` instead of `TypeError` on invalid index
+  types, with error messages that match NumPy. This also applies to various
+  API functions that call `ndindex()` on their arguments.
+
+- Update the "too many indices for array" error messages to match NumPy 1.19.
 
 - Better checking of arguments for functions that take a shape. The allowed
   shapes and exceptions should now match NumPy more closely (although unknown
