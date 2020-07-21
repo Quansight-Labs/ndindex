@@ -31,6 +31,14 @@ def test_ndindex(idx):
     ix = ndindex(idx)
     assert ndindex(ix.raw) == ix
 
+def test_ndindex_not_implemented():
+    a = np.arange(10)
+    for idx in [[], [1, 2], np.array([1, 2]), np.array([True, False]*5), True,
+                False, None]:
+        raises(NotImplementedError, lambda: ndindex(idx))
+        # Make sure the index really is valid
+        a[idx]
+
 def test_ndindex_ellipsis():
     raises(TypeError, lambda: ndindex(ellipsis))
 
