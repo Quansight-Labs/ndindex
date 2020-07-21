@@ -205,6 +205,7 @@ class NDIndex:
         .Tuple.reduce
         .Slice.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
 
         """
         # XXX: Should the default be raise NotImplementedError or return self?

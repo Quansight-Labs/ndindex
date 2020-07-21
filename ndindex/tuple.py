@@ -171,6 +171,7 @@ class Tuple(NDIndex):
         .Slice.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
 
         """
         from .ellipsis import ellipsis

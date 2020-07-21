@@ -270,6 +270,7 @@ class Slice(NDIndex):
         .Tuple.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
 
         """
         start, stop, step = self.args

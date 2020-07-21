@@ -74,6 +74,31 @@ class IntegerArray(NDIndex):
         return self.array.shape
 
     def reduce(self, shape=None, axis=0):
+        """
+        Reduce an IntegerArray index on an array of shape `shape`.
+
+        The result will either be IndexError if the index is invalid for the
+        given shape, or an Integer index where the value is nonnegative.
+
+        >>> from ndindex import IntegerArray
+        >>> idx = IntegerArray([-5, 2])
+        >>> idx.reduce((3,))
+        Traceback (most recent call last):
+        ...
+        IndexError: index -5 is out of bounds for axis 0 with size 3
+        >>> idx.reduce((9,))
+        IntegerArray([4, 2])
+
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .ellipsis.reduce
+        .Integer.reduce
+
+        """
         from .integer import Integer
 
         if shape is None:

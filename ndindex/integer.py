@@ -44,7 +44,7 @@ class Integer(NDIndex):
 
     def reduce(self, shape=None, axis=0):
         """
-        Reduce an Integer index on an array of shape `shape`
+        Reduce an Integer index on an array of shape `shape`.
 
         The result will either be IndexError if the index is invalid for the
         given shape, or an Integer index where the value is nonnegative.
@@ -65,6 +65,7 @@ class Integer(NDIndex):
         .Tuple.reduce
         .Slice.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
 
         """
         if shape is None:
