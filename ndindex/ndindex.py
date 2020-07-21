@@ -36,7 +36,7 @@ def ndindex(obj):
     if obj is Ellipsis:
         return ellipsis()
 
-    if isinstance(obj, ndarray):
+    if isinstance(obj, (list, ndarray)):
         raise NotImplementedError("array indices are not yet supported")
 
     raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
