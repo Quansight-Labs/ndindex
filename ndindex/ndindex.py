@@ -3,7 +3,7 @@ import operator
 import numbers
 import warnings
 
-from numpy import ndarray, asarray, integer, bool_, int64
+from numpy import ndarray, asarray, integer, bool_, intp
 
 def ndindex(obj):
     """
@@ -31,7 +31,7 @@ def ndindex(obj):
         # filtered out anyway since they produce object arrays.
         with warnings.catch_warnings(record=True):
             if isinstance(obj, list) and obj == []:
-                a = asarray([], dtype=int64)
+                a = asarray([], dtype=intp)
             else:
                 a = asarray(obj)
         if issubclass(a.dtype.type, integer):
