@@ -1,8 +1,8 @@
 import warnings
 
-from numpy import ndarray, asarray, integer, bool_, intp
+from numpy import ndarray, asarray, integer, bool_, intp, ndindex as numpy_ndindex
 
-from .ndindex import NDIndex
+from .ndindex import NDIndex, asshape
 
 class IntegerArray(NDIndex):
     """
@@ -51,3 +51,37 @@ class IntegerArray(NDIndex):
     @property
     def raw(self):
         return self.args[0]
+
+    @property
+    def array(self):
+        """
+        Return the NumPy array of self.
+
+        This is the same as self.args[0].
+        """
+        return self.args[0]
+
+    @property
+    def shape(self):
+        """
+        Return the shape of the array of self.
+
+        This is the same as self.array.shape. Note that this is **not** the
+        same as the shape of an array that is indexed by self. Use
+        :meth:`newshape` to get that.
+
+        """
+        return self.array.shape
+
+    def reduce(self, shape=None, axis=0):
+        from .integer import Integer
+
+        if shape is None:
+            return self
+
+        shape = asshape(shape)
+
+        new_array = ndarray(self.shape, dtype=intp)
+        for index in numpy_ndindex(self.shape):
+            new_array[index] = Integer(self.array[index]).reduce(shape, axis=axis).raw
+        return IntegerArray(new_array)
