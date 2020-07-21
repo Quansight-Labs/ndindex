@@ -8,7 +8,8 @@ from numpy.testing import assert_equal
 from pytest import fail
 
 from hypothesis import assume
-from hypothesis.strategies import integers, composite, none, one_of, lists, just, builds
+from hypothesis.strategies import (integers, composite, none, one_of, lists,
+                                   just, builds, nothing)
 from hypothesis.extra.numpy import arrays
 
 from ..ndindex import ndindex
@@ -45,16 +46,20 @@ shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < 100000)
 
-integer_arrays = arrays(intp, shapes)
+_integer_arrays = arrays(intp, shapes)
+integer_arrays = _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
 
 @composite
-def ndindices(draw):
+def ndindices(draw, arrays=False):
+    # TODO: Always include integer arrays
+    a = integer_arrays if arrays else nothing()
     s = draw(one_of(
-        ints(),
-        slices(),
-        ellipses(),
-        tuples(one_of(ints(), slices())),
-    ))
+            ints(),
+            slices(),
+            ellipses(),
+            tuples(one_of(ints(), slices())),
+            a,
+        ))
 
     try:
         return ndindex(s)
