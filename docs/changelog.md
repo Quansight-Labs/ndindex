@@ -17,8 +17,8 @@
 - `as_subindex` correctly gives `NotImplementedError` for Tuples with
   ellipses.
 
-- `ndindex(list)` now correctly raises `NotImplementedError` instead of
-  `TypeError`.
+- `ndindex(list/array/bool/None)` now correctly raise `NotImplementedError`
+  instead of `TypeError`.
 
 - Update "too many indices for array" error messages to match NumPy 1.19.
 
