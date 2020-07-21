@@ -18,7 +18,7 @@ def ndindex(obj):
     >>> ndindex(slice(0, 10))
     Slice(0, 10, None)
     """
-    from . import Integer, Slice, Tuple, ellipsis
+    from . import Integer, Slice, Tuple, ellipsis, IntegerArray
 
     if isinstance(obj, NDIndex):
         return obj
@@ -37,7 +37,7 @@ def ndindex(obj):
             else:
                 a = asarray(obj)
         if issubclass(a.dtype.type, integer):
-            raise NotImplementedError("integer array indices are not yet supported")
+            return IntegerArray(a)
         elif a.dtype == bool_:
             raise NotImplementedError("boolean array indices are not yet supported")
         else:
