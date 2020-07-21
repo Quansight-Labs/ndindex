@@ -26,6 +26,8 @@ def ndindex(obj):
     if obj is None:
         raise NotImplementedError("newaxis is not yet implemented")
 
+    # TODO: Replace this with calls to the IntegerArray() and BooleanArray()
+    # constructors.
     if isinstance(obj, (list, ndarray, bool)):
         # Ignore deprecation warnings for things like [1, []]. These will be
         # filtered out anyway since they produce object arrays.
