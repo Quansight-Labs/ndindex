@@ -9,8 +9,9 @@ class IntegerArray(NDIndex):
     Represents an integer array.
 
     If `idx` is an n-dimensional integer array with shape `s = (s1, ..., sn)`
-    and `a` is any array, `a[idx]` replaces the first axis of `a` with `s`,
-    where each entry is indexed according to the entry in `idx`.
+    and `a` is any array, `a[idx]` replaces the first dimension of `a` with
+    `s1, ..., sn` dimensions, where each entry is indexed according to the
+    entry in `idx` as an integer index.
 
     Integer arrays can also appear as part of tuple indices. In that case,
     they replace the axis being indexed. If more than one integer array
@@ -57,7 +58,7 @@ class IntegerArray(NDIndex):
         """
         Return the NumPy array of self.
 
-        This is the same as self.args[0].
+        This is the same as `self.args[0]`.
         """
         return self.args[0]
 
@@ -75,10 +76,11 @@ class IntegerArray(NDIndex):
 
     def reduce(self, shape=None, axis=0):
         """
-        Reduce an IntegerArray index on an array of shape `shape`.
+        Reduce an `IntegerArray` index on an array of shape `shape`.
 
-        The result will either be IndexError if the index is invalid for the
-        given shape, or an Integer index where the value is nonnegative.
+        The result will either be `IndexError` if the index is invalid for the
+        given shape, or an `IntegerArray` index where the values are all
+        nonnegative.
 
         >>> from ndindex import IntegerArray
         >>> idx = IntegerArray([-5, 2])
