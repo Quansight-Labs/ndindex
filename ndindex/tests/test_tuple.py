@@ -33,18 +33,18 @@ def test_tuple_exhaustive():
                     idx2 = t2(*t2_args)
                     idx3 = t3(*t3_args)
 
-                    index = (idx1, idx2, idx3)
+                    idx = (idx1, idx2, idx3)
                     # Disable the same exception check because there could be
                     # multiple invalid indices in the tuple, and for instance
                     # numpy may give an IndexError but we would give a
                     # TypeError because we check the type first.
-                    check_same(a, index, same_exception=False)
+                    check_same(a, idx, same_exception=False)
                     try:
-                        idx = Tuple(*index)
+                        index = Tuple(*idx)
                     except (IndexError, ValueError):
                         pass
                     else:
-                        assert idx.has_ellipsis == (type(...) in (t1, t2, t3))
+                        assert index.has_ellipsis == (type(...) in (t1, t2, t3))
 
 @given(Tuples, shapes)
 def test_tuples_hypothesis(t, shape):
@@ -55,11 +55,11 @@ def test_tuples_hypothesis(t, shape):
 def test_ellipsis_index(t, shape):
     a = arange(prod(shape)).reshape(shape)
     try:
-        idx = ndindex(t)
+        index = ndindex(t)
     except (IndexError, ValueError):
         pass
     else:
-        if isinstance(idx, Tuple):
+        if isinstance(index, Tuple):
             # Don't know if there is a better way to test ellipsis_idx
             check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
 
@@ -71,14 +71,14 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
         a = arange(prod(shape)).reshape(shape)
 
     try:
-        idx = Tuple(*t)
+        index = Tuple(*t)
     except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
-    check_same(a, idx.raw, func=lambda x: x.reduce(),
+    check_same(a, index.raw, func=lambda x: x.reduce(),
                same_exception=False)
 
-    reduced = idx.reduce()
+    reduced = index.reduce()
     if isinstance(reduced, Tuple):
         assert len(reduced.args) != 1
         assert reduced == () or reduced.args[-1] != ...
