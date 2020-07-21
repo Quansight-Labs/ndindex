@@ -19,6 +19,12 @@ def ndindex(obj):
     if isinstance(obj, NDIndex):
         return obj
 
+    if obj is None:
+        raise NotImplementedError("newaxis is not yet implemented")
+
+    if isinstance(obj, (list, ndarray, bool)):
+        raise NotImplementedError("array indices are not yet supported")
+
     try:
         # If operator.index() works, use that
         return Integer(obj)
@@ -35,9 +41,6 @@ def ndindex(obj):
         raise TypeError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
     if obj is Ellipsis:
         return ellipsis()
-
-    if isinstance(obj, (list, ndarray)):
-        raise NotImplementedError("array indices are not yet supported")
 
     raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
 
