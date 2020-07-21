@@ -65,6 +65,8 @@ with indices.</p>
 <dt id="ndindex.ndindex">
 <code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ndindex</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert an object into an ndindex type</p>
+<p>Invalid indices will raise IndexError. Indices that are supported by NumPy
+but not yet supported by ndindex will raise NotImplementedError.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">Integer(1)</span>
