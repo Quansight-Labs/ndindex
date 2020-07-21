@@ -46,6 +46,13 @@ Tuple
    :members:
    :special-members:
 
+IntegerArray
+------------
+
+.. autoclass:: ndindex.IntegerArray
+   :members:
+   :special-members:
+
 Internal API
 ------------
 
