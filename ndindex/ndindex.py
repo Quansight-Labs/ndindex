@@ -3,7 +3,7 @@ import operator
 import numbers
 import warnings
 
-from numpy import ndarray, asarray, integer, bool_, int64
+from numpy import ndarray, asarray, integer, bool_, intp
 
 def ndindex(obj):
     """
@@ -32,10 +32,9 @@ def ndindex(obj):
         # Ignore deprecation warnings for things like [1, []]. These will be
         # filtered out anyway since they produce object arrays.
         with warnings.catch_warnings(record=True):
-            if isinstance(obj, list) and obj == []:
-                a = asarray([], dtype=int64)
-            else:
-                a = asarray(obj)
+            a = asarray(obj)
+            if isinstance(obj, list) and 0 in a.shape:
+                a = a.astype(intp)
         if issubclass(a.dtype.type, integer):
             return IntegerArray(a)
         elif a.dtype == bool_:

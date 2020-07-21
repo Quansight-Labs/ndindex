@@ -36,10 +36,9 @@ class IntegerArray(NDIndex):
             # Ignore deprecation warnings for things like [1, []]. These will be
             # filtered out anyway since they produce object arrays.
             with warnings.catch_warnings(record=True):
-                if isinstance(idx, list) and idx == []:
-                    a = asarray([], dtype=intp)
-                else:
-                    a = asarray(idx)
+                a = asarray(idx)
+                if isinstance(idx, list) and 0 in a.shape:
+                    a = a.astype(intp)
             if issubclass(a.dtype.type, integer):
                 if a.dtype != intp:
                     a = a.astype(intp)
