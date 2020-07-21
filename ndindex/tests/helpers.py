@@ -2,12 +2,14 @@ from itertools import chain
 from functools import reduce
 from operator import mul
 
+from numpy import intp
 from numpy.testing import assert_equal
 
 from pytest import fail
 
 from hypothesis import assume
 from hypothesis.strategies import integers, composite, none, one_of, lists, just, builds
+from hypothesis.extra.numpy import arrays
 
 from ..ndindex import ndindex
 
@@ -38,6 +40,13 @@ def tuples(elements, *, min_size=0, max_size=None, unique_by=None, unique=False)
 
 Tuples = tuples(one_of(ellipses(), ints(), slices()))
 
+shapes = tuples(integers(0, 10)).filter(
+             # numpy gives errors with empty arrays with large shapes.
+             # See https://github.com/numpy/numpy/issues/15753
+             lambda shape: prod([i for i in shape if i]) < 100000)
+
+integer_arrays = arrays(intp, shapes)
+
 @composite
 def ndindices(draw):
     s = draw(one_of(
@@ -52,10 +61,6 @@ def ndindices(draw):
     except ValueError: # pragma: no cover
         assume(False)
 
-shapes = tuples(integers(0, 10)).filter(
-             # numpy gives errors with empty arrays with large shapes.
-             # See https://github.com/numpy/numpy/issues/15753
-             lambda shape: prod([i for i in shape if i]) < 100000)
 
 def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None
