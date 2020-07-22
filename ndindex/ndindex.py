@@ -133,6 +133,9 @@ class NDIndex:
         return inspect.Signature(d.values())
 
     def __repr__(self):
+        return f"{self.__class__.__name__}({', '.join(map(repr, self.args))})"
+
+    def __str__(self):
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
 
     def __eq__(self, other):
