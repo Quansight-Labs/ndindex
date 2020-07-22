@@ -1,5 +1,36 @@
 # ndindex Changelog
 
+## Version 1.3.1 (2020-07-22)
+
+### Major Changes
+
+- `as_subindex` now supports more input types. In particular, `Integer` is now
+  supported better.
+
+- `as_subindex` will now raise `ValueError` in some cases when the two indices
+  do not intersect with each other. This is because representing the correct
+  answer is either impossible or requires an index type that is not yet
+  implemented in ndindex.
+
+### Minor Changes
+
+- `as_subindex` correctly gives `NotImplementedError` for Tuples with
+  ellipses.
+
+- `ndindex(list/array/bool/None)` now correctly raise `NotImplementedError`
+  instead of `TypeError`.
+
+- `ndindex()` now raises `IndexError` instead of `TypeError` on invalid index
+  types, with error messages that match NumPy. This also applies to various
+  API functions that call `ndindex()` on their arguments.
+
+- Update the "too many indices for array" error messages to match NumPy 1.19.
+
+- Better checking of arguments for functions that take a shape. The allowed
+  shapes and exceptions should now match NumPy more closely (although unknown
+  (negative) dimensions do not make sense and are not allowed). Shapes with
+  NumPy integer types now work properly.
+
 ## Version 1.3 (2020-06-29)
 
 ### Major Changes
