@@ -382,18 +382,25 @@ class NDIndex:
         """
         raise NotImplementedError
 
-def asshape(shape):
+def asshape(shape, axis=None):
     """
     Cast `shape` as a valid NumPy shape.
 
     The input can be an integer `n`, which is equivalent to `(n,)`, or a tuple
     of integers.
 
+    If the `axis` argument is provided, an IndexError is raised if it is out
+    of bounds for the shape.
+
     The resulting shape is always a tuple of nonnegative integers.
 
     All ndindex code that takes a shape should use
 
-        shape = asindex(shape)
+        shape = asshape(shape)
+
+    or
+
+        shape = asshape(shape, axis=axis)
 
     """
     if isinstance(shape, numbers.Number):
@@ -413,5 +420,9 @@ def asshape(shape):
 
         if shape[i] < 0:
             raise ValueError("unknown (negative) dimensions are not supported")
+
+    if axis is not None:
+        if len(newshape) <= axis:
+            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
 
     return tuple(newshape)

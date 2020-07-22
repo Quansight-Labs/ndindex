@@ -304,10 +304,7 @@ class Slice(NDIndex):
 
         # Further canonicalize with an explicit array shape
 
-        shape = asshape(shape)
-        if len(shape) <= axis:
-            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
-
+        shape = asshape(shape, axis=axis)
         size = shape[axis]
 
         # try:

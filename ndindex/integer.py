@@ -71,10 +71,7 @@ class Integer(NDIndex):
         if shape is None:
             return self
 
-        shape = asshape(shape)
-        if len(shape) <= axis:
-            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
-
+        shape = asshape(shape, axis=axis)
         size = shape[axis]
         if self.raw >= size or -size > self.raw < 0:
             raise IndexError(f"index {self.raw} is out of bounds for axis {axis} with size {size}")
