@@ -283,6 +283,7 @@ def test_slice_as_subindex_slice_exhaustive():
             asubindex2 = aS[subindex2.raw]
             assert_equal(asubindex2, asubindex)
 
+@example(slice(0, 10), slice(5, 15), 20)
 @given(slices(), slices(), integers(0, 100))
 def test_slice_as_subindex_slice_hypothesis(s, index, size):
     a = arange(size)
@@ -519,6 +520,7 @@ def test_slice_isempty_exhaustive():
 
         assert isempty == aempty, S
 
+@example(slice(None, None, None), ())
 @given(slices(), one_of(shapes, integers(0, 10)))
 def test_slice_isempty_hypothesis(s, shape):
     if isinstance(shape, int):

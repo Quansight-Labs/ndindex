@@ -1,10 +1,16 @@
 import inspect
+import operator
+import numbers
+import warnings
 
-from numpy import ndarray
+from numpy import ndarray, asarray, integer, bool_, intp
 
 def ndindex(obj):
     """
     Convert an object into an ndindex type
+
+    Invalid indices will raise IndexError. Indices that are supported by NumPy
+    but not yet supported by ndindex will raise NotImplementedError.
 
     >>> from ndindex import ndindex
     >>> ndindex(1)
@@ -16,6 +22,28 @@ def ndindex(obj):
 
     if isinstance(obj, NDIndex):
         return obj
+
+    if obj is None:
+        raise NotImplementedError("newaxis is not yet implemented")
+
+    if isinstance(obj, (list, ndarray, bool)):
+        # Ignore deprecation warnings for things like [1, []]. These will be
+        # filtered out anyway since they produce object arrays.
+        with warnings.catch_warnings(record=True):
+            if isinstance(obj, list) and obj == []:
+                a = asarray([], dtype=intp)
+            else:
+                a = asarray(obj)
+        if issubclass(a.dtype.type, integer):
+            raise NotImplementedError("integer array indices are not yet supported")
+        elif a.dtype == bool_:
+            raise NotImplementedError("boolean array indices are not yet supported")
+        else:
+            # Match the NumPy exceptions
+            if isinstance(obj, ndarray):
+                raise IndexError("arrays used as indices must be of integer (or boolean) type")
+            else:
+                raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
     try:
         # If operator.index() works, use that
@@ -30,14 +58,11 @@ def ndindex(obj):
         return Tuple(*obj)
 
     if obj == ellipsis:
-        raise TypeError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
+        raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
     if obj is Ellipsis:
         return ellipsis()
 
-    if isinstance(obj, ndarray):
-        raise NotImplementedError("array indices are not yet supported")
-
-    raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
+    raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
 class classproperty(object):
     def __init__(self, f):
@@ -113,7 +138,7 @@ class NDIndex:
         if not isinstance(other, NDIndex):
             try:
                 other = ndindex(other)
-            except (TypeError, NotImplementedError):
+            except (IndexError, NotImplementedError):
                 return False
 
         return ((isinstance(other, self.__class__)
@@ -344,3 +369,37 @@ class NDIndex:
 
         """
         raise NotImplementedError
+
+def asshape(shape):
+    """
+    Cast `shape` as a valid NumPy shape.
+
+    The input can be an integer `n`, which is equivalent to `(n,)`, or a tuple
+    of integers.
+
+    The resulting shape is always a tuple of nonnegative integers.
+
+    All ndindex code that takes a shape should use
+
+        shape = asindex(shape)
+
+    """
+    if isinstance(shape, numbers.Number):
+        shape = (operator.index(shape),)
+
+    try:
+        l = len(shape)
+    except TypeError:
+        raise TypeError("expected sequence object with len >= 0 or a single integer")
+
+    newshape = []
+    # numpy uses __getitem__ rather than __iter__ to index into shape, so we
+    # match that
+    for i in range(l):
+        # Raise TypeError if invalid
+        newshape.append(operator.index(shape[i]))
+
+        if shape[i] < 0:
+            raise ValueError("unknown (negative) dimensions are not supported")
+
+    return tuple(newshape)

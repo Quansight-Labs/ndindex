@@ -113,7 +113,7 @@ implemented:
       >>> arange(4)[s.raw]
       array([0, 1])
 
-- [`len()`](__len__) computes the maximum length of an index over a given axis.
+- [`len()`](Slice.__len__) computes the maximum length of an index over a given axis.
 
       >>> len(Slice(2, 10, 3))
       3
@@ -128,8 +128,8 @@ implemented:
       True
 
 - [`idx.expand(shape)`](NDIndex.expand) expands an index so that it is as
-  explicit as possible. An expanded index is always a {ref}`Tuple` where each
-  indexed axis is indexed explicitly.
+  explicit as possible. An expanded index is always a [`Tuple`](ndindex.Tuple)
+  where each indexed axis is indexed explicitly.
 
       >>> from ndindex import Tuple
       >>> Tuple(Slice(0, 10), ..., Slice(1, None)).expand((10, 11, 12))
