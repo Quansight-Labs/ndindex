@@ -133,13 +133,19 @@ same. To use it with slices with negative start or stop, call
 if <code class="code docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">j[k]</span></code>, that is, <code class="code docutils literal notranslate"><span class="pre">a[i]</span> <span class="pre">=</span> <span class="pre">a[j][k]</span></code>, then <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">i.as_subindex(j)</span></code>,
 so that <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">&quot;=&quot;</span> <span class="pre">(j^-1)[i]</span></code> (this only works as a true inverse if
 <code class="code docutils literal notranslate"><span class="pre">j</span></code> is a subset of <code class="code docutils literal notranslate"><span class="pre">i</span></code>).</p>
+<p>Note that due to symmetry, <code class="code docutils literal notranslate"><span class="pre">a[j][i.as_subindex(j)]</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">a[i][j.as_subindex(i)]</span></code> will give the same subarrays of <code class="code docutils literal notranslate"><span class="pre">a</span></code>, which
+will be the array that includes the elements indexed by both <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">a[j]</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">i.as_subindex(j)</span></code> may raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code> in the case that the indices
+<code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
+<p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
 subindices of chunks of an array. For example, say a 1-D array <code class="code docutils literal notranslate"><span class="pre">a</span></code> is
 chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be
 reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span> <span class="pre">N))</span></code>,
-<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc. See the example below.</p>
-<p class="rubric">Examples</p>
+<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">j1</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -373,13 +379,19 @@ same. To use it with slices with negative start or stop, call
 if <code class="code docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">j[k]</span></code>, that is, <code class="code docutils literal notranslate"><span class="pre">a[i]</span> <span class="pre">=</span> <span class="pre">a[j][k]</span></code>, then <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">i.as_subindex(j)</span></code>,
 so that <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">&quot;=&quot;</span> <span class="pre">(j^-1)[i]</span></code> (this only works as a true inverse if
 <code class="code docutils literal notranslate"><span class="pre">j</span></code> is a subset of <code class="code docutils literal notranslate"><span class="pre">i</span></code>).</p>
+<p>Note that due to symmetry, <code class="code docutils literal notranslate"><span class="pre">a[j][i.as_subindex(j)]</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">a[i][j.as_subindex(i)]</span></code> will give the same subarrays of <code class="code docutils literal notranslate"><span class="pre">a</span></code>, which
+will be the array that includes the elements indexed by both <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">a[j]</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">i.as_subindex(j)</span></code> may raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code> in the case that the indices
+<code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
+<p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
 subindices of chunks of an array. For example, say a 1-D array <code class="code docutils literal notranslate"><span class="pre">a</span></code> is
 chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be
 reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span> <span class="pre">N))</span></code>,
-<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc. See the example below.</p>
-<p class="rubric">Examples</p>
+<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">j1</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -639,13 +651,19 @@ same. To use it with slices with negative start or stop, call
 if <code class="code docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">j[k]</span></code>, that is, <code class="code docutils literal notranslate"><span class="pre">a[i]</span> <span class="pre">=</span> <span class="pre">a[j][k]</span></code>, then <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">i.as_subindex(j)</span></code>,
 so that <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">&quot;=&quot;</span> <span class="pre">(j^-1)[i]</span></code> (this only works as a true inverse if
 <code class="code docutils literal notranslate"><span class="pre">j</span></code> is a subset of <code class="code docutils literal notranslate"><span class="pre">i</span></code>).</p>
+<p>Note that due to symmetry, <code class="code docutils literal notranslate"><span class="pre">a[j][i.as_subindex(j)]</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">a[i][j.as_subindex(i)]</span></code> will give the same subarrays of <code class="code docutils literal notranslate"><span class="pre">a</span></code>, which
+will be the array that includes the elements indexed by both <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">a[j]</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">i.as_subindex(j)</span></code> may raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code> in the case that the indices
+<code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
+<p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
 subindices of chunks of an array. For example, say a 1-D array <code class="code docutils literal notranslate"><span class="pre">a</span></code> is
 chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be
 reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span> <span class="pre">N))</span></code>,
-<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc. See the example below.</p>
-<p class="rubric">Examples</p>
+<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">j1</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -837,13 +855,19 @@ same. To use it with slices with negative start or stop, call
 if <code class="code docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">j[k]</span></code>, that is, <code class="code docutils literal notranslate"><span class="pre">a[i]</span> <span class="pre">=</span> <span class="pre">a[j][k]</span></code>, then <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">i.as_subindex(j)</span></code>,
 so that <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">&quot;=&quot;</span> <span class="pre">(j^-1)[i]</span></code> (this only works as a true inverse if
 <code class="code docutils literal notranslate"><span class="pre">j</span></code> is a subset of <code class="code docutils literal notranslate"><span class="pre">i</span></code>).</p>
+<p>Note that due to symmetry, <code class="code docutils literal notranslate"><span class="pre">a[j][i.as_subindex(j)]</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">a[i][j.as_subindex(i)]</span></code> will give the same subarrays of <code class="code docutils literal notranslate"><span class="pre">a</span></code>, which
+will be the array that includes the elements indexed by both <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">a[j]</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">i.as_subindex(j)</span></code> may raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code> in the case that the indices
+<code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
+<p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
 subindices of chunks of an array. For example, say a 1-D array <code class="code docutils literal notranslate"><span class="pre">a</span></code> is
 chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be
 reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span> <span class="pre">N))</span></code>,
-<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc. See the example below.</p>
-<p class="rubric">Examples</p>
+<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">j1</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -1164,13 +1188,19 @@ same. To use it with slices with negative start or stop, call
 if <code class="code docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">j[k]</span></code>, that is, <code class="code docutils literal notranslate"><span class="pre">a[i]</span> <span class="pre">=</span> <span class="pre">a[j][k]</span></code>, then <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">i.as_subindex(j)</span></code>,
 so that <code class="code docutils literal notranslate"><span class="pre">k</span> <span class="pre">&quot;=&quot;</span> <span class="pre">(j^-1)[i]</span></code> (this only works as a true inverse if
 <code class="code docutils literal notranslate"><span class="pre">j</span></code> is a subset of <code class="code docutils literal notranslate"><span class="pre">i</span></code>).</p>
+<p>Note that due to symmetry, <code class="code docutils literal notranslate"><span class="pre">a[j][i.as_subindex(j)]</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">a[i][j.as_subindex(i)]</span></code> will give the same subarrays of <code class="code docutils literal notranslate"><span class="pre">a</span></code>, which
+will be the array that includes the elements indexed by both <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">a[j]</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">i.as_subindex(j)</span></code> may raise <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code> in the case that the indices
+<code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
+<p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
 subindices of chunks of an array. For example, say a 1-D array <code class="code docutils literal notranslate"><span class="pre">a</span></code> is
 chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be
 reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span> <span class="pre">N))</span></code>,
-<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc. See the example below.</p>
-<p class="rubric">Examples</p>
+<code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(N,</span> <span class="pre">2*N))</span></code>, etc.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">j1</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
