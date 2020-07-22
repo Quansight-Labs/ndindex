@@ -1,5 +1,4 @@
 from numpy import arange, isin
-from numpy.testing import assert_equal
 
 from hypothesis import given, assume
 from hypothesis.strategies import one_of, integers
@@ -11,7 +10,8 @@ from ..tuple import Tuple
 from ..slice import Slice
 from ..integer import Integer
 from ..ellipsis import ellipsis
-from .helpers import check_same, prod, shapes, ellipses, slices, Tuples
+from .helpers import (check_same, prod, shapes, ellipses, slices, Tuples,
+                      assert_equal)
 
 def test_ellipsis_exhaustive():
     for n in range(10):
@@ -79,7 +79,7 @@ def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
 
     try:
         Subindex = E.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
 
     try:
@@ -90,6 +90,13 @@ def test_ellipsis_as_subindex_slice_hypothesis(idx, index, shape):
     asubindex = aindex[Subindex.raw]
 
     assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
+
+    try:
+        subindex2 = Index.as_subindex(E)
+    except NotImplementedError:
+        return
+    asubindex2 = aE[subindex2.raw]
+    assert_equal(asubindex2, asubindex)
 
 @given(ellipses(), Tuples, shapes)
 def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
@@ -103,7 +110,7 @@ def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
 
     try:
         Subindex = E.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
+    except NotImplementedError:
         return
 
     try:
@@ -115,6 +122,12 @@ def test_ellipsis_as_subindex_tuple_hypothesis(idx, index, shape):
 
     assert_equal(asubindex.flatten(), aE[isin(aE, aindex)])
 
+    try:
+        subindex2 = Index.as_subindex(E)
+    except NotImplementedError:
+        return
+    asubindex2 = aE[subindex2.raw]
+    assert_equal(asubindex2, asubindex)
 
 @given(ellipses(), one_of(shapes, integers(0, 10)))
 def test_ellipsis_isempty_hypothesis(idx, shape):
