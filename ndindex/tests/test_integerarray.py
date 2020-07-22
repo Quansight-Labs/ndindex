@@ -13,7 +13,7 @@ def test_integer_array_hypothesis(idx, shape):
     check_same(a, idx)
 
 @given(integer_arrays, one_of(shapes, integers(0, 10)))
-def test_tuple_reduce_no_shape_hypothesis(idx, shape):
+def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -24,7 +24,7 @@ def test_tuple_reduce_no_shape_hypothesis(idx, shape):
     check_same(a, index.raw, func=lambda x: x.reduce())
 
 @given(integer_arrays, one_of(shapes, integers(0, 10)))
-def test_tuple_reduce_hypothesis(idx, shape):
+def test_integerarray_reduce_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
     else:
