@@ -11,14 +11,21 @@ from ..integer import Integer
 from ..ellipsis import ellipsis
 from .helpers import ndindices, check_same
 
-@given(ndindices())
+@given(ndindices(arrays=True))
 def test_eq(idx):
     new = type(idx)(*idx.args)
     assert (new == idx) is True
-    assert (new.raw == idx.raw) is True
+    try:
+        if isinstance(new.raw, np.ndarray):
+            raise ValueError
+        assert (new.raw == idx.raw) is True
+        assert (idx.raw == idx) is True
+    except ValueError:
+        np.testing.assert_equal(new.raw, idx.raw)
+        # Sadly, there is now way to bypass array.__eq__ from producing an
+        # array.
     assert hash(new) == hash(idx)
     assert (idx == idx.raw) is True
-    assert (idx.raw == idx) is True
     assert (idx == 'a') is False
     assert ('a' == idx) is False
     assert (idx != 'a') is True
@@ -33,8 +40,7 @@ def test_ndindex(idx):
 
 def test_ndindex_not_implemented():
     a = np.arange(10)
-    for idx in [[], [1, 2], np.array([1, 2]), np.array([True, False]*5), True,
-                False, None]:
+    for idx in [np.array([True, False]*5), True, False, None]:
         raises(NotImplementedError, lambda: ndindex(idx))
         # Make sure the index really is valid
         a[idx]
