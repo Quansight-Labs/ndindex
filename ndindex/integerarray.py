@@ -1,7 +1,7 @@
 import warnings
 
 from numpy import (ndarray, asarray, integer, bool_, intp, array2string,
-                   ndindex as numpy_ndindex, empty)
+                   ndindex as numpy_ndindex, empty, zeros)
 
 from .ndindex import NDIndex, asshape
 
@@ -117,8 +117,19 @@ class IntegerArray(NDIndex):
         if shape is None:
             return self
 
-        shape = asshape(shape)
+        shape = asshape(shape, axis=axis)
+        if 0 in shape[:axis] + shape[axis+1:]:
+            # There are no bounds checks for empty arrays if one of the
+            # non-indexed axes is 0. This behavior will be deprecated in NumPy
+            # 1.20. Once 1.20 is released, we will change the ndindex behavior
+            # to match it, since we want to match all post-deprecation NumPy
+            # behavior. But it is impossible to test against the
+            # post-deprecation behavior reliably until a version of NumPy is
+            # released that raises the deprecation warning, so for now, we
+            # just match the NumPy 1.19 behavior.
+            return IntegerArray(zeros(self.shape, dtype=intp))
 
+        # TODO: Rewrite the following using array operations
         new_array = ndarray(self.shape, dtype=intp)
         for index in numpy_ndindex(self.shape):
             new_array[index] = Integer(self.array[index]).reduce(shape, axis=axis).raw
