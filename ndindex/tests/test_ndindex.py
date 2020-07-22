@@ -4,12 +4,12 @@ import numpy as np
 
 from hypothesis import given, example
 
-from pytest import raises
+from pytest import raises, warns
 
 from ..ndindex import ndindex, asshape
 from ..integer import Integer
 from ..ellipsis import ellipsis
-from .helpers import ndindices
+from .helpers import ndindices, check_same
 
 @given(ndindices())
 def test_eq(idx):
@@ -31,8 +31,28 @@ def test_ndindex(idx):
     ix = ndindex(idx)
     assert ndindex(ix.raw) == ix
 
+def test_ndindex_not_implemented():
+    a = np.arange(10)
+    for idx in [[], [1, 2], np.array([1, 2]), np.array([True, False]*5), True,
+                False, None]:
+        raises(NotImplementedError, lambda: ndindex(idx))
+        # Make sure the index really is valid
+        a[idx]
+
+def test_ndindex_invalid():
+    a = np.arange(10)
+    for idx in [1.0, [1.0], np.array([1.0]), np.array([1], dtype=object),
+                np.array([])]:
+        check_same(a, idx)
+
+    # This index is allowed by NumPy, but gives a deprecation warnings. We are
+    # not going to allow indices that give deprecation warnings in ndindex.
+    with warns(None) as r: # Make sure no warnings are emitted from ndindex()
+        raises(IndexError, lambda: ndindex([1, []]))
+    assert not r
+
 def test_ndindex_ellipsis():
-    raises(TypeError, lambda: ndindex(ellipsis))
+    raises(IndexError, lambda: ndindex(ellipsis))
 
 def test_signature():
     sig = inspect.signature(Integer)

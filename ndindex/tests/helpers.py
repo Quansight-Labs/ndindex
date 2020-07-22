@@ -2,7 +2,7 @@ from itertools import chain
 from functools import reduce
 from operator import mul
 
-from numpy.testing import assert_equal
+import numpy.testing
 
 from pytest import fail
 
@@ -56,6 +56,17 @@ shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < 100000)
+
+def assert_equal(actual, desired, err_msg='', verbose=True):
+    """
+    Same as numpy.testing.assert_equal except it also requires the shapes to
+    be equal.
+    """
+    numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
+                               verbose=verbose)
+    if not err_msg:
+        err_msg = f"{actual.shape} != {desired.shape}"
+    assert actual.shape == desired.shape, err_msg
 
 def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None

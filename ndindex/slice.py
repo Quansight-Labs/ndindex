@@ -370,17 +370,39 @@ class Slice(NDIndex):
 
         from .ndindex import ndindex
         from .tuple import Tuple
+        from .integer import Integer
 
         index = ndindex(index)
+
+        s = self.reduce()
+        index = index.reduce()
 
         if isinstance(index, Tuple):
             return Tuple(self).as_subindex(index)
 
-        if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples and slices")
+        if isinstance(index, Integer):
+            s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
+            if s == Slice(0, 0, 1):
+                # There is no index that we can return here. The intersection
+                # of `self` and `index` is empty. Ideally we want to give an
+                # index that gives an empty array, but we cannot make the
+                # shape match. If a is dimension 1, then a[index] is dimension
+                # 0, so a[index][slice(0, 0)] will not work. A possibility
+                # would be to return False, which would add a length-0
+                # dimension to the array. But
+                #
+                # 1. this isn't implemented yet, and
+                # 2. a False can only add a length-0 dimension once, so it
+                #    still wouldn't work in every case. For example,
+                #    Tuple(slice(0), slice(0)).as_subindex((0, 0)) would need
+                #    to return an index that replaces the first two
+                #    dimensions with length-0 dimensions.
+                raise ValueError(f"{self} and {index} do not intersect")
+            assert len(s) == 1
+            return Tuple()
 
-        s = self.reduce()
-        index = index.reduce()
+        if not isinstance(index, Slice):
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
 
         if s.step < 0 or index.step < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")

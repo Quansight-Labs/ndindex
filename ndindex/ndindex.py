@@ -1,12 +1,16 @@
 import inspect
 import operator
 import numbers
+import warnings
 
-from numpy import ndarray
+from numpy import ndarray, asarray, integer, bool_, intp
 
 def ndindex(obj):
     """
     Convert an object into an ndindex type
+
+    Invalid indices will raise IndexError. Indices that are supported by NumPy
+    but not yet supported by ndindex will raise NotImplementedError.
 
     >>> from ndindex import ndindex
     >>> ndindex(1)
@@ -18,6 +22,28 @@ def ndindex(obj):
 
     if isinstance(obj, NDIndex):
         return obj
+
+    if obj is None:
+        raise NotImplementedError("newaxis is not yet implemented")
+
+    if isinstance(obj, (list, ndarray, bool)):
+        # Ignore deprecation warnings for things like [1, []]. These will be
+        # filtered out anyway since they produce object arrays.
+        with warnings.catch_warnings(record=True):
+            if isinstance(obj, list) and obj == []:
+                a = asarray([], dtype=intp)
+            else:
+                a = asarray(obj)
+        if issubclass(a.dtype.type, integer):
+            raise NotImplementedError("integer array indices are not yet supported")
+        elif a.dtype == bool_:
+            raise NotImplementedError("boolean array indices are not yet supported")
+        else:
+            # Match the NumPy exceptions
+            if isinstance(obj, ndarray):
+                raise IndexError("arrays used as indices must be of integer (or boolean) type")
+            else:
+                raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
     try:
         # If operator.index() works, use that
@@ -32,14 +58,11 @@ def ndindex(obj):
         return Tuple(*obj)
 
     if obj == ellipsis:
-        raise TypeError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
+        raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
     if obj is Ellipsis:
         return ellipsis()
 
-    if isinstance(obj, ndarray):
-        raise NotImplementedError("array indices are not yet supported")
-
-    raise TypeError(f"Don't know how to convert object of type {type(obj)} to an ndindex object")
+    raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
 class classproperty(object):
     def __init__(self, f):
@@ -115,7 +138,7 @@ class NDIndex:
         if not isinstance(other, NDIndex):
             try:
                 other = ndindex(other)
-            except (TypeError, NotImplementedError):
+            except (IndexError, NotImplementedError):
                 return False
 
         return ((isinstance(other, self.__class__)
@@ -269,15 +292,23 @@ class NDIndex:
         so that `k "=" (j^-1)[i]` (this only works as a true inverse if
         `j` is a subset of `i`).
 
+        Note that due to symmetry, `a[j][i.as_subindex(j)]` and
+        `a[i][j.as_subindex(i)]` will give the same subarrays of `a`, which
+        will be the array that includes the elements indexed by both `a[i]`
+        and `a[j]`.
+
+        `i.as_subindex(j)` may raise `ValueError` in the case that the indices
+        `i` and `j` do not intersect at all.
+
+        Examples
+        ========
+
         An example usage of `as_subindex` is to split an index up into
         subindices of chunks of an array. For example, say a 1-D array `a` is
         chunked up into chunks of size `N`, so that `a[0:N]`, `a[N:2*N]`,
         `[2*N:3*N]`, etc. are stored separately. Then an index `a[i]` can be
         reindexed onto the chunks via `i.as_subindex(Slice(0, N))`,
-        `i.as_subindex(Slice(N, 2*N))`, etc. See the example below.
-
-        Examples
-        ========
+        `i.as_subindex(Slice(N, 2*N))`, etc.
 
         >>> from ndindex import Slice
         >>> i = Slice(5, 15)
