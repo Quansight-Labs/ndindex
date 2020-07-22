@@ -106,12 +106,29 @@ class Integer(NDIndex):
             return Tuple(self).as_subindex(index)
 
         if not isinstance(index, Slice):
-            raise NotImplementedError("Tuple.as_subindex is only implemented for slices")
+            raise NotImplementedError("Integer.as_subindex is only implemented for slices")
 
-        s = Slice(self.args[0], self.args[0] + 1).as_subindex(index)
+        if self.args[0] == -1:
+            s = Slice(self.args[0], None).as_subindex(index)
+        else:
+            s = Slice(self.args[0], self.args[0] + 1).as_subindex(index)
         if s == Slice(0, 0, 1):
-            # Return a slice so that the result doesn't produce an IndexError
-            return s
+            # The intersection is empty. There is no valid index we can return
+            # here. We want an index that produces an empty array, but the
+            # shape should be one less, to match a[self]. Since a[index] has
+            # as many dimensions as a, there is no way to index a[index] so
+            # that it gives one fewer dimension but is also empty. The best we
+            # could do is to return a boolean array index array([False]),
+            # which would replace the first dimension with a length 0
+            # dimension. But
+            #
+            # 1. this isn't implemented yet,
+            # 2. there are complications if this happens in multiple
+            #    dimensions (it might not be possible to represent, I'm not
+            #    sure), and
+            # 3. Slice.as_subindex(Integer) also raises this exception in the
+            #    case of an empty intersection (see the comment in that code).
+            raise ValueError(f"{self} and {index} do not intersect")
         assert len(s) == 1
         return Integer(s.args[0])
 

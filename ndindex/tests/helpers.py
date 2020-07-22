@@ -5,7 +5,7 @@ from operator import mul
 import warnings
 
 from numpy import intp, array
-from numpy.testing import assert_equal
+import numpy.testing
 
 from pytest import fail
 
@@ -68,6 +68,17 @@ def ndindices(draw, arrays=False):
     except ValueError: # pragma: no cover
         assume(False)
 
+
+def assert_equal(actual, desired, err_msg='', verbose=True):
+    """
+    Same as numpy.testing.assert_equal except it also requires the shapes to
+    be equal.
+    """
+    numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
+                               verbose=verbose)
+    if not err_msg:
+        err_msg = f"{actual.shape} != {desired.shape}"
+    assert actual.shape == desired.shape, err_msg
 
 def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None
