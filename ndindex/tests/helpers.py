@@ -1,8 +1,10 @@
+import sys
 from itertools import chain
 from functools import reduce
 from operator import mul
+import warnings
 
-from numpy import intp
+from numpy import intp, array
 from numpy.testing import assert_equal
 
 from pytest import fail
@@ -70,7 +72,25 @@ def ndindices(draw, arrays=False):
 def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None
     try:
-        a_raw = a[index]
+        # Handle list indices that NumPy treats as tuple indices with a
+        # deprecation warning. We want to test against the post-deprecation
+        # behavior.
+        with warnings.catch_warnings(record=True) as r:
+            e_inner = None
+            try:
+                a_raw = a[index]
+            except Exception:
+                _, e_inner, _ = sys.exc_info()
+        if len(r) == 1:
+            if (isinstance(r[0].message, FutureWarning) and "Using a non-tuple "
+                "sequence for multidimensional indexing is deprecated" in
+                r[0].message.args[0]):
+                index = array(index)
+                a_raw = a[index]
+            else:
+                raise AssertionError(f"Unexpected warnings raised: {[i.message for i in r]}") # pragma: no cover
+        elif e_inner:
+            raise e_inner
     except Exception as e:
         exception = e
 
