@@ -145,9 +145,24 @@ class NDIndex:
             except (IndexError, NotImplementedError):
                 return False
 
-        return ((isinstance(other, self.__class__)
-                 or isinstance(self, other.__class__))
-                and self.args == other.args)
+        def test_equal(a, b):
+            """
+            Check if a == b, allowing for numpy arrays
+            """
+            if not (isinstance(a, b.__class__)
+                    or isinstance(b, a.__class__)):
+                return False
+            if isinstance(a, ndarray):
+                return a.shape == b.shape and (a == b).all()
+            if isinstance(a, tuple):
+                return len(a) == len(b) and all(test_equal(i, j) for i, j in
+                                                zip(a, b))
+            if isinstance(a, NDIndex):
+                return test_equal(a.args, b.args)
+
+            return a == b
+
+        return test_equal(self, other)
 
     def __hash__(self):
         return hash(self.args)
