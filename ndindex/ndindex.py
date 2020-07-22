@@ -114,11 +114,11 @@ class NDIndex:
     via `reduce()`.
 
     """
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         """
         This method should be called by subclasses (via super()) after type-checking
         """
-        args = self._typecheck(*args)
+        args = self._typecheck(*args, **kwargs)
         self.args = args
 
     @classproperty
