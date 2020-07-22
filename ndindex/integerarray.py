@@ -1,6 +1,7 @@
 import warnings
 
-from numpy import ndarray, asarray, integer, bool_, intp, ndindex as numpy_ndindex
+from numpy import (ndarray, asarray, integer, bool_, intp, array2string,
+                   ndindex as numpy_ndindex, empty)
 
 from .ndindex import NDIndex, asshape
 
@@ -31,8 +32,16 @@ class IntegerArray(NDIndex):
            [1, 2]])
 
     """
-    def _typecheck(self, idx):
-        if isinstance(idx, (list, ndarray, bool)):
+    def _typecheck(self, idx, shape=None):
+        if shape is not None:
+            if idx != []:
+                raise ValueError("The shape argument is only allowed for empty arrays (idx=[])")
+            shape = asshape(shape)
+            if 0 not in shape:
+                raise ValueError("The shape argument must be an empty shape")
+            idx = empty(shape, dtype=intp)
+
+        if isinstance(idx, (list, ndarray, bool, integer, int, bool_)):
             # Ignore deprecation warnings for things like [1, []]. These will be
             # filtered out anyway since they produce object arrays.
             with warnings.catch_warnings(record=True):
@@ -43,10 +52,10 @@ class IntegerArray(NDIndex):
                 if a.dtype != intp:
                     a = a.astype(intp)
                 return (a,)
-            elif a.dtype == bool_:
+            if a.dtype == bool_:
                 raise TypeError("Boolean array passed to IntegerArray. Use BooleanArray instead.")
-            else:
-                raise TypeError("The input array must have an integer dtype.")
+            raise TypeError("The input array must have an integer dtype.")
+        raise TypeError("IntegerArray must be created with an array of integers")
 
     @property
     def raw(self):
@@ -101,6 +110,9 @@ class IntegerArray(NDIndex):
 
         """
         from .integer import Integer
+
+        if self.shape == ():
+            return Integer(self.array).reduce(shape, axis=axis)
 
         if shape is None:
             return self
