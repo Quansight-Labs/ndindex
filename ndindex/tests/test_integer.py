@@ -167,6 +167,7 @@ def test_integer_as_subindex_slice_exhaustive():
                     asubindex2 = aidx[subindex2.raw]
                     assert_equal(asubindex2, asubindex)
 
+@example(0, slice(0, 0), 1)
 @example(0, slice(0, 1), 1)
 @given(ints(), slices(), integers(0, 100))
 def test_integer_as_subindex_slice_hypothesis(i, index, size):
