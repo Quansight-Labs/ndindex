@@ -123,3 +123,21 @@ class IntegerArray(NDIndex):
         for index in numpy_ndindex(self.shape):
             new_array[index] = Integer(self.array[index]).reduce(shape, axis=axis).raw
         return IntegerArray(new_array)
+
+    # The repr form recreates the object. The str form gives the truncated
+    # array string and is explicitly non-valid Python (doesn't have commas).
+    def __repr__(self):
+        if 0 not in self.shape:
+            arg = repr(self.array.tolist())
+        else:
+            arg = f"[], shape={self.shape}"
+        return f"{self.__class__.__name__}({arg})"
+
+    def __str__(self):
+        return (self.__class__.__name__
+                + "("
+                + array2string(self.array).replace('\n', '')
+                + ")")
+
+    def __hash__(self):
+        return hash(self.array.tobytes())

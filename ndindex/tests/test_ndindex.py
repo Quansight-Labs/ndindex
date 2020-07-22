@@ -64,14 +64,20 @@ def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
 
-@given(ndindices())
 @example((1, ..., slice(1, 2)))
-def test_str(idx):
-    # The str form should be re-creatable
+@given(ndindices(arrays=True))
+def test_repr(idx):
+    # The repr form should be re-creatable
     index = ndindex(idx)
     d = {}
     exec("from ndindex import *", d)
-    assert eval(str(index), d) == idx
+    assert eval(repr(index), d) == idx
+
+@given(ndindices(arrays=True))
+def test_str(idx):
+    # Str may not be re-creatable. Just test that it doesn't give an exception.
+    index = ndindex(idx)
+    str(index)
 
 def test_asshape():
     assert asshape(1) == (1,)
