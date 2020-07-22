@@ -5,6 +5,7 @@ from hypothesis.strategies import one_of, integers
 
 from .helpers import integer_arrays, shapes, check_same
 
+from ..integer import Integer
 from ..integerarray import IntegerArray
 
 @given(integer_arrays, shapes)
@@ -39,4 +40,8 @@ def test_integerarray_reduce_hypothesis(idx, shape):
     except IndexError:
         pass
     else:
-        assert (reduced.raw >= 0).all()
+        if isinstance(reduced, Integer):
+            assert reduced.raw >= 0
+        else:
+            assert isinstance(reduced, IntegerArray)
+            assert (reduced.raw >= 0).all()
