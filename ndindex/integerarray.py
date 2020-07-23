@@ -51,6 +51,7 @@ class IntegerArray(NDIndex):
             if issubclass(a.dtype.type, integer):
                 if a.dtype != intp:
                     a = a.astype(intp)
+                a.flags.writeable = False
                 return (a,)
             if a.dtype == bool_:
                 raise TypeError("Boolean array passed to IntegerArray. Use BooleanArray instead.")

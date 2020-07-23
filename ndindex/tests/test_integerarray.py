@@ -22,6 +22,10 @@ def test_integer_array_constructor():
     idx = IntegerArray([], shape=(0, 1))
     assert_equal(idx.array, empty((0, 1), dtype=intp))
 
+    idx = IntegerArray([1, 2])
+    with raises(ValueError):
+        idx.array[0] = 0
+
 @given(integer_arrays, shapes)
 def test_integer_array_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
