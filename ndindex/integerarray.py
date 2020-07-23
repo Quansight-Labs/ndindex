@@ -150,6 +150,16 @@ class IntegerArray(NDIndex):
 
         return self.shape + shape[1:]
 
+    def isempty(self, shape=None):
+        if shape is not None:
+            shape = asshape(shape)
+            # Raise IndexError if necessary
+            self.reduce(shape)
+            if 0 in shape:
+                return True
+
+        return 0 in self.shape
+
     # The repr form recreates the object. The str form gives the truncated
     # array string and is explicitly non-valid Python (doesn't have commas).
     def __repr__(self):
