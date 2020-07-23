@@ -64,10 +64,11 @@ def ndindices(draw, arrays=False):
         ))
 
     try:
-        return ndindex(s)
+        ndindex(s)
     except ValueError: # pragma: no cover
         assume(False)
 
+    return s
 
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """

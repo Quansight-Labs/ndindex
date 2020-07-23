@@ -15,23 +15,24 @@ from .helpers import ndindices, check_same
 
 @given(ndindices(arrays=True))
 def test_eq(idx):
-    new = type(idx)(*idx.args)
-    assert (new == idx) is True
+    index = ndindex(idx)
+    new = type(index)(*index.args)
+    assert (new == index) is True
     try:
         if isinstance(new.raw, np.ndarray):
             raise ValueError
-        assert (new.raw == idx.raw) is True
-        assert (idx.raw == idx) is True
+        assert (new.raw == index.raw) is True
+        assert (index.raw == index) is True
     except ValueError:
-        np.testing.assert_equal(new.raw, idx.raw)
+        np.testing.assert_equal(new.raw, index.raw)
         # Sadly, there is now way to bypass array.__eq__ from producing an
         # array.
-    assert hash(new) == hash(idx)
-    assert (idx == idx.raw) is True
-    assert (idx == 'a') is False
-    assert ('a' == idx) is False
-    assert (idx != 'a') is True
-    assert ('a' != idx) is True
+    assert hash(new) == hash(index)
+    assert (index == index.raw) is True
+    assert (index == 'a') is False
+    assert ('a' == index) is False
+    assert (index != 'a') is True
+    assert ('a' != index) is True
 
 @given(ndindices())
 def test_ndindex(idx):
