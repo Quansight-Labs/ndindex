@@ -411,6 +411,12 @@ def asshape(shape, axis=None):
         shape = asshape(shape, axis=axis)
 
     """
+    from .integer import Integer
+    from .tuple import Tuple
+    if isinstance(shape, (Tuple, Integer)):
+        raise TypeError("ndindex types are not meant to be used as a shape - "
+                        "did you mean to use the built-in tuple type?")
+
     if isinstance(shape, numbers.Number):
         shape = (operator.index(shape),)
 

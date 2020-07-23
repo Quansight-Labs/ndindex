@@ -349,11 +349,6 @@ class Slice(NDIndex):
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
-        from . import Integer, Tuple
-
-        if isinstance(shape, (Tuple, Integer)):
-            raise TypeError("ndindex types are not meant to be used as a shape - "
-                            "did you mean to use the built-in tuple type?")
         shape = asshape(shape)
 
         idx = self.reduce(shape)
