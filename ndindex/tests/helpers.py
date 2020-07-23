@@ -57,18 +57,16 @@ def _doesnt_raise(idx):
     return True
 
 Tuples = tuples(one_of(ellipses(), ints(), slices(),
-                       )).filter(_doesnt_raise)
+                       integer_arrays)).filter(_doesnt_raise)
 
 @composite
-def ndindices(draw, arrays=False):
-    # TODO: Always include integer arrays
-    a = integer_arrays if arrays else nothing()
+def ndindices(draw):
     s = draw(one_of(
             ints(),
             slices(),
             ellipses(),
             tuples(one_of(ints(), slices())),
-            a,
+            integer_arrays,
         ))
 
     try:

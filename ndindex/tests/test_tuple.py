@@ -159,13 +159,12 @@ def test_ndindex_expand_hypothesis(idx, shape):
 
     index = ndindex(idx)
 
-    check_same(a, index.raw, func=lambda x: x.expand(shape),
-               same_exception=False)
-
     try:
         expanded = index.expand(shape)
     except IndexError:
         pass
+    except NotImplementedError:
+        return
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
@@ -173,6 +172,9 @@ def test_ndindex_expand_hypothesis(idx, shape):
             assert len(expanded.args) == 1
         else:
             assert len(expanded.args) == len(shape)
+
+    check_same(a, index.raw, func=lambda x: x.expand(shape),
+               same_exception=False)
 
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
