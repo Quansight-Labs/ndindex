@@ -212,7 +212,7 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     T = Tuple(*t)
     try:
         Index = ndindex(index)
-    except IndexError: # pragma: no cover
+    except ValueError: # pragma: no cover
         assume(False)
 
     empty = False
