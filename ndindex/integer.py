@@ -83,6 +83,7 @@ class Integer(NDIndex):
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
 
         # reduce will raise IndexError if it should be raised
         self.reduce(shape)
