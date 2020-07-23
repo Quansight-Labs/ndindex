@@ -71,14 +71,19 @@ def ndindices(draw, arrays=False):
 
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """
-    Same as numpy.testing.assert_equal except it also requires the shapes to
-    be equal.
+    Same as numpy.testing.assert_equal except it also requires the shapes and
+    dtypes to be equal.
+
     """
     numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
                                verbose=verbose)
     if not err_msg:
         err_msg = f"{actual.shape} != {desired.shape}"
     assert actual.shape == desired.shape, err_msg
+
+    if not err_msg:
+        err_msg = f"{actual.dtype} != {desired.dtype}"
+    assert actual.dtype == desired.dtype, err_msg
 
 def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None
