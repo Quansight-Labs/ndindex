@@ -2,8 +2,6 @@
 import sys
 sys.path.insert(0, '.')
 
-collect_ignore = ["setup.py", "docs/conf.py"]
-
 # Add a --hypothesis-max-examples flag to pytest. See
 # https://github.com/HypothesisWorks/hypothesis/issues/2434#issuecomment-630309150
 
