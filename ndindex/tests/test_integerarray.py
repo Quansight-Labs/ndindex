@@ -1,12 +1,26 @@
-from numpy import prod, arange
+from numpy import prod, arange, array, int8, intp, empty
 
-from hypothesis import given
+from hypothesis import given, example
 from hypothesis.strategies import one_of, integers
 
-from .helpers import integer_arrays, shapes, check_same
+from pytest import raises
+
+from .helpers import integer_arrays, shapes, check_same, assert_equal
 
 from ..integer import Integer
 from ..integerarray import IntegerArray
+
+def test_integer_array_constructor():
+    raises(ValueError, lambda: IntegerArray([0], shape=(1,)))
+    raises(ValueError, lambda: IntegerArray([], shape=(1,)))
+    raises(TypeError, lambda: IntegerArray([False]))
+    raises(TypeError, lambda: IntegerArray(array(0.0)))
+    raises(TypeError, lambda: IntegerArray((1,)))
+    idx = IntegerArray(array([0], dtype=int8))
+    assert_equal(idx.array, array([0], dtype=intp))
+
+    idx = IntegerArray([], shape=(0, 1))
+    assert_equal(idx.array, empty((0, 1), dtype=intp))
 
 @given(integer_arrays, shapes)
 def test_integer_array_hypothesis(idx, shape):
@@ -24,6 +38,7 @@ def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
 
     check_same(a, index.raw, func=lambda x: x.reduce())
 
+@example(array(0), 1)
 @given(integer_arrays, one_of(shapes, integers(0, 10)))
 def test_integerarray_reduce_hypothesis(idx, shape):
     if isinstance(shape, int):
