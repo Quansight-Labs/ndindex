@@ -10,6 +10,7 @@ from ..ndindex import ndindex, asshape
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
+from ..tuple import Tuple
 from .helpers import ndindices, check_same
 
 @given(ndindices(arrays=True))
@@ -96,3 +97,5 @@ def test_asshape():
     raises(ValueError, lambda: asshape(-1))
     raises(ValueError, lambda: asshape((1, -1)))
     raises(TypeError, lambda: asshape(...))
+    raises(TypeError, lambda: asshape(Integer(1)))
+    raises(TypeError, lambda: asshape(Tuple(1, 2)))
