@@ -11,7 +11,7 @@ from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
-from .helpers import ndindices, check_same
+from .helpers import ndindices, check_same, assert_equal
 
 @given(ndindices(arrays=True))
 def test_eq(idx):
@@ -36,10 +36,15 @@ def test_eq(idx):
 
 @given(ndindices())
 def test_ndindex(idx):
-    assert ndindex(idx) == idx
-    assert ndindex(idx).raw == idx
-    ix = ndindex(idx)
-    assert ndindex(ix.raw) == ix
+    index = ndindex(idx)
+    assert index == idx
+    if isinstance(idx, np.ndarray):
+        assert_equal(index.raw, idx)
+    elif isinstance(idx, list):
+        assert_equal(index.raw, np.asarray(idx, dtype=np.intp))
+    else:
+        assert index.raw == idx
+    assert ndindex(index.raw) == index
 
 def test_ndindex_not_implemented():
     a = np.arange(10)
