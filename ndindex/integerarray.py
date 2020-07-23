@@ -46,6 +46,8 @@ class IntegerArray(NDIndex):
             # filtered out anyway since they produce object arrays.
             with warnings.catch_warnings(record=True):
                 a = asarray(idx)
+                if a is idx:
+                    a = a.copy()
                 if isinstance(idx, list) and 0 in a.shape:
                     a = a.astype(intp)
             if issubclass(a.dtype.type, integer):
