@@ -1,7 +1,7 @@
 import warnings
 
 from numpy import (ndarray, asarray, integer, bool_, intp, array2string,
-                   ndindex as numpy_ndindex, empty, zeros)
+                   empty, zeros)
 
 from .ndindex import NDIndex, asshape
 
