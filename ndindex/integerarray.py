@@ -11,8 +11,8 @@ class IntegerArray(NDIndex):
 
     If `idx` is an n-dimensional integer array with shape `s = (s1, ..., sn)`
     and `a` is any array, `a[idx]` replaces the first dimension of `a` with
-    `s1, ..., sn` dimensions, where each entry is indexed according to the
-    entry in `idx` as an integer index.
+    dimensions of size `s1, ..., sn`, where each entry is indexed according to
+    the entry in `idx` as an integer index.
 
     Integer arrays can also appear as part of tuple indices. In that case,
     they replace the axis being indexed. If more than one integer array
