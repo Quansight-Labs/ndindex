@@ -54,14 +54,8 @@ def test_tuples_hypothesis(t, shape):
 @given(Tuples, shapes)
 def test_ellipsis_index(t, shape):
     a = arange(prod(shape)).reshape(shape)
-    try:
-        index = ndindex(t)
-    except (IndexError, ValueError):
-        pass
-    else:
-        if isinstance(index, Tuple):
-            # Don't know if there is a better way to test ellipsis_idx
-            check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
+    # Don't know if there is a better way to test ellipsis_idx
+    check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
 
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_no_shape_hypothesis(t, shape):
@@ -70,10 +64,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    try:
-        index = Tuple(*t)
-    except (IndexError, ValueError): # pragma: no cover
-        assume(False)
+    index = Tuple(*t)
 
     check_same(a, index.raw, func=lambda x: x.reduce(),
                same_exception=False)
@@ -95,10 +86,7 @@ def test_tuple_reduce_hypothesis(t, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    try:
-        index = Tuple(*t)
-    except (IndexError, ValueError): # pragma: no cover
-        assume(False)
+    index = Tuple(*t)
 
     check_same(a, index.raw, func=lambda x: x.reduce(shape),
                same_exception=False)
@@ -143,10 +131,7 @@ def test_tuple_expand_hypothesis(t, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    try:
-        index = Tuple(*t)
-    except (IndexError, ValueError): # pragma: no cover
-        assume(False)
+    index = Tuple(*t)
 
     check_same(a, index.raw, func=lambda x: x.expand(shape),
                same_exception=False)
@@ -177,7 +162,6 @@ def test_ndindex_expand_hypothesis(idx, shape):
     check_same(a, index.raw, func=lambda x: x.expand(shape),
                same_exception=False)
 
-
     try:
         expanded = index.expand(shape)
     except IndexError:
@@ -198,10 +182,7 @@ def test_tuple_newshape_hypothesis(t, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    try:
-        index = Tuple(*t)
-    except (IndexError, ValueError): # pragma: no cover
-        assume(False)
+    index = Tuple(*t)
 
     # Call newshape so we can see if any exceptions match
     def func(t):
@@ -228,10 +209,10 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
+    T = Tuple(*t)
     try:
-        T = Tuple(*t)
         Index = ndindex(index)
-    except (IndexError, ValueError): # pragma: no cover
+    except IndexError: # pragma: no cover
         assume(False)
 
     empty = False
@@ -272,10 +253,10 @@ def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
 def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
     a = arange(prod(shape)).reshape(shape)
 
+    T = Tuple(*t)
     try:
-        T = Tuple(*t)
         Index = ndindex(index)
-    except (IndexError, ValueError): # pragma: no cover
+    except IndexError: # pragma: no cover
         assume(False)
 
     empty = False
@@ -320,10 +301,7 @@ def test_tuple_isempty_hypothesis(t, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    try:
-        T = Tuple(*t)
-    except (IndexError, ValueError): # pragma: no cover
-        assume(False)
+    T = Tuple(*t)
 
     # Call isempty to see if the exceptions are the same
     def func(T):

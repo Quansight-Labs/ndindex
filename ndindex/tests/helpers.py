@@ -41,8 +41,6 @@ def tuples(elements, *, min_size=0, max_size=None, unique_by=None, unique=False)
     return lists(elements, min_size=min_size, max_size=max_size,
                  unique_by=unique_by, unique=unique).map(tuple)
 
-Tuples = tuples(one_of(ellipses(), ints(), slices()))
-
 shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
@@ -50,6 +48,16 @@ shapes = tuples(integers(0, 10)).filter(
 
 _integer_arrays = arrays(intp, shapes)
 integer_arrays = _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
+
+def _doesnt_raise(idx):
+    try:
+        ndindex(idx)
+    except (IndexError, ValueError, NotImplementedError):
+        return False
+    return True
+
+Tuples = tuples(one_of(ellipses(), ints(), slices(),
+                       )).filter(_doesnt_raise)
 
 @composite
 def ndindices(draw, arrays=False):
@@ -65,7 +73,7 @@ def ndindices(draw, arrays=False):
 
     try:
         ndindex(s)
-    except ValueError: # pragma: no cover
+    except (ValueError, NotImplementedError): # pragma: no cover
         assume(False)
 
     return s
