@@ -132,10 +132,13 @@ class IntegerArray(NDIndex):
             # just match the NumPy 1.19 behavior.
             return IntegerArray(zeros(self.shape, dtype=intp))
 
-        # TODO: Rewrite the following using array operations
-        new_array = ndarray(self.shape, dtype=intp)
-        for index in numpy_ndindex(self.shape):
-            new_array[index] = Integer(self.array[index]).reduce(shape, axis=axis).raw
+        size = shape[axis]
+        new_array = self.array.copy()
+        out_of_bounds = (new_array >= size) | ((-size > new_array) & (new_array < 0))
+        if out_of_bounds.any():
+            raise IndexError(f"index {new_array[out_of_bounds].flat[0]} is out of bounds for axis {axis} with size {size}")
+
+        new_array[new_array < 0] += size
         return IntegerArray(new_array)
 
     # The repr form recreates the object. The str form gives the truncated
