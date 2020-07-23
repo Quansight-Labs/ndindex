@@ -141,6 +141,15 @@ class IntegerArray(NDIndex):
         new_array[new_array < 0] += size
         return IntegerArray(new_array)
 
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        # reduce will raise IndexError if it should be raised
+        self.reduce(shape)
+
+        return self.shape + shape[1:]
+
     # The repr form recreates the object. The str form gives the truncated
     # array string and is explicitly non-valid Python (doesn't have commas).
     def __repr__(self):

@@ -69,3 +69,21 @@ def test_integerarray_reduce_hypothesis(idx, shape):
         else:
             assert isinstance(reduced, IntegerArray)
             assert (reduced.raw >= 0).all()
+
+@given(integer_arrays, one_of(shapes, integers(0, 10)))
+def test_integer_array_newshape_hypothesis(idx, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    def assert_equal(x, y):
+        newshape = IntegerArray(idx).newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    # Call newshape so we can see if any exceptions match
+    def func(idx):
+        idx.newshape(shape)
+        return idx
+
+    check_same(a, idx, func=func, assert_equal=assert_equal)
