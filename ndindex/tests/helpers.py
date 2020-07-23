@@ -11,7 +11,7 @@ from pytest import fail
 
 from hypothesis import assume
 from hypothesis.strategies import (integers, composite, none, one_of, lists,
-                                   just, builds, nothing)
+                                   just, builds)
 from hypothesis.extra.numpy import arrays
 
 from ..ndindex import ndindex
