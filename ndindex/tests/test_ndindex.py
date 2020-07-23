@@ -9,6 +9,7 @@ from pytest import raises, warns
 from ..ndindex import ndindex, asshape
 from ..integer import Integer
 from ..ellipsis import ellipsis
+from ..integerarray import IntegerArray
 from .helpers import ndindices, check_same
 
 @given(ndindices(arrays=True))
@@ -64,6 +65,7 @@ def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
 
+@example(IntegerArray([], (0, 1)))
 @example((1, ..., slice(1, 2)))
 @given(ndindices(arrays=True))
 def test_repr(idx):
