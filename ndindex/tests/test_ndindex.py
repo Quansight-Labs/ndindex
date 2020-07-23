@@ -2,7 +2,7 @@ import inspect
 
 import numpy as np
 
-from hypothesis import given, example
+from hypothesis import given, example, settings
 
 from pytest import raises, warns
 
@@ -69,6 +69,9 @@ def test_signature():
 
 @example(IntegerArray([], (0, 1)))
 @example((1, ..., slice(1, 2)))
+# eval can sometimes be slower than the default deadline of 200ms for large
+# array indices
+@settings(deadline=None)
 @given(ndindices(arrays=True))
 def test_repr(idx):
     # The repr form should be re-creatable
