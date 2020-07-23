@@ -295,15 +295,15 @@ def test_integer_isempty_hypothesis(i, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    idx = Integer(i)
+    index = Integer(i)
 
     # Call isempty to see if the exceptions are the same
-    def func(idx):
-        idx.isempty(shape)
-        return idx
+    def func(index):
+        index.isempty(shape)
+        return index
 
     def assert_equal(a_raw, a_idx):
-        isempty = idx.isempty()
+        isempty = index.isempty()
 
         aempty = (a_raw.size == 0)
         assert aempty == (a_idx.size == 0)
@@ -313,6 +313,6 @@ def test_integer_isempty_hypothesis(i, shape):
 
         # isempty() should always give the correct result for a specific
         # array after reduction
-        assert idx.isempty(shape) == aempty, (idx, shape)
+        assert index.isempty(shape) == aempty, (index, shape)
 
     check_same(a, i, func=func, assert_equal=assert_equal)
