@@ -397,16 +397,16 @@ def asshape(shape, axis=None):
     The input can be an integer `n`, which is equivalent to `(n,)`, or a tuple
     of integers.
 
-    If the `axis` argument is provided, an IndexError is raised if it is out
+    If the `axis` argument is provided, an `IndexError` is raised if it is out
     of bounds for the shape.
 
     The resulting shape is always a tuple of nonnegative integers.
 
-    All ndindex code that takes a shape should use
+    All ndindex functions that take a shape input should use::
 
         shape = asshape(shape)
 
-    or
+    or::
 
         shape = asshape(shape, axis=axis)
 

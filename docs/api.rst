@@ -62,3 +62,5 @@ These classes are only intended for internal use in ndindex.
    :members:
 
 .. autoclass:: ndindex.slice.default
+
+.. autofunction:: ndindex.ndindex.asshape
