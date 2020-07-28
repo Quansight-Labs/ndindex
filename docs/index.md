@@ -58,7 +58,7 @@ their limitations:
   whether the step is positive or negative and the start and stop are
   positive, negative, or None. Consider, for example, the meaning of the slice
   `a[4:-2:-2]`, where `a` is a one-dimensional array. This slices every other
-  element from the third element to the second from the last, but not
+  element from the fifth element to the second from the last, but not
   including the second from last. The resulting array will have shape `(0,)`
   if the original shape is less than 1 or greater than 5, and shape `(1,)`
   otherwise. In ndindex, one can use `len(Slice(4, -2, -2))` to compute the
