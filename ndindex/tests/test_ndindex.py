@@ -34,6 +34,7 @@ def test_eq(idx):
     assert (index != 'a') is True
     assert ('a' != index) is True
 
+@example([1, 2, 3])
 @given(ndindices())
 def test_ndindex(idx):
     index = ndindex(idx)
