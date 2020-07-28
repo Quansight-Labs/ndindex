@@ -385,6 +385,7 @@ def test_slice_as_subindex_integer_hypothesis(s, i, size):
         asubindex2 = aS[subindex2.raw]
         assert_equal(asubindex2, asubindex)
 
+@example(slice(None, 0, None), (0, Ellipsis), 1)
 @example(slice(0, 1), (2,), 3)
 @given(slices(), Tuples, one_of(shapes, integers(0, 10)))
 def test_slice_as_subindex_tuple_hypothesis(s, index, shape):
@@ -417,8 +418,11 @@ def test_slice_as_subindex_tuple_hypothesis(s, index, shape):
     if empty:
         assert not isin(aS, aindex).any()
         assert not isin(aindex, aS).any()
-        with raises(ValueError, match="do not intersect"):
-            Index.as_subindex(S)
+        try:
+            with raises(ValueError, match="do not intersect"):
+                Index.as_subindex(S)
+        except NotImplementedError:
+            pass
     else:
         asubindex = aindex[Subindex.raw]
 
