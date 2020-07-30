@@ -1,8 +1,7 @@
 import operator
-import math
 
 from sympy.ntheory.modular import crt
-from sympy import ilcm
+from sympy import ilcm, Rational
 
 from .ndindex import NDIndex, asshape
 
@@ -424,7 +423,7 @@ class Slice(NDIndex):
 
             Assumes x >= 0, m >= 1, and 0 <= a < m.
             """
-            n = int(math.ceil((x - a)/m))
+            n = Rational(x - a, m).ceiling()
             return a + n*m
 
         # Get the smallest lcm multiple of common that is >= start
@@ -434,7 +433,7 @@ class Slice(NDIndex):
 
         step = lcm//index.step # = s.step//igcd(s.step, index.step)
 
-        stop = math.ceil((min(s.stop, index.stop) - index.start)/index.step)
+        stop = Rational((min(s.stop, index.stop) - index.start), index.step).ceiling()
         if stop < 0:
             stop = 0
 

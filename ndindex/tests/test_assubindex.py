@@ -8,6 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from .helpers import ndindices, shapes, assert_equal
 
+@example(slice(0, 0), 9007199254741193, 1)
 @example((0,), (slice(1, 2),), 3)
 @example(slice(0, 10), slice(5, 15), 20)
 @example((), (slice(None, None, -1),), (2,))
