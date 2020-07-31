@@ -44,7 +44,7 @@ class Integer(NDIndex):
 
     def reduce(self, shape=None, axis=0):
         """
-        Reduce an Integer index on an array of shape `shape`
+        Reduce an Integer index on an array of shape `shape`.
 
         The result will either be IndexError if the index is invalid for the
         given shape, or an Integer index where the value is nonnegative.
@@ -65,15 +65,13 @@ class Integer(NDIndex):
         .Tuple.reduce
         .Slice.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
 
         """
         if shape is None:
             return self
 
-        shape = asshape(shape)
-        if len(shape) <= axis:
-            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
-
+        shape = asshape(shape, axis=axis)
         size = shape[axis]
         if self.raw >= size or -size > self.raw < 0:
             raise IndexError(f"index {self.raw} is out of bounds for axis {axis} with size {size}")
@@ -85,11 +83,6 @@ class Integer(NDIndex):
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
-        from . import Tuple
-
-        if isinstance(shape, (Tuple, Integer)):
-            raise TypeError("ndindex types are not meant to be used as a shape - "
-                            "did you mean to use the built-in tuple type?")
         shape = asshape(shape)
 
         # reduce will raise IndexError if it should be raised

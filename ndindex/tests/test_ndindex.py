@@ -2,39 +2,54 @@ import inspect
 
 import numpy as np
 
-from hypothesis import given, example
+from hypothesis import given, example, settings
 
 from pytest import raises, warns
 
 from ..ndindex import ndindex, asshape
 from ..integer import Integer
 from ..ellipsis import ellipsis
-from .helpers import ndindices, check_same
+from ..integerarray import IntegerArray
+from ..tuple import Tuple
+from .helpers import ndindices, check_same, assert_equal
 
 @given(ndindices())
 def test_eq(idx):
-    new = type(idx)(*idx.args)
-    assert (new == idx) is True
-    assert (new.raw == idx.raw) is True
-    assert hash(new) == hash(idx)
-    assert (idx == idx.raw) is True
-    assert (idx.raw == idx) is True
-    assert (idx == 'a') is False
-    assert ('a' == idx) is False
-    assert (idx != 'a') is True
-    assert ('a' != idx) is True
+    index = ndindex(idx)
+    new = type(index)(*index.args)
+    assert (new == index) is True
+    try:
+        if isinstance(new.raw, np.ndarray):
+            raise ValueError
+        assert (new.raw == index.raw) is True
+        assert (index.raw == index) is True
+    except ValueError:
+        np.testing.assert_equal(new.raw, index.raw)
+        # Sadly, there is now way to bypass array.__eq__ from producing an
+        # array.
+    assert hash(new) == hash(index)
+    assert (index == index.raw) is True
+    assert (index == 'a') is False
+    assert ('a' == index) is False
+    assert (index != 'a') is True
+    assert ('a' != index) is True
 
+@example([1, 2, 3])
 @given(ndindices())
 def test_ndindex(idx):
-    assert ndindex(idx) == idx
-    assert ndindex(idx).raw == idx
-    ix = ndindex(idx)
-    assert ndindex(ix.raw) == ix
+    index = ndindex(idx)
+    assert index == idx
+    if isinstance(idx, np.ndarray):
+        assert_equal(index.raw, idx)
+    elif isinstance(idx, list):
+        assert_equal(index.raw, np.asarray(idx, dtype=np.intp))
+    else:
+        assert index.raw == idx
+    assert ndindex(index.raw) == index
 
 def test_ndindex_not_implemented():
     a = np.arange(10)
-    for idx in [[], [1, 2], np.array([1, 2]), np.array([True, False]*5), True,
-                False, None]:
+    for idx in [np.array([True, False]*5), True, False, None]:
         raises(NotImplementedError, lambda: ndindex(idx))
         # Make sure the index really is valid
         a[idx]
@@ -58,14 +73,24 @@ def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
 
-@given(ndindices())
+@example(IntegerArray([], (0, 1)))
 @example((1, ..., slice(1, 2)))
-def test_str(idx):
-    # The str form should be re-creatable
+# eval can sometimes be slower than the default deadline of 200ms for large
+# array indices
+@settings(deadline=None)
+@given(ndindices())
+def test_repr(idx):
+    # The repr form should be re-creatable
     index = ndindex(idx)
     d = {}
     exec("from ndindex import *", d)
-    assert eval(str(index), d) == idx
+    assert eval(repr(index), d) == idx
+
+@given(ndindices())
+def test_str(idx):
+    # Str may not be re-creatable. Just test that it doesn't give an exception.
+    index = ndindex(idx)
+    str(index)
 
 def test_asshape():
     assert asshape(1) == (1,)
@@ -82,3 +107,5 @@ def test_asshape():
     raises(ValueError, lambda: asshape(-1))
     raises(ValueError, lambda: asshape((1, -1)))
     raises(TypeError, lambda: asshape(...))
+    raises(TypeError, lambda: asshape(Integer(1)))
+    raises(TypeError, lambda: asshape(Tuple(1, 2)))

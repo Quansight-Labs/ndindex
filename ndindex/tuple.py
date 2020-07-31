@@ -34,6 +34,7 @@ class Tuple(NDIndex):
     """
     def _typecheck(self, *args):
         from .ellipsis import ellipsis
+        from .integerarray import IntegerArray
 
         newargs = []
         for arg in args:
@@ -44,6 +45,8 @@ class Tuple(NDIndex):
 
         if newargs.count(ellipsis()) > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
+        if len([i for i in newargs if isinstance(i, IntegerArray)]) > 0:
+            raise NotImplementedError("tuples containing integer arrays are not yet supported")
 
         return tuple(newargs)
 
@@ -171,6 +174,7 @@ class Tuple(NDIndex):
         .Slice.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
 
         """
         from .ellipsis import ellipsis
@@ -181,10 +185,8 @@ class Tuple(NDIndex):
             return type(self)(*args, ellipsis()).reduce(shape)
 
         if shape is not None:
-            shape = asshape(shape)
             indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
-            if len(shape) < indexed_args:
-                raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {indexed_args} were indexed")
+            shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
@@ -279,11 +281,8 @@ class Tuple(NDIndex):
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).expand(shape)
 
-        shape = asshape(shape)
-
         indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
-        if len(shape) < indexed_args:
-            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {indexed_args} were indexed")
+        shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
@@ -305,11 +304,6 @@ class Tuple(NDIndex):
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
-        from . import Integer
-
-        if isinstance(shape, (Tuple, Integer)):
-            raise TypeError("ndindex types are not meant to be used as a shape - "
-                            "did you mean to use the built-in tuple type?")
         shape = asshape(shape)
 
         if self == Tuple():

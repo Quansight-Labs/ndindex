@@ -1,13 +1,18 @@
+import sys
 from itertools import chain
 from functools import reduce
 from operator import mul
+import warnings
 
+from numpy import intp, array
 import numpy.testing
 
 from pytest import fail
 
 from hypothesis import assume
-from hypothesis.strategies import integers, composite, none, one_of, lists, just, builds
+from hypothesis.strategies import (integers, composite, none, one_of, lists,
+                                   just, builds)
+from hypothesis.extra.numpy import arrays
 
 from ..ndindex import ndindex
 
@@ -36,42 +41,74 @@ def tuples(elements, *, min_size=0, max_size=None, unique_by=None, unique=False)
     return lists(elements, min_size=min_size, max_size=max_size,
                  unique_by=unique_by, unique=unique).map(tuple)
 
-Tuples = tuples(one_of(ellipses(), ints(), slices()))
-
-@composite
-def ndindices(draw):
-    s = draw(one_of(
-        ints(),
-        slices(),
-        ellipses(),
-        tuples(one_of(ints(), slices())),
-    ))
-
-    try:
-        return ndindex(s)
-    except ValueError: # pragma: no cover
-        assume(False)
-
 shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < 100000)
 
+_integer_arrays = arrays(intp, shapes)
+integer_arrays = _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
+
+def _doesnt_raise(idx):
+    try:
+        ndindex(idx)
+    except (IndexError, ValueError, NotImplementedError):
+        return False
+    return True
+
+Tuples = tuples(one_of(ellipses(), ints(), slices(),
+                       integer_arrays)).filter(_doesnt_raise)
+
+@composite
+def ndindices(draw):
+    s = draw(one_of(
+            ints(),
+            slices(),
+            ellipses(),
+            tuples(one_of(ints(), slices())),
+            integer_arrays,
+        ))
+
+    try:
+        ndindex(s)
+    except (ValueError, NotImplementedError): # pragma: no cover
+        assume(False)
+
+    return s
+
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """
-    Same as numpy.testing.assert_equal except it also requires the shapes to
-    be equal.
+    Same as numpy.testing.assert_equal except it also requires the shapes and
+    dtypes to be equal.
+
     """
     numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
                                verbose=verbose)
-    if not err_msg:
-        err_msg = f"{actual.shape} != {desired.shape}"
-    assert actual.shape == desired.shape, err_msg
+    assert actual.shape == desired.shape, err_msg or f"{actual.shape} != {desired.shape}"
+    assert actual.dtype == desired.dtype, err_msg or f"{actual.dtype} != {desired.dtype}"
 
 def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
     exception = None
     try:
-        a_raw = a[index]
+        # Handle list indices that NumPy treats as tuple indices with a
+        # deprecation warning. We want to test against the post-deprecation
+        # behavior.
+        with warnings.catch_warnings(record=True) as r:
+            e_inner = None
+            try:
+                a_raw = a[index]
+            except Exception:
+                _, e_inner, _ = sys.exc_info()
+        if len(r) == 1:
+            if (isinstance(r[0].message, FutureWarning) and "Using a non-tuple "
+                "sequence for multidimensional indexing is deprecated" in
+                r[0].message.args[0]):
+                index = array(index)
+                a_raw = a[index]
+            else:
+                raise AssertionError(f"Unexpected warnings raised: {[i.message for i in r]}") # pragma: no cover
+        elif e_inner:
+            raise e_inner
     except Exception as e:
         exception = e
 

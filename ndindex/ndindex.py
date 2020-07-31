@@ -18,7 +18,7 @@ def ndindex(obj):
     >>> ndindex(slice(0, 10))
     Slice(0, 10, None)
     """
-    from . import Integer, Slice, Tuple, ellipsis
+    from . import Integer, Slice, Tuple, ellipsis, IntegerArray
 
     if isinstance(obj, NDIndex):
         return obj
@@ -26,16 +26,17 @@ def ndindex(obj):
     if obj is None:
         raise NotImplementedError("newaxis is not yet implemented")
 
+    # TODO: Replace this with calls to the IntegerArray() and BooleanArray()
+    # constructors.
     if isinstance(obj, (list, ndarray, bool)):
         # Ignore deprecation warnings for things like [1, []]. These will be
         # filtered out anyway since they produce object arrays.
         with warnings.catch_warnings(record=True):
-            if isinstance(obj, list) and obj == []:
-                a = asarray([], dtype=intp)
-            else:
-                a = asarray(obj)
+            a = asarray(obj)
+            if isinstance(obj, list) and 0 in a.shape:
+                a = a.astype(intp)
         if issubclass(a.dtype.type, integer):
-            raise NotImplementedError("integer array indices are not yet supported")
+            return IntegerArray(a)
         elif a.dtype == bool_:
             raise NotImplementedError("boolean array indices are not yet supported")
         else:
@@ -113,11 +114,11 @@ class NDIndex:
     via `reduce()`.
 
     """
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         """
         This method should be called by subclasses (via super()) after type-checking
         """
-        args = self._typecheck(*args)
+        args = self._typecheck(*args, **kwargs)
         self.args = args
 
     @classproperty
@@ -132,6 +133,9 @@ class NDIndex:
         return inspect.Signature(d.values())
 
     def __repr__(self):
+        return f"{self.__class__.__name__}({', '.join(map(repr, self.args))})"
+
+    def __str__(self):
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
 
     def __eq__(self, other):
@@ -141,9 +145,24 @@ class NDIndex:
             except (IndexError, NotImplementedError):
                 return False
 
-        return ((isinstance(other, self.__class__)
-                 or isinstance(self, other.__class__))
-                and self.args == other.args)
+        def test_equal(a, b):
+            """
+            Check if a == b, allowing for numpy arrays
+            """
+            if not (isinstance(a, b.__class__)
+                    or isinstance(b, a.__class__)):
+                return False
+            if isinstance(a, ndarray):
+                return a.shape == b.shape and (a == b).all()
+            if isinstance(a, tuple):
+                return len(a) == len(b) and all(test_equal(i, j) for i, j in
+                                                zip(a, b))
+            if isinstance(a, NDIndex):
+                return test_equal(a.args, b.args)
+
+            return a == b
+
+        return test_equal(self, other)
 
     def __hash__(self):
         return hash(self.args)
@@ -203,6 +222,7 @@ class NDIndex:
         .Tuple.reduce
         .Slice.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
 
         """
         # XXX: Should the default be raise NotImplementedError or return self?
@@ -370,20 +390,33 @@ class NDIndex:
         """
         raise NotImplementedError
 
-def asshape(shape):
+def asshape(shape, axis=None):
     """
     Cast `shape` as a valid NumPy shape.
 
     The input can be an integer `n`, which is equivalent to `(n,)`, or a tuple
     of integers.
 
+    If the `axis` argument is provided, an `IndexError` is raised if it is out
+    of bounds for the shape.
+
     The resulting shape is always a tuple of nonnegative integers.
 
-    All ndindex code that takes a shape should use
+    All ndindex functions that take a shape input should use::
 
-        shape = asindex(shape)
+        shape = asshape(shape)
+
+    or::
+
+        shape = asshape(shape, axis=axis)
 
     """
+    from .integer import Integer
+    from .tuple import Tuple
+    if isinstance(shape, (Tuple, Integer)):
+        raise TypeError("ndindex types are not meant to be used as a shape - "
+                        "did you mean to use the built-in tuple type?")
+
     if isinstance(shape, numbers.Number):
         shape = (operator.index(shape),)
 
@@ -401,5 +434,9 @@ def asshape(shape):
 
         if shape[i] < 0:
             raise ValueError("unknown (negative) dimensions are not supported")
+
+    if axis is not None:
+        if len(newshape) <= axis:
+            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
 
     return tuple(newshape)

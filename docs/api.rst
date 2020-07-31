@@ -46,6 +46,13 @@ Tuple
    :members:
    :special-members:
 
+IntegerArray
+------------
+
+.. autoclass:: ndindex.IntegerArray
+   :members:
+   :special-members:
+
 Internal API
 ------------
 
@@ -55,3 +62,5 @@ These classes are only intended for internal use in ndindex.
    :members:
 
 .. autoclass:: ndindex.slice.default
+
+.. autofunction:: ndindex.ndindex.asshape
