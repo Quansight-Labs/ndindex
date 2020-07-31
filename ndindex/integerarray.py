@@ -1,6 +1,4 @@
-import warnings
-
-from numpy import ndarray, asarray, integer, bool_, intp, empty, zeros
+from numpy import intp, zeros
 
 from .array import ArrayIndex
 from .ndindex import asshape
