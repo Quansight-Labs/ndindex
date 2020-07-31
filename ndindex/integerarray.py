@@ -5,7 +5,7 @@ from .ndindex import asshape
 
 class IntegerArray(ArrayIndex):
     """
-    Represents an integer array.
+    Represents an integer array index.
 
     If `idx` is an n-dimensional integer array with shape `s = (s1, ..., sn)`
     and `a` is any array, `a[idx]` replaces the first dimension of `a` with
@@ -28,6 +28,13 @@ class IntegerArray(ArrayIndex):
     >>> a[idx.raw]
     array([[0, 1],
            [1, 2]])
+
+    .. note::
+
+       `IntegerArray` does *not* represent an array, but rather an *array
+       index*. It does not have most methods that `numpy.ndarray` has, and
+       should not be used in array contexts. See the document on
+       :ref:`type-confusion` for more details.
 
     """
     dtype = intp

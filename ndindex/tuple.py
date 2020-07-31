@@ -31,6 +31,13 @@ class Tuple(NDIndex):
     >>> a[idx.raw]
     array([2, 3])
 
+    .. note::
+
+       `Tuple` does *not* represent a tuple, but rather an *tuple index*. It
+       does not have most methods that `tuple` has, and should not be used in
+       non-indexing contexts. See the document on :ref:`type-confusion` for
+       more details.
+
     """
     def _typecheck(self, *args):
         from .ellipsis import ellipsis

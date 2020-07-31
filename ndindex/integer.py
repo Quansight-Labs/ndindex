@@ -20,6 +20,13 @@ class Integer(NDIndex):
     index directly. However, it is still recommended to use `raw` for
     consistency, as this only works for `Integer`.
 
+    .. note::
+
+       `Integer` does *not* represent an integer, but rather an
+       *integer index*. It does not have most methods that `int` has, and
+       should not be used in non-indexing contexts. See the document on
+       :ref:`type-confusion` for more details.
+
     """
     def _typecheck(self, idx):
         idx = operator.index(idx)
