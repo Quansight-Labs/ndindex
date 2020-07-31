@@ -81,7 +81,7 @@ but not yet supported by ndindex will raise NotImplementedError.</p>
 <h3>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="ndindex.Integer">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Integer</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Integer</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an integer index on an axis of an nd-array.</p>
 <p>Any object that implements <code class="code docutils literal notranslate"><span class="pre">__index__</span></code> can be used as an integer index.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Integer</span>
@@ -252,7 +252,7 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 <dl class="method">
 <dt id="ndindex.Integer.reduce">
 <code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.reduce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reduce an Integer index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code></p>
+<dd><p>Reduce an Integer index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p>The result will either be IndexError if the index is invalid for the
 given shape, or an Integer index where the value is nonnegative.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Integer</span>
@@ -267,7 +267,7 @@ given shape, or an Integer index where the value is nonnegative.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a></p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -278,7 +278,7 @@ given shape, or an Integer index where the value is nonnegative.</p>
 <span id="slice-api"></span><h3>Slice<a class="headerlink" href="#slice" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="ndindex.Slice">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Slice</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Slice</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a slice on an axis of an nd-array.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Slice(x)</span></code> with one argument is equivalent to <code class="code docutils literal notranslate"><span class="pre">Slice(None,</span> <span class="pre">x)</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">start</span></code> and <code class="code docutils literal notranslate"><span class="pre">stop</span></code> can be any integer, or <code class="code docutils literal notranslate"><span class="pre">None</span></code>. <code class="code docutils literal notranslate"><span class="pre">step</span></code> can be any
@@ -559,7 +559,7 @@ and never raises ValueError.</p>
 </ul>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a></p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -591,7 +591,7 @@ and never raises ValueError.</p>
 <h3>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="ndindex.ellipsis">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ellipsis</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ellipsis" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ellipsis</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ellipsis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an ellipsis index, i.e., <code class="code docutils literal notranslate"><span class="pre">...</span></code> (or <code class="code docutils literal notranslate"><span class="pre">Ellipsis</span></code>).</p>
 <p>Ellipsis indices by themselves return the full array. Inside of a tuple
 index, an ellipsis skips 0 or more axes of the array so that everything
@@ -781,7 +781,7 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a></p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -792,7 +792,7 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 <h3>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="ndindex.Tuple">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Tuple</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Tuple</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a tuple of single-axis indices.</p>
 <p>Valid single axis indices are</p>
 <ul class="simple">
@@ -1110,8 +1110,170 @@ instead of a scalar.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.Tuple.expand" title="ndindex.Tuple.expand"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.expand()</span></code></a>, <a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a></p>
+<p><a class="reference internal" href="#ndindex.Tuple.expand" title="ndindex.Tuple.expand"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.expand()</span></code></a>, <a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></p>
 </div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="integerarray">
+<h3>IntegerArray<a class="headerlink" href="#integerarray" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="ndindex.IntegerArray">
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">IntegerArray</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an integer array.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">idx</span></code> is an n-dimensional integer array with shape <code class="code docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">(s1,</span> <span class="pre">...,</span> <span class="pre">sn)</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">a</span></code> is any array, <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code> replaces the first dimension of <code class="code docutils literal notranslate"><span class="pre">a</span></code> with
+dimensions of size <code class="code docutils literal notranslate"><span class="pre">s1,</span> <span class="pre">...,</span> <span class="pre">sn</span></code>, where each entry is indexed according to
+the entry in <code class="code docutils literal notranslate"><span class="pre">idx</span></code> as an integer index.</p>
+<p>Integer arrays can also appear as part of tuple indices. In that case,
+they replace the axis being indexed. If more than one integer array
+appears inside of a tuple index, they are broadcast together.</p>
+<p>A list of integers may also be used in place of an integer array. Note
+that NumPy treats a direct list of integers as a tuple index, but this
+behavior is deprecated and will be replaced with integer array indexing in
+the future. ndindex always treats lists as arrays.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">IntegerArray</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">]</span>
+<span class="go">array([[0, 1],</span>
+<span class="go">       [1, 2]])</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="ndindex.IntegerArray.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.array">
+<em class="property">property </em><code class="sig-name descname">array</code><a class="headerlink" href="#ndindex.IntegerArray.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the NumPy array of self.</p>
+<p>This is the same as <code class="code docutils literal notranslate"><span class="pre">self.args[0]</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.isempty">
+<code class="sig-name descname">isempty</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.isempty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether self always indexes an empty array</p>
+<p>An empty array is an array whose shape contains at least one 0. Note
+that scalars (arrays with shape <code class="code docutils literal notranslate"><span class="pre">()</span></code>) are not considered empty.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default), or an array shape. If it is
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, isempty() will return <code class="code docutils literal notranslate"><span class="pre">True</span></code> when <code class="code docutils literal notranslate"><span class="pre">self</span></code> is always empty for
+any array shape. However, if it gives <code class="code docutils literal notranslate"><span class="pre">False</span></code>, it could still give an
+empty array for some array shapes, but not all. If you know the shape
+of the array that will be indexed, you can call <code class="code docutils literal notranslate"><span class="pre">idx.isempty(shape)</span></code>
+first and the result will be correct for arrays of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. If
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is given and <code class="code docutils literal notranslate"><span class="pre">self</span></code> would raise an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> on an array of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>, <code class="code docutils literal notranslate"><span class="pre">isempty()</span></code> also raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">isempty</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ndindex.Slice.__len__()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.newshape">
+<code class="sig-name descname">newshape</code><span class="sig-paren">(</span><em class="sig-param">shape</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.newshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
+1-D shape.</p>
+<p>Raises IndexError if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
+shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(7, 8)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">index 10 is out of bounds for axis 0 with size 6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(3, 7, 8)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(7, 2)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.raw">
+<em class="property">property </em><code class="sig-name descname">raw</code><a class="headerlink" href="#ndindex.IntegerArray.raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the equivalent of <code class="code docutils literal notranslate"><span class="pre">self</span></code> that can be used as an index</p>
+<p>NumPy does not allow custom objects to be used as indices, with the
+exception of integer indices, so to use an ndindex object as an
+index, it is necessary to use <code class="code docutils literal notranslate"><span class="pre">raw</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">raw</span><span class="p">]</span>
+<span class="go">array([2, 3])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.reduce">
+<code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param">shape=None</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.reduce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce an <code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code> index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>The result will either be <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if the index is invalid for the
+given shape, or an <code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code> index where the values are all
+nonnegative.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">IntegerArray</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">3</span><span class="p">,))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">index -5 is out of bounds for axis 0 with size 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">9</span><span class="p">,))</span>
+<span class="go">IntegerArray([4, 2])</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ndindex.IntegerArray.shape">
+<em class="property">property </em><code class="sig-name descname">shape</code><a class="headerlink" href="#ndindex.IntegerArray.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the shape of the array of self.</p>
+<p>This is the same as self.array.shape. Note that this is <strong>not</strong> the
+same as the shape of an array that is indexed by self. Use
+<a class="reference internal" href="#ndindex.IntegerArray.newshape" title="ndindex.IntegerArray.newshape"><code class="xref py py-meth docutils literal notranslate"><span class="pre">newshape()</span></code></a> to get that.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1122,7 +1284,7 @@ instead of a scalar.</p>
 <p>These classes are only intended for internal use in ndindex.</p>
 <dl class="class">
 <dt id="ndindex.ndindex.NDIndex">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.ndindex.</code><code class="sig-name descname">NDIndex</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.ndindex.</code><code class="sig-name descname">NDIndex</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an index into an nd-array (i.e., a numpy array).</p>
 <p>This is a base class for all ndindex types. All types that subclass this
 class should redefine the following methods</p>
@@ -1349,7 +1511,7 @@ for array).</p>
 optional <code class="code docutils literal notranslate"><span class="pre">axis</span></code> argument to specify the axis, defaulting to 0.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a></p>
+<p><a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a>, <a class="reference internal" href="#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -1361,6 +1523,25 @@ optional <code class="code docutils literal notranslate"><span class="pre">axis<
 <dd><p>A default keyword argument value.</p>
 <p>Used as the default value for keyword arguments where <code class="code docutils literal notranslate"><span class="pre">None</span></code> is also a
 meaningful value but not the default.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ndindex.ndindex.asshape">
+<code class="sig-prename descclassname">ndindex.ndindex.</code><code class="sig-name descname">asshape</code><span class="sig-paren">(</span><em class="sig-param">shape</em>, <em class="sig-param">axis=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.asshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cast <code class="code docutils literal notranslate"><span class="pre">shape</span></code> as a valid NumPy shape.</p>
+<p>The input can be an integer <code class="code docutils literal notranslate"><span class="pre">n</span></code>, which is equivalent to <code class="code docutils literal notranslate"><span class="pre">(n,)</span></code>, or a tuple
+of integers.</p>
+<p>If the <code class="code docutils literal notranslate"><span class="pre">axis</span></code> argument is provided, an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> is raised if it is out
+of bounds for the shape.</p>
+<p>The resulting shape is always a tuple of nonnegative integers.</p>
+<p>All ndindex functions that take a shape input should use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">asshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">asshape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -1407,6 +1588,7 @@ meaningful value but not the default.</p>
 <li class="toctree-l5"><a class="reference internal" href="#slice">Slice</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#tuple">Tuple</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#integerarray">IntegerArray</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#internal-api">Internal API</a></li>
 </ul>
 </li>
@@ -1477,6 +1659,7 @@ meaningful value but not the default.</p>
 <li class="toctree-l3"><a class="reference internal" href="#slice">Slice</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tuple">Tuple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integerarray">IntegerArray</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#internal-api">Internal API</a></li>
 </ul>
 </li>
