@@ -54,6 +54,13 @@ class ArrayIndex(NDIndex):
         Return the NumPy array of self.
 
         This is the same as `self.args[0]`.
+
+        >>> from ndindex import IntegerArray, BooleanArray
+        >>> IntegerArray([0, 1]).array
+        array([0, 1])
+        >>> BooleanArray([False, True]).array
+        array([False, True])
+
         """
         return self.args[0]
 
@@ -66,6 +73,12 @@ class ArrayIndex(NDIndex):
         same as the shape of an array that is indexed by self. Use
         :meth:`newshape` to get that.
 
+        >>> from ndindex import IntegerArray, BooleanArray
+        >>> IntegerArray([[0], [1]]).shape
+        (2, 1)
+        >>> BooleanArray([[False], [True]]).shape
+        (2, 1)
+
         """
         return self.array.shape
 
@@ -77,6 +90,12 @@ class ArrayIndex(NDIndex):
         This is the same as self.array.ndim. Note that this is **not** the
         same as the number of dimensions of an array that is indexed by self.
         Use `len` on :meth:`newshape` to get that.
+
+        >>> from ndindex import IntegerArray, BooleanArray
+        >>> IntegerArray([[0], [1]]).ndim
+        2
+        >>> BooleanArray([[False], [True]]).ndim
+        2
 
         """
         return self.array.ndim
