@@ -55,8 +55,7 @@ class BooleanArray(ArrayIndex):
     ...                     [False, False]])
     >>> a = np.arange(10).reshape((5, 2))
     >>> a[idx.raw]
-    array([[0, 1],
-           [1, 2]])
+    array([0, 1, 2, 7])
 
     .. note::
 
