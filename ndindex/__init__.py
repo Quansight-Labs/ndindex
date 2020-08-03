@@ -24,6 +24,10 @@ from .integerarray import IntegerArray
 
 __all__ += ['IntegerArray']
 
+from .booleanarray import BooleanArray
+
+__all__ += ['BooleanArray']
+
 from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions

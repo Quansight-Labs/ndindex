@@ -22,10 +22,13 @@ def test_integer_array_constructor():
     idx = IntegerArray([], shape=(0, 1))
     assert_equal(idx.array, empty((0, 1), dtype=intp))
 
+    # Make sure the underlying array is immutable
     idx = IntegerArray([1, 2])
     with raises(ValueError):
         idx.array[0] = 0
+    assert_equal(idx.array, array([True], dtype=intp))
 
+    # Make sure the underlying array is copied
     a = array([1, 2])
     idx = IntegerArray(a)
     a[0] = 0

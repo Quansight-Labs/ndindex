@@ -49,10 +49,10 @@ def test_ndindex(idx):
 
 def test_ndindex_not_implemented():
     a = np.arange(10)
-    for idx in [np.array([True, False]*5), True, False, None]:
-        raises(NotImplementedError, lambda: ndindex(idx))
-        # Make sure the index really is valid
-        a[idx]
+    idx = None
+    raises(NotImplementedError, lambda: ndindex(idx))
+    # Make sure the index really is valid
+    a[idx]
 
 def test_ndindex_invalid():
     a = np.arange(10)

@@ -4,7 +4,7 @@ from functools import reduce
 from operator import mul
 import warnings
 
-from numpy import intp, array
+from numpy import intp, bool_, array
 import numpy.testing
 
 from pytest import fail
@@ -48,6 +48,9 @@ shapes = tuples(integers(0, 10)).filter(
 
 _integer_arrays = arrays(intp, shapes)
 integer_arrays = _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
+
+_boolean_arrays = arrays(bool_, shapes)
+boolean_arrays = _boolean_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
 
 def _doesnt_raise(idx):
     try:

@@ -42,6 +42,7 @@ class Tuple(NDIndex):
     def _typecheck(self, *args):
         from .ellipsis import ellipsis
         from .integerarray import IntegerArray
+        from .booleanarray import BooleanArray
 
         newargs = []
         for arg in args:
@@ -54,6 +55,8 @@ class Tuple(NDIndex):
             raise IndexError("an index can only have a single ellipsis ('...')")
         if len([i for i in newargs if isinstance(i, IntegerArray)]) > 0:
             raise NotImplementedError("tuples containing integer arrays are not yet supported")
+        if len([i for i in newargs if isinstance(i, BooleanArray)]) > 0:
+            raise NotImplementedError("tuples containing boolean arrays are not yet supported")
 
         return tuple(newargs)
 
