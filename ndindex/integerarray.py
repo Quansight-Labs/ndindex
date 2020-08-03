@@ -64,6 +64,7 @@ class IntegerArray(ArrayIndex):
         .Slice.reduce
         .ellipsis.reduce
         .Integer.reduce
+        .BooleanArray.reduce
 
         """
         from .integer import Integer

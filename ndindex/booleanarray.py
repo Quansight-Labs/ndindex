@@ -1,4 +1,4 @@
-from numpy import bool_, zeros
+from numpy import bool_
 
 from .array import ArrayIndex
 from .ndindex import asshape
@@ -66,3 +66,46 @@ class BooleanArray(ArrayIndex):
 
     """
     dtype = bool_
+
+    def reduce(self, shape=None, axis=0):
+        """
+        Reduce a `BooleanArray` index on an array of shape `shape`.
+
+        The result will either be `IndexError` if the index is invalid for the
+        given shape, or a `BooleanArray` index. Presently, no simplifications
+        are done for BooleanArray: if `reduce()` does not produce an
+        `IndexArray` the index returned will be the same as `self`.
+
+        >>> from ndindex import BooleanArray
+        >>> idx = BooleanArray([True, False])
+        >>> idx.reduce((3,))
+        Traceback (most recent call last):
+        ...
+        IndexError: boolean index did not match indexed array along dimension 0; dimension is 3 but corresponding boolean dimension is 2
+        >>> idx.reduce((2,))
+        BooleanArray([True, False])
+
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .ellipsis.reduce
+        .Integer.reduce
+        .IntegerArray.reduce
+
+        """
+        if shape is None:
+            return self
+
+        shape = asshape(shape)
+
+        if len(shape) < self.ndim + axis:
+            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {self.ndim + axis} were indexed")
+
+        for i in range(axis, axis+self.ndim):
+            if self.shape[i-axis] != 0 and shape[i] != 0 and 0 not in shape and shape[i] != self.shape[i-axis]:
+                raise IndexError(f"boolean index did not match indexed array along dimension {i}; dimension is {shape[i]} but corresponding boolean dimension is {self.shape[i-axis]}")
+
+        return self

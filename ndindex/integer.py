@@ -73,6 +73,7 @@ class Integer(NDIndex):
         .Slice.reduce
         .ellipsis.reduce
         .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         if shape is None:

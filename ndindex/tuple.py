@@ -185,6 +185,7 @@ class Tuple(NDIndex):
         .Integer.reduce
         .ellipsis.reduce
         .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         from .ellipsis import ellipsis

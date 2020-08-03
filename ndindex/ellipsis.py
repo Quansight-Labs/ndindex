@@ -61,6 +61,7 @@ class ellipsis(NDIndex):
         .Slice.reduce
         .Integer.reduce
         .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         return Tuple()

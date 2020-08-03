@@ -1,6 +1,7 @@
 from numpy import prod, arange, array, bool_, empty
 
 from hypothesis import given
+from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
@@ -36,3 +37,34 @@ def test_boolean_array_constructor():
 def test_boolean_array_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
+
+@given(boolean_arrays, one_of(shapes, integers(0, 10)))
+def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    index = BooleanArray(idx)
+
+    check_same(a, index.raw, func=lambda x: x.reduce())
+
+@given(boolean_arrays, one_of(shapes, integers(0, 10)))
+def test_booleanarray_reduce_hypothesis(idx, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    index = BooleanArray(idx)
+
+    check_same(a, index.raw, func=lambda x: x.reduce(shape))
+
+    try:
+        reduced = index.reduce(shape)
+    except IndexError:
+        pass
+    else:
+        # At present, reduce() always returns the same index if it doesn't
+        # give an IndexError
+        assert reduced == index
