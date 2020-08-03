@@ -69,6 +69,18 @@ class ArrayIndex(NDIndex):
         """
         return self.array.shape
 
+    @property
+    def ndim(self):
+        """
+        Return the number of dimensions of the array of self.
+
+        This is the same as self.array.ndim. Note that this is **not** the
+        same as the number of dimensions of an array that is indexed by self.
+        Use `len` on :meth:`newshape` to get that.
+
+        """
+        return self.array.ndim
+
     # The repr form recreates the object. The str form gives the truncated
     # array string and is explicitly non-valid Python (doesn't have commas).
     def __repr__(self):
