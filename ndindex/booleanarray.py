@@ -1,4 +1,4 @@
-from numpy import bool_
+from numpy import bool_, count_nonzero
 
 from .array import ArrayIndex
 from .ndindex import asshape
@@ -67,6 +67,25 @@ class BooleanArray(ArrayIndex):
     """
     dtype = bool_
 
+    @property
+    def count_nonzero(self):
+        """
+        Returns the number of elements indexed by self.
+
+        In general, if shapes match, when indexed by `self`, the first *n*
+        dimensions of an array are replaced with a single dimension of size
+        `count_nonzero`, where *n* is `self.shape`.
+
+        This is the same as `np.count_nonzero(self.array)`. Note, to get the
+        shape of an array indexed by self, use :ref:`newshape`, not this
+        method.
+
+        >>> from ndindex import BooleanArray
+        >>> BooleanArray([True, False, True]).count_nonzero
+        2
+        """
+        return count_nonzero(self.array)
+
     def reduce(self, shape=None, axis=0):
         """
         Reduce a `BooleanArray` index on an array of shape `shape`.
@@ -109,3 +128,12 @@ class BooleanArray(ArrayIndex):
                 raise IndexError(f"boolean index did not match indexed array along dimension {i}; dimension is {shape[i]} but corresponding boolean dimension is {self.shape[i-axis]}")
 
         return self
+
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        # reduce will raise IndexError if it should be raised
+        self.reduce(shape)
+
+        return (self.count_nonzero,) + shape[self.ndim:]

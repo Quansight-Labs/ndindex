@@ -68,3 +68,21 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         # At present, reduce() always returns the same index if it doesn't
         # give an IndexError
         assert reduced == index
+
+@given(boolean_arrays, one_of(shapes, integers(0, 10)))
+def test_boolean_array_newshape_hypothesis(idx, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    def assert_equal(x, y):
+        newshape = BooleanArray(idx).newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    # Call newshape so we can see if any exceptions match
+    def func(idx):
+        idx.newshape(shape)
+        return idx
+
+    check_same(a, idx, func=func, assert_equal=assert_equal)
