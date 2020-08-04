@@ -26,7 +26,7 @@ def test_integer_array_constructor():
     idx = IntegerArray([1, 2])
     with raises(ValueError):
         idx.array[0] = 0
-    assert_equal(idx.array, array([True], dtype=intp))
+    assert_equal(idx.array, array([1, 2], dtype=intp))
 
     # Make sure the underlying array is copied
     a = array([1, 2])
