@@ -8,7 +8,7 @@ class BooleanArray(ArrayIndex):
     Represents a boolean array index (also known as a mask).
 
     If `idx` is an n-dimensional boolean array with shape `s = (s1, ..., sn)`
-    and `a` is an array of shape `s = (s1, ..., sn, ..., sm), `a[idx]`
+    and `a` is an array of shape `s = (s1, ..., sn, ..., sm)`, `a[idx]`
     replaces the first `n` dimensions of `a` with a single dimensions of size
     `np.nonzero(idx)`, where each entry is included if the corresponding
     element of `idx` is True.
@@ -77,7 +77,7 @@ class BooleanArray(ArrayIndex):
         `count_nonzero`, where *n* is `self.shape`.
 
         This is the same as `np.count_nonzero(self.array)`. Note, to get the
-        shape of an array indexed by self, use :ref:`newshape`, not this
+        shape of an array indexed by self, use :meth:`newshape`, not this
         method.
 
         >>> from ndindex import BooleanArray
