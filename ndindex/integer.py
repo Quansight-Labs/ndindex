@@ -53,7 +53,7 @@ class Integer(NDIndex):
         """
         Reduce an Integer index on an array of shape `shape`.
 
-        The result will either be IndexError if the index is invalid for the
+        The result will either be `IndexError` if the index is invalid for the
         given shape, or an Integer index where the value is nonnegative.
 
         >>> from ndindex import Integer

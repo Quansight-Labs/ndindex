@@ -128,7 +128,7 @@ class Tuple(NDIndex):
         Slice(2, 4, 1)
 
         If an explicit array shape is given, the result will either be
-        IndexError if the index is invalid for the given shape, or an index
+        `IndexError` if the index is invalid for the given shape, or an index
         that is as simple as possible:
 
         - All the elements of the tuple are recursively reduced.
@@ -250,7 +250,7 @@ class Tuple(NDIndex):
         An expanded `Tuple` is one where the length of the .args is the same
         as the given shape, and there are no ellipses.
 
-        The result will either be IndexError if self is invalid for the
+        The result will either be `IndexError` if self is invalid for the
         given shape, or will be canonicalized so that
 
         - All the elements of the tuple are recursively reduced.

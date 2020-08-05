@@ -9,14 +9,15 @@ def ndindex(obj):
     """
     Convert an object into an ndindex type
 
-    Invalid indices will raise IndexError. Indices that are supported by NumPy
-    but not yet supported by ndindex will raise NotImplementedError.
+    Invalid indices will raise `IndexError`. Indices that are supported by
+    NumPy but not yet supported by ndindex will raise `NotImplementedError`.
 
     >>> from ndindex import ndindex
     >>> ndindex(1)
     Integer(1)
     >>> ndindex(slice(0, 10))
     Slice(0, 10, None)
+
     """
     from . import Integer, Slice, Tuple, ellipsis, IntegerArray, BooleanArray
 
@@ -101,11 +102,11 @@ class NDIndex:
       maximum exists.
 
     - `reduce(shape=None)` should reduce an index to an equivalent form for
-      arrays of shape `shape`, or raise an IndexError. The error messages
+      arrays of shape `shape`, or raise an `IndexError`. The error messages
       should match numpy as much as possible. The class of the equivalent
       index may be different. If `shape` is `None`, it should return a
       canonical form that is equivalent for all array shapes (assuming no
-      IndexErrors).
+      `IndexError`s).
 
     The methods `__init__`, `__eq__`, and `__hash__` should *not* be
     overridden. Equality (and hashability) on `NDIndex` subclasses is
@@ -262,7 +263,7 @@ class NDIndex:
         `shape` should be a tuple of ints, or an int, which is equivalent to a
         1-D shape.
 
-        Raises IndexError if `self` would be out of shape for an array of
+        Raises `IndexError` if `self` would be out of shape for an array of
         shape `shape`.
 
         >>> from ndindex import Slice, Integer, Tuple

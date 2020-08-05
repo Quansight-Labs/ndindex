@@ -225,7 +225,7 @@ class Slice(NDIndex):
           Note that `Slice` objects that index a single element are not
           canonicalized to `Integer`, because integer indices always remove an
           axis whereas slices keep the axis. Furthermore, slices cannot raise
-          IndexError except on arrays with shape equal to `()`.
+          `IndexError` except on arrays with shape equal to `()`.
 
           >>> from ndindex import Slice
           >>> s = Slice(10)
