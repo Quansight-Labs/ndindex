@@ -114,3 +114,37 @@ def test_booleanarray_newshape_hypothesis(idx, shape):
         return
 
     check_same(a, idx, func=func, assert_equal=assert_equal)
+
+
+@given(boolean_arrays, one_of(shapes, integers(0, 10)))
+def test_booleanarray_isempty_hypothesis(idx, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    index = BooleanArray(idx)
+
+    # Call isempty to see if the exceptions are the same
+    def func(index):
+        index.isempty(shape)
+        return index
+
+    def assert_equal(a_raw, a_idx):
+        isempty = index.isempty()
+        isempty_shape = index.isempty(shape)
+
+        aempty = (a_raw.size == 0)
+        assert aempty == (a_idx.size == 0)
+
+        # If isempty is true with no shape it should be true for a specific
+        # shape. The converse is not true because the indexed array could be
+        # empty.
+        if isempty:
+            assert isempty_shape
+
+        # isempty() should always give the correct result for a specific
+        # array after reduction
+        assert isempty_shape == aempty, (index, shape)
+
+    check_same(a, idx, func=func, assert_equal=assert_equal)

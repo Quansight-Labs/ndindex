@@ -137,3 +137,9 @@ class BooleanArray(ArrayIndex):
         self.reduce(shape)
 
         return (self.count_nonzero,) + shape[self.ndim:]
+
+    def isempty(self, shape=None):
+        if shape is not None:
+            return 0 in self.newshape(shape)
+
+        return self.count_nonzero == 0
