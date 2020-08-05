@@ -1,8 +1,8 @@
 from itertools import product
 
-from numpy import arange, isin
+from numpy import arange
 
-from hypothesis import given, assume, example
+from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
 
 from pytest import raises
@@ -10,8 +10,7 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import (check_same, Tuples, prod, shapes, iterslice, ndindices,
-                      slices, assert_equal)
+from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
 
 
 def test_tuple_exhaustive():
@@ -201,98 +200,6 @@ def test_tuple_newshape_hypothesis(t, shape):
 def test_tuple_newshape_ndindex_input():
     raises(TypeError, lambda: Tuple(1).newshape(Tuple(2, 1)))
     raises(TypeError, lambda: Tuple(1).newshape(Integer(2)))
-
-
-@example((0,), (slice(1, 2),), 3)
-@given(Tuples, slices(), one_of(shapes, integers(0, 10)))
-def test_tuple_as_subindex_slice_hypothesis(t, index, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    T = Tuple(*t)
-    try:
-        Index = ndindex(index)
-    except ValueError: # pragma: no cover
-        assume(False)
-
-    empty = False
-    try:
-        Subindex = T.as_subindex(Index)
-    except NotImplementedError:
-        return
-    except ValueError as e:
-        assert "do not intersect" in e.args[0]
-        empty = True
-
-    try:
-        aT = a[t]
-        aindex = a[index]
-    except IndexError: # pragma: no cover
-        assume(False)
-
-    if empty:
-        assert not isin(aT, aindex).any()
-        assert not isin(aindex, aT).any()
-        with raises(ValueError, match="do not intersect"):
-            Index.as_subindex(T)
-    else:
-        asubindex = aindex[Subindex.raw]
-
-        assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
-
-        subindex2 = Index.as_subindex(T)
-        asubindex2 = aT[subindex2.raw]
-        assert_equal(asubindex2, asubindex)
-
-@example((), (slice(None, None, -1),), (2,))
-@example((), (..., slice(None, None, -1),), (2,))
-@example((slice(0, 1),), (2,), (3,))
-@example((slice(0, 5), slice(0, 5)), (slice(3, 10), slice(3, 10)), (20, 20))
-@example((slice(0, 5), slice(0, 5)), (1, 1), (10, 10))
-@given(Tuples, Tuples, shapes)
-def test_tuple_as_subindex_tuple_hypothesis(t, index, shape):
-    a = arange(prod(shape)).reshape(shape)
-
-    T = Tuple(*t)
-    try:
-        Index = ndindex(index)
-    except IndexError: # pragma: no cover
-        assume(False)
-
-    empty = False
-    try:
-        Subindex = T.as_subindex(Index)
-    except NotImplementedError:
-        return
-    except ValueError as e:
-        assert "do not intersect" in e.args[0]
-        empty = True
-
-
-    try:
-        aT = a[t]
-        aindex = a[index]
-    except IndexError: # pragma: no cover
-        assume(False)
-
-    if empty:
-        assert not isin(aT, aindex).any()
-        assert not isin(aindex, aT).any()
-        with raises(ValueError, match="do not intersect"):
-            Index.as_subindex(T)
-    else:
-        asubindex = aindex[Subindex.raw]
-
-        assert_equal(asubindex.flatten(), aT[isin(aT, aindex)])
-
-        try:
-            subindex2 = Index.as_subindex(T)
-        except NotImplementedError:
-            return
-        asubindex2 = aT[subindex2.raw]
-        assert_equal(asubindex2, asubindex)
 
 @example((slice(0, 0),), 2)
 @example((0, slice(0, 0)), (1, 2))
