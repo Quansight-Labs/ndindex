@@ -377,13 +377,7 @@ class Tuple(NDIndex):
         raise NotImplementedError(f"Tuple.as_subindex() is not implemented for type '{type(index).__name__}")
 
     def isempty(self, shape=None):
-        idx = self
         if shape is not None:
-            shape = asshape(shape)
-            if 0 in shape:
-                return True
-            idx = self.reduce(shape)
-            if not isinstance(idx, Tuple):
-                idx = Tuple(idx)
+            return 0 in self.newshape(shape)
 
-        return any(i.isempty() for i in idx.args)
+        return any(i.isempty() for i in self.args)

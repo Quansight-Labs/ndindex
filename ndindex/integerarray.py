@@ -107,10 +107,6 @@ class IntegerArray(ArrayIndex):
 
     def isempty(self, shape=None):
         if shape is not None:
-            shape = asshape(shape)
-            # Raise IndexError if necessary
-            self.reduce(shape)
-            if 0 in shape:
-                return True
+            return 0 in self.newshape(shape)
 
         return 0 in self.shape
