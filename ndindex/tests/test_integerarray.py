@@ -91,6 +91,7 @@ def test_integerarray_newshape_hypothesis(idx, shape):
 
     check_same(a, idx, func=func, assert_equal=assert_equal)
 
+@example([], (1,))
 @example([0], (1, 0))
 @given(integer_arrays, one_of(shapes, integers(0, 10)))
 def test_integerarray_isempty_hypothesis(idx, shape):
