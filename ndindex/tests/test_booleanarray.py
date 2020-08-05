@@ -9,7 +9,7 @@ from .helpers import boolean_arrays, shapes, check_same, assert_equal
 
 from ..booleanarray import BooleanArray
 
-def test_boolean_array_constructor():
+def test_booleanarray_constructor():
     raises(ValueError, lambda: BooleanArray([False], shape=(1,)))
     raises(ValueError, lambda: BooleanArray([], shape=(1,)))
     raises(TypeError, lambda: BooleanArray([0]))
@@ -34,7 +34,7 @@ def test_boolean_array_constructor():
     assert idx == BooleanArray([True, False])
 
 @given(boolean_arrays, shapes)
-def test_boolean_array_hypothesis(idx, shape):
+def test_booleanarray_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
@@ -85,7 +85,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
 
 @example(full((1, 9), False), (3, 3))
 @given(boolean_arrays, one_of(shapes, integers(0, 10)))
-def test_boolean_array_newshape_hypothesis(idx, shape):
+def test_booleanarray_newshape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
     else:
