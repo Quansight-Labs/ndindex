@@ -31,5 +31,5 @@ def pytest_configure(config):
         hypothesis.settings.load_profile("hypothesis-overridden")
 
 
-settings.register_profile('ndindex_hypothesis_profile', deadline=400)
+settings.register_profile('ndindex_hypothesis_profile', deadline=800)
 settings.load_profile('ndindex_hypothesis_profile')
