@@ -109,3 +109,6 @@ def test_asshape():
     raises(TypeError, lambda: asshape(...))
     raises(TypeError, lambda: asshape(Integer(1)))
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
+
+def no_coverage():
+    pass
