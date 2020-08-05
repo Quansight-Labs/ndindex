@@ -61,6 +61,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
     index = BooleanArray(idx)
 
     if (index.count_nonzero == 0
+        and a.shape != index.shape
         and prod(a.shape) == prod(index.shape) not in [0, 1]
         and len(a.shape) == len(index.shape)):
         # NumPy currently allows this case, due to a bug: (see
@@ -102,6 +103,7 @@ def test_booleanarray_newshape_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
     if (index.count_nonzero == 0
+        and a.shape != index.shape
         and prod(a.shape) == prod(index.shape) not in [0, 1]
         and len(a.shape) == len(index.shape)):
         # NumPy currently allows this case, due to a bug: (see
