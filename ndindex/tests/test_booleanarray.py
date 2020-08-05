@@ -1,6 +1,6 @@
-from numpy import prod, arange, array, bool_, empty
+from numpy import prod, arange, array, bool_, empty, full
 
-from hypothesis import given
+from hypothesis import given, example
 from hypothesis.strategies import one_of, integers
 
 from pytest import raises
@@ -49,6 +49,8 @@ def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
 
     check_same(a, index.raw, func=lambda x: x.reduce())
 
+@example(full((1, 9), True), (3, 3))
+@example(full((1, 9), False), (3, 3))
 @given(boolean_arrays, one_of(shapes, integers(0, 10)))
 def test_booleanarray_reduce_hypothesis(idx, shape):
     if isinstance(shape, int):
@@ -57,6 +59,18 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         a = arange(prod(shape)).reshape(shape)
 
     index = BooleanArray(idx)
+
+    if (index.count_nonzero == 0
+        and prod(a.shape) == prod(index.shape) not in [0, 1]
+        and len(a.shape) == len(index.shape)):
+        # NumPy currently allows this case, due to a bug: (see
+        # https://github.com/numpy/numpy/issues/16997 and
+        # https://github.com/numpy/numpy/pull/17010), but we disallow it.
+        with raises(IndexError, match=r"boolean index did not match indexed "
+                    r"array along dimension \d+; dimension is \d+ but "
+                    r"corresponding boolean dimension is \d+"):
+            index.reduce(shape)
+        return
 
     check_same(a, index.raw, func=lambda x: x.reduce(shape))
 
@@ -69,6 +83,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         # give an IndexError
         assert reduced == index
 
+@example(full((1, 9), False), (3, 3))
 @given(boolean_arrays, one_of(shapes, integers(0, 10)))
 def test_boolean_array_newshape_hypothesis(idx, shape):
     if isinstance(shape, int):
@@ -84,5 +99,18 @@ def test_boolean_array_newshape_hypothesis(idx, shape):
     def func(idx):
         idx.newshape(shape)
         return idx
+
+    index = BooleanArray(idx)
+    if (index.count_nonzero == 0
+        and prod(a.shape) == prod(index.shape) not in [0, 1]
+        and len(a.shape) == len(index.shape)):
+        # NumPy currently allows this case, due to a bug: (see
+        # https://github.com/numpy/numpy/issues/16997 and
+        # https://github.com/numpy/numpy/pull/17010), but we disallow it.
+        with raises(IndexError, match=r"boolean index did not match indexed "
+                    r"array along dimension \d+; dimension is \d+ but "
+                    r"corresponding boolean dimension is \d+"):
+            index.reduce(shape)
+        return
 
     check_same(a, idx, func=func, assert_equal=assert_equal)
