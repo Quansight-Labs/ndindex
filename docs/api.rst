@@ -53,6 +53,14 @@ IntegerArray
    :members:
    :special-members:
 
+
+BooleanArray
+------------
+
+.. autoclass:: ndindex.BooleanArray
+   :members:
+   :special-members:
+
 Internal API
 ------------
 
