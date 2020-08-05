@@ -38,6 +38,10 @@ class IntegerArray(ArrayIndex):
 
     """
     dtype = intp
+    """
+    The dtype of `IntegerArray` is `np.intp`, which is typically either
+    `np.int32` or `np.int64` depending on the platform.
+    """
 
     def reduce(self, shape=None, axis=0):
         """

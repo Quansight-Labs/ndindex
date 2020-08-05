@@ -6,10 +6,13 @@ from .ndindex import NDIndex, asshape
 
 class ArrayIndex(NDIndex):
     """
-    Super class for array indices
+    Superclass for array indices
 
     This class should not be instantiated directly. Rather, use one of its
-    subclasses, `IntegerArray` or `BooleanArray`.
+    subclasses, :class:`~.IntegerArray` or :class:`~.BooleanArray`.
+
+    To subclass this, define the `dtype` attribute, as well as all the usual
+    ndindex methods.
     """
     # Subclasses should redefine this
     dtype = None
@@ -69,9 +72,9 @@ class ArrayIndex(NDIndex):
         """
         Return the shape of the array of self.
 
-        This is the same as self.array.shape. Note that this is **not** the
-        same as the shape of an array that is indexed by self. Use
-        :meth:`newshape` to get that.
+        This is the same as `self.array.shape`. Note that this is **not** the
+        same as the shape of an array that is indexed by `self`. Use
+        :meth:`~.NDIndex.newshape` to get that.
 
         >>> from ndindex import IntegerArray, BooleanArray
         >>> IntegerArray([[0], [1]]).shape
@@ -87,9 +90,9 @@ class ArrayIndex(NDIndex):
         """
         Return the number of dimensions of the array of self.
 
-        This is the same as self.array.ndim. Note that this is **not** the
-        same as the number of dimensions of an array that is indexed by self.
-        Use `len` on :meth:`newshape` to get that.
+        This is the same as `self.array.ndim`. Note that this is **not** the
+        same as the number of dimensions of an array that is indexed by
+        `self`. Use `len` on :meth:`~.NDIndex.newshape` to get that.
 
         >>> from ndindex import IntegerArray, BooleanArray
         >>> IntegerArray([[0], [1]]).ndim

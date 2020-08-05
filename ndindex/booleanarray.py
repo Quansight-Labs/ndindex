@@ -65,7 +65,11 @@ class BooleanArray(ArrayIndex):
        :ref:`type-confusion` for more details.
 
     """
+
     dtype = bool_
+    """
+    The dtype of `BooleanArray` is `np.bool_`.
+    """
 
     @property
     def count_nonzero(self):
