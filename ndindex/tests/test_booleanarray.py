@@ -84,6 +84,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         # give an IndexError
         assert reduced == index
 
+@example(array([[[True], [False]]]), (1, 1, 2))
 @example(full((1, 9), False), (3, 3))
 @given(boolean_arrays, one_of(shapes, integers(0, 10)))
 def test_booleanarray_newshape_hypothesis(idx, shape):

@@ -111,7 +111,9 @@ def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=ass
             else:
                 raise AssertionError(f"Unexpected warnings raised: {[i.message for i in r]}") # pragma: no cover
         elif e_inner:
-            if isinstance(e_inner, ValueError) and e_inner.args[0].startswith('operands could not be broadcast together with shapes'):
+            if (isinstance(e_inner, ValueError)
+                and (e_inner.args[0].startswith('operands could not be broadcast together with shapes')
+                     or e_inner.args[0].startswith('non-broadcastable operand with shape'))):
                 # NumPy has a bug where it sometimes gives
                 # ValueError('operands could not be broadcast together with
                 # shapes ...') instead of the correct IndexError (see
