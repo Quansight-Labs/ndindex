@@ -35,7 +35,7 @@ class ellipsis(NDIndex):
     most ndindex contexts, `...` can be used instead of `ellipsis()`, for
     instance, when creating a `Tuple` object. Also unlike `Ellipsis`,
     `ellipsis()` is not singletonized, so you should not use `is` to compare
-    it.
+    it. See the document on :ref:`type-confusion` for more details.
 
     """
     def _typecheck(self):
