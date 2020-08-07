@@ -222,6 +222,10 @@ Additionally, some advice for specific types:
   if idx is Ellipsis: # Will be False if idx is the ndindex ellipsis type
   ```
 
+  ```py
+  if idx is ellipsis(): # Will be False (ellipsis() creates a new instance)
+  ```
+
 ## Newaxis
 
 The advice for `Newaxis` is almost identical to the advice for `ellipsis`.
@@ -286,6 +290,10 @@ Note that `np.newaxis` is just an alias for `None`.
 
   ```py
   if idx is np.newaxis: # Will be False if idx is the ndindex Newaxis type
+  ```
+
+  ```py
+  if idx is Newaxis(): # Will be False (Newaxis() creates a new instance)
   ```
 
 ## IntegerArray and BooleanArray
