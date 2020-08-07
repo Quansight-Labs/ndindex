@@ -40,7 +40,7 @@ class Newaxis(NDIndex):
     def raw(self):
         return None
 
-    def reduce(self, shape=None):
+    def reduce(self, shape=None, axis=0):
         """
         Reduce a Newaxis index
 
