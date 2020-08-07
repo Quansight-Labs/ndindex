@@ -166,8 +166,8 @@ Additionally, some advice for specific types:
   **Right:**
 
   ```py
-  idx1 = ndindex(...)
-  idx1.reduce()
+  idx = ndindex(...)
+  idx.reduce()
   ```
 
   **Wrong:**
@@ -184,27 +184,25 @@ Additionally, some advice for specific types:
   **Right:**
 
   ```py
-  idx1 = ndindex((0, ..., 1))
-  idx1.reduce()
+  idx = ndindex((0, ..., 1))
   ```
 
   **Wrong:**
 
   ```py
-  idx = (0, ellipsis, 1)
-  idx.reduce() # Gives an error
+  idx = ndindex((0, ellipsis, 1)) # Gives an error
   ```
 
   These do not give errors, but it is easy to confuse them with the above. It
   is best to just use `...`, which is more concise and easier to read.
 
   ```py
-  idx = (0, ellipsis(), 1)
+  idx = ndindex((0, ellipsis(), 1))
   idx.reduce()
   ```
 
   ```py
-  idx = (0, Ellipsis, 1)
+  idx = ndindex((0, Ellipsis, 1))
   idx.reduce()
   ```
 
@@ -222,6 +220,72 @@ Additionally, some advice for specific types:
 
   ```py
   if idx is Ellipsis: # Will be False if idx is the ndindex ellipsis type
+  ```
+
+## Newaxis
+
+The advice for `Newaxis` is almost identical to the advice for `ellipsis`.
+Note that `np.newaxis` is just an alias for `None`.
+
+- You should almost never use the ndindex {any}`Newaxis` class directly.
+  Instead, **use `np.newaxis`, `None`, `ndindex(np.newaxis)`, or
+  `ndindex(None)`**. As noted above, all ndindex methods and `Tuple` will
+  automatically convert `None` into the ndindex type.
+
+  **Right:**
+
+  ```py
+  idx = ndindex(np.newaxis)
+  idx.reduce()
+  ```
+
+  **Wrong:**
+
+  ```py
+  idx = np.newaxis
+  idx.reduce() # Gives an error
+  ```
+
+- If you do use `Newaxis` beware that it is the *class*, not the *instance*,
+  unlike the NumPy `np.newaxis` object (i.e., `None`). This is done for
+  consistency in the internal ndindex class hierarchy.
+
+  **Right:**
+
+  ```py
+  idx = ndindex((0, np.newaxis, 1))
+  ```
+
+  **Wrong:**
+
+  ```py
+  idx = ndindex((0, Newaxis, 1)) # Gives an error
+  ```
+
+  This does not give an error, but it is easy to confuse it with the above. It
+  is best to just use `np.newaxis` or `None`, which is more concise and easier
+  to read.
+
+  ```py
+  idx = ndindex((0, Newaxis(), 1))
+  idx.reduce()
+  ```
+
+- `Newaxis` is **not** singletonized, unlike the built-in `None`. It would
+  also be impossible to make `Newaxis() is np.newaxis` or `Newaxis() is None`
+  return True. If you are using ndindex, **you should use `==` to compare
+  against `np.newaxis` or `None`**, and avoid using `is`.
+
+  **Right:**
+
+  ```py
+  if idx == np.newaxis:
+  ```
+
+  **Wrong:**
+
+  ```py
+  if idx is np.newaxis: # Will be False if idx is the ndindex Newaxis type
   ```
 
 ## IntegerArray and BooleanArray
