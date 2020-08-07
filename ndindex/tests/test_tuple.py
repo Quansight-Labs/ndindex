@@ -13,6 +13,12 @@ from ..integer import Integer
 from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
 
 
+def test_tuple_constructor():
+    # Test things in the Tuple constructor that are not tested by the other
+    # tests below.
+    raises(ValueError, lambda: Tuple((1, 2, 3)))
+    raises(ValueError, lambda: Tuple(0, (1, 2, 3)))
+
 def test_tuple_exhaustive():
     # Exhaustive tests here have to be very limited because of combinatorial
     # explosion.

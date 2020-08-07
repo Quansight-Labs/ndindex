@@ -48,7 +48,9 @@ class Tuple(NDIndex):
         for arg in args:
             newarg = ndindex(arg)
             if isinstance(newarg, Tuple):
-                raise NotImplementedError("tuples of tuples are not yet supported")
+                if len(args) == 1:
+                    raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call Tuple(*args) instead of Tuple(args)?")
+                raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
 
         if newargs.count(ellipsis()) > 1:
