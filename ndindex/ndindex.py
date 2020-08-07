@@ -64,7 +64,7 @@ def ndindex(obj):
     if obj is Ellipsis:
         return ellipsis()
 
-    if obj is newaxis:
+    if obj == newaxis:
         return Newaxis()
 
     raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
