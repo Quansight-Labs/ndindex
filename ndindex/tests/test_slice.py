@@ -1,12 +1,15 @@
 from pytest import raises
 
-from numpy import arange
+from numpy import arange, isin
 
-from hypothesis import given, assume
-from hypothesis.strategies import integers
+from hypothesis import given, assume, example
+from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
-from .helpers import check_same, slices, prod, shapes, iterslice
+from ..tuple import Tuple
+from ..integer import Integer
+from ..ellipsis import ellipsis
+from .helpers import check_same, slices, prod, shapes, iterslice, assert_equal
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -158,9 +161,13 @@ def test_slice_reduce_exhaustive():
             assert reduced.step != None
             assert len(reduced) == len(a[reduced.raw]), (S, n)
 
-@given(slices(), shapes)
+@given(slices(), one_of(shapes, integers(0, 10)))
 def test_slice_reduce_hypothesis(s, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
     try:
         S = Slice(s)
     except ValueError: # pragma: no cover
@@ -184,6 +191,57 @@ def test_slice_reduce_hypothesis(s, shape):
     assert reduced.stop != None
     assert reduced.step != None
     assert len(reduced) == len(a[reduced.raw]), (S, shape)
+
+
+def test_slice_newshape_exhaustive():
+    # Call newshape so we can see if any exceptions match
+    def func(S):
+        S.newshape(shape)
+        return S
+
+    def assert_equal(x, y):
+        newshape = S.newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    for n in range(10):
+        shape = n
+        a = arange(n)
+
+        for sargs in iterslice():
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            check_same(a, S.raw, func=func, assert_equal=assert_equal)
+
+
+@given(slices(), one_of(shapes, integers(0, 10)))
+def test_slice_newshape_hypothesis(s, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
+    try:
+        S = Slice(s)
+    except ValueError: # pragma: no cover
+        assume(False)
+
+    # Call newshape so we can see if any exceptions match
+    def func(S):
+        S.newshape(shape)
+        return S
+
+    def assert_equal(x, y):
+        newshape = S.newshape(shape)
+        assert x.shape == y.shape == newshape
+
+    check_same(a, S.raw, func=func, assert_equal=assert_equal)
+
+def test_slice_newshape_ndindex_input():
+    raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
+    raises(TypeError, lambda: Slice(6).newshape(Integer(2)))
 
 def test_slice_as_subindex_slice_exhaustive():
     # We have to restrict the range of the exhaustive test to get something
@@ -217,36 +275,137 @@ def test_slice_as_subindex_slice_exhaustive():
             aindex = a[Index.raw]
             asubindex = aindex[Subindex.raw]
 
-            for i in a:
-                if i in aS and i in aindex:
-                    assert i in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+            assert_equal(asubindex, aS[isin(aS, aindex)])
+
+            subindex2 = Index.as_subindex(S)
+            asubindex2 = aS[subindex2.raw]
+            assert_equal(asubindex2, asubindex)
+
+def test_slice_as_subindex_integer_exhaustive():
+    a = arange(10)
+    for sargs in iterslice():
+        for i in range(-10, 10):
+
+            try:
+                S = Slice(*sargs)
+            except ValueError:
+                continue
+
+            Index = Integer(i)
+
+            empty = False
+            try:
+                Subindex = S.as_subindex(Index)
+            except NotImplementedError:
+                continue
+            except ValueError as e:
+                assert "do not intersect" in e.args[0]
+                empty = True
+
+            aS = a[S.raw]
+            aindex = a[i]
+
+            if empty:
+                assert not isin(aS, aindex).any()
+                assert not isin(aindex, aS).any()
+                with raises(ValueError, match="do not intersect"):
+                    Index.as_subindex(S)
+            else:
+                asubindex = aindex[Subindex.raw]
+
+                assert_equal(asubindex.flatten(), aS[isin(aS, aindex)])
+
+                subindex2 = Index.as_subindex(S)
+                asubindex2 = aS[subindex2.raw]
+                assert_equal(asubindex2, asubindex)
+
+def test_slice_as_subindex_ellipsis_exhaustive():
+    a = arange(10)
+    for sargs in iterslice():
+        try:
+            S = Slice(*sargs)
+        except ValueError:
+            continue
+
+        Index = ellipsis()
+
+        try:
+            Subindex = S.as_subindex(Index)
+        except NotImplementedError:
+            continue
+
+        aS = a[S.raw]
+        aindex = a[...]
+
+        asubindex = aindex[Subindex.raw]
+
+        assert_equal(asubindex.flatten(), aS[isin(aS, aindex)])
+
+        try:
+            subindex2 = Index.as_subindex(S)
+        except NotImplementedError:
+            continue
+        asubindex2 = aS[subindex2.raw]
+        assert_equal(asubindex2, asubindex)
+
+def test_slice_isempty_exhaustive():
+    for args in iterslice():
+        try:
+            S = Slice(*args)
+        except ValueError:
+            continue
+
+        isempty = S.isempty()
+
+        aempty = True
+        for n in range(30):
+            a = arange(n)
+
+            aS = a[S.raw]
+            if aS.size != 0:
+                if isempty:
+                    raise AssertionError(f"Slice s = {S}.isempty() gave True, a[s] is not empty for a = range({n}).")
                 else:
-                    assert i not in asubindex, "%s.as_subindex(%s) == %s" % (S, Index, Subindex)
+                    aempty = False
+            # isempty() should always give the correct result for a specific
+            # array shape
+            assert S.isempty(n) == (aS.size == 0)
 
-positive_slices = slices(start=integers(0, 10), stop=integers(0, 10),
-                         step=integers(1, 10))
+        assert isempty == aempty, S
 
-# @given(slices(), slices(), integers(0, 100))
-@given(positive_slices, positive_slices, integers(0, 100))
-def test_slice_as_subindex_slice_hypothesis(s, index, size):
-    a = arange(size)
+@example(slice(None, None, None), ())
+@given(slices(), one_of(shapes, integers(0, 10)))
+def test_slice_isempty_hypothesis(s, shape):
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
+
     try:
         S = Slice(s)
-        Index = Slice(index)
-    except ValueError: # pragma: no cover
+    except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
-    try:
-        Subindex = S.as_subindex(Index)
-    except NotImplementedError: # pragma: no cover
-        assume(False)
+    # Call isempty to see if the exceptions are the same
+    def func(S):
+        S.isempty(shape)
+        return S
 
-    aS = a[s]
-    aindex = a[index]
-    asubindex = aindex[Subindex.raw]
+    def assert_equal(a_raw, a_idx):
+        isempty = S.isempty()
 
-    for i in a:
-        if i in aS and i in aindex:
-            assert i in asubindex
-        else:
-            assert i not in asubindex
+        aempty = (a_raw.size == 0)
+        assert aempty == (a_idx.size == 0)
+
+        # If isempty is True then a[s] should be empty
+        if isempty:
+            assert aempty, (S, shape)
+        # We cannot test the converse with hypothesis. isempty may be False but
+        # a[s] could still be empty for this specific a (e.g., if a is already
+        # itself empty).
+
+        # isempty() should always give the correct result for a specific
+        # array after reduction
+        assert S.isempty(shape) == aempty, (S, shape)
+
+    check_same(a, s, func=func, assert_equal=assert_equal)

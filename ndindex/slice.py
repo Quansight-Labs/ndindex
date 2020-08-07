@@ -1,10 +1,9 @@
 import operator
-import math
 
 from sympy.ntheory.modular import crt
-from sympy import ilcm
+from sympy import ilcm, Rational
 
-from .ndindex import NDIndex
+from .ndindex import NDIndex, asshape
 
 class default:
     """
@@ -35,9 +34,8 @@ class Slice(NDIndex):
     because Python itself does not make the distinction between x:y and x:y:
     syntactically.
 
-    See
-    https://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing-and-indexing
-    for a description of the semantic meaning of slices on arrays.
+    See :ref:`slices-docs` for a description of the semantic meaning of slices
+    on arrays.
 
     Slice has attributes `start`, `stop`, and `step` to access the
     corresponding attributes.
@@ -110,11 +108,11 @@ class Slice(NDIndex):
 
     def __len__(self):
         """
-        __len__ gives the maximum size of an axis sliced with self
+        `len()` gives the maximum size of an axis sliced with `self`.
 
         An actual array may produce a smaller size if it is smaller than the
-        bounds of the slice. For instance, [0, 1, 2][2:4] only has 1 element
-        but the maximum length of the slice 2:4 is 2.
+        bounds of the slice. For instance, `[0, 1, 2][2:4]` only has 1 element
+        but the maximum length of the slice `2:4` is 2.
 
         >>> from ndindex import Slice
         >>> [0, 1, 2][2:4]
@@ -124,7 +122,7 @@ class Slice(NDIndex):
         >>> [0, 1, 2, 3][2:4]
         [2, 3]
 
-        If there is no such maximum, raises ValueError.
+        If there is no such maximum, it raises `ValueError`.
 
         >>> # From the second element to the end, which could have any size
         >>> len(Slice(1, None))
@@ -132,13 +130,23 @@ class Slice(NDIndex):
         ...
         ValueError: Cannot determine max length of slice
 
-        Note that the `Slice.reduce()` method returns a Slice that always has
-        a correct `len` which doesn't raise ValueError.
+        The :meth:`Slice.reduce` method returns a Slice that always has a
+        correct `len` which doesn't raise `ValueError`.
 
         >>> Slice(2, 4).reduce(3)
         Slice(2, 3, 1)
         >>> len(_)
         1
+
+        Be aware that `len(Slice)` only gives the size of the axis being
+        sliced. It does not say anything about the total shape of the array.
+        In particular, the array may be empty after slicing if one of its
+        dimensions is 0, but the other dimensions may be nonzero. To check if
+        an array will empty after indexing, use :meth:`isempty`.
+
+        See Also
+        ========
+        isempty
 
         """
         start, stop, step = self.reduce().args
@@ -216,7 +224,7 @@ class Slice(NDIndex):
           Note that `Slice` objects that index a single element are not
           canonicalized to `Integer`, because integer indices always remove an
           axis whereas slices keep the axis. Furthermore, slices cannot raise
-          IndexError except on arrays with shape equal to `()`.
+          `IndexError` except on arrays with shape equal to `()`.
 
           >>> from ndindex import Slice
           >>> s = Slice(10)
@@ -261,6 +269,8 @@ class Slice(NDIndex):
         .Tuple.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         start, stop, step = self.args
@@ -294,11 +304,7 @@ class Slice(NDIndex):
 
         # Further canonicalize with an explicit array shape
 
-        if isinstance(shape, int):
-            shape = (shape,)
-        if len(shape) <= axis:
-            raise IndexError("too many indices for array")
-
+        shape = asshape(shape, axis=axis)
         size = shape[axis]
 
         # try:
@@ -341,26 +347,62 @@ class Slice(NDIndex):
                 stop += size
         return self.__class__(start, stop, step)
 
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        idx = self.reduce(shape)
+
+        # len() won't raise an error after reducing with a shape
+        return (len(idx),) + shape[1:]
+
     # TODO: Better name?
     def as_subindex(self, index):
         # The docstring of this method is currently on NDindex.as_subindex, as
         # this is the only method that is actually implemented so far.
 
         from .ndindex import ndindex
-        index = ndindex(index)
+        from .tuple import Tuple
+        from .integer import Integer
 
-        if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices")
+        index = ndindex(index)
 
         s = self.reduce()
         index = index.reduce()
 
+        if isinstance(index, Tuple):
+            return Tuple(self).as_subindex(index)
+
+        if isinstance(index, Integer):
+            s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
+            if s == Slice(0, 0, 1):
+                # There is no index that we can return here. The intersection
+                # of `self` and `index` is empty. Ideally we want to give an
+                # index that gives an empty array, but we cannot make the
+                # shape match. If a is dimension 1, then a[index] is dimension
+                # 0, so a[index][slice(0, 0)] will not work. A possibility
+                # would be to return False, which would add a length-0
+                # dimension to the array. But
+                #
+                # 1. this isn't implemented yet, and
+                # 2. a False can only add a length-0 dimension once, so it
+                #    still wouldn't work in every case. For example,
+                #    Tuple(slice(0), slice(0)).as_subindex((0, 0)) would need
+                #    to return an index that replaces the first two
+                #    dimensions with length-0 dimensions.
+                raise ValueError(f"{self} and {index} do not intersect")
+            assert len(s) == 1
+            return Tuple()
+
+        if not isinstance(index, Slice):
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
+
         if s.step < 0 or index.step < 0:
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices with positive steps")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
 
         # After reducing, start is not None when step > 0
         if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
-            raise NotImplementedError("Slice.as_subindex is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
         # Chinese Remainder Theorem. We are looking for a solution to
         #
@@ -382,7 +424,7 @@ class Slice(NDIndex):
 
             Assumes x >= 0, m >= 1, and 0 <= a < m.
             """
-            n = int(math.ceil((x - a)/m))
+            n = Rational(x - a, m).ceiling()
             return a + n*m
 
         # Get the smallest lcm multiple of common that is >= start
@@ -392,8 +434,18 @@ class Slice(NDIndex):
 
         step = lcm//index.step # = s.step//igcd(s.step, index.step)
 
-        stop = math.ceil((min(s.stop, index.stop) - index.start)/index.step)
+        stop = Rational((min(s.stop, index.stop) - index.start), index.step).ceiling()
         if stop < 0:
             stop = 0
 
-        return Slice(start, stop, step)
+        return Slice(start, stop, step).reduce()
+
+    def isempty(self, shape=None):
+        if shape is not None:
+            return 0 in self.newshape(shape)
+
+        try:
+            l = len(self)
+        except (TypeError, ValueError):
+            return False
+        return l == 0

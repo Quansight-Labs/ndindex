@@ -1,4 +1,4 @@
-from .ndindex import NDIndex
+from .ndindex import NDIndex, asshape
 from .tuple import Tuple
 
 class ellipsis(NDIndex):
@@ -35,7 +35,7 @@ class ellipsis(NDIndex):
     most ndindex contexts, `...` can be used instead of `ellipsis()`, for
     instance, when creating a `Tuple` object. Also unlike `Ellipsis`,
     `ellipsis()` is not singletonized, so you should not use `is` to compare
-    it.
+    it. See the document on :ref:`type-confusion` for more details.
 
     """
     def _typecheck(self):
@@ -60,6 +60,8 @@ class ellipsis(NDIndex):
         .Tuple.reduce
         .Slice.reduce
         .Integer.reduce
+        .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         return Tuple()
@@ -67,3 +69,15 @@ class ellipsis(NDIndex):
     @property
     def raw(self):
         return ...
+
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        return shape
+
+    def as_subindex(self, index):
+        return Tuple().as_subindex(index)
+
+    def isempty(self, shape=None):
+        return Tuple().isempty(shape=shape)

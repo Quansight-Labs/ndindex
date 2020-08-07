@@ -1,4 +1,4 @@
-from .ndindex import NDIndex, ndindex
+from .ndindex import NDIndex, ndindex, asshape
 
 class Tuple(NDIndex):
     """
@@ -31,9 +31,18 @@ class Tuple(NDIndex):
     >>> a[idx.raw]
     array([2, 3])
 
+    .. note::
+
+       `Tuple` does *not* represent a tuple, but rather an *tuple index*. It
+       does not have most methods that `tuple` has, and should not be used in
+       non-indexing contexts. See the document on :ref:`type-confusion` for
+       more details.
+
     """
     def _typecheck(self, *args):
         from .ellipsis import ellipsis
+        from .integerarray import IntegerArray
+        from .booleanarray import BooleanArray
 
         newargs = []
         for arg in args:
@@ -44,6 +53,10 @@ class Tuple(NDIndex):
 
         if newargs.count(ellipsis()) > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
+        if len([i for i in newargs if isinstance(i, IntegerArray)]) > 0:
+            raise NotImplementedError("tuples containing integer arrays are not yet supported")
+        if len([i for i in newargs if isinstance(i, BooleanArray)]) > 0:
+            raise NotImplementedError("tuples containing boolean arrays are not yet supported")
 
         return tuple(newargs)
 
@@ -115,7 +128,7 @@ class Tuple(NDIndex):
         Slice(2, 4, 1)
 
         If an explicit array shape is given, the result will either be
-        IndexError if the index is invalid for the given shape, or an index
+        `IndexError` if the index is invalid for the given shape, or an index
         that is as simple as possible:
 
         - All the elements of the tuple are recursively reduced.
@@ -137,7 +150,7 @@ class Tuple(NDIndex):
         >>> idx.reduce((5,))
         Traceback (most recent call last):
         ...
-        IndexError: too many indices for array
+        IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
         >>> idx.reduce((5, 2))
         Traceback (most recent call last):
         ...
@@ -171,6 +184,8 @@ class Tuple(NDIndex):
         .Slice.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         from .ellipsis import ellipsis
@@ -180,13 +195,9 @@ class Tuple(NDIndex):
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).reduce(shape)
 
-        if isinstance(shape, int):
-            shape = (shape,)
-
         if shape is not None:
-            if (self.has_ellipsis and len(shape) < len(self.args) - 1
-                or not self.has_ellipsis and len(shape) < len(self.args)):
-                raise IndexError("too many indices for array")
+            indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
+            shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
@@ -239,7 +250,7 @@ class Tuple(NDIndex):
         An expanded `Tuple` is one where the length of the .args is the same
         as the given shape, and there are no ellipses.
 
-        The result will either be IndexError if self is invalid for the
+        The result will either be `IndexError` if self is invalid for the
         given shape, or will be canonicalized so that
 
         - All the elements of the tuple are recursively reduced.
@@ -261,7 +272,7 @@ class Tuple(NDIndex):
         >>> idx.expand((5,))
         Traceback (most recent call last):
         ...
-        IndexError: too many indices for array
+        IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
         >>> idx.expand((5, 2))
         Traceback (most recent call last):
         ...
@@ -281,12 +292,8 @@ class Tuple(NDIndex):
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).expand(shape)
 
-        if isinstance(shape, int):
-            shape = (shape,)
-
-        if (self.has_ellipsis and len(shape) < len(self.args) - 1
-            or not self.has_ellipsis and len(shape) < len(self.args)):
-            raise IndexError("too many indices for array")
+        indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
+        shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
@@ -304,3 +311,73 @@ class Tuple(NDIndex):
         newargs = newargs + endargs[::-1]
 
         return type(self)(*newargs)
+
+
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        if self == Tuple():
+            return shape
+
+        # This will raise any IndexErrors
+        self.reduce(shape)
+
+        ellipsis_i = self.ellipsis_index
+
+        newshape = []
+        for i, s in enumerate(self.args[:ellipsis_i]):
+            newshape.extend(list(s.newshape(shape[i])))
+
+        if ... in self.args:
+            midshape = list(shape[ellipsis_i:len(shape)+ellipsis_i-len(self.args)+1])
+        else:
+            midshape = list(shape[len(self.args):])
+
+        endshape = []
+        for i, s in enumerate(reversed(self.args[ellipsis_i+1:]), start=1):
+            endshape.extend(list(s.newshape(shape[len(shape)-i])))
+
+        newshape = newshape + midshape + endshape[::-1]
+
+        return tuple(newshape)
+
+    def as_subindex(self, index):
+        from .ndindex import ndindex
+        from .slice import Slice
+        from .integer import Integer
+
+        index = ndindex(index).reduce()
+
+        if ... in self.args:
+            raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
+
+        if isinstance(index, Slice):
+            if not self.args:
+                if index.step < 0:
+                    raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
+                return self
+
+            first = self.args[0]
+            return Tuple(first.as_subindex(index), *self.args[1:])
+        if isinstance(index, Integer):
+            index = Tuple(index)
+        if isinstance(index, Tuple):
+            new_args = []
+            if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
+                    raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
+            if ... in index.args:
+                raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
+            for self_arg, index_arg in zip(self.args, index.args):
+                subindex = self_arg.as_subindex(index_arg)
+                if isinstance(subindex, Tuple):
+                    continue
+                new_args.append(subindex)
+            return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
+        raise NotImplementedError(f"Tuple.as_subindex() is not implemented for type '{type(index).__name__}")
+
+    def isempty(self, shape=None):
+        if shape is not None:
+            return 0 in self.newshape(shape)
+
+        return any(i.isempty() for i in self.args)
