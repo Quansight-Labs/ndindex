@@ -24,9 +24,6 @@ def ndindex(obj):
     if isinstance(obj, NDIndex):
         return obj
 
-    if obj is None:
-        raise NotImplementedError("newaxis is not yet implemented")
-
     # TODO: Replace this with calls to the IntegerArray() and BooleanArray()
     # constructors.
     if isinstance(obj, (list, ndarray, bool)):
