@@ -60,5 +60,6 @@ class Newaxis(NDIndex):
         .BooleanArray.reduce
 
         """
-        shape = asshape(shape)
+        if shape is not None:
+            shape = asshape(shape)
         return self

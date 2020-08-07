@@ -65,7 +65,8 @@ class ellipsis(NDIndex):
         .BooleanArray.reduce
 
         """
-        shape = asshape(shape)
+        if shape is not None:
+            shape = asshape(shape)
         return Tuple()
 
     @property
