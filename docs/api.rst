@@ -39,6 +39,14 @@ ellipsis
    :members:
    :special-members:
 
+
+Newaxis
+-------
+
+.. autoclass:: ndindex.Newaxis
+   :members:
+   :special-members:
+
 Tuple
 -----
 
