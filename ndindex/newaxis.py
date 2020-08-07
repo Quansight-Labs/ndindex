@@ -20,14 +20,16 @@ class Newaxis(NDIndex):
 
     Using `Newaxis().raw` as an index is equivalent to using `numpy.newaxis`.
 
-    **Note:** Unlike the NumPy `newaxis`, `Newaxis` is the type, not the
-    object (the name is lowercase to avoid conflicting with the NumPy type).
-    Use `Newaxis()`, `ndindex(np.newaxis)`, or `ndindex(None)` to create the
-    object. In most ndindex contexts, `np.newaxis` or `None` can be used
-    instead of `Newaxis()`, for instance, when creating a `Tuple` object. Also
-    unlike `None`, `Newaxis()` is not singletonized, so you should not use
-    `is` to compare it. See the document on :ref:`type-confusion` for more
-    details.
+    .. note::
+
+       Unlike the NumPy `newaxis`, `Newaxis` is the type, not the object (the
+       name is lowercase to avoid conflicting with the NumPy type). Use
+       `Newaxis()`, `ndindex(np.newaxis)`, or `ndindex(None)` to create the
+       object. In most ndindex contexts, `np.newaxis` or `None` can be used
+       instead of `Newaxis()`, for instance, when creating a `Tuple` object.
+       Also unlike `None`, `Newaxis()` is not singletonized, so you should not
+       use `is` to compare it. See the document on :ref:`type-confusion` for
+       more details.
 
     """
     def _typecheck(self):

@@ -29,13 +29,15 @@ class ellipsis(NDIndex):
     An ellipsis can go at the beginning of end of a tuple index, and is
     allowed to match 0 axes.
 
-    **Note:** Unlike the standard Python `Ellipsis`, `ellipsis` is the type,
-    not the object (the name is lowercase to avoid conflicting with the
-    built-in). Use `ellipsis()` or `ndindex(...)` to create the object. In
-    most ndindex contexts, `...` can be used instead of `ellipsis()`, for
-    instance, when creating a `Tuple` object. Also unlike `Ellipsis`,
-    `ellipsis()` is not singletonized, so you should not use `is` to compare
-    it. See the document on :ref:`type-confusion` for more details.
+    .. note::
+
+       Unlike the standard Python `Ellipsis`, `ellipsis` is the type, not the
+       object (the name is lowercase to avoid conflicting with the built-in).
+       Use `ellipsis()` or `ndindex(...)` to create the object. In most
+       ndindex contexts, `...` can be used instead of `ellipsis()`, for
+       instance, when creating a `Tuple` object. Also unlike `Ellipsis`,
+       `ellipsis()` is not singletonized, so you should not use `is` to
+       compare it. See the document on :ref:`type-confusion` for more details.
 
     """
     def _typecheck(self):
