@@ -103,6 +103,24 @@ class ArrayIndex(NDIndex):
         """
         return self.array.ndim
 
+    @property
+    def size(self):
+        """
+        Return the number of elements of the array of self.
+
+        This is the same as `self.array.size`. Note that this is **not** the
+        same as the number of elements of an array that is indexed by `self`.
+        Use `np.prod` on :meth:`~.NDIndex.newshape` to get that.
+
+        >>> from ndindex import IntegerArray, BooleanArray
+        >>> IntegerArray([[0], [1]]).size
+        2
+        >>> BooleanArray([[False], [True]]).size
+        2
+
+        """
+        return self.array.size
+
     # The repr form recreates the object. The str form gives the truncated
     # array string and is explicitly non-valid Python (doesn't have commas).
     def __repr__(self):
