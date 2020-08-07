@@ -15,11 +15,11 @@ classes are not available on the ndindex classes.
 Some general types to help avoid type confusion:
 
 - **Always use the [`ndindex()`](ndindex.ndindex) function to create ndindex
-  types.** When calling ndindex methods or creating {ref}`Tuple` objects, it
-  is not necessary to convert arguments to ndindex types first. Slice literals
-  (using `:`) are not valid syntax outside of a getitem (square brackets), but
-  you can use the `slice` built-in object to create slices. `slice(a, b, c)`
-  is the same as `a:b:c`.
+  types.** When calling ndindex methods or creating `Tuple
+  <ndindex.tuple.Tuple>` objects, it is not necessary to convert arguments to
+  ndindex types first. Slice literals (using `:`) are not valid syntax outside
+  of a getitem (square brackets), but you can use the `slice` built-in object
+  to create slices. `slice(a, b, c)` is the same as `a:b:c`.
 
   **Right:**
 
