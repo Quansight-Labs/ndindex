@@ -52,6 +52,23 @@ IntegerArray
 .. autoclass:: ndindex.IntegerArray
    :members:
    :special-members:
+   :inherited-members:
+   :exclude-members: dtype
+
+   .. autoattribute:: dtype
+      :annotation:
+
+BooleanArray
+------------
+
+.. autoclass:: ndindex.BooleanArray
+   :members:
+   :special-members:
+   :inherited-members:
+   :exclude-members: dtype
+
+   .. autoattribute:: dtype
+      :annotation:
 
 Internal API
 ------------
@@ -60,6 +77,14 @@ These classes are only intended for internal use in ndindex.
 
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
+
+.. autoclass:: ndindex.array.ArrayIndex
+   :members:
+   :special-members:
+   :exclude-members: dtype
+
+   .. autoattribute:: dtype
+      :annotation: Subclasses should redefine this
 
 .. autoclass:: ndindex.slice.default
 

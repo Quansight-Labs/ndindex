@@ -239,6 +239,7 @@ MIT License
 index.md
 api.md
 slices.md
+type-confusion.md
 changelog.md
 style-guide.md
 ```

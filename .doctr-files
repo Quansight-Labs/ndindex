@@ -4,6 +4,7 @@
 ./_sources/index.md.txt
 ./_sources/slices.md.txt
 ./_sources/style-guide.md.txt
+./_sources/type-confusion.md.txt
 ./_static/alabaster.css
 ./_static/basic.css
 ./_static/copybutton.js
@@ -11,7 +12,7 @@
 ./_static/doctools.js
 ./_static/documentation_options.js
 ./_static/file.png
-./_static/jquery-3.4.1.js
+./_static/jquery-3.5.1.js
 ./_static/jquery.js
 ./_static/language_data.js
 ./_static/minus.png
@@ -29,3 +30,4 @@
 ./searchindex.js
 ./slices.html
 ./style-guide.html
+./type-confusion.html
