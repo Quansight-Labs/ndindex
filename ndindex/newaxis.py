@@ -63,3 +63,18 @@ class Newaxis(NDIndex):
         if shape is not None:
             shape = asshape(shape)
         return self
+
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        # reduce will raise IndexError if it should be raised
+        self.reduce(shape)
+
+        return (1,) + shape
+
+    def isempty(self, shape=None):
+        if shape is not None:
+            return 0 in self.newshape(shape)
+
+        return False
