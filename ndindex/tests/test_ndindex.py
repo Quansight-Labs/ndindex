@@ -48,13 +48,6 @@ def test_ndindex(idx):
         assert index.raw == idx
     assert ndindex(index.raw) == index
 
-def test_ndindex_not_implemented():
-    a = np.arange(10)
-    idx = None
-    raises(NotImplementedError, lambda: ndindex(idx))
-    # Make sure the index really is valid
-    a[idx]
-
 def test_ndindex_invalid():
     a = np.arange(10)
     for idx in [1.0, [1.0], np.array([1.0]), np.array([1], dtype=object),

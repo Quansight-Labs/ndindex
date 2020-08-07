@@ -9,8 +9,7 @@ def ndindex(obj):
     """
     Convert an object into an ndindex type
 
-    Invalid indices will raise `IndexError`. Indices that are supported by
-    NumPy but not yet supported by ndindex will raise `NotImplementedError`.
+    Invalid indices will raise `IndexError`.
 
     >>> from ndindex import ndindex
     >>> ndindex(1)
@@ -143,7 +142,7 @@ class NDIndex:
         if not isinstance(other, NDIndex):
             try:
                 other = ndindex(other)
-            except (IndexError, NotImplementedError):
+            except IndexError:
                 return False
 
         def test_equal(a, b):
