@@ -4,11 +4,12 @@ class Newaxis(NDIndex):
     """
     Represents a `np.newaxis` (i.e., `None`) index.
 
-    Newaxis adds a shape 1 dimension to the array. If a Newaxis is inside of a
-    tuple index, it adds a shape 1 dimension at that location in the index.
+    `Newaxis` adds a shape 1 dimension to the array. If a `Newaxis` is inside
+    of a tuple index, it adds a shape 1 dimension at that location in the
+    index.
 
     For example, if `a` has shape `(2, 3)`, then `a[newaxis]` has shape `(1,
-    2, 3)`, `a[:, newaxis]` has shape (2, 1, 3)`, and so on.
+    2, 3)`, `a[:, newaxis]` has shape `(2, 1, 3)`, and so on.
 
     >>> from ndindex import Newaxis
     >>> from numpy import arange
