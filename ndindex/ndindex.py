@@ -106,7 +106,7 @@ class NDIndex:
       should match numpy as much as possible. The class of the equivalent
       index may be different. If `shape` is `None`, it should return a
       canonical form that is equivalent for all array shapes (assuming no
-      `IndexError`s).
+      IndexErrors).
 
     The methods `__init__`, `__eq__`, and `__hash__` should *not* be
     overridden. Equality (and hashability) on `NDIndex` subclasses is
