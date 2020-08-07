@@ -31,10 +31,18 @@ class Tuple(NDIndex):
     >>> a[idx.raw]
     array([2, 3])
 
+    .. note::
+
+       `Tuple` does *not* represent a tuple, but rather an *tuple index*. It
+       does not have most methods that `tuple` has, and should not be used in
+       non-indexing contexts. See the document on :ref:`type-confusion` for
+       more details.
+
     """
     def _typecheck(self, *args):
         from .ellipsis import ellipsis
         from .integerarray import IntegerArray
+        from .booleanarray import BooleanArray
 
         newargs = []
         for arg in args:
@@ -47,6 +55,8 @@ class Tuple(NDIndex):
             raise IndexError("an index can only have a single ellipsis ('...')")
         if len([i for i in newargs if isinstance(i, IntegerArray)]) > 0:
             raise NotImplementedError("tuples containing integer arrays are not yet supported")
+        if len([i for i in newargs if isinstance(i, BooleanArray)]) > 0:
+            raise NotImplementedError("tuples containing boolean arrays are not yet supported")
 
         return tuple(newargs)
 
@@ -118,7 +128,7 @@ class Tuple(NDIndex):
         Slice(2, 4, 1)
 
         If an explicit array shape is given, the result will either be
-        IndexError if the index is invalid for the given shape, or an index
+        `IndexError` if the index is invalid for the given shape, or an index
         that is as simple as possible:
 
         - All the elements of the tuple are recursively reduced.
@@ -175,6 +185,7 @@ class Tuple(NDIndex):
         .Integer.reduce
         .ellipsis.reduce
         .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         from .ellipsis import ellipsis
@@ -239,7 +250,7 @@ class Tuple(NDIndex):
         An expanded `Tuple` is one where the length of the .args is the same
         as the given shape, and there are no ellipses.
 
-        The result will either be IndexError if self is invalid for the
+        The result will either be `IndexError` if self is invalid for the
         given shape, or will be canonicalized so that
 
         - All the elements of the tuple are recursively reduced.
@@ -366,13 +377,7 @@ class Tuple(NDIndex):
         raise NotImplementedError(f"Tuple.as_subindex() is not implemented for type '{type(index).__name__}")
 
     def isempty(self, shape=None):
-        idx = self
         if shape is not None:
-            shape = asshape(shape)
-            if 0 in shape:
-                return True
-            idx = self.reduce(shape)
-            if not isinstance(idx, Tuple):
-                idx = Tuple(idx)
+            return 0 in self.newshape(shape)
 
-        return any(i.isempty() for i in idx.args)
+        return any(i.isempty() for i in self.args)

@@ -10,7 +10,7 @@ from .helpers import integer_arrays, shapes, check_same, assert_equal
 from ..integer import Integer
 from ..integerarray import IntegerArray
 
-def test_integer_array_constructor():
+def test_integerarray_constructor():
     raises(ValueError, lambda: IntegerArray([0], shape=(1,)))
     raises(ValueError, lambda: IntegerArray([], shape=(1,)))
     raises(TypeError, lambda: IntegerArray([False]))
@@ -22,17 +22,20 @@ def test_integer_array_constructor():
     idx = IntegerArray([], shape=(0, 1))
     assert_equal(idx.array, empty((0, 1), dtype=intp))
 
+    # Make sure the underlying array is immutable
     idx = IntegerArray([1, 2])
     with raises(ValueError):
         idx.array[0] = 0
+    assert_equal(idx.array, array([1, 2], dtype=intp))
 
+    # Make sure the underlying array is copied
     a = array([1, 2])
     idx = IntegerArray(a)
     a[0] = 0
     assert idx == IntegerArray([1, 2])
 
 @given(integer_arrays, shapes)
-def test_integer_array_hypothesis(idx, shape):
+def test_integerarray_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
@@ -71,7 +74,7 @@ def test_integerarray_reduce_hypothesis(idx, shape):
             assert (reduced.raw >= 0).all()
 
 @given(integer_arrays, one_of(shapes, integers(0, 10)))
-def test_integer_array_newshape_hypothesis(idx, shape):
+def test_integerarray_newshape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -88,9 +91,10 @@ def test_integer_array_newshape_hypothesis(idx, shape):
 
     check_same(a, idx, func=func, assert_equal=assert_equal)
 
+@example([], (1,))
 @example([0], (1, 0))
 @given(integer_arrays, one_of(shapes, integers(0, 10)))
-def test_integer_array_isempty_hypothesis(idx, shape):
+def test_integerarray_isempty_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
     else:

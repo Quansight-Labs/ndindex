@@ -61,6 +61,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # Make sphinx give errors for bad cross-references
 nitpicky = True
 
+suppress_warnings = ['toc.circular']
 
 # -- Options for HTML output -------------------------------------------------
 

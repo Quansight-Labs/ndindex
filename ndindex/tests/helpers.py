@@ -4,7 +4,7 @@ from functools import reduce
 from operator import mul
 import warnings
 
-from numpy import intp, array
+from numpy import intp, bool_, array
 import numpy.testing
 
 from pytest import fail
@@ -49,6 +49,9 @@ shapes = tuples(integers(0, 10)).filter(
 _integer_arrays = arrays(intp, shapes)
 integer_arrays = _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
 
+_boolean_arrays = arrays(bool_, shapes)
+boolean_arrays = _boolean_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
+
 def _doesnt_raise(idx):
     try:
         ndindex(idx)
@@ -67,6 +70,7 @@ def ndindices(draw):
             ellipses(),
             tuples(one_of(ints(), slices())),
             integer_arrays,
+            boolean_arrays,
         ))
 
     try:
@@ -108,6 +112,16 @@ def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=ass
             else:
                 raise AssertionError(f"Unexpected warnings raised: {[i.message for i in r]}") # pragma: no cover
         elif e_inner:
+            if (isinstance(e_inner, ValueError)
+                and (e_inner.args[0].startswith('operands could not be broadcast together with shapes')
+                     or e_inner.args[0].startswith('non-broadcastable operand with shape'))):
+                # NumPy has a bug where it sometimes gives
+                # ValueError('operands could not be broadcast together with
+                # shapes ...') instead of the correct IndexError (see
+                # https://github.com/numpy/numpy/issues/16997). We don't want
+                # to reproduce this incorrect error, so ignore it.
+                same_exception = False
+                raise IndexError
             raise e_inner
     except Exception as e:
         exception = e

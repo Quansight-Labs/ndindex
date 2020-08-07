@@ -9,16 +9,17 @@ def ndindex(obj):
     """
     Convert an object into an ndindex type
 
-    Invalid indices will raise IndexError. Indices that are supported by NumPy
-    but not yet supported by ndindex will raise NotImplementedError.
+    Invalid indices will raise `IndexError`. Indices that are supported by
+    NumPy but not yet supported by ndindex will raise `NotImplementedError`.
 
     >>> from ndindex import ndindex
     >>> ndindex(1)
     Integer(1)
     >>> ndindex(slice(0, 10))
     Slice(0, 10, None)
+
     """
-    from . import Integer, Slice, Tuple, ellipsis, IntegerArray
+    from . import Integer, Slice, Tuple, ellipsis, IntegerArray, BooleanArray
 
     if isinstance(obj, NDIndex):
         return obj
@@ -38,7 +39,7 @@ def ndindex(obj):
         if issubclass(a.dtype.type, integer):
             return IntegerArray(a)
         elif a.dtype == bool_:
-            raise NotImplementedError("boolean array indices are not yet supported")
+            return BooleanArray(a)
         else:
             # Match the NumPy exceptions
             if isinstance(obj, ndarray):
@@ -101,7 +102,7 @@ class NDIndex:
       maximum exists.
 
     - `reduce(shape=None)` should reduce an index to an equivalent form for
-      arrays of shape `shape`, or raise an IndexError. The error messages
+      arrays of shape `shape`, or raise an `IndexError`. The error messages
       should match numpy as much as possible. The class of the equivalent
       index may be different. If `shape` is `None`, it should return a
       canonical form that is equivalent for all array shapes (assuming no
@@ -223,6 +224,7 @@ class NDIndex:
         .Slice.reduce
         .ellipsis.reduce
         .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         # XXX: Should the default be raise NotImplementedError or return self?
@@ -261,7 +263,7 @@ class NDIndex:
         `shape` should be a tuple of ints, or an int, which is equivalent to a
         1-D shape.
 
-        Raises IndexError if `self` would be out of shape for an array of
+        Raises `IndexError` if `self` would be out of shape for an array of
         shape `shape`.
 
         >>> from ndindex import Slice, Integer, Tuple

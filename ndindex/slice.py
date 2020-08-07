@@ -224,7 +224,7 @@ class Slice(NDIndex):
           Note that `Slice` objects that index a single element are not
           canonicalized to `Integer`, because integer indices always remove an
           axis whereas slices keep the axis. Furthermore, slices cannot raise
-          IndexError except on arrays with shape equal to `()`.
+          `IndexError` except on arrays with shape equal to `()`.
 
           >>> from ndindex import Slice
           >>> s = Slice(10)
@@ -270,6 +270,7 @@ class Slice(NDIndex):
         .Integer.reduce
         .ellipsis.reduce
         .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         start, stop, step = self.args
@@ -440,15 +441,11 @@ class Slice(NDIndex):
         return Slice(start, stop, step).reduce()
 
     def isempty(self, shape=None):
-        idx = self
         if shape is not None:
-            shape = asshape(shape)
-            if 0 in shape:
-                return True
-            idx = self.reduce(shape)
+            return 0 in self.newshape(shape)
 
         try:
-            l = len(idx)
+            l = len(self)
         except (TypeError, ValueError):
             return False
         return l == 0

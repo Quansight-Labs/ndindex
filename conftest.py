@@ -2,6 +2,8 @@
 import sys
 sys.path.insert(0, '.')
 
+from hypothesis import settings
+
 # Add a --hypothesis-max-examples flag to pytest. See
 # https://github.com/HypothesisWorks/hypothesis/issues/2434#issuecomment-630309150
 
@@ -27,3 +29,7 @@ def pytest_configure(config):
         )
 
         hypothesis.settings.load_profile("hypothesis-overridden")
+
+
+settings.register_profile('ndindex_hypothesis_profile', deadline=800)
+settings.load_profile('ndindex_hypothesis_profile')

@@ -42,17 +42,18 @@ def test_ndindex(idx):
     if isinstance(idx, np.ndarray):
         assert_equal(index.raw, idx)
     elif isinstance(idx, list):
-        assert_equal(index.raw, np.asarray(idx, dtype=np.intp))
+        assert index.dtype in [np.intp, np.bool_]
+        assert_equal(index.raw, np.asarray(idx, dtype=index.dtype))
     else:
         assert index.raw == idx
     assert ndindex(index.raw) == index
 
 def test_ndindex_not_implemented():
     a = np.arange(10)
-    for idx in [np.array([True, False]*5), True, False, None]:
-        raises(NotImplementedError, lambda: ndindex(idx))
-        # Make sure the index really is valid
-        a[idx]
+    idx = None
+    raises(NotImplementedError, lambda: ndindex(idx))
+    # Make sure the index really is valid
+    a[idx]
 
 def test_ndindex_invalid():
     a = np.arange(10)

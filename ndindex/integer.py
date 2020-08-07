@@ -20,6 +20,13 @@ class Integer(NDIndex):
     index directly. However, it is still recommended to use `raw` for
     consistency, as this only works for `Integer`.
 
+    .. note::
+
+       `Integer` does *not* represent an integer, but rather an
+       *integer index*. It does not have most methods that `int` has, and
+       should not be used in non-indexing contexts. See the document on
+       :ref:`type-confusion` for more details.
+
     """
     def _typecheck(self, idx):
         idx = operator.index(idx)
@@ -46,7 +53,7 @@ class Integer(NDIndex):
         """
         Reduce an Integer index on an array of shape `shape`.
 
-        The result will either be IndexError if the index is invalid for the
+        The result will either be `IndexError` if the index is invalid for the
         given shape, or an Integer index where the value is nonnegative.
 
         >>> from ndindex import Integer
@@ -66,6 +73,7 @@ class Integer(NDIndex):
         .Slice.reduce
         .ellipsis.reduce
         .IntegerArray.reduce
+        .BooleanArray.reduce
 
         """
         if shape is None:
@@ -129,10 +137,6 @@ class Integer(NDIndex):
 
     def isempty(self, shape=None):
         if shape is not None:
-            shape = asshape(shape)
-            # Raise IndexError if necessary
-            self.reduce(shape)
-            if 0 in shape:
-                return True
+            return 0 in self.newshape(shape)
 
         return False
