@@ -18,7 +18,7 @@ def ndindex(obj):
     Slice(0, 10, None)
 
     """
-    from . import Integer, Slice, Tuple, ellipsis, Newaxis,IntegerArray, BooleanArray
+    from . import Integer, Slice, Tuple, ellipsis, Newaxis, IntegerArray, BooleanArray
 
     if isinstance(obj, NDIndex):
         return obj
