@@ -59,6 +59,7 @@ class ellipsis(NDIndex):
         .NDIndex.reduce
         .Tuple.reduce
         .Slice.reduce
+        .Newaxis.reduce
         .Integer.reduce
         .IntegerArray.reduce
         .BooleanArray.reduce

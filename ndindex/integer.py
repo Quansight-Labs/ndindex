@@ -72,6 +72,7 @@ class Integer(NDIndex):
         .Tuple.reduce
         .Slice.reduce
         .ellipsis.reduce
+        .Newaxis.reduce
         .IntegerArray.reduce
         .BooleanArray.reduce
 

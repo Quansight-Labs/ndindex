@@ -1,5 +1,4 @@
-from .ndindex import NDIndex
-
+from .ndindex import NDIndex, asshape
 
 class Newaxis(NDIndex):
     """
@@ -34,15 +33,32 @@ class Newaxis(NDIndex):
     def _typecheck(self):
         return ()
 
-    def reduce(self, shape=None):
-        """
-        Reduce Newaxis index
-
-        For any shape, `Newaxis().reduce(shape)` returns and index equivalent
-        to `Newaxis()`.
-        """
-        return self
-
     @property
     def raw(self):
         return None
+
+    def reduce(self, shape=None):
+        """
+        Reduce a Newaxis index
+
+        There is no other index that is equivalent to a Newaxis index by
+        itself, so Newaxis().reduce() always returns Newaxis() unchanged.
+
+        >>> from ndindex import Newaxis
+        >>> Newaxis().reduce()
+        Newaxis()
+
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .Integer.reduce
+        .ellipsis.reduce
+        .IntegerArray.reduce
+        .BooleanArray.reduce
+
+        """
+        shape = asshape(shape)
+        return self

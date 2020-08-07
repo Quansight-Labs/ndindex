@@ -184,6 +184,7 @@ class Tuple(NDIndex):
         .Slice.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .Newaxis.reduce
         .IntegerArray.reduce
         .BooleanArray.reduce
 
