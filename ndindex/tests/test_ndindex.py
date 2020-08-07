@@ -42,7 +42,8 @@ def test_ndindex(idx):
     if isinstance(idx, np.ndarray):
         assert_equal(index.raw, idx)
     elif isinstance(idx, list):
-        assert_equal(index.raw, np.asarray(idx, dtype=np.intp))
+        assert index.dtype in [np.intp, np.bool_]
+        assert_equal(index.raw, np.asarray(idx, dtype=index.dtype))
     else:
         assert index.raw == idx
     assert ndindex(index.raw) == index

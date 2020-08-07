@@ -70,6 +70,7 @@ def ndindices(draw):
             ellipses(),
             tuples(one_of(ints(), slices())),
             integer_arrays,
+            boolean_arrays,
         ))
 
     try:
