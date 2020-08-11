@@ -61,7 +61,7 @@ def _doesnt_raise(idx):
     return True
 
 Tuples = tuples(one_of(ellipses(), ints(), slices(),
-                       integer_arrays)).filter(_doesnt_raise)
+                       integer_arrays, boolean_arrays)).filter(_doesnt_raise)
 
 @composite
 def ndindices(draw):
