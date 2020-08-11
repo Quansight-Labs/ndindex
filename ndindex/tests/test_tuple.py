@@ -142,14 +142,15 @@ def test_tuple_expand_hypothesis(t, shape):
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
+        n_newaxis = t.count(None)
         if isinstance(shape, int):
-            assert len(expanded.args) == 1
+            assert len(expanded.args) == 1 + n_newaxis
         else:
-            assert len(expanded.args) == len(shape)
+            assert len(expanded.args) == len(shape) + n_newaxis
 
 # This is here because expand() always returns a Tuple, so it is very similar
 # to the test_tuple_expand_hypothesis test.
-@given(ndindices(), one_of(shapes, integers(0, 10)))
+@given(ndindices, one_of(shapes, integers(0, 10)))
 def test_ndindex_expand_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -167,10 +168,16 @@ def test_ndindex_expand_hypothesis(idx, shape):
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
-        if isinstance(shape, int):
-            assert len(expanded.args) == 1
+        if isinstance(idx, tuple):
+            n_newaxis = idx.count(None)
+        elif idx == None:
+            n_newaxis = 1
         else:
-            assert len(expanded.args) == len(shape)
+            n_newaxis = 0
+        if isinstance(shape, int):
+            assert len(expanded.args) == 1 + n_newaxis
+        else:
+            assert len(expanded.args) == len(shape) + n_newaxis
 
     check_same(a, index.raw, func=lambda x: x.expand(shape),
                same_exception=False)

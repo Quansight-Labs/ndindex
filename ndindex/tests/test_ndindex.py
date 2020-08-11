@@ -13,7 +13,7 @@ from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import ndindices, check_same, assert_equal
 
-@given(ndindices())
+@given(ndindices)
 def test_eq(idx):
     index = ndindex(idx)
     new = type(index)(*index.args)
@@ -35,7 +35,7 @@ def test_eq(idx):
     assert ('a' != index) is True
 
 @example([1, 2, 3])
-@given(ndindices())
+@given(ndindices)
 def test_ndindex(idx):
     index = ndindex(idx)
     assert index == idx
@@ -72,7 +72,7 @@ def test_signature():
 # eval can sometimes be slower than the default deadline of 200ms for large
 # array indices
 @settings(deadline=None)
-@given(ndindices())
+@given(ndindices)
 def test_repr(idx):
     # The repr form should be re-creatable
     index = ndindex(idx)
@@ -80,7 +80,7 @@ def test_repr(idx):
     exec("from ndindex import *", d)
     assert eval(repr(index), d) == idx
 
-@given(ndindices())
+@given(ndindices)
 def test_str(idx):
     # Str may not be re-creatable. Just test that it doesn't give an exception.
     index = ndindex(idx)
