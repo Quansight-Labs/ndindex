@@ -122,6 +122,7 @@ def test_tuple_reduce_explicit():
         a = arange(prod(shape)).reshape(shape)
         check_same(a, before.raw, func=lambda x: x.reduce(shape))
 
+@example((..., None, 0), 1)
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_expand_hypothesis(t, shape):
