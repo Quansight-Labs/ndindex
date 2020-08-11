@@ -6,12 +6,12 @@ class Tuple(NDIndex):
 
     Valid single axis indices are
 
-    - `Integer`
-    - `Slice`
-    - `ellipsis`
-    - `Newaxis`
-    - `IntegerArray`
-    - `BooleanArray`
+    - :class:`Integer`
+    - :class:`Slice`
+    - :class:`ellipsis`
+    - :class:`Newaxis`
+    - :class:`IntegerArray`
+    - :class:`BooleanArray`
 
     (some of the above are not yet implemented)
 
