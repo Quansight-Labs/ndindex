@@ -183,6 +183,7 @@ def test_ndindex_expand_hypothesis(idx, shape):
     check_same(a, index.raw, func=lambda x: x.expand(shape),
                same_exception=False)
 
+@example((0, None, 0, ..., 0, None, 0), (2, 2, 2, 2, 2, 2, 2))
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_newshape_hypothesis(t, shape):
