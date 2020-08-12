@@ -151,6 +151,7 @@ def test_tuple_expand_hypothesis(t, shape):
 
 # This is here because expand() always returns a Tuple, so it is very similar
 # to the test_tuple_expand_hypothesis test.
+@example(None, 2)
 @given(ndindices, one_of(shapes, integers(0, 10)))
 def test_ndindex_expand_hypothesis(idx, shape):
     if isinstance(shape, int):
