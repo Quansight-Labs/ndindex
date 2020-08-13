@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Type Confusion &#8212; ndindex  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -191,8 +191,8 @@ access the specific term in a <code class="docutils literal notranslate"><span c
 Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex(...)</span></code></strong>. As noted above, all ndindex
 methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will automatically convert <code class="docutils literal notranslate"><span class="pre">...</span></code> into the ndindex type.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx1</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">idx1</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
@@ -205,22 +205,20 @@ methods and <code class="docutils literal notranslate"><span class="pre">Tuple</
 unlike the built-in <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> object. This is done for consistency in the
 internal ndindex class hierarchy.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx1</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="n">idx1</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span> <span class="c1"># Gives an error</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Gives an error</span>
 </pre></div>
 </div>
 <p>These do not give errors, but it is easy to confuse them with the above. It
 is best to just use <code class="docutils literal notranslate"><span class="pre">...</span></code>, which is more concise and easier to read.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -234,6 +232,66 @@ ndindex, <strong>you should use <code class="docutils literal notranslate"><span
 </div>
 <p><strong>Wrong:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span> <span class="c1"># Will be False if idx is the ndindex ellipsis type</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="n">ellipsis</span><span class="p">():</span> <span class="c1"># Will be False (ellipsis() creates a new instance)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="newaxis">
+<h2>Newaxis<a class="headerlink" href="#newaxis" title="Permalink to this headline">¶</a></h2>
+<p>The advice for <code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is almost identical to the advice for <code class="docutils literal notranslate"><span class="pre">ellipsis</span></code>.
+Note that <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> is just an alias for <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<ul>
+<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> class directly.
+Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">ndindex(np.newaxis)</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">ndindex(None)</span></code></strong>. As noted above, all ndindex methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will
+automatically convert <code class="docutils literal notranslate"><span class="pre">None</span></code> into the ndindex type.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+</li>
+<li><p>If you do use <code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> beware that it is the <em>class</em>, not the <em>instance</em>,
+unlike the NumPy <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> object (i.e., <code class="docutils literal notranslate"><span class="pre">None</span></code>). This is done for
+consistency in the internal ndindex class hierarchy.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+<p>This does not give an error, but it is easy to confuse it with the above. It
+is best to just use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>, which is more concise and easier
+to read.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is <strong>not</strong> singletonized, unlike the built-in <code class="docutils literal notranslate"><span class="pre">None</span></code>. It would
+also be impossible to make <code class="docutils literal notranslate"><span class="pre">Newaxis()</span> <span class="pre">is</span> <span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">Newaxis()</span> <span class="pre">is</span> <span class="pre">None</span></code>
+return True. If you are using ndindex, <strong>you should use <code class="docutils literal notranslate"><span class="pre">==</span></code> to compare
+against <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code></strong>, and avoid using <code class="docutils literal notranslate"><span class="pre">is</span></code>.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">:</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">:</span> <span class="c1"># Will be False if idx is the ndindex Newaxis type</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="n">Newaxis</span><span class="p">():</span> <span class="c1"># Will be False (Newaxis() creates a new instance)</span>
 </pre></div>
 </div>
 </li>
@@ -320,6 +378,7 @@ not affect the ndindex objects.</p>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
@@ -354,6 +413,7 @@ not affect the ndindex objects.</p>
 <li class="toctree-l4"><a class="reference internal" href="#integer">Integer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tuple">Tuple</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#newaxis">Newaxis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
 </ul>
 </li>
@@ -399,6 +459,7 @@ not affect the ndindex objects.</p>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
@@ -433,6 +494,7 @@ not affect the ndindex objects.</p>
 <li class="toctree-l2"><a class="reference internal" href="#integer">Integer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tuple">Tuple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#newaxis">Newaxis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
 </ul>
 </li>
@@ -489,7 +551,7 @@ not affect the ndindex objects.</p>
       &copy;2020, Quansight.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
