@@ -1,9 +1,8 @@
 import inspect
 import operator
 import numbers
-import warnings
 
-from numpy import ndarray, asarray, integer, bool_, intp
+from numpy import ndarray, bool_
 
 def ndindex(obj):
     """
@@ -27,25 +26,21 @@ def ndindex(obj):
     if obj is None:
         raise NotImplementedError("newaxis is not yet implemented")
 
-    # TODO: Replace this with calls to the IntegerArray() and BooleanArray()
-    # constructors.
-    if isinstance(obj, (list, ndarray, bool)):
-        # Ignore deprecation warnings for things like [1, []]. These will be
-        # filtered out anyway since they produce object arrays.
-        with warnings.catch_warnings(record=True):
-            a = asarray(obj)
-            if isinstance(obj, list) and 0 in a.shape:
-                a = a.astype(intp)
-        if issubclass(a.dtype.type, integer):
-            return IntegerArray(a)
-        elif a.dtype == bool_:
-            return BooleanArray(a)
+    if isinstance(obj, (list, ndarray, bool, bool_)):
+        try:
+            return IntegerArray(obj)
+        except TypeError:
+            pass
+        try:
+            return BooleanArray(obj)
+        except TypeError:
+            pass
+
+        # Match the NumPy exceptions
+        if isinstance(obj, ndarray):
+            raise IndexError("arrays used as indices must be of integer (or boolean) type")
         else:
-            # Match the NumPy exceptions
-            if isinstance(obj, ndarray):
-                raise IndexError("arrays used as indices must be of integer (or boolean) type")
-            else:
-                raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+            raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
     try:
         # If operator.index() works, use that
