@@ -20,6 +20,8 @@ def test_integer_args():
     assert isinstance(idx.raw, int)
     assert Integer(zero) == zero
 
+    raises(TypeError, lambda: Integer(1.0))
+    raises(TypeError, lambda: Integer(True))  # See the docstring of operator_index()
 
 def test_integer_exhaustive():
     a = arange(10)

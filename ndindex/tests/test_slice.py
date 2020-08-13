@@ -16,6 +16,8 @@ def test_slice_args():
     # TODO: Incorporate this into the normal slice tests
     raises(TypeError, lambda: slice())
     raises(TypeError, lambda: Slice())
+    raises(TypeError, lambda: Slice(1.0))
+    raises(TypeError, lambda: Slice(True)) # See docstring of operator_index()
 
     S = Slice(1)
     assert S == Slice(S) == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)

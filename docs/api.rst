@@ -89,3 +89,5 @@ These classes are only intended for internal use in ndindex.
 .. autoclass:: ndindex.slice.default
 
 .. autofunction:: ndindex.ndindex.asshape
+
+.. autofunction:: ndindex.ndindex.operator_index
