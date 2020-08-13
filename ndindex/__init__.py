@@ -20,6 +20,10 @@ from .ellipsis import ellipsis
 
 __all__ += ['ellipsis']
 
+from .newaxis import Newaxis
+
+__all__ += ['Newaxis']
+
 from .integerarray import IntegerArray
 
 __all__ += ['IntegerArray']

@@ -267,6 +267,7 @@ class Slice(NDIndex):
         .Tuple.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .Newaxis.reduce
         .IntegerArray.reduce
         .BooleanArray.reduce
 

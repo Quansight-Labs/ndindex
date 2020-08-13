@@ -67,6 +67,7 @@ class IntegerArray(ArrayIndex):
         .Tuple.reduce
         .Slice.reduce
         .ellipsis.reduce
+        .Newaxis.reduce
         .Integer.reduce
         .BooleanArray.reduce
 

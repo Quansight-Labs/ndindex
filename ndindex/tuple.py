@@ -6,12 +6,12 @@ class Tuple(NDIndex):
 
     Valid single axis indices are
 
-    - `Integer`
-    - `Slice`
-    - `ellipsis`
-    - `Newaxis`
-    - `IntegerArray`
-    - `BooleanArray`
+    - :class:`Integer`
+    - :class:`Slice`
+    - :class:`ellipsis`
+    - :class:`Newaxis`
+    - :class:`IntegerArray`
+    - :class:`BooleanArray`
 
     (some of the above are not yet implemented)
 
@@ -186,6 +186,7 @@ class Tuple(NDIndex):
         .Slice.reduce
         .Integer.reduce
         .ellipsis.reduce
+        .Newaxis.reduce
         .IntegerArray.reduce
         .BooleanArray.reduce
 
@@ -198,18 +199,27 @@ class Tuple(NDIndex):
             return type(self)(*args, ellipsis()).reduce(shape)
 
         if shape is not None:
-            indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
+            # assert self.args.count(...) == 1
+            n_newaxis = self.args.count(None)
+            indexed_args = len(self.args) - n_newaxis - 1 # -1 for the ellipsis
             shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
         preargs = []
         removable = shape is not None
+        n_newaxis_before_ellipsis = args[:ellipsis_i].count(None)
         for i, s in enumerate(reversed(args[:ellipsis_i]), start=1):
-            reduced = s.reduce(shape, axis=ellipsis_i - i)
+            axis = ellipsis_i - i - n_newaxis_before_ellipsis
+            if s == None:
+                n_newaxis_before_ellipsis -= 1
+                preargs.insert(0, s)
+                removable = False
+                continue
+            reduced = s.reduce(shape, axis=axis)
             if (removable
                 and isinstance(reduced, Slice)
-                and reduced == Slice(0, shape[ellipsis_i - i], 1)):
+                and reduced == Slice(0, shape[axis], 1)):
                 continue
             else:
                 removable = False
@@ -219,9 +229,16 @@ class Tuple(NDIndex):
         removable = shape is not None
         for i, s in enumerate(args[ellipsis_i+1:]):
             axis = -len(args) + ellipsis_i + 1 + i
+            axis += args[ellipsis_i+1:][i:].count(None)
             if shape is not None:
-                # Make the axis positive so the error messages will match numpy
-                axis += len(shape)
+                # Make the axis positive so the error messages will match
+                # numpy
+                while axis < 0 and len(shape):
+                    axis += len(shape)
+            if s == None:
+                endargs.append(s)
+                removable = False
+                continue
             reduced = s.reduce(shape, axis=axis)
             if (removable
                 and isinstance(reduced, Slice)
@@ -231,7 +248,8 @@ class Tuple(NDIndex):
                 removable = False
                 endargs.append(reduced)
 
-        if shape is None or endargs and len(preargs) + len(endargs) < len(shape):
+        if shape is None or (endargs and len(preargs) + len(endargs)
+                             < len(shape) + args.count(None)):
             preargs = preargs + [...]
 
         newargs = preargs + endargs
@@ -250,26 +268,28 @@ class Tuple(NDIndex):
         Expand a Tuple index on an array of shape `shape`
 
         An expanded `Tuple` is one where the length of the .args is the same
-        as the given shape, and there are no ellipses.
+        as the given shape plus the number of :any:`Newaxis` indices, and
+        there are no ellipses.
 
-        The result will either be `IndexError` if self is invalid for the
+        The result will either be `IndexError` if `self` is invalid for the
         given shape, or will be canonicalized so that
 
         - All the elements of the tuple are recursively reduced.
 
-        - The length of the .args is the same as the length of the shape.
+        - The length of the .args is equal to the length of the shape plus the
+          number of :any:`Newaxis` indices in `self`.
 
         - The resulting Tuple has no ellipses. Axes that would be matched by
           an ellipsis or an implicit ellipsis at the end of the tuple are
           replaced by `Slice(0, n)`.
 
         >>> from ndindex import Tuple
-        >>> idx = Tuple(slice(0, 10), ..., -3)
+        >>> idx = Tuple(slice(0, 10), ..., None, -3)
 
         >>> idx.expand((5, 3))
-        Tuple(slice(0, 5, 1), 0)
+        Tuple(slice(0, 5, 1), None, 0)
         >>> idx.expand((1, 2, 3))
-        Tuple(slice(0, 1, 1), slice(0, 2, 1), 0)
+        Tuple(slice(0, 1, 1), slice(0, 2, 1), None, 0)
 
         >>> idx.expand((5,))
         Traceback (most recent call last):
@@ -287,28 +307,39 @@ class Tuple(NDIndex):
         .NDIndex.expand
 
         """
-        from .ellipsis import ellipsis
         from .slice import Slice
 
         args = self.args
-        if ellipsis() not in args:
-            return type(self)(*args, ellipsis()).expand(shape)
+        if ... not in args:
+            return type(self)(*args, ...).expand(shape)
 
-        indexed_args = len(self.args) - 1 if self.has_ellipsis else len(self.args)
+        # assert self.args.count(...) == 1
+        n_newaxis = self.args.count(None)
+        indexed_args = len(self.args) - n_newaxis - 1 # -1 for the ellipsis
         shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
         newargs = []
+        n_newaxis_before_ellipsis = 0
         for i, s in enumerate(args[:ellipsis_i]):
-            newargs.append(s.reduce(shape, axis=i))
+            if s == None:
+                n_newaxis_before_ellipsis += 1
+                newargs.append(s)
+            else:
+                newargs.append(s.reduce(shape, axis=i - n_newaxis_before_ellipsis))
 
-        newargs.extend([Slice(None).reduce(shape, axis=i + ellipsis_i) for
-                        i in range(len(shape) - len(args) + 1)])
+        newargs.extend([Slice(None).reduce(shape, axis=i + ellipsis_i - n_newaxis_before_ellipsis) for
+                        i in range(len(shape) - len(args) + 1 + n_newaxis)])
 
+        n_newaxis_after_ellipsis = 0
         endargs = []
         for i, s in enumerate(reversed(args[ellipsis_i+1:]), start=1):
-            endargs.append(s.reduce(shape, axis=len(shape)-i))
+            if s == None:
+                n_newaxis_after_ellipsis += 1
+                endargs.append(s)
+            else:
+                endargs.append(s.reduce(shape, axis=len(shape)-i+n_newaxis_after_ellipsis))
 
         newargs = newargs + endargs[::-1]
 
@@ -327,20 +358,31 @@ class Tuple(NDIndex):
 
         ellipsis_i = self.ellipsis_index
 
-        newshape = []
+        startshape = []
+        n_newaxis = self.args.count(None)
+        n_newaxis_before_ellipsis = 0
         for i, s in enumerate(self.args[:ellipsis_i]):
-            newshape.extend(list(s.newshape(shape[i])))
+            if s == None:
+                n_newaxis_before_ellipsis += 1
+                startshape.append(1)
+            else:
+                startshape.extend(list(s.newshape(shape[i-n_newaxis_before_ellipsis])))
 
-        if ... in self.args:
-            midshape = list(shape[ellipsis_i:len(shape)+ellipsis_i-len(self.args)+1])
-        else:
-            midshape = list(shape[len(self.args):])
-
+        n_newaxis_after_ellipsis = 0
         endshape = []
         for i, s in enumerate(reversed(self.args[ellipsis_i+1:]), start=1):
-            endshape.extend(list(s.newshape(shape[len(shape)-i])))
+            if s == None:
+                n_newaxis_after_ellipsis += 1
+                endshape.append(1)
+            else:
+                endshape.extend(list(s.newshape(shape[len(shape)-i+n_newaxis_after_ellipsis])))
 
-        newshape = newshape + midshape + endshape[::-1]
+        if ... in self.args:
+            midshape = list(shape[ellipsis_i-n_newaxis_before_ellipsis:len(shape)+ellipsis_i-len(self.args)+n_newaxis_after_ellipsis+1])
+        else:
+            midshape = list(shape[len(self.args) - n_newaxis:])
+
+        newshape = startshape + midshape + endshape[::-1]
 
         return tuple(newshape)
 
