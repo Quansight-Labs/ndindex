@@ -52,10 +52,12 @@ short_shapes = tuples(integers(0, 10)).filter(
              lambda shape: prod([i for i in shape if i]) < 1000)
 
 _integer_arrays = arrays(intp, short_shapes)
-integer_arrays = _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
+integer_scalars = arrays(intp, ()).map(lambda x: x[()])
+integer_arrays = one_of(integer_scalars, _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
 
 _boolean_arrays = arrays(bool_, shapes)
-boolean_arrays = _boolean_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
+boolean_scalars = arrays(bool_, ()).map(lambda x: x[()])
+boolean_arrays = one_of(boolean_scalars, _boolean_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
 
 def _doesnt_raise(idx):
     try:
