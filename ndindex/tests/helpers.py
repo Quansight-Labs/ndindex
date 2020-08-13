@@ -9,9 +9,8 @@ import numpy.testing
 
 from pytest import fail
 
-from hypothesis import assume
-from hypothesis.strategies import (integers, composite, none, one_of, lists,
-                                   just, builds)
+from hypothesis.strategies import (integers, none, one_of, lists, just,
+                                   builds)
 from hypothesis.extra.numpy import arrays
 
 from ..ndindex import ndindex
@@ -35,6 +34,7 @@ def slices(start=one_of(none(), ints()), stop=one_of(none(), ints()),
     return builds(slice, start, stop, step)
 
 ellipses = lambda: just(...)
+newaxes = lambda: just(None)
 
 # hypotheses.strategies.tuples only generates tuples of a fixed size
 def tuples(elements, *, min_size=0, max_size=None, unique_by=None, unique=False):
@@ -59,26 +59,18 @@ def _doesnt_raise(idx):
         return False
     return True
 
-Tuples = tuples(one_of(ellipses(), ints(), slices(),
-                       integer_arrays)).filter(_doesnt_raise)
+Tuples = tuples(one_of(ellipses(), newaxes(), ints(), slices(),
+                       integer_arrays, boolean_arrays)).filter(_doesnt_raise)
 
-@composite
-def ndindices(draw):
-    s = draw(one_of(
-            ints(),
-            slices(),
-            ellipses(),
-            tuples(one_of(ints(), slices())),
-            integer_arrays,
-            boolean_arrays,
-        ))
-
-    try:
-        ndindex(s)
-    except (ValueError, NotImplementedError): # pragma: no cover
-        assume(False)
-
-    return s
+ndindices = one_of(
+    ints(),
+    slices(),
+    ellipses(),
+    newaxes(),
+    Tuples,
+    integer_arrays,
+    boolean_arrays,
+).filter(_doesnt_raise)
 
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """

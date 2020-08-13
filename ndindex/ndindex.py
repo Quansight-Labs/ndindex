@@ -3,14 +3,13 @@ import operator
 import numbers
 import warnings
 
-from numpy import ndarray, asarray, integer, bool_, intp
+from numpy import ndarray, newaxis, asarray, integer, bool_, intp
 
 def ndindex(obj):
     """
     Convert an object into an ndindex type
 
-    Invalid indices will raise `IndexError`. Indices that are supported by
-    NumPy but not yet supported by ndindex will raise `NotImplementedError`.
+    Invalid indices will raise `IndexError`.
 
     >>> from ndindex import ndindex
     >>> ndindex(1)
@@ -19,13 +18,10 @@ def ndindex(obj):
     Slice(0, 10, None)
 
     """
-    from . import Integer, Slice, Tuple, ellipsis, IntegerArray, BooleanArray
+    from . import Integer, Slice, Tuple, ellipsis, Newaxis, IntegerArray, BooleanArray
 
     if isinstance(obj, NDIndex):
         return obj
-
-    if obj is None:
-        raise NotImplementedError("newaxis is not yet implemented")
 
     # TODO: Replace this with calls to the IntegerArray() and BooleanArray()
     # constructors.
@@ -63,6 +59,9 @@ def ndindex(obj):
         raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
     if obj is Ellipsis:
         return ellipsis()
+
+    if obj == newaxis:
+        return Newaxis()
 
     raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
@@ -143,7 +142,7 @@ class NDIndex:
         if not isinstance(other, NDIndex):
             try:
                 other = ndindex(other)
-            except (IndexError, NotImplementedError):
+            except IndexError:
                 return False
 
         def test_equal(a, b):
@@ -223,6 +222,7 @@ class NDIndex:
         .Tuple.reduce
         .Slice.reduce
         .ellipsis.reduce
+        .Newaxis.reduce
         .IntegerArray.reduce
         .BooleanArray.reduce
 

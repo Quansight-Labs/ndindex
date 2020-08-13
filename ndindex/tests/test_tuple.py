@@ -122,6 +122,7 @@ def test_tuple_reduce_explicit():
         a = arange(prod(shape)).reshape(shape)
         check_same(a, before.raw, func=lambda x: x.reduce(shape))
 
+@example((..., None, 0), 1)
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_expand_hypothesis(t, shape):
@@ -142,14 +143,16 @@ def test_tuple_expand_hypothesis(t, shape):
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
+        n_newaxis = t.count(None)
         if isinstance(shape, int):
-            assert len(expanded.args) == 1
+            assert len(expanded.args) == 1 + n_newaxis
         else:
-            assert len(expanded.args) == len(shape)
+            assert len(expanded.args) == len(shape) + n_newaxis
 
 # This is here because expand() always returns a Tuple, so it is very similar
 # to the test_tuple_expand_hypothesis test.
-@given(ndindices(), one_of(shapes, integers(0, 10)))
+@example(None, 2)
+@given(ndindices, one_of(shapes, integers(0, 10)))
 def test_ndindex_expand_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -167,14 +170,21 @@ def test_ndindex_expand_hypothesis(idx, shape):
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
-        if isinstance(shape, int):
-            assert len(expanded.args) == 1
+        if isinstance(idx, tuple):
+            n_newaxis = idx.count(None)
+        elif idx == None:
+            n_newaxis = 1
         else:
-            assert len(expanded.args) == len(shape)
+            n_newaxis = 0
+        if isinstance(shape, int):
+            assert len(expanded.args) == 1 + n_newaxis
+        else:
+            assert len(expanded.args) == len(shape) + n_newaxis
 
     check_same(a, index.raw, func=lambda x: x.expand(shape),
                same_exception=False)
 
+@example((0, None, 0, ..., 0, None, 0), (2, 2, 2, 2, 2, 2, 2))
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_newshape_hypothesis(t, shape):
