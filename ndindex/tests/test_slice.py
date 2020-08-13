@@ -1,6 +1,6 @@
 from pytest import raises
 
-from numpy import arange, isin
+from numpy import arange, isin, bool_
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
@@ -17,7 +17,9 @@ def test_slice_args():
     raises(TypeError, lambda: slice())
     raises(TypeError, lambda: Slice())
     raises(TypeError, lambda: Slice(1.0))
-    raises(TypeError, lambda: Slice(True)) # See docstring of operator_index()
+    # See docstring of operator_index()
+    raises(TypeError, lambda: Slice(True))
+    raises(TypeError, lambda: Slice(bool_(True)))
 
     S = Slice(1)
     assert S == Slice(S) == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)

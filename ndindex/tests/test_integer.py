@@ -1,4 +1,4 @@
-from numpy import arange, int64, isin
+from numpy import arange, int64, isin, bool_
 
 from pytest import raises
 
@@ -21,7 +21,9 @@ def test_integer_args():
     assert Integer(zero) == zero
 
     raises(TypeError, lambda: Integer(1.0))
-    raises(TypeError, lambda: Integer(True))  # See the docstring of operator_index()
+    # See the docstring of operator_index()
+    raises(TypeError, lambda: Integer(True))
+    raises(TypeError, lambda: Integer(bool_(True)))
 
 def test_integer_exhaustive():
     a = arange(10)
