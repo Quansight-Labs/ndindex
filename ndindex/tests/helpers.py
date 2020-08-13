@@ -46,7 +46,12 @@ shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < 100000)
 
-_integer_arrays = arrays(intp, shapes)
+short_shapes = tuples(integers(0, 10)).filter(
+             # numpy gives errors with empty arrays with large shapes.
+             # See https://github.com/numpy/numpy/issues/15753
+             lambda shape: prod([i for i in shape if i]) < 1000)
+
+_integer_arrays = arrays(intp, short_shapes)
 integer_arrays = _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist())))
 
 _boolean_arrays = arrays(bool_, shapes)

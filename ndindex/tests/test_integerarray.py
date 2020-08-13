@@ -5,7 +5,7 @@ from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
-from .helpers import integer_arrays, shapes, check_same, assert_equal
+from .helpers import integer_arrays, short_shapes, check_same, assert_equal
 
 from ..integer import Integer
 from ..integerarray import IntegerArray
@@ -34,12 +34,12 @@ def test_integerarray_constructor():
     a[0] = 0
     assert idx == IntegerArray([1, 2])
 
-@given(integer_arrays, shapes)
+@given(integer_arrays, short_shapes)
 def test_integerarray_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
-@given(integer_arrays, one_of(shapes, integers(0, 10)))
+@given(integer_arrays, one_of(short_shapes, integers(0, 10)))
 def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -51,7 +51,7 @@ def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
     check_same(a, index.raw, func=lambda x: x.reduce())
 
 @example(array(0), 1)
-@given(integer_arrays, one_of(shapes, integers(0, 10)))
+@given(integer_arrays, one_of(short_shapes, integers(0, 10)))
 def test_integerarray_reduce_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -73,7 +73,7 @@ def test_integerarray_reduce_hypothesis(idx, shape):
             assert isinstance(reduced, IntegerArray)
             assert (reduced.raw >= 0).all()
 
-@given(integer_arrays, one_of(shapes, integers(0, 10)))
+@given(integer_arrays, one_of(short_shapes, integers(0, 10)))
 def test_integerarray_newshape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -93,7 +93,7 @@ def test_integerarray_newshape_hypothesis(idx, shape):
 
 @example([], (1,))
 @example([0], (1, 0))
-@given(integer_arrays, one_of(shapes, integers(0, 10)))
+@given(integer_arrays, one_of(short_shapes, integers(0, 10)))
 def test_integerarray_isempty_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
