@@ -17,7 +17,7 @@ class ArrayIndex(NDIndex):
     # Subclasses should redefine this
     dtype = None
 
-    def _typecheck(self, idx, shape=None):
+    def _typecheck(self, idx, shape=None, _copy=True):
         if self.dtype is None:
             raise TypeError("Do not instantiate the superclass ArrayIndex directly")
 
@@ -34,7 +34,7 @@ class ArrayIndex(NDIndex):
             # filtered out anyway since they produce object arrays.
             with warnings.catch_warnings(record=True):
                 a = asarray(idx)
-                if a is idx:
+                if a is idx and _copy:
                     a = a.copy()
                 if isinstance(idx, list) and 0 in a.shape:
                     a = a.astype(self.dtype)
