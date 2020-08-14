@@ -144,21 +144,21 @@ def test_tuple_expand_hypothesis(t, shape):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
-               same_exception=False)
-
     try:
         expanded = index.expand(shape)
-    except IndexError:
+    except (IndexError, NotImplementedError):
         pass
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
-        n_newaxis = t.count(None)
+        n_newaxis = index.args.count(None)
         if isinstance(shape, int):
             assert len(expanded.args) == 1 + n_newaxis
         else:
             assert len(expanded.args) == len(shape) + n_newaxis
+
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
+               same_exception=False)
 
 # This is here because expand() always returns a Tuple, so it is very similar
 # to the test_tuple_expand_hypothesis test.
@@ -183,7 +183,7 @@ def test_ndindex_expand_hypothesis(idx, shape):
         assert ... not in expanded.args
         if isinstance(idx, tuple):
             n_newaxis = idx.count(None)
-        elif idx == None:
+        elif index == None:
             n_newaxis = 1
         else:
             n_newaxis = 0
@@ -195,6 +195,8 @@ def test_ndindex_expand_hypothesis(idx, shape):
     check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
                same_exception=False)
 
+
+@example(([0, 0, 0], [0, 0]), (2, 2))
 @example((0, None, 0, ..., 0, None, 0), (2, 2, 2, 2, 2, 2, 2))
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
 @given(Tuples, one_of(shapes, integers(0, 10)))
@@ -203,6 +205,13 @@ def test_tuple_newshape_hypothesis(t, shape):
         a = arange(shape)
     else:
         a = arange(prod(shape)).reshape(shape)
+
+    try:
+        ndindex(t).newshape(shape)
+    except NotImplementedError:
+        return
+    except IndexError:
+        pass
 
     def raw_func(a, idx):
         return a[idx].shape
@@ -230,6 +239,13 @@ def test_tuple_isempty_hypothesis(t, shape):
         a = arange(prod(shape)).reshape(shape)
 
     T = Tuple(*t)
+
+    try:
+        ndindex(t).isempty(shape)
+    except NotImplementedError:
+        return
+    except IndexError:
+        pass
 
     def raw_func(a, t):
         return a[t].size == 0

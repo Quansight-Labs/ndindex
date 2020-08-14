@@ -1,3 +1,5 @@
+from numpy import broadcast, broadcast_to
+
 from .ndindex import NDIndex, ndindex, asshape
 
 class Tuple(NDIndex):
@@ -40,11 +42,13 @@ class Tuple(NDIndex):
 
     """
     def _typecheck(self, *args):
+        from .array import ArrayIndex
         from .ellipsis import ellipsis
         from .integerarray import IntegerArray
         from .booleanarray import BooleanArray
 
         newargs = []
+        arrays = []
         for arg in args:
             newarg = ndindex(arg)
             if isinstance(newarg, Tuple):
@@ -52,11 +56,19 @@ class Tuple(NDIndex):
                     raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call Tuple(*args) instead of Tuple(args)?")
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
+            if isinstance(newarg, ArrayIndex):
+                arrays.append(newarg)
 
         if newargs.count(ellipsis()) > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
-        if len([i for i in newargs if isinstance(i, IntegerArray)]) > 0:
-            raise NotImplementedError("tuples containing integer arrays are not yet supported")
+        if len(arrays) > 0 and isinstance(arrays[0], IntegerArray):
+            if not all(isinstance(i, (IntegerArray, ellipsis)) for i in newargs):
+                raise NotImplementedError("tuples mixing integer arrays with other index types are not yet supported")
+            try:
+                broadcast(*[i.raw for i in arrays])
+            except ValueError as e:
+                assert e.args == ("shape mismatch: objects cannot be broadcast to a single shape",)
+                raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
         if len([i for i in newargs if isinstance(i, BooleanArray)]) > 0:
             raise NotImplementedError("tuples containing boolean arrays are not yet supported")
 
@@ -283,6 +295,11 @@ class Tuple(NDIndex):
           an ellipsis or an implicit ellipsis at the end of the tuple are
           replaced by `Slice(0, n)`.
 
+        - Any array indices in `self` are broadcast together. Note that
+          broadcasting is done in a memory efficient way so that if the
+          broadcasted shape is large it will not take up more memory than the
+          original.
+
         >>> from ndindex import Tuple
         >>> idx = Tuple(slice(0, 10), ..., None, -3)
 
@@ -307,11 +324,26 @@ class Tuple(NDIndex):
         .NDIndex.expand
 
         """
+        from .array import ArrayIndex
         from .slice import Slice
 
         args = self.args
         if ... not in args:
             return type(self)(*args, ...).expand(shape)
+
+        # Broadcast all array indices. Note that broadcastability checked in
+        # the Tuple constructor, so this should not fail.
+        arrays = [i.raw for i in self.args if isinstance(i, ArrayIndex)]
+        broadcast_shape = broadcast(*arrays).shape
+        newargs = []
+        for s in args:
+            if isinstance(s, ArrayIndex):
+                # broadcast_to(x) gives a readonly view on x, which is also
+                # readonly, so set _copy=False to avoid representing the full
+                # broadcasted array in memory.
+                s = type(s)(broadcast_to(s.raw, broadcast_shape), _copy=False)
+            newargs.append(s)
+        args = tuple(newargs)
 
         # assert self.args.count(...) == 1
         n_newaxis = self.args.count(None)
@@ -354,7 +386,7 @@ class Tuple(NDIndex):
             return shape
 
         # This will raise any IndexErrors
-        self.reduce(shape)
+        self = self.expand(shape)
 
         ellipsis_i = self.ellipsis_index
 
