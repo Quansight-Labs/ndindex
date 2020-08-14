@@ -26,24 +26,24 @@ def test_newaxis_hypothesis(idx, shape):
 def test_newaxis_reduce_exhaustive():
     for n in range(10):
         a = arange(n)
-        check_same(a, newaxis, func=lambda x: x.reduce((n,)))
+        check_same(a, newaxis, ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
 
 
 @given(newaxes(), shapes)
 def test_newaxis_reduce_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, func=lambda x: x.reduce(shape))
+    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
 
 
 def test_newaxis_reduce_no_shape_exhaustive():
     for n in range(10):
         a = arange(n)
-        check_same(a, newaxis, func=lambda x: x.reduce())
+        check_same(a, newaxis, ndindex_func=lambda a, x: a[x.reduce().raw])
 
 @given(newaxes(), shapes)
 def test_newaxis_reduce_no_shape_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, func=lambda x: x.reduce())
+    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce().raw])
 
 @given(newaxes(), one_of(shapes, integers(0, 10)))
 def test_newaxis_newshape_hypothesis(idx, shape):
@@ -52,18 +52,17 @@ def test_newaxis_newshape_hypothesis(idx, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    index = ndindex(idx)
+    def raw_func(a, idx):
+        return a[idx].shape
 
-    # Call newshape so we can see if any exceptions match
-    def func(t):
-        t.newshape(shape)
-        return t
+    def ndindex_func(a, index):
+        return index.newshape(shape)
 
-    def assert_equal(x, y):
-        newshape = index.newshape(shape)
-        assert x.shape == y.shape == newshape
+    def assert_equal(raw_shape, newshape):
+        assert raw_shape == newshape
 
-    check_same(a, idx, func=func, assert_equal=assert_equal)
+    check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)
 
 def test_newaxis_newshape_ndindex_input():
     raises(TypeError, lambda: Newaxis().newshape(Tuple(2, 1)))
@@ -76,24 +75,27 @@ def test_newaxis_isempty_hypothesis(idx, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    E = ndindex(idx)
+    index = ndindex(idx)
 
-    # Call isempty to see if the exceptions are the same
-    def func(E):
-        E.isempty(shape)
-        return E
 
-    def assert_equal(a_raw, a_idx):
-        isempty = E.isempty()
+    def raw_func(a, idx):
+        return a[idx].size == 0
 
-        aempty = (a_raw.size == 0)
-        assert aempty == (a_idx.size == 0)
+    def ndindex_func(a, index):
+        return index.isempty(), index.isempty(shape)
+
+    def assert_equal(raw_empty, ndindex_empty):
+        isempty, isempty_shape = ndindex_empty
 
         # Since idx is a newaxis, it should never be unconditionally empty
         assert not isempty
+        # We cannot test the converse with hypothesis. isempty may be False
+        # but a[idx] could still be empty for this specific a (e.g., if a is
+        # already itself empty).
 
         # isempty() should always give the correct result for a specific
         # array after reduction
-        assert E.isempty(shape) == aempty, (E, shape)
+        assert isempty_shape == raw_empty, (index, shape)
 
-    check_same(a, idx, func=func, assert_equal=assert_equal)
+    check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)

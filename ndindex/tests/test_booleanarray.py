@@ -47,7 +47,7 @@ def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
 
-    check_same(a, index.raw, func=lambda x: x.reduce())
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
 
 @example(full((1, 9), True), (3, 3))
 @example(full((1, 9), False), (3, 3))
@@ -77,7 +77,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         a[index.raw]
         return
 
-    check_same(a, index.raw, func=lambda x: x.reduce(shape))
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
 
     try:
         reduced = index.reduce(shape)
@@ -97,14 +97,14 @@ def test_booleanarray_newshape_hypothesis(idx, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    def assert_equal(x, y):
-        newshape = BooleanArray(idx).newshape(shape)
-        assert x.shape == y.shape == newshape
+    def raw_func(a, idx):
+        return a[idx].shape
 
-    # Call newshape so we can see if any exceptions match
-    def func(idx):
-        idx.newshape(shape)
-        return idx
+    def ndindex_func(a, index):
+        return index.newshape(shape)
+
+    def assert_equal(raw_shape, newshape):
+        assert raw_shape == newshape
 
     index = BooleanArray(idx)
     if (index.count_nonzero == 0
@@ -124,7 +124,8 @@ def test_booleanarray_newshape_hypothesis(idx, shape):
         a[index.raw]
         return
 
-    check_same(a, idx, func=func, assert_equal=assert_equal)
+    check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)
 
 
 @given(boolean_arrays, one_of(shapes, integers(0, 10)))
@@ -136,26 +137,31 @@ def test_booleanarray_isempty_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
 
-    # Call isempty to see if the exceptions are the same
-    def func(index):
-        index.isempty(shape)
-        return index
+    def raw_func(a, idx):
+        return a[idx].size == 0
 
-    def assert_equal(a_raw, a_idx):
-        isempty = index.isempty()
-        isempty_shape = index.isempty(shape)
+    def ndindex_func(a, index):
+        return index.isempty(), index.isempty(shape)
 
-        aempty = (a_raw.size == 0)
-        assert aempty == (a_idx.size == 0)
+    def assert_equal(raw_empty, ndindex_empty):
+        isempty, isempty_shape = ndindex_empty
+
+        # If isempty is True then a[t] should be empty
+        if isempty:
+            assert raw_empty, (index, shape)
+        # We cannot test the converse with hypothesis. isempty may be False
+        # but a[idx] could still be empty for this specific a (e.g., if a is
+        # already itself empty).
 
         # If isempty is true with no shape it should be true for a specific
         # shape. The converse is not true because the indexed array could be
         # empty.
         if isempty:
-            assert isempty_shape
+            assert isempty_shape, (index, shape)
 
         # isempty() should always give the correct result for a specific
         # array after reduction
-        assert isempty_shape == aempty, (index, shape)
+        assert isempty_shape == raw_empty, (index, shape)
 
-    check_same(a, idx, func=func, assert_equal=assert_equal)
+    check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)

@@ -6,7 +6,6 @@ from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
 
 from ..integer import Integer
-from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..slice import Slice
 from .helpers import check_same, ints, prod, shapes, iterslice, assert_equal
@@ -52,7 +51,7 @@ def test_integer_len_hypothesis(i):
 def test_integer_reduce_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
-        check_same(a, i, func=lambda x: x.reduce((10,)))
+        check_same(a, i, ndindex_func=lambda a, x: a[x.reduce((10,)).raw])
 
         try:
             reduced = Integer(i).reduce(10)
@@ -68,7 +67,7 @@ def test_integer_reduce_hypothesis(i, shape):
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, i, func=lambda x: x.reduce(shape))
+    check_same(a, i, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
 
     try:
         reduced = Integer(i).reduce(shape)
@@ -80,27 +79,29 @@ def test_integer_reduce_hypothesis(i, shape):
 def test_integer_reduce_no_shape_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
-        check_same(a, i, func=lambda x: x.reduce())
+        check_same(a, i, ndindex_func=lambda a, x: a[x.reduce().raw])
 
 @given(ints(), shapes)
 def test_integer_reduce_no_shape_hypothesis(i, shape):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, i, func=lambda x: x.reduce())
+    check_same(a, i, ndindex_func=lambda a, x: a[x.reduce().raw])
 
 def test_integer_newshape_exhaustive():
     shape = 5
     a = arange(shape)
-    def assert_equal(x, y):
-        newshape = ndindex(i).newshape(shape)
-        assert x.shape == y.shape == newshape
 
-    # Call newshape so we can see if any exceptions match
-    def func(i):
-        i.newshape(shape)
-        return i
+    def raw_func(a, idx):
+        return a[idx].shape
+
+    def ndindex_func(a, index):
+        return index.newshape(shape)
+
+    def assert_equal(raw_shape, newshape):
+        assert raw_shape == newshape
 
     for i in range(-10, 10):
-        check_same(a, i, func=func, assert_equal=assert_equal)
+        check_same(a, i, raw_func=raw_func, ndindex_func=ndindex_func,
+                   assert_equal=assert_equal)
 
 @given(ints(), one_of(shapes, integers(0, 10)))
 def test_integer_newshape_hypothesis(i, shape):
@@ -109,16 +110,17 @@ def test_integer_newshape_hypothesis(i, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    def assert_equal(x, y):
-        newshape = ndindex(i).newshape(shape)
-        assert x.shape == y.shape == newshape
+    def raw_func(a, idx):
+        return a[idx].shape
 
-    # Call newshape so we can see if any exceptions match
-    def func(i):
-        i.newshape(shape)
-        return i
+    def ndindex_func(a, index):
+        return index.newshape(shape)
 
-    check_same(a, i, func=func, assert_equal=assert_equal)
+    def assert_equal(raw_shape, newshape):
+        assert raw_shape == newshape
+
+    check_same(a, i, raw_func=raw_func, ndindex_func=ndindex_func,
+                assert_equal=assert_equal)
 
 def test_integer_newshape_ndindex_input():
     raises(TypeError, lambda: Integer(1).newshape(Tuple(2, 1)))
@@ -210,22 +212,24 @@ def test_integer_isempty_hypothesis(i, shape):
 
     index = Integer(i)
 
-    # Call isempty to see if the exceptions are the same
-    def func(index):
-        index.isempty(shape)
-        return index
+    def raw_func(a, idx):
+        return a[idx].size == 0
 
-    def assert_equal(a_raw, a_idx):
-        isempty = index.isempty()
+    def ndindex_func(a, index):
+        return index.isempty(), index.isempty(shape)
 
-        aempty = (a_raw.size == 0)
-        assert aempty == (a_idx.size == 0)
+    def assert_equal(raw_empty, ndindex_empty):
+        isempty, isempty_shape = ndindex_empty
 
-        # idx is an integer, so it should never be empty
+        # Since i is an integer, it should never be unconditionally empty
         assert not isempty
+        # We cannot test the converse with hypothesis. isempty may be False
+        # but a[i] could still be empty for this specific a (e.g., if a is
+        # already itself empty).
 
         # isempty() should always give the correct result for a specific
         # array after reduction
-        assert index.isempty(shape) == aempty, (index, shape)
+        assert isempty_shape == raw_empty, (index, shape)
 
-    check_same(a, i, func=func, assert_equal=assert_equal)
+    check_same(a, i, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)

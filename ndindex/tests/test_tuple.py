@@ -60,7 +60,11 @@ def test_tuples_hypothesis(t, shape):
 def test_ellipsis_index(t, shape):
     a = arange(prod(shape)).reshape(shape)
     # Don't know if there is a better way to test ellipsis_idx
-    check_same(a, t, func=lambda x: ndindex((*x.raw[:x.ellipsis_index], ..., *x.raw[x.ellipsis_index+1:])))
+    def ndindex_func(a, index):
+        return a[ndindex((*index.raw[:index.ellipsis_index], ...,
+                          *index.raw[index.ellipsis_index+1:])).raw]
+
+    check_same(a, t, ndindex_func=ndindex_func)
 
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_no_shape_hypothesis(t, shape):
@@ -71,7 +75,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, func=lambda x: x.reduce(),
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce().raw],
                same_exception=False)
 
     reduced = index.reduce()
@@ -93,7 +97,7 @@ def test_tuple_reduce_hypothesis(t, shape):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, func=lambda x: x.reduce(shape),
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw],
                same_exception=False)
 
     try:
@@ -126,7 +130,8 @@ def test_tuple_reduce_explicit():
         assert reduced == after
 
         a = arange(prod(shape)).reshape(shape)
-        check_same(a, before.raw, func=lambda x: x.reduce(shape))
+        check_same(a, before.raw, ndindex_func=lambda a, x:
+                   a[x.reduce(shape).raw])
 
 @example((..., None, 0), 1)
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
@@ -139,7 +144,7 @@ def test_tuple_expand_hypothesis(t, shape):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, func=lambda x: x.expand(shape),
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
                same_exception=False)
 
     try:
@@ -187,7 +192,7 @@ def test_ndindex_expand_hypothesis(idx, shape):
         else:
             assert len(expanded.args) == len(shape) + n_newaxis
 
-    check_same(a, index.raw, func=lambda x: x.expand(shape),
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
                same_exception=False)
 
 @example((0, None, 0, ..., 0, None, 0), (2, 2, 2, 2, 2, 2, 2))
@@ -199,19 +204,17 @@ def test_tuple_newshape_hypothesis(t, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    index = Tuple(*t)
+    def raw_func(a, idx):
+        return a[idx].shape
 
-    # Call newshape so we can see if any exceptions match
-    def func(t):
-        t.newshape(shape)
-        return t
+    def ndindex_func(a, index):
+        return index.newshape(shape)
 
-    def assert_equal(x, y):
-        newshape = index.newshape(shape)
-        assert x.shape == y.shape == newshape
+    def assert_equal(raw_shape, newshape):
+        assert raw_shape == newshape
 
-    check_same(a, index.raw, func=func, assert_equal=assert_equal,
-               same_exception=False)
+    check_same(a, t, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)
 
 def test_tuple_newshape_ndindex_input():
     raises(TypeError, lambda: Tuple(1).newshape(Tuple(2, 1)))
@@ -228,27 +231,31 @@ def test_tuple_isempty_hypothesis(t, shape):
 
     T = Tuple(*t)
 
-    # Call isempty to see if the exceptions are the same
-    def func(T):
-        T.isempty(shape)
-        return T
+    def raw_func(a, t):
+        return a[t].size == 0
 
-    def assert_equal(a_raw, a_idx):
-        isempty = T.isempty()
+    def ndindex_func(a, T):
+        return T.isempty(), T.isempty(shape)
 
-        aempty = (a_raw.size == 0)
-        assert aempty == (a_idx.size == 0)
+    def assert_equal(raw_empty, ndindex_empty):
+        isempty, isempty_shape = ndindex_empty
 
         # If isempty is True then a[t] should be empty
         if isempty:
-            assert aempty, (T, shape)
+            assert raw_empty, (T, shape)
         # We cannot test the converse with hypothesis. isempty may be False
         # but a[t] could still be empty for this specific a (e.g., if a is
         # already itself empty).
 
+        # If isempty is true with no shape it should be true for a specific
+        # shape. The converse is not true because the indexed array could be
+        # empty.
+        if isempty:
+            assert isempty_shape, (T, shape)
+
         # isempty() should always give the correct result for a specific
         # array after reduction
-        assert T.isempty(shape) == aempty, (T, shape)
+        assert isempty_shape == raw_empty, (T, shape)
 
-    check_same(a, t, func=func, assert_equal=assert_equal,
-               same_exception=False)
+    check_same(a, t, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)

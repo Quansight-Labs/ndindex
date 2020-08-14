@@ -90,7 +90,30 @@ def assert_equal(actual, desired, err_msg='', verbose=True):
     assert actual.shape == desired.shape, err_msg or f"{actual.shape} != {desired.shape}"
     assert actual.dtype == desired.dtype, err_msg or f"{actual.dtype} != {desired.dtype}"
 
-def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=assert_equal):
+def check_same(a, idx, raw_func=lambda a, idx: a[idx],
+               ndindex_func=lambda a, index: a[index.raw],
+               same_exception=True, assert_equal=assert_equal):
+    """
+    Check that a raw index idx produces the same result on an array a before
+    and after being transformed by ndindex.
+
+    Tests that raw_func(a, idx) == ndindex_func(a, ndindex(idx)) or that they
+    raise the same exception. If same_exception=False, it will still check
+    that they both raise an exception, but will not require the exception type
+    and message to be the same.
+
+    By default, raw_func(a, idx) is a[idx] and ndindex_func(a, index) is
+    a[index.raw].
+
+    The assert_equal argument changes the function used to test equality. By
+    default it is the custom assert_equal() function in this file that extends
+    numpy.testing.assert_equal. If the func functions return something other
+    than arrays, assert_equal should be set to something else, like
+
+        def assert_equal(x, y):
+            assert x == y
+
+    """
     exception = None
     try:
         # Handle list indices that NumPy treats as tuple indices with a
@@ -99,15 +122,15 @@ def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=ass
         with warnings.catch_warnings(record=True) as r:
             e_inner = None
             try:
-                a_raw = a[index]
+                a_raw = raw_func(a, idx)
             except Exception:
                 _, e_inner, _ = sys.exc_info()
         if len(r) == 1:
             if (isinstance(r[0].message, FutureWarning) and "Using a non-tuple "
                 "sequence for multidimensional indexing is deprecated" in
                 r[0].message.args[0]):
-                index = array(index)
-                a_raw = a[index]
+                idx = array(idx)
+                a_raw = raw_func(a, idx)
             else:
                 raise AssertionError(f"Unexpected warnings raised: {[i.message for i in r]}") # pragma: no cover
         elif e_inner:
@@ -126,9 +149,8 @@ def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=ass
         exception = e
 
     try:
-        idx = ndindex(index)
-        idx = func(idx)
-        a_idx = a[idx.raw]
+        index = ndindex(idx)
+        a_ndindex = ndindex_func(a, index)
     except Exception as e:
         if not exception:
             fail(f"Raw form does not raise but ndindex form does ({e!r}): {index})") # pragma: no cover
@@ -140,7 +162,7 @@ def check_same(a, index, func=lambda x: x, same_exception=True, assert_equal=ass
             fail(f"ndindex form did not raise but raw form does ({exception!r}): {index})") # pragma: no cover
 
     if not exception:
-        assert_equal(a_raw, a_idx)
+        assert_equal(a_raw, a_ndindex)
 
 
 def iterslice(start_range=(-10, 10),
