@@ -11,7 +11,9 @@ class BooleanArray(ArrayIndex):
     and `a` is an array of shape `s = (s1, ..., sn, ..., sm)`, `a[idx]`
     replaces the first `n` dimensions of `a` with a single dimensions of size
     `np.nonzero(idx)`, where each entry is included if the corresponding
-    element of `idx` is True.
+    element of `idx` is True. The axes in the index shape should match the
+    corresponding axes in the array shape or be 0, or the index produces
+    IndexError.
 
     The typical way of creating a mask is to use boolean operations on an
     array, then index the array with that. For example, if `a` is an array of
@@ -29,7 +31,7 @@ class BooleanArray(ArrayIndex):
        iterated in row-major, C-style order. This does not apply to
        0-dimensional boolean indices.
 
-    3. A 0-dimension boolean index (i.e., just the scalar `True` or `False`)
+    3. A 0-dimensional boolean index (i.e., just the scalar `True` or `False`)
        can still be thought of as removing 0 dimensions and adding a single
        dimension of length 1 for True or 0 for False. Hence, if `a` has shape
        `(s1, ..., sn)`, then `a[True]` has shape `(1, s1, ..., sn)`, and
@@ -129,7 +131,8 @@ class BooleanArray(ArrayIndex):
             raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {self.ndim + axis} were indexed")
 
         for i in range(axis, axis+self.ndim):
-            if self.shape[i-axis] != 0 and shape[i] != 0 and 0 not in shape and shape[i] != self.shape[i-axis]:
+            if self.shape[i-axis] != 0 and shape[i] != self.shape[i-axis]:
+
                 raise IndexError(f"boolean index did not match indexed array along dimension {i}; dimension is {shape[i]} but corresponding boolean dimension is {self.shape[i-axis]}")
 
         return self
