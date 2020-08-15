@@ -83,6 +83,8 @@ class Tuple(NDIndex):
             if s is Ellipsis:
                 return '...'
             if isinstance(s, ArrayIndex):
+                if 0 not in s.shape:
+                    return repr(s.array.tolist())
                 return repr(s)
             return repr(s.raw)
         return f"{self.__class__.__name__}({', '.join(map(_repr, self.args))})"
