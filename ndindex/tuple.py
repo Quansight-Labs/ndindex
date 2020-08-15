@@ -74,14 +74,30 @@ class Tuple(NDIndex):
 
         return tuple(newargs)
 
+
     def __repr__(self):
+        from .array import ArrayIndex
         # Since tuples are nested, we can print the raw form of the args to
         # make them a little more readable.
         def _repr(s):
             if s is Ellipsis:
                 return '...'
-            return repr(s)
-        return f"{self.__class__.__name__}({', '.join(map(_repr, self.raw))})"
+            if isinstance(s, ArrayIndex):
+                return repr(s)
+            return repr(s.raw)
+        return f"{self.__class__.__name__}({', '.join(map(_repr, self.args))})"
+
+    def __str__(self):
+        from .array import ArrayIndex
+        # Since tuples are nested, we can print the raw form of the args to
+        # make them a little more readable.
+        def _str(s):
+            if s is Ellipsis:
+                return '...'
+            if isinstance(s, ArrayIndex):
+                return str(s)
+            return str(s.raw)
+        return f"{self.__class__.__name__}({', '.join(map(_str, self.args))})"
 
     @property
     def has_ellipsis(self):
