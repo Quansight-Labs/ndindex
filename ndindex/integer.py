@@ -87,13 +87,16 @@ class Integer(NDIndex):
 
         return self
 
-    def newshape(self, shape):
+    def newshape(self, shape, _axis=None):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        # reduce will raise IndexError if it should be raised
-        self.reduce(shape)
+        if _axis is not None:
+            # reduce will raise IndexError if it should be raised
+            self.reduce(shape, axis=_axis)
+            return ()
 
+        self.reduce(shape)
         return shape[1:]
 
     def as_subindex(self, index):
