@@ -99,7 +99,7 @@ class Tuple(NDIndex):
         # Since tuples are nested, we can print the raw form of the args to
         # make them a little more readable.
         def _repr(s):
-            if s is Ellipsis:
+            if s == ...:
                 return '...'
             if isinstance(s, ArrayIndex):
                 if s.shape and 0 not in s.shape:
@@ -113,7 +113,7 @@ class Tuple(NDIndex):
         # Since tuples are nested, we can print the raw form of the args to
         # make them a little more readable.
         def _str(s):
-            if s is Ellipsis:
+            if s == ...:
                 return '...'
             if isinstance(s, ArrayIndex):
                 return str(s)
