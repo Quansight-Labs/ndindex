@@ -357,6 +357,10 @@ class Tuple(NDIndex):
         ...
         IndexError: index -3 is out of bounds for axis 1 with size 2
 
+        >>> idx = Tuple(..., [0, 1], -1)
+        >>> idx.expand((1, 2, 3))
+        Tuple(slice(0, 1, 1), [0, 1], [2, 2])
+
         See Also
         ========
 

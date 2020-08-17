@@ -14,7 +14,11 @@ class IntegerArray(ArrayIndex):
 
     Integer arrays can also appear as part of tuple indices. In that case,
     they replace the axis being indexed. If more than one integer array
-    appears inside of a tuple index, they are broadcast together.
+    appears inside of a tuple index, they are broadcast together and iterated
+    as one. Furthermore, if an integer array appears in a tuple index, all
+    integer indices in the tuple are treated as scalar integer arrays and are
+    also broadcast. In general, an :any:`Integer` index semantically behaves
+    the same as a scalar (`shape=()`) `IntegerArray`.
 
     A list of integers may also be used in place of an integer array. Note
     that NumPy treats a direct list of integers as a tuple index, but this
