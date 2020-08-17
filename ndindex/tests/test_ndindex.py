@@ -48,10 +48,12 @@ def test_ndindex(idx):
         elif isinstance(idx, tuple):
             assert type(index.raw) == type(idx)
             assert len(index.raw) == len(idx)
-            for i, j in zip(index.raw, idx):
+            assert index.args == index.raw
+            for i, j in zip(idx, index.args):
                 test_raw_eq(i, j)
         else:
             assert index.raw == idx
+    test_raw_eq(idx, index)
     assert ndindex(index.raw) == index
 
 def test_ndindex_invalid():
