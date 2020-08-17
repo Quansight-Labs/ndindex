@@ -19,6 +19,22 @@ def test_tuple_constructor():
     raises(ValueError, lambda: Tuple((1, 2, 3)))
     raises(ValueError, lambda: Tuple(0, (1, 2, 3)))
 
+    # Test NotImplementedError behavior for Tuples with arrays split up by
+    # slices, ellipses, and newaxes.
+    raises(NotImplementedError, lambda: Tuple(0, slice(None), [0]))
+    raises(NotImplementedError, lambda: Tuple([0], slice(None), [0]))
+    raises(NotImplementedError, lambda: Tuple([0], slice(None), [0]))
+    raises(NotImplementedError, lambda: Tuple(0, ..., [0]))
+    raises(NotImplementedError, lambda: Tuple([0], ..., [0]))
+    raises(NotImplementedError, lambda: Tuple([0], ..., [0]))
+    raises(NotImplementedError, lambda: Tuple(0, None, [0]))
+    raises(NotImplementedError, lambda: Tuple([0], None, [0]))
+    raises(NotImplementedError, lambda: Tuple([0], None, [0]))
+    # Make sure this doesn't raise
+    Tuple(0, slice(None), 0)
+    Tuple(0, ..., 0)
+    Tuple(0, None, 0)
+
 def test_tuple_exhaustive():
     # Exhaustive tests here have to be very limited because of combinatorial
     # explosion.

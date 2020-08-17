@@ -39,13 +39,19 @@ def test_eq(idx):
 def test_ndindex(idx):
     index = ndindex(idx)
     assert index == idx
-    if isinstance(idx, np.ndarray):
-        assert_equal(index.raw, idx)
-    elif isinstance(idx, list):
-        assert index.dtype in [np.intp, np.bool_]
-        assert_equal(index.raw, np.asarray(idx, dtype=index.dtype))
-    else:
-        assert index.raw == idx
+    def test_raw_eq(idx, index):
+        if isinstance(idx, np.ndarray):
+            assert_equal(index.raw, idx)
+        elif isinstance(idx, list):
+            assert index.dtype in [np.intp, np.bool_]
+            assert_equal(index.raw, np.asarray(idx, dtype=index.dtype))
+        elif isinstance(idx, tuple):
+            assert type(index.raw) == type(idx)
+            assert len(index.raw) == len(idx)
+            for i, j in zip(index.raw, idx):
+                test_raw_eq(i, j)
+        else:
+            assert index.raw == idx
     assert ndindex(index.raw) == index
 
 def test_ndindex_invalid():

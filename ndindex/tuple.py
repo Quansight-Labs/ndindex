@@ -1,4 +1,4 @@
-from numpy import broadcast, broadcast_to
+from numpy import broadcast, broadcast_to, array, intp, ndarray, bool_
 
 from .ndindex import NDIndex, ndindex, asshape
 
@@ -44,11 +44,16 @@ class Tuple(NDIndex):
     def _typecheck(self, *args):
         from .array import ArrayIndex
         from .ellipsis import ellipsis
-        from .integerarray import IntegerArray
+        from .newaxis import Newaxis
+        from .slice import Slice
+        from .integer import Integer
         from .booleanarray import BooleanArray
 
         newargs = []
         arrays = []
+        array_block_start = False
+        array_block_stop = False
+        has_array = any(isinstance(i, (ArrayIndex, list, ndarray, bool, bool_)) for i in args)
         for arg in args:
             newarg = ndindex(arg)
             if isinstance(newarg, Tuple):
@@ -57,13 +62,27 @@ class Tuple(NDIndex):
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
             if isinstance(newarg, ArrayIndex):
+                array_block_start = True
                 arrays.append(newarg)
+            elif has_array and isinstance(newarg, Integer):
+                array_block_start = True
+            if isinstance(newarg, (Slice, ellipsis, Newaxis)) and array_block_start:
+                array_block_stop = True
+            elif isinstance(newarg, (ArrayIndex, Integer)):
+                if array_block_start and array_block_stop:
+                    # If the arrays in a tuple index are separated by a slice,
+                    # ellipsis, or newaxis, the behavior is that the
+                    # dimensions indexed by the array (and integer) indices
+                    # are added to the front of the final array shape. Travis
+                    # told me that he regrets implementing this behavior in
+                    # NumPy and that he wishes it were in error. So for now,
+                    # that is what we are going to do, unless it turns out
+                    # that we actually need it.
+                    raise NotImplementedError("Array indices separated by slices, ellipses (...), or newaxes (None) are not supported")
 
         if newargs.count(ellipsis()) > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
-        if len(arrays) > 0 and isinstance(arrays[0], IntegerArray):
-            if not all(isinstance(i, (IntegerArray, ellipsis)) for i in newargs):
-                raise NotImplementedError("tuples mixing integer arrays with other index types are not yet supported")
+        if len(arrays) > 0:
             try:
                 broadcast(*[i.raw for i in arrays])
             except ValueError as e:
@@ -83,7 +102,7 @@ class Tuple(NDIndex):
             if s is Ellipsis:
                 return '...'
             if isinstance(s, ArrayIndex):
-                if 0 not in s.shape:
+                if s.shape and 0 not in s.shape:
                     return repr(s.array.tolist())
                 return repr(s)
             return repr(s.raw)
@@ -313,7 +332,10 @@ class Tuple(NDIndex):
           an ellipsis or an implicit ellipsis at the end of the tuple are
           replaced by `Slice(0, n)`.
 
-        - Any array indices in `self` are broadcast together. Note that
+        - Any array indices in `self` are broadcast together. If `self`
+          contains array indices (:any:`IntegerArray` or :any:`BooleanArray`),
+          then any :any:`Integer` indices are converted into
+          :any:`IntegerArray` indices of shape `()` and broadcast. Note that
           broadcasting is done in a memory efficient way so that if the
           broadcasted shape is large it will not take up more memory than the
           original.
@@ -343,25 +365,18 @@ class Tuple(NDIndex):
 
         """
         from .array import ArrayIndex
+        from .integer import Integer
+        from .integerarray import IntegerArray
         from .slice import Slice
 
         args = self.args
         if ... not in args:
             return type(self)(*args, ...).expand(shape)
 
-        # Broadcast all array indices. Note that broadcastability checked in
-        # the Tuple constructor, so this should not fail.
+        # Broadcast all array indices. Note that broadcastability is checked
+        # in the Tuple constructor, so this should not fail.
         arrays = [i.raw for i in self.args if isinstance(i, ArrayIndex)]
         broadcast_shape = broadcast(*arrays).shape
-        newargs = []
-        for s in args:
-            if isinstance(s, ArrayIndex):
-                # broadcast_to(x) gives a readonly view on x, which is also
-                # readonly, so set _copy=False to avoid representing the full
-                # broadcasted array in memory.
-                s = type(s)(broadcast_to(s.raw, broadcast_shape), _copy=False)
-            newargs.append(s)
-        args = tuple(newargs)
 
         # assert self.args.count(...) == 1
         n_newaxis = self.args.count(None)
@@ -373,11 +388,19 @@ class Tuple(NDIndex):
         newargs = []
         n_newaxis_before_ellipsis = 0
         for i, s in enumerate(args[:ellipsis_i]):
-            if s == None:
+            axis = i - n_newaxis_before_ellipsis
+            s = s.reduce(shape, axis=axis)
+            if isinstance(s, ArrayIndex):
+                # broadcast_to(x) gives a readonly view on x, which is also
+                # readonly, so set _copy=False to avoid representing the full
+                # broadcasted array in memory.
+                s = type(s)(broadcast_to(s.raw, broadcast_shape), _copy=False)
+            elif arrays and isinstance(s, Integer):
+                s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
+                                              broadcast_shape), _copy=False)
+            elif s == None:
                 n_newaxis_before_ellipsis += 1
-                newargs.append(s)
-            else:
-                newargs.append(s.reduce(shape, axis=i - n_newaxis_before_ellipsis))
+            newargs.append(s)
 
         newargs.extend([Slice(None).reduce(shape, axis=i + ellipsis_i - n_newaxis_before_ellipsis) for
                         i in range(len(shape) - len(args) + 1 + n_newaxis)])
@@ -385,11 +408,18 @@ class Tuple(NDIndex):
         n_newaxis_after_ellipsis = 0
         endargs = []
         for i, s in enumerate(reversed(args[ellipsis_i+1:]), start=1):
-            if s == None:
+            s = s.reduce(shape, axis=len(shape)-i+n_newaxis_after_ellipsis)
+            if isinstance(s, ArrayIndex):
+                # broadcast_to(x) gives a readonly view on x, which is also
+                # readonly, so set _copy=False to avoid representing the full
+                # broadcasted array in memory.
+                s = type(s)(broadcast_to(s.raw, broadcast_shape), _copy=False)
+            elif arrays and isinstance(s, Integer):
+                s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
+                                              broadcast_shape), _copy=False)
+            elif s == None:
                 n_newaxis_after_ellipsis += 1
-                endargs.append(s)
-            else:
-                endargs.append(s.reduce(shape, axis=len(shape)-i+n_newaxis_after_ellipsis))
+            endargs.append(s)
 
         newargs = newargs + endargs[::-1]
 
