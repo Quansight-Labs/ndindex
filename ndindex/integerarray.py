@@ -48,8 +48,9 @@ class IntegerArray(ArrayIndex):
         Reduce an `IntegerArray` index on an array of shape `shape`.
 
         The result will either be `IndexError` if the index is invalid for the
-        given shape, or an `IntegerArray` index where the values are all
-        nonnegative.
+        given shape, an `IntegerArray` index where the values are all
+        nonnegative, or, if `self` is a scalar array index (`self.shape ==
+        ()`), an `Integer` whose value is nonnegative.
 
         >>> from ndindex import IntegerArray
         >>> idx = IntegerArray([-5, 2])
