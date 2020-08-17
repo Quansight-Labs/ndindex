@@ -1,4 +1,4 @@
-from numpy import intp, zeros
+from numpy import intp, zeros, amax, amin, broadcast_arrays
 
 from .array import ArrayIndex
 from .ndindex import asshape
@@ -128,3 +128,66 @@ class IntegerArray(ArrayIndex):
             return 0 in self.newshape(shape)
 
         return 0 in self.shape
+
+    def as_subindex(self, index):
+        from .ndindex import ndindex
+        from .slice import Slice
+
+        def ceiling(a, b):
+            """
+            Returns ceil(a/b)
+            """
+            return -(-a//b)
+
+        def _max(a, b):
+            return amax(broadcast_arrays(a, b), axis=0)
+
+        def _min(a, b):
+            return amin(broadcast_arrays(a, b), axis=0)
+
+        index = ndindex(index)
+
+        if isinstance(index, Slice):
+            index = index.reduce()
+            if (self.array < 0).any():
+                raise NotImplementedError("IntegerArray.as_subindex() is only implemented for arrays with all nonnegative entries. Try calling reduce() with a shape first.")
+            if index.step < 0:
+                raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with positive steps")
+
+            # After reducing, start is not None when step > 0
+            if index.stop is None or index.start < 0 or index.stop < 0:
+                raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+
+            # Logic extracted from Slice.as_subindex. Equivalent to
+
+            # res = []
+            # for i in self.array.flat:
+            #     s = Slice(i, i+1).as_subindex(index)
+            #     if s == Slice(0, 0, 1):
+            #         continue
+            #     res.append(s.start)
+            # return IntegerArray(res)
+
+            # See also Integer.as_subindex().
+
+            s = self.array
+            common = index.start % index.step
+            lcm = index.step
+            start = _max(s, index.start)
+            n = ceiling((start - common), lcm)
+            start = common + n*lcm
+            start = (start - index.start)//index.step
+
+            stop = ceiling((_min(s+1, index.stop) - index.start), index.step)
+            if start.shape == ():
+                if stop <= 0:
+                    raise ValueError("Indices do not intersect")
+                return IntegerArray(start)
+
+            start = start[stop > 0]
+
+            if 0 in start.shape:
+                raise ValueError("Indices do not intersect")
+            return IntegerArray(start)
+
+        raise NotImplementedError("IntegerArray.as_subindex is only implemented for slices")

@@ -44,8 +44,8 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
         empty = True
 
     try:
-        a1 = a[idx1]
-        a2 = a[idx2]
+        a1 = a[index1.raw]
+        a2 = a[index2.raw]
     except IndexError: # pragma: no cover
         assume(False)
 
