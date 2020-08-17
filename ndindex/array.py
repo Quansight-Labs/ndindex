@@ -37,9 +37,13 @@ class ArrayIndex(NDIndex):
                 if a is idx and _copy:
                     a = a.copy()
                 if isinstance(idx, list) and 0 in a.shape:
+                    if not _copy:
+                        raise ValueError("_copy=False is not allowed with list input")
                     a = a.astype(self.dtype)
             if self.dtype == intp and issubclass(a.dtype.type, integer):
                 if a.dtype != self.dtype:
+                    if not _copy:
+                        raise ValueError("If _copy=False, the input array dtype must already be intp")
                     a = a.astype(self.dtype)
             if a.dtype != self.dtype:
                 raise TypeError(f"The input array to {self.__class__.__name__} must have dtype {self.dtype.__name__}, not {a.dtype}")
