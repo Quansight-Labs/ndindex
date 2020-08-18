@@ -126,7 +126,7 @@ def check_same(a, idx, raw_func=lambda a, idx: a[idx],
                 if ("Using a non-tuple sequence for multidimensional indexing is deprecated" in w.args[0]):
                     idx = array(idx)
                     a_raw = raw_func(a, idx)
-                else:
+                else: # pragma: no cover
                     fail(f"Unexpected warning raised: {w}")
         except Exception:
             _, e_inner, _ = sys.exc_info()
