@@ -444,15 +444,14 @@ class Tuple(NDIndex):
 
         ellipsis_i = self.ellipsis_index
 
-        startshape = []
-        n_newaxis = self.args.count(None)
-        n_newaxis_before_ellipsis = 0
+        newshape = []
+        n_newaxis = 0
         arrays = False
         for i, s in enumerate(self.args[:ellipsis_i]):
-            axis = i-n_newaxis_before_ellipsis
+            axis = i-n_newaxis
             if s == None:
-                n_newaxis_before_ellipsis += 1
-                startshape.append(1)
+                n_newaxis += 1
+                newshape.append(1)
             elif isinstance(s, ArrayIndex):
                 if not arrays:
                     # Multiple arrays are all broadcast together (in expand())
@@ -461,31 +460,10 @@ class Tuple(NDIndex):
                     # by ellipses, slices, or newaxes affect the shape
                     # differently, but these are currently unsupported (see
                     # the comments in the Tuple constructor)
-                    startshape.extend(list(s.newshape(shape, _axis=axis)))
+                    newshape.extend(list(s.newshape(shape, _axis=axis)))
                     arrays = True
             else:
-                startshape.extend(list(s.newshape(shape, _axis=axis)))
-
-        n_newaxis_after_ellipsis = 0
-        endshape = []
-        for i, s in enumerate(reversed(self.args[ellipsis_i+1:]), start=1):
-            axis = len(shape)-i+n_newaxis_after_ellipsis
-            if s == None:
-                n_newaxis_after_ellipsis += 1
-                endshape.append(1)
-            elif isinstance(s, ArrayIndex):
-                if not arrays:
-                    endshape.extend(list(s.newshape(shape, _axis=axis)))
-                    arrays = True
-            else:
-                endshape.extend(list(s.newshape(shape, _axis=axis)))
-
-        if ... in self.args:
-            midshape = list(shape[ellipsis_i-n_newaxis_before_ellipsis:len(shape)+ellipsis_i-len(self.args)+n_newaxis_after_ellipsis+1])
-        else:
-            midshape = list(shape[len(self.args) - n_newaxis:])
-
-        newshape = startshape + midshape + endshape[::-1]
+                newshape.extend(list(s.newshape(shape, _axis=axis)))
 
         return tuple(newshape)
 
