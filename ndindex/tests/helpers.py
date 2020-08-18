@@ -2,7 +2,6 @@ import sys
 from itertools import chain
 from functools import reduce
 from operator import mul
-import warnings
 
 from numpy import intp, bool_, array
 import numpy.testing
