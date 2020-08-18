@@ -119,21 +119,19 @@ def check_same(a, idx, raw_func=lambda a, idx: a[idx],
         # Handle list indices that NumPy treats as tuple indices with a
         # deprecation warning. We want to test against the post-deprecation
         # behavior.
-        with warnings.catch_warnings(record=True) as r:
-            e_inner = None
+        e_inner = None
+        try:
             try:
                 a_raw = raw_func(a, idx)
-            except Exception:
-                _, e_inner, _ = sys.exc_info()
-        if len(r) == 1:
-            if (isinstance(r[0].message, FutureWarning) and "Using a non-tuple "
-                "sequence for multidimensional indexing is deprecated" in
-                r[0].message.args[0]):
-                idx = array(idx)
-                a_raw = raw_func(a, idx)
-            else:
-                raise AssertionError(f"Unexpected warnings raised: {[i.message for i in r]}") # pragma: no cover
-        elif e_inner:
+            except FutureWarning as w:
+                if ("Using a non-tuple sequence for multidimensional indexing is deprecated" in w.args[0]):
+                    idx = array(idx)
+                    a_raw = raw_func(a, idx)
+                else:
+                    fail(f"Unexpected warning raised: {w}")
+        except Exception:
+            _, e_inner, _ = sys.exc_info()
+        if e_inner:
             if (isinstance(e_inner, ValueError)
                 and (e_inner.args[0].startswith('operands could not be broadcast together with shapes')
                      or e_inner.args[0].startswith('non-broadcastable operand with shape'))):
