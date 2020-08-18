@@ -200,7 +200,7 @@ def test_ndindex_expand_hypothesis(idx, shape):
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
         if isinstance(idx, tuple):
-            n_newaxis = idx.count(None)
+            n_newaxis = index.args.count(None)
         elif index == None:
             n_newaxis = 1
         else:
