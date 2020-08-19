@@ -75,6 +75,9 @@ def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
 
+
+@example(([0, 1],))
+@example((IntegerArray([], (0, 1)),))
 @example(IntegerArray([], (0, 1)))
 @example((1, ..., slice(1, 2)))
 # eval can sometimes be slower than the default deadline of 200ms for large

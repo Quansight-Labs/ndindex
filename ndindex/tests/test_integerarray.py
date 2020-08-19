@@ -50,6 +50,7 @@ def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
 
     check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
 
+@example(array([2, 0]), (1, 0))
 @example(array(0), 1)
 @given(integer_arrays, one_of(short_shapes, integers(0, 10)))
 def test_integerarray_reduce_hypothesis(idx, shape):
