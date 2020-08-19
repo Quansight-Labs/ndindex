@@ -122,25 +122,18 @@ def check_same(a, idx, raw_func=lambda a, idx: a[idx],
         try:
             try:
                 a_raw = raw_func(a, idx)
-            except FutureWarning as w:
+            except Warning as w:
                 if ("Using a non-tuple sequence for multidimensional indexing is deprecated" in w.args[0]):
                     idx = array(idx)
                     a_raw = raw_func(a, idx)
+                elif "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
+                    same_exception = False
+                    raise IndexError
                 else: # pragma: no cover
                     fail(f"Unexpected warning raised: {w}")
         except Exception:
             _, e_inner, _ = sys.exc_info()
         if e_inner:
-            if (isinstance(e_inner, ValueError)
-                and (e_inner.args[0].startswith('operands could not be broadcast together with shapes')
-                     or e_inner.args[0].startswith('non-broadcastable operand with shape'))):
-                # NumPy has a bug where it sometimes gives
-                # ValueError('operands could not be broadcast together with
-                # shapes ...') instead of the correct IndexError (see
-                # https://github.com/numpy/numpy/issues/16997). We don't want
-                # to reproduce this incorrect error, so ignore it.
-                same_exception = False
-                raise IndexError
             raise e_inner
     except Exception as e:
         exception = e

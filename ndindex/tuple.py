@@ -460,10 +460,10 @@ class Tuple(NDIndex):
                     # by ellipses, slices, or newaxes affect the shape
                     # differently, but these are currently unsupported (see
                     # the comments in the Tuple constructor)
-                    newshape.extend(list(s.newshape(shape, _axis=axis)))
+                    newshape.extend(list(s.newshape(shape[axis])))
                     arrays = True
             else:
-                newshape.extend(list(s.newshape(shape, _axis=axis)))
+                newshape.extend(list(s.newshape(shape[axis])))
 
         return tuple(newshape)
 

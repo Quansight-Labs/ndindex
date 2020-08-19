@@ -137,15 +137,11 @@ class BooleanArray(ArrayIndex):
 
         return self
 
-    def newshape(self, shape, _axis=None):
+    def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        if _axis is not None:
-            # reduce will raise IndexError if it should be raised
-            self.reduce(shape, axis=_axis)
-            return (self.count_nonzero,)
-
+        # reduce will raise IndexError if it should be raised
         self.reduce(shape)
         return (self.count_nonzero,) + shape[self.ndim:]
 

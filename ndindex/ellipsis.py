@@ -75,12 +75,9 @@ class ellipsis(NDIndex):
     def raw(self):
         return ...
 
-    def newshape(self, shape, _axis=None):
+    def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
-
-        if _axis is not None:
-            return shape[_axis]
 
         return shape
 
