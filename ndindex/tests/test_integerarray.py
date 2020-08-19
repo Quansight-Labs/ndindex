@@ -52,6 +52,7 @@ def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
 
 @example(array([2, 0]), (1, 0))
 @example(array(0), 1)
+@example(array([]), 0)
 @given(integer_arrays, one_of(short_shapes, integers(0, 10)))
 def test_integerarray_reduce_hypothesis(idx, shape):
     if isinstance(shape, int):
