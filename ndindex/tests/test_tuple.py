@@ -10,8 +10,7 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, Tuples, prod, shapes, iterslice, ndindices
-
+from .helpers import check_same, Tuples, prod, shapes, iterslice
 
 def test_tuple_constructor():
     # Test things in the Tuple constructor that are not tested by the other
@@ -148,78 +147,6 @@ def test_tuple_reduce_explicit():
         a = arange(prod(shape)).reshape(shape)
         check_same(a, before.raw, ndindex_func=lambda a, x:
                    a[x.reduce(shape).raw])
-
-@example(([0, 1], 0), (2, 2))
-@example((..., [0, 1], 0), (2, 2))
-@example((..., None, 0), 1)
-@example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
-@example(None, 2)
-@given(ndindices, one_of(shapes, integers(0, 10)))
-def test_ndindex_expand_hypothesis(idx, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    index = ndindex(idx)
-
-    try:
-        expanded = index.expand(shape)
-    except IndexError:
-        pass
-    except NotImplementedError:
-        return
-    else:
-        assert isinstance(expanded, Tuple)
-        assert ... not in expanded.args
-        if isinstance(idx, tuple):
-            n_newaxis = index.args.count(None)
-        elif index == None:
-            n_newaxis = 1
-        else:
-            n_newaxis = 0
-        if isinstance(shape, int):
-            assert len(expanded.args) == 1 + n_newaxis
-        else:
-            assert len(expanded.args) == len(shape) + n_newaxis
-
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
-               same_exception=False)
-
-
-@example(([0, 1], 0), (2, 2))
-@example(([0, 0, 0], [0, 0]), (2, 2))
-@example((0, None, 0, ..., 0, None, 0), (2, 2, 2, 2, 2, 2, 2))
-@example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
-@given(Tuples, one_of(shapes, integers(0, 10)))
-def test_tuple_newshape_hypothesis(t, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    try:
-        ndindex(t).newshape(shape)
-    except NotImplementedError:
-        return
-    except IndexError:
-        pass
-
-    def raw_func(a, idx):
-        return a[idx].shape
-
-    def ndindex_func(a, index):
-        return index.newshape(shape)
-
-    def assert_equal(raw_shape, newshape):
-        assert raw_shape == newshape
-
-    check_same(a, t, raw_func=raw_func, ndindex_func=ndindex_func,
-               assert_equal=assert_equal, same_exception=False)
-
-def test_tuple_newshape_ndindex_input():
-    raises(TypeError, lambda: Tuple(1).newshape(Tuple(2, 1)))
-    raises(TypeError, lambda: Tuple(1).newshape(Integer(2)))
 
 @example((slice(0, 0),), 2)
 @example((0, slice(0, 0)), (1, 2))

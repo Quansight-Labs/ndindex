@@ -73,25 +73,6 @@ def test_integerarray_reduce_hypothesis(idx, shape):
             assert isinstance(reduced, IntegerArray)
             assert (reduced.raw >= 0).all()
 
-@given(integer_arrays, one_of(short_shapes, integers(0, 10)))
-def test_integerarray_newshape_hypothesis(idx, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    def raw_func(a, idx):
-        return a[idx].shape
-
-    def ndindex_func(a, index):
-        return index.newshape(shape)
-
-    def assert_equal(raw_shape, newshape):
-        assert raw_shape == newshape
-
-    check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
-               assert_equal=assert_equal, same_exception=False)
-
 @example([], (1,))
 @example([0], (1, 0))
 @given(integer_arrays, one_of(short_shapes, integers(0, 10)))

@@ -6,7 +6,6 @@ from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
 
 from ..integer import Integer
-from ..tuple import Tuple
 from ..slice import Slice
 from .helpers import check_same, ints, prod, shapes, iterslice, assert_equal
 
@@ -102,33 +101,6 @@ def test_integer_newshape_exhaustive():
     for i in range(-10, 10):
         check_same(a, i, raw_func=raw_func, ndindex_func=ndindex_func,
                    assert_equal=assert_equal)
-
-@given(ints(), one_of(shapes, integers(0, 10)))
-def test_integer_newshape_hypothesis(i, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    def raw_func(a, idx):
-        return a[idx].shape
-
-    def ndindex_func(a, index):
-        return index.newshape(shape)
-
-    def assert_equal(raw_shape, newshape):
-        assert raw_shape == newshape
-
-    check_same(a, i, raw_func=raw_func, ndindex_func=ndindex_func,
-                assert_equal=assert_equal)
-
-def test_integer_newshape_ndindex_input():
-    raises(TypeError, lambda: Integer(1).newshape(Tuple(2, 1)))
-    raises(TypeError, lambda: Integer(1).newshape(Integer(2)))
-
-def test_integer_newshape_small_shape():
-    raises(IndexError, lambda: Integer(6).newshape(2))
-    raises(IndexError, lambda: Integer(6).newshape((4, 4)))
 
 def test_integer_as_subindex_slice_exhaustive():
     for n in range(10):
