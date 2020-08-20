@@ -65,7 +65,7 @@ def _doesnt_raise(idx):
         return False
     return True
 
-Tuples = tuples(one_of(ellipses(), newaxes(), ints(), slices(),
+Tuples = tuples(one_of(ellipses(), ints(), slices(), newaxes(),
                        integer_arrays, boolean_arrays)).filter(_doesnt_raise)
 
 ndindices = one_of(
