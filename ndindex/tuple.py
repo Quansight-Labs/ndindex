@@ -54,6 +54,7 @@ class Tuple(NDIndex):
         array_block_start = False
         array_block_stop = False
         has_array = any(isinstance(i, (ArrayIndex, list, ndarray, bool, bool_)) for i in args)
+        has_boolean_scalar = False
         for arg in args:
             newarg = ndindex(arg)
             if isinstance(newarg, Tuple):
@@ -64,7 +65,7 @@ class Tuple(NDIndex):
             if isinstance(newarg, ArrayIndex):
                 array_block_start = True
                 if newarg in [True, False]:
-                    pass
+                    has_boolean_scalar = True
                 elif isinstance(newarg, BooleanArray):
                     arrays.extend(newarg.raw.nonzero())
                 else:
@@ -88,6 +89,9 @@ class Tuple(NDIndex):
         if newargs.count(ellipsis()) > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
         if len(arrays) > 0:
+            if has_boolean_scalar:
+                raise NotImplementedError("Tuples mixing boolean scalars (True or False) with arrays are not yet supported.")
+
             try:
                 broadcast(*[i for i in arrays])
             except ValueError as e:
