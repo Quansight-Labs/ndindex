@@ -48,7 +48,7 @@ def test_expand_hypothesis(idx, shape):
                 assert len(expanded.args) == len(shape) + n_newaxis
 
         # Make sure arrays are broadcasted
-        if any(isinstance(i, ArrayIndex) for i in expanded.args):
+        if any(isinstance(i, ArrayIndex) and i not in [True, False] for i in expanded.args):
             assert not any(isinstance(i, Integer) for i in expanded.args)
             assert len({i.shape for i in expanded.args if isinstance(i,
                                                                      IntegerArray)}) in [0, 1]
