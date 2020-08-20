@@ -408,6 +408,7 @@ class Tuple(NDIndex):
             elif isinstance(i, IntegerArray):
                 arrays.append(i.raw)
             elif isinstance(i, BooleanArray):
+                # TODO: Avoid explicitly calling nonzero
                 arrays.extend(i.raw.nonzero())
         broadcast_shape = broadcast(*arrays).shape
         if arrays:
@@ -424,8 +425,8 @@ class Tuple(NDIndex):
                                           _copy=False)
 
         # assert args.count(...) == 1
-        # assert args.count(False) == 1
-        # assert args.count(True) == 1
+        # assert args.count(False) <= 1
+        # assert args.count(True) <= 1
         n_newaxis = args.count(None)
         n_boolean = sum(1 - len(broadcast_shape) for i in arrays if
                         isinstance(i, BooleanArray))
@@ -486,6 +487,7 @@ class Tuple(NDIndex):
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         from .array import ArrayIndex
+        from .booleanarray import BooleanArray
 
         shape = asshape(shape)
 
@@ -495,16 +497,20 @@ class Tuple(NDIndex):
         # This will raise any IndexErrors
         self = self.expand(shape)
 
-        ellipsis_i = self.ellipsis_index
-
         newshape = []
-        n_newaxis = 0
+        axis = 0
         arrays = False
-        for i, s in enumerate(self.args[:ellipsis_i]):
-            axis = i-n_newaxis
+        for i, s in enumerate(self.args):
             if s == None:
-                n_newaxis += 1
                 newshape.append(1)
+                axis -= 1
+            # After expand(), there will be at most one boolean scalar
+            elif s == True:
+                newshape.append(1)
+                axis -= 1
+            elif s == False:
+                newshape.append(0)
+                axis -= 1
             elif isinstance(s, ArrayIndex):
                 if not arrays:
                     # Multiple arrays are all broadcast together (in expand())
@@ -512,12 +518,16 @@ class Tuple(NDIndex):
                     # for the first array we see. Note that arrays separated
                     # by ellipses, slices, or newaxes affect the shape
                     # differently, but these are currently unsupported (see
-                    # the comments in the Tuple constructor)
-                    newshape.extend(list(s.newshape(shape[axis])))
+                    # the comments in the Tuple constructor).
+                    if isinstance(s, BooleanArray):
+                        newshape.extend(list(s.newshape(shape[axis:axis+s.ndim])))
+                        axis += s.ndim - 1
+                    else:
+                        newshape.extend(list(s.newshape(shape[axis])))
                     arrays = True
             else:
                 newshape.extend(list(s.newshape(shape[axis])))
-
+            axis += 1
         return tuple(newshape)
 
     def as_subindex(self, index):
