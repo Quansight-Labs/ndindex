@@ -249,29 +249,65 @@ class Tuple(NDIndex):
         """
         from .ellipsis import ellipsis
         from .slice import Slice
+        from .booleanarray import BooleanArray
+        from .integerarray import IntegerArray
 
         args = self.args
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).reduce(shape)
 
+        boolean_scalars = [i for i in args if i in [True, False]]
+        if len(boolean_scalars) > 1:
+            _args = []
+            seen_boolean_scalar = False
+            for s in args:
+                if s in [True, False]:
+                    if seen_boolean_scalar:
+                        continue
+                    _args.append(BooleanArray(all(i == True for i in boolean_scalars)))
+                    seen_boolean_scalar = True
+                else:
+                    _args.append(s)
+            return type(self)(*_args).reduce(shape)
+
+        arrays = []
+        for i in args:
+            if i in [True, False]:
+                continue
+            elif isinstance(i, IntegerArray):
+                arrays.append(i.raw)
+            elif isinstance(i, BooleanArray):
+                # TODO: Avoid explicitly calling nonzero
+                arrays.extend(i.raw.nonzero())
+        broadcast_shape = broadcast(*arrays).shape
+        ndim = len(broadcast_shape)
+
         if shape is not None:
             # assert self.args.count(...) == 1
+            # assert self.args.count(False) <= 1
+            # assert self.args.count(True) <= 1
             n_newaxis = self.args.count(None)
-            indexed_args = len(self.args) - n_newaxis - 1 # -1 for the ellipsis
+            n_boolean = sum(1 - len(broadcast_shape) for i in arrays if
+                            isinstance(i, BooleanArray))
+            if True in args or False in args:
+                n_boolean += 1
+            indexed_args = len(args) - n_boolean - n_newaxis - 1 # -1 for the
+
             shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
         preargs = []
         removable = shape is not None
-        n_newaxis_before_ellipsis = args[:ellipsis_i].count(None)
+        begin_offset = args[:ellipsis_i].count(None)
+        begin_offset -= sum(ndim - 1 for j in args[:ellipsis_i] if
+                            isinstance(j, BooleanArray))
         for i, s in enumerate(reversed(args[:ellipsis_i]), start=1):
-            axis = ellipsis_i - i - n_newaxis_before_ellipsis
+            axis = ellipsis_i - i - begin_offset
             if s == None:
-                n_newaxis_before_ellipsis -= 1
-                preargs.insert(0, s)
-                removable = False
-                continue
+                begin_offset -= 1
+            elif isinstance(s, BooleanArray):
+                begin_offset += ndim - 1
             reduced = s.reduce(shape, axis=axis)
             if (removable
                 and isinstance(reduced, Slice)
@@ -284,13 +320,18 @@ class Tuple(NDIndex):
         endargs = []
         removable = shape is not None
         for i, s in enumerate(args[ellipsis_i+1:]):
-            axis = -len(args) + ellipsis_i + 1 + i
-            axis += args[ellipsis_i+1:][i:].count(None)
             if shape is not None:
+                axis = -len(args) + ellipsis_i + 1 + i
+                axis += args[ellipsis_i+1:][i:].count(None)
+                axis -= sum(ndim - 1 for j in args[ellipsis_i+1:][i:] if
+                                 isinstance(j, BooleanArray))
+
                 # Make the axis positive so the error messages will match
                 # numpy
                 while axis < 0 and len(shape):
                     axis += len(shape)
+            else:
+                axis = None
             if s == None:
                 endargs.append(s)
                 removable = False
@@ -305,7 +346,7 @@ class Tuple(NDIndex):
                 endargs.append(reduced)
 
         if shape is None or (endargs and len(preargs) + len(endargs)
-                             < len(shape) + args.count(None)):
+                             < len(shape) + args.count(None) + n_boolean):
             preargs = preargs + [...]
 
         newargs = preargs + endargs
