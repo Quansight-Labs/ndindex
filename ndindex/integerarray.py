@@ -184,7 +184,7 @@ class IntegerArray(ArrayIndex):
                     raise ValueError("Indices do not intersect")
                 return IntegerArray(start)
 
-            start = start[stop > 0]
+            start = start[stop > start]
 
             if 0 in start.shape:
                 raise ValueError("Indices do not intersect")
