@@ -374,7 +374,8 @@ class Tuple(NDIndex):
         - All the elements of the tuple are recursively reduced.
 
         - The length of the .args is equal to the length of the shape plus the
-          number of :any:`Newaxis` indices in `self`.
+          number of :any:`Newaxis` indices in `self` (this is not true if
+          `self` contains :any:`BooleanArray`s).
 
         - The resulting Tuple has no ellipses. Axes that would be matched by
           an ellipsis or an implicit ellipsis at the end of the tuple are
