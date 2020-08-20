@@ -26,7 +26,7 @@ class BooleanArray(ArrayIndex):
        and replace them with a single flat dimension which is the size of the
        number of `True` elements in the index.
 
-    2. A boolean array index `idx` works the same as the integer index
+    2. A boolean array index `idx` works the same as the integer array index
        `np.nonzero(idx)`. In particular, the elements of the index are always
        iterated in row-major, C-style order. This does not apply to
        0-dimensional boolean indices.

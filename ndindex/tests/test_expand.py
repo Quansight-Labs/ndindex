@@ -4,6 +4,7 @@ from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
+from ..booleanarray import BooleanArray
 from ..tuple import Tuple
 from .helpers import ndindices, shapes, check_same
 
@@ -37,10 +38,11 @@ def test_expand_hypothesis(idx, shape):
             n_newaxis = 1
         else:
             n_newaxis = 0
-        if isinstance(shape, int):
-            assert len(expanded.args) == 1 + n_newaxis
-        else:
-            assert len(expanded.args) == len(shape) + n_newaxis
+        if not any(isinstance(i, BooleanArray) for i in expanded.args):
+            if isinstance(shape, int):
+                assert len(expanded.args) == 1 + n_newaxis
+            else:
+                assert len(expanded.args) == len(shape) + n_newaxis
 
     check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
                same_exception=False)
