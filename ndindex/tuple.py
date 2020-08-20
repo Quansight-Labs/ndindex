@@ -61,11 +61,11 @@ class Tuple(NDIndex):
                     raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call Tuple(*args) instead of Tuple(args)?")
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
-            if newarg in [True, False]:
-                pass
-            elif isinstance(newarg, ArrayIndex):
+            if isinstance(newarg, ArrayIndex):
                 array_block_start = True
-                if isinstance(newarg, BooleanArray):
+                if newarg in [True, False]:
+                    pass
+                elif isinstance(newarg, BooleanArray):
                     arrays.extend(newarg.raw.nonzero())
                 else:
                     arrays.append(newarg.raw)
