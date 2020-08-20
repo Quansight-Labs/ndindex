@@ -504,6 +504,8 @@ class Tuple(NDIndex):
                 if isinstance(s, BooleanArray):
                     end_offset -= s.ndim - 1
             elif arrays and isinstance(s, Integer):
+                if (0 in broadcast_shape or False in args):
+                    s = s.reduce(shape, axis=len(shape)-i+end_offset)
                 s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
                                               broadcast_shape), _copy=False)
             elif s == None:

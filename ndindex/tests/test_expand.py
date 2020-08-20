@@ -1,4 +1,4 @@
-from numpy import arange, prod
+from numpy import arange, prod, array, intp
 
 from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
@@ -12,10 +12,12 @@ from ..tuple import Tuple
 from .helpers import ndindices, shapes, check_same
 
 
+@example((..., 0, array([], dtype=intp)), (0, 0))
+@example((..., array(0), array([], dtype=intp)), (0, 0))
 @example((False, False), ())
 @example((-1, False), 1)
 @example((..., False), ())
-@example((arange(0),), ())
+@example((array([0]),), ())
 @example(([0, 1], 0), (2, 2))
 @example((..., [0, 1], 0), (2, 2))
 @example((..., None, 0), 1)
