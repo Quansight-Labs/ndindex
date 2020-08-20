@@ -12,6 +12,9 @@ from ..tuple import Tuple
 from .helpers import ndindices, shapes, check_same
 
 
+@example((-1, False), 1)
+@example((..., False), ())
+@example((arange(0),), ())
 @example(([0, 1], 0), (2, 2))
 @example((..., [0, 1], 0), (2, 2))
 @example((..., None, 0), 1)
