@@ -489,7 +489,7 @@ class Tuple(NDIndex):
             if isinstance(s, ArrayIndex):
                 if isinstance(s, BooleanArray):
                     begin_offset += s.ndim - 1
-            elif isinstance(s, Integer):
+            elif arrays and isinstance(s, Integer):
                 s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
                                               broadcast_shape), _copy=False)
             elif s == None:
@@ -503,7 +503,7 @@ class Tuple(NDIndex):
             if isinstance(s, ArrayIndex):
                 if isinstance(s, BooleanArray):
                     end_offset -= s.ndim - 1
-            elif isinstance(s, Integer):
+            elif arrays and isinstance(s, Integer):
                 s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
                                               broadcast_shape), _copy=False)
             elif s == None:
