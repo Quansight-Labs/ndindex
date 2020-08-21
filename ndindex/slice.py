@@ -1,5 +1,7 @@
 from sympy.ntheory.modular import crt
-from sympy import ilcm, Rational
+from sympy import ilcm
+
+from numpy import broadcast_arrays, amin, amax
 
 from .ndindex import NDIndex, asshape, operator_index
 
@@ -368,6 +370,8 @@ class Slice(NDIndex):
         from .ndindex import ndindex
         from .tuple import Tuple
         from .integer import Integer
+        from .integerarray import IntegerArray
+        from .booleanarray import BooleanArray
 
         index = ndindex(index)
 
@@ -398,14 +402,58 @@ class Slice(NDIndex):
             assert len(s) == 1
             return Tuple()
 
-        if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
-
-        if s.step < 0 or index.step < 0:
+        if s.step < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
 
         # After reducing, start is not None when step > 0
-        if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
+        if s.stop is None or s.start < 0 or s.stop < 0:
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+
+        def ceiling(a, b):
+            """
+            Returns ceil(a/b)
+            """
+            return -(-a//b)
+
+        def _max(a, b):
+            return amax(broadcast_arrays(a, b), axis=0)
+
+        def _min(a, b):
+            return amin(broadcast_arrays(a, b), axis=0)
+
+        def _smallest(x, a, m):
+            """
+            Gives the smallest integer >= x that equals a (mod m)
+
+            Assumes x >= 0, m >= 1, and 0 <= a < m.
+            """
+            n = ceiling(x - a, m)
+            return a + n*m
+
+        if isinstance(index, IntegerArray):
+            idx = index.array
+            common = 0
+            lcm = s.step
+            start = _max(s.start, idx)
+            start = _smallest(start, common, lcm)
+            start = start - idx
+
+            stop = _min(s.stop, idx+1) - idx
+
+            res = BooleanArray(start <= stop)
+
+            if not res.count_nonzero:
+                raise ValueError("Indices do not intersect")
+            return res
+
+        if not isinstance(index, Slice):
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
+
+        if index.step < 0:
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
+
+        # After reducing, start is not None when step > 0
+        if index.stop is None or index.start < 0 or index.stop < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
         # Chinese Remainder Theorem. We are looking for a solution to
@@ -422,15 +470,6 @@ class Slice(NDIndex):
         lcm = ilcm(s.step, index.step)
         start = max(s.start, index.start)
 
-        def _smallest(x, a, m):
-            """
-            Gives the smallest integer >= x that equals a (mod m)
-
-            Assumes x >= 0, m >= 1, and 0 <= a < m.
-            """
-            n = Rational(x - a, m).ceiling()
-            return a + n*m
-
         # Get the smallest lcm multiple of common that is >= start
         start = _smallest(start, common, lcm)
         # Finally, we need to shift start so that it is relative to index
@@ -438,7 +477,7 @@ class Slice(NDIndex):
 
         step = lcm//index.step # = s.step//igcd(s.step, index.step)
 
-        stop = Rational((min(s.stop, index.stop) - index.start), index.step).ceiling()
+        stop = ceiling((min(s.stop, index.stop) - index.start), index.step)
         if stop < 0:
             stop = 0
 

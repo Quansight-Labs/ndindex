@@ -132,6 +132,7 @@ class IntegerArray(ArrayIndex):
     def as_subindex(self, index):
         from .ndindex import ndindex
         from .slice import Slice
+        from .tuple import Tuple
 
         def ceiling(a, b):
             """
@@ -146,6 +147,9 @@ class IntegerArray(ArrayIndex):
             return amin(broadcast_arrays(a, b), axis=0)
 
         index = ndindex(index)
+
+        if isinstance(index, Tuple):
+            return Tuple(self).as_subindex(index)
 
         if isinstance(index, Slice):
             index = index.reduce()
