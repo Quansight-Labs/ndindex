@@ -1,4 +1,4 @@
-from numpy import intp, zeros, amax, amin, broadcast_arrays
+from numpy import intp, amax, amin, broadcast_arrays
 
 from .array import ArrayIndex
 from .ndindex import asshape
