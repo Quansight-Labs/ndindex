@@ -437,7 +437,7 @@ class Slice(NDIndex):
 
             stop = _min(s.stop, idx+1) - idx
 
-            res = BooleanArray(start <= stop)
+            res = BooleanArray(start < stop)
 
             if not res.count_nonzero:
                 raise ValueError("Indices do not intersect")
