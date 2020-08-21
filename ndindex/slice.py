@@ -348,18 +348,13 @@ class Slice(NDIndex):
                 stop += size
         return self.__class__(start, stop, step)
 
-    def newshape(self, shape, _axis=None):
+    def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        if _axis is not None:
-            idx = self.reduce(shape, axis=_axis)
-
-            # len() won't raise an error after reducing with a shape
-            return (len(idx),)
-
         idx = self.reduce(shape)
 
+        # len() won't raise an error after reducing with a shape
         return (len(idx),) + shape[1:]
 
     # TODO: Better name?

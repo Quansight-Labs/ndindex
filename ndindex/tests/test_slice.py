@@ -6,7 +6,6 @@ from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
-from ..tuple import Tuple
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from .helpers import check_same, slices, prod, shapes, iterslice, assert_equal
@@ -219,35 +218,6 @@ def test_slice_newshape_exhaustive():
 
             check_same(a, S.raw, raw_func=raw_func, ndindex_func=ndindex_func,
                    assert_equal=assert_equal)
-
-@given(slices(), one_of(shapes, integers(0, 10)))
-def test_slice_newshape_hypothesis(s, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    try:
-        Slice(s)
-    except ValueError: # pragma: no cover
-        assume(False)
-
-
-    def raw_func(a, idx):
-        return a[idx].shape
-
-    def ndindex_func(a, index):
-        return index.newshape(shape)
-
-    def assert_equal(raw_shape, newshape):
-        assert raw_shape == newshape
-
-    check_same(a, s, raw_func=raw_func, ndindex_func=ndindex_func,
-               assert_equal=assert_equal)
-
-def test_slice_newshape_ndindex_input():
-    raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
-    raises(TypeError, lambda: Slice(6).newshape(Integer(2)))
 
 def test_slice_as_subindex_slice_exhaustive():
     # We have to restrict the range of the exhaustive test to get something

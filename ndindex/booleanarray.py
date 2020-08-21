@@ -26,7 +26,7 @@ class BooleanArray(ArrayIndex):
        and replace them with a single flat dimension which is the size of the
        number of `True` elements in the index.
 
-    2. A boolean array index `idx` works the same as the integer index
+    2. A boolean array index `idx` works the same as the integer array index
        `np.nonzero(idx)`. In particular, the elements of the index are always
        iterated in row-major, C-style order. This does not apply to
        0-dimensional boolean indices.
@@ -137,15 +137,11 @@ class BooleanArray(ArrayIndex):
 
         return self
 
-    def newshape(self, shape, _axis=None):
+    def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        if _axis is not None:
-            # reduce will raise IndexError if it should be raised
-            self.reduce(shape, axis=_axis)
-            return (self.count_nonzero,)
-
+        # reduce will raise IndexError if it should be raised
         self.reduce(shape)
         return (self.count_nonzero,) + shape[self.ndim:]
 

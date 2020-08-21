@@ -75,23 +75,23 @@ def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
 
+
+@example(([0, 1],))
+@example((IntegerArray([], (0, 1)),))
 @example(IntegerArray([], (0, 1)))
 @example((1, ..., slice(1, 2)))
 # eval can sometimes be slower than the default deadline of 200ms for large
 # array indices
 @settings(deadline=None)
 @given(ndindices)
-def test_repr(idx):
+def test_repr_str(idx):
     # The repr form should be re-creatable
     index = ndindex(idx)
     d = {}
     exec("from ndindex import *", d)
     assert eval(repr(index), d) == idx
 
-@given(ndindices)
-def test_str(idx):
     # Str may not be re-creatable. Just test that it doesn't give an exception.
-    index = ndindex(idx)
     str(index)
 
 def test_asshape():

@@ -54,6 +54,7 @@ class Tuple(NDIndex):
         array_block_start = False
         array_block_stop = False
         has_array = any(isinstance(i, (ArrayIndex, list, ndarray, bool, bool_)) for i in args)
+        has_boolean_scalar = False
         for arg in args:
             newarg = ndindex(arg)
             if isinstance(newarg, Tuple):
@@ -63,7 +64,12 @@ class Tuple(NDIndex):
             newargs.append(newarg)
             if isinstance(newarg, ArrayIndex):
                 array_block_start = True
-                arrays.append(newarg)
+                if newarg in [True, False]:
+                    has_boolean_scalar = True
+                elif isinstance(newarg, BooleanArray):
+                    arrays.extend(newarg.raw.nonzero())
+                else:
+                    arrays.append(newarg.raw)
             elif has_array and isinstance(newarg, Integer):
                 array_block_start = True
             if isinstance(newarg, (Slice, ellipsis, Newaxis)) and array_block_start:
@@ -83,13 +89,14 @@ class Tuple(NDIndex):
         if newargs.count(ellipsis()) > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
         if len(arrays) > 0:
+            if has_boolean_scalar:
+                raise NotImplementedError("Tuples mixing boolean scalars (True or False) with arrays are not yet supported.")
+
             try:
-                broadcast(*[i.raw for i in arrays])
+                broadcast(*[i for i in arrays])
             except ValueError as e:
                 assert e.args == ("shape mismatch: objects cannot be broadcast to a single shape",)
                 raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
-        if len([i for i in newargs if isinstance(i, BooleanArray)]) > 0:
-            raise NotImplementedError("tuples containing boolean arrays are not yet supported")
 
         return tuple(newargs)
 
@@ -242,29 +249,65 @@ class Tuple(NDIndex):
         """
         from .ellipsis import ellipsis
         from .slice import Slice
+        from .booleanarray import BooleanArray
+        from .integerarray import IntegerArray
 
         args = self.args
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).reduce(shape)
 
+        boolean_scalars = [i for i in args if i in [True, False]]
+        if len(boolean_scalars) > 1:
+            _args = []
+            seen_boolean_scalar = False
+            for s in args:
+                if s in [True, False]:
+                    if seen_boolean_scalar:
+                        continue
+                    _args.append(BooleanArray(all(i == True for i in boolean_scalars)))
+                    seen_boolean_scalar = True
+                else:
+                    _args.append(s)
+            return type(self)(*_args).reduce(shape)
+
+        arrays = []
+        for i in args:
+            if i in [True, False]:
+                continue
+            elif isinstance(i, IntegerArray):
+                arrays.append(i.raw)
+            elif isinstance(i, BooleanArray):
+                # TODO: Avoid explicitly calling nonzero
+                arrays.extend(i.raw.nonzero())
+        broadcast_shape = broadcast(*arrays).shape
+        ndim = len(broadcast_shape)
+
         if shape is not None:
             # assert self.args.count(...) == 1
+            # assert self.args.count(False) <= 1
+            # assert self.args.count(True) <= 1
             n_newaxis = self.args.count(None)
-            indexed_args = len(self.args) - n_newaxis - 1 # -1 for the ellipsis
+            n_boolean = sum(1 - len(broadcast_shape) for i in arrays if
+                            isinstance(i, BooleanArray))
+            if True in args or False in args:
+                n_boolean += 1
+            indexed_args = len(args) - n_boolean - n_newaxis - 1 # -1 for the
+
             shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
         preargs = []
         removable = shape is not None
-        n_newaxis_before_ellipsis = args[:ellipsis_i].count(None)
+        begin_offset = args[:ellipsis_i].count(None)
+        begin_offset -= sum(ndim - 1 for j in args[:ellipsis_i] if
+                            isinstance(j, BooleanArray))
         for i, s in enumerate(reversed(args[:ellipsis_i]), start=1):
-            axis = ellipsis_i - i - n_newaxis_before_ellipsis
+            axis = ellipsis_i - i - begin_offset
             if s == None:
-                n_newaxis_before_ellipsis -= 1
-                preargs.insert(0, s)
-                removable = False
-                continue
+                begin_offset -= 1
+            elif isinstance(s, BooleanArray):
+                begin_offset += ndim - 1
             reduced = s.reduce(shape, axis=axis)
             if (removable
                 and isinstance(reduced, Slice)
@@ -277,13 +320,18 @@ class Tuple(NDIndex):
         endargs = []
         removable = shape is not None
         for i, s in enumerate(args[ellipsis_i+1:]):
-            axis = -len(args) + ellipsis_i + 1 + i
-            axis += args[ellipsis_i+1:][i:].count(None)
             if shape is not None:
+                axis = -len(args) + ellipsis_i + 1 + i
+                axis += args[ellipsis_i+1:][i:].count(None)
+                axis -= sum(ndim - 1 for j in args[ellipsis_i+1:][i:] if
+                                 isinstance(j, BooleanArray))
+
                 # Make the axis positive so the error messages will match
                 # numpy
                 while axis < 0 and len(shape):
                     axis += len(shape)
+            else:
+                axis = None
             if s == None:
                 endargs.append(s)
                 removable = False
@@ -298,7 +346,7 @@ class Tuple(NDIndex):
                 endargs.append(reduced)
 
         if shape is None or (endargs and len(preargs) + len(endargs)
-                             < len(shape) + args.count(None)):
+                             < len(shape) + args.count(None) + n_boolean):
             preargs = preargs + [...]
 
         newargs = preargs + endargs
@@ -326,7 +374,8 @@ class Tuple(NDIndex):
         - All the elements of the tuple are recursively reduced.
 
         - The length of the .args is equal to the length of the shape plus the
-          number of :any:`Newaxis` indices in `self`.
+          number of :any:`Newaxis` indices in `self` (this is not true if
+          `self` contains :any:`BooleanArray`s).
 
         - The resulting Tuple has no ellipses. Axes that would be matched by
           an ellipsis or an implicit ellipsis at the end of the tuple are
@@ -369,63 +418,112 @@ class Tuple(NDIndex):
 
         """
         from .array import ArrayIndex
+        from .booleanarray import BooleanArray
         from .integer import Integer
         from .integerarray import IntegerArray
         from .slice import Slice
 
-        args = self.args
+        args = list(self.args)
         if ... not in args:
             return type(self)(*args, ...).expand(shape)
 
+        boolean_scalars = [i for i in args if i in [True, False]]
+        if len(boolean_scalars) > 1:
+            _args = []
+            seen_boolean_scalar = False
+            for s in args:
+                if s in [True, False]:
+                    if seen_boolean_scalar:
+                        continue
+                    _args.append(BooleanArray(all(i == True for i in boolean_scalars)))
+                    seen_boolean_scalar = True
+                else:
+                    _args.append(s)
+            return type(self)(*_args).expand(shape)
+
         # Broadcast all array indices. Note that broadcastability is checked
         # in the Tuple constructor, so this should not fail.
-        arrays = [i.raw for i in self.args if isinstance(i, ArrayIndex)]
+        arrays = []
+        for i in args:
+            if i in [True, False]:
+                continue
+            elif isinstance(i, IntegerArray):
+                arrays.append(i.raw)
+            elif isinstance(i, BooleanArray):
+                # TODO: Avoid explicitly calling nonzero
+                arrays.extend(i.raw.nonzero())
         broadcast_shape = broadcast(*arrays).shape
+        if arrays:
+            for i in range(len(args)):
+                s = args[i]
+                if isinstance(s, IntegerArray):
+                    if s.ndim == 0:
+                        args[i] = Integer(s.raw)
+                    else:
+                        # broadcast_to(x) gives a readonly view on x, which is also
+                        # readonly, so set _copy=False to avoid representing the full
+                        # broadcasted array in memory.
+                        args[i] = type(s)(broadcast_to(s.raw, broadcast_shape),
+                                          _copy=False)
 
-        # assert self.args.count(...) == 1
-        n_newaxis = self.args.count(None)
-        indexed_args = len(self.args) - n_newaxis - 1 # -1 for the ellipsis
+        # assert args.count(...) == 1
+        # assert args.count(False) <= 1
+        # assert args.count(True) <= 1
+        n_newaxis = args.count(None)
+        n_boolean = sum(1 - len(broadcast_shape) for i in arrays if
+                        isinstance(i, BooleanArray))
+        if True in args or False in args:
+            n_boolean += 1
+        indexed_args = len(args) - n_boolean - n_newaxis - 1 # -1 for the ellipsis
         shape = asshape(shape, axis=indexed_args - 1)
 
         ellipsis_i = self.ellipsis_index
 
         newargs = []
-        n_newaxis_before_ellipsis = 0
+        begin_offset = 0
         for i, s in enumerate(args[:ellipsis_i]):
-            axis = i - n_newaxis_before_ellipsis
-            s = s.reduce(shape, axis=axis)
+            axis = i + begin_offset
+            if not (isinstance(s, IntegerArray) and (0 in broadcast_shape or
+                                                     False in args)):
+                s = s.reduce(shape, axis=axis)
             if isinstance(s, ArrayIndex):
-                # broadcast_to(x) gives a readonly view on x, which is also
-                # readonly, so set _copy=False to avoid representing the full
-                # broadcasted array in memory.
-                s = type(s)(broadcast_to(s.raw, broadcast_shape), _copy=False)
+                if isinstance(s, BooleanArray):
+                    begin_offset += s.ndim - 1
             elif arrays and isinstance(s, Integer):
                 s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
                                               broadcast_shape), _copy=False)
             elif s == None:
-                n_newaxis_before_ellipsis += 1
+                begin_offset -= 1
             newargs.append(s)
 
-        newargs.extend([Slice(None).reduce(shape, axis=i + ellipsis_i - n_newaxis_before_ellipsis) for
-                        i in range(len(shape) - len(args) + 1 + n_newaxis)])
-
-        n_newaxis_after_ellipsis = 0
+        # TODO: Merge this with the above loop
         endargs = []
+        end_offset = 0
         for i, s in enumerate(reversed(args[ellipsis_i+1:]), start=1):
-            s = s.reduce(shape, axis=len(shape)-i+n_newaxis_after_ellipsis)
             if isinstance(s, ArrayIndex):
-                # broadcast_to(x) gives a readonly view on x, which is also
-                # readonly, so set _copy=False to avoid representing the full
-                # broadcasted array in memory.
-                s = type(s)(broadcast_to(s.raw, broadcast_shape), _copy=False)
+                if isinstance(s, BooleanArray):
+                    end_offset -= s.ndim - 1
             elif arrays and isinstance(s, Integer):
+                if (0 in broadcast_shape or False in args):
+                    s = s.reduce(shape, axis=len(shape)-i+end_offset)
                 s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
                                               broadcast_shape), _copy=False)
             elif s == None:
-                n_newaxis_after_ellipsis += 1
+                end_offset += 1
+            axis = len(shape) - i + end_offset
+            if not (isinstance(s, IntegerArray) and (0 in broadcast_shape or
+                                                     False in args)):
+                # Array bounds are not checked when the broadcast shape is empty
+                s = s.reduce(shape, axis=axis)
             endargs.append(s)
 
-        newargs = newargs + endargs[::-1]
+        idx_offset = begin_offset - end_offset
+
+        midargs = [Slice(None).reduce(shape, axis=i + ellipsis_i + begin_offset) for
+                        i in range(len(shape) - len(args) + 1 - idx_offset)]
+
+
+        newargs = newargs + midargs + endargs[::-1]
 
         return type(self)(*newargs)
 
@@ -433,6 +531,7 @@ class Tuple(NDIndex):
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         from .array import ArrayIndex
+        from .booleanarray import BooleanArray
 
         shape = asshape(shape)
 
@@ -442,17 +541,20 @@ class Tuple(NDIndex):
         # This will raise any IndexErrors
         self = self.expand(shape)
 
-        ellipsis_i = self.ellipsis_index
-
-        startshape = []
-        n_newaxis = self.args.count(None)
-        n_newaxis_before_ellipsis = 0
+        newshape = []
+        axis = 0
         arrays = False
-        for i, s in enumerate(self.args[:ellipsis_i]):
-            axis = i-n_newaxis_before_ellipsis
+        for i, s in enumerate(self.args):
             if s == None:
-                n_newaxis_before_ellipsis += 1
-                startshape.append(1)
+                newshape.append(1)
+                axis -= 1
+            # After expand(), there will be at most one boolean scalar
+            elif s == True:
+                newshape.append(1)
+                axis -= 1
+            elif s == False:
+                newshape.append(0)
+                axis -= 1
             elif isinstance(s, ArrayIndex):
                 if not arrays:
                     # Multiple arrays are all broadcast together (in expand())
@@ -460,33 +562,16 @@ class Tuple(NDIndex):
                     # for the first array we see. Note that arrays separated
                     # by ellipses, slices, or newaxes affect the shape
                     # differently, but these are currently unsupported (see
-                    # the comments in the Tuple constructor)
-                    startshape.extend(list(s.newshape(shape, _axis=axis)))
+                    # the comments in the Tuple constructor).
+                    if isinstance(s, BooleanArray):
+                        newshape.extend(list(s.newshape(shape[axis:axis+s.ndim])))
+                        axis += s.ndim - 1
+                    else:
+                        newshape.extend(list(s.newshape(shape[axis])))
                     arrays = True
             else:
-                startshape.extend(list(s.newshape(shape, _axis=axis)))
-
-        n_newaxis_after_ellipsis = 0
-        endshape = []
-        for i, s in enumerate(reversed(self.args[ellipsis_i+1:]), start=1):
-            axis = len(shape)-i+n_newaxis_after_ellipsis
-            if s == None:
-                n_newaxis_after_ellipsis += 1
-                endshape.append(1)
-            elif isinstance(s, ArrayIndex):
-                if not arrays:
-                    endshape.extend(list(s.newshape(shape, _axis=axis)))
-                    arrays = True
-            else:
-                endshape.extend(list(s.newshape(shape, _axis=axis)))
-
-        if ... in self.args:
-            midshape = list(shape[ellipsis_i-n_newaxis_before_ellipsis:len(shape)+ellipsis_i-len(self.args)+n_newaxis_after_ellipsis+1])
-        else:
-            midshape = list(shape[len(self.args) - n_newaxis:])
-
-        newshape = startshape + midshape + endshape[::-1]
-
+                newshape.extend(list(s.newshape(shape[axis])))
+            axis += 1
         return tuple(newshape)
 
     def as_subindex(self, index):

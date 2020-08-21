@@ -86,16 +86,6 @@ class IntegerArray(ArrayIndex):
             return self
 
         shape = asshape(shape, axis=axis)
-        if 0 in shape[:axis] + shape[axis+1:]:
-            # There are no bounds checks for empty arrays if one of the
-            # non-indexed axes is 0. This behavior will be deprecated in NumPy
-            # 1.20. Once 1.20 is released, we will change the ndindex behavior
-            # to match it, since we want to match all post-deprecation NumPy
-            # behavior. But it is impossible to test against the
-            # post-deprecation behavior reliably until a version of NumPy is
-            # released that raises the deprecation warning, so for now, we
-            # just match the NumPy 1.19 behavior.
-            return IntegerArray(zeros(self.shape, dtype=intp))
 
         size = shape[axis]
         new_array = self.array.copy()
@@ -106,20 +96,11 @@ class IntegerArray(ArrayIndex):
         new_array[new_array < 0] += size
         return IntegerArray(new_array)
 
-    def newshape(self, shape, _axis=None):
+    def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        # We need to split out the axis argument so that we can match the
-        # NumPy 1.19 behavior for out of bounds integer array indices on empty
-        # arrays (see the comment in IntegerArray.reduce()). Once we move to
-        # NumPy 1.20 post-deprecation semantics, we can remove this argument
-        # from the newshape() methods.
-        if _axis is not None:
-            # reduce will raise IndexError if it should be raised
-            self.reduce(shape, axis=_axis)
-            return self.shape
-
+        # reduce will raise IndexError if it should be raised
         self.reduce(shape)
         return self.shape + shape[1:]
 
