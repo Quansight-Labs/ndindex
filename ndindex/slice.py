@@ -427,6 +427,8 @@ class Slice(NDIndex):
 
         if isinstance(index, IntegerArray):
             idx = index.array
+            if (idx < 0).any():
+                raise NotImplementedError("Slice.as_subindex(IntegerArray) is not yet implemented for arrays with negative values. Try calling reduce with a shape first.")
             common = 0
             lcm = s.step
             start = _max(s.start, idx)
