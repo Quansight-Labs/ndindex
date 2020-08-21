@@ -1,13 +1,18 @@
 from pytest import raises
 
-from numpy import arange, isin, prod
+from numpy import array, arange, isin, prod, unique
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
+from ..integerarray import IntegerArray
+from ..tuple import Tuple
 from .helpers import ndindices, shapes, assert_equal
 
+@example((slice(None, 1, None), slice(None, 1, None)),
+         (array(0), array([0, 0])),
+         (1, 1))
 @example([[0, 11], [0, 0]], slice(0, 10), 20)
 @example(slice(0, 0), 9007199254741193, 1)
 @example((0,), (slice(1, 2),), 3)
@@ -66,7 +71,14 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
     else:
         asubindex = a2[Subindex.raw]
 
-        assert_equal(asubindex.flatten(), a1[isin(a1, a2)])
+        if (isinstance(index2, IntegerArray)
+            or (isinstance(index2, Tuple)
+                and any(isinstance(i, IntegerArray) for i in index2.args))):
+            # isin(x, y) has the same shape as x. If idx2 has an integer array
+            # it may index the same element more than once, but idx1 will not.
+            assert_equal(unique(asubindex.flatten()), unique(a1[isin(a1, a2)]))
+        else:
+            assert_equal(asubindex.flatten(), a1[isin(a1, a2)])
 
         try:
             subindex2 = index2.as_subindex(index1)
