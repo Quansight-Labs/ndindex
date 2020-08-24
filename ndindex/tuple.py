@@ -587,7 +587,7 @@ class Tuple(NDIndex):
                     # differently, but these are currently unsupported (see
                     # the comments in the Tuple constructor).
                     if isinstance(s, BooleanArray):
-                        newshape.extend(list(s.newshape(shape[axis:axis+s.ndim])))
+                        newshape.extend(list(s.newshape(shape[axis])))
                         axis += s.ndim - 1
                     else:
                         newshape.extend(list(s.newshape(shape[axis])))
