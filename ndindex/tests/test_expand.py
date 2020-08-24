@@ -12,6 +12,8 @@ from ..tuple import Tuple
 from .helpers import ndindices, shapes, check_same
 
 
+@example((array([], dtype=intp), 0), (0, 0))
+@example((array([], dtype=intp), [0]), (0, 0))
 @example((..., 0, array([], dtype=intp)), (0, 0))
 @example((..., array(0), array([], dtype=intp)), (0, 0))
 @example((False, False), ())

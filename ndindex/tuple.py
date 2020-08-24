@@ -249,10 +249,11 @@ class Tuple(NDIndex):
         """
         from .ellipsis import ellipsis
         from .slice import Slice
+        from .integer import Integer
         from .booleanarray import BooleanArray
         from .integerarray import IntegerArray
 
-        args = self.args
+        args = list(self.args)
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).reduce(shape)
 
@@ -280,6 +281,23 @@ class Tuple(NDIndex):
                 # TODO: Avoid explicitly calling nonzero
                 arrays.extend(i.raw.nonzero())
         broadcast_shape = broadcast(*arrays).shape
+        # If the broadcast shape is empty, out of bounds indices in
+        # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
+        # ([], []), so the bounds for 10 are not checked. Thus, we must do
+        # this before calling reduce() on the arguments. This rule, however,
+        # is *not* followed for scalar integer indices.
+        if 0 in broadcast_shape:
+            for i in range(len(args)):
+                s = args[i]
+                if isinstance(s, IntegerArray):
+                    if s.ndim == 0:
+                        args[i] = Integer(s.raw)
+                    else:
+                        # broadcast_to(x) gives a readonly view on x, which is also
+                        # readonly, so set _copy=False to avoid representing the full
+                        # broadcasted array in memory.
+                        args[i] = type(s)(broadcast_to(s.raw, broadcast_shape),
+                                          _copy=False)
         ndim = len(broadcast_shape)
 
         if shape is not None:
@@ -453,6 +471,11 @@ class Tuple(NDIndex):
                 # TODO: Avoid explicitly calling nonzero
                 arrays.extend(i.raw.nonzero())
         broadcast_shape = broadcast(*arrays).shape
+        # If the broadcast shape is empty, out of bounds indices in
+        # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
+        # ([], []), so the bounds for 10 are not checked. Thus, we must do
+        # this before calling reduce() on the arguments. This rule, however,
+        # is *not* followed for scalar integer indices.
         if arrays:
             for i in range(len(args)):
                 s = args[i]

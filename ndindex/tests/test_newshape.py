@@ -10,8 +10,14 @@ from ..tuple import Tuple
 from ..integer import Integer
 from .helpers import ndindices, short_shapes, check_same
 
+
+@example(..., 0)
+@example((True,), ())
+@example(([[True, False], [True, False]], [True, True], slice(0, 2)), ((2, 2, 2, 3, 3)))
+@example((array([], dtype=bool),), (0, 0))
 @example((False, False), ())
 @example(array([], dtype=bool), 0)
+@example((array([], dtype=bool),), 0)
 @example(array([[[True], [False]]]), (1, 1, 2))
 @example(full((1, 9), False), (3, 3))
 @example(([0, 1], 0), (2, 2))

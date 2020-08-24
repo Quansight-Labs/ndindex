@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arange
+from numpy import arange, array, intp
 
 from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
@@ -81,6 +81,7 @@ def test_ellipsis_index(t, shape):
 
     check_same(a, t, ndindex_func=ndindex_func)
 
+@example((True, 0, False), 1)
 @example((..., None), ())
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_no_shape_hypothesis(t, shape):
@@ -99,6 +100,8 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
         assert len(reduced.args) != 1
         assert reduced == () or reduced.args[-1] != ...
 
+@example((array([], dtype=intp), 0), (0, 0))
+@example((array([], dtype=intp), [0]), (0, 0))
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
 @example((0, ..., slice(None)), (2, 3, 4, 5, 6, 7))
