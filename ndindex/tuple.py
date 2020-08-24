@@ -1,4 +1,5 @@
-from numpy import broadcast, broadcast_to, array, intp, ndarray, bool_
+from numpy import (broadcast, broadcast_to, broadcast_arrays, array, intp,
+                   ndarray, bool_, logical_and)
 
 from .ndindex import NDIndex, ndindex, asshape
 
@@ -601,6 +602,7 @@ class Tuple(NDIndex):
         from .ndindex import ndindex
         from .slice import Slice
         from .integer import Integer
+        from .booleanarray import BooleanArray
 
         index = ndindex(index).reduce()
 
@@ -619,6 +621,7 @@ class Tuple(NDIndex):
             index = Tuple(index)
         if isinstance(index, Tuple):
             new_args = []
+            arrays = []
             if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
                     raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
             if ... in index.args:
@@ -627,7 +630,23 @@ class Tuple(NDIndex):
                 subindex = self_arg.as_subindex(index_arg)
                 if isinstance(subindex, Tuple):
                     continue
+                if isinstance(subindex, BooleanArray):
+                    arrays.append(subindex)
                 new_args.append(subindex)
+            # Replace all boolean arrays with the logical AND of them.
+            if arrays:
+                new_array = BooleanArray(logical_and.reduce(broadcast_arrays(*[i.array for i in arrays])))
+                new_args2 = []
+                first = True
+                for arg in new_args:
+                    if arg in arrays:
+                        if first:
+                            new_args2.append(new_array)
+                            first = False
+                    else:
+                        new_args2.append(arg)
+                new_args = new_args2
+
             return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
         raise NotImplementedError(f"Tuple.as_subindex() is not implemented for type '{type(index).__name__}")
 
