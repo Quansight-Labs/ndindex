@@ -8,11 +8,14 @@ import numpy.testing
 
 from pytest import fail
 
+from hypothesis import target
 from hypothesis.strategies import (integers, none, one_of, lists, just,
                                    builds)
 from hypothesis.extra.numpy import arrays
 
-from ..ndindex import ndindex
+from ..tuple import Tuple
+from ..booleanarray import BooleanArray
+from ..ndindex import ndindex, asshape
 
 # Hypothesis strategies for generating indices. Note that some of these
 # strategies are nominally already defined in hypothesis, but we redefine them
@@ -77,6 +80,37 @@ ndindices = one_of(
     integer_arrays,
     boolean_arrays,
 ).filter(_doesnt_raise)
+
+def boolean_array_target(index, shape):
+    """
+    Use hypothesis.target to try to get boolean arrays to match the indexing
+    array shape.
+
+    See
+    https://hypothesis.readthedocs.io/en/latest/details.html#targeted-example-generation.
+
+    Boolean arrays are only valid if their shape matches the array shape at
+    the axis being indexed. Thus, if boolean arrays and shapes are both chosen
+    randomly, they will not tend to align.
+
+    """
+    if not isinstance(index, Tuple):
+        return boolean_array_target(Tuple(index), shape)
+    shape = asshape(shape)
+    boolean_shapes = [i.shape for i in index.args if isinstance(i, BooleanArray)]
+    if not boolean_shapes:
+        return
+    target(shapes_target(boolean_shapes, shape), label='boolean array shapes')
+
+def shapes_target(boolean_shapes, shape):
+    def tostr(seq):
+        return ' '.join(map(str, seq))
+
+    boolean_shapes = [tostr(i) for i in boolean_shapes]
+    shape = tostr(shape)
+
+    return sum([i in shape for i in boolean_shapes])/len(boolean_shapes)
+
 
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """
