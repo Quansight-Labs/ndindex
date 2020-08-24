@@ -2,6 +2,7 @@ import sys
 from itertools import chain
 from functools import reduce
 from operator import mul
+import re
 
 from numpy import intp, bool_, array
 import numpy.testing
@@ -13,9 +14,9 @@ from hypothesis.strategies import (integers, none, one_of, lists, just,
                                    builds)
 from hypothesis.extra.numpy import arrays
 
-from ..tuple import Tuple
+from ..ndindex import ndindex
 from ..booleanarray import BooleanArray
-from ..ndindex import ndindex, asshape
+from ..tuple import Tuple
 
 # Hypothesis strategies for generating indices. Note that some of these
 # strategies are nominally already defined in hypothesis, but we redefine them
@@ -81,7 +82,7 @@ ndindices = one_of(
     boolean_arrays,
 ).filter(_doesnt_raise)
 
-def boolean_array_target(index, shape):
+def boolean_array_target(exception):
     """
     Use hypothesis.target to try to get boolean arrays to match the indexing
     array shape.
@@ -94,13 +95,33 @@ def boolean_array_target(index, shape):
     randomly, they will not tend to align.
 
     """
-    if not isinstance(index, Tuple):
-        return boolean_array_target(Tuple(index), shape)
-    shape = asshape(shape)
-    boolean_shapes = [i.shape for i in index.args if isinstance(i, BooleanArray)]
-    if not boolean_shapes:
+    if not isinstance(exception, IndexError):
         return
-    target(shapes_target(boolean_shapes, shape), label='boolean array shapes')
+    msg_re = re.compile(r'boolean index did not match indexed array along dimension (\d+); dimension is (\d+) but corresponding boolean dimension is (\d+)')
+    m = msg_re.match(exception.args[0])
+    if m:
+        axis, a_dim, idx_dim = map(int, m.groups())
+        value = -abs(a_dim - idx_dim)
+        print("boolean target", value)
+        target(value, label='boolean array shapes')
+
+    # msg_re = re.compile(r'too many indices for array: array is (\d+)-dimensional, but (\d+) were indexed')
+    # m = msg_re.match(exception.args[0])
+    # if m:
+    #     a_dim, idx_dim = map(int, m.groups())
+    #     error = a_dim - idx_dim
+    #     print("too many indices target")
+    #     target(-abs(error), label='too many indices shapes')
+
+def boolean_array_target_index(index):
+    if isinstance(index, BooleanArray):
+        return boolean_array_target_index(Tuple(index))
+    if isinstance(index, Tuple) and any(isinstance(i, BooleanArray) for i in index.args):
+        booleans = [i for i in index.args if isinstance(i, BooleanArray)]
+        total_size = float(sum(prod(i.shape)*i.ndim for i in booleans))*len(booleans)
+        print("boolean target", total_size)
+        print(index)
+        target(total_size, label='boolean array shapes')
 
 def shapes_target(boolean_shapes, shape):
     def tostr(seq):
@@ -168,6 +189,7 @@ def check_same(a, idx, raw_func=lambda a, idx: a[idx],
         except Exception:
             _, e_inner, _ = sys.exc_info()
         if e_inner:
+            boolean_array_target(e_inner)
             raise e_inner
     except Exception as e:
         exception = e
@@ -187,6 +209,8 @@ def check_same(a, idx, raw_func=lambda a, idx: a[idx],
 
     if not exception:
         assert_equal(a_raw, a_ndindex)
+
+        boolean_array_target_index(index)
 
 
 def iterslice(start_range=(-10, 10),

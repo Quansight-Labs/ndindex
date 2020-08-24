@@ -8,7 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import ndindices, short_shapes, check_same, boolean_array_target
+from .helpers import ndindices, short_shapes, check_same
 
 
 @example(..., 0)
@@ -36,8 +36,6 @@ def test_newshape_hypothesis(idx, shape):
     except IndexError:
         pass
     else:
-        boolean_array_target(index, shape)
-
         # Make sure ndindex input gives an error
         raises(TypeError, lambda: index.newshape(Tuple(2, 1)))
         raises(TypeError, lambda: index.newshape(Integer(2)))
