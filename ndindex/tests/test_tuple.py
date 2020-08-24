@@ -81,6 +81,7 @@ def test_ellipsis_index(t, shape):
 
     check_same(a, t, ndindex_func=ndindex_func)
 
+@example((True, 0, False), 1)
 @example((..., None), ())
 @given(Tuples, one_of(shapes, integers(0, 10)))
 def test_tuple_reduce_no_shape_hypothesis(t, shape):
