@@ -164,9 +164,9 @@ class IntegerArray(ArrayIndex):
             start = (start - index.start)//index.step
 
             stop = ceiling((_min(s+1, index.stop) - index.start), index.step)
+            if (stop <= 0).all():
+                raise ValueError("Indices do not intersect")
             if start.shape == ():
-                if stop <= 0:
-                    raise ValueError("Indices do not intersect")
                 return IntegerArray(start)
 
             start = start[start <= stop]
