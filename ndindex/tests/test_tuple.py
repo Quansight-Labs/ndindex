@@ -101,6 +101,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
         assert reduced == () or reduced.args[-1] != ...
 
 @example((array([], dtype=intp), 0), (0, 0))
+@example((array([], dtype=intp), array(0)), (0, 0))
 @example((array([], dtype=intp), [0]), (0, 0))
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
