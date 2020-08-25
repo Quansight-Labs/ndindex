@@ -101,7 +101,7 @@ def boolean_array_target(exception):
     m = msg_re.match(exception.args[0])
     if m:
         axis, a_dim, idx_dim = map(int, m.groups())
-        value = -abs(a_dim - idx_dim)
+        value = float(-abs(a_dim - idx_dim))
         print("boolean target", value)
         target(value, label='boolean array shapes')
 
