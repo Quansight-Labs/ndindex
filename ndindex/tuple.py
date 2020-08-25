@@ -493,7 +493,7 @@ class Tuple(NDIndex):
         # assert args.count(False) <= 1
         # assert args.count(True) <= 1
         n_newaxis = args.count(None)
-        n_boolean = sum(1 - len(broadcast_shape) for i in arrays if
+        n_boolean = sum(1 - i.ndim for i in arrays if
                         isinstance(i, BooleanArray))
         if True in args or False in args:
             n_boolean += 1
@@ -587,7 +587,7 @@ class Tuple(NDIndex):
                     # differently, but these are currently unsupported (see
                     # the comments in the Tuple constructor).
                     if isinstance(s, BooleanArray):
-                        newshape.extend(list(s.newshape(shape[axis])))
+                        newshape.extend(list(s.newshape(shape[axis:axis+s.ndim])))
                         axis += s.ndim - 1
                     else:
                         newshape.extend(list(s.newshape(shape[axis])))
