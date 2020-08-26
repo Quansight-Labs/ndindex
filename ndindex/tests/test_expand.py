@@ -9,7 +9,7 @@ from ..booleanarray import BooleanArray
 from ..integerarray import IntegerArray
 from ..integer import Integer
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, common_shapes
+from .helpers import ndindices, check_same, short_shapes
 
 @example((array([], dtype=intp), 0), (0, 0))
 @example((array([], dtype=intp), [0]), (0, 0))
@@ -24,7 +24,7 @@ from .helpers import ndindices, check_same, common_shapes
 @example((..., None, 0), 1)
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @example(None, 2)
-@given(ndindices, one_of(common_shapes, integers(0, 10)))
+@given(ndindices, one_of(short_shapes, integers(0, 10)))
 def test_expand_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
