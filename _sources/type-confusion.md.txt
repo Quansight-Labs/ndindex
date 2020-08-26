@@ -208,7 +208,10 @@ Additionally, some advice for specific types:
 
 - `ellipsis` is **not** singletonized, unlike the built-in `...`. It would
   also be impossible to make `ellipsis() is ...` return True. If you are using
-  ndindex, **you should use `==` to compare against `...`**, and avoid using `is`.
+  ndindex, **you should use `==` to compare against `...`**, and avoid using
+  `is`. Note that as long as you know `idx` is an ndindex type, this is safe
+  to do, since even the array index types `IntegerArray` and `BooleanArray`
+  allow `==` comparison (unlike NumPy arrays).
 
   **Right:**
 
@@ -278,7 +281,10 @@ Note that `np.newaxis` is just an alias for `None`.
 - `Newaxis` is **not** singletonized, unlike the built-in `None`. It would
   also be impossible to make `Newaxis() is np.newaxis` or `Newaxis() is None`
   return True. If you are using ndindex, **you should use `==` to compare
-  against `np.newaxis` or `None`**, and avoid using `is`.
+  against `np.newaxis` or `None`**, and avoid using `is`. Note that as long as
+  you know `idx` is an ndindex type, this is safe to do, since even the array
+  index types `IntegerArray` and `BooleanArray` allow `==` comparison (unlike
+  NumPy arrays).
 
   **Right:**
 

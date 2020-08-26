@@ -14,7 +14,7 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}})</script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="ndindex Changelog" href="changelog.html" />
@@ -225,7 +225,10 @@ is best to just use <code class="docutils literal notranslate"><span class="pre"
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code> is <strong>not</strong> singletonized, unlike the built-in <code class="docutils literal notranslate"><span class="pre">...</span></code>. It would
 also be impossible to make <code class="docutils literal notranslate"><span class="pre">ellipsis()</span> <span class="pre">is</span> <span class="pre">...</span></code> return True. If you are using
-ndindex, <strong>you should use <code class="docutils literal notranslate"><span class="pre">==</span></code> to compare against <code class="docutils literal notranslate"><span class="pre">...</span></code></strong>, and avoid using <code class="docutils literal notranslate"><span class="pre">is</span></code>.</p>
+ndindex, <strong>you should use <code class="docutils literal notranslate"><span class="pre">==</span></code> to compare against <code class="docutils literal notranslate"><span class="pre">...</span></code></strong>, and avoid using
+<code class="docutils literal notranslate"><span class="pre">is</span></code>. Note that as long as you know <code class="docutils literal notranslate"><span class="pre">idx</span></code> is an ndindex type, this is safe
+to do, since even the array index types <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code>
+allow <code class="docutils literal notranslate"><span class="pre">==</span></code> comparison (unlike NumPy arrays).</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="o">...</span><span class="p">:</span>
 </pre></div>
@@ -282,7 +285,10 @@ to read.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is <strong>not</strong> singletonized, unlike the built-in <code class="docutils literal notranslate"><span class="pre">None</span></code>. It would
 also be impossible to make <code class="docutils literal notranslate"><span class="pre">Newaxis()</span> <span class="pre">is</span> <span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">Newaxis()</span> <span class="pre">is</span> <span class="pre">None</span></code>
 return True. If you are using ndindex, <strong>you should use <code class="docutils literal notranslate"><span class="pre">==</span></code> to compare
-against <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code></strong>, and avoid using <code class="docutils literal notranslate"><span class="pre">is</span></code>.</p>
+against <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code></strong>, and avoid using <code class="docutils literal notranslate"><span class="pre">is</span></code>. Note that as long as
+you know <code class="docutils literal notranslate"><span class="pre">idx</span></code> is an ndindex type, this is safe to do, since even the array
+index types <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> allow <code class="docutils literal notranslate"><span class="pre">==</span></code> comparison (unlike
+NumPy arrays).</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">:</span>
 </pre></div>
@@ -551,7 +557,7 @@ not affect the ndindex objects.</p>
       &copy;2020, Quansight.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

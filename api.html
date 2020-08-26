@@ -14,7 +14,7 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}})</script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Slices" href="slices.html" />
@@ -972,6 +972,12 @@ more details.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="ndindex.Tuple.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="ndindex.Tuple.as_subindex">
 <code class="sig-name descname">as_subindex</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.as_subindex" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="code docutils literal notranslate"><span class="pre">i.as_subindex(j)</span></code> produces an index <code class="code docutils literal notranslate"><span class="pre">k</span></code> such that <code class="code docutils literal notranslate"><span class="pre">a[j][k]</span></code> gives all of
@@ -1079,10 +1085,18 @@ given shape, or will be canonicalized so that</p>
 <ul class="simple">
 <li><p>All the elements of the tuple are recursively reduced.</p></li>
 <li><p>The length of the .args is equal to the length of the shape plus the
-number of <a class="reference internal" href="#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> indices in <code class="code docutils literal notranslate"><span class="pre">self</span></code>.</p></li>
+number of <a class="reference internal" href="#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> indices in <code class="code docutils literal notranslate"><span class="pre">self</span></code> (this is not true if
+<code class="code docutils literal notranslate"><span class="pre">self</span></code> contains :any:<a href="#id2"><span class="problematic" id="id3">`</span></a>BooleanArray`s).</p></li>
 <li><p>The resulting Tuple has no ellipses. Axes that would be matched by
 an ellipsis or an implicit ellipsis at the end of the tuple are
 replaced by <code class="code docutils literal notranslate"><span class="pre">Slice(0,</span> <span class="pre">n)</span></code>.</p></li>
+<li><p>Any array indices in <code class="code docutils literal notranslate"><span class="pre">self</span></code> are broadcast together. If <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+contains array indices (<a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> or <a class="reference internal" href="#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a>),
+then any <a class="reference internal" href="#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> indices are converted into
+<a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> indices of shape <code class="code docutils literal notranslate"><span class="pre">()</span></code> and broadcast. Note that
+broadcasting is done in a memory efficient way so that if the
+broadcasted shape is large it will not take up more memory than the
+original.</p></li>
 </ul>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
@@ -1102,6 +1116,11 @@ replaced by <code class="code docutils literal notranslate"><span class="pre">Sl
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">index -3 is out of bounds for axis 1 with size 2</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">expand</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="go">Tuple(slice(0, 1, 1), [0, 1], [2, 2])</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -1276,7 +1295,11 @@ dimensions of size <code class="code docutils literal notranslate"><span class="
 the entry in <code class="code docutils literal notranslate"><span class="pre">idx</span></code> as an integer index.</p>
 <p>Integer arrays can also appear as part of tuple indices. In that case,
 they replace the axis being indexed. If more than one integer array
-appears inside of a tuple index, they are broadcast together.</p>
+appears inside of a tuple index, they are broadcast together and iterated
+as one. Furthermore, if an integer array appears in a tuple index, all
+integer indices in the tuple are treated as scalar integer arrays and are
+also broadcast. In general, an <a class="reference internal" href="#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> index semantically behaves
+the same as a scalar (<code class="code docutils literal notranslate"><span class="pre">shape=()</span></code>) <code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code>.</p>
 <p>A list of integers may also be used in place of an integer array. Note
 that NumPy treats a direct list of integers as a tuple index, but this
 behavior is deprecated and will be replaced with integer array indexing in
@@ -1541,8 +1564,9 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 <code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.reduce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce an <code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code> index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p>The result will either be <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if the index is invalid for the
-given shape, or an <code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code> index where the values are all
-nonnegative.</p>
+given shape, an <code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code> index where the values are all
+nonnegative, or, if <code class="code docutils literal notranslate"><span class="pre">self</span></code> is a scalar array index (<code class="code docutils literal notranslate"><span class="pre">self.shape</span> <span class="pre">==</span>
+<span class="pre">()</span></code>), an <code class="code docutils literal notranslate"><span class="pre">Integer</span></code> whose value is nonnegative.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">IntegerArray</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">3</span><span class="p">,))</span>
@@ -1604,7 +1628,9 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 and <code class="code docutils literal notranslate"><span class="pre">a</span></code> is an array of shape <code class="code docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">(s1,</span> <span class="pre">...,</span> <span class="pre">sn,</span> <span class="pre">...,</span> <span class="pre">sm)</span></code>, <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>
 replaces the first <code class="code docutils literal notranslate"><span class="pre">n</span></code> dimensions of <code class="code docutils literal notranslate"><span class="pre">a</span></code> with a single dimensions of size
 <code class="code docutils literal notranslate"><span class="pre">np.nonzero(idx)</span></code>, where each entry is included if the corresponding
-element of <code class="code docutils literal notranslate"><span class="pre">idx</span></code> is True.</p>
+element of <code class="code docutils literal notranslate"><span class="pre">idx</span></code> is True. The axes in the index shape should match the
+corresponding axes in the array shape or be 0, or the index produces
+IndexError.</p>
 <p>The typical way of creating a mask is to use boolean operations on an
 array, then index the array with that. For example, if <code class="code docutils literal notranslate"><span class="pre">a</span></code> is an array of
 integers, <code class="code docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">&gt;</span> <span class="pre">0]</span></code> will produces a flat array of the elements of <code class="code docutils literal notranslate"><span class="pre">a</span></code>
@@ -1614,11 +1640,11 @@ that are positive.</p>
 <li><p>A boolean array index will remove as many dimensions as the index has,
 and replace them with a single flat dimension which is the size of the
 number of <code class="code docutils literal notranslate"><span class="pre">True</span></code> elements in the index.</p></li>
-<li><p>A boolean array index <code class="code docutils literal notranslate"><span class="pre">idx</span></code> works the same as the integer index
+<li><p>A boolean array index <code class="code docutils literal notranslate"><span class="pre">idx</span></code> works the same as the integer array index
 <code class="code docutils literal notranslate"><span class="pre">np.nonzero(idx)</span></code>. In particular, the elements of the index are always
 iterated in row-major, C-style order. This does not apply to
 0-dimensional boolean indices.</p></li>
-<li><p>A 0-dimension boolean index (i.e., just the scalar <code class="code docutils literal notranslate"><span class="pre">True</span></code> or <code class="code docutils literal notranslate"><span class="pre">False</span></code>)
+<li><p>A 0-dimensional boolean index (i.e., just the scalar <code class="code docutils literal notranslate"><span class="pre">True</span></code> or <code class="code docutils literal notranslate"><span class="pre">False</span></code>)
 can still be thought of as removing 0 dimensions and adding a single
 dimension of length 1 for True or 0 for False. Hence, if <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape
 <code class="code docutils literal notranslate"><span class="pre">(s1,</span> <span class="pre">...,</span> <span class="pre">sn)</span></code>, then <code class="code docutils literal notranslate"><span class="pre">a[True]</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">s1,</span> <span class="pre">...,</span> <span class="pre">sn)</span></code>, and
@@ -2347,6 +2373,35 @@ of bounds for the shape.</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt id="ndindex.ndindex.operator_index">
+<code class="sig-prename descclassname">ndindex.ndindex.</code><code class="sig-name descname">operator_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.operator_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <code class="code docutils literal notranslate"><span class="pre">idx</span></code> into an integer index using <code class="code docutils literal notranslate"><span class="pre">__index__()</span></code> or raise
+<code class="code docutils literal notranslate"><span class="pre">TypeError</span></code>.</p>
+<p>This is the same as <code class="code docutils literal notranslate"><span class="pre">operator.index()</span></code> except it disallows boolean types.</p>
+<p>This is a slight break in NumPy compatibility, as NumPy allows bools in
+some contexts where <code class="code docutils literal notranslate"><span class="pre">__index__()</span></code> is used, for instance, in slices. It
+does disallow it in others, such as in shapes. The main motivation for
+disallowing bools entirely is 1) <code class="code docutils literal notranslate"><span class="pre">numpy.bool_.__index__()</span></code> is deprecated
+(currently it matches the built-in <code class="code docutils literal notranslate"><span class="pre">bool.__index__()</span></code> and returns the
+object unchanged, but prints a deprecation warning), and 2) for raw
+indices, booleans and <code class="code docutils literal notranslate"><span class="pre">0</span></code>/<code class="code docutils literal notranslate"><span class="pre">1</span></code> are completely different, i.e., <code class="code docutils literal notranslate"><span class="pre">a[True]</span></code> is
+<em>not</em> the same as <code class="code docutils literal notranslate"><span class="pre">a[1]</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex.ndindex</span> <span class="kn">import</span> <span class="n">operator_index</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">operator_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">operator_index</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;float&#39; object cannot be interpreted as an integer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">operator_index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 </div>
@@ -2563,7 +2618,7 @@ of bounds for the shape.</p>
       &copy;2020, Quansight.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
