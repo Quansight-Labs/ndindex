@@ -196,6 +196,7 @@ class Tuple(NDIndex):
           contain any explicit ellipses.
         - Ellipses that don't match any axes are removed.
         - An ellipsis at the end of the tuple is removed.
+        - Scalar booleans (`True` or `False`) are combined into a single term.
         - If the resulting Tuple would have a single argument, that argument
           is returned.
 
