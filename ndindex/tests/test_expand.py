@@ -48,7 +48,8 @@ def test_expand_hypothesis(idx, shape):
             n_newaxis = 1
         else:
             n_newaxis = 0
-        if not any(isinstance(i, BooleanArray) for i in expanded.args):
+        if not (isinstance(index, BooleanArray) or isinstance(index, Tuple)
+                and any(isinstance(i, BooleanArray) for i in index.args)):
             if isinstance(shape, int):
                 assert len(expanded.args) == 1 + n_newaxis
             else:
@@ -57,6 +58,7 @@ def test_expand_hypothesis(idx, shape):
         # Make sure arrays are broadcasted
         if any(isinstance(i, ArrayIndex) and i not in [True, False] for i in expanded.args):
             assert not any(isinstance(i, Integer) for i in expanded.args)
+            assert not any(isinstance(i, BooleanArray) and i not in [True, False] for i in expanded.args)
             assert len({i.shape for i in expanded.args if isinstance(i,
                                                                      IntegerArray)}) in [0, 1]
 

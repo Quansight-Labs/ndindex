@@ -381,7 +381,7 @@ class Tuple(NDIndex):
 
 
     def expand(self, shape):
-        """
+        r"""
         Expand a Tuple index on an array of shape `shape`
 
         An expanded `Tuple` is one where the length of the .args is the same
@@ -395,7 +395,7 @@ class Tuple(NDIndex):
 
         - The length of the .args is equal to the length of the shape plus the
           number of :any:`Newaxis` indices in `self` (this is not true if
-          `self` contains :any:`BooleanArray`s).
+          `self` contains :any:`BooleanArray`\ s).
 
         - The resulting Tuple has no ellipses. Axes that would be matched by
           an ellipsis or an implicit ellipsis at the end of the tuple are
@@ -408,6 +408,12 @@ class Tuple(NDIndex):
           broadcasting is done in a memory efficient way so that if the
           broadcasted shape is large it will not take up more memory than the
           original.
+
+        - Scalar :any:`BooleanArray` arguments (`True` or `False`) are
+          combined into a single term (the same as with :any:`Tuple.reduce`).
+
+        - Non-scalar :any:`BooleanArray`\ s are all converted into equivalent
+          :any:`IntegerArray`\ s via `nonzero()`.
 
         >>> from ndindex import Tuple
         >>> idx = Tuple(slice(0, 10), ..., None, -3)
@@ -470,7 +476,7 @@ class Tuple(NDIndex):
             elif isinstance(i, IntegerArray):
                 arrays.append(i.raw)
             elif isinstance(i, BooleanArray):
-                # TODO: Avoid explicitly calling nonzero
+                # TODO: Avoid calling nonzero twice
                 arrays.extend(i.raw.nonzero())
         broadcast_shape = broadcast(*arrays).shape
         # If the broadcast shape is empty, out of bounds indices in
@@ -501,7 +507,7 @@ class Tuple(NDIndex):
 
         ellipsis_i = self.ellipsis_index
 
-        newargs = []
+        startargs = []
         begin_offset = 0
         for i, s in enumerate(args[:ellipsis_i]):
             axis = i + begin_offset
@@ -511,12 +517,17 @@ class Tuple(NDIndex):
             if isinstance(s, ArrayIndex):
                 if isinstance(s, BooleanArray):
                     begin_offset += s.ndim - 1
+                    if s not in [True, False]:
+                        startargs.extend([IntegerArray(broadcast_to(i,
+                                                                  broadcast_shape))
+                                        for i in s.array.nonzero()])
+                        continue
             elif arrays and isinstance(s, Integer):
                 s = IntegerArray(broadcast_to(array(s.raw, dtype=intp),
                                               broadcast_shape), _copy=False)
             elif s == None:
                 begin_offset -= 1
-            newargs.append(s)
+            startargs.append(s)
 
         # TODO: Merge this with the above loop
         endargs = []
@@ -525,6 +536,11 @@ class Tuple(NDIndex):
             if isinstance(s, ArrayIndex):
                 if isinstance(s, BooleanArray):
                     end_offset -= s.ndim - 1
+                    if s not in [True, False]:
+                        endargs.extend([IntegerArray(broadcast_to(i,
+                                                                  broadcast_shape))
+                                        for i in s.array.nonzero()])
+                        continue
             elif arrays and isinstance(s, Integer):
                 if (0 in broadcast_shape or False in args):
                     s = s.reduce(shape, axis=len(shape)-i+end_offset)
@@ -545,7 +561,7 @@ class Tuple(NDIndex):
                         i in range(len(shape) - len(args) + 1 - idx_offset)]
 
 
-        newargs = newargs + midargs + endargs[::-1]
+        newargs = startargs + midargs + endargs[::-1]
 
         return type(self)(*newargs)
 
