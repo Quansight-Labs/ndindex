@@ -114,7 +114,25 @@ class NDIndex:
         """
         args = self._typecheck(*args, **kwargs)
         self.args = args
+        """
+        `idx.args` contains the arguments needed to create `idx`.
 
+        For an ndindex object `idx`, `idx.args` is always a tuple such that
+        `type(idx)(*idx.args) == idx`. For :any:`Tuple` indices, the elements
+        of `.args` are themselves ndindex types. For other types, `.args`
+        contains raw Python types. Note that `.args` contains NumPy arrays for
+        :any:`IntegerArray` and :any:`BooleanArray` types, so one should
+        always do equality testing or hashing on the ndindex type itself, not
+        its `.args`.
+
+        For an object that represents an indexable version of `idx`, use
+        :any:`.raw <raw>`.
+
+        See Also
+        ========
+
+        raw
+        """
     @classproperty
     def __signature__(self):
         """
