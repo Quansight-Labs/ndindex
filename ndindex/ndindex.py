@@ -225,25 +225,70 @@ class NDIndex:
         raise NotImplementedError
 
     def expand(self, shape):
-        """
-        Expand an index on an array of shape `shape`
+        r"""
+        Expand a Tuple index on an array of shape `shape`
 
-        An expanded index is as explicit as possible. Unlike `reduce`, which
-        tries to simplify an index and remove redundancies, `expand` typically
-        makes an index larger.
+        An expanded index is as explicit as possible. Unlike :any:`reduce
+        <NDIndex.reduce>`, which tries to simplify an index and remove
+        redundancies, `expand()` typically makes an index larger.
 
-        `expand` always returns a `Tuple` whose `.args` is the same length as
-        `shape`. See :meth:`.Tuple.expand` for more details on the behavior of
-        `expand`.
+        If `self` is invalid for the given shape, an `IndexError` is raised.
+        Otherwise, the returned index satisfies the following:
 
-        >>> from ndindex import Slice
+        - It is always a :any:`Tuple`.
+
+        - All the elements of the :any:`Tuple` are recursively :any:`reduced
+          <NDIndex.reduce>`.
+
+        - The length of the `.args` is equal to the length of the shape plus
+          the number of :any:`Newaxis` indices in `self` plus 1 if there is a
+          scalar :any:`BooleanArray` (`True` or `False`).
+
+        - The resulting :any:`Tuple` has no :any:`ellipses <ellipsis>`. If
+          there are axes that would be matched by an ellipsis or an implicit
+          ellipsis at the end of the tuple, `Slice(0, n, 1)` indices are
+          inserted, where `n` is the corresponding axis of the `shape`.
+
+        - Any array indices in `self` are broadcast together. If `self`
+          contains array indices (:any:`IntegerArray` or :any:`BooleanArray`),
+          then any :any:`Integer` indices are converted into
+          :any:`IntegerArray` indices of shape `()` and broadcast. Note that
+          broadcasting is done in a memory efficient way so that even if the
+          broadcasted shape is large it will not take up more memory than the
+          original.
+
+        - Scalar :any:`BooleanArray` arguments (`True` or `False`) are
+          combined into a single term (the same as with :any:`Tuple.reduce`).
+
+        - Non-scalar :any:`BooleanArray`\ s are all converted into equivalent
+          :any:`IntegerArray`\ s via `nonzero()` and broadcast.
+
+        >>> from ndindex import Tuple, Slice
         >>> Slice(None).expand((2, 3))
         Tuple(slice(0, 2, 1), slice(0, 3, 1))
+
+        >>> idx = Tuple(slice(0, 10), ..., None, -3)
+        >>> idx.expand((5, 3))
+        Tuple(slice(0, 5, 1), None, 0)
+        >>> idx.expand((1, 2, 3))
+        Tuple(slice(0, 1, 1), slice(0, 2, 1), None, 0)
+        >>> idx.expand((5,))
+        Traceback (most recent call last):
+        ...
+        IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
+        >>> idx.expand((5, 2))
+        Traceback (most recent call last):
+        ...
+        IndexError: index -3 is out of bounds for axis 1 with size 2
+
+        >>> idx = Tuple(..., [0, 1], -1)
+        >>> idx.expand((1, 2, 3))
+        Tuple(slice(0, 1, 1), [0, 1], [2, 2])
 
         See Also
         ========
 
-        .Tuple.expand
+        .Tuple.reduce
 
         """
         from .tuple import Tuple

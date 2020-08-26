@@ -175,7 +175,7 @@ class Tuple(NDIndex):
         return tuple(i.raw for i in self.args)
 
     def reduce(self, shape=None):
-        """
+        r"""
         Reduce a Tuple index on an array of shape `shape`
 
         A `Tuple` with a single argument is always reduced to that single
@@ -190,15 +190,23 @@ class Tuple(NDIndex):
         `IndexError` if the index is invalid for the given shape, or an index
         that is as simple as possible:
 
-        - All the elements of the tuple are recursively reduced.
-        - Any axes that can be merged into an ellipsis are removed. This
-          includes the implicit ellipsis at the end of a tuple that doesn't
-          contain any explicit ellipses.
-        - Ellipses that don't match any axes are removed.
-        - An ellipsis at the end of the tuple is removed.
-        - Scalar booleans (`True` or `False`) are combined into a single term.
-        - If the resulting Tuple would have a single argument, that argument
-          is returned.
+        - All the elements of the :any:`Tuple` are recursively :any:`reduced
+          <NDIndex.reduce>`.
+
+        - Any axes that can be merged into an :any:`ellipsis` are removed.
+          This includes the implicit ellipsis at the end of a Tuple that
+          doesn't contain any explicit ellipses.
+
+        - :any:`Ellipses <ellipsis>` that don't match any axes are removed.
+
+        - An :any:`ellipsis` at the end of the :any:`Tuple` is removed.
+
+        - Scalar :any:`BooleanArray` arguments (`True` or `False`) are
+          combined into a single term (the first boolean scalar is replaced
+          with the AND of all the boolean scalars).
+
+        - If the resulting :any:`Tuple` would have a single argument, that
+          argument is returned.
 
         >>> idx = Tuple(0, ..., slice(0, 3))
         >>> idx.reduce((5, 4))
@@ -381,68 +389,7 @@ class Tuple(NDIndex):
 
 
     def expand(self, shape):
-        r"""
-        Expand a Tuple index on an array of shape `shape`
-
-        An expanded `Tuple` is one where the length of the .args is the same
-        as the given shape plus the number of :any:`Newaxis` indices, and
-        there are no ellipses.
-
-        The result will either be `IndexError` if `self` is invalid for the
-        given shape, or will be canonicalized so that
-
-        - All the elements of the tuple are recursively reduced.
-
-        - The length of the .args is equal to the length of the shape plus the
-          number of :any:`Newaxis` indices in `self` (this is not true if
-          `self` contains :any:`BooleanArray`\ s).
-
-        - The resulting Tuple has no ellipses. Axes that would be matched by
-          an ellipsis or an implicit ellipsis at the end of the tuple are
-          replaced by `Slice(0, n)`.
-
-        - Any array indices in `self` are broadcast together. If `self`
-          contains array indices (:any:`IntegerArray` or :any:`BooleanArray`),
-          then any :any:`Integer` indices are converted into
-          :any:`IntegerArray` indices of shape `()` and broadcast. Note that
-          broadcasting is done in a memory efficient way so that if the
-          broadcasted shape is large it will not take up more memory than the
-          original.
-
-        - Scalar :any:`BooleanArray` arguments (`True` or `False`) are
-          combined into a single term (the same as with :any:`Tuple.reduce`).
-
-        - Non-scalar :any:`BooleanArray`\ s are all converted into equivalent
-          :any:`IntegerArray`\ s via `nonzero()`.
-
-        >>> from ndindex import Tuple
-        >>> idx = Tuple(slice(0, 10), ..., None, -3)
-
-        >>> idx.expand((5, 3))
-        Tuple(slice(0, 5, 1), None, 0)
-        >>> idx.expand((1, 2, 3))
-        Tuple(slice(0, 1, 1), slice(0, 2, 1), None, 0)
-
-        >>> idx.expand((5,))
-        Traceback (most recent call last):
-        ...
-        IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
-        >>> idx.expand((5, 2))
-        Traceback (most recent call last):
-        ...
-        IndexError: index -3 is out of bounds for axis 1 with size 2
-
-        >>> idx = Tuple(..., [0, 1], -1)
-        >>> idx.expand((1, 2, 3))
-        Tuple(slice(0, 1, 1), [0, 1], [2, 2])
-
-        See Also
-        ========
-
-        .Tuple.reduce
-        .NDIndex.expand
-
-        """
+        # The expand() docstring is on NDIndex.expand()
         from .array import ArrayIndex
         from .booleanarray import BooleanArray
         from .integer import Integer
