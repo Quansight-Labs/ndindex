@@ -44,8 +44,6 @@ def test_expand_hypothesis(idx, shape):
         expanded = index.expand(shape)
     except IndexError:
         pass
-    except NotImplementedError:
-        return
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
