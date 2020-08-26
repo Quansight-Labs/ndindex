@@ -542,7 +542,7 @@ class Tuple(NDIndex):
                     if s not in [True, False]:
                         endargs.extend([IntegerArray(broadcast_to(i,
                                                                   broadcast_shape))
-                                        for i in s.array.nonzero()])
+                                        for i in reversed(s.array.nonzero())])
                         continue
             elif arrays and isinstance(s, Integer):
                 if (0 in broadcast_shape or False in args):
