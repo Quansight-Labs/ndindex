@@ -600,6 +600,7 @@ class Tuple(NDIndex):
 
     def as_subindex(self, index):
         from .ndindex import ndindex
+        from .array import ArrayIndex
         from .slice import Slice
         from .integer import Integer
         from .booleanarray import BooleanArray
@@ -617,7 +618,7 @@ class Tuple(NDIndex):
 
             first = self.args[0]
             return Tuple(first.as_subindex(index), *self.args[1:])
-        if isinstance(index, Integer):
+        if isinstance(index, (Integer, ArrayIndex)):
             index = Tuple(index)
         if isinstance(index, Tuple):
             new_args = []
