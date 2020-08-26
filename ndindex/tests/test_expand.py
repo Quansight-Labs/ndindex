@@ -40,6 +40,9 @@ def test_expand_hypothesis(idx, shape):
 
     index = ndindex(idx)
 
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
+               same_exception=False)
+
     try:
         expanded = index.expand(shape)
     except IndexError:
@@ -70,6 +73,3 @@ def test_expand_hypothesis(idx, shape):
         assert expanded.args.count(True) <= 1
         assert expanded.args.count(False) <= 1
         assert not (True in expanded.args and False in expanded.args)
-
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
-               same_exception=False)
