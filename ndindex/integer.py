@@ -1,6 +1,4 @@
-import operator
-
-from .ndindex import NDIndex, asshape
+from .ndindex import NDIndex, asshape, operator_index
 
 class Integer(NDIndex):
     """
@@ -29,8 +27,7 @@ class Integer(NDIndex):
 
     """
     def _typecheck(self, idx):
-        idx = operator.index(idx)
-
+        idx = operator_index(idx)
         return (idx,)
 
     def __index__(self):
@@ -96,7 +93,6 @@ class Integer(NDIndex):
 
         # reduce will raise IndexError if it should be raised
         self.reduce(shape)
-
         return shape[1:]
 
     def as_subindex(self, index):

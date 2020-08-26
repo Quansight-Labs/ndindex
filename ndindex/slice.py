@@ -1,9 +1,7 @@
-import operator
-
 from sympy.ntheory.modular import crt
 from sympy import ilcm, Rational
 
-from .ndindex import NDIndex, asshape
+from .ndindex import NDIndex, asshape, operator_index
 
 class default:
     """
@@ -65,11 +63,11 @@ class Slice(NDIndex):
             raise ValueError("slice step cannot be zero")
 
         if start is not None:
-            start = operator.index(start)
+            start = operator_index(start)
         if stop is not None:
-            stop = operator.index(stop)
+            stop = operator_index(stop)
         if step is not None:
-            step = operator.index(step)
+            step = operator_index(step)
 
         args = (start, stop, step)
 

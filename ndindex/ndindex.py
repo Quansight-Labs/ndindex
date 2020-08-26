@@ -1,9 +1,7 @@
 import inspect
-import operator
 import numbers
-import warnings
 
-from numpy import ndarray, newaxis, asarray, integer, bool_, intp
+from numpy import ndarray, bool_, newaxis
 
 def ndindex(obj):
     """
@@ -23,25 +21,21 @@ def ndindex(obj):
     if isinstance(obj, NDIndex):
         return obj
 
-    # TODO: Replace this with calls to the IntegerArray() and BooleanArray()
-    # constructors.
-    if isinstance(obj, (list, ndarray, bool)):
-        # Ignore deprecation warnings for things like [1, []]. These will be
-        # filtered out anyway since they produce object arrays.
-        with warnings.catch_warnings(record=True):
-            a = asarray(obj)
-            if isinstance(obj, list) and 0 in a.shape:
-                a = a.astype(intp)
-        if issubclass(a.dtype.type, integer):
-            return IntegerArray(a)
-        elif a.dtype == bool_:
-            return BooleanArray(a)
+    if isinstance(obj, (list, ndarray, bool, bool_)):
+        try:
+            return IntegerArray(obj)
+        except TypeError:
+            pass
+        try:
+            return BooleanArray(obj)
+        except TypeError:
+            pass
+
+        # Match the NumPy exceptions
+        if isinstance(obj, ndarray):
+            raise IndexError("arrays used as indices must be of integer (or boolean) type")
         else:
-            # Match the NumPy exceptions
-            if isinstance(obj, ndarray):
-                raise IndexError("arrays used as indices must be of integer (or boolean) type")
-            else:
-                raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+            raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
     try:
         # If operator.index() works, use that
@@ -420,7 +414,7 @@ def asshape(shape, axis=None):
                         "did you mean to use the built-in tuple type?")
 
     if isinstance(shape, numbers.Number):
-        shape = (operator.index(shape),)
+        shape = (operator_index(shape),)
 
     try:
         l = len(shape)
@@ -432,7 +426,7 @@ def asshape(shape, axis=None):
     # match that
     for i in range(l):
         # Raise TypeError if invalid
-        newshape.append(operator.index(shape[i]))
+        newshape.append(operator_index(shape[i]))
 
         if shape[i] < 0:
             raise ValueError("unknown (negative) dimensions are not supported")
@@ -442,3 +436,41 @@ def asshape(shape, axis=None):
             raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
 
     return tuple(newshape)
+
+
+def operator_index(idx):
+    """
+    Convert `idx` into an integer index using `__index__()` or raise
+    `TypeError`.
+
+    This is the same as `operator.index()` except it disallows boolean types.
+
+    This is a slight break in NumPy compatibility, as NumPy allows bools in
+    some contexts where `__index__()` is used, for instance, in slices. It
+    does disallow it in others, such as in shapes. The main motivation for
+    disallowing bools entirely is 1) `numpy.bool_.__index__()` is deprecated
+    (currently it matches the built-in `bool.__index__()` and returns the
+    object unchanged, but prints a deprecation warning), and 2) for raw
+    indices, booleans and `0`/`1` are completely different, i.e., `a[True]` is
+    *not* the same as `a[1]`.
+
+    >>> from ndindex.ndindex import operator_index
+    >>> operator_index(1)
+    1
+    >>> operator_index(1.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: 'float' object cannot be interpreted as an integer
+    >>> operator_index(True)
+    Traceback (most recent call last):
+    ...
+    TypeError: 'bool' object cannot be interpreted as an integer
+
+    """
+    import operator
+
+    if isinstance(idx, bool):
+        raise TypeError("'bool' object cannot be interpreted as an integer")
+    if isinstance(idx, bool_):
+        raise TypeError("'np.bool_' object cannot be interpreted as an integer")
+    return operator.index(idx)

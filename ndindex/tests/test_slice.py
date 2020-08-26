@@ -1,12 +1,11 @@
 from pytest import raises
 
-from numpy import arange, isin
+from numpy import arange, isin, bool_
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..slice import Slice
-from ..tuple import Tuple
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from .helpers import check_same, slices, prod, shapes, iterslice, assert_equal
@@ -16,6 +15,10 @@ def test_slice_args():
     # TODO: Incorporate this into the normal slice tests
     raises(TypeError, lambda: slice())
     raises(TypeError, lambda: Slice())
+    raises(TypeError, lambda: Slice(1.0))
+    # See docstring of operator_index()
+    raises(TypeError, lambda: Slice(True))
+    raises(TypeError, lambda: Slice(bool_(True)))
 
     S = Slice(1)
     assert S == Slice(S) == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
@@ -114,7 +117,7 @@ def test_slice_reduce_no_shape_exhaustive():
             except ValueError:
                 continue
 
-            check_same(a, S.raw, func=lambda x: x.reduce())
+            check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
 
             # Check the conditions stated by the Slice.reduce() docstring
             reduced = S.reduce()
@@ -132,7 +135,7 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, S.raw, func=lambda x: x.reduce())
+    check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
 
     # Check the conditions stated by the Slice.reduce() docstring
     reduced = S.reduce()
@@ -148,7 +151,7 @@ def test_slice_reduce_exhaustive():
             except ValueError:
                 continue
 
-            check_same(a, S.raw, func=lambda x: x.reduce((n,)))
+            check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
 
             # Check the conditions stated by the Slice.reduce() docstring
             # TODO: Factor this out so we can also test it in the tuple reduce
@@ -176,7 +179,7 @@ def test_slice_reduce_hypothesis(s, shape):
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, S.raw, func=lambda x: x.reduce(shape))
+    check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
 
     # Check the conditions stated by the Slice.reduce() docstring
     try:
@@ -194,14 +197,14 @@ def test_slice_reduce_hypothesis(s, shape):
 
 
 def test_slice_newshape_exhaustive():
-    # Call newshape so we can see if any exceptions match
-    def func(S):
-        S.newshape(shape)
-        return S
+    def raw_func(a, idx):
+        return a[idx].shape
 
-    def assert_equal(x, y):
-        newshape = S.newshape(shape)
-        assert x.shape == y.shape == newshape
+    def ndindex_func(a, index):
+        return index.newshape(shape)
+
+    def assert_equal(raw_shape, newshape):
+        assert raw_shape == newshape
 
     for n in range(10):
         shape = n
@@ -213,35 +216,8 @@ def test_slice_newshape_exhaustive():
             except ValueError:
                 continue
 
-            check_same(a, S.raw, func=func, assert_equal=assert_equal)
-
-
-@given(slices(), one_of(shapes, integers(0, 10)))
-def test_slice_newshape_hypothesis(s, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    try:
-        S = Slice(s)
-    except ValueError: # pragma: no cover
-        assume(False)
-
-    # Call newshape so we can see if any exceptions match
-    def func(S):
-        S.newshape(shape)
-        return S
-
-    def assert_equal(x, y):
-        newshape = S.newshape(shape)
-        assert x.shape == y.shape == newshape
-
-    check_same(a, S.raw, func=func, assert_equal=assert_equal)
-
-def test_slice_newshape_ndindex_input():
-    raises(TypeError, lambda: Slice(6).newshape(Tuple(2, 1)))
-    raises(TypeError, lambda: Slice(6).newshape(Integer(2)))
+            check_same(a, S.raw, raw_func=raw_func, ndindex_func=ndindex_func,
+                   assert_equal=assert_equal)
 
 def test_slice_as_subindex_slice_exhaustive():
     # We have to restrict the range of the exhaustive test to get something
@@ -386,26 +362,31 @@ def test_slice_isempty_hypothesis(s, shape):
     except (IndexError, ValueError): # pragma: no cover
         assume(False)
 
-    # Call isempty to see if the exceptions are the same
-    def func(S):
-        S.isempty(shape)
-        return S
+    def raw_func(a, s):
+        return a[s].size == 0
 
-    def assert_equal(a_raw, a_idx):
-        isempty = S.isempty()
+    def ndindex_func(a, S):
+        return S.isempty(), S.isempty(shape)
 
-        aempty = (a_raw.size == 0)
-        assert aempty == (a_idx.size == 0)
+    def assert_equal(raw_empty, ndindex_empty):
+        isempty, isempty_shape = ndindex_empty
 
-        # If isempty is True then a[s] should be empty
+        # If isempty is True then a[t] should be empty
         if isempty:
-            assert aempty, (S, shape)
-        # We cannot test the converse with hypothesis. isempty may be False but
-        # a[s] could still be empty for this specific a (e.g., if a is already
-        # itself empty).
+            assert raw_empty, (S, shape)
+        # We cannot test the converse with hypothesis. isempty may be False
+        # but a[s] could still be empty for this specific a (e.g., if a is
+        # already itself empty).
+
+        # If isempty is true with no shape it should be true for a specific
+        # shape. The converse is not true because the indexed array could be
+        # empty.
+        if isempty:
+            assert isempty_shape, (S, shape)
 
         # isempty() should always give the correct result for a specific
         # array after reduction
-        assert S.isempty(shape) == aempty, (S, shape)
+        assert isempty_shape == raw_empty, (S, shape)
 
-    check_same(a, s, func=func, assert_equal=assert_equal)
+    check_same(a, s, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)

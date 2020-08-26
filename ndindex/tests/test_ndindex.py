@@ -39,13 +39,21 @@ def test_eq(idx):
 def test_ndindex(idx):
     index = ndindex(idx)
     assert index == idx
-    if isinstance(idx, np.ndarray):
-        assert_equal(index.raw, idx)
-    elif isinstance(idx, list):
-        assert index.dtype in [np.intp, np.bool_]
-        assert_equal(index.raw, np.asarray(idx, dtype=index.dtype))
-    else:
-        assert index.raw == idx
+    def test_raw_eq(idx, index):
+        if isinstance(idx, np.ndarray):
+            assert_equal(index.raw, idx)
+        elif isinstance(idx, list):
+            assert index.dtype in [np.intp, np.bool_]
+            assert_equal(index.raw, np.asarray(idx, dtype=index.dtype))
+        elif isinstance(idx, tuple):
+            assert type(index.raw) == type(idx)
+            assert len(index.raw) == len(idx)
+            assert index.args == index.raw
+            for i, j in zip(idx, index.args):
+                test_raw_eq(i, j)
+        else:
+            assert index.raw == idx
+    test_raw_eq(idx, index)
     assert ndindex(index.raw) == index
 
 def test_ndindex_invalid():
@@ -67,23 +75,23 @@ def test_signature():
     sig = inspect.signature(Integer)
     assert sig.parameters.keys() == {'idx'}
 
+
+@example(([0, 1],))
+@example((IntegerArray([], (0, 1)),))
 @example(IntegerArray([], (0, 1)))
 @example((1, ..., slice(1, 2)))
 # eval can sometimes be slower than the default deadline of 200ms for large
 # array indices
 @settings(deadline=None)
 @given(ndindices)
-def test_repr(idx):
+def test_repr_str(idx):
     # The repr form should be re-creatable
     index = ndindex(idx)
     d = {}
     exec("from ndindex import *", d)
     assert eval(repr(index), d) == idx
 
-@given(ndindices)
-def test_str(idx):
     # Str may not be re-creatable. Just test that it doesn't give an exception.
-    index = ndindex(idx)
     str(index)
 
 def test_asshape():
@@ -103,3 +111,4 @@ def test_asshape():
     raises(TypeError, lambda: asshape(...))
     raises(TypeError, lambda: asshape(Integer(1)))
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
+    raises(TypeError, lambda: asshape((True,)))

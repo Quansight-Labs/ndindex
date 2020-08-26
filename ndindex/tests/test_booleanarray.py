@@ -5,7 +5,7 @@ from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
-from .helpers import boolean_arrays, shapes, check_same, assert_equal
+from .helpers import boolean_arrays, common_shapes, check_same, assert_equal
 
 from ..booleanarray import BooleanArray
 
@@ -33,12 +33,12 @@ def test_booleanarray_constructor():
     a[0] = False
     assert idx == BooleanArray([True, False])
 
-@given(boolean_arrays, shapes)
+@given(boolean_arrays, common_shapes)
 def test_booleanarray_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
-@given(boolean_arrays, one_of(shapes, integers(0, 10)))
+@given(boolean_arrays, one_of(common_shapes, integers(0, 10)))
 def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -47,11 +47,11 @@ def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
 
-    check_same(a, index.raw, func=lambda x: x.reduce())
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
 
 @example(full((1, 9), True), (3, 3))
 @example(full((1, 9), False), (3, 3))
-@given(boolean_arrays, one_of(shapes, integers(0, 10)))
+@given(boolean_arrays, one_of(common_shapes, integers(0, 10)))
 def test_booleanarray_reduce_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -60,20 +60,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
 
-    if (index.count_nonzero == 0
-        and a.shape != index.shape
-        and prod(a.shape) == prod(index.shape) not in [0, 1]
-        and len(a.shape) == len(index.shape)):
-        # NumPy currently allows this case, due to a bug: (see
-        # https://github.com/numpy/numpy/issues/16997 and
-        # https://github.com/numpy/numpy/pull/17010), but we disallow it.
-        with raises(IndexError, match=r"boolean index did not match indexed "
-                    r"array along dimension \d+; dimension is \d+ but "
-                    r"corresponding boolean dimension is \d+"):
-            index.reduce(shape)
-        return
-
-    check_same(a, index.raw, func=lambda x: x.reduce(shape))
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
 
     try:
         reduced = index.reduce(shape)
@@ -84,42 +71,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         # give an IndexError
         assert reduced == index
 
-@example(array([[[True], [False]]]), (1, 1, 2))
-@example(full((1, 9), False), (3, 3))
-@given(boolean_arrays, one_of(shapes, integers(0, 10)))
-def test_booleanarray_newshape_hypothesis(idx, shape):
-    if isinstance(shape, int):
-        a = arange(shape)
-    else:
-        a = arange(prod(shape)).reshape(shape)
-
-    def assert_equal(x, y):
-        newshape = BooleanArray(idx).newshape(shape)
-        assert x.shape == y.shape == newshape
-
-    # Call newshape so we can see if any exceptions match
-    def func(idx):
-        idx.newshape(shape)
-        return idx
-
-    index = BooleanArray(idx)
-    if (index.count_nonzero == 0
-        and a.shape != index.shape
-        and prod(a.shape) == prod(index.shape) not in [0, 1]
-        and len(a.shape) == len(index.shape)):
-        # NumPy currently allows this case, due to a bug: (see
-        # https://github.com/numpy/numpy/issues/16997 and
-        # https://github.com/numpy/numpy/pull/17010), but we disallow it.
-        with raises(IndexError, match=r"boolean index did not match indexed "
-                    r"array along dimension \d+; dimension is \d+ but "
-                    r"corresponding boolean dimension is \d+"):
-            index.reduce(shape)
-        return
-
-    check_same(a, idx, func=func, assert_equal=assert_equal)
-
-
-@given(boolean_arrays, one_of(shapes, integers(0, 10)))
+@given(boolean_arrays, one_of(common_shapes, integers(0, 10)))
 def test_booleanarray_isempty_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -128,26 +80,31 @@ def test_booleanarray_isempty_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
 
-    # Call isempty to see if the exceptions are the same
-    def func(index):
-        index.isempty(shape)
-        return index
+    def raw_func(a, idx):
+        return a[idx].size == 0
 
-    def assert_equal(a_raw, a_idx):
-        isempty = index.isempty()
-        isempty_shape = index.isempty(shape)
+    def ndindex_func(a, index):
+        return index.isempty(), index.isempty(shape)
 
-        aempty = (a_raw.size == 0)
-        assert aempty == (a_idx.size == 0)
+    def assert_equal(raw_empty, ndindex_empty):
+        isempty, isempty_shape = ndindex_empty
+
+        # If isempty is True then a[t] should be empty
+        if isempty:
+            assert raw_empty, (index, shape)
+        # We cannot test the converse with hypothesis. isempty may be False
+        # but a[idx] could still be empty for this specific a (e.g., if a is
+        # already itself empty).
 
         # If isempty is true with no shape it should be true for a specific
         # shape. The converse is not true because the indexed array could be
         # empty.
         if isempty:
-            assert isempty_shape
+            assert isempty_shape, (index, shape)
 
         # isempty() should always give the correct result for a specific
         # array after reduction
-        assert isempty_shape == aempty, (index, shape)
+        assert isempty_shape == raw_empty, (index, shape)
 
-    check_same(a, idx, func=func, assert_equal=assert_equal)
+    check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal, same_exception=False)

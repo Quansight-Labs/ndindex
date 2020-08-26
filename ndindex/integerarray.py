@@ -1,4 +1,4 @@
-from numpy import intp, zeros
+from numpy import intp
 
 from .array import ArrayIndex
 from .ndindex import asshape
@@ -14,7 +14,11 @@ class IntegerArray(ArrayIndex):
 
     Integer arrays can also appear as part of tuple indices. In that case,
     they replace the axis being indexed. If more than one integer array
-    appears inside of a tuple index, they are broadcast together.
+    appears inside of a tuple index, they are broadcast together and iterated
+    as one. Furthermore, if an integer array appears in a tuple index, all
+    integer indices in the tuple are treated as scalar integer arrays and are
+    also broadcast. In general, an :any:`Integer` index semantically behaves
+    the same as a scalar (`shape=()`) `IntegerArray`.
 
     A list of integers may also be used in place of an integer array. Note
     that NumPy treats a direct list of integers as a tuple index, but this
@@ -48,8 +52,9 @@ class IntegerArray(ArrayIndex):
         Reduce an `IntegerArray` index on an array of shape `shape`.
 
         The result will either be `IndexError` if the index is invalid for the
-        given shape, or an `IntegerArray` index where the values are all
-        nonnegative.
+        given shape, an `IntegerArray` index where the values are all
+        nonnegative, or, if `self` is a scalar array index (`self.shape ==
+        ()`), an `Integer` whose value is nonnegative.
 
         >>> from ndindex import IntegerArray
         >>> idx = IntegerArray([-5, 2])
@@ -81,16 +86,6 @@ class IntegerArray(ArrayIndex):
             return self
 
         shape = asshape(shape, axis=axis)
-        if 0 in shape[:axis] + shape[axis+1:]:
-            # There are no bounds checks for empty arrays if one of the
-            # non-indexed axes is 0. This behavior will be deprecated in NumPy
-            # 1.20. Once 1.20 is released, we will change the ndindex behavior
-            # to match it, since we want to match all post-deprecation NumPy
-            # behavior. But it is impossible to test against the
-            # post-deprecation behavior reliably until a version of NumPy is
-            # released that raises the deprecation warning, so for now, we
-            # just match the NumPy 1.19 behavior.
-            return IntegerArray(zeros(self.shape, dtype=intp))
 
         size = shape[axis]
         new_array = self.array.copy()
@@ -107,7 +102,6 @@ class IntegerArray(ArrayIndex):
 
         # reduce will raise IndexError if it should be raised
         self.reduce(shape)
-
         return self.shape + shape[1:]
 
     def isempty(self, shape=None):
