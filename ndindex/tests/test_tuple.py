@@ -10,7 +10,7 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, Tuples, prod, shapes, iterslice
+from .helpers import check_same, Tuples, prod, common_shapes, iterslice
 
 def test_tuple_constructor():
     # Test things in the Tuple constructor that are not tested by the other
@@ -66,12 +66,12 @@ def test_tuple_exhaustive():
                     else:
                         assert index.has_ellipsis == (type(...) in (t1, t2, t3))
 
-@given(Tuples, shapes)
+@given(Tuples, common_shapes)
 def test_tuples_hypothesis(t, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, t, same_exception=False)
 
-@given(Tuples, shapes)
+@given(Tuples, common_shapes)
 def test_ellipsis_index(t, shape):
     a = arange(prod(shape)).reshape(shape)
     # Don't know if there is a better way to test ellipsis_idx
@@ -83,7 +83,7 @@ def test_ellipsis_index(t, shape):
 
 @example((True, 0, False), 1)
 @example((..., None), ())
-@given(Tuples, one_of(shapes, integers(0, 10)))
+@given(Tuples, one_of(common_shapes, integers(0, 10)))
 def test_tuple_reduce_no_shape_hypothesis(t, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -108,7 +108,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
 @example((0, ..., slice(None)), (2, 3, 4, 5, 6, 7))
 @example((slice(None, None, -1),), (2,))
 @example((..., slice(None, None, -1),), (2, 3, 4))
-@given(Tuples, one_of(shapes, integers(0, 10)))
+@given(Tuples, one_of(common_shapes, integers(0, 10)))
 def test_tuple_reduce_hypothesis(t, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -155,7 +155,7 @@ def test_tuple_reduce_explicit():
 
 @example((slice(0, 0),), 2)
 @example((0, slice(0, 0)), (1, 2))
-@given(Tuples, one_of(shapes, integers(0, 10)))
+@given(Tuples, one_of(common_shapes, integers(0, 10)))
 def test_tuple_isempty_hypothesis(t, shape):
     if isinstance(shape, int):
         a = arange(shape)

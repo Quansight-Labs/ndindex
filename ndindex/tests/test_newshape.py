@@ -8,8 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import ndindices, short_shapes, check_same
-
+from .helpers import ndindices, check_same, common_shapes
 
 @example(..., 0)
 @example((True,), ())
@@ -24,7 +23,7 @@ from .helpers import ndindices, short_shapes, check_same
 @example(([0, 0, 0], [0, 0]), (2, 2))
 @example((0, None, 0, ..., 0, None, 0), (2, 2, 2, 2, 2, 2, 2))
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
-@given(ndindices, one_of(short_shapes, integers(0, 10)))
+@given(ndindices, one_of(common_shapes, integers(0, 10)))
 def test_newshape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
