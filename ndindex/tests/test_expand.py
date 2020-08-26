@@ -50,18 +50,20 @@ def test_expand_hypothesis(idx, shape):
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
+        n_newaxis = 0
+        boolean_scalars = 0
         if isinstance(idx, tuple):
             n_newaxis = index.args.count(None)
+            if True in index.args or False in index.args:
+                boolean_scalars = 1
         elif index == None:
             n_newaxis = 1
+        elif index in [True, False]:
+            boolean_scalars = 1
+        if isinstance(shape, int):
+            assert len(expanded.args) == 1 + n_newaxis + boolean_scalars
         else:
-            n_newaxis = 0
-        if not (isinstance(index, BooleanArray) or isinstance(index, Tuple)
-                and any(isinstance(i, BooleanArray) for i in index.args)):
-            if isinstance(shape, int):
-                assert len(expanded.args) == 1 + n_newaxis
-            else:
-                assert len(expanded.args) == len(shape) + n_newaxis
+            assert len(expanded.args) == len(shape) + n_newaxis + boolean_scalars
 
         # Make sure arrays are broadcasted
         if any(isinstance(i, ArrayIndex) and i not in [True, False] for i in expanded.args):
