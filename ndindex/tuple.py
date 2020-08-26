@@ -501,7 +501,10 @@ class Tuple(NDIndex):
         # assert args.count(False) <= 1
         # assert args.count(True) <= 1
         n_newaxis = args.count(None)
-        n_boolean = 1 if True in args or False in args else 0
+        n_boolean = sum(1 - i.ndim for i in args if
+                        isinstance(i, BooleanArray))
+        if True in args or False in args:
+            n_boolean += 1
         indexed_args = len(args) - n_boolean - n_newaxis - 1 # -1 for the ellipsis
         shape = asshape(shape, axis=indexed_args - 1)
 
