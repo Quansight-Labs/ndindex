@@ -1,4 +1,4 @@
-from numpy import broadcast_arrays, amin, amax, ndarray, where
+from numpy import broadcast_arrays, amin, amax, where
 
 def _crt(m1, m2, v1, v2):
     """
