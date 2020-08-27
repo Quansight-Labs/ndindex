@@ -17,18 +17,32 @@ def pytest_addoption(parser):
         help="set the Hypothesis max_examples setting",
     )
 
+    # Add an option to disable the Hypothesis deadline
+    parser.addoption(
+        "--hypothesis-disable-deadline",
+        "--disable-deadline",
+        action="store_true",
+        help="disable the Hypothesis deadline",
+    )
+
 
 def pytest_configure(config):
     # Set Hypothesis max_examples.
     hypothesis_max_examples = config.getoption("--hypothesis-max-examples")
+    disable_deadline = config.getoption('--hypothesis-disable-deadline')
+    profile_settings = {}
     if hypothesis_max_examples is not None:
+        profile_settings['max_examples'] = int(hypothesis_max_examples)
+    if disable_deadline is not None:
+        profile_settings['deadline'] = None
+    if profile_settings:
         import hypothesis
 
         hypothesis.settings.register_profile(
-            "hypothesis-overridden", max_examples=int(hypothesis_max_examples)
+            "hypothesis-pytest-overridden", **profile_settings,
         )
 
-        hypothesis.settings.load_profile("hypothesis-overridden")
+        hypothesis.settings.load_profile("hypothesis-pytest-overridden")
 
 
 settings.register_profile('ndindex_hypothesis_profile', deadline=800)
