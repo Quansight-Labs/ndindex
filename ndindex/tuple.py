@@ -603,7 +603,7 @@ class Tuple(NDIndex):
                 new_args.append(subindex)
             # Replace all boolean arrays with the logical AND of them.
             if arrays:
-                new_array = BooleanArray(logical_and.reduce(broadcast_arrays(*[i.array for i in arrays])))
+                new_array = BooleanArray(logical_and.reduce(*[i.array for i in arrays]))
                 new_args2 = []
                 first = True
                 for arg in new_args:
