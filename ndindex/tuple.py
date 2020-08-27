@@ -388,6 +388,62 @@ class Tuple(NDIndex):
 
         return type(self)(*newargs)
 
+    def broadcast_arrays(self):
+        from .array import ArrayIndex
+        from .booleanarray import BooleanArray
+        from .integerarray import IntegerArray
+        from .integer import Integer
+
+        args = self.args
+        boolean_scalars = [i for i in args if i in [True, False]]
+        if len(boolean_scalars) > 1:
+            _args = []
+            seen_boolean_scalar = False
+            for s in args:
+                if s in [True, False]:
+                    if seen_boolean_scalar:
+                        continue
+                    _args.append(BooleanArray(all(i == True for i in boolean_scalars)))
+                    seen_boolean_scalar = True
+                else:
+                    _args.append(s)
+            return type(self)(*_args).broadcast_arrays()
+
+        # Broadcast all array indices. Note that broadcastability is checked
+        # in the Tuple constructor, so this should not fail.
+        boolean_nonzero = {}
+        arrays = []
+        for s in args:
+            if s in [True, False]:
+                continue
+            elif isinstance(s, IntegerArray):
+                arrays.append(s.raw)
+            elif isinstance(s, BooleanArray):
+                nz = s.raw.nonzero()
+                arrays.extend(nz)
+                boolean_nonzero[s] = nz
+        if not arrays:
+            return self
+        broadcast_shape = broadcast(*arrays).shape
+
+        newargs = []
+        for s in args:
+            if isinstance(s, BooleanArray):
+                if s not in [True, False]:
+                    newargs.extend([IntegerArray(broadcast_to(i, broadcast_shape))
+                                    for i in boolean_nonzero[s]])
+            elif isinstance(s, Integer):
+                # broadcast_to(x) gives a readonly view on x, which is also
+                # readonly, so set _copy=False to avoid representing the full
+                # broadcasted array in memory.
+                newargs.append(IntegerArray(broadcast_to(array(s.raw, dtype=intp),
+                                              broadcast_shape), _copy=False))
+            elif isinstance(s, IntegerArray):
+                newargs.append(IntegerArray(broadcast_to(s.raw, broadcast_shape),
+                                            _copy=False))
+            else:
+                newargs.append(s)
+        return Tuple(*newargs)
 
     def expand(self, shape):
         # The expand() docstring is on NDIndex.expand()
@@ -515,7 +571,6 @@ class Tuple(NDIndex):
         newargs = startargs + midargs + endargs[::-1]
 
         return type(self)(*newargs)
-
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class

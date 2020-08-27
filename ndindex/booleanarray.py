@@ -157,3 +157,7 @@ class BooleanArray(ArrayIndex):
         if self in [True, False]:
             raise NotImplementedError("as_subindex is not supported for scalar boolean indices")
         return Tuple(*self.array.nonzero()).as_subindex(index)
+
+    def broadcast_arrays(self):
+        from .tuple import Tuple
+        return Tuple(self).broadcast_arrays()

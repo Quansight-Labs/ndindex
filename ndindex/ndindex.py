@@ -307,6 +307,7 @@ class NDIndex:
         ========
 
         .Tuple.reduce
+        broadcast_arrays
 
         """
         from .tuple import Tuple
@@ -448,6 +449,45 @@ class NDIndex:
 
         """
         raise NotImplementedError
+
+    def broadcast_arrays(self):
+        """
+        Broadcast all the array indices in self to a common shape.
+
+        The resulting index is equivalent in all contexts where the original
+        index is allowed. However, it is possible for the original index to
+        give an IndexError but for the new index to not, since integer array
+        indices have less stringent shape requirements than boolean array
+        indices. There are also some instances for empty indices
+        (:any:`isempty` is True) where bounds would be checked before
+        broadcasting but not after.
+
+        Any :any:`BooleanArray` indices are converted to :any:`IntegerArray`
+        indices. Furthermore, if there are :any:`BooleanArray` or
+        :any:`IntegerArray` indices, then any :any:`Integer` indices are also
+        converted into scalar :any:`IntegerArray` indices. Furthermore,
+        if there are multiple boolean scalar indices, they are combined into a
+        single one.
+
+        Note that array broadcastability is checked in the :any:`Tuple`
+        constructor, so this method will not raise any exceptions.
+
+        This is part of what is performed by :any:`expand`, but unlike
+        :any:`expand`, this method does not do any other manipulations, and it
+        does not require a shape.
+
+        >>> from ndindex import Tuple
+        >>> idx = Tuple([[False], [True], [True]], [[0], [1], [1]], -1)
+        >>> print(idx.broadcast_arrays())
+        Tuple(IntegerArray([[1 2] [1 2] [1 2]]), IntegerArray([[0 0] [0 0] [0 0]]), IntegerArray([[-1 -1] [-1 -1] [-1 -1]]))
+
+        See Also
+        ========
+
+        expand
+
+        """
+        return self
 
 def asshape(shape, axis=None):
     """
