@@ -389,7 +389,6 @@ class Tuple(NDIndex):
         return type(self)(*newargs)
 
     def broadcast_arrays(self):
-        from .array import ArrayIndex
         from .booleanarray import BooleanArray
         from .integerarray import IntegerArray
         from .integer import Integer
