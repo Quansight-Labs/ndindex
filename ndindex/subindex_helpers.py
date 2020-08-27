@@ -1,9 +1,25 @@
+"""
+This file has the main algorithm for Slice.as_subindex(Slice)
+
+Since Integer can use the same algorithm via Slice(i, i+1), and IntegerArray
+needs to do this but in a way that only uses array friendly operations, we
+need to have this factored out into a separately callable function.
+
+TODO: we could remove the dependency on SymPy if we wanted to, by implementing
+the special cases for ilcm(a, b) and the Chinese Remainder Theorem for 2
+equations. It wouldn't be too bad (it just requires the extended gcd
+algorithm), but depending on SymPy also isn't a big deal for the time being.
+
+"""
 from numpy import broadcast_arrays, amin, amax, where
 
 def _crt(m1, m2, v1, v2):
     """
+    Chinese Remainder Theorem
+
     Returns x such that x = v1 (mod m1) and x = v2 (mod m2), or None if no
     such solution exists.
+
     """
     from sympy.ntheory.modular import crt as sympy_crt
 
