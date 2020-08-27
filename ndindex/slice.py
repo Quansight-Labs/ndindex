@@ -1,5 +1,3 @@
-from numpy import broadcast_arrays, amin, amax
-
 from .ndindex import NDIndex, asshape, operator_index
 from .subindex_helpers import subindex_slice
 

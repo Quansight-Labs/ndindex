@@ -1,4 +1,4 @@
-from numpy import bool_, count_nonzero, broadcast_arrays
+from numpy import bool_, count_nonzero
 
 from .array import ArrayIndex
 from .ndindex import asshape
