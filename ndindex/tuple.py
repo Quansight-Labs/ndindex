@@ -571,6 +571,9 @@ class Tuple(NDIndex):
 
         index = ndindex(index).reduce()
 
+        if sum(isinstance(i, ArrayIndex) for i in self.args) > 1:
+            raise NotImplementedError
+
         if ... in self.args:
             raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
 
@@ -585,6 +588,8 @@ class Tuple(NDIndex):
         if isinstance(index, (Integer, ArrayIndex)):
             index = Tuple(index)
         if isinstance(index, Tuple):
+            if sum(isinstance(i, ArrayIndex) for i in index.args) > 1:
+                raise NotImplementedError
             new_args = []
             arrays = []
             if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
