@@ -367,9 +367,9 @@ class NDIndex:
         :meth:`reduce` with a shape first.
 
         `as_subindex` can be seen as the left-inverse of composition, that is,
-        if `i = j[k]`, that is, `a[i] = a[j][k]`, then `k = i.as_subindex(j)`,
-        so that `k "=" (j^-1)[i]` (this only works as a true inverse if
-        `j` is a subset of `i`).
+        if `a[i] = a[j][k]`, then `k = i.as_subindex(j)`, so that `k "="
+        (j^-1)[i]` (this only works as a true inverse if `j` is a subset of
+        `i`).
 
         Note that due to symmetry, `a[j][i.as_subindex(j)]` and
         `a[i][j.as_subindex(i)]` will give the same subarrays of `a`, which
