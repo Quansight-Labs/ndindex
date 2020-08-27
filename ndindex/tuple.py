@@ -625,7 +625,7 @@ class Tuple(NDIndex):
         from .integerarray import IntegerArray
         from .booleanarray import BooleanArray
 
-        index = ndindex(index).reduce()
+        index = ndindex(index).reduce().broadcast_arrays()
 
         if ... in self.args:
             raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
@@ -633,6 +633,7 @@ class Tuple(NDIndex):
         if isinstance(index, (Integer, ArrayIndex, Slice)):
             index = Tuple(index)
         if isinstance(index, Tuple):
+            index = index.broadcast_arrays()
             new_args = []
             boolean_arrays = []
             integer_arrays = []
