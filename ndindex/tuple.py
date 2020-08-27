@@ -588,8 +588,6 @@ class Tuple(NDIndex):
         if isinstance(index, (Integer, ArrayIndex)):
             index = Tuple(index)
         if isinstance(index, Tuple):
-            if sum(isinstance(i, ArrayIndex) for i in index.args) > 1:
-                raise NotImplementedError
             new_args = []
             arrays = []
             if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
