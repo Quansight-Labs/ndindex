@@ -40,7 +40,7 @@ def test_broadcast_arrays_hypothesis(idx, shape):
             raise
     if check:
         check_same(a, index.raw, ndindex_func=lambda a, x:
-                   a[x.broadcast_arrays().raw], same_exception=True)
+                   a[x.broadcast_arrays().raw], same_exception=False)
 
     broadcasted = index.broadcast_arrays()
 
