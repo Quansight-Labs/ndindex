@@ -1,7 +1,8 @@
-from numpy import (broadcast, broadcast_to, broadcast_arrays, array, intp,
-                   ndarray, bool_, logical_and)
+from numpy import (broadcast, broadcast_to, array, intp, ndarray, bool_,
+                   logical_and, broadcast_arrays)
 
 from .ndindex import NDIndex, ndindex, asshape
+from .subindex_helpers import subindex_slice
 
 class Tuple(NDIndex):
     """
@@ -567,55 +568,112 @@ class Tuple(NDIndex):
         from .array import ArrayIndex
         from .slice import Slice
         from .integer import Integer
+        from .integerarray import IntegerArray
         from .booleanarray import BooleanArray
 
         index = ndindex(index).reduce()
 
-        if sum(isinstance(i, ArrayIndex) for i in self.args) > 1:
-            raise NotImplementedError
-
         if ... in self.args:
             raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
 
-        if isinstance(index, Slice):
-            if not self.args:
-                if index.step < 0:
-                    raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
-                return self
-
-            first = self.args[0]
-            return Tuple(first.as_subindex(index), *self.args[1:])
-        if isinstance(index, (Integer, ArrayIndex)):
+        if isinstance(index, (Integer, ArrayIndex, Slice)):
             index = Tuple(index)
         if isinstance(index, Tuple):
             new_args = []
-            arrays = []
+            boolean_arrays = []
+            integer_arrays = []
             if any(isinstance(i, Slice) and i.step < 0 for i in index.args):
                     raise NotImplementedError("Tuple.as_subindex() is only implemented on slices with positive steps")
             if ... in index.args:
                 raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
             for self_arg, index_arg in zip(self.args, index.args):
-                subindex = self_arg.as_subindex(index_arg)
-                if isinstance(subindex, Tuple):
-                    continue
-                if isinstance(subindex, BooleanArray):
-                    arrays.append(subindex)
-                new_args.append(subindex)
+                if (isinstance(self_arg, IntegerArray) and
+                    isinstance(index_arg, Slice)):
+                    if (self_arg.array < 0).any():
+                        raise NotImplementedError("IntegerArray.as_subindex() is only implemented for arrays with all nonnegative entries. Try calling reduce() with a shape first.")
+                    if index_arg.step < 0:
+                        raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with positive steps")
+
+                    # After reducing, start is not None when step > 0
+                    if index_arg.stop is None or index_arg.start < 0 or index_arg.stop < 0:
+                        raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+
+                    s = self_arg.array
+                    start, stop, step = subindex_slice(
+                        s, s+1, 1, index_arg.start, index_arg.stop, index_arg.step)
+                    if (stop <= 0).all():
+                        raise ValueError("Indices do not intersect")
+                    if start.shape == ():
+                        if start >= stop:
+                            raise ValueError("Indices do not intersect")
+                    if 0 in start.shape:
+                        raise ValueError("Indices do not intersect")
+
+                    integer_arrays.append((start, stop))
+                    # Placeholder. We need to mask out the stops below.
+                    new_args.append(IntegerArray(start))
+                else:
+                    subindex = self_arg.as_subindex(index_arg)
+                    if isinstance(subindex, Tuple):
+                        continue
+                    if isinstance(subindex, BooleanArray):
+                        boolean_arrays.append(subindex)
+                    new_args.append(subindex)
+            args_remainder = self.args[min(len(self.args), len(index.args)):]
+            index_remainder = index.args[min(len(self.args), len(index.args)):]
+            if any(isinstance(i, ArrayIndex) and i.isempty() for i in
+                   index_remainder):
+                raise ValueError("Indices do not intersect")
+            for arg in args_remainder:
+                if isinstance(arg, BooleanArray):
+                    boolean_arrays.append(arg)
+                if isinstance(arg, IntegerArray):
+                    integer_arrays.append((arg.array, arg.array+1))
+                new_args.append(arg)
             # Replace all boolean arrays with the logical AND of them.
-            if arrays:
-                new_array = BooleanArray(logical_and.reduce(*[i.array for i in arrays]))
+            if any(i.isempty() for i in boolean_arrays):
+                raise ValueError("Indices do not intersect")
+            if len(boolean_arrays) > 1:
+                new_array = BooleanArray(logical_and.reduce([i.array for i in boolean_arrays]))
                 new_args2 = []
                 first = True
                 for arg in new_args:
-                    if arg in arrays:
+                    if arg in boolean_arrays:
                         if first:
                             new_args2.append(new_array)
                             first = False
                     else:
                         new_args2.append(arg)
                 new_args = new_args2
-
-            return Tuple(*new_args, *self.args[min(len(self.args), len(index.args)):])
+            # Mask out integer arrays to only where the start is less than the
+            # stop for all arrays.
+            if integer_arrays:
+                starts, stops = zip(*integer_arrays)
+                starts = array(broadcast_arrays(*starts))
+                stops = array(broadcast_arrays(*stops))
+                mask = logical_and.reduce(starts < stops, axis=0)
+                new_args2 = []
+                i = 0
+                for arg in new_args:
+                    if isinstance(arg, IntegerArray):
+                        if mask.ndim == 0:
+                            # Integer arrays always result in a 1 dimensional
+                            # result, except when we have a scalar, we want to
+                            # have a 0 dimensional result to match Integer().
+                            if not mask:
+                                raise ValueError("Indices do not intersect")
+                            new_args2.append(IntegerArray(starts[i]))
+                        elif mask.all():
+                            new_args2.append(IntegerArray(starts[i]))
+                        else:
+                            new_args2.append(IntegerArray(starts[i, mask]))
+                        if new_args2[-1].isempty():
+                            raise ValueError("Indices do not intersect")
+                        i += 1
+                    else:
+                        new_args2.append(arg)
+                new_args = new_args2
+            return Tuple(*new_args)
         raise NotImplementedError(f"Tuple.as_subindex() is not implemented for type '{type(index).__name__}")
 
     def isempty(self, shape=None):

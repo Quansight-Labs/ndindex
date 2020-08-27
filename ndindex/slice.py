@@ -415,7 +415,7 @@ class Slice(NDIndex):
             return res
 
         if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers, arrays and slices")
 
         if index.step < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")

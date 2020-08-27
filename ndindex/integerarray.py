@@ -149,10 +149,10 @@ class IntegerArray(ArrayIndex):
                                                index.start, index.stop, index.step)
             if (stop <= 0).all():
                 raise ValueError("Indices do not intersect")
+            start = start[start < stop]
+
             if start.shape == ():
                 return IntegerArray(start)
-
-            start = start[start < stop]
 
             if 0 in start.shape:
                 raise ValueError("Indices do not intersect")
