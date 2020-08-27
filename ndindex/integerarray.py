@@ -2,6 +2,7 @@ from numpy import intp, amax, amin, broadcast_arrays
 
 from .array import ArrayIndex
 from .ndindex import asshape
+from .subindex_helpers import subindex_slice
 
 class IntegerArray(ArrayIndex):
     """
@@ -115,18 +116,6 @@ class IntegerArray(ArrayIndex):
         from .slice import Slice
         from .tuple import Tuple
 
-        def ceiling(a, b):
-            """
-            Returns ceil(a/b)
-            """
-            return -(-a//b)
-
-        def _max(a, b):
-            return amax(broadcast_arrays(a, b), axis=0)
-
-        def _min(a, b):
-            return amin(broadcast_arrays(a, b), axis=0)
-
         index = ndindex(index)
 
         if isinstance(index, Tuple):
@@ -143,7 +132,7 @@ class IntegerArray(ArrayIndex):
             if index.stop is None or index.start < 0 or index.stop < 0:
                 raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
-            # Logic extracted from Slice.as_subindex. Equivalent to
+            # Equivalent to
 
             # res = []
             # for i in self.array.flat:
@@ -156,20 +145,14 @@ class IntegerArray(ArrayIndex):
             # See also Integer.as_subindex().
 
             s = self.array
-            common = index.start % index.step
-            lcm = index.step
-            start = _max(s, index.start)
-            n = ceiling((start - common), lcm)
-            start = common + n*lcm
-            start = (start - index.start)//index.step
-
-            stop = ceiling((_min(s+1, index.stop) - index.start), index.step)
+            start, stop, step = subindex_slice(s, s+1, 1,
+                                               index.start, index.stop, index.step)
             if (stop <= 0).all():
                 raise ValueError("Indices do not intersect")
             if start.shape == ():
                 return IntegerArray(start)
 
-            start = start[start <= stop]
+            start = start[start < stop]
 
             if 0 in start.shape:
                 raise ValueError("Indices do not intersect")

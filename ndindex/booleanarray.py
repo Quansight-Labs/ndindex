@@ -150,3 +150,10 @@ class BooleanArray(ArrayIndex):
             return 0 in self.newshape(shape)
 
         return self.count_nonzero == 0
+
+    def as_subindex(self, index):
+        from .tuple import Tuple
+
+        if self in [True, False]:
+            raise NotImplementedError("as_subindex is not supported for scalar boolean indices")
+        return Tuple(*self.array.nonzero()).as_subindex(index)

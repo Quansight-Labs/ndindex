@@ -1,9 +1,7 @@
-from sympy.ntheory.modular import crt
-from sympy import ilcm
-
 from numpy import broadcast_arrays, amin, amax
 
 from .ndindex import NDIndex, asshape, operator_index
+from .subindex_helpers import subindex_slice
 
 class default:
     """
@@ -404,39 +402,12 @@ class Slice(NDIndex):
         if s.stop is None or s.start < 0 or s.stop < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
-        def ceiling(a, b):
-            """
-            Returns ceil(a/b)
-            """
-            return -(-a//b)
-
-        def _max(a, b):
-            return amax(broadcast_arrays(a, b), axis=0)
-
-        def _min(a, b):
-            return amin(broadcast_arrays(a, b), axis=0)
-
-        def _smallest(x, a, m):
-            """
-            Gives the smallest integer >= x that equals a (mod m)
-
-            Assumes x >= 0, m >= 1, and 0 <= a < m.
-            """
-            n = ceiling(x - a, m)
-            return a + n*m
-
         if isinstance(index, IntegerArray):
             idx = index.array
             if (idx < 0).any():
                 raise NotImplementedError("Slice.as_subindex(IntegerArray) is not yet implemented for arrays with negative values. Try calling reduce with a shape first.")
-            common = 0
-            lcm = s.step
-            start = _max(s.start, idx)
-            start = _smallest(start, common, lcm)
-            start = start - idx
-
-            stop = _min(s.stop, idx+1) - idx
-
+            start, stop, step = subindex_slice(s.start, s.stop, s.step,
+                                               idx, idx+1, 1)
             res = BooleanArray(start < stop)
 
             if not res.count_nonzero:
@@ -453,32 +424,8 @@ class Slice(NDIndex):
         if index.stop is None or index.start < 0 or index.stop < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
-        # Chinese Remainder Theorem. We are looking for a solution to
-        #
-        # x = s.start (mod s.step)
-        # x = index.start (mod index.step)
-        #
-        # If crt() returns None, then there are no solutions (the slices do
-        # not overlap).
-        res = crt([s.step, index.step], [s.start, index.start])
-        if res is None:
-            return Slice(0, 0, 1)
-        common, _ = res
-        lcm = ilcm(s.step, index.step)
-        start = max(s.start, index.start)
-
-        # Get the smallest lcm multiple of common that is >= start
-        start = _smallest(start, common, lcm)
-        # Finally, we need to shift start so that it is relative to index
-        start = (start - index.start)//index.step
-
-        step = lcm//index.step # = s.step//igcd(s.step, index.step)
-
-        stop = ceiling((min(s.stop, index.stop) - index.start), index.step)
-        if stop < 0:
-            stop = 0
-
-        return Slice(start, stop, step).reduce()
+        return Slice(*subindex_slice(s.start, s.stop, s.step, index.start,
+                                     index.stop, index.step)).reduce()
 
     def isempty(self, shape=None):
         if shape is not None:
