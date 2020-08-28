@@ -15,6 +15,9 @@ setuptools.setup(
     url="https://quansight.github.io/ndindex/",
     packages=['ndindex', 'ndindex.tests'],
     license="MIT",
+    package_data={
+              'ndindex.tests': ['pytest.ini'],
+    },
     install_requires=[
         "numpy",
         "sympy",
