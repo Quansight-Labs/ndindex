@@ -524,6 +524,7 @@ class Tuple(NDIndex):
                 if isinstance(s, BooleanArray):
                     begin_offset += s.ndim - 1
                     if s not in [True, False]:
+                        s = s.reduce(shape, axis=axis)
                         startargs.extend([IntegerArray(broadcast_to(i,
                                                                   broadcast_shape))
                                         for i in s.array.nonzero()])
@@ -543,6 +544,7 @@ class Tuple(NDIndex):
                 if isinstance(s, BooleanArray):
                     end_offset -= s.ndim - 1
                     if s not in [True, False]:
+                        s = s.reduce(shape, axis=len(shape) - i + end_offset)
                         endargs.extend([IntegerArray(broadcast_to(i,
                                                                   broadcast_shape))
                                         for i in reversed(s.array.nonzero())])
