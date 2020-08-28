@@ -456,6 +456,9 @@ class Tuple(NDIndex):
         if ... not in args:
             return type(self)(*args, ...).expand(shape)
 
+        # TODO: Use broadcast_arrays here. The challenge is that we still need
+        # to do bounds checks on nonscalar integer arrays that get broadcast
+        # away.
         boolean_scalars = [i for i in args if i in [True, False]]
         if len(boolean_scalars) > 1:
             _args = []
@@ -629,13 +632,14 @@ class Tuple(NDIndex):
 
         index = ndindex(index).reduce().broadcast_arrays()
 
+        self = self.broadcast_arrays()
+
         if ... in self.args:
             raise NotImplementedError("Tuple.as_subindex() is not yet implemented for tuples with ellipses")
 
         if isinstance(index, (Integer, ArrayIndex, Slice)):
             index = Tuple(index)
         if isinstance(index, Tuple):
-            index = index.broadcast_arrays()
             new_args = []
             boolean_arrays = []
             integer_arrays = []
@@ -672,6 +676,7 @@ class Tuple(NDIndex):
                 else:
                     subindex = self_arg.as_subindex(index_arg)
                     if isinstance(subindex, Tuple):
+                        assert all(i == Slice(None) for i in subindex.args)
                         continue
                     if isinstance(subindex, BooleanArray):
                         boolean_arrays.append(subindex)
@@ -690,18 +695,27 @@ class Tuple(NDIndex):
             # Replace all boolean arrays with the logical AND of them.
             if any(i.isempty() for i in boolean_arrays):
                 raise ValueError("Indices do not intersect")
-            if len(boolean_arrays) > 1:
-                new_array = BooleanArray(logical_and.reduce([i.array for i in boolean_arrays]))
+            if boolean_arrays:
+                if len(boolean_arrays) > 1:
+                    new_array = BooleanArray(logical_and.reduce([i.array for i in boolean_arrays]))
+                else:
+                    new_array = boolean_arrays[0]
                 new_args2 = []
                 first = True
                 for arg in new_args:
                     if arg in boolean_arrays:
                         if first:
-                            new_args2.append(new_array)
+                            if (new_array.array.all() and new_array.ndim > 0
+                                and not any(isinstance(i, BooleanArray) for i
+                                            in args_remainder)):
+                                new_args2.extend([Slice(None)]*new_array.ndim)
+                            else:
+                                new_args2.append(new_array)
                             first = False
                     else:
                         new_args2.append(arg)
                 new_args = new_args2
+
             # Mask out integer arrays to only where the start is less than the
             # stop for all arrays.
             if integer_arrays:

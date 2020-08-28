@@ -410,6 +410,9 @@ class Slice(NDIndex):
 
             if not res.count_nonzero:
                 raise ValueError("Indices do not intersect")
+
+            if res.array.all() and res.ndim > 0:
+                return Tuple(*[Slice(None)]*res.ndim)
             return res
 
         if not isinstance(index, Slice):

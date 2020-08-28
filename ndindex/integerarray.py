@@ -156,7 +156,9 @@ class IntegerArray(ArrayIndex):
                 else:
                     raise ValueError("Indices do not intersect")
 
-            start = start[start < stop]
+            mask = start < stop
+            if not mask.all():
+                start = start[start < stop]
 
             if 0 in start.shape:
                 raise ValueError("Indices do not intersect")
