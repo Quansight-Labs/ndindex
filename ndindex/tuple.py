@@ -309,7 +309,6 @@ class Tuple(NDIndex):
                         # broadcasted array in memory.
                         args[i] = type(s)(broadcast_to(s.raw, broadcast_shape),
                                           _copy=False)
-        ndim = len(broadcast_shape)
 
         if shape is not None:
             # assert self.args.count(...) == 1
@@ -329,14 +328,14 @@ class Tuple(NDIndex):
         preargs = []
         removable = shape is not None
         begin_offset = args[:ellipsis_i].count(None)
-        begin_offset -= sum(ndim - 1 for j in args[:ellipsis_i] if
+        begin_offset -= sum(j.ndim - 1 for j in args[:ellipsis_i] if
                             isinstance(j, BooleanArray))
         for i, s in enumerate(reversed(args[:ellipsis_i]), start=1):
             axis = ellipsis_i - i - begin_offset
             if s == None:
                 begin_offset -= 1
             elif isinstance(s, BooleanArray):
-                begin_offset += ndim - 1
+                begin_offset += s.ndim - 1
             reduced = s.reduce(shape, axis=axis)
             if (removable
                 and isinstance(reduced, Slice)
@@ -352,7 +351,7 @@ class Tuple(NDIndex):
             if shape is not None:
                 axis = -len(args) + ellipsis_i + 1 + i
                 axis += args[ellipsis_i+1:][i:].count(None)
-                axis -= sum(ndim - 1 for j in args[ellipsis_i+1:][i:] if
+                axis -= sum(j.ndim - 1 for j in args[ellipsis_i+1:][i:] if
                                  isinstance(j, BooleanArray))
 
                 # Make the axis positive so the error messages will match
