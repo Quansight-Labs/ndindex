@@ -291,7 +291,11 @@ class Tuple(NDIndex):
             elif isinstance(i, BooleanArray):
                 # TODO: Avoid explicitly calling nonzero
                 arrays.extend(i.raw.nonzero())
-        broadcast_shape = broadcast(*arrays).shape
+        if not arrays:
+            # Older versions of NumPy do not allow broadcast() with no arguments
+            broadcast_shape = ()
+        else:
+            broadcast_shape = broadcast(*arrays).shape
         # If the broadcast shape is empty, out of bounds indices in
         # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
         # ([], []), so the bounds for 10 are not checked. Thus, we must do
@@ -483,7 +487,11 @@ class Tuple(NDIndex):
             elif isinstance(i, BooleanArray):
                 # TODO: Avoid calling nonzero twice
                 arrays.extend(i.raw.nonzero())
-        broadcast_shape = broadcast(*arrays).shape
+        if not arrays:
+            # Older versions of NumPy do not allow broadcast() with no arguments
+            broadcast_shape = ()
+        else:
+            broadcast_shape = broadcast(*arrays).shape
         # If the broadcast shape is empty, out of bounds indices in
         # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
         # ([], []), so the bounds for 10 are not checked. Thus, we must do
