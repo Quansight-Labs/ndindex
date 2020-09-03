@@ -466,8 +466,8 @@ class NDIndex:
         indices. Furthermore, if there are :any:`BooleanArray` or
         :any:`IntegerArray` indices, then any :any:`Integer` indices are also
         converted into scalar :any:`IntegerArray` indices and broadcast.
-        Furthermore, if there are multiple boolean scalar indices, they are
-        combined into a single one.
+        Furthermore, if there are multiple boolean scalar indices (`True` or
+        `False`), they are combined into a single one.
 
         Note that array broadcastability is checked in the :any:`Tuple`
         constructor, so this method will not raise any exceptions.
