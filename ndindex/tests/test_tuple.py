@@ -149,7 +149,7 @@ def test_tuple_reduce_explicit():
 
     for (before, shape), after in tests.items():
         reduced = before.reduce(shape)
-        assert reduced == after
+        assert reduced == after, (before, shape)
 
         a = arange(prod(shape)).reshape(shape)
         check_same(a, before.raw, ndindex_func=lambda a, x:
