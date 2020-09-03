@@ -465,9 +465,9 @@ class NDIndex:
         Any :any:`BooleanArray` indices are converted to :any:`IntegerArray`
         indices. Furthermore, if there are :any:`BooleanArray` or
         :any:`IntegerArray` indices, then any :any:`Integer` indices are also
-        converted into scalar :any:`IntegerArray` indices. Furthermore,
-        if there are multiple boolean scalar indices, they are combined into a
-        single one.
+        converted into scalar :any:`IntegerArray` indices and broadcast.
+        Furthermore, if there are multiple boolean scalar indices, they are
+        combined into a single one.
 
         Note that array broadcastability is checked in the :any:`Tuple`
         constructor, so this method will not raise any exceptions.
@@ -477,9 +477,12 @@ class NDIndex:
         does not require a shape.
 
         >>> from ndindex import Tuple
-        >>> idx = Tuple([[False], [True], [True]], [[0], [1], [1]], -1)
+        >>> idx = Tuple([[False], [True], [True]], [[4], [5], [5]], -1)
         >>> print(idx.broadcast_arrays())
-        Tuple(IntegerArray([[1 2] [1 2] [1 2]]), IntegerArray([[0 0] [0 0] [0 0]]), IntegerArray([[-1 -1] [-1 -1] [-1 -1]]))
+        Tuple(IntegerArray([[1 2] [1 2] [1 2]]),
+              IntegerArray([[0 0] [0 0] [0 0]]),
+              IntegerArray([[4 4] [5 5] [5 5]]),
+              IntegerArray([[-1 -1] [-1 -1] [-1 -1]]))
 
         See Also
         ========
