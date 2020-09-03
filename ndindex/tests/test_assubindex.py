@@ -10,6 +10,8 @@ from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import ndindices, short_shapes, assert_equal
 
+@example(IntegerArray(0), slice(0, 1), 3)
+@example(IntegerArray(0), slice(1, 2), 3)
 @example(..., (-1, array([0])), (1, 1))
 @example(..., (-1, array([0, 0])), (1, 1))
 @example((slice(None, 1, None), slice(None, 1, None)),
