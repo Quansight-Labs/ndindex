@@ -10,8 +10,12 @@ from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import ndindices, short_shapes, assert_equal
 
+@example((slice(0, 2), slice(0, 2)), (array([0, 2]), array([0, 2])), 3)
+@example(IntegerArray([0, 1]), (slice(0, 1),), 2)
+@example(array([1]), slice(0, 1), 1)
 @example(IntegerArray(0), slice(0, 1), 3)
 @example(IntegerArray(0), slice(1, 2), 3)
+@example(IntegerArray(2), slice(0, 1), 3)
 @example(..., (-1, array([0])), (1, 1))
 @example(..., (-1, array([0, 0])), (1, 1))
 @example((slice(None, 1, None), slice(None, 1, None)),
@@ -60,7 +64,7 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
         a2 = a[index2.raw]
     except IndexError: # pragma: no cover
         assume(False)
-    except DeprecationWarning as w:
+    except DeprecationWarning as w: # pragma: no cover
         if "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
             assume(False)
         else: # pragma: no cover

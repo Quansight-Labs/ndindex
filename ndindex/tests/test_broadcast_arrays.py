@@ -1,6 +1,6 @@
-from numpy import arange, prod
+from numpy import arange, prod, array
 
-from hypothesis import given
+from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
@@ -11,6 +11,12 @@ from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import ndindices, check_same, short_shapes
 
+@example(array([False]), 0)
+@example((slice(None, -1, None), array([[1]])), (1, 1))
+@example((1, False), 0)
+@example(True, 1)
+@example(False, 1)
+@example([[True, False], [False, False]], (2, 2, 3))
 @given(ndindices, one_of(short_shapes, integers(0, 10)))
 def test_broadcast_arrays_hypothesis(idx, shape):
     if isinstance(shape, int):

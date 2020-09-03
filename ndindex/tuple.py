@@ -686,6 +686,7 @@ class Tuple(NDIndex):
                     subindex = self_arg.as_subindex(index_arg)
                     if isinstance(subindex, Tuple):
                         assert all(i == Slice(None) for i in subindex.args)
+                        subindex # Workaround https://github.com/nedbat/coveragepy/issues/1029
                         continue
                     if isinstance(subindex, BooleanArray):
                         boolean_arrays.append(subindex)
