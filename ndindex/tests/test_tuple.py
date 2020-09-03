@@ -100,6 +100,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
         assert len(reduced.args) != 1
         assert reduced == () or reduced.args[-1] != ...
 
+@example((..., None), ())
 @example((..., empty((0, 0), dtype=bool)), (0, 0))
 @example((empty((0, 0), dtype=bool), 0), (0, 0, 1))
 @example((array([], dtype=intp), 0), (0, 0))

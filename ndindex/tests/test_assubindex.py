@@ -1,6 +1,6 @@
 from pytest import raises
 
-from numpy import array, arange, isin, prod, unique
+from numpy import array, arange, isin, prod, unique, intp
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
@@ -10,6 +10,16 @@ from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import ndindices, short_shapes, assert_equal
 
+
+@example((), (None, array([], dtype=intp)), 0)
+@example((), array([], dtype=bool), 0)
+@example((), IntegerArray(0), 1)
+@example((), (None, True), 0)
+@example(..., False, 0)
+@example(..., (False,), 0)
+@example((IntegerArray(2),), (slice(0, 1),), 3)
+@example(([0],), (slice(1, 2),), 3)
+@example(array([True]), slice(0, 1), 2)
 @example((slice(0, 2), slice(0, 2)), (array([0, 2]), array([0, 2])), 3)
 @example(IntegerArray([0, 1]), (slice(0, 1),), 2)
 @example(array([1]), slice(0, 1), 1)
