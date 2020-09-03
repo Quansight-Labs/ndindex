@@ -622,11 +622,11 @@ class Tuple(NDIndex):
                     # by ellipses, slices, or newaxes affect the shape
                     # differently, but these are currently unsupported (see
                     # the comments in the Tuple constructor).
-                    if isinstance(s, BooleanArray):
-                        newshape.extend(list(s.newshape(shape[axis:axis+s.ndim])))
-                        axis += s.ndim - 1
-                    else:
-                        newshape.extend(list(s.newshape(shape[axis])))
+
+                    # expand() should remove all non scalar boolean arrays
+                    assert not isinstance(s, BooleanArray)
+
+                    newshape.extend(list(s.newshape(shape[axis])))
                     arrays = True
             else:
                 newshape.extend(list(s.newshape(shape[axis])))
