@@ -11,6 +11,7 @@ from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import ndindices, check_same, short_shapes
 
+@example((..., False, False), 1)
 @example((True, False), 1)
 @example((True, True), 1)
 @example(array([False]), 0)
