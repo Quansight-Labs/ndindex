@@ -678,8 +678,6 @@ class Tuple(NDIndex):
                     if start.shape == ():
                         if start >= stop:
                             raise ValueError("Indices do not intersect")
-                    if 0 in start.shape:
-                        raise ValueError("Indices do not intersect")
 
                     integer_arrays.append((start, stop))
                     # Placeholder. We need to mask out the stops below.
@@ -716,12 +714,7 @@ class Tuple(NDIndex):
                 for arg in new_args:
                     if arg in boolean_arrays:
                         if first:
-                            if (new_array.array.all() and new_array.ndim > 0
-                                and not any(isinstance(i, BooleanArray) for i
-                                            in args_remainder)):
-                                new_args2.extend([Slice(None)]*new_array.ndim)
-                            else:
-                                new_args2.append(new_array)
+                            new_args2.append(new_array)
                             first = False
                     else:
                         new_args2.append(arg)
@@ -742,8 +735,6 @@ class Tuple(NDIndex):
                             # Integer arrays always result in a 1 dimensional
                             # result, except when we have a scalar, we want to
                             # have a 0 dimensional result to match Integer().
-                            if not mask:
-                                raise ValueError("Indices do not intersect")
                             new_args2.append(IntegerArray(starts[i]))
                         elif mask.all():
                             new_args2.append(IntegerArray(starts[i]))
