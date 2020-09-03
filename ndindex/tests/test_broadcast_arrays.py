@@ -64,7 +64,7 @@ def test_broadcast_arrays_hypothesis(idx, shape):
         assert not (True in broadcasted.args and False in broadcasted.args)
         if True in broadcasted.args or False in broadcasted.args:
             assert index in [True, False] or True in index.args or False in index.args
-    elif index in [True, False]:
+    if index in [True, False]:
         assert broadcasted == Tuple(index)
-    elif isinstance(idx, BooleanArray):
+    elif isinstance(index, BooleanArray):
         assert all(isinstance(i, IntegerArray) for i in broadcasted.args)
