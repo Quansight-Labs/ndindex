@@ -23,7 +23,7 @@ class Integer(NDIndex):
        `Integer` does *not* represent an integer, but rather an
        *integer index*. It does not have most methods that `int` has, and
        should not be used in non-indexing contexts. See the document on
-       :ref:`type-confusion` for more details.
+       :any:`type-confusion` for more details.
 
     """
     def _typecheck(self, idx):

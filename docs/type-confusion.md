@@ -1,4 +1,3 @@
-(type-confusion)=
 Type Confusion
 ==============
 
@@ -15,11 +14,11 @@ classes are not available on the ndindex classes.
 Some general types to help avoid type confusion:
 
 - **Always use the [`ndindex()`](ndindex.ndindex) function to create ndindex
-  types.** When calling ndindex methods or creating `Tuple
-  <ndindex.tuple.Tuple>` objects, it is not necessary to convert arguments to
-  ndindex types first. Slice literals (using `:`) are not valid syntax outside
-  of a getitem (square brackets), but you can use the `slice` built-in object
-  to create slices. `slice(a, b, c)` is the same as `a:b:c`.
+  types.** When calling ndindex methods or creating [`Tuple`](Tuple) objects,
+  it is not necessary to convert arguments to ndindex types first. Slice
+  literals (using `:`) are not valid syntax outside of a getitem (square
+  brackets), but you can use the `slice` built-in object to create slices.
+  `slice(a, b, c)` is the same as `a:b:c`.
 
   **Right:**
 
@@ -104,14 +103,14 @@ Additionally, some advice for specific types:
   **Right:**
 
   ```py
-  # idx is an Integer
+  idx = ndindex(0)
   idx.raw + 1
   ```
 
   **Wrong:**
 
   ```py
-  # idx is a Tuple
+  idx = ndindex(0)
   idx.raw + 1 # Produces an error
   ```
 
@@ -121,42 +120,52 @@ Additionally, some advice for specific types:
   index types like slices or tuples. **It is recommended to always use
   `idx.raw` even if `idx` is an `Integer`**, so that it will also work even if
   it is another index type. You should not rely on any ndindex function
-  returning a specific index type.
+  returning a specific index type (unless it states that it does so in its
+  docstring).
 
+(type-confusion-tuples)=
 ## Tuple
 
-- **{any}`Tuple` should not be thought of as a tuple.** In particular, things like
-  `idx[0]` and `len(idx)` will not work if `idx` is a `Tuple`. If you need to
-  access the specific term in a `Tuple`, use `Tuple.args`.
+- **{any}`Tuple` should not be thought of as a tuple.** In particular, things
+  like `idx[0]` and `len(idx)` will not work if `idx` is a `Tuple`. If you
+  need to access the specific term in a `Tuple`, use `Tuple.args` if you want
+  the ndindex type, or `Tuple.raw` if you want the raw type.
 
   **Right:**
 
   ```py
-  # idx is a Tuple
-  idx.raw[0]
+  idx = ndindex((0, slice(0, 1))
+  idx.raw[0] # Gives int(0)
+  idx.args[0] # Gives Integer(0)
   ```
 
   **Wrong:**
 
   ```py
-  # idx is a Tuple
+  idx = ndindex((0, slice(0, 1))
   idx[0] # Produces an error
   ```
 
-- `Tuple` is defined as `Tuple(*args)`.
+- `Tuple` is defined as `Tuple(*args)`. `Tuple(args)` gives an error.
 
    **Right:**
 
    ```py
-   Tuple(0, 1, 2)
+   Tuple(0, slice(0, 1))
+   ```
+
+   **Better:**
+   ```py
+   ndindex((0, slice(0, 1)))
    ```
 
    **Wrong:**
 
    ```py
-   Tuple((0, 1, 2)) # Gives an error
+   Tuple((0, slice(0, 1))) # Gives an error
    ```
 
+(type-confusion-ellipsis)=
 ## ellipsis
 
 - You should almost never use the ndindex {any}`ellipsis` class directly.
@@ -177,6 +186,23 @@ Additionally, some advice for specific types:
   idx.reduce() # Gives an error
   ```
 
+- We recommend preferring `...` over the built-in name `Ellipsis`, as it is
+  more readable. The `...` syntax is allowed everywhere that `Ellipsis` would
+  work.
+
+  **Right:**
+
+  ```py
+  idx = ndindex((0, ..., 1))
+  ```
+
+  **Wrong:**
+
+  ```py
+  idx = ndindex((0, Ellipsis, 1)) # Less readable
+  ```
+
+
 - If you do use `ellipsis` beware that it is the *class*, not the *instance*,
   unlike the built-in `Ellipsis` object. This is done for consistency in the
   internal ndindex class hierarchy.
@@ -193,21 +219,22 @@ Additionally, some advice for specific types:
   idx = ndindex((0, ellipsis, 1)) # Gives an error
   ```
 
-  These do not give errors, but it is easy to confuse them with the above. It
-  is best to just use `...`, which is more concise and easier to read.
+  The below do not give errors, but it is easy to confuse them with the above.
+  It is best to just use `...`, which is more concise and easier to read.
 
   ```py
-  idx = ndindex((0, ellipsis(), 1))
+  idx = ndindex((0, ellipsis(), 1)) # Easy to confuse, less readable
   idx.reduce()
   ```
 
   ```py
-  idx = ndindex((0, Ellipsis, 1))
+  idx = ndindex((0, Ellipsis, 1)) # Easy to confuse, less readable
   idx.reduce()
   ```
 
-- `ellipsis` is **not** singletonized, unlike the built-in `...`. It would
-  also be impossible to make `ellipsis() is ...` return True. If you are using
+- `ellipsis` is **not** singletonized, unlike the built-in `...`. Aside from
+  singletonization not being necessary for ndindex types, it would be
+  impossible to make `ellipsis() is ...` return True. If you are using
   ndindex, **you should use `==` to compare against `...`**, and avoid using
   `is`. Note that as long as you know `idx` is an ndindex type, this is safe
   to do, since even the array index types `IntegerArray` and `BooleanArray`
@@ -226,13 +253,14 @@ Additionally, some advice for specific types:
   ```
 
   ```py
-  if idx is ellipsis(): # Will be False (ellipsis() creates a new instance)
+  if idx is ellipsis(): # Will always be False (ellipsis() creates a new instance)
   ```
 
 ## Newaxis
 
-The advice for `Newaxis` is almost identical to the advice for `ellipsis`.
-Note that `np.newaxis` is just an alias for `None`.
+The advice for `Newaxis` is almost identical to the advice for
+[`ellipsis`](type-confusion-ellipsis). Note that `np.newaxis` is just an alias
+for `None`.
 
 - You should almost never use the ndindex {any}`Newaxis` class directly.
   Instead, **use `np.newaxis`, `None`, `ndindex(np.newaxis)`, or
@@ -263,18 +291,22 @@ Note that `np.newaxis` is just an alias for `None`.
   idx = ndindex((0, np.newaxis, 1))
   ```
 
+  ```py
+  idx = ndindex((0, None, 1))
+  ```
+
   **Wrong:**
 
   ```py
   idx = ndindex((0, Newaxis, 1)) # Gives an error
   ```
 
-  This does not give an error, but it is easy to confuse it with the above. It
-  is best to just use `np.newaxis` or `None`, which is more concise and easier
-  to read.
+  The below does not give an error, but it is easy to confuse it with the
+  above. It is best to just use `np.newaxis` or `None`, which is more concise
+  and easier to read.
 
   ```py
-  idx = ndindex((0, Newaxis(), 1))
+  idx = ndindex((0, Newaxis(), 1)) # Easy to confuse
   idx.reduce()
   ```
 
@@ -292,10 +324,18 @@ Note that `np.newaxis` is just an alias for `None`.
   if idx == np.newaxis:
   ```
 
+  ```py
+  if idx == None:
+  ```
+
   **Wrong:**
 
   ```py
   if idx is np.newaxis: # Will be False if idx is the ndindex Newaxis type
+  ```
+
+  ```py
+  if idx is None: # Will be False if idx is the ndindex Newaxis type
   ```
 
   ```py
@@ -304,10 +344,11 @@ Note that `np.newaxis` is just an alias for `None`.
 
 ## IntegerArray and BooleanArray
 
-- **{any}`IntegerArray` and `BooleanArray` should not be thought of as
+- **{any}`IntegerArray` and {any}`BooleanArray` should not be thought of as
   arrays.** They do not have the methods that `numpy.ndarray` would have. They
   also have fixed dtypes (`intp` and `bool_`) and are restricted by what is
-  allowed as indices by NumPy.
+  allowed as indices by NumPy. To access the array they represent, use
+  `idx.array` or `idx.raw`.
 
   **Right:**
 
@@ -320,16 +361,16 @@ Note that `np.newaxis` is just an alias for `None`.
 
   ```py
   idx = IntegerArray(array([0, 1]))
-  idx.[0] # Gives an error
+  idx[0] # Gives an error
   ```
 
 - **Like all other ndindex types, `IntegerArray` and `BooleanArray` are
   immutable.**. The `.array` object on them is set as read-only to enforce
   this. To modify an array index, create a new object. All ndindex methods
-  that manipulate indices, like [reduce](NDIndex.reduce), return new objects.
-  If you create an `IntegerArray` or `BooleanArray` object out of an existing
-  array, the array is copied so that modifications to the original array do
-  not affect the ndindex objects.
+  that manipulate indices, like [`reduce()`](NDIndex.reduce), return new
+  objects. If you create an `IntegerArray` or `BooleanArray` object out of an
+  existing array, the array is copied so that modifications to the original
+  array do not affect the ndindex objects.
 
   **Right:**
 

@@ -64,7 +64,7 @@ class BooleanArray(ArrayIndex):
        `BooleanArray` does *not* represent an array, but rather an *array
        index*. It does not have most methods that `numpy.ndarray` has, and
        should not be used in array contexts. See the document on
-       :ref:`type-confusion` for more details.
+       :any:`type-confusion` for more details.
 
     """
 
