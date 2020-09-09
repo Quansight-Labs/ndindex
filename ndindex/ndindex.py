@@ -112,9 +112,6 @@ def isindex(obj, exclude=None):
 
     return True
 
-=======
-    raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
->>>>>>> master
 
 class classproperty(object):
     def __init__(self, f):
