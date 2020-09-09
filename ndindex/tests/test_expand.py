@@ -11,7 +11,7 @@ from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import ndindices, check_same, short_shapes
 
-
+@example(True, (1,))
 @example((Ellipsis, array([[ True,  True]])), (1, 2))
 @example((..., 0, 0, False), 1)
 @example((empty((0, 0), dtype=bool)), 0)
