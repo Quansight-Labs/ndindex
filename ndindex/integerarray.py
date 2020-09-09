@@ -2,6 +2,7 @@ from numpy import intp
 
 from .array import ArrayIndex
 from .ndindex import asshape
+from .subindex_helpers import subindex_slice
 
 class IntegerArray(ArrayIndex):
     """
@@ -109,3 +110,58 @@ class IntegerArray(ArrayIndex):
             return 0 in self.newshape(shape)
 
         return 0 in self.shape
+
+    def as_subindex(self, index):
+        from .ndindex import ndindex
+        from .slice import Slice
+        from .tuple import Tuple
+
+        index = ndindex(index)
+
+        if isinstance(index, Tuple):
+            return Tuple(self).as_subindex(index)
+
+        if isinstance(index, Slice):
+            index = index.reduce()
+            if (self.array < 0).any():
+                raise NotImplementedError("IntegerArray.as_subindex() is only implemented for arrays with all nonnegative entries. Try calling reduce() with a shape first.")
+            if index.step < 0:
+                raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with positive steps")
+
+            # After reducing, start is not None when step > 0
+            if index.stop is None or index.start < 0 or index.stop < 0:
+                raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
+
+            # Equivalent to
+
+            # res = []
+            # for i in self.array.flat:
+            #     s = Slice(i, i+1).as_subindex(index)
+            #     if s == Slice(0, 0, 1):
+            #         continue
+            #     res.append(s.start)
+            # return IntegerArray(res)
+
+            # See also Integer.as_subindex().
+
+            s = self.array
+            start, stop, step = subindex_slice(s, s+1, 1,
+                                               index.start, index.stop, index.step)
+            if (stop <= 0).all():
+                raise ValueError("Indices do not intersect")
+
+            if start.shape == ():
+                if start < stop:
+                    return IntegerArray(start)
+                else:
+                    raise ValueError("Indices do not intersect")
+
+            mask = start < stop
+            if not mask.all():
+                start = start[start < stop]
+
+            if 0 in start.shape:
+                raise ValueError("Indices do not intersect")
+            return IntegerArray(start)
+
+        raise NotImplementedError("IntegerArray.as_subindex is only implemented for slices")
