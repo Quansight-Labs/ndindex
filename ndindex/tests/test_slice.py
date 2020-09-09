@@ -109,24 +109,40 @@ def test_slice_args_reduce_no_shape():
     assert S == Slice(0, 1, None).reduce() == Slice(0, 1, 1)
 
 def test_slice_reduce_no_shape_exhaustive():
-    for n in range(10):
-        a = arange(n)
-        for args in iterslice():
-            try:
-                S = Slice(*args)
-            except ValueError:
-                continue
+    slices = {}
+    A = [arange(n) for n in range(30)]
+    for args in iterslice():
+        try:
+            S = Slice(*args)
+        except ValueError:
+            continue
 
+        # Check the conditions stated by the Slice.reduce() docstring
+        reduced = S.reduce()
+        # TODO: Test that start and stop are not None when possible
+        assert reduced.step != None
+
+        assert reduced.reduce() == reduced, S
+
+        B = []
+        for a in A:
             check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
+            B.append(tuple(a[reduced.raw]))
+        B = tuple(B)
+        # Test that Slice.reduce gives a canonical result, i.e., if any two
+        # slices always give the same sub-arrays, they reduce to the same thing
+        if B in slices:
+            assert slices[B] == reduced, f"{S} reduced to {reduced}, but should be equal to {slices[B]}"
+        else:
+            slices[B] = reduced
 
-            # Check the conditions stated by the Slice.reduce() docstring
-            reduced = S.reduce()
-            # TODO: Test that start and stop are not None when possible
-            assert reduced.step != None
 
-@given(slices(), shapes)
+@given(slices(), one_of(integers(0, 100), shapes))
 def test_slice_reduce_no_shape_hypothesis(s, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
     try:
         S = Slice(s)
     except ValueError: # pragma: no cover

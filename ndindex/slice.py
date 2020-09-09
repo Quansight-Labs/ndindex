@@ -281,23 +281,68 @@ class Slice(NDIndex):
         if start is None and step > 0:
             start = 0
 
-        if start is not None and stop is not None:
-            r = range(start, stop, step)
-            # We can reuse some of the logic built-in to range(), but we have to
-            # be careful. range() only acts like a slice if the 0 <= start <= stop (or
-            # visa-versa for negative step). Otherwise, slices are different
-            # because of wrap-around behavior. For example, range(-3, 1)
-            # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
-            # of elements from the third to last to the first, which is either an
-            # empty slice or a single element slice depending on the shape of the
-            # axis.
-            if start >= 0 and stop >= 0 and len(r) == 0:
-                start, stop, step = 0, 0, 1
-            # This is not correct because a slice keeps the axis whereas an
-            # integer index removes it.
-            # if len(r) == 1:
-            #     return Integer(r[0])
+        if start == -1 and stop is None and step > 0:
+            start, stop, step = (-1, -2, -1)
+        elif start is not None and stop is not None:
+            if start >= 0 and stop >= 0 or start < 0 and stop < 0:
+                if step > 0:
+                    if stop <= start:
+                        start, stop, step = 0, 0, 1
+                    elif start >= 0 and start + step >= stop:
+                        # Indexes 1 element. Start has to be >= 0 because a
+                        # negative start could be less than the size of the
+                        # axis, in which case it will clip and the single
+                        # element will be element 0. We can only do that
+                        # reduction if we know the shape.
 
+                        # Note that returning Integer here is wrong, because
+                        # slices keep the axis and integers remove it.
+                        stop, step = start + 1, 1
+                    elif start < 0 and start + step > stop:
+                        # The exception is this case where stop is already
+                        # start + 1.
+                        step = stop - start
+                    if start >= 0:
+                        stop -= (stop - start - 1) % step
+                elif step < 0:
+                    if stop >= start:
+                        start, stop, step = 0, 0, 1
+                    elif start < 0 and start + step <= stop:
+                        if start < -1:
+                            stop, step = start + 1, 1
+                        else:
+                            stop, step = start - 1, -1
+                    elif stop == start - 1:
+                        stop, step = start + 1, 1
+                    if start < 0:
+                        stop -= (stop - start + 1) % step
+            elif start < 0 and stop == 0 and step > 0:
+                start, stop, step = 0, 0, 1
+            elif start < 0 and stop >= 0 and step >= min(-start, stop):
+                step = min(-start, stop)
+                if start == -1 or stop == 1:
+                    # Can only index 0 or 1 elements. We can either pick a
+                    # version with positive start and negative step, or
+                    # negative start and positive step. We prefer the former
+                    # as it matches what is done for reduce() with a shape
+                    # (start is always nonnegative).
+                    assert step == 1
+                    start, stop, step = stop - 1, start - 1, -1
+            elif step < 0 and stop < 0 and start < min(-step, -stop - 1):
+                if stop == -1:
+                    start, stop, step = 0, 0, 1
+                else:
+                    step = max(-start - 1, stop + 1)
+            elif start >= 0 and stop == -1 and step < 0:
+                start, stop, step = 0, 0, 1
+        elif start is not None and stop is None:
+            if start < 0 and step >= -start:
+                step = -start
+            elif step < 0:
+                if start == 0:
+                    start, stop, step = 0, 1, 1
+                elif 0 <= start < -step:
+                    step = -start - 1
         if shape is None:
             return type(self)(start, stop, step)
 
