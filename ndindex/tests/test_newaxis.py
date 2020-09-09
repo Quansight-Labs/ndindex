@@ -1,49 +1,54 @@
-from numpy import arange
+from numpy import arange, newaxis
 
 from hypothesis import given
 from hypothesis.strategies import one_of, integers
 
 from ..ndindex import ndindex
-from .helpers import check_same, prod, shapes, ellipses
+from .helpers import check_same, prod, shapes, newaxes
 
-def test_ellipsis_exhaustive():
+def test_newaxis_exhaustive():
     for n in range(10):
         a = arange(n)
-    check_same(a, ...)
+    check_same(a, newaxis)
 
-@given(ellipses(), shapes)
-def test_ellipsis_hypothesis(idx, shape):
+
+@given(newaxes(), shapes)
+def test_newaxis_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
-def test_ellipsis_reduce_exhaustive():
+
+def test_newaxis_reduce_exhaustive():
     for n in range(10):
         a = arange(n)
-        check_same(a, ..., ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
+        check_same(a, newaxis, ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
 
-@given(ellipses(), shapes)
-def test_ellipsis_reduce_hypothesis(idx, shape):
+
+@given(newaxes(), shapes)
+def test_newaxis_reduce_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
 
-def test_ellipsis_reduce_no_shape_exhaustive():
+
+def test_newaxis_reduce_no_shape_exhaustive():
     for n in range(10):
         a = arange(n)
-        check_same(a, ..., ndindex_func=lambda a, x: a[x.reduce().raw])
+        check_same(a, newaxis, ndindex_func=lambda a, x: a[x.reduce().raw])
 
-@given(ellipses(), shapes)
-def test_ellipsis_reduce_no_shape_hypothesis(idx, shape):
+@given(newaxes(), shapes)
+def test_newaxis_reduce_no_shape_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce().raw])
 
-@given(ellipses(), one_of(shapes, integers(0, 10)))
-def test_ellipsis_isempty_hypothesis(idx, shape):
+@given(newaxes(), one_of(shapes, integers(0, 10)))
+def test_newaxis_isempty_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
     else:
         a = arange(prod(shape)).reshape(shape)
 
     index = ndindex(idx)
+
 
     def raw_func(a, idx):
         return a[idx].size == 0
@@ -54,7 +59,7 @@ def test_ellipsis_isempty_hypothesis(idx, shape):
     def assert_equal(raw_empty, ndindex_empty):
         isempty, isempty_shape = ndindex_empty
 
-        # Since idx is an ellipsis, it should never be unconditionally empty
+        # Since idx is a newaxis, it should never be unconditionally empty
         assert not isempty
         # We cannot test the converse with hypothesis. isempty may be False
         # but a[idx] could still be empty for this specific a (e.g., if a is

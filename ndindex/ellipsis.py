@@ -1,4 +1,4 @@
-from .ndindex import NDIndex
+from .ndindex import NDIndex, asshape
 from .tuple import Tuple
 
 class ellipsis(NDIndex):
@@ -29,11 +29,15 @@ class ellipsis(NDIndex):
     An ellipsis can go at the beginning of end of a tuple index, and is
     allowed to match 0 axes.
 
-    **Note:** Unlike the standard Python `Ellipsis`, `ellipsis` is the type,
-    not the object (the name is lowercase to avoid conflicting with the
-    built-in). Use `ellipsis()` or `ndindex(...)` to create the object. Also
-    unlike `Ellipsis`, `ellipsis()` is not singletonized, so you should not
-    use `is` to compare it.
+    .. note::
+
+       Unlike the standard Python `Ellipsis`, `ellipsis` is the type, not the
+       object (the name is lowercase to avoid conflicting with the built-in).
+       Use `ellipsis()` or `ndindex(...)` to create the object. In most
+       ndindex contexts, `...` can be used instead of `ellipsis()`, for
+       instance, when creating a `Tuple` object. Also unlike `Ellipsis`,
+       `ellipsis()` is not singletonized, so you should not use `is` to
+       compare it. See the document on :ref:`type-confusion` for more details.
 
     """
     def _typecheck(self):
@@ -51,9 +55,34 @@ class ellipsis(NDIndex):
         >>> ellipsis().reduce()
         Tuple()
 
+        See Also
+        ========
+
+        .NDIndex.reduce
+        .Tuple.reduce
+        .Slice.reduce
+        .Newaxis.reduce
+        .Integer.reduce
+        .IntegerArray.reduce
+        .BooleanArray.reduce
+
         """
+        if shape is not None:
+            shape = asshape(shape)
         return Tuple()
 
     @property
     def raw(self):
         return ...
+
+    def newshape(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        return shape
+
+    def as_subindex(self, index):
+        return Tuple().as_subindex(index)
+
+    def isempty(self, shape=None):
+        return Tuple().isempty(shape=shape)
