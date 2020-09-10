@@ -318,6 +318,17 @@ class Slice(NDIndex):
                             stop, step = start - 1, -1
                     elif stop == start - 1:
                         stop, step = start + 1, 1
+                    elif start >= 0 and start + step <= stop:
+                        # Indexes 0 or 1 elements. We can't change stop
+                        # because start might clip to a smaller true start if
+                        # the axis is smaller than it, and increasing stop
+                        # would prevent it from indexing an element in that
+                        # case. The exception is the case right before this
+                        # one (stop == start - 1). In that case start cannot
+                        # clip past the stop (it always indexes the same one
+                        # element in the cases where it indexes anything at
+                        # all).
+                        step = stop - start
                     if start < 0:
                         stop -= (stop - start + 1) % step
             elif start < 0 and stop == 0 and step > 0:
@@ -332,7 +343,8 @@ class Slice(NDIndex):
                     # (start is always nonnegative).
                     assert step == 1
                     start, stop, step = stop - 1, start - 1, -1
-            elif step < 0 and stop < 0 and start < min(-step, -stop - 1):
+            elif start >= 0 and stop < 0 and step < 0 and (start < -step or
+                                                           -stop - 1 < -step):
                 if stop == -1:
                     start, stop, step = 0, 0, 1
                 else:
