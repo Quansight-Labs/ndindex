@@ -64,7 +64,7 @@ def ndindex(obj):
 
 def isindex(obj, exclude=None):
     """
-    Returns True if object is an index type, including built-in objects that
+    Return True if object is an index type, including built-in objects that
     can be used as indices.
 
     `exclude` should be a tuple of index types.
@@ -79,35 +79,13 @@ def isindex(obj, exclude=None):
     >>> isindex([1,2])
     False
     """
-    from . import ellipsis, Integer
 
     try:
-        Integer(obj)
-        if exclude and ((int in exclude) or (Integer in exclude)):
-            return False
-        else:
-            return True
-    except TypeError:
-        pass
+        idx = ndindex(obj)
+    except IndexError:
+        return False
 
-    if isinstance(obj, ndarray):
-        if exclude and (ndarray in exclude):
-            return False
-        else:
-            raise NotImplementedError("array indices are not yet supported")
-
-    if obj == ellipsis:
-        raise TypeError("Got ellipsis class. Did you mean to use the instance,"
-                        " ellipsis()?")
-    elif obj is Ellipsis:
-        if exclude and (Ellipsis in exclude):
-            return False
-        else:
-            return True
-
-    possible = (NDIndex, tuple, slice)
-    if (not isinstance(obj, possible)) or \
-            (exclude and isinstance(obj, exclude)):
+    if exclude and ((type(obj) in exclude) or (type(idx) in exclude)):
         return False
 
     return True
