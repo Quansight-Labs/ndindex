@@ -209,15 +209,16 @@ class Slice(NDIndex):
 
         - If `shape` is `None`, the Slice is canonicalized so that
 
-          - `start` and `stop` are not `None` when possible,
+          - `start` is not `None`
+          - `stop` is not `None` when possible,
           - `step` is not `None`.
 
-          Note that `start` and `stop` may be `None`, even after
-          canonicalization with `reduce()` with no `shape`. This is because some
-          slices are impossible to represent without `None` without making
-          assumptions about the array shape. To get a slice where the `start`,
-          `stop`, and `step` are always integers, use `reduce(shape)` with an
-          explicit array shape.
+          Note that `stop` may be `None`, even after canonicalization with
+          `reduce()` with no `shape`. This is because some slices are
+          impossible to represent without `None` without making assumptions
+          about the array shape. To get a slice where the `start`, `stop`, and
+          `step` are always integers, use `reduce(shape)` with an explicit
+          array shape.
 
           Note that `Slice` objects that index a single element are not
           canonicalized to `Integer`, because integer indices always remove an
@@ -278,8 +279,11 @@ class Slice(NDIndex):
 
         if step is None:
             step = 1
-        if start is None and step > 0:
-            start = 0
+        if start is None:
+            if step > 0:
+                start = 0
+            elif step < 0:
+                start = -1
 
         if start == -1 and stop is None and step > 0:
             start, stop, step = (-1, -2, -1)
