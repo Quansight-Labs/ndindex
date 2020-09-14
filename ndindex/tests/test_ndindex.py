@@ -39,6 +39,7 @@ def test_eq_explicit():
     assert Integer(1) != True
     assert Integer(0) != IntegerArray(0)
 
+@example((np.array([1, 2]), 0))
 @example([1, 2, 3])
 @given(ndindices)
 def test_ndindex(idx):

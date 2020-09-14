@@ -16,8 +16,11 @@ def mktmp():
 def run_tests():
     # Don't use the built-in pytest action because that uses Docker, which is
     # overkill and requires installing Docker
-    with run_in_conda_env(['python=3.8', 'pytest', 'numpy', 'hypothesis', 'sympy',
-                           'pyflakes', 'pytest-cov', 'pytest-flakes']):
+    with run_in_conda_env(['python=3.8', 'pytest', 'hypothesis', 'sympy',
+                           'pyflakes', 'pytest-cov', 'pytest-flakes',
+                           'mkl']):
+        # Until numpy 1.20 is out, the tests require the git version to run
+        pip install git+https://github.com/numpy/numpy.git
         pyflakes .
         python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
         ./run_doctests

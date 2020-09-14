@@ -1,5 +1,86 @@
 # ndindex Changelog
 
+## Version 1.4 (???)
+
+### Major Changes
+
+- New object [`Newaxis`](Newaxis) to represent `np.newaxis` (i.e., `None`).
+
+- New object [`BooleanArray`](BooleanArray) to represent boolean array indices
+  (i.e., masks).
+
+- New object [`IntegerArray`](IntegerArray) to represent integer array indices
+  (i.e., fancy indexing).
+
+With these three new objects, ndindex can now represent all valid NumPy index
+types. However, note that two corner cases with tuples of arrays are not
+implemented:
+
+  - separating arrays by slices, ellipsis, or newaxis (e.g., `a[[0], :, [0]]`)
+  - mixing boolean scalars (`True` or `False`) with other non-boolean scalar
+    arrays (e.g., `a[True, [0]]`)
+
+The first case in particular may not ever be implemented, as it is considered
+to be a mistake that it is allowed in the first place in the NumPy, so if you
+need it, please [let me know](https://github.com/Quansight/ndindex/issues).
+
+Additionally, some corner cases of array semantics are either deprecated or
+fixed as bugs in newer versions of NumPy, with some only being fixed in the
+unreleased NumPy 1.20. ndindex follows the NumPy 1.20 behavior, and whenever
+something is deprecated, ndindex follows the post-deprecation semantics. For
+example, in some cases in NumPy, using a list as an index results in it being
+interpreted as a tuple and a deprecation warning raised. ndindex always treats
+lists as arrays. As another example, there are some cases involving integer
+array indices where NumPy does not check bounds but raises a deprecation
+warning, and in these cases ndindex does check bounds (when relevant, e.g., in
+[`idx.reduce(shape)`](Tuple.reduce)). ndindex should work just fine with older
+versions of NumPy, but at least 1.20 (the development version) is required to
+run the ndindex test suite due to the way ndindex tests itself against NumPy.
+
+- New method [`broadcast_arrays()`](NDIndex.broadcast_arrays). This will
+  convert all boolean arrays into the equivalent integer arrays and broadcast
+  all arrays in a `Tuple` together so that they have the same shape.
+  `idx.broadcast_arrays()` is equivalent to `idx` in all cases where `idx`
+  does not give `IndexError`. Note that broadcastability itself is checked in
+  the `Tuple` constructor, so if you only wish to check if an index is valid,
+  it is not necessary to call `broadcast_arrays()`.
+
+- [`expand()`](NDIndex.expand) now broadcasts all array inputs (same as
+  `broadcast_arrays()`), and combines multiple scalar booleans.
+
+- [`Tuple.reduce()`](Tuple.reduce) now combines multiple scalar booleans.
+
+- [`as_subindex()`](NDIndex.as_subindex) now supports many cases involving
+  `BooleanArray` and `IntegerArray`. There are still many instances where
+  `as_subindex()` raises `NotImplementedError` however. If you need support
+  for these, please [open an
+  issue](https://github.com/Quansight/ndindex/issues) to let me know.
+
+- Add a new document to the documentation on [type confusion](type-confusion).
+  The document stresses that ndindex types should not be confused with the
+  built-in/NumPy types that they wrap, and outlines some pitfalls and best
+  practices to avoid them when using ndindex.
+
+### Minor Changes
+
+- There is now only one docstring for [`expand()`](NDIndex.expand), on the
+  `NDindex` base class.
+
+- Calling `Tuple` with a `tuple` argument now raises `ValueError`. Previously
+  it raised `NotImplementedError`, because NumPy sometimes treats tuples as
+  arrays. It was decided to not allow treating a tuple as an array to avoid
+  the [type confusion](type-confusion-tuples) between `Tuple((1, 2))` and
+  `Tuple(1, 2)` (only the latter form is correct).
+
+- Document the [`.args`](args) attribute.
+
+- New internal function [`operator_index()`](operator_index), which acts like
+  `operator.index()` except it disallows boolean types. A consequence of this
+  is that calling the [`Integer`](Integer) or [`Slice`](Slice) constructors
+  with boolean arguments will now result in a `TypeError`. Note that scalar
+  booleans (`False` and `True`) are valid indices, but they are not the same
+  as the integer indices `0` and `1`.
+
 ## Version 1.3.1 (2020-07-22)
 
 ### Major Changes
