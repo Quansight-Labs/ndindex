@@ -119,9 +119,14 @@ def test_slice_reduce_no_shape_exhaustive():
 
         # Check the conditions stated by the Slice.reduce() docstring
         reduced = S.reduce()
-        # TODO: Test that start and stop are not None when possible
+        assert reduced.start != None
+        if S.start != None and S.start >= 0:
+            assert reduced.start >= 0
         assert reduced.step != None
-
+        if S.step is not None:
+            assert abs(reduced.step) <= abs(S.step)
+        if reduced.stop is None:
+            assert S.stop is None
         assert reduced.reduce() == reduced, S
 
         B = []
@@ -155,8 +160,15 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
 
     # Check the conditions stated by the Slice.reduce() docstring
     reduced = S.reduce()
-    # TODO: Test that start and stop are not None when possible
+    assert reduced.start != None
+    if S.start != None and S.start >= 0:
+        assert reduced.start >= 0
     assert reduced.step != None
+    if S.step is not None:
+        assert abs(reduced.step) <= abs(S.step)
+    if reduced.stop is None:
+        assert S.stop is None
+    assert reduced.reduce() == reduced, S
 
 def test_slice_reduce_exhaustive():
     for n in range(10):

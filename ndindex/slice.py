@@ -301,7 +301,7 @@ class Slice(NDIndex):
         if start is None:
             if step > 0:
                 start = 0
-            elif step < 0:
+            else:
                 start = -1
 
         if start == -1 and stop is None and step > 0:
