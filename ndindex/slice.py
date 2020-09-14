@@ -207,18 +207,37 @@ class Slice(NDIndex):
         canonicalized for an array of the given shape, or for any shape if
         `shape` is `None` (the default).
 
-        - If `shape` is `None`, the Slice is canonicalized so that
+        `Slice.reduce` is a perfect canonicalization, meaning that two slices
+        are equal (for all array shapes if `shape=None` or for arrays of shape
+        `shape` otherwise) if and only if they `reduce` to the same slice
+        object. Note that ndindex objects do not simplify automatically, and
+        `==` only does exact equality comparison, so to test that two slices
+        are equal, use `slice1.reduce(shape) == slice2.reduce(shape)`.
 
-          - `start` is not `None`
-          - `stop` is not `None` when possible,
+        - If `shape` is `None`, the following properties hold after calling
+          `reduce()`:
+
+          - `start` is not `None`.
+          - `stop` is not `None`, when possible. The reduced `stop` can only
+            be None if the original `stop` is.
           - `step` is not `None`.
+          - If the `start` of `self` is not `None`, the sign of the reduced
+            `start` will be the same (either both negative or both
+            nonnegative). This is *not* the case for `stop` and `step`, which
+            may change signs after reduction.
+          - If `self` is always empty, the resulting slice will be `Slice(0,
+            0, 1)`. However, one should prefer the :any:`isempty` method to
+            test if a slice is always empty.
+          - `step` is as close to 0 as possible.
 
-          Note that `stop` may be `None`, even after canonicalization with
-          `reduce()` with no `shape`. This is because some slices are
-          impossible to represent without `None` without making assumptions
-          about the array shape. To get a slice where the `start`, `stop`, and
-          `step` are always integers, use `reduce(shape)` with an explicit
-          array shape.
+          Note in particular that `stop` may be `None`, even after
+          canonicalization with `reduce()` with no `shape`. This is because
+          some slices are impossible to represent without `None` without
+          making assumptions about the array shape. For example, `Slice(0,
+          None)` cannot be equivalent to a slice with `stop != None` for all
+          array shapes. To get a slice where the `start`, `stop`, and `step`
+          are always integers, use `reduce(shape)` with an explicit array
+          shape.
 
           Note that `Slice` objects that index a single element are not
           canonicalized to `Integer`, because integer indices always remove an
