@@ -101,7 +101,7 @@ consistency, as this only works for <code class="code docutils literal notransla
 <p><code class="code docutils literal notranslate"><span class="pre">Integer</span></code> does <em>not</em> represent an integer, but rather an
 <em>integer index</em>. It does not have most methods that <code class="code docutils literal notranslate"><span class="pre">int</span></code> has, and
 should not be used in non-indexing contexts. See the document on
-<a class="reference internal" href="type-confusion.html#type-confusion"><span class="std std-ref">Type Confusion</span></a> for more details.</p>
+<a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for more details.</p>
 </div>
 <dl class="py method">
 <dt id="ndindex.Integer.__len__">
@@ -630,7 +630,7 @@ Use <code class="code docutils literal notranslate"><span class="pre">ellipsis()
 ndindex contexts, <code class="code docutils literal notranslate"><span class="pre">...</span></code> can be used instead of <code class="code docutils literal notranslate"><span class="pre">ellipsis()</span></code>, for
 instance, when creating a <code class="code docutils literal notranslate"><span class="pre">Tuple</span></code> object. Also unlike <code class="code docutils literal notranslate"><span class="pre">Ellipsis</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">ellipsis()</span></code> is not singletonized, so you should not use <code class="code docutils literal notranslate"><span class="pre">is</span></code> to
-compare it. See the document on <a class="reference internal" href="type-confusion.html#type-confusion"><span class="std std-ref">Type Confusion</span></a> for more details.</p>
+compare it. See the document on <a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for more details.</p>
 </div>
 <dl class="py method">
 <dt id="ndindex.ellipsis.as_subindex">
@@ -827,7 +827,7 @@ name is lowercase to avoid conflicting with the NumPy type). Use
 object. In most ndindex contexts, <code class="code docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="code docutils literal notranslate"><span class="pre">None</span></code> can be used
 instead of <code class="code docutils literal notranslate"><span class="pre">Newaxis()</span></code>, for instance, when creating a <code class="code docutils literal notranslate"><span class="pre">Tuple</span></code> object.
 Also unlike <code class="code docutils literal notranslate"><span class="pre">None</span></code>, <code class="code docutils literal notranslate"><span class="pre">Newaxis()</span></code> is not singletonized, so you should not
-use <code class="code docutils literal notranslate"><span class="pre">is</span></code> to compare it. See the document on <a class="reference internal" href="type-confusion.html#type-confusion"><span class="std std-ref">Type Confusion</span></a> for
+use <code class="code docutils literal notranslate"><span class="pre">is</span></code> to compare it. See the document on <a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for
 more details.</p>
 </div>
 <dl class="py method">
@@ -962,7 +962,7 @@ empty tuple index, <code class="code docutils literal notranslate"><span class="
 <p class="admonition-title">Note</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Tuple</span></code> does <em>not</em> represent a tuple, but rather an <em>tuple index</em>. It
 does not have most methods that <code class="code docutils literal notranslate"><span class="pre">tuple</span></code> has, and should not be used in
-non-indexing contexts. See the document on <a class="reference internal" href="type-confusion.html#type-confusion"><span class="std std-ref">Type Confusion</span></a> for
+non-indexing contexts. See the document on <a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for
 more details.</p>
 </div>
 <dl class="py method">
@@ -1363,7 +1363,7 @@ the future. ndindex always treats lists as arrays.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code> does <em>not</em> represent an array, but rather an <em>array
 index</em>. It does not have most methods that <code class="code docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> has, and
 should not be used in array contexts. See the document on
-<a class="reference internal" href="type-confusion.html#type-confusion"><span class="std std-ref">Type Confusion</span></a> for more details.</p>
+<a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for more details.</p>
 </div>
 <dl class="py attribute">
 <dt id="ndindex.IntegerArray.dtype">
@@ -1798,7 +1798,7 @@ the future. ndindex always treats lists as arrays.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">BooleanArray</span></code> does <em>not</em> represent an array, but rather an <em>array
 index</em>. It does not have most methods that <code class="code docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> has, and
 should not be used in array contexts. See the document on
-<a class="reference internal" href="type-confusion.html#type-confusion"><span class="std std-ref">Type Confusion</span></a> for more details.</p>
+<a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for more details.</p>
 </div>
 <dl class="py attribute">
 <dt id="ndindex.BooleanArray.dtype">
@@ -2237,8 +2237,11 @@ via <code class="code docutils literal notranslate"><span class="pre">reduce()</
 <dt id="ndindex.ndindex.NDIndex.args">
 <code class="sig-name descname">args</code><a class="headerlink" href="#ndindex.ndindex.NDIndex.args" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> contains the arguments needed to create <code class="code docutils literal notranslate"><span class="pre">idx</span></code>.</p>
-<p>For an ndindex object <code class="code docutils literal notranslate"><span class="pre">idx</span></code>, <code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> is always a tuple such that
-<code class="code docutils literal notranslate"><span class="pre">type(idx)(*idx.args)</span> <span class="pre">==</span> <span class="pre">idx</span></code>. For <a class="reference internal" href="#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> indices, the elements
+<p>For an ndindex object <code class="code docutils literal notranslate"><span class="pre">idx</span></code>, <code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> is always a tuple such that</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)(</span><span class="o">*</span><span class="n">idx</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="n">idx</span>
+</pre></div>
+</div>
+<p>For <a class="reference internal" href="#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> indices, the elements
 of <code class="code docutils literal notranslate"><span class="pre">.args</span></code> are themselves ndindex types. For other types, <code class="code docutils literal notranslate"><span class="pre">.args</span></code>
 contains raw Python types. Note that <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains NumPy arrays for
 <a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> types, so one should
@@ -2780,28 +2783,33 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4">Version 1.4 (???)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -2861,28 +2869,33 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4">Version 1.4 (???)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
 </ul>
 </li>
 </ul>
