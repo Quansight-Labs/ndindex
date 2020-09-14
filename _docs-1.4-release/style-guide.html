@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documentation Style Guide &#8212; ndindex  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}, "tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ndindex Changelog" href="changelog.html" />
+ 
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+ 
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="changelog.html" title="Previous document">ndindex Changelog</a>
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="documentation-style-guide">
+<h1>Documentation Style Guide<a class="headerlink" href="#documentation-style-guide" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This document is still a work in progress</p>
+</div>
+<p>This is a style guide for the ndindex documentation.</p>
+<div class="section" id="english-conventions">
+<h2>English Conventions<a class="headerlink" href="#english-conventions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Use American English spelling for all documentation.</p></li>
+<li><p>The Oxford comma should be used.</p></li>
+<li><p>“ndindex” is always written in all lowercase, unless referring to the
+<code class="docutils literal notranslate"><span class="pre">NDIndex</span></code> base class.</p></li>
+<li><p>The plural of “index” is “indices”. “Indexes” should only be used as a verb.
+For example, “in <code class="docutils literal notranslate"><span class="pre">a[i,</span> <span class="pre">j]</span></code>, the indices are <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>. They represent a
+single tuple index <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code> which indexes the array <code class="docutils literal notranslate"><span class="pre">a</span></code>.”</p></li>
+<li><p>The arguments of a slice should be referred to as “start”, “stop”, and
+“step”, respectively. This matches the argument names and attributes of the
+<code class="docutils literal notranslate"><span class="pre">Slice</span></code> object.</p></li>
+<li><p>A generic index variable should be called <code class="docutils literal notranslate"><span class="pre">idx</span></code>.</p></li>
+<li><p>A generic slice variable should be called <code class="docutils literal notranslate"><span class="pre">s</span></code>.</p></li>
+<li><p>Example array variables should be called <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p></li>
+<li><p>The more concise Python notation for indices should be used where it is
+allowed in doctests and code examples, unless not using an ndindex type
+would lead to confusion or ambiguity. For example, <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> always converts
+its arguments to ndindex types, so <code class="docutils literal notranslate"><span class="pre">Tuple(slice(1,</span> <span class="pre">2),</span> <span class="pre">...,</span> <span class="pre">3)</span></code> is preferred
+over <code class="docutils literal notranslate"><span class="pre">Tuple(Slice(1,</span> <span class="pre">2),</span> <span class="pre">ellipsis(),</span> <span class="pre">Integer(3))</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">...</span></code> should be used in place of <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> or <code class="docutils literal notranslate"><span class="pre">ellipsis()</span></code> wherever
+possible (this and the previous rule also apply to the code, not just
+documentation examples).</p></li>
+<li><p>The above rules are only guides. If following them to the word would lead to
+ambiguity, they should be broken.</p></li>
+</ul>
+</div>
+<div class="section" id="markup-conventions">
+<h2>Markup Conventions<a class="headerlink" href="#markup-conventions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Sphinx docs can be written either in RST or in Markdown. Markdown documents
+use <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/">MyST</a>. Markdown is
+generally preferred over RST, although in some cases RST is required if
+something isn’t supported by MyST.</p></li>
+<li><p>Both RST and MyST support cross references. In RST, a cross reference looks
+like <code class="docutils literal notranslate"><span class="pre">:ref:`reference`</span></code>. In MyST, use either <code class="docutils literal notranslate"><span class="pre">[link</span> <span class="pre">text](reference)</span></code>
+or <code class="docutils literal notranslate"><span class="pre">{ref}`link</span> <span class="pre">text</span> <span class="pre">&lt;reference&gt;`</span></code>. See the <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/using/syntax.html">MyST
+docs</a> and
+the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html">RST
+docs</a>
+for more details.</p></li>
+<li><p>Text in documentation should use <code class="docutils literal notranslate"><span class="pre">code</span></code> (surrounded by single backticks,
+like <code class="docutils literal notranslate"><span class="pre">`code`</span></code>) whenever it refers to a variable or expression in code.
+Note that only single backticks are required even for RST as the default
+role is set to <code class="docutils literal notranslate"><span class="pre">'code'</span></code>.</p></li>
+<li><p>Inline mathematical formulas can be formatted with single dollar signs, like
+<code class="docutils literal notranslate"><span class="pre">$x^2</span> <span class="pre">+</span> <span class="pre">1$</span></code>, which creates <span class="math notranslate nohighlight">\(x^2 + 1\)</span>. Display formulas, which appear on
+their own line, should use the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">math::</span></code> directive for RST or <code class="docutils literal notranslate"><span class="pre">```{math}</span></code> for Markdown.</p></li>
+<li><p>Docstrings are currently written in RST. We may move to Markdown at some
+point. Docstrings use the napoleon extension, meaning they can be written in
+numpydoc format.</p></li>
+<li><p>All public docstrings should include a doctest. Doctests can be run with the
+<code class="docutils literal notranslate"><span class="pre">./run_doctests</span></code> script at the root of the repo. This also runs doctests in
+the RST and Markdown files. Doctests are configured so that each function or
+method must import all names used in that function or method.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="changelog.html" title="Previous document">ndindex Changelog</a>
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+<h1 class="logo"><a href="index.html">ndindex</a></h1>
+
+
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ndindex</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#license">License</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="type-confusion.html">Type Confusion</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integer">Integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#tuple">Tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#newaxis">Newaxis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4">Version 1.4 (???)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Documentation Style Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#english-conventions">English Conventions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#markup-conventions">Markup Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="type-confusion.html">Type Confusion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#integer">Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#tuple">Tuple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#newaxis">Newaxis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4">Version 1.4 (???)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation Style Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#english-conventions">English Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#markup-conventions">Markup Conventions</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2020, Quansight.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/style-guide.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <span id="forkongithub"><a href="https://github.com/Quansight/ndindex">Fork me on GitHub</a></span>
+  </body>
+</html>
