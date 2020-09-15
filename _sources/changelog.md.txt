@@ -1,6 +1,6 @@
 # ndindex Changelog
 
-## Version 1.4 (???)
+## Version 1.4 (2020-09-14)
 
 ### Major Changes
 
