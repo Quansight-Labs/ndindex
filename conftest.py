@@ -25,11 +25,11 @@ def pytest_configure(config):
         import hypothesis
 
         hypothesis.settings.register_profile(
-            "hypothesis-overridden", max_examples=int(hypothesis_max_examples)
+            "ndindex-hypothesis-overridden", max_examples=int(hypothesis_max_examples)
         )
 
-        hypothesis.settings.load_profile("hypothesis-overridden")
+        hypothesis.settings.load_profile("ndindex-hypothesis-overridden")
 
 
-settings.register_profile('ndindex_hypothesis_profile', deadline=800)
-settings.load_profile('ndindex_hypothesis_profile')
+settings.register_profile('ndindex-hypothesis-profile', deadline=800)
+settings.load_profile('ndindex-hypothesis-profile')
