@@ -17,7 +17,8 @@ class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array.
 
-    `Slice(x)` with one argument is equivalent to `Slice(None, x)`.
+    `Slice(x)` with one argument is equivalent to `Slice(None, x)`. `Slice(x,
+    y)` with two arguments is equivalent to `Slice(x, y, None)`.
 
     `start` and `stop` can be any integer, or `None`. `step` can be any
     nonzero integer or `None`.
@@ -27,7 +28,7 @@ class Slice(NDIndex):
     syntax where the item is omitted, for example, `Slice(None, None, k)` is
     the same as the syntax `::k`.
 
-    `Slice` always has three arguments, and does not make any distinction
+    `Slice.args` always has three arguments, and does not make any distinction
     between, for instance, `Slice(x, y)` and `Slice(x, y, None)`. This is
     because Python itself does not make the distinction between x:y and x:y:
     syntactically.
@@ -100,7 +101,7 @@ class Slice(NDIndex):
         """
         The step of the slice.
 
-        This will be a nonzero integer.
+        Note that this may be nonzero integer or None.
         """
         return self.args[2]
 
@@ -128,8 +129,9 @@ class Slice(NDIndex):
         ...
         ValueError: Cannot determine max length of slice
 
-        The :meth:`Slice.reduce` method returns a Slice that always has a
-        correct `len` which doesn't raise `ValueError`.
+        The :meth:`Slice.reduce` method with a `shape` argument returns a
+        `Slice` that always has a correct `len` which doesn't raise
+        `ValueError`.
 
         >>> Slice(2, 4).reduce(3)
         Slice(2, 3, 1)
@@ -150,8 +152,7 @@ class Slice(NDIndex):
         start, stop, step = self.reduce().args
         error = ValueError("Cannot determine max length of slice")
         # We reuse the logic in range.__len__. However, it is only correct if
-        # the slice doesn't use wrap around (see the comment in reduce()
-        # below).
+        # start and stop are nonnegative.
         if start is stop is None:
             raise error
         if step > 0:
