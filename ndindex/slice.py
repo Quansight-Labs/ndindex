@@ -358,8 +358,6 @@ class Slice(NDIndex):
                     start, stop, step = 0, 0, 1
                 else:
                     step = max(-start - 1, stop + 1)
-            elif start >= 0 and stop == -1 and step < 0:
-                start, stop, step = 0, 0, 1
         elif start is not None and stop is None:
             if start < 0 and step >= -start:
                 step = -start
