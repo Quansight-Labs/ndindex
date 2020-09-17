@@ -153,8 +153,6 @@ class Slice(NDIndex):
         error = ValueError("Cannot determine max length of slice")
         # We reuse the logic in range.__len__. However, it is only correct if
         # start and stop are nonnegative.
-        if start is stop is None:
-            raise error
         if step > 0:
             # start cannot be None
             if stop is None:
@@ -173,16 +171,7 @@ class Slice(NDIndex):
                 # a[n:-m]. The max length depends on the size of the array.
                 raise error
         else:
-            if start is None:
-                if stop is None or stop >= 0:
-                    # a[:m:-1] or a[::-1]. The max length depends on the size of
-                    # the array
-                    raise error
-                else:
-                    # a[:-m:-1]
-                    start, stop = 0, -stop - 1
-                    step = -step
-            elif stop is None:
+            if stop is None:
                 if start >= 0:
                     # a[n::-1] (start != None by above). Same as range(n, -1, -1)
                     stop = -1
