@@ -446,6 +446,7 @@ class Slice(NDIndex):
         from .integer import Integer
 
         index = ndindex(index)
+        index_orig = index
 
         s = self.reduce()
         index = index.reduce()
@@ -470,7 +471,7 @@ class Slice(NDIndex):
                 #    Tuple(slice(0), slice(0)).as_subindex((0, 0)) would need
                 #    to return an index that replaces the first two
                 #    dimensions with length-0 dimensions.
-                raise ValueError(f"{self} and {index} do not intersect")
+                raise ValueError(f"{self} and {index_orig} do not intersect")
             assert len(s) == 1
             return Tuple()
 
