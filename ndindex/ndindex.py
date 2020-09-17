@@ -114,7 +114,30 @@ class NDIndex:
         """
         args = self._typecheck(*args, **kwargs)
         self.args = args
+        """
+        `idx.args` contains the arguments needed to create `idx`.
 
+        For an ndindex object `idx`, `idx.args` is always a tuple such that
+
+        .. code:: python
+
+           type(idx)(*idx.args) == idx
+
+        For :any:`Tuple` indices, the elements
+        of `.args` are themselves ndindex types. For other types, `.args`
+        contains raw Python types. Note that `.args` contains NumPy arrays for
+        :any:`IntegerArray` and :any:`BooleanArray` types, so one should
+        always do equality testing or hashing on the ndindex type itself, not
+        its `.args`.
+
+        For an object that represents an indexable version of `idx`, use
+        :any:`.raw <raw>`.
+
+        See Also
+        ========
+
+        raw
+        """
     @classproperty
     def __signature__(self):
         """
@@ -225,25 +248,71 @@ class NDIndex:
         raise NotImplementedError
 
     def expand(self, shape):
-        """
-        Expand an index on an array of shape `shape`
+        r"""
+        Expand a Tuple index on an array of shape `shape`
 
-        An expanded index is as explicit as possible. Unlike `reduce`, which
-        tries to simplify an index and remove redundancies, `expand` typically
-        makes an index larger.
+        An expanded index is as explicit as possible. Unlike :any:`reduce
+        <NDIndex.reduce>`, which tries to simplify an index and remove
+        redundancies, `expand()` typically makes an index larger.
 
-        `expand` always returns a `Tuple` whose `.args` is the same length as
-        `shape`. See :meth:`.Tuple.expand` for more details on the behavior of
-        `expand`.
+        If `self` is invalid for the given shape, an `IndexError` is raised.
+        Otherwise, the returned index satisfies the following:
 
-        >>> from ndindex import Slice
+        - It is always a :any:`Tuple`.
+
+        - All the elements of the :any:`Tuple` are recursively :any:`reduced
+          <NDIndex.reduce>`.
+
+        - The length of the `.args` is equal to the length of the shape plus
+          the number of :any:`Newaxis` indices in `self` plus 1 if there is a
+          scalar :any:`BooleanArray` (`True` or `False`).
+
+        - The resulting :any:`Tuple` has no :any:`ellipses <ellipsis>`. If
+          there are axes that would be matched by an ellipsis or an implicit
+          ellipsis at the end of the tuple, `Slice(0, n, 1)` indices are
+          inserted, where `n` is the corresponding axis of the `shape`.
+
+        - Any array indices in `self` are broadcast together. If `self`
+          contains array indices (:any:`IntegerArray` or :any:`BooleanArray`),
+          then any :any:`Integer` indices are converted into
+          :any:`IntegerArray` indices of shape `()` and broadcast. Note that
+          broadcasting is done in a memory efficient way so that even if the
+          broadcasted shape is large it will not take up more memory than the
+          original.
+
+        - Scalar :any:`BooleanArray` arguments (`True` or `False`) are
+          combined into a single term (the same as with :any:`Tuple.reduce`).
+
+        - Non-scalar :any:`BooleanArray`\ s are all converted into equivalent
+          :any:`IntegerArray`\ s via `nonzero()` and broadcast.
+
+        >>> from ndindex import Tuple, Slice
         >>> Slice(None).expand((2, 3))
         Tuple(slice(0, 2, 1), slice(0, 3, 1))
+
+        >>> idx = Tuple(slice(0, 10), ..., None, -3)
+        >>> idx.expand((5, 3))
+        Tuple(slice(0, 5, 1), None, 0)
+        >>> idx.expand((1, 2, 3))
+        Tuple(slice(0, 1, 1), slice(0, 2, 1), None, 0)
+        >>> idx.expand((5,))
+        Traceback (most recent call last):
+        ...
+        IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
+        >>> idx.expand((5, 2))
+        Traceback (most recent call last):
+        ...
+        IndexError: index -3 is out of bounds for axis 1 with size 2
+
+        >>> idx = Tuple(..., [0, 1], -1)
+        >>> idx.expand((1, 2, 3))
+        Tuple(slice(0, 1, 1), [0, 1], [2, 2])
 
         See Also
         ========
 
-        .Tuple.expand
+        .Tuple.reduce
+        broadcast_arrays
 
         """
         from .tuple import Tuple
@@ -304,9 +373,9 @@ class NDIndex:
         :meth:`reduce` with a shape first.
 
         `as_subindex` can be seen as the left-inverse of composition, that is,
-        if `i = j[k]`, that is, `a[i] = a[j][k]`, then `k = i.as_subindex(j)`,
-        so that `k "=" (j^-1)[i]` (this only works as a true inverse if
-        `j` is a subset of `i`).
+        if `a[i] = a[j][k]`, then `k = i.as_subindex(j)`, so that `k "="
+        (j^-1)[i]` (this only works as a true inverse if `j` is a subset of
+        `i`).
 
         Note that due to symmetry, `a[j][i.as_subindex(j)]` and
         `a[i][j.as_subindex(i)]` will give the same subarrays of `a`, which
@@ -385,6 +454,48 @@ class NDIndex:
 
         """
         raise NotImplementedError
+
+    def broadcast_arrays(self):
+        """
+        Broadcast all the array indices in self to a common shape.
+
+        The resulting index is equivalent in all contexts where the original
+        index is allowed. However, it is possible for the original index to
+        give an IndexError but for the new index to not, since integer array
+        indices have less stringent shape requirements than boolean array
+        indices. There are also some instances for empty indices
+        (:any:`isempty` is True) where bounds would be checked before
+        broadcasting but not after.
+
+        Any :any:`BooleanArray` indices are converted to :any:`IntegerArray`
+        indices. Furthermore, if there are :any:`BooleanArray` or
+        :any:`IntegerArray` indices, then any :any:`Integer` indices are also
+        converted into scalar :any:`IntegerArray` indices and broadcast.
+        Furthermore, if there are multiple boolean scalar indices (`True` or
+        `False`), they are combined into a single one.
+
+        Note that array broadcastability is checked in the :any:`Tuple`
+        constructor, so this method will not raise any exceptions.
+
+        This is part of what is performed by :any:`expand`, but unlike
+        :any:`expand`, this method does not do any other manipulations, and it
+        does not require a shape.
+
+        >>> from ndindex import Tuple
+        >>> idx = Tuple([[False], [True], [True]], [[4], [5], [5]], -1)
+        >>> print(idx.broadcast_arrays())
+        Tuple(IntegerArray([[1 2] [1 2] [1 2]]),
+              IntegerArray([[0 0] [0 0] [0 0]]),
+              IntegerArray([[4 4] [5 5] [5 5]]),
+              IntegerArray([[-1 -1] [-1 -1] [-1 -1]]))
+
+        See Also
+        ========
+
+        expand
+
+        """
+        return self
 
 def asshape(shape, axis=None):
     """

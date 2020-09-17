@@ -29,7 +29,7 @@ class Newaxis(NDIndex):
        object. In most ndindex contexts, `np.newaxis` or `None` can be used
        instead of `Newaxis()`, for instance, when creating a `Tuple` object.
        Also unlike `None`, `Newaxis()` is not singletonized, so you should not
-       use `is` to compare it. See the document on :ref:`type-confusion` for
+       use `is` to compare it. See the document on :any:`type-confusion` for
        more details.
 
     """

@@ -1,7 +1,5 @@
-from sympy.ntheory.modular import crt
-from sympy import ilcm, Rational
-
 from .ndindex import NDIndex, asshape, operator_index
+from .subindex_helpers import subindex_slice
 
 class default:
     """
@@ -480,6 +478,8 @@ class Slice(NDIndex):
         from .ndindex import ndindex
         from .tuple import Tuple
         from .integer import Integer
+        from .integerarray import IntegerArray
+        from .booleanarray import BooleanArray
 
         index = ndindex(index)
         index_orig = index
@@ -514,51 +514,38 @@ class Slice(NDIndex):
             assert len(s) == 1
             return Tuple()
 
-        if not isinstance(index, Slice):
-            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers and slices")
-
-        if s.step < 0 or index.step < 0:
+        if s.step < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
 
         # After reducing, start is not None when step > 0
-        if index.stop is None or s.stop is None or s.start < 0 or index.start < 0 or s.stop < 0 or index.stop < 0:
+        if s.stop is None or s.start < 0 or s.stop < 0:
             raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
-        # Chinese Remainder Theorem. We are looking for a solution to
-        #
-        # x = s.start (mod s.step)
-        # x = index.start (mod index.step)
-        #
-        # If crt() returns None, then there are no solutions (the slices do
-        # not overlap).
-        res = crt([s.step, index.step], [s.start, index.start])
-        if res is None:
-            return Slice(0, 0, 1)
-        common, _ = res
-        lcm = ilcm(s.step, index.step)
-        start = max(s.start, index.start)
+        if isinstance(index, IntegerArray):
+            idx = index.array
+            if (idx < 0).any():
+                raise NotImplementedError("Slice.as_subindex(IntegerArray) is not yet implemented for arrays with negative values. Try calling reduce with a shape first.")
+            start, stop, step = subindex_slice(s.start, s.stop, s.step,
+                                               idx, idx+1, 1)
+            res = BooleanArray(start < stop)
 
-        def _smallest(x, a, m):
-            """
-            Gives the smallest integer >= x that equals a (mod m)
+            if not res.count_nonzero:
+                raise ValueError("Indices do not intersect")
 
-            Assumes x >= 0, m >= 1, and 0 <= a < m.
-            """
-            n = Rational(x - a, m).ceiling()
-            return a + n*m
+            return res
 
-        # Get the smallest lcm multiple of common that is >= start
-        start = _smallest(start, common, lcm)
-        # Finally, we need to shift start so that it is relative to index
-        start = (start - index.start)//index.step
+        if not isinstance(index, Slice):
+            raise NotImplementedError("Slice.as_subindex() is only implemented for tuples, integers, arrays and slices")
 
-        step = lcm//index.step # = s.step//igcd(s.step, index.step)
+        if index.step < 0:
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with positive steps")
 
-        stop = Rational((min(s.stop, index.stop) - index.start), index.step).ceiling()
-        if stop < 0:
-            stop = 0
+        # After reducing, start is not None when step > 0
+        if index.stop is None or index.start < 0 or index.stop < 0:
+            raise NotImplementedError("Slice.as_subindex() is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
-        return Slice(start, stop, step).reduce()
+        return Slice(*subindex_slice(s.start, s.stop, s.step, index.start,
+                                     index.stop, index.step)).reduce()
 
     def isempty(self, shape=None):
         if shape is not None:

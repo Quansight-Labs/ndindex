@@ -1,4 +1,4 @@
-from numpy import arange, prod, array, intp
+from numpy import arange, prod, array, intp, empty
 
 from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
@@ -9,8 +9,15 @@ from ..booleanarray import BooleanArray
 from ..integerarray import IntegerArray
 from ..integer import Integer
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, common_shapes
+from .helpers import ndindices, check_same, short_shapes
 
+@example(True, (1,))
+@example((Ellipsis, array([[ True,  True]])), (1, 2))
+@example((..., 0, 0, False), 1)
+@example((empty((0, 0), dtype=bool)), 0)
+@example((0, empty((0, 0), dtype=bool)), 0)
+@example((..., empty((0, 0), dtype=bool)), 0)
+@example((..., 0, empty((0, 0), dtype=bool)), 0)
 @example((array([], dtype=intp), 0), (0, 0))
 @example((array([], dtype=intp), [0]), (0, 0))
 @example((..., 0, array([], dtype=intp)), (0, 0))
@@ -24,7 +31,7 @@ from .helpers import ndindices, check_same, common_shapes
 @example((..., None, 0), 1)
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
 @example(None, 2)
-@given(ndindices, one_of(common_shapes, integers(0, 10)))
+@given(ndindices, one_of(short_shapes, integers(0, 10)))
 def test_expand_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -33,36 +40,38 @@ def test_expand_hypothesis(idx, shape):
 
     index = ndindex(idx)
 
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
+               same_exception=False)
+
     try:
         expanded = index.expand(shape)
     except IndexError:
         pass
-    except NotImplementedError:
-        return
     else:
         assert isinstance(expanded, Tuple)
         assert ... not in expanded.args
+        n_newaxis = 0
+        boolean_scalars = 0
         if isinstance(idx, tuple):
             n_newaxis = index.args.count(None)
+            if True in index.args or False in index.args:
+                boolean_scalars = 1
         elif index == None:
             n_newaxis = 1
+        elif index in [True, False]:
+            boolean_scalars = 1
+        if isinstance(shape, int):
+            assert len(expanded.args) == 1 + n_newaxis + boolean_scalars
         else:
-            n_newaxis = 0
-        if not any(isinstance(i, BooleanArray) for i in expanded.args):
-            if isinstance(shape, int):
-                assert len(expanded.args) == 1 + n_newaxis
-            else:
-                assert len(expanded.args) == len(shape) + n_newaxis
+            assert len(expanded.args) == len(shape) + n_newaxis + boolean_scalars
 
         # Make sure arrays are broadcasted
         if any(isinstance(i, ArrayIndex) and i not in [True, False] for i in expanded.args):
             assert not any(isinstance(i, Integer) for i in expanded.args)
+            assert not any(isinstance(i, BooleanArray) and i not in [True, False] for i in expanded.args)
             assert len({i.shape for i in expanded.args if isinstance(i,
                                                                      IntegerArray)}) in [0, 1]
 
         assert expanded.args.count(True) <= 1
         assert expanded.args.count(False) <= 1
         assert not (True in expanded.args and False in expanded.args)
-
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
-               same_exception=False)

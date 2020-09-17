@@ -5,7 +5,7 @@ from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
-from .helpers import boolean_arrays, common_shapes, check_same, assert_equal
+from .helpers import boolean_arrays, short_shapes, check_same, assert_equal
 
 from ..booleanarray import BooleanArray
 
@@ -33,12 +33,12 @@ def test_booleanarray_constructor():
     a[0] = False
     assert idx == BooleanArray([True, False])
 
-@given(boolean_arrays, common_shapes)
+@given(boolean_arrays, short_shapes)
 def test_booleanarray_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
-@given(boolean_arrays, one_of(common_shapes, integers(0, 10)))
+@given(boolean_arrays, one_of(short_shapes, integers(0, 10)))
 def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -51,7 +51,7 @@ def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
 
 @example(full((1, 9), True), (3, 3))
 @example(full((1, 9), False), (3, 3))
-@given(boolean_arrays, one_of(common_shapes, integers(0, 10)))
+@given(boolean_arrays, one_of(short_shapes, integers(0, 10)))
 def test_booleanarray_reduce_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -71,7 +71,7 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         # give an IndexError
         assert reduced == index
 
-@given(boolean_arrays, one_of(common_shapes, integers(0, 10)))
+@given(boolean_arrays, one_of(short_shapes, integers(0, 10)))
 def test_booleanarray_isempty_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
