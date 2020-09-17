@@ -455,7 +455,10 @@ class Slice(NDIndex):
             return Tuple(self).as_subindex(index)
 
         if isinstance(index, Integer):
-            s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
+            if index.args[0] == -1:
+                s = self.as_subindex(Slice(index.args[0], None))
+            else:
+                s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
             if s == Slice(0, 0, 1):
                 # There is no index that we can return here. The intersection
                 # of `self` and `index` is empty. Ideally we want to give an
