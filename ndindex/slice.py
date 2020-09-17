@@ -208,26 +208,25 @@ class Slice(NDIndex):
           `reduce()`:
 
           - `start` is not `None`.
+
           - `stop` is not `None`, when possible. The reduced `stop` can only
             be None if the original `stop` is.
+
           - `step` is not `None`.
-          - If the `start` of `self` is not `None`, the sign of the reduced
-            `start` will be the same (either both negative or both
-            nonnegative). This is *not* the case for `stop` and `step`, which
-            may change signs after reduction.
+
+          - `step` is as close to 0 as possible.
+
           - If `self` is always empty, the resulting slice will be `Slice(0,
             0, 1)`. However, one should prefer the :any:`isempty` method to
             test if a slice is always empty.
-          - `step` is as close to 0 as possible.
 
-          Note in particular that `stop` may be `None`, even after
-          canonicalization with `reduce()` with no `shape`. This is because
-          some slices are impossible to represent without `None` without
-          making assumptions about the array shape. For example, `Slice(0,
-          None)` cannot be equivalent to a slice with `stop != None` for all
-          array shapes. To get a slice where the `start`, `stop`, and `step`
-          are always integers, use `reduce(shape)` with an explicit array
-          shape.
+          In particular, `stop` may be `None`, even after canonicalization
+          with `reduce()` with no `shape`. This is because some slices are
+          impossible to represent without `None` without making assumptions
+          about the array shape. For example, `Slice(0, None)` cannot be
+          equivalent to a slice with `stop != None` for all array shapes. To
+          get a slice where the `start`, `stop`, and `step` are always
+          integers, use `reduce(shape)` with an explicit array shape.
 
           Note that `Slice` objects that index a single element are not
           canonicalized to `Integer`, because integer indices always remove an
@@ -235,30 +234,56 @@ class Slice(NDIndex):
           `IndexError` except on arrays with shape equal to `()`.
 
           >>> from ndindex import Slice
-          >>> s = Slice(10)
-          >>> s
-          Slice(None, 10, None)
-          >>> s.reduce()
+          >>> Slice(10).reduce()
           Slice(0, 10, 1)
+          >>> Slice(1, 3, 3).reduce()
+          Slice(1, 2, 1)
 
-        - If an explicit shape is given, the resulting object is always a
-          `Slice` canonicalized so that
+        - If an explicit shape is given, the following properties are true
+          after calling `Slice.reduce(shape)`:
 
           - `start`, `stop`, and `step` are not `None`,
+
           - `start` is nonnegative.
+
+          - `stop` is nonnegative whenever possible. In particular, `stop` is
+            only negative when it has to be to represent the given slice,
+            i.e., a slice with negative `step` that indexes more than 1
+            element and indexes the first (index `0`) element (in this case,
+            it will be `-n - 1` where `n` is the size of the axis being
+            sliced).
+
+          - `stop` is as small as possible for positive `step` or large as
+            possible for negative `step`.
+
+          - `step` is as close to 0 as possible.
+
+          - If `self` is empty for the given shape, the resulting slice will
+            be `Slice(0, 0, 1)`. However, one should prefer the :any:`isempty`
+            method to test if a slice is always empty.
+
+          - If `self` indexes a single element, the resulting slice will be of
+            the form `Slice(i, i+1, 1)`. However, one should prefer using
+            `len(s.reduce(shape)) == 1` to test if a slice indexes exactly 1
+            element.
+
+          - :any:`len() <Slice.__len__>` gives the true size of the axis for a
+            sliced array of the given shape, and never raises `ValueError`.
 
           The `axis` argument can be used to specify an axis of the shape (by
           default, `axis=0`). For convenience, `shape` can be passed as an integer
           for a single dimension.
 
-          After running `Slice.reduce(shape)` with an explicit shape, `len()`
-          gives the true size of the axis for a sliced array of the given shape,
-          and never raises ValueError.
 
           >>> from ndindex import Slice
-          >>> s = Slice(1, 10)
-          >>> s.reduce((3,))
+          >>> Slice(1, 10).reduce(3)
           Slice(1, 3, 1)
+          >>> Slice(-1, 1, -2).reduce(4)
+          Slice(3, 4, 1)
+          >>> Slice(1, 10, 3).reduce((4, 5), axis=0)
+          Slice(1, 2, 1)
+          >>> Slice(1, 10, 3).reduce((4, 5), axis=1)
+          Slice(1, 5, 3)
 
           >>> s = Slice(2, None)
           >>> len(s)
