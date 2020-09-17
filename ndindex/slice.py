@@ -374,11 +374,15 @@ class Slice(NDIndex):
         shape = asshape(shape, axis=axis)
         size = shape[axis]
 
-        # try:
-        #     if len(self) == size:
-        #         return self.__class__(None).reduce(shape, axis=axis)
-        # except ValueError:
-        #     pass
+        if stop is None:
+            if step > 0:
+                stop = size
+            else:
+                stop = -size - 1
+
+        if stop < -size:
+            stop = -size - 1
+
         if size == 0:
             start, stop, step = 0, 0, 1
         elif step > 0:
@@ -387,21 +391,23 @@ class Slice(NDIndex):
                 start = size + start
             if start < 0:
                 start = 0
+            if start >= size:
+                start, stop, step = 0, 0, 1
 
-            if stop is None:
-                stop = size
-            elif stop < 0:
+            if stop < 0:
                 stop = size + stop
                 if stop < 0:
                     stop = 0
             else:
                 stop = min(stop, size)
-        else:
-            if start is None:
-                start = size - 1
-            if stop is None:
-                stop = -size - 1
+            stop -= (stop - start - 1) % step
 
+            if stop - start == 1:
+                # Indexes 1 element.
+                step = 1
+            elif stop - start <= 0:
+                start, stop, step = 0, 0, 1
+        else:
             if start < 0:
                 if start >= -size:
                     start = size + start
@@ -412,6 +418,24 @@ class Slice(NDIndex):
 
             if -size <= stop < 0:
                 stop += size
+
+            if stop >= 0:
+                if start - stop == 1:
+                    stop, step = start + 1, 1
+                elif start - stop <= 0:
+                    start, stop, step = 0, 0, 1
+                else:
+                    stop += (start - stop - 1) % -step
+
+            # start >= 0
+            if (stop < 0 and start - size - stop <= -step
+                or stop >= 0 and start - stop <= -step):
+                stop, step = start + 1, 1
+            if stop < 0 and start % step != 0:
+                # At this point, negative stop is only necessary to index the
+                # first element. If that element isn't actually indexed, we
+                # prefer a nonnegative stop. Otherwise, stop will be -size - 1.
+                stop = start % -step - 1
         return self.__class__(start, stop, step)
 
     def newshape(self, shape):
