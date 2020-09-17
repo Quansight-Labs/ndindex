@@ -226,6 +226,7 @@ def test_slice_reduce_exhaustive():
             else:
                 slices[B] = reduced
 
+@example(slice(None, None, -1), 2)
 @example(slice(-10, 11, 3), 10)
 @example(slice(-1, 3, -3), 10)
 @given(slices(), one_of(integers(0, 100), shapes))
