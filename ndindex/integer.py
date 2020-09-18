@@ -108,7 +108,7 @@ class Integer(NDIndex):
         if not isinstance(index, Slice):
             raise NotImplementedError("Integer.as_subindex is only implemented for slices")
 
-        if self.args[0] == -1:
+        if self == -1:
             s = Slice(self.args[0], None).as_subindex(index)
         else:
             s = Slice(self.args[0], self.args[0] + 1).as_subindex(index)

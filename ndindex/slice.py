@@ -491,7 +491,7 @@ class Slice(NDIndex):
             return Tuple(self).as_subindex(index)
 
         if isinstance(index, Integer):
-            if index.args[0] == -1:
+            if index.args == -1:
                 s = self.as_subindex(Slice(index.args[0], None))
             else:
                 s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
