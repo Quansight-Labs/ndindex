@@ -314,12 +314,10 @@ class Slice(NDIndex):
         if start is None:
             if step > 0:
                 start = 0
-            else:
+            else: # step < 0
                 start = -1
 
-        if start == -1 and stop is None and step > 0:
-            start, stop, step = (-1, -2, -1)
-        elif start is not None and stop is not None:
+        if start is not None and stop is not None:
             if start >= 0 and stop >= 0 or start < 0 and stop < 0:
                 if step > 0:
                     if stop <= start:
@@ -340,13 +338,13 @@ class Slice(NDIndex):
                         step = stop - start
                     if start >= 0:
                         stop -= (stop - start - 1) % step
-                elif step < 0:
+                else: # step < 0
                     if stop >= start:
                         start, stop, step = 0, 0, 1
                     elif start < 0 and start + step <= stop:
                         if start < -1:
                             stop, step = start + 1, 1
-                        else:
+                        else: # start == -1
                             stop, step = start - 1, -1
                     elif stop == start - 1:
                         stop, step = start + 1, 1
@@ -363,6 +361,12 @@ class Slice(NDIndex):
                         step = stop - start
                     if start < 0:
                         stop -= (stop - start + 1) % step
+            elif start >= 0 and stop < 0 and step < 0 and (start < -step or
+                                                           -stop - 1 < -step):
+                if stop == -1:
+                    start, stop, step = 0, 0, 1
+                else:
+                    step = max(-start - 1, stop + 1)
             elif start < 0 and stop == 0 and step > 0:
                 start, stop, step = 0, 0, 1
             elif start < 0 and stop >= 0 and step >= min(-start, stop):
@@ -375,14 +379,10 @@ class Slice(NDIndex):
                     # (start is always nonnegative).
                     assert step == 1
                     start, stop, step = stop - 1, start - 1, -1
-            elif start >= 0 and stop < 0 and step < 0 and (start < -step or
-                                                           -stop - 1 < -step):
-                if stop == -1:
-                    start, stop, step = 0, 0, 1
-                else:
-                    step = max(-start - 1, stop + 1)
         elif start is not None and stop is None:
-            if start < 0 and step >= -start:
+            if start == -1 and step > 0:
+                start, stop, step = (-1, -2, -1)
+            elif start < 0 and step >= -start:
                 step = -start
             elif step < 0:
                 if start == 0:
