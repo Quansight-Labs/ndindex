@@ -24,6 +24,16 @@ div.sphinxsidebar p.logo {
 
 }
 
+/* Disable white background on some links, since our background is not white. */
+tt, code {
+    background-color: inherit;
+}
+
+div.admonition tt.xref, div.admonition code.xref, div.admonition a tt, tt.xref, code.xref, a tt {
+    background-color: inherit;
+    border-bottom: 0;
+}
+
 /* Pure CSS "Fork me on GitHub" ribbon.
  * From
  * https://github.com/ssokolow/quicktile/commit/1ae5388ac0f2a2bfa494045644b0ba19eb042329
