@@ -27,7 +27,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes
+  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION pyflakes pytest pytest-doctestplus sympy hypothesis doctr sphinx myst-parser=0.11.2 sphinx_rtd_theme pytest-cov pytest-flakes
   - source activate test-environment
   - pip install git+https://github.com/numpy/numpy.git
 
