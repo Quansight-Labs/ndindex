@@ -1,5 +1,4 @@
 import ast
-import sys
 
 def literal_eval_slice(node_or_string):
     """
@@ -46,18 +45,15 @@ def literal_eval_slice(node_or_string):
                 _convert(node.upper) if node.upper is not None else None,
                 _convert(node.step) if node.step is not None else None,
             )
-
-        if sys.version_info.major == 3 and sys.version_info.minor < 9:
-            if sys.version_info.minor < 8:
-                # ast.Num was removed (all uses replaced with ast.Constant) in cpy38
-                if isinstance(node, ast.Num):
-                    return node.n
-
-            # ast.Index and ast.ExtSlice were removed in cpy39
-            if isinstance(node, ast.Index):
-                return _convert(node.value)
-            elif isinstance(node, ast.ExtSlice):
-                return tuple(map(_convert, node.dims))
+        elif isinstance(node, ast.Num):
+            # ast.Num was removed from ast grammar (superceded by ast.Constant) in cpy38
+            return node.n
+        elif isinstance(node, ast.Index):
+            # ast.Index was removed from ast grammar in cpy39
+            return _convert(node.value)
+        elif isinstance(node, ast.ExtSlice):
+            # ast.ExtSlice was removed from ast grammar in cpy39
+            return tuple(map(_convert, node.dims))
 
         return _convert_signed_num(node)
     return _convert(node_or_string)
