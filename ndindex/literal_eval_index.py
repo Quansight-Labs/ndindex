@@ -48,7 +48,14 @@ def literal_eval_index(node_or_string):
             # support for parsing slices written out as 'slice(...)' objects
             return slice(*map(_convert, node.args))
         elif isinstance(node, ast.NameConstant) and node.value is None:
+            # support for literal None in slices, eg 'slice(None, ...)'
             return None
+        elif isinstance(node, ast.Ellipsis):
+            # support for three dot '...' ellipsis syntax
+            return ...
+        elif isinstance(node, ast.Name) and node.id == 'Ellipsis':
+            # support for 'Ellipsis' ellipsis syntax
+            return ...
         elif isinstance(node, ast.Index):
             # ast.Index was removed from ast grammar in cpy39
             return _convert(node.value)

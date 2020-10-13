@@ -4,17 +4,16 @@ from hypothesis.strategies import one_of
 import pytest
 
 from ..literal_eval_index import literal_eval_index
-from .helpers import ints, slices, tuples, _doesnt_raise
+from .helpers import ellipses, ints, slices, tuples, _doesnt_raise
 
 Tuples = tuples(one_of(
-    # no ellipses support for now
-    # ellipses(),
+    ellipses(),
     ints(),
     slices(),
 )).filter(_doesnt_raise)
 
 ndindexStrs = one_of(
-    # ellipses(),
+    ellipses(),
     ints(),
     slices(),
     Tuples,
@@ -27,6 +26,8 @@ _dummy = _Dummy()
 
 @example('3')
 @example('-3')
+@example('...')
+@example('Ellipsis')
 @example('+3')
 @example('3:4')
 @example('3:-4')
@@ -44,6 +45,8 @@ _dummy = _Dummy()
 @example('slice(12, 72, 14)')
 @example('slice(-12, -72, 14)')
 @example('3:15, -5, slice(12, -14), (1,2,3)')
+@example('..., -5, slice(12, -14), (1,2,3)')
+@example('3:15, -5, slice(12, -14), (1,2,3), Ellipsis')
 @given(ndindexStrs)
 def test_literal_eval_index_hypothesis(ixStr):
     assert eval(f'_dummy[{ixStr}]') == literal_eval_index(ixStr)
