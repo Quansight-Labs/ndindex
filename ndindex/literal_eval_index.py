@@ -1,5 +1,16 @@
 import ast
 
+class _Guard:
+    def __init__(self):
+        self.val = False
+
+    def __call__(self):
+        if self.val:
+            return True
+        else:
+            self.val = True
+            return False
+
 def literal_eval_index(node_or_string):
     """
     "Safely" (needs validation) evaluate an expression node or a string containing
@@ -33,8 +44,12 @@ def literal_eval_index(node_or_string):
                 return - operand
         return _convert_num(node)
 
+    _nested_tuple_guard = _Guard()
     def _convert(node):
         if isinstance(node, ast.Tuple):
+            if _nested_tuple_guard():
+                raise ValueError(f'tuples inside of tuple indices are not supported: {node!r}')
+
             return tuple(map(_convert, node.elts))
         elif isinstance(node, ast.List):
             return list(map(_convert, node.elts))
