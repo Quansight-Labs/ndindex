@@ -1,6 +1,6 @@
 import ast
 
-def literal_eval_slice(node_or_string):
+def literal_eval_index(node_or_string):
     """
     "Safely" (needs validation) evaluate an expression node or a string containing
     a (limited subset) of valid numpy index or slice expressions.
@@ -21,8 +21,9 @@ def literal_eval_slice(node_or_string):
             if isinstance(node.value, (int, float, complex)):
                 return node.value
         elif isinstance(node, ast.Num):
+            # ast.Num was removed from ast grammar in cpy38
             return node.n
-        raise ValueError('malformed node or string: ' + repr(node))
+        _raise_malformed_node(node)
     def _convert_signed_num(node):
         if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
             operand = _convert_num(node.operand)
@@ -33,9 +34,7 @@ def literal_eval_slice(node_or_string):
         return _convert_num(node)
 
     def _convert(node):
-        if isinstance(node, ast.Constant):
-            return node.value
-        elif isinstance(node, ast.Tuple):
+        if isinstance(node, ast.Tuple):
             return tuple(map(_convert, node.elts))
         elif isinstance(node, ast.List):
             return list(map(_convert, node.elts))
@@ -45,9 +44,11 @@ def literal_eval_slice(node_or_string):
                 _convert(node.upper) if node.upper is not None else None,
                 _convert(node.step) if node.step is not None else None,
             )
-        elif isinstance(node, ast.Num):
-            # ast.Num was removed from ast grammar (superceded by ast.Constant) in cpy38
-            return node.n
+        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'slice' and node.keywords == []:
+            # support for parsing slices written out as 'slice(...)' objects
+            return slice(*map(_convert, node.args))
+        elif isinstance(node, ast.NameConstant) and node.value is None:
+            return None
         elif isinstance(node, ast.Index):
             # ast.Index was removed from ast grammar in cpy39
             return _convert(node.value)
