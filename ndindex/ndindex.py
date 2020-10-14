@@ -182,7 +182,11 @@ class NDIndex:
         return test_equal(self, other)
 
     def __hash__(self):
-        return hash(self.args)
+        try:
+            # Make the hash match the raw hash when the raw type is hashable.
+            return hash(self.raw)
+        except TypeError:
+            return hash(self.args)
 
     # TODO: Make NDIndex an abstract base class
     @property
