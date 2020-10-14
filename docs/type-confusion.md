@@ -32,6 +32,83 @@ Some general types to help avoid type confusion:
   idx.as_subindex(Tuple(Integer(1))) # More verbose than necessary
   ```
 
+- **Keep all index objects as ndindex types until performing actual
+  indexing.** If all you are doing with an index is indexing it, and not
+  manipulating it or storing it somewhere else, there is no need to use
+  ndindex. But if you are storing ndindex types separately before indexing, or
+  plan to manipulate them in any way, it is best to convert them to ndindex
+  types with [`ndindex()`](ndindex.ndindex) as early as possible, and store
+  them in that form. Only convert back to a raw index (with `.raw`, see the
+  next bullet point) once doing an actual index operation. Avoid mixing
+  ndindex and "raw" or non-ndindex types. There are many reasons to avoid
+  this:
+
+  - Raw types (such as `int`, `slice`, `tuple`, `array`, and so on), do not
+    have any of the same methods as ndindex, so your code may fail
+
+  - Some raw types, such as slices, arrays, and tuples containing slices or
+    arrays, are not hashable, so if you try to use them as a dictionary key,
+    they will fail. ndindex types are always hashable.
+
+    **Wrong**
+
+    ```py
+    # Fails with a TypeError: unhashable type: 'slice'
+    indices = {
+        slice(0, 10): 0,
+        slice(10, 20): 1
+    }
+    ```
+
+    **Right**
+
+    ```py
+    indices = {
+        ndindex(slice(0, 10)): 0,
+        ndindex(slice(10, 20)): 1
+    }
+    ```
+
+  - ndindex does basic type checking on indices that would otherwise not
+    happen until they are actually used as an index. For example, `slice(1.0,
+    2.0)` does not fail until you try to index an array with it, but
+    `Slice(1.0, 2.0)` fails immediately.
+
+    **Wrong**
+
+    ```py
+    # Typo would not be caught until idx is actually used to index an array
+    idx = slice(1, 2.)
+    ```
+
+    **Right**
+
+    ```py
+    # Typo would be caught right away
+    idx = ndindex(slice(1, 2.))
+    # OR
+    idx = Slice(1, 2.)
+    ```
+
+  - NumPy arrays and tuples containing NumPy arrays are not easy to compare,
+    since using `==` on an `array` does not produce a boolean. `==` on an
+    ndindex type will always produce a boolean, which compares if the two
+    indices are exactly equal.
+
+    **Wrong**
+
+    ```py
+    # Fails with ValueError: The truth value of an array with more than one element is ambiguous.
+    if idx == (slice(0, 2), np.array([0, 0]):
+        ...
+    ```
+
+    **Right**
+
+    ```py
+    if ndindex(idx) == ndindex((slice(0, 2), np.array([0, 0])):
+        ...
+    ```
 
 - **Use `.raw` to convert an ndindex object to an indexable type.** With the
   exception of `Integer`, it is impossible for custom types to define
