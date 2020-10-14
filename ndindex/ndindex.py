@@ -148,7 +148,7 @@ def parse_index(node_or_string):
             return tuple(map(_convert, node.dims))
 
         return _convert_signed_num(node)
-    return _convert(node_or_string)
+    return ndindex(_convert(node_or_string))
 
 
 class NDIndex:

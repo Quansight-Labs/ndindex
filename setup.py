@@ -21,6 +21,7 @@ setuptools.setup(
     ],
     tests_require=[
         "pytest",
+        "pytest-cov",
         "pytest-flakes",
         "pytest-tornasync",
         "hypothesis",

@@ -107,7 +107,7 @@ def test_ndindex_ellipsis():
 @example('3:15, 5, 14:99, 1')
 @example('3:15, -5, 14:-99, 1')
 @example(':15, -5, 14:-99:3, 1')
-@example('3:15, -5, :, [1,2,3]')
+@example('3:15, -5, [1,2,3], :')
 @example('slice(None)')
 @example('slice(None, None)')
 @example('slice(None, None, None)')

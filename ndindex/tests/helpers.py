@@ -24,12 +24,14 @@ from ..ndindex import ndindex
 def prod(seq):
     return reduce(mul, seq, 1)
 
+positive_ints = integers(1, 10)
 nonnegative_ints = integers(0, 10)
 negative_ints = integers(-10, -1)
 ints = lambda: one_of(negative_ints, nonnegative_ints)
+ints_nonzero = lambda: one_of(negative_ints, positive_ints)
 
 def slices(start=one_of(none(), ints()), stop=one_of(none(), ints()),
-           step=one_of(none(), ints())):
+           step=one_of(none(), ints_nonzero())):
     return builds(slice, start, stop, step)
 
 ellipses = lambda: just(...)
