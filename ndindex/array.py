@@ -51,6 +51,11 @@ class ArrayIndex(NDIndex):
             return (a,)
         raise TypeError(f"{self.__class__.__name__} must be created with an array with dtype {self.dtype.__name__}")
 
+    def __hash__(self):
+        # We can't use the default hash(self.raw) because arrays are not
+        # hashable
+        return hash(self.args)
+
     @property
     def raw(self):
         return self.args[0]

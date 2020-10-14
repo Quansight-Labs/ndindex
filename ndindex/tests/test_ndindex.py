@@ -29,17 +29,19 @@ def test_eq(idx):
         # array.
     assert hash(new) == hash(index)
     try:
-        # Note, we test against index.raw here instead of idx, because idx
-        # could be a hashable type that gets canonicalized to a nonhashable
-        # raw type, such as False -> array(False). Boolean scalars in
-        # particular are messy because False == 0 is true for raw types, but
-        # ndindex(False) == ndindex(0) is not true. So there's little point to
-        # making hash(False) == hash(ndindex(False)).
+        h = hash(index)
+    except TypeError:
+        pass
+    else:
+        assert hash(index) == h
+
+    try:
         h = hash(index.raw)
     except TypeError:
         pass
     else:
         assert hash(index) == h
+
     assert (index == index.raw) is True
     assert (index == 'a') is False
     assert ('a' == index) is False

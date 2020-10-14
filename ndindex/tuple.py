@@ -102,6 +102,10 @@ class Tuple(NDIndex):
 
         return tuple(newargs)
 
+    def __hash__(self):
+        # Since self.args is itself a tuple, it will match the hash of
+        # self.raw when it is hashable.
+        return hash(self.args)
 
     def __repr__(self):
         from .array import ArrayIndex

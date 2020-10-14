@@ -101,11 +101,13 @@ class NDIndex:
       canonical form that is equivalent for all array shapes (assuming no
       IndexErrors).
 
-    The methods `__init__`, `__eq__`, and `__hash__` should *not* be
-    overridden. Equality (and hashability) on `NDIndex` subclasses is
-    determined by equality of types and `.args`. Equivalent indices should not
-    attempt to redefine equality. Rather they should define canonicalization
-    via `reduce()`.
+    The methods `__init__` and `__eq__` should *not* be overridden. Equality
+    (and hashability) on `NDIndex` subclasses is determined by equality of
+    types and `.args`. Equivalent indices should not attempt to redefine
+    equality. Rather they should define canonicalization via `reduce()`.
+    `__hash__` is defined so that the hash matches the hash of `.raw`. If
+    `.raw` is unhashable, `__hash__` should be overridden to use
+    `hash(self.args)`.
 
     """
     def __init__(self, *args, **kwargs):
@@ -182,11 +184,10 @@ class NDIndex:
         return test_equal(self, other)
 
     def __hash__(self):
-        try:
-            # Make the hash match the raw hash when the raw type is hashable.
-            return hash(self.raw)
-        except TypeError:
-            return hash(self.args)
+        # Make the hash match the raw hash when the raw type is hashable.
+        # Note: subclasses where .raw is not hashable should define __hash__
+        # as hash(self.args)
+        return hash(self.raw)
 
     # TODO: Make NDIndex an abstract base class
     @property

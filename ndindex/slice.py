@@ -71,6 +71,11 @@ class Slice(NDIndex):
 
         return args
 
+    def __hash__(self):
+        # We can't use the default hash(self.raw) because slices are not
+        # hashable
+        return hash(self.args)
+
     @property
     def raw(self):
         return slice(*self.args)
