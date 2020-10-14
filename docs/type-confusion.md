@@ -133,7 +133,7 @@ Some general types to help avoid type confusion:
   a[idx] # Gives an error
   ```
 
-- **Only use ndindex classes for objects that represent indices.** Do not use
+- **Use ndindex classes only for objects that represent indices.** Do not use
   classes like `Integer`, `Tuple`, `IntegerArray`, or `BooleanArray` unless
   the object in question is going to be an index to an array. For example,
   array shapes are always tuples of integers, but they are not indices, so
