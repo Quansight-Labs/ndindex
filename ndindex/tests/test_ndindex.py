@@ -29,7 +29,7 @@ def test_eq(idx):
         # array.
     assert hash(new) == hash(index)
     try:
-        h = hash(index)
+        h = hash(idx)
     except TypeError:
         pass
     else:
