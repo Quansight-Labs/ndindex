@@ -90,9 +90,9 @@ def parse_index(node_or_string):
         node_or_string = node_or_string.slice
 
     def _raise_malformed_node(node):
-        raise ValueError(f'malformed node or string: {node!r}')
+        raise ValueError(f'malformed node or string: {node!r}, {ast.dump(node)!r}')
     def _raise_nested_tuple_node(node):
-        raise ValueError(f'tuples inside of tuple indices are not supported: {node!r}')
+        raise ValueError(f'tuples inside of tuple indices are not supported: {node!r}, {ast.dump(node)!r}')
 
     # from cpy37, should work until they remove ast.Num (not until cpy310)
     def _convert_num(node):
@@ -101,7 +101,7 @@ def parse_index(node_or_string):
                 return node.value
         elif isinstance(node, ast.Num):
             # ast.Num was removed from ast grammar in cpy38
-            return node.n
+            return node.n # pragma: no cover
         _raise_malformed_node(node)
     def _convert_signed_num(node):
         if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
@@ -141,11 +141,11 @@ def parse_index(node_or_string):
             return ...
         elif isinstance(node, ast.Index):
             # ast.Index was removed from ast grammar in cpy39
-            return _convert(node.value)
+            return _convert(node.value) # pragma: no cover
         elif isinstance(node, ast.ExtSlice):
             # ast.ExtSlice was removed from ast grammar in cpy39
-            _nested_tuple_guard()
-            return tuple(map(_convert, node.dims))
+            _nested_tuple_guard()                  # pragma: no cover
+            return tuple(map(_convert, node.dims)) # pragma: no cover
 
         return _convert_signed_num(node)
     return ndindex(_convert(node_or_string))
