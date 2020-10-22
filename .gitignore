@@ -130,3 +130,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# jetbrains ide stuff
+*.iml
+.idea/
+
+# vscode ide stuff
+*.code-workspace
+.history/
+.vscode/
+
+# project scratch dir
+/scratch/
