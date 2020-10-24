@@ -14,6 +14,10 @@ class ArrayIndex(NDIndex):
     To subclass this, define the `dtype` attribute, as well as all the usual
     ndindex methods.
     """
+    __array_ufunc__ = None
+    def __array_function__(self, func, types, args, kwargs):
+        return NotImplemented
+
     # Subclasses should redefine this
     dtype = None
 
