@@ -39,6 +39,20 @@ def test_eq(idx):
     assert (index != 'a')
     assert ('a' != index)
 
+    try:
+        h = hash(idx)
+    except TypeError:
+        pass
+    else:
+        assert hash(index) == h
+
+    try:
+        h = hash(index.raw)
+    except TypeError:
+        pass
+    else:
+        assert hash(index) == h
+
 def test_eq_array_raises():
     index = ndindex([1, 2, 3])
     with raises(TypeError):
