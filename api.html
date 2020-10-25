@@ -315,6 +315,12 @@ corresponding attributes.</p>
 </pre></div>
 </div>
 <dl class="py method">
+<dt id="ndindex.Slice.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="ndindex.Slice.__len__">
 <code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="code docutils literal notranslate"><span class="pre">len()</span></code> gives the maximum size of an axis sliced with <code class="code docutils literal notranslate"><span class="pre">self</span></code>.</p>
@@ -965,6 +971,12 @@ does not have most methods that <code class="code docutils literal notranslate">
 non-indexing contexts. See the document on <a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for
 more details.</p>
 </div>
+<dl class="py method">
+<dt id="ndindex.Tuple.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
 <dl class="py method">
 <dt id="ndindex.Tuple.__repr__">
 <code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.__repr__" title="Permalink to this definition">¶</a></dt>
@@ -2228,11 +2240,13 @@ index may be different. If <code class="code docutils literal notranslate"><span
 canonical form that is equivalent for all array shapes (assuming no
 IndexErrors).</p></li>
 </ul>
-<p>The methods <code class="code docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="code docutils literal notranslate"><span class="pre">__eq__</span></code>, and <code class="code docutils literal notranslate"><span class="pre">__hash__</span></code> should <em>not</em> be
-overridden. Equality (and hashability) on <code class="code docutils literal notranslate"><span class="pre">NDIndex</span></code> subclasses is
-determined by equality of types and <code class="code docutils literal notranslate"><span class="pre">.args</span></code>. Equivalent indices should not
-attempt to redefine equality. Rather they should define canonicalization
-via <code class="code docutils literal notranslate"><span class="pre">reduce()</span></code>.</p>
+<p>The methods <code class="code docutils literal notranslate"><span class="pre">__init__</span></code> and <code class="code docutils literal notranslate"><span class="pre">__eq__</span></code> should <em>not</em> be overridden. Equality
+(and hashability) on <code class="code docutils literal notranslate"><span class="pre">NDIndex</span></code> subclasses is determined by equality of
+types and <code class="code docutils literal notranslate"><span class="pre">.args</span></code>. Equivalent indices should not attempt to redefine
+equality. Rather they should define canonicalization via <code class="code docutils literal notranslate"><span class="pre">reduce()</span></code>.
+<code class="code docutils literal notranslate"><span class="pre">__hash__</span></code> is defined so that the hash matches the hash of <code class="code docutils literal notranslate"><span class="pre">.raw</span></code>. If
+<code class="code docutils literal notranslate"><span class="pre">.raw</span></code> is unhashable, <code class="code docutils literal notranslate"><span class="pre">__hash__</span></code> should be overridden to use
+<code class="code docutils literal notranslate"><span class="pre">hash(self.args)</span></code>.</p>
 <dl class="py attribute">
 <dt id="ndindex.ndindex.NDIndex.args">
 <code class="sig-name descname">args</code><a class="headerlink" href="#ndindex.ndindex.NDIndex.args" title="Permalink to this definition">¶</a></dt>

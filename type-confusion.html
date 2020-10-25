@@ -80,6 +80,72 @@ brackets), but you can use the <code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 </li>
+<li><p><strong>Keep all index objects as ndindex types until performing actual
+indexing.</strong> If all you are doing with an index is indexing it, and not
+manipulating it or storing it somewhere else, there is no need to use
+ndindex. But if you are storing ndindex types separately before indexing, or
+plan to manipulate them in any way, it is best to convert them to ndindex
+types with <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></span></a> as early as possible, and store
+them in that form. Only convert back to a raw index (with <code class="docutils literal notranslate"><span class="pre">.raw</span></code>, see the
+next bullet point) once doing an actual index operation. Avoid mixing
+ndindex and “raw” or non-ndindex types. There are many reasons to avoid
+this:</p>
+<ul>
+<li><p>Raw types (such as <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">slice</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">array</span></code>, and so on), do not
+have any of the same methods as ndindex, so your code may fail</p></li>
+<li><p>Some raw types, such as slices, arrays, and tuples containing slices or
+arrays, are not hashable, so if you try to use them as a dictionary key,
+they will fail. ndindex types are always hashable.</p>
+<p><strong>Wrong</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fails with a TypeError: unhashable type: &#39;slice&#39;</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nb">slice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Right</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)):</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)):</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>ndindex does basic type checking on indices that would otherwise not
+happen until they are actually used as an index. For example, <code class="docutils literal notranslate"><span class="pre">slice(1.0,</span> <span class="pre">2.0)</span></code> does not fail until you try to index an array with it, but
+<code class="docutils literal notranslate"><span class="pre">Slice(1.0,</span> <span class="pre">2.0)</span></code> fails immediately.</p>
+<p><strong>Wrong</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typo would not be caught until idx is actually used to index an array</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Right</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typo would be caught right away</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">))</span>
+<span class="c1"># OR</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>NumPy arrays and tuples containing NumPy arrays are not easy to compare,
+since using <code class="docutils literal notranslate"><span class="pre">==</span></code> on an <code class="docutils literal notranslate"><span class="pre">array</span></code> does not produce a boolean. <code class="docutils literal notranslate"><span class="pre">==</span></code> on an
+ndindex type will always produce a boolean, which compares if the two
+indices are exactly equal.</p>
+<p><strong>Wrong</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fails with ValueError: The truth value of an array with more than one element is ambiguous.</span>
+<span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>Right</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ndindex</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="n">ndindex</span><span class="p">((</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
 <li><p><strong>Use <code class="docutils literal notranslate"><span class="pre">.raw</span></code> to convert an ndindex object to an indexable type.</strong> With the
 exception of <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, it is impossible for custom types to define
 themselves as indices to NumPy arrays, so it is necessary to use
@@ -97,7 +163,7 @@ use <code class="docutils literal notranslate"><span class="pre">.raw</span></co
 </pre></div>
 </div>
 </li>
-<li><p><strong>Only use ndindex classes for objects that represent indices.</strong> Do not use
+<li><p><strong>Use ndindex classes only for objects that represent indices.</strong> Do not use
 classes like <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code>, or <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> unless
 the object in question is going to be an index to an array. For example,
 array shapes are always tuples of integers, but they are not indices, so
