@@ -28,6 +28,20 @@ def test_eq(idx):
         # Sadly, there is now way to bypass array.__eq__ from producing an
         # array.
     assert hash(new) == hash(index)
+    try:
+        h = hash(idx)
+    except TypeError:
+        pass
+    else:
+        assert hash(index) == h
+
+    try:
+        h = hash(index.raw)
+    except TypeError:
+        pass
+    else:
+        assert hash(index) == h
+
     assert (index == index.raw) is True
     assert (index == 'a') is False
     assert ('a' == index) is False

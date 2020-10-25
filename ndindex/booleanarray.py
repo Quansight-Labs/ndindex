@@ -73,6 +73,13 @@ class BooleanArray(ArrayIndex):
     The dtype of `BooleanArray` is `np.bool_`.
     """
 
+    def __hash__(self):
+        # Match the hash for scalar booleans. Otherwise, hash(True) won't
+        # equal hash(ndindex(True)).
+        if self.shape == ():
+            return hash(self.array.any())
+        return super().__hash__()
+
     @property
     def count_nonzero(self):
         """
