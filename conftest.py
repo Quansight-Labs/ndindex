@@ -45,10 +45,10 @@ def pytest_configure(config):
         import hypothesis
 
         hypothesis.settings.register_profile(
-            "hypothesis-pytest-overridden", **profile_settings,
+            "ndindex-hypothesis-overridden", **profile_settings,
         )
 
-        hypothesis.settings.load_profile("hypothesis-pytest-overridden")
+        hypothesis.settings.load_profile("ndindex-hypothesis-overridden")
 
 
 settings.register_profile('ndindex_hypothesis_profile', deadline=800)
