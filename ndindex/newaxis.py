@@ -24,7 +24,7 @@ class Newaxis(NDIndex):
     .. note::
 
        Unlike the NumPy `newaxis`, `Newaxis` is the type, not the object (the
-       name is lowercase to avoid conflicting with the NumPy type). Use
+       name is uppercase to avoid conflicting with the NumPy type). Use
        `Newaxis()`, `ndindex(np.newaxis)`, or `ndindex(None)` to create the
        object. In most ndindex contexts, `np.newaxis` or `None` can be used
        instead of `Newaxis()`, for instance, when creating a `Tuple` object.
@@ -42,10 +42,10 @@ class Newaxis(NDIndex):
 
     def reduce(self, shape=None, axis=0):
         """
-        Reduce a Newaxis index
+        Reduce a `Newaxis` index
 
-        There is no other index that is equivalent to a Newaxis index by
-        itself, so Newaxis().reduce() always returns Newaxis() unchanged.
+        There is no other index that is equivalent to a newaxis index by
+        itself, so `Newaxis().reduce()` always returns `Newaxis()` unchanged.
 
         >>> from ndindex import Newaxis
         >>> Newaxis().reduce()

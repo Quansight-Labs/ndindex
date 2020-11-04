@@ -86,7 +86,7 @@ class Slice(NDIndex):
         """
         The start value of the slice.
 
-        Note that this may be an integer or None.
+        Note that this may be an integer or `None`.
         """
         return self.args[0]
 
@@ -95,7 +95,7 @@ class Slice(NDIndex):
         """
         The stop of the slice.
 
-        Note that this may be an integer or None.
+        Note that this may be an integer or `None`.
         """
         return self.args[1]
 
@@ -104,7 +104,7 @@ class Slice(NDIndex):
         """
         The step of the slice.
 
-        Note that this may be nonzero integer or None.
+        Note that this may be a nonzero integer or `None`.
         """
         return self.args[2]
 
@@ -196,13 +196,12 @@ class Slice(NDIndex):
 
     def reduce(self, shape=None, axis=0):
         """
-        `Slice.reduce` returns a slice where the start and stop are
-        canonicalized for an array of the given shape, or for any shape if
-        `shape` is `None` (the default).
+        `Slice.reduce` returns a slice that is canonicalized for an array of the
+        given shape, or for any shape if `shape` is `None` (the default).
 
         `Slice.reduce` is a perfect canonicalization, meaning that two slices
-        are equal (for all array shapes if `shape=None` or for arrays of shape
-        `shape` otherwise) if and only if they `reduce` to the same slice
+        are equal---for all array shapes if `shape=None` or for arrays of shape
+        `shape` otherwise---if and only if they `reduce` to the same Slice
         object. Note that ndindex objects do not simplify automatically, and
         `==` only does exact equality comparison, so to test that two slices
         are equal, use `slice1.reduce(shape) == slice2.reduce(shape)`.
@@ -213,15 +212,15 @@ class Slice(NDIndex):
           - `start` is not `None`.
 
           - `stop` is not `None`, when possible. The reduced `stop` can only
-            be None if the original `stop` is.
+            be `None` if the original `stop` is.
 
           - `step` is not `None`.
 
           - `step` is as close to 0 as possible.
 
-          - If `self` is always empty, the resulting slice will be `Slice(0,
-            0, 1)`. However, one should prefer the :any:`isempty` method to
-            test if a slice is always empty.
+          - If the slice is always empty, the resulting slice will be
+            `Slice(0, 0, 1)`. However, one should prefer the :any:`isempty`
+            method to test if a slice is always empty.
 
           In particular, `stop` may be `None`, even after canonicalization
           with `reduce()` with no `shape`. This is because some slices are
@@ -261,12 +260,12 @@ class Slice(NDIndex):
 
           - `step` is as close to 0 as possible.
 
-          - If `self` is empty for the given shape, the resulting slice will
-            be `Slice(0, 0, 1)`. However, one should prefer the :any:`isempty`
-            method to test if a slice is always empty.
+          - If the slice is empty for the given shape, the resulting slice
+            will be `Slice(0, 0, 1)`. However, one should prefer the
+            :any:`isempty` method to test if a slice is always empty.
 
-          - If `self` indexes a single element, the resulting slice will be of
-            the form `Slice(i, i+1, 1)`. However, one should prefer using
+          - If the slice indexes a single element, the resulting slice will be
+            of the form `Slice(i, i+1, 1)`. However, one should prefer using
             `len(s.reduce(shape)) == 1` to test if a slice indexes exactly 1
             element.
 

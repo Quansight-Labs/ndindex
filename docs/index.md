@@ -101,11 +101,13 @@ implemented:
       >>> arange(10)[2:9:1]
       array([2, 3, 4, 5, 6, 7, 8])
 
-  `reduce()` simplifies all index types, but for slice indices in particular,
-  it always puts them into canonical form, so that `s1.reduce()` and
-  `s2.reduce()` will give the same resulting Slice if and only if `s1` always
-  slices the same elements as `s2`. This can be used to test slice equality
-  without indexing an array.
+  `reduce()` simplifies all index types, but for [slice indices](Slice.reduce)
+  in particular, it always puts them into canonical form, so that
+  `s1.reduce()` and `s2.reduce()` will give the same resulting `Slice` if and
+  only if `s1` always slices the same elements as `s2`. If no shape is given,
+  `s.reduce()` returns a canonical slice that is equivalent to `s` for all
+  array shapes. This can be used to test slice equality without indexing an
+  array.
 
       >>> Slice(2, 4, 3).reduce()
       Slice(2, 3, 1)
@@ -129,7 +131,21 @@ implemented:
       >>> Slice(1, 3).args
       (1, 3, None)
 
-- All ndindex objects are hashable and can be used as dictionary keys.
+- All ndindex objects are immutable/hashable and can be used as dictionary keys.
+
+- ndindex objects can be compared using `==`, even if they contain array
+  indices. Note that `==` does exact equality comparison. Use
+  [`idx1.reduce(shape) == idx2.reduce(shape)`](NDIndex.reduce) (see above) to
+  test if two indices index the same elements as each other (n.b. pure
+  canonicalization is currently only guaranteed for slice indices).
+
+      >>> from ndindex import Tuple
+      >>> from numpy import array
+      >>> # This would fail with ValueError for a Python tuple containing an array
+      >>> Tuple(array([1, 2]), 0) == Tuple(array([1, 2]), 0)
+      True
+      >>> Slice(0, 10).reduce(5) == Slice(0, 5).reduce(5)
+      True
 
 - A real index object can be accessed with [`idx.raw`](NDIndex.raw). Use this
   to use an ndindex index to index an array.
@@ -170,7 +186,6 @@ implemented:
 - [`idx.broadcast_arrays()`](NDIndex.broadcast_arrays) broadcasts the array
   indices in `idx`, and converts boolean arrays into equivalent integer arrays.
 
-      >>> from numpy import array
       >>> Tuple(array([[True, False], [True, False]]), array([0, 1])).broadcast_arrays()
       Tuple([0, 1], [0, 0], [0, 1])
 
