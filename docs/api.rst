@@ -37,7 +37,6 @@ ellipsis
 
 .. autoclass:: ndindex.ellipsis
    :members:
-   :special-members:
 
 
 Newaxis
@@ -45,7 +44,6 @@ Newaxis
 
 .. autoclass:: ndindex.Newaxis
    :members:
-   :special-members:
 
 Tuple
 -----
