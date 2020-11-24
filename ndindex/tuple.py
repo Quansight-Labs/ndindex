@@ -247,7 +247,7 @@ class Tuple(NDIndex):
         >>> a[1]
         1
 
-        See https://github.com/Quansight/ndindex/issues/22.
+        See https://github.com/Quansight-Labs/ndindex/issues/22.
 
         See Also
         ========

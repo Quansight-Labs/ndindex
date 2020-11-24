@@ -172,7 +172,7 @@ The following things are not yet implemented, but are planned.
   [SymPy](https://www.sympy.org/).
 
 And more. If there is something you would like to see this library be able to
-do, please [open an issue](https://github.com/quansight/ndindex/issues). Pull
+do, please [open an issue](https://github.com/quansight-labs/ndindex/issues). Pull
 requests are welcome as well.
 
 (testing)=
@@ -206,7 +206,7 @@ There are two primary types of tests that we employ to verify this:
 - Hypothesis tests. Hypothesis is a library that can intelligently check a
   combinatorial search space of inputs. This requires writing hypothesis
   strategies that can generate all the relevant types of indices (see
-  [ndindex/tests/helpers.py](https://github.com/Quansight/ndindex/blob/master/ndindex/tests/helpers.py)).
+  [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py)).
   For more information on hypothesis, see
   <https://hypothesis.readthedocs.io/en/latest/index.html>. All tests have
   hypothesis tests, even if they are also tested exhaustively.
@@ -221,9 +221,9 @@ that still fails. For example, a failing exhaustive slice test might give
 to `Slice(-2, -1, -1)`. Another reason for the duplication is that hypothesis
 can sometimes test a slightly expanded test space without any additional
 consequences. For example,
-[`test_slice_reduce_hypothesis()`](https://github.com/Quansight/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L165)
+[`test_slice_reduce_hypothesis()`](https://github.com/Quansight-Labs/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L165)
 in tests all types of array shapes, whereas
-[`test_slice_reduce_exhaustive()`](https://github.com/Quansight/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L142)
+[`test_slice_reduce_exhaustive()`](https://github.com/Quansight-Labs/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L142)
 tests only 1-dimensional shapes. This doesn't affect things because hypotheses
 will always shrink large shapes to a 1-dimensional shape in the case of a
 failure. Consequently every exhaustive test will also have a corresponding

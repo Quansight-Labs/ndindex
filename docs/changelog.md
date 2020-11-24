@@ -22,7 +22,7 @@ implemented:
 
 The first case in particular may not ever be implemented, as it is considered
 to be a mistake that it is allowed in the first place in the NumPy, so if you
-need it, please [let me know](https://github.com/Quansight/ndindex/issues).
+need it, please [let me know](https://github.com/Quansight-Labs/ndindex/issues).
 
 Additionally, some corner cases of array semantics are either deprecated or
 fixed as bugs in newer versions of NumPy, with some only being fixed in the
@@ -54,7 +54,7 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
   `BooleanArray` and `IntegerArray`. There are still many instances where
   `as_subindex()` raises `NotImplementedError` however. If you need support
   for these, please [open an
-  issue](https://github.com/Quansight/ndindex/issues) to let me know.
+  issue](https://github.com/Quansight-Labs/ndindex/issues) to let me know.
 
 - Add a new document to the documentation on [type confusion](type-confusion).
   The document stresses that ndindex types should not be confused with the

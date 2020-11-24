@@ -2,7 +2,7 @@
 
 A Python library for manipulating indices of ndarrays.
 
-The documentation for ndindex can be found at https://quansight.github.io/ndindex/
+The documentation for ndindex can be found at https://quansight-labs.github.io/ndindex/
 
 ndindex is a library that allows representing and manipulating objects that
 can be valid indices to numpy arrays, i.e., slices, integers, ellipses,
@@ -66,7 +66,7 @@ True
 array([], shape=(4, 0), dtype=float64)
 ```
 
-See the [documentation](https://quansight.github.io/ndindex/) for full details
+See the [documentation](https://quansight-labs.github.io/ndindex/) for full details
 on what ndindex can do.
 
 ## License
