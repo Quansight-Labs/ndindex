@@ -266,7 +266,7 @@ indexing</a>.</p></li>
 <a class="reference external" href="https://www.sympy.org/">SymPy</a>.</p></li>
 </ul>
 <p>And more. If there is something you would like to see this library be able to
-do, please <a class="reference external" href="https://github.com/quansight/ndindex/issues">open an issue</a>. Pull
+do, please <a class="reference external" href="https://github.com/quansight-labs/ndindex/issues">open an issue</a>. Pull
 requests are welcome as well.</p>
 </div>
 <div class="section" id="testing-and-correctness">
@@ -296,7 +296,7 @@ testing due to combinatorial explosion.</p></li>
 <li><p>Hypothesis tests. Hypothesis is a library that can intelligently check a
 combinatorial search space of inputs. This requires writing hypothesis
 strategies that can generate all the relevant types of indices (see
-<a class="reference external" href="https://github.com/Quansight/ndindex/blob/master/ndindex/tests/helpers.py">ndindex/tests/helpers.py</a>).
+<a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py">ndindex/tests/helpers.py</a>).
 For more information on hypothesis, see
 <a class="reference external" href="https://hypothesis.readthedocs.io/en/latest/index.html">https://hypothesis.readthedocs.io/en/latest/index.html</a>. All tests have
 hypothesis tests, even if they are also tested exhaustively.</p></li>
@@ -311,9 +311,9 @@ that still fails. For example, a failing exhaustive slice test might give
 to <code class="docutils literal notranslate"><span class="pre">Slice(-2,</span> <span class="pre">-1,</span> <span class="pre">-1)</span></code>. Another reason for the duplication is that hypothesis
 can sometimes test a slightly expanded test space without any additional
 consequences. For example,
-<a class="reference external" href="https://github.com/Quansight/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L165"><code class="docutils literal notranslate"><span class="pre">test_slice_reduce_hypothesis()</span></code></a>
+<a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L165"><code class="docutils literal notranslate"><span class="pre">test_slice_reduce_hypothesis()</span></code></a>
 in tests all types of array shapes, whereas
-<a class="reference external" href="https://github.com/Quansight/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L142"><code class="docutils literal notranslate"><span class="pre">test_slice_reduce_exhaustive()</span></code></a>
+<a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/8875637bf223f92672db9292ec537c9d98ae382e/ndindex/tests/test_slice.py#L142"><code class="docutils literal notranslate"><span class="pre">test_slice_reduce_exhaustive()</span></code></a>
 tests only 1-dimensional shapes. This doesn’t affect things because hypotheses
 will always shrink large shapes to a 1-dimensional shape in the case of a
 failure. Consequently every exhaustive test will also have a corresponding
@@ -721,7 +721,7 @@ hypothesis test.</p>
     </div>
     
     <div class="footer">
-      &copy;2020, Quansight.
+      &copy;2020, Quansight Labs.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
@@ -735,6 +735,6 @@ hypothesis test.</p>
     
 
     
-    <span id="forkongithub"><a href="https://github.com/Quansight/ndindex">Fork me on GitHub</a></span>
+    <span id="forkongithub"><a href="https://github.com/Quansight-Labs/ndindex">Fork me on GitHub</a></span>
   </body>
 </html>
