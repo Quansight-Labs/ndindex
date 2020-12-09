@@ -13,7 +13,7 @@ matrix:
         - DOCS=true
         - CODECOV=true
         # Doctr deploy key for Quansight/ndindex
-        - secure: "re3NcmEUC70IlsnSzeSP8SET/Z8VC5r0CLUespXPG0/mDqxulgDRJC3jZMKy/Aa9TkBGW0MTitazIe7zSyuq+UrmNTN1yH8t04fBsQ5Hu8Lh+ed7mhmJqOVBhTX+uaYsHoQ+7LxTaZz4onzfaJBHuzNC7XIchARKPNelz3+TKs8Vlk+K0awtbEgPqpNIo22VOe/dzxs+AtQF1bwdrmfiSRv3LdJNtH+Dzgh1i4euybhylQh+ugWUHVqTKa6FSfXvvvrhZqCUNbVbRjAmGTL2RkucdqRre37Kz3dd6vL7G3zN9tiCI6m6uH+3Z1pEj2rV+y80GZX+CkcSLeGbfqU6S4GewaBW5+p33p4WGKWGvaU2lOu7dJIMwfMTMjzAXPoKSNA42rMzKtArsYAk14mYRKOj082P2sF3bXyy5zvKCG2m6gJseoWQxqU6tZcjUfoKPMUCZQGXJzgHDkzl9vTPfFl2mTY5zvAvC7BYkxUK1uGA6bbTEqGBnfbY9dSDPk5DYDeN5BcAxwBhtnfHiRF+VnhSt2dsG8FE4eL1MyfQn0iSkqd/UHrJOUCBCzGRrw4ZbDhX+S4zv7qNjbonB5UowbpdinePdRf7PUQWGvRvCHoND3se8FITLZktqIcKjB3WvLx7xF9MevVQZhvsRTmOE4MttQ6xbAM0XSzNmehOWVg="
+        - secure: "e0sPsQ2FgguRv8qzByrRRFCHIOxI9ixUgsl1LeUdRw9M0yX8O6O9/CFeQBL+/l5FNu7ECM71I+a++pl/mkKkWexZwnR9zhYYRaPPBAjlyCmmEHemdIA9rlEd3hm5E8Z8+4CxoPFH3WaiIFBZwcTQtzlBen0EZpP6UjsaI+/XFdUb9Nw/uMlacXOxVetBFKoCTk218GXvjRRf5mPoHu3or5Rf7vAOOoPWYNuZEptWx/JJ1/p6EO05LqJPJVW6gRS7XZykCQytaXTD2dvvtAl21z6ppaQ0OfH5ku5DUY8NHgKuRcKRb56H0/pq6jIR/ALFkoPPy/43ildW66jDxVET0k9Ucm1bmHJPtGvH8r2ECAhY2PLvjDxAbOpuqejczaYPC75Nin7rileu738RTOxwmW/6NSPr2TmqUuhgzkyvi7cU4iizLmjEQQrYizNPDjwP0LMhxc6kE9ArWcaZIvZMUOddLwVaP8akoKkLuRlL+sMjWqb5Cm/ofcohAdBdBiakg50kIHldw65m+aqsz+JBlMQAejSm0keiiJaa494Sq1DiJrnjeylra4lru7pWK61/WfqMy4kDe1Y3LRaEx7KCNDllknFTcC/+R90x0WqeVXV6FEKVfPKgU2/rx4Hr2N89Svwgta2lZOicfsiLVrvdDN6eQ4N+eIRgN63zSbK8BcI="
     - name: python 3.9
       env:
         - PYTHON_VERSION=3.9
