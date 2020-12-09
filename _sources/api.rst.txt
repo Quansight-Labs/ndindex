@@ -37,7 +37,6 @@ ellipsis
 
 .. autoclass:: ndindex.ellipsis
    :members:
-   :special-members:
 
 
 Newaxis
@@ -45,21 +44,18 @@ Newaxis
 
 .. autoclass:: ndindex.Newaxis
    :members:
-   :special-members:
 
 Tuple
 -----
 
 .. autoclass:: ndindex.Tuple
    :members:
-   :special-members:
 
 IntegerArray
 ------------
 
 .. autoclass:: ndindex.IntegerArray
    :members:
-   :special-members:
    :inherited-members:
    :exclude-members: dtype
 
@@ -71,7 +67,6 @@ BooleanArray
 
 .. autoclass:: ndindex.BooleanArray
    :members:
-   :special-members:
    :inherited-members:
    :exclude-members: dtype
 
@@ -88,7 +83,6 @@ These classes are only intended for internal use in ndindex.
 
 .. autoclass:: ndindex.array.ArrayIndex
    :members:
-   :special-members:
    :exclude-members: dtype
 
    .. autoattribute:: dtype

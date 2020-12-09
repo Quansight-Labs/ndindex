@@ -513,12 +513,11 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 <dl class="py method">
 <dt id="ndindex.Slice.reduce">
 <code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.reduce" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="code docutils literal notranslate"><span class="pre">Slice.reduce</span></code> returns a slice where the start and stop are
-canonicalized for an array of the given shape, or for any shape if
-<code class="code docutils literal notranslate"><span class="pre">shape</span></code> is <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default).</p>
+<dd><p><code class="code docutils literal notranslate"><span class="pre">Slice.reduce</span></code> returns a slice that is canonicalized for an array of the
+given shape, or for any shape if <code class="code docutils literal notranslate"><span class="pre">shape</span></code> is <code class="code docutils literal notranslate"><span class="pre">None</span></code> (the default).</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Slice.reduce</span></code> is a perfect canonicalization, meaning that two slices
-are equal (for all array shapes if <code class="code docutils literal notranslate"><span class="pre">shape=None</span></code> or for arrays of shape
-<code class="code docutils literal notranslate"><span class="pre">shape</span></code> otherwise) if and only if they <code class="code docutils literal notranslate"><span class="pre">reduce</span></code> to the same slice
+are equal—for all array shapes if <code class="code docutils literal notranslate"><span class="pre">shape=None</span></code> or for arrays of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code> otherwise—if and only if they <code class="code docutils literal notranslate"><span class="pre">reduce</span></code> to the same Slice
 object. Note that ndindex objects do not simplify automatically, and
 <code class="code docutils literal notranslate"><span class="pre">==</span></code> only does exact equality comparison, so to test that two slices
 are equal, use <code class="code docutils literal notranslate"><span class="pre">slice1.reduce(shape)</span> <span class="pre">==</span> <span class="pre">slice2.reduce(shape)</span></code>.</p>
@@ -528,12 +527,12 @@ are equal, use <code class="code docutils literal notranslate"><span class="pre"
 <ul class="simple">
 <li><p><code class="code docutils literal notranslate"><span class="pre">start</span></code> is not <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">stop</span></code> is not <code class="code docutils literal notranslate"><span class="pre">None</span></code>, when possible. The reduced <code class="code docutils literal notranslate"><span class="pre">stop</span></code> can only
-be None if the original <code class="code docutils literal notranslate"><span class="pre">stop</span></code> is.</p></li>
+be <code class="code docutils literal notranslate"><span class="pre">None</span></code> if the original <code class="code docutils literal notranslate"><span class="pre">stop</span></code> is.</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">step</span></code> is not <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">step</span></code> is as close to 0 as possible.</p></li>
-<li><p>If <code class="code docutils literal notranslate"><span class="pre">self</span></code> is always empty, the resulting slice will be <code class="code docutils literal notranslate"><span class="pre">Slice(0,</span>
-<span class="pre">0,</span> <span class="pre">1)</span></code>. However, one should prefer the <a class="reference internal" href="#ndindex.Slice.isempty" title="ndindex.Slice.isempty"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">isempty</span></code></a> method to
-test if a slice is always empty.</p></li>
+<li><p>If the slice is always empty, the resulting slice will be
+<code class="code docutils literal notranslate"><span class="pre">Slice(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code>. However, one should prefer the <a class="reference internal" href="#ndindex.Slice.isempty" title="ndindex.Slice.isempty"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">isempty</span></code></a>
+method to test if a slice is always empty.</p></li>
 </ul>
 <p>In particular, <code class="code docutils literal notranslate"><span class="pre">stop</span></code> may be <code class="code docutils literal notranslate"><span class="pre">None</span></code>, even after canonicalization
 with <code class="code docutils literal notranslate"><span class="pre">reduce()</span></code> with no <code class="code docutils literal notranslate"><span class="pre">shape</span></code>. This is because some slices are
@@ -568,11 +567,11 @@ sliced).</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">stop</span></code> is as small as possible for positive <code class="code docutils literal notranslate"><span class="pre">step</span></code> or large as
 possible for negative <code class="code docutils literal notranslate"><span class="pre">step</span></code>.</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">step</span></code> is as close to 0 as possible.</p></li>
-<li><p>If <code class="code docutils literal notranslate"><span class="pre">self</span></code> is empty for the given shape, the resulting slice will
-be <code class="code docutils literal notranslate"><span class="pre">Slice(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code>. However, one should prefer the <a class="reference internal" href="#ndindex.Slice.isempty" title="ndindex.Slice.isempty"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">isempty</span></code></a>
-method to test if a slice is always empty.</p></li>
-<li><p>If <code class="code docutils literal notranslate"><span class="pre">self</span></code> indexes a single element, the resulting slice will be of
-the form <code class="code docutils literal notranslate"><span class="pre">Slice(i,</span> <span class="pre">i+1,</span> <span class="pre">1)</span></code>. However, one should prefer using
+<li><p>If the slice is empty for the given shape, the resulting slice
+will be <code class="code docutils literal notranslate"><span class="pre">Slice(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code>. However, one should prefer the
+<a class="reference internal" href="#ndindex.Slice.isempty" title="ndindex.Slice.isempty"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">isempty</span></code></a> method to test if a slice is always empty.</p></li>
+<li><p>If the slice indexes a single element, the resulting slice will be
+of the form <code class="code docutils literal notranslate"><span class="pre">Slice(i,</span> <span class="pre">i+1,</span> <span class="pre">1)</span></code>. However, one should prefer using
 <code class="code docutils literal notranslate"><span class="pre">len(s.reduce(shape))</span> <span class="pre">==</span> <span class="pre">1</span></code> to test if a slice indexes exactly 1
 element.</p></li>
 <li><p><a class="reference internal" href="#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">len()</span></code></a> gives the true size of the axis for a
@@ -615,21 +614,21 @@ for a single dimension.</p>
 <dt id="ndindex.Slice.start">
 <em class="property">property </em><code class="sig-name descname">start</code><a class="headerlink" href="#ndindex.Slice.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>The start value of the slice.</p>
-<p>Note that this may be an integer or None.</p>
+<p>Note that this may be an integer or <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="ndindex.Slice.step">
 <em class="property">property </em><code class="sig-name descname">step</code><a class="headerlink" href="#ndindex.Slice.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>The step of the slice.</p>
-<p>Note that this may be nonzero integer or None.</p>
+<p>Note that this may be a nonzero integer or <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="ndindex.Slice.stop">
 <em class="property">property </em><code class="sig-name descname">stop</code><a class="headerlink" href="#ndindex.Slice.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>The stop of the slice.</p>
-<p>Note that this may be an integer or None.</p>
+<p>Note that this may be an integer or <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -863,7 +862,7 @@ index.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Unlike the NumPy <code class="code docutils literal notranslate"><span class="pre">newaxis</span></code>, <code class="code docutils literal notranslate"><span class="pre">Newaxis</span></code> is the type, not the object (the
-name is lowercase to avoid conflicting with the NumPy type). Use
+name is uppercase to avoid conflicting with the NumPy type). Use
 <code class="code docutils literal notranslate"><span class="pre">Newaxis()</span></code>, <code class="code docutils literal notranslate"><span class="pre">ndindex(np.newaxis)</span></code>, or <code class="code docutils literal notranslate"><span class="pre">ndindex(None)</span></code> to create the
 object. In most ndindex contexts, <code class="code docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="code docutils literal notranslate"><span class="pre">None</span></code> can be used
 instead of <code class="code docutils literal notranslate"><span class="pre">Newaxis()</span></code>, for instance, when creating a <code class="code docutils literal notranslate"><span class="pre">Tuple</span></code> object.
@@ -950,9 +949,9 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 <dl class="py method">
 <dt id="ndindex.Newaxis.reduce">
 <code class="sig-name descname">reduce</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Newaxis.reduce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reduce a Newaxis index</p>
-<p>There is no other index that is equivalent to a Newaxis index by
-itself, so Newaxis().reduce() always returns Newaxis() unchanged.</p>
+<dd><p>Reduce a <code class="code docutils literal notranslate"><span class="pre">Newaxis</span></code> index</p>
+<p>There is no other index that is equivalent to a newaxis index by
+itself, so <code class="code docutils literal notranslate"><span class="pre">Newaxis().reduce()</span></code> always returns <code class="code docutils literal notranslate"><span class="pre">Newaxis()</span></code> unchanged.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Newaxis</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Newaxis</span><span class="p">()</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 <span class="go">Newaxis()</span>
@@ -1006,24 +1005,6 @@ does not have most methods that <code class="code docutils literal notranslate">
 non-indexing contexts. See the document on <a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for
 more details.</p>
 </div>
-<dl class="py method">
-<dt id="ndindex.Tuple.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.Tuple.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.Tuple.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
 <dl class="py method">
 <dt id="ndindex.Tuple.as_subindex">
 <code class="sig-name descname">as_subindex</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.as_subindex" title="Permalink to this definition">¶</a></dt>
@@ -1096,7 +1077,8 @@ reindexed onto the chunks via <code class="code docutils literal notranslate"><s
 <dl class="py method">
 <dt id="ndindex.Tuple.broadcast_arrays">
 <code class="sig-name descname">broadcast_arrays</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.broadcast_arrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Broadcast all the array indices in self to a common shape.</p>
+<dd><p>Broadcast all the array indices in self to a common shape and convert
+boolean array indices into integer array indices.</p>
 <p>The resulting index is equivalent in all contexts where the original
 index is allowed. However, it is possible for the original index to
 give an IndexError but for the new index to not, since integer array
@@ -1420,42 +1402,6 @@ should not be used in array contexts. See the document on
 </dd></dl>
 
 <dl class="py method">
-<dt id="ndindex.IntegerArray.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.IntegerArray.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.IntegerArray.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method should be called by subclasses (via super()) after type-checking</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.IntegerArray.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.IntegerArray.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="ndindex.IntegerArray.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#ndindex.IntegerArray.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="ndindex.IntegerArray.array">
 <em class="property">property </em><code class="sig-name descname">array</code><a class="headerlink" href="#ndindex.IntegerArray.array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the NumPy array of self.</p>
@@ -1541,7 +1487,8 @@ reindexed onto the chunks via <code class="code docutils literal notranslate"><s
 <dl class="py method">
 <dt id="ndindex.IntegerArray.broadcast_arrays">
 <code class="sig-name descname">broadcast_arrays</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.broadcast_arrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Broadcast all the array indices in self to a common shape.</p>
+<dd><p>Broadcast all the array indices in self to a common shape and convert
+boolean array indices into integer array indices.</p>
 <p>The resulting index is equivalent in all contexts where the original
 index is allowed. However, it is possible for the original index to
 give an IndexError but for the new index to not, since integer array
@@ -1854,42 +1801,6 @@ should not be used in array contexts. See the document on
 </dd></dl>
 
 <dl class="py method">
-<dt id="ndindex.BooleanArray.__eq__">
-<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.__eq__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return self==value.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.BooleanArray.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.BooleanArray.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method should be called by subclasses (via super()) after type-checking</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.BooleanArray.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.BooleanArray.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="ndindex.BooleanArray.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#ndindex.BooleanArray.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="ndindex.BooleanArray.array">
 <em class="property">property </em><code class="sig-name descname">array</code><a class="headerlink" href="#ndindex.BooleanArray.array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the NumPy array of self.</p>
@@ -1975,7 +1886,8 @@ reindexed onto the chunks via <code class="code docutils literal notranslate"><s
 <dl class="py method">
 <dt id="ndindex.BooleanArray.broadcast_arrays">
 <code class="sig-name descname">broadcast_arrays</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.broadcast_arrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Broadcast all the array indices in self to a common shape.</p>
+<dd><p>Broadcast all the array indices in self to a common shape and convert
+boolean array indices into integer array indices.</p>
 <p>The resulting index is equivalent in all contexts where the original
 index is allowed. However, it is possible for the original index to
 give an IndexError but for the new index to not, since integer array
@@ -2376,7 +2288,8 @@ reindexed onto the chunks via <code class="code docutils literal notranslate"><s
 <dl class="py method">
 <dt id="ndindex.ndindex.NDIndex.broadcast_arrays">
 <code class="sig-name descname">broadcast_arrays</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex.broadcast_arrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Broadcast all the array indices in self to a common shape.</p>
+<dd><p>Broadcast all the array indices in self to a common shape and convert
+boolean array indices into integer array indices.</p>
 <p>The resulting index is equivalent in all contexts where the original
 index is allowed. However, it is possible for the original index to
 give an IndexError but for the new index to not, since integer array
@@ -2589,24 +2502,6 @@ ndindex methods.</p>
 <dt id="ndindex.array.ArrayIndex.dtype">
 <code class="sig-name descname">dtype</code><em class="property"> Subclasses should redefine this</em><a class="headerlink" href="#ndindex.array.ArrayIndex.dtype" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.array.ArrayIndex.__hash__">
-<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.array.ArrayIndex.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return hash(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.array.ArrayIndex.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.array.ArrayIndex.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ndindex.array.ArrayIndex.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.array.ArrayIndex.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
 
 <dl class="py method">
 <dt id="ndindex.array.ArrayIndex.array">

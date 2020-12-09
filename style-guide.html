@@ -64,10 +64,10 @@
 <code class="docutils literal notranslate"><span class="pre">NDIndex</span></code> base class.</p></li>
 <li><p>The plural of “index” is “indices”. “Indexes” should only be used as a verb.
 For example, “in <code class="docutils literal notranslate"><span class="pre">a[i,</span> <span class="pre">j]</span></code>, the indices are <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>. They represent a
-single tuple index <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code> which indexes the array <code class="docutils literal notranslate"><span class="pre">a</span></code>.”</p></li>
+single tuple index <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code>, which indexes the array <code class="docutils literal notranslate"><span class="pre">a</span></code>.”</p></li>
 <li><p>The arguments of a slice should be referred to as “start”, “stop”, and
 “step”, respectively. This matches the argument names and attributes of the
-<code class="docutils literal notranslate"><span class="pre">Slice</span></code> object.</p></li>
+<code class="docutils literal notranslate"><span class="pre">Slice</span></code> and <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects.</p></li>
 <li><p>A generic index variable should be called <code class="docutils literal notranslate"><span class="pre">idx</span></code>.</p></li>
 <li><p>A generic slice variable should be called <code class="docutils literal notranslate"><span class="pre">s</span></code>.</p></li>
 <li><p>Example array variables should be called <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p></li>
@@ -109,8 +109,9 @@ point. Docstrings use the napoleon extension, meaning they can be written in
 numpydoc format.</p></li>
 <li><p>All public docstrings should include a doctest. Doctests can be run with the
 <code class="docutils literal notranslate"><span class="pre">./run_doctests</span></code> script at the root of the repo. This also runs doctests in
-the RST and Markdown files. Doctests are configured so that each function or
-method must import all names used in that function or method.</p></li>
+the RST and Markdown files. Doctests are configured so that the doctests for
+each function or method must import all names used in that function or
+method.</p></li>
 </ul>
 </div>
 </div>

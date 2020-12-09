@@ -118,7 +118,9 @@ extensive testing (see below), you can be assured that ndindex is correct.</p>
 <p>ndindex is still a work in progress. The following things are currently
 implemented:</p>
 <ul>
-<li><p><a class="reference internal" href="api.html#ndindex.Slice" title="ndindex.Slice"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Slice</span></code></a>, <a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a>, <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a>, and <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a></p></li>
+<li><p><a class="reference internal" href="api.html#ndindex.Slice" title="ndindex.Slice"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Slice</span></code></a>, <a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a>, <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a>, <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a>, <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a>,
+<a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a>, and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> classes to represent any valid
+index to a NumPy array.</p></li>
 <li><p>Classes do not canonicalize by default (the constructor only does basic type
 checking). Objects can be put into canonical form by calling
 <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></span></a>.</p>
@@ -141,6 +143,31 @@ array([2, 3, 4, 5, 6, 7, 8])
 array([2, 3, 4, 5, 6, 7, 8])
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">reduce()</span></code> simplifies all index types, but for <a class="reference internal" href="api.html#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><span class="xref myst py py-meth">slice indices</span></a>
+in particular, it always puts them into canonical form, so that
+<code class="docutils literal notranslate"><span class="pre">s1.reduce()</span></code> and <code class="docutils literal notranslate"><span class="pre">s2.reduce()</span></code> will give the same resulting <code class="docutils literal notranslate"><span class="pre">Slice</span></code> if and
+only if <code class="docutils literal notranslate"><span class="pre">s1</span></code> always slices the same elements as <code class="docutils literal notranslate"><span class="pre">s2</span></code>. If no shape is given,
+<code class="docutils literal notranslate"><span class="pre">s.reduce()</span></code> returns a canonical slice that is equivalent to <code class="docutils literal notranslate"><span class="pre">s</span></code> for all
+array shapes. This can be used to test slice equality without indexing an
+array.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; Slice(2, 4, 3).reduce()
+Slice(2, 3, 1)
+&gt;&gt;&gt; Slice(2, 5, 3).reduce()
+Slice(2, 3, 1)
+
+&gt;&gt;&gt; Slice(-2, 5, 3).reduce(3)
+Slice(1, 2, 1)
+&gt;&gt;&gt; Slice(-2, -1).reduce(3)
+Slice(1, 2, 1)
+&gt;&gt;&gt; a = [0, 1, 2]
+&gt;&gt;&gt; a[-2:5:3]
+[1]
+&gt;&gt;&gt; a[-2:-1]
+[1]
+&gt;&gt;&gt; a[1:2:1]
+[1]
+</pre></div>
+</div>
 </li>
 <li><p>Object arguments can be accessed with <code class="docutils literal notranslate"><span class="pre">idx.args</span></code></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; Slice(1, 3).args
@@ -148,7 +175,22 @@ array([2, 3, 4, 5, 6, 7, 8])
 </pre></div>
 </div>
 </li>
-<li><p>All ndindex objects are hashable and can be used as dictionary keys.</p></li>
+<li><p>All ndindex objects are immutable/hashable and can be used as dictionary keys.</p></li>
+<li><p>ndindex objects can be compared using <code class="docutils literal notranslate"><span class="pre">==</span></code>, even if they contain array
+indices. Note that <code class="docutils literal notranslate"><span class="pre">==</span></code> does exact equality comparison. Use
+<a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">idx1.reduce(shape)</span> <span class="pre">==</span> <span class="pre">idx2.reduce(shape)</span></code></span></a> (see above) to
+test if two indices index the same elements as each other (n.b. pure
+canonicalization is currently only guaranteed for slice indices).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from ndindex import Tuple
+&gt;&gt;&gt; from numpy import array
+&gt;&gt;&gt; # This would fail with ValueError for a Python tuple containing an array
+&gt;&gt;&gt; Tuple(array([1, 2]), 0) == Tuple(array([1, 2]), 0)
+True
+&gt;&gt;&gt; Slice(0, 10).reduce(5) == Slice(0, 5).reduce(5)
+True
+</pre></div>
+</div>
+</li>
 <li><p>A real index object can be accessed with <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.raw" title="ndindex.ndindex.NDIndex.raw"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">idx.raw</span></code></span></a>. Use this
 to use an ndindex index to index an array.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; s = Slice(0, 2)
@@ -157,7 +199,8 @@ array([0, 1])
 </pre></div>
 </div>
 </li>
-<li><p><a class="reference internal" href="api.html#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">len()</span></code></span></a> computes the maximum length of an index over a given axis.</p>
+<li><p><a class="reference internal" href="api.html#ndindex.Slice.__len__" title="ndindex.Slice.__len__"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">len()</span></code></span></a> computes the maximum length of a slice index (over
+the first axis).</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; len(Slice(2, 10, 3))
 3
 &gt;&gt;&gt; len(arange(10)[2:10:3])
@@ -189,6 +232,13 @@ assuming <code class="docutils literal notranslate"><span class="pre">a</span></
 </pre></div>
 </div>
 </li>
+<li><p><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.broadcast_arrays" title="ndindex.ndindex.NDIndex.broadcast_arrays"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">idx.broadcast_arrays()</span></code></span></a> broadcasts the array
+indices in <code class="docutils literal notranslate"><span class="pre">idx</span></code>, and converts boolean arrays into equivalent integer arrays.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; Tuple(array([[True, False], [True, False]]), array([0, 1])).broadcast_arrays()
+Tuple([0, 1], [0, 0], [0, 1])
+</pre></div>
+</div>
+</li>
 <li><p><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.as_subindex" title="ndindex.ndindex.NDIndex.as_subindex"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">i.as_subindex(j)</span></code></span></a> produces an index <code class="docutils literal notranslate"><span class="pre">k</span></code> such that
 <code class="docutils literal notranslate"><span class="pre">a[j][k]</span></code> gives all the elements of <code class="docutils literal notranslate"><span class="pre">a[j]</span></code> that are also in <code class="docutils literal notranslate"><span class="pre">a[i]</span></code> (see the
 <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.as_subindex" title="ndindex.ndindex.NDIndex.as_subindex"><span class="xref myst py py-meth">documentation</span></a> for more information). This is useful
@@ -205,8 +255,6 @@ Slice(0, 60, 1)
 </ul>
 <p>The following things are not yet implemented, but are planned.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Newaxis</span></code>, <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code>, and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> types, so that all
-types of indexing are support.</p></li>
 <li><p>Composition: <code class="docutils literal notranslate"><span class="pre">i1[i2]</span></code> will create a new ndindex object <code class="docutils literal notranslate"><span class="pre">i3</span></code> (when possible)
 so that <code class="docutils literal notranslate"><span class="pre">a[i1][i2]</span> <span class="pre">==</span> <span class="pre">a[i3]</span></code>.</p></li>
 <li><p>Various set-like operations on indices, including “contains”, “union”, and
