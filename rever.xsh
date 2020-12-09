@@ -49,7 +49,7 @@ $ACTIVITIES = [
     'ghrelease',  # Creates a Github release entry for the new tag
 ]
 
-$PUSH_TAG_REMOTE = 'git@github.com:Quansight/ndindex.git'  # Repo to push tags to
+$PUSH_TAG_REMOTE = 'git@github.com:Quansight-Labs/ndindex.git'  # Repo to push tags to
 
-$GITHUB_ORG = 'Quansight'  # Github org for Github releases and conda-forge
+$GITHUB_ORG = 'Quansight-Labs'  # Github org for Github releases and conda-forge
 $GITHUB_REPO = 'ndindex'  # Github repo for Github releases and conda-forge

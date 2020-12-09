@@ -166,7 +166,7 @@ Some general types to help avoid type confusion:
   manipulating index args directly in complex ways, it's a sign you should
   probably be using a higher level abstraction. If what you are trying to do
   doesn't exist yet, [open an
-  issue](https://github.com/Quansight/ndindex/issues) so we can implement it.
+  issue](https://github.com/Quansight-labs/ndindex/issues) so we can implement it.
 
 Additionally, some advice for specific types:
 

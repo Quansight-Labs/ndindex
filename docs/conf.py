@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'ndindex'
-copyright = '2020, Quansight'
-author = 'Quansight'
+copyright = '2020, Quansight Labs'
+author = 'Quansight Labs'
 
 
 # -- General configuration ---------------------------------------------------
@@ -74,7 +74,7 @@ html_theme = 'alabaster'
 pygments_style = 'sphinx'
 
 html_theme_options = {
-    'github_user': 'Quansight',
+    'github_user': 'Quansight-Labs',
     'github_repo': 'ndindex',
     'github_banner': False,
     # 'logo': 'logo.jpg',
