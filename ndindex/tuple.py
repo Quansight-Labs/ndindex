@@ -49,7 +49,7 @@ class Tuple(NDIndex):
         from .newaxis import Newaxis
         from .slice import Slice
         from .integer import Integer
-        from .booleanarray import BooleanArray
+        from .booleanarray import BooleanArray, _is_boolean_scalar
 
         newargs = []
         arrays = []
@@ -66,7 +66,7 @@ class Tuple(NDIndex):
             newargs.append(newarg)
             if isinstance(newarg, ArrayIndex):
                 array_block_start = True
-                if newarg in [True, False]:
+                if _is_boolean_scalar(newarg):
                     has_boolean_scalar = True
                 elif isinstance(newarg, BooleanArray):
                     arrays.extend(newarg.raw.nonzero())
@@ -265,19 +265,19 @@ class Tuple(NDIndex):
         from .ellipsis import ellipsis
         from .slice import Slice
         from .integer import Integer
-        from .booleanarray import BooleanArray
+        from .booleanarray import BooleanArray, _is_boolean_scalar
         from .integerarray import IntegerArray
 
         args = list(self.args)
         if ellipsis() not in args:
             return type(self)(*args, ellipsis()).reduce(shape)
 
-        boolean_scalars = [i for i in args if i in [True, False]]
+        boolean_scalars = [i for i in args if _is_boolean_scalar(i)]
         if len(boolean_scalars) > 1:
             _args = []
             seen_boolean_scalar = False
             for s in args:
-                if s in [True, False]:
+                if _is_boolean_scalar(s):
                     if seen_boolean_scalar:
                         continue
                     _args.append(BooleanArray(all(i == True for i in boolean_scalars)))
@@ -288,7 +288,7 @@ class Tuple(NDIndex):
 
         arrays = []
         for i in args:
-            if i in [True, False]:
+            if _is_boolean_scalar(i):
                 continue
             elif isinstance(i, IntegerArray):
                 arrays.append(i.raw)
@@ -324,7 +324,7 @@ class Tuple(NDIndex):
             # assert self.args.count(True) <= 1
             n_newaxis = self.args.count(None)
             n_boolean = sum(i.ndim - 1 for i in args if
-                            isinstance(i, BooleanArray) and i not in [True, False])
+                            isinstance(i, BooleanArray) and not _is_boolean_scalar(i))
             if True in args or False in args:
                 n_boolean -= 1
             indexed_args = len(args) + n_boolean - n_newaxis - 1 # -1 for the
@@ -399,17 +399,17 @@ class Tuple(NDIndex):
         return type(self)(*newargs)
 
     def broadcast_arrays(self):
-        from .booleanarray import BooleanArray
+        from .booleanarray import BooleanArray, _is_boolean_scalar
         from .integerarray import IntegerArray
         from .integer import Integer
 
         args = self.args
-        boolean_scalars = [i for i in args if i in [True, False]]
+        boolean_scalars = [i for i in args if _is_boolean_scalar(i)]
         if len(boolean_scalars) > 1:
             _args = []
             seen_boolean_scalar = False
             for s in args:
-                if s in [True, False]:
+                if _is_boolean_scalar(s):
                     if seen_boolean_scalar:
                         continue
                     _args.append(BooleanArray(all(i == True for i in boolean_scalars)))
@@ -423,7 +423,7 @@ class Tuple(NDIndex):
         boolean_nonzero = {}
         arrays = []
         for s in args:
-            if s in [True, False]:
+            if _is_boolean_scalar(s):
                 continue
             elif isinstance(s, IntegerArray):
                 arrays.append(s.raw)
@@ -438,7 +438,7 @@ class Tuple(NDIndex):
         newargs = []
         for s in args:
             if isinstance(s, BooleanArray):
-                if s not in [True, False]:
+                if not _is_boolean_scalar(s):
                     newargs.extend([IntegerArray(broadcast_to(i, broadcast_shape))
                                     for i in boolean_nonzero[s]])
             elif isinstance(s, Integer):
@@ -457,7 +457,7 @@ class Tuple(NDIndex):
     def expand(self, shape):
         # The expand() docstring is on NDIndex.expand()
         from .array import ArrayIndex
-        from .booleanarray import BooleanArray
+        from .booleanarray import BooleanArray, _is_boolean_scalar
         from .integer import Integer
         from .integerarray import IntegerArray
         from .slice import Slice
@@ -469,12 +469,12 @@ class Tuple(NDIndex):
         # TODO: Use broadcast_arrays here. The challenge is that we still need
         # to do bounds checks on nonscalar integer arrays that get broadcast
         # away.
-        boolean_scalars = [i for i in args if i in [True, False]]
+        boolean_scalars = [i for i in args if _is_boolean_scalar(i)]
         if len(boolean_scalars) > 1:
             _args = []
             seen_boolean_scalar = False
             for s in args:
-                if s in [True, False]:
+                if _is_boolean_scalar(s):
                     if seen_boolean_scalar:
                         continue
                     _args.append(BooleanArray(all(i == True for i in boolean_scalars)))
@@ -487,7 +487,7 @@ class Tuple(NDIndex):
         # in the Tuple constructor, so this should not fail.
         arrays = []
         for i in args:
-            if i in [True, False]:
+            if _is_boolean_scalar(i):
                 continue
             elif isinstance(i, IntegerArray):
                 arrays.append(i.raw)
@@ -522,7 +522,7 @@ class Tuple(NDIndex):
         # assert args.count(True) <= 1
         n_newaxis = args.count(None)
         n_boolean = sum(i.ndim - 1 for i in args if
-                        isinstance(i, BooleanArray) and i not in [True, False])
+                        isinstance(i, BooleanArray) and not _is_boolean_scalar(i))
         if True in args or False in args:
             n_boolean -= 1
         indexed_args = len(args) + n_boolean - n_newaxis - 1 # -1 for the ellipsis
@@ -540,7 +540,7 @@ class Tuple(NDIndex):
             if isinstance(s, ArrayIndex):
                 if isinstance(s, BooleanArray):
                     begin_offset += s.ndim - 1
-                    if s not in [True, False]:
+                    if not _is_boolean_scalar(s):
                         s = s.reduce(shape, axis=axis)
                         startargs.extend([IntegerArray(broadcast_to(i,
                                                                   broadcast_shape))
@@ -560,7 +560,7 @@ class Tuple(NDIndex):
             if isinstance(s, ArrayIndex):
                 if isinstance(s, BooleanArray):
                     end_offset -= s.ndim - 1
-                    if s not in [True, False]:
+                    if not _is_boolean_scalar(s):
                         s = s.reduce(shape, axis=len(shape) - i + end_offset)
                         endargs.extend([IntegerArray(broadcast_to(i,
                                                                   broadcast_shape))
