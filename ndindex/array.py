@@ -51,6 +51,16 @@ class ArrayIndex(NDIndex):
             return (a,)
         raise TypeError(f"{self.__class__.__name__} must be created with an array with dtype {self.dtype.__name__}")
 
+    # These will allow array == ArrayIndex to give True or False instead of
+    # returning an array.
+    __array_ufunc__ = None
+    def __array_function__(self, func, types, args, kwargs):
+        return NotImplemented
+
+    def __array__(self):
+        raise TypeError(f"Cannot convert {self.__class__.__name__} to an array. Use .array instead.")
+
+
     @property
     def raw(self):
         return self.args[0]

@@ -17,17 +17,28 @@ from .helpers import ndindices, check_same, assert_equal
 def test_eq(idx):
     index = ndindex(idx)
     new = type(index)(*index.args)
-    assert (new == index) is True
-    try:
-        if isinstance(new.raw, np.ndarray):
-            raise ValueError
-        assert (new.raw == index.raw) is True
-        assert (index.raw == index) is True
-    except ValueError:
-        np.testing.assert_equal(new.raw, index.raw)
-        # Sadly, there is now way to bypass array.__eq__ from producing an
-        # array.
+
+    if isinstance(new.raw, np.ndarray):
+        # trying to get a single value out of comparing two arrays requires all sorts of special handling, just let numpy do it
+        assert np.array_equal(new.raw, index.raw)
+    else:
+        (new.raw == index.raw)
+
+    assert (new == index)
+    assert (new.raw == index)
+    assert (new == index.raw)
+    assert (index == new)
+    assert (index.raw == new)
+    assert (index == new.raw)
+
+    assert (index.raw == index)
     assert hash(new) == hash(index)
+    assert (index == index.raw)
+    assert not (index == 'a')
+    assert not ('a' == index)
+    assert (index != 'a')
+    assert ('a' != index)
+
     try:
         h = hash(idx)
     except TypeError:
@@ -42,11 +53,12 @@ def test_eq(idx):
     else:
         assert hash(index) == h
 
-    assert (index == index.raw) is True
-    assert (index == 'a') is False
-    assert ('a' == index) is False
-    assert (index != 'a') is True
-    assert ('a' != index) is True
+def test_eq_array_raises():
+    index = ndindex([1, 2, 3])
+    with raises(TypeError):
+        np.equal(index.raw, index)
+    with raises(TypeError):
+        np.array_equal(index.raw, index)
 
 def test_eq_explicit():
     assert Integer(0) != False

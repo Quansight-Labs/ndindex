@@ -22,6 +22,12 @@ def test_attributes():
     assert idx.shape == a.shape == (2, 2)
     assert idx.size == a.size == 4
 
+def test_cast_raises():
+    with raises(TypeError):
+        a = array([[0, 1], [1, 0]])
+        idx = IntegerArray(a)
+        assert array(idx) == idx
+
 def test_copy():
     idx = IntegerArray([1, 2])
     idx2 = IntegerArray(idx.raw)
