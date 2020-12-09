@@ -4,9 +4,6 @@ dist: xenial
 
 matrix:
   include:
-    - python: 3.6
-      env:
-        - TESTS=true
     - python: 3.7
       env:
         - TESTS=true
@@ -33,7 +30,7 @@ install:
   - conda info -a
   - conda create -n test-environment python=${PYTHON_VERSION:-$TRAVIS_PYTHON_VERSION} pyflakes pytest pytest-doctestplus sympy hypothesis doctr sphinx myst-parser=0.11.2 sphinx_rtd_theme pytest-cov pytest-flakes
   - source activate test-environment
-  - pip install git+https://github.com/numpy/numpy.git
+  - pip install --pre numpy>=1.20
 
 script:
   - set -e
