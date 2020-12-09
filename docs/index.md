@@ -75,7 +75,9 @@ their limitations:
 ndindex is still a work in progress. The following things are currently
 implemented:
 
-- {any}`Slice`, {any}`Integer`, {any}`ellipsis`, and {any}`Tuple`
+- {any}`Slice`, {any}`Integer`, {any}`ellipsis`, {any}`Tuple`, {any}`Newaxis`,
+  {any}`IntegerArray`, and {any}`BooleanArray` classes to represent any valid
+  index to a NumPy array.
 
 - Classes do not canonicalize by default (the constructor only does basic type
   checking). Objects can be put into canonical form by calling
@@ -99,12 +101,51 @@ implemented:
       >>> arange(10)[2:9:1]
       array([2, 3, 4, 5, 6, 7, 8])
 
+  `reduce()` simplifies all index types, but for [slice indices](Slice.reduce)
+  in particular, it always puts them into canonical form, so that
+  `s1.reduce()` and `s2.reduce()` will give the same resulting `Slice` if and
+  only if `s1` always slices the same elements as `s2`. If no shape is given,
+  `s.reduce()` returns a canonical slice that is equivalent to `s` for all
+  array shapes. This can be used to test slice equality without indexing an
+  array.
+
+      >>> Slice(2, 4, 3).reduce()
+      Slice(2, 3, 1)
+      >>> Slice(2, 5, 3).reduce()
+      Slice(2, 3, 1)
+
+      >>> Slice(-2, 5, 3).reduce(3)
+      Slice(1, 2, 1)
+      >>> Slice(-2, -1).reduce(3)
+      Slice(1, 2, 1)
+      >>> a = [0, 1, 2]
+      >>> a[-2:5:3]
+      [1]
+      >>> a[-2:-1]
+      [1]
+      >>> a[1:2:1]
+      [1]
+
 - Object arguments can be accessed with `idx.args`
 
       >>> Slice(1, 3).args
       (1, 3, None)
 
-- All ndindex objects are hashable and can be used as dictionary keys.
+- All ndindex objects are immutable/hashable and can be used as dictionary keys.
+
+- ndindex objects can be compared using `==`, even if they contain array
+  indices. Note that `==` does exact equality comparison. Use
+  [`idx1.reduce(shape) == idx2.reduce(shape)`](NDIndex.reduce) (see above) to
+  test if two indices index the same elements as each other (n.b. pure
+  canonicalization is currently only guaranteed for slice indices).
+
+      >>> from ndindex import Tuple
+      >>> from numpy import array
+      >>> # This would fail with ValueError for a Python tuple containing an array
+      >>> Tuple(array([1, 2]), 0) == Tuple(array([1, 2]), 0)
+      True
+      >>> Slice(0, 10).reduce(5) == Slice(0, 5).reduce(5)
+      True
 
 - A real index object can be accessed with [`idx.raw`](NDIndex.raw). Use this
   to use an ndindex index to index an array.
@@ -113,7 +154,8 @@ implemented:
       >>> arange(4)[s.raw]
       array([0, 1])
 
-- [`len()`](Slice.__len__) computes the maximum length of an index over a given axis.
+- [`len()`](Slice.__len__) computes the maximum length of a slice index (over
+  the first axis).
 
       >>> len(Slice(2, 10, 3))
       3
@@ -141,6 +183,12 @@ implemented:
       >>> Tuple(0, ..., Slice(0, 5)).newshape((10, 10, 10))
       (10, 5)
 
+- [`idx.broadcast_arrays()`](NDIndex.broadcast_arrays) broadcasts the array
+  indices in `idx`, and converts boolean arrays into equivalent integer arrays.
+
+      >>> Tuple(array([[True, False], [True, False]]), array([0, 1])).broadcast_arrays()
+      Tuple([0, 1], [0, 0], [0, 1])
+
 - [`i.as_subindex(j)`](NDIndex.as_subindex) produces an index `k` such that
   `a[j][k]` gives all the elements of `a[j]` that are also in `a[i]` (see the
   [documentation](NDIndex.as_subindex) for more information). This is useful
@@ -154,9 +202,6 @@ implemented:
       Slice(0, 60, 1)
 
 The following things are not yet implemented, but are planned.
-
-- `Newaxis`, `IntegerArray`, and `BooleanArray` types, so that all
-  types of indexing are support.
 
 - Composition: `i1[i2]` will create a new ndindex object `i3` (when possible)
   so that `a[i1][i2] == a[i3]`.

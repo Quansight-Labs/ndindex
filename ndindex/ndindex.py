@@ -462,7 +462,8 @@ class NDIndex:
 
     def broadcast_arrays(self):
         """
-        Broadcast all the array indices in self to a common shape.
+        Broadcast all the array indices in self to a common shape and convert
+        boolean array indices into integer array indices.
 
         The resulting index is equivalent in all contexts where the original
         index is allowed. However, it is possible for the original index to

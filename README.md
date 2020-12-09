@@ -28,13 +28,15 @@ are
 
 ## Examples
 
-**Canonicalize a slice**
+**Canonicalize a slice (over a given shape, or independent of array shape)**
 
 
 ```py
 >>> from ndindex import *
->>> Slice(None, 10).reduce()
-Slice(0, 10, 1)
+>>> Slice(-2, 10, 3).reduce()
+Slice(-2, 10, 2)
+>>> Slice(-2, 10, 3).reduce(5)
+Slice(3, 4, 1)
 ```
 
 **Compute the maximum length of a sliced axis**
