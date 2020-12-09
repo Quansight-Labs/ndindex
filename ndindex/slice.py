@@ -15,7 +15,8 @@ class Slice(NDIndex):
     """
     Represents a slice on an axis of an nd-array.
 
-    `Slice(x)` with one argument is equivalent to `Slice(None, x)`.
+    `Slice(x)` with one argument is equivalent to `Slice(None, x)`. `Slice(x,
+    y)` with two arguments is equivalent to `Slice(x, y, None)`.
 
     `start` and `stop` can be any integer, or `None`. `step` can be any
     nonzero integer or `None`.
@@ -25,7 +26,7 @@ class Slice(NDIndex):
     syntax where the item is omitted, for example, `Slice(None, None, k)` is
     the same as the syntax `::k`.
 
-    `Slice` always has three arguments, and does not make any distinction
+    `Slice.args` always has three arguments, and does not make any distinction
     between, for instance, `Slice(x, y)` and `Slice(x, y, None)`. This is
     because Python itself does not make the distinction between x:y and x:y:
     syntactically.
@@ -103,7 +104,7 @@ class Slice(NDIndex):
         """
         The step of the slice.
 
-        This will be a nonzero integer.
+        Note that this may be nonzero integer or None.
         """
         return self.args[2]
 
@@ -131,8 +132,9 @@ class Slice(NDIndex):
         ...
         ValueError: Cannot determine max length of slice
 
-        The :meth:`Slice.reduce` method returns a Slice that always has a
-        correct `len` which doesn't raise `ValueError`.
+        The :meth:`Slice.reduce` method with a `shape` argument returns a
+        `Slice` that always has a correct `len` which doesn't raise
+        `ValueError`.
 
         >>> Slice(2, 4).reduce(3)
         Slice(2, 3, 1)
@@ -153,10 +155,7 @@ class Slice(NDIndex):
         start, stop, step = self.reduce().args
         error = ValueError("Cannot determine max length of slice")
         # We reuse the logic in range.__len__. However, it is only correct if
-        # the slice doesn't use wrap around (see the comment in reduce()
-        # below).
-        if start is stop is None:
-            raise error
+        # start and stop are nonnegative.
         if step > 0:
             # start cannot be None
             if stop is None:
@@ -175,16 +174,7 @@ class Slice(NDIndex):
                 # a[n:-m]. The max length depends on the size of the array.
                 raise error
         else:
-            if start is None:
-                if stop is None or stop >= 0:
-                    # a[:m:-1] or a[::-1]. The max length depends on the size of
-                    # the array
-                    raise error
-                else:
-                    # a[:-m:-1]
-                    start, stop = 0, -stop - 1
-                    step = -step
-            elif stop is None:
+            if stop is None:
                 if start >= 0:
                     # a[n::-1] (start != None by above). Same as range(n, -1, -1)
                     stop = -1
@@ -210,17 +200,36 @@ class Slice(NDIndex):
         canonicalized for an array of the given shape, or for any shape if
         `shape` is `None` (the default).
 
-        - If `shape` is `None`, the Slice is canonicalized so that
+        `Slice.reduce` is a perfect canonicalization, meaning that two slices
+        are equal (for all array shapes if `shape=None` or for arrays of shape
+        `shape` otherwise) if and only if they `reduce` to the same slice
+        object. Note that ndindex objects do not simplify automatically, and
+        `==` only does exact equality comparison, so to test that two slices
+        are equal, use `slice1.reduce(shape) == slice2.reduce(shape)`.
 
-          - `start` and `stop` are not `None` when possible,
+        - If `shape` is `None`, the following properties hold after calling
+          `reduce()`:
+
+          - `start` is not `None`.
+
+          - `stop` is not `None`, when possible. The reduced `stop` can only
+            be None if the original `stop` is.
+
           - `step` is not `None`.
 
-          Note that `start` and `stop` may be `None`, even after
-          canonicalization with `reduce()` with no `shape`. This is because some
-          slices are impossible to represent without `None` without making
-          assumptions about the array shape. To get a slice where the `start`,
-          `stop`, and `step` are always integers, use `reduce(shape)` with an
-          explicit array shape.
+          - `step` is as close to 0 as possible.
+
+          - If `self` is always empty, the resulting slice will be `Slice(0,
+            0, 1)`. However, one should prefer the :any:`isempty` method to
+            test if a slice is always empty.
+
+          In particular, `stop` may be `None`, even after canonicalization
+          with `reduce()` with no `shape`. This is because some slices are
+          impossible to represent without `None` without making assumptions
+          about the array shape. For example, `Slice(0, None)` cannot be
+          equivalent to a slice with `stop != None` for all array shapes. To
+          get a slice where the `start`, `stop`, and `step` are always
+          integers, use `reduce(shape)` with an explicit array shape.
 
           Note that `Slice` objects that index a single element are not
           canonicalized to `Integer`, because integer indices always remove an
@@ -228,30 +237,56 @@ class Slice(NDIndex):
           `IndexError` except on arrays with shape equal to `()`.
 
           >>> from ndindex import Slice
-          >>> s = Slice(10)
-          >>> s
-          Slice(None, 10, None)
-          >>> s.reduce()
+          >>> Slice(10).reduce()
           Slice(0, 10, 1)
+          >>> Slice(1, 3, 3).reduce()
+          Slice(1, 2, 1)
 
-        - If an explicit shape is given, the resulting object is always a
-          `Slice` canonicalized so that
+        - If an explicit shape is given, the following properties are true
+          after calling `Slice.reduce(shape)`:
 
           - `start`, `stop`, and `step` are not `None`,
+
           - `start` is nonnegative.
+
+          - `stop` is nonnegative whenever possible. In particular, `stop` is
+            only negative when it has to be to represent the given slice,
+            i.e., a slice with negative `step` that indexes more than 1
+            element and indexes the first (index `0`) element (in this case,
+            it will be `-n - 1` where `n` is the size of the axis being
+            sliced).
+
+          - `stop` is as small as possible for positive `step` or large as
+            possible for negative `step`.
+
+          - `step` is as close to 0 as possible.
+
+          - If `self` is empty for the given shape, the resulting slice will
+            be `Slice(0, 0, 1)`. However, one should prefer the :any:`isempty`
+            method to test if a slice is always empty.
+
+          - If `self` indexes a single element, the resulting slice will be of
+            the form `Slice(i, i+1, 1)`. However, one should prefer using
+            `len(s.reduce(shape)) == 1` to test if a slice indexes exactly 1
+            element.
+
+          - :any:`len() <Slice.__len__>` gives the true size of the axis for a
+            sliced array of the given shape, and never raises `ValueError`.
 
           The `axis` argument can be used to specify an axis of the shape (by
           default, `axis=0`). For convenience, `shape` can be passed as an integer
           for a single dimension.
 
-          After running `Slice.reduce(shape)` with an explicit shape, `len()`
-          gives the true size of the axis for a sliced array of the given shape,
-          and never raises ValueError.
 
           >>> from ndindex import Slice
-          >>> s = Slice(1, 10)
-          >>> s.reduce((3,))
+          >>> Slice(1, 10).reduce(3)
           Slice(1, 3, 1)
+          >>> Slice(-1, 1, -2).reduce(4)
+          Slice(3, 4, 1)
+          >>> Slice(1, 10, 3).reduce((4, 5), axis=0)
+          Slice(1, 2, 1)
+          >>> Slice(1, 10, 3).reduce((4, 5), axis=1)
+          Slice(1, 5, 3)
 
           >>> s = Slice(2, None)
           >>> len(s)
@@ -281,26 +316,84 @@ class Slice(NDIndex):
 
         if step is None:
             step = 1
-        if start is None and step > 0:
-            start = 0
+        if start is None:
+            if step > 0:
+                start = 0
+            else: # step < 0
+                start = -1
 
         if start is not None and stop is not None:
-            r = range(start, stop, step)
-            # We can reuse some of the logic built-in to range(), but we have to
-            # be careful. range() only acts like a slice if the 0 <= start <= stop (or
-            # visa-versa for negative step). Otherwise, slices are different
-            # because of wrap-around behavior. For example, range(-3, 1)
-            # represents [-3, -2, -1, 0] whereas slice(-3, 1) represents the slice
-            # of elements from the third to last to the first, which is either an
-            # empty slice or a single element slice depending on the shape of the
-            # axis.
-            if start >= 0 and stop >= 0 and len(r) == 0:
-                start, stop, step = 0, 0, 1
-            # This is not correct because a slice keeps the axis whereas an
-            # integer index removes it.
-            # if len(r) == 1:
-            #     return Integer(r[0])
+            if start >= 0 and stop >= 0 or start < 0 and stop < 0:
+                if step > 0:
+                    if stop <= start:
+                        start, stop, step = 0, 0, 1
+                    elif start >= 0 and start + step >= stop:
+                        # Indexes 1 element. Start has to be >= 0 because a
+                        # negative start could be less than the size of the
+                        # axis, in which case it will clip and the single
+                        # element will be element 0. We can only do that
+                        # reduction if we know the shape.
 
+                        # Note that returning Integer here is wrong, because
+                        # slices keep the axis and integers remove it.
+                        stop, step = start + 1, 1
+                    elif start < 0 and start + step > stop:
+                        # The exception is this case where stop is already
+                        # start + 1.
+                        step = stop - start
+                    if start >= 0:
+                        stop -= (stop - start - 1) % step
+                else: # step < 0
+                    if stop >= start:
+                        start, stop, step = 0, 0, 1
+                    elif start < 0 and start + step <= stop:
+                        if start < -1:
+                            stop, step = start + 1, 1
+                        else: # start == -1
+                            stop, step = start - 1, -1
+                    elif stop == start - 1:
+                        stop, step = start + 1, 1
+                    elif start >= 0 and start + step <= stop:
+                        # Indexes 0 or 1 elements. We can't change stop
+                        # because start might clip to a smaller true start if
+                        # the axis is smaller than it, and increasing stop
+                        # would prevent it from indexing an element in that
+                        # case. The exception is the case right before this
+                        # one (stop == start - 1). In that case start cannot
+                        # clip past the stop (it always indexes the same one
+                        # element in the cases where it indexes anything at
+                        # all).
+                        step = stop - start
+                    if start < 0:
+                        stop -= (stop - start + 1) % step
+            elif start >= 0 and stop < 0 and step < 0 and (start < -step or
+                                                           -stop - 1 < -step):
+                if stop == -1:
+                    start, stop, step = 0, 0, 1
+                else:
+                    step = max(-start - 1, stop + 1)
+            elif start < 0 and stop == 0 and step > 0:
+                start, stop, step = 0, 0, 1
+            elif start < 0 and stop >= 0 and step >= min(-start, stop):
+                step = min(-start, stop)
+                if start == -1 or stop == 1:
+                    # Can only index 0 or 1 elements. We can either pick a
+                    # version with positive start and negative step, or
+                    # negative start and positive step. We prefer the former
+                    # as it matches what is done for reduce() with a shape
+                    # (start is always nonnegative).
+                    assert step == 1
+                    start, stop, step = stop - 1, start - 1, -1
+        elif start is not None and stop is None:
+            if start == -1 and step > 0:
+                start, stop, step = (-1, -2, -1)
+            elif start < 0 and step >= -start:
+                step = -start
+            elif step < 0:
+                if start == 0:
+                    start, stop, step = 0, 1, 1
+                elif 0 <= start < -step:
+                    step = -start - 1
         if shape is None:
             return type(self)(start, stop, step)
 
@@ -309,11 +402,15 @@ class Slice(NDIndex):
         shape = asshape(shape, axis=axis)
         size = shape[axis]
 
-        # try:
-        #     if len(self) == size:
-        #         return self.__class__(None).reduce(shape, axis=axis)
-        # except ValueError:
-        #     pass
+        if stop is None:
+            if step > 0:
+                stop = size
+            else:
+                stop = -size - 1
+
+        if stop < -size:
+            stop = -size - 1
+
         if size == 0:
             start, stop, step = 0, 0, 1
         elif step > 0:
@@ -322,21 +419,23 @@ class Slice(NDIndex):
                 start = size + start
             if start < 0:
                 start = 0
+            if start >= size:
+                start, stop, step = 0, 0, 1
 
-            if stop is None:
-                stop = size
-            elif stop < 0:
+            if stop < 0:
                 stop = size + stop
                 if stop < 0:
                     stop = 0
             else:
                 stop = min(stop, size)
-        else:
-            if start is None:
-                start = size - 1
-            if stop is None:
-                stop = -size - 1
+            stop -= (stop - start - 1) % step
 
+            if stop - start == 1:
+                # Indexes 1 element.
+                step = 1
+            elif stop - start <= 0:
+                start, stop, step = 0, 0, 1
+        else:
             if start < 0:
                 if start >= -size:
                     start = size + start
@@ -347,6 +446,24 @@ class Slice(NDIndex):
 
             if -size <= stop < 0:
                 stop += size
+
+            if stop >= 0:
+                if start - stop == 1:
+                    stop, step = start + 1, 1
+                elif start - stop <= 0:
+                    start, stop, step = 0, 0, 1
+                else:
+                    stop += (start - stop - 1) % -step
+
+            # start >= 0
+            if (stop < 0 and start - size - stop <= -step
+                or stop >= 0 and start - stop <= -step):
+                stop, step = start + 1, 1
+            if stop < 0 and start % step != 0:
+                # At this point, negative stop is only necessary to index the
+                # first element. If that element isn't actually indexed, we
+                # prefer a nonnegative stop. Otherwise, stop will be -size - 1.
+                stop = start % -step - 1
         return self.__class__(start, stop, step)
 
     def newshape(self, shape):
@@ -370,6 +487,7 @@ class Slice(NDIndex):
         from .booleanarray import BooleanArray
 
         index = ndindex(index)
+        index_orig = index
 
         s = self.reduce()
         index = index.reduce()
@@ -378,7 +496,10 @@ class Slice(NDIndex):
             return Tuple(self).as_subindex(index)
 
         if isinstance(index, Integer):
-            s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
+            if index == -1:
+                s = self.as_subindex(Slice(index.args[0], None))
+            else:
+                s = self.as_subindex(Slice(index.args[0], index.args[0] + 1))
             if s == Slice(0, 0, 1):
                 # There is no index that we can return here. The intersection
                 # of `self` and `index` is empty. Ideally we want to give an
@@ -394,7 +515,7 @@ class Slice(NDIndex):
                 #    Tuple(slice(0), slice(0)).as_subindex((0, 0)) would need
                 #    to return an index that replaces the first two
                 #    dimensions with length-0 dimensions.
-                raise ValueError(f"{self} and {index} do not intersect")
+                raise ValueError(f"{self} and {index_orig} do not intersect")
             assert len(s) == 1
             return Tuple()
 

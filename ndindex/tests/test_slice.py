@@ -8,6 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..slice import Slice
 from ..integer import Integer
 from ..ellipsis import ellipsis
+from ..ndindex import asshape
 from .helpers import check_same, slices, prod, shapes, iterslice, assert_equal
 
 def test_slice_args():
@@ -109,24 +110,45 @@ def test_slice_args_reduce_no_shape():
     assert S == Slice(0, 1, None).reduce() == Slice(0, 1, 1)
 
 def test_slice_reduce_no_shape_exhaustive():
-    for n in range(10):
-        a = arange(n)
-        for args in iterslice():
-            try:
-                S = Slice(*args)
-            except ValueError:
-                continue
+    slices = {}
+    A = [arange(n) for n in range(30)]
+    for args in iterslice():
+        try:
+            S = Slice(*args)
+        except ValueError:
+            continue
 
+        # Check the conditions stated by the Slice.reduce() docstring
+        reduced = S.reduce()
+        assert reduced.start != None
+        if S.start != None and S.start >= 0:
+            assert reduced.start >= 0
+        assert reduced.step != None
+        if S.step is not None:
+            assert abs(reduced.step) <= abs(S.step)
+        if reduced.stop is None:
+            assert S.stop is None
+        assert reduced.reduce() == reduced, S
+
+        B = []
+        for a in A:
             check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
+            B.append(tuple(a[reduced.raw]))
+        B = tuple(B)
+        # Test that Slice.reduce gives a canonical result, i.e., if any two
+        # slices always give the same sub-arrays, they reduce to the same thing
+        if B in slices:
+            assert slices[B] == reduced, f"{S} reduced to {reduced}, but should be equal to {slices[B]}"
+        else:
+            slices[B] = reduced
 
-            # Check the conditions stated by the Slice.reduce() docstring
-            reduced = S.reduce()
-            # TODO: Test that start and stop are not None when possible
-            assert reduced.step != None
 
-@given(slices(), shapes)
+@given(slices(), one_of(integers(0, 100), shapes))
 def test_slice_reduce_no_shape_hypothesis(s, shape):
-    a = arange(prod(shape)).reshape(shape)
+    if isinstance(shape, int):
+        a = arange(shape)
+    else:
+        a = arange(prod(shape)).reshape(shape)
     try:
         S = Slice(s)
     except ValueError: # pragma: no cover
@@ -139,11 +161,19 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
 
     # Check the conditions stated by the Slice.reduce() docstring
     reduced = S.reduce()
-    # TODO: Test that start and stop are not None when possible
+    assert reduced.start != None
+    if S.start != None and S.start >= 0:
+        assert reduced.start >= 0
     assert reduced.step != None
+    if S.step is not None:
+        assert abs(reduced.step) <= abs(S.step)
+    if reduced.stop is None:
+        assert S.stop is None
+    assert reduced.reduce() == reduced, S
 
 def test_slice_reduce_exhaustive():
-    for n in range(10):
+    for n in range(30):
+        slices = {}
         a = arange(n)
         for args in iterslice():
             try:
@@ -151,20 +181,55 @@ def test_slice_reduce_exhaustive():
             except ValueError:
                 continue
 
-            check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
+            reduced = S.reduce((n,))
 
             # Check the conditions stated by the Slice.reduce() docstring
             # TODO: Factor this out so we can also test it in the tuple reduce
             # tests.
-            reduced = S.reduce((n,))
+
+            # len() should not raise after calling reduce() with a shape
+            L = len(reduced)
+            # len() should be exact after calling reduce() with a shape
+            assert L == len(a[reduced.raw]), (S, n)
             assert reduced.start >= 0
             # We cannot require stop > 0 because if stop = None and step < 0, the
             # only equivalent stop that includes 0 is negative.
             assert reduced.stop != None
+            if S.step != None and S.step < 0:
+                if reduced.stop < 0:
+                    assert reduced.stop == -n - 1
+                    assert 0 in a[reduced.raw], (S, n)
+                    assert L > 1
+            else:
+                assert reduced.stop >= 0, (S, n)
             assert reduced.step != None
-            assert len(reduced) == len(a[reduced.raw]), (S, n)
+            if S.step != None:
+                assert abs(reduced.step) <= abs(S.step)
+            if S.stop != None and S.stop >= 0:
+                # Test that stop is as close to start as possible for the
+                # given step (the "as possible" is checked by uniqueness
+                # below).
+                if L not in [0, 1]:
+                    if reduced.step > 0:
+                        assert reduced.stop <= S.stop, (S, n)
+                    else:
+                        assert reduced.stop >= S.stop
+            if L == 1:
+                assert reduced == Slice(reduced.start, reduced.start+1, 1)
 
-@given(slices(), one_of(shapes, integers(0, 10)))
+            check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
+            B = tuple(a[reduced.raw])
+            # Test that Slice.reduce gives a canonical result, i.e., if any two
+# slices always give the same sub-arrays, they reduce to the same thing
+            if B in slices:
+                assert slices[B] == reduced, f"{S} reduced to {reduced}, but should be equal to {slices[B]} for shape {n}"
+            else:
+                slices[B] = reduced
+
+@example(slice(None, None, -1), 2)
+@example(slice(-10, 11, 3), 10)
+@example(slice(-1, 3, -3), 10)
+@given(slices(), one_of(integers(0, 100), shapes))
 def test_slice_reduce_hypothesis(s, shape):
     if isinstance(shape, int):
         a = arange(shape)
@@ -188,13 +253,39 @@ def test_slice_reduce_hypothesis(s, shape):
         # shape == ()
         return
 
+    shape = asshape(shape)
+    n = shape[0]
+
+    # len() should not raise after calling reduce() with a shape
+    L = len(reduced)
+    # len() should be exact after calling reduce() with a shape
+    assert L == len(a[reduced.raw]), (S, n)
     assert reduced.start >= 0
     # We cannot require stop > 0 because if stop = None and step < 0, the
     # only equivalent stop that includes 0 is negative.
     assert reduced.stop != None
+    if S.step != None and S.step < 0:
+        if reduced.stop < 0:
+            assert reduced.stop == -n - 1
+            if a.size != 0:
+                assert a[0] in a[reduced.raw], (S, n)
+            assert L > 1
+    else:
+        assert reduced.stop >= 0, (S, n)
     assert reduced.step != None
-    assert len(reduced) == len(a[reduced.raw]), (S, shape)
-
+    if S.step != None:
+        assert abs(reduced.step) <= abs(S.step)
+    if S.stop != None and S.stop >= 0:
+        # Test that stop is as close to start as possible for the
+        # given step (the "as possible" is checked by uniqueness
+        # in the exhaustive test).
+        if L not in [0, 1]:
+            if reduced.step > 0:
+                assert reduced.stop <= S.stop, (S, n)
+            else:
+                assert reduced.stop >= S.stop
+    if L == 1:
+        assert reduced == Slice(reduced.start, reduced.start+1, 1)
 
 def test_slice_newshape_exhaustive():
     def raw_func(a, idx):
