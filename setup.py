@@ -20,8 +20,11 @@ setuptools.setup(
         "sympy",
     ],
     tests_require=[
-        'pytest',
-        'hypothesis',
+        "pytest",
+        "pytest-cov",
+        "pytest-flakes",
+        "pytest-tornasync",
+        "hypothesis",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

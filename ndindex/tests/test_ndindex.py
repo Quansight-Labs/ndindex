@@ -1,17 +1,34 @@
+import ast
 import inspect
-
 import numpy as np
-
-from hypothesis import given, example, settings
-
+from hypothesis import example, given, settings
+from hypothesis.strategies import one_of
 from pytest import raises, warns
 
-from ..ndindex import ndindex, asshape
+from ..ndindex import ndindex, parse_index, asshape
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, assert_equal
+from .helpers import ndindices, check_same, assert_equal, ellipses, ints, slices, tuples, _doesnt_raise
+
+Tuples = tuples(one_of(
+    ellipses(),
+    ints(),
+    slices(),
+)).filter(_doesnt_raise)
+
+ndindexStrs = one_of(
+    ellipses(),
+    ints(),
+    slices(),
+    Tuples,
+).map(lambda x: f'{x}')
+
+class _Dummy:
+    def __getitem__(self, x):
+        return x
+_dummy = _Dummy()
 
 @given(ndindices)
 def test_eq(idx):
@@ -102,6 +119,63 @@ def test_ndindex_invalid():
 
 def test_ndindex_ellipsis():
     raises(IndexError, lambda: ndindex(ellipsis))
+
+
+@example('3')
+@example('-3')
+@example('...')
+@example('Ellipsis')
+@example('+3')
+@example('3:4')
+@example('3:-4')
+@example('3, 5, 14, 1')
+@example('3, -5, 14, -1')
+@example('3:15, 5, 14:99, 1')
+@example('3:15, -5, 14:-99, 1')
+@example(':15, -5, 14:-99:3, 1')
+@example('3:15, -5, [1,2,3], :')
+@example('slice(None)')
+@example('slice(None, None)')
+@example('slice(None, None, None)')
+@example('slice(14)')
+@example('slice(12, 14)')
+@example('slice(12, 72, 14)')
+@example('slice(-12, -72, 14)')
+@example('3:15, -5, slice(-12, -72, 14), Ellipsis')
+@example('..., 3:15, -5, slice(-12, -72, 14)')
+@given(ndindexStrs)
+def test_parse_index_hypothesis(ixStr):
+    assert eval(f'_dummy[{ixStr}]') == parse_index(ixStr)
+
+def test_parse_index_malformed_raise():
+    # we don't allow the bitwise not unary op
+    with raises(ValueError):
+        ixStr = '~3'
+        parse_index(ixStr)
+
+def test_parse_index_nested_tuple_raise():
+    # we don't allow tuples within tuple indices
+    with raises(ValueError):
+        # this will parse as either ast.Index or ast.Slice (depending on cpy version) containing an ast.Tuple
+        ixStr = '..., -5, slice(12, -14), (1,2,3)'
+        parse_index(ixStr)
+
+    with raises(ValueError):
+        # in cpy37, this will parse as ast.ExtSlice containing an ast.Tuple
+        ixStr = '3:15, -5, :, (1,2,3)'
+        parse_index(ixStr)
+
+def test_parse_index_ensure_coverage():
+    # ensure full coverage, regarless of cpy version and accompanying changes to the ast grammar
+    for node in (
+        ast.Constant(7),
+        ast.Num(7),
+        ast.Index(ast.Constant(7)),
+    ):
+        assert parse_index(node) == 7
+
+    assert parse_index(ast.ExtSlice((ast.Constant(7), ast.Constant(7), ast.Constant(7)))) == (7, 7, 7)
+
 
 def test_signature():
     sig = inspect.signature(Integer)
