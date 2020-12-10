@@ -65,49 +65,33 @@ class classproperty(object):
     def __get__(self, obj, owner):
         return self.f(owner)
 
-class NDIndex:
+class ImmutableObject:
     """
-    Represents an index into an nd-array (i.e., a numpy array).
+    Base class for immutable objects.
 
-    This is a base class for all ndindex types. All types that subclass this
-    class should redefine the following methods
+    Subclasses of this class are immutable objects. They all have the `.args`
+    attribute, which gives the full necessary data to recreate the class, via,
 
-    - `_typecheck(self, *args)` should do type checking and basic type
-      canonicalization, and either return a tuple of the new arguments for the
-      class or raise an exception. Type checking means it should raise
-      exceptions for input types that are never semantically meaningful for
-      numpy arrays, for example, floating point indices, using the same
-      exceptions as numpy where possible. Basic type canonicalization means,
-      for instance, converting integers into `int` using `operator.index()`.
-      All other canonicalization should be done in the `reduce()` method. The
-      `NDIndex` base constructor will automatically set `.args` to the
-      arguments returned by this method. Classes should always be able to
-      recreate themselves with `.args`, i.e., `type(idx)(*idx.args) == idx`
-      should always hold.
+    .. code:: python
 
-    - `raw` (a **@property** method) should return the raw index that can be
-      passed as an index to a numpy array.
+       type(obj)(*obj.args) == obj
 
-    In addition other methods should be defined as necessary.
+    Note: subclasses that specifically represent indices should subclass
+    :class:`NDIndex` instead.
 
-    - `__len__` should return the largest possible shape of an axis sliced by
-      the index (for single-axis indices), or raise ValueError if no such
-      maximum exists.
-
-    - `reduce(shape=None)` should reduce an index to an equivalent form for
-      arrays of shape `shape`, or raise an `IndexError`. The error messages
-      should match numpy as much as possible. The class of the equivalent
-      index may be different. If `shape` is `None`, it should return a
-      canonical form that is equivalent for all array shapes (assuming no
-      IndexErrors).
-
-    The methods `__init__` and `__eq__` should *not* be overridden. Equality
-    (and hashability) on `NDIndex` subclasses is determined by equality of
-    types and `.args`. Equivalent indices should not attempt to redefine
-    equality. Rather they should define canonicalization via `reduce()`.
-    `__hash__` is defined so that the hash matches the hash of `.raw`. If
-    `.raw` is unhashable, `__hash__` should be overridden to use
-    `hash(self.args)`.
+    All classes that subclass `ImmutableObject` should define the `_typecheck`
+    method. `_typecheck(self, *args)` should do type checking and basic type
+    canonicalization, and either return a tuple of the new arguments for the
+    class or raise an exception. Type checking means it should raise
+    exceptions for input types that are never semantically meaningful for
+    numpy arrays, for example, floating point indices, using the same
+    exceptions as numpy where possible. Basic type canonicalization means, for
+    instance, converting integers into `int` using `operator.index()`. All
+    other canonicalization should be done in the `reduce()` method. The
+    `ImmutableObject` base constructor will automatically set `.args` to the
+    arguments returned by this method. Classes should always be able to
+    recreate themselves with `.args`, i.e., `type(obj)(*obj.args) == obj`
+    should always hold.
 
     """
     def __init__(self, *args, **kwargs):
@@ -184,12 +168,46 @@ class NDIndex:
         return test_equal(self, other)
 
     def __hash__(self):
-        # Make the hash match the raw hash when the raw type is hashable.
-        # Note: subclasses where .raw is not hashable should define __hash__
-        # as hash(self.args)
-        return hash(self.raw)
+        # Note: subclasses where .args is not hashable should redefine
+        # __hash__
+        return hash(self.args)
 
-    # TODO: Make NDIndex an abstract base class
+class NDIndex(ImmutableObject):
+    """
+    Represents an index into an nd-array (i.e., a numpy array).
+
+    This is a base class for all ndindex types. All types that subclass this
+    class should redefine the following methods
+
+    - `_typecheck(self, *args)`. See the docstring of
+      :class:`ImmutableObject`.
+
+    - `raw` (a **@property** method) should return the raw index that can be
+      passed as an index to a numpy array.
+
+    In addition other methods should be defined as necessary.
+
+    - `__len__` should return the largest possible shape of an axis sliced by
+      the index (for single-axis indices), or raise ValueError if no such
+      maximum exists.
+
+    - `reduce(shape=None)` should reduce an index to an equivalent form for
+      arrays of shape `shape`, or raise an `IndexError`. The error messages
+      should match numpy as much as possible. The class of the equivalent
+      index may be different. If `shape` is `None`, it should return a
+      canonical form that is equivalent for all array shapes (assuming no
+      IndexErrors).
+
+    The methods `__init__` and `__eq__` should *not* be overridden. Equality
+    (and hashability) on `NDIndex` subclasses is determined by equality of
+    types and `.args`. Equivalent indices should not attempt to redefine
+    equality. Rather they should define canonicalization via `reduce()`.
+    `__hash__` is defined so that the hash matches the hash of `.raw`. If
+    `.raw` is unhashable, `__hash__` should be overridden to use
+    `hash(self.args)`.
+
+    """
+    # TODO: Make NDIndex and ImmutableObject abstract base classes
     @property
     def raw(self):
         """
@@ -212,6 +230,12 @@ class NDIndex:
 
         """
         raise NotImplementedError
+
+    def __hash__(self):
+        # Make the hash match the raw hash when the raw type is hashable.
+        # Note: subclasses where .raw is not hashable should define __hash__
+        # as hash(self.args)
+        return hash(self.raw)
 
     def reduce(self, shape=None):
         """
