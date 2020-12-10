@@ -6,12 +6,13 @@ from hypothesis import given, example, settings
 
 from pytest import raises, warns
 
-from ..ndindex import ndindex, asshape
+from ..ndindex import ndindex, asshape, isindex
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import ndindices, check_same, assert_equal
+
 
 @given(ndindices)
 def test_eq(idx):
@@ -100,7 +101,18 @@ def test_ndindex_invalid():
         raises(IndexError, lambda: ndindex([1, []]))
     assert not r
 
+@given(ndindices)
+def test_isindex(idx):
+    assert isindex(ndindex(idx)) is True
+    assert isindex(idx, exclude=(type(idx),)) is False
+    assert isindex(idx, exclude=(type(ndindex(idx)),)) is False
+    assert isindex(ellipsis) is False
+    with warns(None) as r: # Make sure no warnings are emitted from ndindex()
+        assert isindex([1, []]) is False
+    assert not r
+
 def test_ndindex_ellipsis():
+    assert isindex(Ellipsis) is True
     raises(IndexError, lambda: ndindex(ellipsis))
 
 def test_signature():

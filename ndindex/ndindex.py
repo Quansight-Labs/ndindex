@@ -3,6 +3,7 @@ import numbers
 
 from numpy import ndarray, bool_, newaxis
 
+
 def ndindex(obj):
     """
     Convert an object into an ndindex type
@@ -51,6 +52,7 @@ def ndindex(obj):
 
     if obj == ellipsis:
         raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
+
     if obj is Ellipsis:
         return ellipsis()
 
@@ -59,11 +61,43 @@ def ndindex(obj):
 
     raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
+
+def isindex(obj, exclude=None):
+    """
+    Return True if object is an index type, including built-in objects that
+    can be used as indices.
+
+    `exclude` should be a tuple of index types.
+
+    >>> from ndindex import isindex, Slice, Tuple, Integer
+    >>> isindex(Slice(0,2))
+    True
+    >>> isindex((1,2), exclude=(tuple,))
+    False
+    >>> isindex(Slice(0,2), exclude=(Tuple, Integer))
+    True
+    >>> isindex([1,2])
+    False
+    """
+
+    try:
+        idx = ndindex(obj)
+    except IndexError:
+        return False
+
+    if exclude and ((type(obj) in exclude) or (type(idx) in exclude)):
+        return False
+
+    return True
+
+
 class classproperty(object):
     def __init__(self, f):
         self.f = f
+
     def __get__(self, obj, owner):
         return self.f(owner)
+
 
 class NDIndex:
     """
@@ -112,7 +146,8 @@ class NDIndex:
     """
     def __init__(self, *args, **kwargs):
         """
-        This method should be called by subclasses (via super()) after type-checking
+        This method should be called by subclasses (via super()) after
+        type-checking
         """
         args = self._typecheck(*args, **kwargs)
         self.args = args
@@ -206,7 +241,8 @@ class NDIndex:
         >>> a[s]
         Traceback (most recent call last):
         ...
-        IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+        IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis
+        (`None`) and integer or boolean arrays are valid indices
         >>> a[s.raw]
         array([2, 3])
 
@@ -215,7 +251,8 @@ class NDIndex:
 
     def reduce(self, shape=None):
         """
-        Simplify an index given that it will be applied to an array of a given shape.
+        Simplify an index given that it will be applied to an array of a given
+        shape.
 
         If `shape` is None (the default), the index will be canonicalized as
         much as possible while still staying equivalent for all array shapes
