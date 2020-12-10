@@ -1,9 +1,9 @@
 from collections.abc import Sequence
 from itertools import product
 
-from .ndindex import ImmutableObject, operator_index, asshape
+from .ndindex import ImmutableObject, operator_index, asshape, ndindex
 from .tuple import Tuple
-from .Slice import Slice
+from .slice import Slice
 from .subindex_helpers import ceiling
 
 class ChunkSize(ImmutableObject, Sequence):
@@ -95,3 +95,42 @@ class ChunkSize(ImmutableObject, Sequence):
             # c = (0, 0, 0), (0, 0, 1), ...
             yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
                           for n, chunk_size, i in zip(shape, self, c)])
+
+
+
+    def as_subchunks(self, idx, shape):
+        """
+        Split an index `idx` on an array of shape `shape` into subchunk indices.
+
+        Yields tuples `(c, index)`, where `c` is an index for the chunk that
+        should be sliced, and `index` is an index into that chunk giving the
+        elements of `idx` that are included in it (`c` and `index` are both
+        ndindex indices).
+
+        That is to say, for each `(c, index)` pair yielded, `a[c][index]` will
+        give those elements of `a[idx]` that are part of the `c` chunk.
+
+        Note that this only yields those indices that are nonempty.
+
+        >>> from ndindex.chunking import ChunkSize
+        >>> idx = (slice(5, 15), 0)
+        >>> shape = (20, 20)
+        >>> chunk_size = ChunkSize((10, 10))
+        >>> for c, index in chunk_size.as_subchunks(idx, shape):
+        ...     print(c)
+        ...     print('    ', index)
+        Tuple(slice(0, 10, 1), slice(0, 10, 1))
+            Tuple(slice(5, 10, 1), 0)
+        Tuple(slice(10, 20, 1), slice(0, 10, 1))
+            Tuple(slice(0, 5, 1), 0)
+
+        """
+        idx = ndindex(idx)
+        for c in self.indices(shape):
+            try:
+                index = idx.as_subindex(c)
+            except ValueError:
+                continue
+
+            if not index.isempty(self):
+                yield (c, index)
