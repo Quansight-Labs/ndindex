@@ -1,0 +1,97 @@
+from collections.abc import Sequence
+from itertools import product
+
+from .ndindex import ImmutableObject, operator_index, asshape
+from .tuple import Tuple
+from .Slice import Slice
+from .subindex_helpers import ceiling
+
+class ChunkSize(ImmutableObject, Sequence):
+    """
+    Represents a chunk size.
+
+    A chunk size is a tuple of length n where each element is either a
+    positive integer or None. It represents a chunking of an array with n
+    dimensions, where each corresponding dimension is chunked by the
+    corresponding chunk size, or not chunked for None.
+
+    For example, given a 3 dimensional chunk size of (20, 20, None) and an
+    array of shape (40, 30, 10), the array would be split into four chunks,
+    corresponding to the indices `0:20,0:20,:`, `0:20,20:30,:`,
+    `20:40,0:20,:`, and `20:40,20:30,:`. Note that the size of a chunk may be
+    less than the total chunk size if the array shape is not a multiple of the
+    chunk size in a given dimension.
+
+    """
+    def _typecheck(self, chunk_size):
+        # TODO: Also accept ChunkSize(1, 2, 3)?
+        if isinstance(chunk_size, Tuple):
+            raise TypeError("Tuple is not a valid input to ChunkSize. Use tuple instead.")
+        args = []
+        for i in chunk_size:
+            if i is None:
+                args.append(i)
+            else:
+                try:
+                    i = operator_index(i)
+                except TypeError:
+                    raise TypeError("Chunks must be positive integers or None")
+                if i <= 0:
+                    raise ValueError("Chunks must be positive integers")
+                args.append(i)
+        return (tuple(args),)
+
+    # Methods for collections.abc.Sequence to make ChunkSize act like a tuple
+    def __getitem__(self, *args):
+        return self.args[0].__getitem__(*args)
+
+    def __len__(self):
+        return len(self.args[0])
+
+    def num_chunks(self, shape):
+        """
+        Give the number of chunks for the given shape.
+
+        This is the same as `len(self.indices(shape))`, but much faster.
+        """
+
+    def indices(self, shape):
+        """
+        Yield a set of ndindex indices for the chunks on an array of shape `shape`.
+
+        If the shape is not a multiple of the chunk size, some chunks will be
+        truncated, so that `len(idx.args[i]) <ndindex.Slice.__len__>` can be
+        used to get the size of an indexed axis.
+
+        For example, if `a` has shape `(10, 19)` and is chunked into chunks
+        of shape `(5, 5)`:
+
+        >>> from ndindex.chunking import ChunkSize
+        >>> chunk_size = ChunkSize((5, 5))
+        >>> for idx in chunk_size.indices((10, 19))
+        ...     print(idx)
+        Tuple(slice(0, 5, 1), slice(0, 5, 1))
+        Tuple(slice(0, 5, 1), slice(5, 10, 1))
+        Tuple(slice(0, 5, 1), slice(10, 15, 1))
+        Tuple(slice(0, 5, 1), slice(15, 19, 1))
+        Tuple(slice(5, 10, 1), slice(0, 5, 1))
+        Tuple(slice(5, 10, 1), slice(5, 10, 1))
+        Tuple(slice(5, 10, 1), slice(10, 15, 1))
+        Tuple(slice(5, 10, 1), slice(15, 19, 1))
+
+        """
+        shape = asshape(shape)
+
+        if len(shape) != len(self):
+            raise ValueError("chunks dimensions must equal the array dimensions")
+        if len(shape) == 0:
+            # chunk_size = 1
+            yield Tuple(Slice(0))
+
+        d = [ceiling(i, c) for i, c in zip(shape, self)]
+        if 0 in d:
+            yield Tuple(*[Slice(0, bool(i)*chunk_size, 1) for i, chunk_size in zip(d, self)]).expand(shape)
+        for c in product(*[range(i) for i in d]):
+            # c = (0, 0, 0), (0, 0, 1), ...
+            yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
+                          for n, chunk_size, i in zip(shape, self, c)])
