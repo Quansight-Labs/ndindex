@@ -36,7 +36,8 @@ class ChunkSize(ImmutableObject, Sequence):
         args = []
         for i in chunk_size:
             if i is None:
-                args.append(i)
+                raise NotImplementedError("None in chunks is not supported yet")
+                # args.append(i)
             else:
                 try:
                     i = operator_index(i)
