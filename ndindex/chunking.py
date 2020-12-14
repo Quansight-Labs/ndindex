@@ -1,10 +1,16 @@
 from collections.abc import Sequence
 from itertools import product
+from functools import reduce
+from operator import mul
 
 from .ndindex import ImmutableObject, operator_index, asshape, ndindex
 from .tuple import Tuple
 from .slice import Slice
 from .subindex_helpers import ceiling
+
+# np.prod has overflow and math.prod is Python 3.8+ only
+def prod(seq):
+    return reduce(mul, seq, 1)
 
 class ChunkSize(ImmutableObject, Sequence):
     """
@@ -54,6 +60,11 @@ class ChunkSize(ImmutableObject, Sequence):
 
         This is the same as `len(self.indices(shape))`, but much faster.
         """
+        shape = asshape(shape)
+        d = [ceiling(i, c) for i, c in zip(shape, self)]
+        if 0 in d:
+            return 1
+        return prod(d)
 
     def indices(self, shape):
         """
