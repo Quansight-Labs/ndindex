@@ -191,3 +191,12 @@ def iterslice(start_range=(-10, 10),
         for stop in chain(range(*stop_range), [None]):
             for step in chain(range(*step_range), [None]):
                 yield (start, stop, step)
+
+
+chunk_shapes = shared(shapes)
+
+@composite
+def chunk_sizes(draw, shapes=chunk_shapes):
+    shape = draw(shapes)
+    return draw(tuples(integers(1, 10), min_size=len(shape),
+                       max_size=len(shape)).filter(lambda shape: prod(shape) < 10000))
