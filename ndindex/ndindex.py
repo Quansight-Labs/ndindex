@@ -142,10 +142,10 @@ class ImmutableObject:
         return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
 
     def __eq__(self, other):
-        if not isinstance(other, NDIndex):
+        if not isinstance(other, ImmutableObject):
             try:
-                other = ndindex(other)
-            except IndexError:
+                other = self.__class__(other)
+            except TypeError:
                 return False
 
         def test_equal(a, b):
@@ -160,7 +160,7 @@ class ImmutableObject:
             if isinstance(a, tuple):
                 return len(a) == len(b) and all(test_equal(i, j) for i, j in
                                                 zip(a, b))
-            if isinstance(a, NDIndex):
+            if isinstance(a, ImmutableObject):
                 return test_equal(a.args, b.args)
 
             return a == b
@@ -230,6 +230,15 @@ class NDIndex(ImmutableObject):
 
         """
         raise NotImplementedError
+
+    def __eq__(self, other):
+        if not isinstance(other, NDIndex):
+            try:
+                other = ndindex(other)
+                return self == other
+            except IndexError:
+                return False
+        return super().__eq__(other)
 
     def __hash__(self):
         # Make the hash match the raw hash when the raw type is hashable.
