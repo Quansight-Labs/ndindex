@@ -1,4 +1,4 @@
-from numpy import arange
+from numpy import arange, isin, sort, concatenate
 
 from hypothesis import given, assume
 from hypothesis.strategies import one_of
@@ -9,7 +9,7 @@ from ..chunking import ChunkSize
 from ..tuple import Tuple
 from ..ndindex import ndindex
 
-from .helpers import chunk_sizes, chunk_shapes, prod, ints, slices
+from .helpers import assert_equal, chunk_sizes, chunk_shapes, prod, ints, slices, ndindices
 
 def test_ChunkSize_constructor():
     raises(TypeError, lambda: ChunkSize(Tuple(1, 2, 3)))
@@ -76,6 +76,11 @@ def test_indices_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).indices((1, 2, 3))))
 
 @given(chunk_sizes(), chunk_shapes)
+def test_num_chunks(chunk_size, shape):
+    chunk_size = ChunkSize(chunk_size)
+    assert chunk_size.num_chunks(shape) == len(list(chunk_size.indices(shape)))
+
+@given(chunk_sizes(), chunk_shapes)
 def test_indices(chunk_size, shape):
     chunk_size = ChunkSize(chunk_size)
     indices = chunk_size.indices(shape)
@@ -96,7 +101,36 @@ def test_indices(chunk_size, shape):
     elements = [i for x in subarrays for i in x.flatten()]
     assert sorted(elements) == list(range(size))
 
-@given(chunk_sizes(), chunk_shapes)
-def test_num_chunks(chunk_size, shape):
+@given(chunk_sizes(), chunk_shapes, ndindices)
+def test_as_subchunks(chunk_size, shape, idx):
     chunk_size = ChunkSize(chunk_size)
-    assert chunk_size.num_chunks(shape) == len(list(chunk_size.indices(shape)))
+    size = prod(shape)
+    a = arange(size).reshape(shape)
+    idx = ndindex(idx)
+
+    try:
+        idx.reduce(shape)
+    except IndexError:
+        assume(False)
+
+    full_idx = a[idx.raw]
+
+    try:
+        subarrays = []
+        for c, index in chunk_size.as_subchunks(idx, shape):
+            chunk = a[c.raw]
+            subchunk = chunk[index.raw]
+            # Not empty
+            assert subchunk.size > 0
+            # Indexes the right elements (c.f. test_as_subindex)
+            assert_equal(subchunk.flatten(), full_idx[isin(full_idx, chunk)])
+            subarrays.append(subchunk)
+    except NotImplementedError:
+        return
+
+    # Picks all elements
+    if subarrays:
+        elements = concatenate([x.flatten() for x in subarrays])
+    else:
+        elements = arange(0)
+    assert_equal(sort(elements), full_idx.flatten())
