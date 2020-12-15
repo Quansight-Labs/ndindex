@@ -1,10 +1,79 @@
 from numpy import arange
 
-from hypothesis import given
+from hypothesis import given, assume
+from hypothesis.strategies import one_of
+
+from pytest import raises
 
 from ..chunking import ChunkSize
+from ..tuple import Tuple
+from ..ndindex import ndindex
 
-from .helpers import chunk_sizes, chunk_shapes, prod
+from .helpers import chunk_sizes, chunk_shapes, prod, ints, slices
+
+def test_ChunkSize_constructor():
+    raises(TypeError, lambda: ChunkSize(Tuple(1, 2, 3)))
+    raises(TypeError, lambda: ChunkSize(1, 2, 3))
+    raises(TypeError, lambda: ChunkSize(1))
+    raises(ValueError, lambda: ChunkSize((-1, 2, 3)))
+    raises(ValueError, lambda: ChunkSize((0, 2, 3)))
+    raises(NotImplementedError, lambda: ChunkSize((None, 2, 3)))
+
+@given(chunk_sizes())
+def test_ChunkSize_eq(chunk_size_tuple):
+    chunk_size = ChunkSize(chunk_size_tuple)
+    new = type(chunk_size)(*chunk_size.args)
+
+    assert chunk_size == chunk_size_tuple
+    assert chunk_size_tuple == chunk_size
+    assert new == chunk_size
+    assert chunk_size == new
+    assert new == chunk_size_tuple
+    assert chunk_size_tuple == new
+
+    assert hash(new) == hash(chunk_size)
+    assert not (chunk_size == 'a')
+    assert not ('a' == chunk_size)
+    assert (chunk_size != 'a')
+    assert ('a' != chunk_size)
+
+    h = hash(chunk_size_tuple)
+    assert hash(chunk_size) == h
+
+@given(chunk_sizes(), one_of(ints(), slices()))
+def test_ChunkSize_args(chunk_size_tuple, idx):
+    chunk_size = ChunkSize(chunk_size_tuple)
+    assert chunk_size.args == (chunk_size_tuple,)
+
+    try:
+        ndindex(idx)
+    except ValueError:
+        # Filter out invalid slices (TODO: do this in the strategy)
+        assume(False)
+
+    # Should index the same way
+    # TODO: Refactor check_same() so we can use that
+    try:
+        chunk_size_idx = chunk_size[idx]
+    except IndexError:
+        try:
+            tuple_idx = chunk_size_tuple[idx]
+        except IndexError:
+            pass
+        else:
+            assert False, "ChunkSize raised but tuple did not"
+    else:
+        tuple_idx = chunk_size_tuple[idx]
+        assert chunk_size_idx == tuple_idx
+
+@given(chunk_sizes())
+def test_ChunkSize_tuple(chunk_size_tuple):
+    # Test that ChunkSize behaves like a tuple
+    chunk_size = ChunkSize(chunk_size_tuple)
+    assert tuple(chunk_size) == chunk_size_tuple
+
+def test_indices_error():
+    raises(ValueError, lambda: next(ChunkSize((1, 2)).indices((1, 2, 3))))
 
 @given(chunk_sizes(), chunk_shapes)
 def test_indices(chunk_size, shape):
