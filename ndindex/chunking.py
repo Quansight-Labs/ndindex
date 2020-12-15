@@ -134,6 +134,9 @@ class ChunkSize(ImmutableObject, Sequence):
             Tuple(slice(0, 5, 1), 0)
 
         """
+        shape = asshape(shape)
+        if 0 in shape:
+            return
         idx = ndindex(idx)
         for c in self.indices(shape):
             try:
