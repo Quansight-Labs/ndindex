@@ -61,7 +61,7 @@ def test_ChunkSize_args(chunk_size_tuple, idx):
         except IndexError:
             pass
         else:
-            assert False, "ChunkSize raised but tuple did not"
+            raise AssertionError("ChunkSize raised but tuple did not")
     else:
         tuple_idx = chunk_size_tuple[idx]
         assert chunk_size_idx == tuple_idx

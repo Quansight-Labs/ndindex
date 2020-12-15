@@ -167,7 +167,7 @@ class ImmutableObject:
 
         return test_equal(self, other)
 
-    def __hash__(self):
+    def __hash__(self): # pragma: no cover
         # Note: subclasses where .args is not hashable should redefine
         # __hash__
         return hash(self.args)
