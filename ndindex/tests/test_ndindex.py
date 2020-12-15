@@ -22,7 +22,7 @@ def test_eq(idx):
         # trying to get a single value out of comparing two arrays requires all sorts of special handling, just let numpy do it
         assert np.array_equal(new.raw, index.raw)
     else:
-        (new.raw == index.raw)
+        assert new.raw == index.raw
 
     assert (new == index)
     assert (new.raw == index)
