@@ -48,6 +48,9 @@ class ChunkSize(ImmutableObject, Sequence):
                 args.append(i)
         return (tuple(args),)
 
+    def __hash__(self):
+        return hash(self.args[0])
+
     # Methods for collections.abc.Sequence to make ChunkSize act like a tuple
     def __getitem__(self, *args):
         return self.args[0].__getitem__(*args)
