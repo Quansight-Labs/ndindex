@@ -26,7 +26,7 @@ def prod(seq):
 
 nonnegative_ints = integers(0, 10)
 negative_ints = integers(-10, -1)
-ints = lambda: one_of(negative_ints, nonnegative_ints)
+ints = lambda: one_of(nonnegative_ints, negative_ints)
 
 def slices(start=one_of(none(), ints()), stop=one_of(none(), ints()),
            step=one_of(none(), ints())):
