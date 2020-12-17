@@ -102,10 +102,10 @@ class ChunkSize(ImmutableObject, Sequence):
         d = [ceiling(i, c) for i, c in zip(shape, self)]
         if 0 in d:
             yield Tuple(*[Slice(0, bool(i)*chunk_size, 1) for i, chunk_size in zip(d, self)]).expand(shape)
-        for c in product(*[range(i) for i in d]):
-            # c = (0, 0, 0), (0, 0, 1), ...
+        for p in product(*[range(i) for i in d]):
+            # p = (0, 0, 0), (0, 0, 1), ...
             yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
-                          for n, chunk_size, i in zip(shape, self, c)])
+                          for n, chunk_size, i in zip(shape, self, p)])
 
     def as_subchunks(self, idx, shape):
         """
