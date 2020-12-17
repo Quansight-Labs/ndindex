@@ -6,6 +6,7 @@ from operator import mul
 from .ndindex import ImmutableObject, operator_index, asshape, ndindex
 from .tuple import Tuple
 from .slice import Slice
+from .integer import Integer
 from .subindex_helpers import ceiling
 
 # np.prod has overflow and math.prod is Python 3.8+ only
@@ -107,7 +108,7 @@ class ChunkSize(ImmutableObject, Sequence):
             yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
                           for n, chunk_size, i in zip(shape, self, p)])
 
-    def as_subchunks(self, idx, shape):
+    def as_subchunks(self, idx, shape, *, _force_slow=False):
         """
         Split an index `idx` on an array of shape `shape` into subchunk indices.
 
@@ -135,14 +136,53 @@ class ChunkSize(ImmutableObject, Sequence):
 
         """
         shape = asshape(shape)
+        if len(shape) != len(self):
+            raise ValueError("chunks dimensions must equal the array dimensions")
+
         if 0 in shape:
             return
-        idx = ndindex(idx)
-        for c in self.indices(shape):
-            try:
-                index = idx.as_subindex(c)
-            except ValueError:
-                continue
+        idx = ndindex(idx).expand(shape)
 
-            if not index.isempty(self):
-                yield (c, index)
+        # The slow naive fallback is kept here for testing purposes and to support
+        # indices that aren't supported in the fast way yet below.
+        def _fallback():
+            print("Fallback", idx)
+            for c in self.indices(shape):
+                try:
+                    index = idx.as_subindex(c)
+                except ValueError:
+                    continue
+
+                if not index.isempty(self):
+                    yield (c, index)
+            return
+
+        if _force_slow or len(idx.args) > len(self):
+            yield from _fallback()
+            return
+
+        iters = []
+        for i, n in zip(idx.args, self):
+            if isinstance(i, Integer):
+                iters.append([i.raw//n])
+            elif isinstance(i, Slice) and i.step > 0:
+                a, N, m = i.args
+                if m >= n:
+                    iters.append(((a + k*m)//n for k in range(ceiling(N, n))))
+                else:
+                    iters.append(range(ceiling(N, n)))
+            else:
+                # fallback to the naive algorithm
+                yield from _fallback()
+                return
+
+        def _indices(iters):
+            for p in product(*iters):
+                # p = (0, 0, 0), (0, 0, 1), ...
+                yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
+                          for n, chunk_size, i in zip(shape, self, p)])
+
+        for c in _indices(iters):
+            # Empty indices should be impossible by the construction of the
+            # iterators above.
+            yield c, idx.as_subindex(c)
