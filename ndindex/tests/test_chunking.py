@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 from numpy import arange, isin, sort, concatenate
 
 from hypothesis import given, assume
@@ -120,7 +122,11 @@ def test_as_subchunks(chunk_size, shape, idx):
 
     try:
         subarrays = []
-        for c, index in chunk_size.as_subchunks(idx, shape):
+        fast = chunk_size.as_subchunks(idx, shape)
+        slow = chunk_size.as_subchunks(idx, shape, _force_slow=True)
+        for (c, index), (cslow, indexslow) in zip_longest(fast, slow):
+            assert c == cslow
+            assert index == indexslow
             chunk = a[c.raw]
             subchunk = chunk[index.raw]
             # Not empty
