@@ -32,6 +32,10 @@ from .booleanarray import BooleanArray
 
 __all__ += ['BooleanArray']
 
+from .chunking import ChunkSize
+
+__all__ += ['ChunkSize']
+
 from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
