@@ -101,6 +101,9 @@ def test_indices(chunk_size, shape):
     elements = [i for x in subarrays for i in x.flatten()]
     assert sorted(elements) == list(range(size))
 
+def test_as_subchunks_error():
+    raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
+
 @given(chunk_sizes(), chunk_shapes, ndindices)
 def test_as_subchunks(chunk_size, shape, idx):
     chunk_size = ChunkSize(chunk_size)
