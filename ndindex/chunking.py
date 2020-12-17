@@ -84,7 +84,7 @@ class ChunkSize(ImmutableObject, Sequence):
 
         >>> from ndindex.chunking import ChunkSize
         >>> chunk_size = ChunkSize((5, 5))
-        >>> for idx in chunk_size.indices((10, 19))
+        >>> for idx in chunk_size.indices((10, 19)):
         ...     print(idx)
         Tuple(slice(0, 5, 1), slice(0, 5, 1))
         Tuple(slice(0, 5, 1), slice(5, 10, 1))
