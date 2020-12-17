@@ -146,7 +146,6 @@ class ChunkSize(ImmutableObject, Sequence):
         # The slow naive fallback is kept here for testing purposes and to support
         # indices that aren't supported in the fast way yet below.
         def _fallback():
-            print("Fallback", idx)
             for c in self.indices(shape):
                 try:
                     index = idx.as_subindex(c)
