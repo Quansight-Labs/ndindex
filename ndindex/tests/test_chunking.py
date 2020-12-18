@@ -142,4 +142,4 @@ def test_as_subchunks(chunk_size, shape, idx):
         elements = concatenate([x.flatten() for x in subarrays])
     else:
         elements = arange(0)
-    assert_equal(sort(elements), full_idx.flatten())
+    assert_equal(sort(elements), sort(full_idx.flatten()))
