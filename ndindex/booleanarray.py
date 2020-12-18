@@ -168,3 +168,13 @@ class BooleanArray(ArrayIndex):
     def broadcast_arrays(self):
         from .tuple import Tuple
         return Tuple(self).broadcast_arrays()
+
+def _is_boolean_scalar(idx):
+    """
+    Determine if idx is a scalar boolean index.
+
+    This is for internal usage only. Assumes idx is already an ndindex type.
+    This is more performant than `idx in [True, False]`.
+    """
+    # TODO: Instead of this function, make BooleanScalar a separate class.
+    return isinstance(idx, BooleanArray) and idx.shape == ()
