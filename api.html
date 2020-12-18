@@ -2160,18 +2160,8 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 <p>This is a base class for all ndindex types. All types that subclass this
 class should redefine the following methods</p>
 <ul class="simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">_typecheck(self,</span> <span class="pre">*args)</span></code> should do type checking and basic type
-canonicalization, and either return a tuple of the new arguments for the
-class or raise an exception. Type checking means it should raise
-exceptions for input types that are never semantically meaningful for
-numpy arrays, for example, floating point indices, using the same
-exceptions as numpy where possible. Basic type canonicalization means,
-for instance, converting integers into <code class="code docutils literal notranslate"><span class="pre">int</span></code> using <code class="code docutils literal notranslate"><span class="pre">operator.index()</span></code>.
-All other canonicalization should be done in the <code class="code docutils literal notranslate"><span class="pre">reduce()</span></code> method. The
-<code class="code docutils literal notranslate"><span class="pre">NDIndex</span></code> base constructor will automatically set <code class="code docutils literal notranslate"><span class="pre">.args</span></code> to the
-arguments returned by this method. Classes should always be able to
-recreate themselves with <code class="code docutils literal notranslate"><span class="pre">.args</span></code>, i.e., <code class="code docutils literal notranslate"><span class="pre">type(idx)(*idx.args)</span> <span class="pre">==</span> <span class="pre">idx</span></code>
-should always hold.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">_typecheck(self,</span> <span class="pre">*args)</span></code>. See the docstring of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ImmutableObject</span></code>.</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">raw</span></code> (a <strong>&#64;property</strong> method) should return the raw index that can be
 passed as an index to a numpy array.</p></li>
 </ul>
@@ -2194,28 +2184,6 @@ equality. Rather they should define canonicalization via <code class="code docut
 <code class="code docutils literal notranslate"><span class="pre">__hash__</span></code> is defined so that the hash matches the hash of <code class="code docutils literal notranslate"><span class="pre">.raw</span></code>. If
 <code class="code docutils literal notranslate"><span class="pre">.raw</span></code> is unhashable, <code class="code docutils literal notranslate"><span class="pre">__hash__</span></code> should be overridden to use
 <code class="code docutils literal notranslate"><span class="pre">hash(self.args)</span></code>.</p>
-<dl class="py attribute">
-<dt id="ndindex.ndindex.NDIndex.args">
-<code class="sig-name descname">args</code><a class="headerlink" href="#ndindex.ndindex.NDIndex.args" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> contains the arguments needed to create <code class="code docutils literal notranslate"><span class="pre">idx</span></code>.</p>
-<p>For an ndindex object <code class="code docutils literal notranslate"><span class="pre">idx</span></code>, <code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> is always a tuple such that</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)(</span><span class="o">*</span><span class="n">idx</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="n">idx</span>
-</pre></div>
-</div>
-<p>For <a class="reference internal" href="#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> indices, the elements
-of <code class="code docutils literal notranslate"><span class="pre">.args</span></code> are themselves ndindex types. For other types, <code class="code docutils literal notranslate"><span class="pre">.args</span></code>
-contains raw Python types. Note that <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains NumPy arrays for
-<a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> types, so one should
-always do equality testing or hashing on the ndindex type itself, not
-its <code class="code docutils literal notranslate"><span class="pre">.args</span></code>.</p>
-<p>For an object that represents an indexable version of <code class="code docutils literal notranslate"><span class="pre">idx</span></code>, use
-<a class="reference internal" href="#ndindex.ndindex.NDIndex.raw" title="ndindex.ndindex.NDIndex.raw"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">.raw</span></code></a>.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.raw" title="ndindex.ndindex.NDIndex.raw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raw</span></code></a></p>
-</div>
-</dd></dl>
-
 <dl class="py method">
 <dt id="ndindex.ndindex.NDIndex.as_subindex">
 <code class="sig-name descname">as_subindex</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex.as_subindex" title="Permalink to this definition">¶</a></dt>
