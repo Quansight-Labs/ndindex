@@ -2,7 +2,7 @@ from itertools import zip_longest
 
 from numpy import arange, isin, sort, concatenate
 
-from hypothesis import given, assume
+from hypothesis import given, assume, example
 from hypothesis.strategies import one_of
 
 from pytest import raises
@@ -106,6 +106,8 @@ def test_indices(chunk_size, shape):
 def test_as_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
+@example((2, 2), (5, 5), (slice(0, 5, 2), slice(0, 5, 3)))
+@example((2, 2), (5, 5), ([0, 0],))
 @given(chunk_sizes(), chunk_shapes, ndindices)
 def test_as_subchunks(chunk_size, shape, idx):
     chunk_size = ChunkSize(chunk_size)
