@@ -167,9 +167,9 @@ class ChunkSize(ImmutableObject, Sequence):
             elif isinstance(i, Slice) and i.step > 0:
                 a, N, m = i.args
                 if m > n:
-                    iters.append(((a + k*m)//n for k in range(ceiling(N, n))))
+                    iters.append([(a + k*m)//n for k in range(ceiling(N, m))])
                 else:
-                    iters.append(range(ceiling(N, n)))
+                    iters.append(range(a//n, ceiling(N, n)))
             else:
                 # fallback to the naive algorithm
                 yield from _fallback()
