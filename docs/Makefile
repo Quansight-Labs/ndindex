@@ -20,4 +20,4 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 livehtml:
-	sphinx-autobuild -B -z .. -p 0 -b html $(SOURCEDIR) $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	sphinx-autobuild --open-browser --watch .. --port 0 -b html $(SOURCEDIR) $(ALLSPHINXOPTS) $(BUILDDIR)/html
