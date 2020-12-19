@@ -81,6 +81,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#ndindex.ndindex.ImmutableObject.args">args (ndindex.ndindex.ImmutableObject attribute)</a>
+</li>
       <li><a href="api.html#ndindex.array.ArrayIndex.array">array() (ndindex.array.ArrayIndex property)</a>
 
       <ul>
@@ -90,6 +92,8 @@
 </li>
       </ul></li>
       <li><a href="api.html#ndindex.array.ArrayIndex">ArrayIndex (class in ndindex.array)</a>
+</li>
+      <li><a href="api.html#ndindex.ChunkSize.as_subchunks">as_subchunks() (ndindex.ChunkSize method)</a>
 </li>
       <li><a href="api.html#ndindex.BooleanArray.as_subindex">as_subindex() (ndindex.BooleanArray method)</a>
 
@@ -134,6 +138,10 @@
 
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#ndindex.ChunkSize">ChunkSize (class in ndindex)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#ndindex.BooleanArray.count_nonzero">count_nonzero() (ndindex.BooleanArray property)</a>
 </li>
@@ -187,6 +195,10 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#ndindex.ndindex.ImmutableObject">ImmutableObject (class in ndindex.ndindex)</a>
+</li>
+      <li><a href="api.html#ndindex.ChunkSize.indices">indices() (ndindex.ChunkSize method)</a>
+</li>
       <li><a href="api.html#ndindex.Integer">Integer (class in ndindex)</a>
 </li>
       <li><a href="api.html#ndindex.IntegerArray">IntegerArray (class in ndindex)</a>
@@ -247,6 +259,10 @@
         <li><a href="api.html#ndindex.Tuple.newshape">(ndindex.Tuple method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#ndindex.ChunkSize.num_chunks">num_chunks() (ndindex.ChunkSize method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -373,6 +389,9 @@
 <li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
@@ -380,7 +399,19 @@
 <li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
 </ul>
 </li>
 </ul>
@@ -459,6 +490,9 @@
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
@@ -466,7 +500,19 @@
 <li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
 </ul>
 </li>
 </ul>

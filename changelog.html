@@ -121,7 +121,7 @@ it raised <code class="docutils literal notranslate"><span class="pre">NotImplem
 arrays. It was decided to not allow treating a tuple as an array to avoid
 the <a class="reference internal" href="type-confusion.html#type-confusion-tuples"><span class="std std-ref">type confusion</span></a> between <code class="docutils literal notranslate"><span class="pre">Tuple((1,</span> <span class="pre">2))</span></code> and
 <code class="docutils literal notranslate"><span class="pre">Tuple(1,</span> <span class="pre">2)</span></code> (only the latter form is correct).</p></li>
-<li><p>Document the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">.args</span></code></span> attribute.</p></li>
+<li><p>Document the <a class="reference internal" href="api.html#ndindex.ndindex.ImmutableObject.args" title="ndindex.ndindex.ImmutableObject.args"><span class="xref myst py py-attr"><code class="docutils literal notranslate"><span class="pre">.args</span></code></span></a> attribute.</p></li>
 <li><p>New internal function <a class="reference internal" href="api.html#ndindex.ndindex.operator_index" title="ndindex.ndindex.operator_index"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">operator_index()</span></code></span></a>, which acts like
 <code class="docutils literal notranslate"><span class="pre">operator.index()</span></code> except it disallows boolean types. A consequence of this
 is that calling the <a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Integer</span></code></span></a> or <a class="reference internal" href="api.html#ndindex.Slice" title="ndindex.Slice"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Slice</span></code></span></a> constructors
@@ -295,6 +295,9 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
 <li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
@@ -302,7 +305,19 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
 <li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
 </ul>
 </li>
 </ul>
@@ -381,6 +396,9 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
@@ -388,7 +406,19 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
 <li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
 </ul>
 </li>
 </ul>
