@@ -10,11 +10,15 @@ with indices.
 ndindex
 =======
 
-
 ndindex
 -------
 
 .. autofunction:: ndindex.ndindex
+
+Index Types
+===========
+
+The following classes represent different types of indices.
 
 Integer
 -------
@@ -73,13 +77,36 @@ BooleanArray
    .. autoattribute:: dtype
       :annotation:
 
+Chunking
+========
+
+ndindex contains objects to represent chunking an array.
+
+ChunkSize
+---------
+
+.. autoclass:: ndindex.ChunkSize
+   :members:
+
 Internal API
-------------
+============
 
 These classes are only intended for internal use in ndindex.
 
+ImmutableObject
+---------------
+
+.. autoclass:: ndindex.ndindex.ImmutableObject
+   :members:
+
+NDIndex
+-------
+
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
+
+ArrayIndex
+----------
 
 .. autoclass:: ndindex.array.ArrayIndex
    :members:
@@ -88,8 +115,17 @@ These classes are only intended for internal use in ndindex.
    .. autoattribute:: dtype
       :annotation: Subclasses should redefine this
 
+default
+-------
+
 .. autoclass:: ndindex.slice.default
 
+asshape
+-------
+
 .. autofunction:: ndindex.ndindex.asshape
+
+operator_index
+--------------
 
 .. autofunction:: ndindex.ndindex.operator_index

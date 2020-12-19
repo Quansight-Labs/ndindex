@@ -93,6 +93,11 @@ class ImmutableObject:
     recreate themselves with `.args`, i.e., `type(obj)(*obj.args) == obj`
     should always hold.
 
+    See Also
+    ========
+
+    NDIndex
+
     """
     def __init__(self, *args, **kwargs):
         """
@@ -115,14 +120,6 @@ class ImmutableObject:
         :any:`IntegerArray` and :any:`BooleanArray` types, so one should
         always do equality testing or hashing on the ndindex type itself, not
         its `.args`.
-
-        For an object that represents an indexable version of `idx`, use
-        :any:`.raw <raw>`.
-
-        See Also
-        ========
-
-        raw
         """
     @classproperty
     def __signature__(self):
@@ -205,6 +202,11 @@ class NDIndex(ImmutableObject):
     `__hash__` is defined so that the hash matches the hash of `.raw`. If
     `.raw` is unhashable, `__hash__` should be overridden to use
     `hash(self.args)`.
+
+    See Also
+    ========
+
+    ImmutableObject
 
     """
     # TODO: Make NDIndex and ImmutableObject abstract base classes
@@ -417,8 +419,7 @@ class NDIndex(ImmutableObject):
 
         Note that due to symmetry, `a[j][i.as_subindex(j)]` and
         `a[i][j.as_subindex(i)]` will give the same subarrays of `a`, which
-        will be the array that includes the elements indexed by both `a[i]`
-        and `a[j]`.
+        will be the array of elements indexed by both `a[i]` and `a[j]`.
 
         `i.as_subindex(j)` may raise `ValueError` in the case that the indices
         `i` and `j` do not intersect at all.
@@ -427,11 +428,12 @@ class NDIndex(ImmutableObject):
         ========
 
         An example usage of `as_subindex` is to split an index up into
-        subindices of chunks of an array. For example, say a 1-D array `a` is
-        chunked up into chunks of size `N`, so that `a[0:N]`, `a[N:2*N]`,
-        `[2*N:3*N]`, etc. are stored separately. Then an index `a[i]` can be
-        reindexed onto the chunks via `i.as_subindex(Slice(0, N))`,
-        `i.as_subindex(Slice(N, 2*N))`, etc.
+        subindices of chunks of an array (see :any:`ChunkSize.as_subchunks()`
+        for a high-level implementation of this). For example, say a 1-D array
+        `a` is chunked up into chunks of size `N`, so that `a[0:N]`,
+        `a[N:2*N]`, `[2*N:3*N]`, etc. are stored separately. Then an index
+        `a[i]` can be reindexed onto the chunks via `i.as_subindex(Slice(0,
+        N))`, `i.as_subindex(Slice(N, 2*N))`, etc.
 
         >>> from ndindex import Slice
         >>> i = Slice(5, 15)
@@ -455,6 +457,11 @@ class NDIndex(ImmutableObject):
         [5, 6, 7, 8, 9]
         >>> a[j2.raw][k2.raw]
         [10, 11, 12, 13, 14]
+
+        See Also
+        ========
+
+        ndindex.ChunkSize.as_subchunks
 
         """
         index = ndindex(index) # pragma: no cover

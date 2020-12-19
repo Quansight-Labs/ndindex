@@ -18,17 +18,20 @@ class ChunkSize(ImmutableObject, Sequence):
     Represents a chunk size.
 
     A chunk size is a tuple of length n where each element is either a
-    positive integer or None. It represents a chunking of an array with n
+    positive integer or `None`. It represents a chunking of an array with n
     dimensions, where each corresponding dimension is chunked by the
-    corresponding chunk size, or not chunked for None.
+    corresponding chunk size, or not chunked for `None`.
 
-    For example, given a 3 dimensional chunk size of (20, 20, None) and an
-    array of shape (40, 30, 10), the array would be split into four chunks,
+    For example, given a 3 dimensional chunk size of `(20, 20, None)` and an
+    array of shape `(40, 30, 10)`, the array would be split into four chunks,
     corresponding to the indices `0:20,0:20,:`, `0:20,20:30,:`,
     `20:40,0:20,:`, and `20:40,20:30,:`. Note that the size of a chunk may be
     less than the total chunk size if the array shape is not a multiple of the
     chunk size in a given dimension.
 
+    ChunkSize behaves like a `tuple`, for example, `chunk_size[0]` gives the
+    first chunk shape, and `len(chunk_size)` gives the number of dimensions of
+    a chunk.
     """
     def _typecheck(self, chunk_size):
         # TODO: Also accept ChunkSize(1, 2, 3)?
@@ -61,9 +64,24 @@ class ChunkSize(ImmutableObject, Sequence):
 
     def num_chunks(self, shape):
         """
-        Give the number of chunks for the given shape.
+        Give the number of chunks for the given `shape`.
 
         This is the same as `len(self.indices(shape))`, but much faster.
+        `shape` must have the same number of dimensions as `self`.
+
+        >>> from ndindex import ChunkSize
+        >>> chunk_size = ChunkSize((10, 10, 10))
+        >>> shape = (10000, 10000, 10000)
+        >>> # len(list(chunk_size.indices(shape))) would be very slow, as
+        >>> # would have to iterate all 1 billion chunks
+        >>> chunk_size.num_chunks(shape)
+        1000000000
+
+        See Also
+        ========
+
+        ChunkSize.indices
+
         """
         shape = asshape(shape)
         d = [ceiling(i, c) for i, c in zip(shape, self)]
@@ -75,14 +93,15 @@ class ChunkSize(ImmutableObject, Sequence):
         """
         Yield a set of ndindex indices for the chunks on an array of shape `shape`.
 
-        If the shape is not a multiple of the chunk size, some chunks will be
-        truncated, so that `len(idx.args[i]) <ndindex.Slice.__len__>` can be
-        used to get the size of an indexed axis.
+        `shape` should have the same number of dimensions as `self`. If the
+        shape is not a multiple of the chunk size, some chunks will be
+        truncated, so that :any:`len(idx.args[i]) <ndindex.Slice.__len__>` can
+        be used to get the size of an indexed axis.
 
         For example, if `a` has shape `(10, 19)` and is chunked into chunks
         of shape `(5, 5)`:
 
-        >>> from ndindex.chunking import ChunkSize
+        >>> from ndindex import ChunkSize
         >>> chunk_size = ChunkSize((5, 5))
         >>> for idx in chunk_size.indices((10, 19)):
         ...     print(idx)
@@ -94,6 +113,11 @@ class ChunkSize(ImmutableObject, Sequence):
         Tuple(slice(5, 10, 1), slice(5, 10, 1))
         Tuple(slice(5, 10, 1), slice(10, 15, 1))
         Tuple(slice(5, 10, 1), slice(15, 19, 1))
+
+        See Also
+        ========
+
+        ChunkSize.num_chunks
 
         """
         shape = asshape(shape)
@@ -134,6 +158,11 @@ class ChunkSize(ImmutableObject, Sequence):
         Tuple(slice(10, 20, 1), slice(0, 10, 1))
             Tuple(slice(0, 5, 1), 0)
 
+        See Also
+        ========
+
+        ndindex.NDIndex.as_subindex
+
         """
         shape = asshape(shape)
         if len(shape) != len(self):
@@ -167,7 +196,7 @@ class ChunkSize(ImmutableObject, Sequence):
             elif isinstance(i, Slice) and i.step > 0:
                 a, N, m = i.args
                 if m > n:
-                    iters.append([(a + k*m)//n for k in range(ceiling(N, m))])
+                    iters.append([(a + k*m)//n for k in range(ceiling(N-a, m))])
                 else:
                     iters.append(range(a//n, ceiling(N, n)))
             else:
