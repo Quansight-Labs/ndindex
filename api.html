@@ -12,7 +12,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}})</script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -85,7 +84,7 @@ with indices.</p>
 <h3>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.Integer">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an integer index on an axis of an nd-array.</p>
 <p>Any object that implements <code class="code docutils literal notranslate"><span class="pre">__index__</span></code> can be used as an integer index.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Integer</span>
@@ -293,7 +292,7 @@ given shape, or an Integer index where the value is nonnegative.</p>
 <span id="slice-api"></span><h3>Slice<a class="headerlink" href="#slice" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.Slice">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Slice</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Slice</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">stop=&lt;class 'ndindex.slice.default'&gt;</em>, <em class="sig-param">step=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a slice on an axis of an nd-array.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Slice(x)</span></code> with one argument is equivalent to <code class="code docutils literal notranslate"><span class="pre">Slice(None,</span> <span class="pre">x)</span></code>. <code class="code docutils literal notranslate"><span class="pre">Slice(x,</span>
 <span class="pre">y)</span></code> with two arguments is equivalent to <code class="code docutils literal notranslate"><span class="pre">Slice(x,</span> <span class="pre">y,</span> <span class="pre">None)</span></code>.</p>
@@ -650,7 +649,7 @@ for a single dimension.</p>
 <h3>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.ellipsis">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ellipsis</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ellipsis" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ellipsis</code><a class="headerlink" href="#ndindex.ellipsis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an ellipsis index, i.e., <code class="code docutils literal notranslate"><span class="pre">...</span></code> (or <code class="code docutils literal notranslate"><span class="pre">Ellipsis</span></code>).</p>
 <p>Ellipsis indices by themselves return the full array. Inside of a tuple
 index, an ellipsis skips 0 or more axes of the array so that everything
@@ -858,7 +857,7 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 <h3>Newaxis<a class="headerlink" href="#newaxis" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.Newaxis">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Newaxis</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Newaxis" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Newaxis</code><a class="headerlink" href="#ndindex.Newaxis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a <code class="code docutils literal notranslate"><span class="pre">np.newaxis</span></code> (i.e., <code class="code docutils literal notranslate"><span class="pre">None</span></code>) index.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">Newaxis</span></code> adds a shape 1 dimension to the array. If a <code class="code docutils literal notranslate"><span class="pre">Newaxis</span></code> is inside
 of a tuple index, it adds a shape 1 dimension at that location in the
@@ -986,7 +985,7 @@ itself, so <code class="code docutils literal notranslate"><span class="pre">New
 <h3>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.Tuple">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Tuple</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">Tuple</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a tuple of single-axis indices.</p>
 <p>Valid single axis indices are</p>
 <ul class="simple">
@@ -1381,7 +1380,7 @@ instead of a scalar.</p>
 <h3>IntegerArray<a class="headerlink" href="#integerarray" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.IntegerArray">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">IntegerArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">IntegerArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">_copy</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an integer array index.</p>
 <p>If <code class="code docutils literal notranslate"><span class="pre">idx</span></code> is an n-dimensional integer array with shape <code class="code docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">(s1,</span> <span class="pre">...,</span> <span class="pre">sn)</span></code>
 and <code class="code docutils literal notranslate"><span class="pre">a</span></code> is any array, <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code> replaces the first dimension of <code class="code docutils literal notranslate"><span class="pre">a</span></code> with
@@ -1762,7 +1761,7 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 <h3>BooleanArray<a class="headerlink" href="#booleanarray" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.BooleanArray">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">BooleanArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">BooleanArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">_copy</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a boolean array index (also known as a mask).</p>
 <p>If <code class="code docutils literal notranslate"><span class="pre">idx</span></code> is an n-dimensional boolean array with shape <code class="code docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">(s1,</span> <span class="pre">...,</span> <span class="pre">sn)</span></code>
 and <code class="code docutils literal notranslate"><span class="pre">a</span></code> is an array of shape <code class="code docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">(s1,</span> <span class="pre">...,</span> <span class="pre">sn,</span> <span class="pre">...,</span> <span class="pre">sm)</span></code>, <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>
@@ -2186,7 +2185,7 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 <h3>ChunkSize<a class="headerlink" href="#chunksize" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.ChunkSize">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ChunkSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ChunkSize" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ChunkSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chunk_size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ChunkSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a chunk size.</p>
 <p>A chunk size is a tuple of length n where each element is either a
 positive integer or <code class="code docutils literal notranslate"><span class="pre">None</span></code>. It represents a chunking of an array with n
@@ -2658,7 +2657,7 @@ optional <code class="code docutils literal notranslate"><span class="pre">axis<
 <h3>ArrayIndex<a class="headerlink" href="#arrayindex" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="ndindex.array.ArrayIndex">
-<em class="property">class </em><code class="sig-prename descclassname">ndindex.array.</code><code class="sig-name descname">ArrayIndex</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.array.ArrayIndex" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ndindex.array.</code><code class="sig-name descname">ArrayIndex</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">_copy</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.array.ArrayIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Superclass for array indices</p>
 <p>This class should not be instantiated directly. Rather, use one of its
 subclasses, <a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> or <a class="reference internal" href="#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a>.</p>
@@ -2917,33 +2916,38 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id10">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id11">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -3018,33 +3022,38 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -3075,7 +3084,7 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

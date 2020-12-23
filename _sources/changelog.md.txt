@@ -1,5 +1,39 @@
 # ndindex Changelog
 
+## Version 1.5 (2020-12-23)
+
+### Major Changes
+
+- ndindex has been moved to the
+  [Quansight-Labs](https://github.com/quansight-labs) organization on Github.
+  ndindex is now a [Quansight Labs](https://labs.quansight.org/) project.
+
+- Python 3.6 support has been dropped. ndindex has been tested with Python
+  3.7-3.9.
+
+- [`Slice.reduce()`](Slice.reduce) now gives a fully canonical result, meaning
+  that two slices `s1` and `s2` are equal on all array shapes if and only if
+  `s1.reduce() == s2.reduce()`, and are equal on an array of shape `shape` if
+  and only if `s1.reduce(shape) == s2.reduce(shape)` (note that `s1 == s2`
+  is only True if `s1` and `s2` are exactly equal). See the
+  [documentation](Slice.reduce) for more information on what properties are
+  true after canonicalization.
+
+- Make `np.ndarray == ndindex(array)` give `True` or `False` (@telamonian).
+
+- Add [ChunkSize](`ChunkSize`), a new object to represent chunking over an
+  array and manipulate indices over chunks.
+
+### Minor Changes
+
+- Various performance improvements.
+
+- Make `hash(idx) == hash(idx.raw)` whenever `idx.raw` is hashable.
+
+- Fix the background color for some monospace text in the docs.
+
+- Fix math formatting in the slices documentation.
+
 ## Version 1.4 (2020-09-14)
 
 ### Major Changes
