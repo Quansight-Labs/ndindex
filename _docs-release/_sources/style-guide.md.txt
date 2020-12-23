@@ -14,10 +14,10 @@ This is a style guide for the ndindex documentation.
   `NDIndex` base class.
 - The plural of "index" is "indices". "Indexes" should only be used as a verb.
   For example, "in `a[i, j]`, the indices are `i` and `j`. They represent a
-  single tuple index `(i, j)` which indexes the array `a`."
+  single tuple index `(i, j)`, which indexes the array `a`."
 - The arguments of a slice should be referred to as "start", "stop", and
   "step", respectively. This matches the argument names and attributes of the
-  `Slice` object.
+  `Slice` and `slice` objects.
 - A generic index variable should be called `idx`.
 - A generic slice variable should be called `s`.
 - Example array variables should be called `a`.
@@ -58,5 +58,6 @@ This is a style guide for the ndindex documentation.
   numpydoc format.
 - All public docstrings should include a doctest. Doctests can be run with the
   `./run_doctests` script at the root of the repo. This also runs doctests in
-  the RST and Markdown files. Doctests are configured so that each function or
-  method must import all names used in that function or method.
+  the RST and Markdown files. Doctests are configured so that the doctests for
+  each function or method must import all names used in that function or
+  method.

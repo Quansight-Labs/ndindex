@@ -4,6 +4,7 @@ _docs-release/_sources/changelog.md.txt
 _docs-release/_sources/index.md.txt
 _docs-release/_sources/slices.md.txt
 _docs-release/_sources/style-guide.md.txt
+_docs-release/_sources/type-confusion.md.txt
 _docs-release/_static/alabaster.css
 _docs-release/_static/basic.css
 _docs-release/_static/copybutton.js
@@ -11,7 +12,7 @@ _docs-release/_static/custom.css
 _docs-release/_static/doctools.js
 _docs-release/_static/documentation_options.js
 _docs-release/_static/file.png
-_docs-release/_static/jquery-3.4.1.js
+_docs-release/_static/jquery-3.5.1.js
 _docs-release/_static/jquery.js
 _docs-release/_static/language_data.js
 _docs-release/_static/minus.png
@@ -29,3 +30,4 @@ _docs-release/search.html
 _docs-release/searchindex.js
 _docs-release/slices.html
 _docs-release/style-guide.html
+_docs-release/type-confusion.html

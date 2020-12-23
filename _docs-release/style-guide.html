@@ -1,18 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Documentation Style Guide &#8212; ndindex  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -63,10 +63,10 @@
 <code class="docutils literal notranslate"><span class="pre">NDIndex</span></code> base class.</p></li>
 <li><p>The plural of “index” is “indices”. “Indexes” should only be used as a verb.
 For example, “in <code class="docutils literal notranslate"><span class="pre">a[i,</span> <span class="pre">j]</span></code>, the indices are <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>. They represent a
-single tuple index <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code> which indexes the array <code class="docutils literal notranslate"><span class="pre">a</span></code>.”</p></li>
+single tuple index <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code>, which indexes the array <code class="docutils literal notranslate"><span class="pre">a</span></code>.”</p></li>
 <li><p>The arguments of a slice should be referred to as “start”, “stop”, and
 “step”, respectively. This matches the argument names and attributes of the
-<code class="docutils literal notranslate"><span class="pre">Slice</span></code> object.</p></li>
+<code class="docutils literal notranslate"><span class="pre">Slice</span></code> and <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects.</p></li>
 <li><p>A generic index variable should be called <code class="docutils literal notranslate"><span class="pre">idx</span></code>.</p></li>
 <li><p>A generic slice variable should be called <code class="docutils literal notranslate"><span class="pre">s</span></code>.</p></li>
 <li><p>Example array variables should be called <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p></li>
@@ -108,8 +108,9 @@ point. Docstrings use the napoleon extension, meaning they can be written in
 numpydoc format.</p></li>
 <li><p>All public docstrings should include a doctest. Doctests can be run with the
 <code class="docutils literal notranslate"><span class="pre">./run_doctests</span></code> script at the root of the repo. This also runs doctests in
-the RST and Markdown files. Doctests are configured so that each function or
-method must import all names used in that function or method.</p></li>
+the RST and Markdown files. Doctests are configured so that the doctests for
+each function or method must import all names used in that function or
+method.</p></li>
 </ul>
 </div>
 </div>
@@ -146,11 +147,29 @@ method must import all names used in that function or method.</p></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
 <li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
 </ul>
 </li>
 </ul>
@@ -177,29 +196,47 @@ method must import all names used in that function or method.</p></li>
 <li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="type-confusion.html">Type Confusion</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integer">Integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#tuple">Tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#newaxis">Newaxis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id10">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id11">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -216,11 +253,29 @@ method must import all names used in that function or method.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#internal-api">Internal API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
 </ul>
 </li>
 </ul>
@@ -247,29 +302,47 @@ method must import all names used in that function or method.</p></li>
 <li class="toctree-l2"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="type-confusion.html">Type Confusion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#integer">Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#tuple">Tuple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#newaxis">Newaxis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -297,10 +370,10 @@ method must import all names used in that function or method.</p></li>
     </div>
     
     <div class="footer">
-      &copy;2020, Quansight.
+      &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
@@ -311,6 +384,6 @@ method must import all names used in that function or method.</p></li>
     
 
     
-    <span id="forkongithub"><a href="https://github.com/Quansight/ndindex">Fork me on GitHub</a></span>
+    <span id="forkongithub"><a href="https://github.com/Quansight-Labs/ndindex">Fork me on GitHub</a></span>
   </body>
 </html>
