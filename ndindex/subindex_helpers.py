@@ -21,13 +21,14 @@ def _crt(m1, m2, v1, v2):
     such solution exists.
 
     """
-    from sympy.ntheory.modular import crt as sympy_crt
-
     # Avoid calling sympy_crt in the cases where the inputs would be arrays.
     if m1 == 1:
         return v2 % m2
     if m2 == 1:
         return v1 % m1
+
+    # Only import SymPy when necessary
+    from sympy.ntheory.modular import crt as sympy_crt
 
     res = sympy_crt([m1, m2], [v1, v2])
     if res is None:
@@ -36,13 +37,14 @@ def _crt(m1, m2, v1, v2):
     return int(res[0])
 
 def _ilcm(a, b):
-    from sympy import ilcm as sympy_ilcm
-
     # Avoid calling sympy_ilcm in the cases where the inputs would be arrays.
     if a == 1:
         return b
     if b == 1:
         return a
+
+    # Only import SymPy when necessary
+    from sympy import ilcm as sympy_ilcm
 
     return sympy_ilcm(a, b)
 
