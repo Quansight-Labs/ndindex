@@ -15,12 +15,13 @@ def prod(seq):
 
 class ChunkSize(ImmutableObject, Sequence):
     """
-    Represents a chunk size.
+    Represents a chunk size tuple.
 
     A chunk size is a tuple of length n where each element is either a
     positive integer or `None`. It represents a chunking of an array with n
     dimensions, where each corresponding dimension is chunked by the
-    corresponding chunk size, or not chunked for `None`.
+    corresponding chunk size, or not chunked for `None` (note, `None` chunks
+    are currently not yet implemented).
 
     For example, given a 3 dimensional chunk size of `(20, 20, None)` and an
     array of shape `(40, 30, 10)`, the array would be split into four chunks,
@@ -29,9 +30,18 @@ class ChunkSize(ImmutableObject, Sequence):
     less than the total chunk size if the array shape is not a multiple of the
     chunk size in a given dimension.
 
-    ChunkSize behaves like a `tuple`, for example, `chunk_size[0]` gives the
-    first chunk shape, and `len(chunk_size)` gives the number of dimensions of
-    a chunk.
+    `ChunkSize` behaves like a `tuple`. For example, `chunk_size[0]` gives the
+    first chunk dimension, and `len(chunk_size)` gives the number of
+    dimensions of a chunk. Also, the input to ChunkSize should be a tuple,
+    just as with the `tuple` constructor, even for single dimensional chunk
+    sizes.
+
+    >>> from ndindex import ChunkSize
+    >>> ChunkSize((20, 30, 40))
+    ChunkSize((20, 30, 40))
+    >>> ChunkSize((2**12,))
+    ChunkSize((4096,))
+
     """
     def _typecheck(self, chunk_size):
         # TODO: Also accept ChunkSize(1, 2, 3)?
@@ -66,7 +76,7 @@ class ChunkSize(ImmutableObject, Sequence):
         """
         Give the number of chunks for the given `shape`.
 
-        This is the same as `len(self.indices(shape))`, but much faster.
+        This is the same as `len(list(self.indices(shape)))`, but much faster.
         `shape` must have the same number of dimensions as `self`.
 
         >>> from ndindex import ChunkSize
