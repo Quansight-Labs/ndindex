@@ -136,23 +136,42 @@ class ChunkSize(ImmutableObject, Sequence):
         """
         Split an index `idx` on an array of shape `shape` into subchunk indices.
 
-        Yields tuples `(c, index)`, where `c` is an index for the chunk that
-        should be sliced, and `index` is an index into that chunk giving the
-        elements of `idx` that are included in it (`c` and `index` are both
-        ndindex indices).
+        Yields indices `c`, where `c` is an index for the chunk that
+        should be sliced. Only those `c` for which `idx` includes at least one
+        element are yielded.
 
-        That is to say, for each `(c, index)` pair yielded, `a[c][index]` will
-        give those elements of `a[idx]` that are part of the `c` chunk.
+        That is to say, for each `c` index yielded, `a[c][idx.as_subindex(c)]`
+        will give those elements of `a[idx]` that are part of the `c` chunk,
+        and together they give all the elements of `a[idx]`. See also the
+        docstring of :meth:`~ndindex.NDIndex.as_subindex`.
 
-        Note that this only yields those indices that are nonempty.
+        This method is roughly equivalent to
 
-        >>> from ndindex.chunking import ChunkSize
-        >>> idx = (slice(5, 15), 0)
+        .. code:: python
+
+           def as_subchunks(self, idx, shape):
+               for c in self.indices(shape):
+                   try:
+                       index = idx.as_subindex(c)
+                   except ValueError:
+                       # as_subindex raises ValueError in some cases when the
+                       # indices do not intersect (see the docstring of
+                       # as_subindex())
+                       continue
+
+                   if not index.isempty(self):
+                       # Yield those c for which idx.as_subindex(c) is nonempty
+                       yield c
+
+        except it is more efficient.
+
+        >>> from ndindex import ChunkSize, Tuple
+        >>> idx = Tuple(slice(5, 15), 0)
         >>> shape = (20, 20)
         >>> chunk_size = ChunkSize((10, 10))
-        >>> for c, index in chunk_size.as_subchunks(idx, shape):
+        >>> for c in chunk_size.as_subchunks(idx, shape):
         ...     print(c)
-        ...     print('    ', index)
+        ...     print('    ', idx.as_subindex(c))
         Tuple(slice(0, 10, 1), slice(0, 10, 1))
             Tuple(slice(5, 10, 1), 0)
         Tuple(slice(10, 20, 1), slice(0, 10, 1))
@@ -182,7 +201,7 @@ class ChunkSize(ImmutableObject, Sequence):
                     continue
 
                 if not index.isempty(self):
-                    yield (c, index)
+                    yield c
             return
 
         if _force_slow or len(idx.args) > len(self):
@@ -213,4 +232,4 @@ class ChunkSize(ImmutableObject, Sequence):
         for c in _indices(iters):
             # Empty indices should be impossible by the construction of the
             # iterators above.
-            yield c, idx.as_subindex(c)
+            yield c

@@ -428,8 +428,7 @@ class NDIndex(ImmutableObject):
         ========
 
         An example usage of `as_subindex` is to split an index up into
-        subindices of chunks of an array (see :any:`ChunkSize.as_subchunks()`
-        for a high-level implementation of this). For example, say a 1-D array
+        subindices of chunks of an array. For example, say a 1-D array
         `a` is chunked up into chunks of size `N`, so that `a[0:N]`,
         `a[N:2*N]`, `[2*N:3*N]`, etc. are stored separately. Then an index
         `a[i]` can be reindexed onto the chunks via `i.as_subindex(Slice(0,
@@ -461,7 +460,9 @@ class NDIndex(ImmutableObject):
         See Also
         ========
 
-        ndindex.ChunkSize.as_subchunks
+        ndindex.ChunkSize.as_subchunks:
+            a high-level iterator that efficiently gives only those chunks
+            that intersect with a given index
 
         """
         index = ndindex(index) # pragma: no cover

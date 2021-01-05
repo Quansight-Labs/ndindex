@@ -127,9 +127,9 @@ def test_as_subchunks(chunk_size, shape, idx):
         subarrays = []
         fast = chunk_size.as_subchunks(idx, shape)
         slow = chunk_size.as_subchunks(idx, shape, _force_slow=True)
-        for (c, index), (cslow, indexslow) in zip_longest(fast, slow):
+        for c, cslow in zip_longest(fast, slow):
             assert c == cslow
-            assert index == indexslow
+            index = idx.as_subindex(c)
             chunk = a[c.raw]
             subchunk = chunk[index.raw]
             # Not empty
