@@ -137,3 +137,15 @@ class Integer(NDIndex):
             return 0 in self.newshape(shape)
 
         return False
+
+    def __eq__(self, other):
+        if isinstance(other, Integer):
+            return self.args == other.args
+        try:
+            other = operator_index(other)
+        except TypeError:
+            return False
+        return self.args[0] == other
+
+    def __hash__(self):
+        return super().__hash__()

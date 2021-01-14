@@ -81,3 +81,9 @@ class Newaxis(NDIndex):
             return 0 in self.newshape(shape)
 
         return False
+
+    def __eq__(self, other):
+        return other is None or isinstance(other, Newaxis)
+
+    def __hash__(self):
+        return super().__hash__()

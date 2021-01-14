@@ -102,6 +102,13 @@ class Tuple(NDIndex):
 
         return tuple(newargs)
 
+    def __eq__(self, other):
+        if isinstance(other, tuple):
+            return self.args == other
+        elif isinstance(other, Tuple):
+            return self.args == other.args
+        return False
+
     def __hash__(self):
         # Since self.args is itself a tuple, it will match the hash of
         # self.raw when it is hashable.

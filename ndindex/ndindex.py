@@ -145,24 +145,7 @@ class ImmutableObject:
             except TypeError:
                 return False
 
-        def test_equal(a, b):
-            """
-            Check if a == b, allowing for numpy arrays
-            """
-            if not (isinstance(a, b.__class__)
-                    or isinstance(b, a.__class__)):
-                return False
-            if isinstance(a, ndarray):
-                return a.shape == b.shape and (a == b).all()
-            if isinstance(a, tuple):
-                return len(a) == len(b) and all(test_equal(i, j) for i, j in
-                                                zip(a, b))
-            if isinstance(a, ImmutableObject):
-                return test_equal(a.args, b.args)
-
-            return a == b
-
-        return test_equal(self, other)
+        return self.args == other.args
 
     def __hash__(self): # pragma: no cover
         # Note: subclasses where .args is not hashable should redefine
@@ -233,7 +216,10 @@ class NDIndex(ImmutableObject):
         """
         raise NotImplementedError
 
-    def __eq__(self, other):
+    # This is still here as a fallback implementation, but it isn't actually
+    # used by any present subclasses, because it is faster to implement __eq__
+    # on each class specifically.
+    def __eq__(self, other): # pragma: no cover
         if not isinstance(other, NDIndex):
             try:
                 other = ndindex(other)
