@@ -55,9 +55,13 @@ def ceiling(a, b):
     return -(-a//b)
 
 def _max(a, b):
+    if isinstance(a, int) and isinstance(b, int):
+        return max(a, b)
     return amax(broadcast_arrays(a, b), axis=0)
 
 def _min(a, b):
+    if isinstance(a, int) and isinstance(b, int):
+        return min(a, b)
     return amin(broadcast_arrays(a, b), axis=0)
 
 def _smallest(x, a, m):
