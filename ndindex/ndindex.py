@@ -16,15 +16,16 @@ def ndindex(obj):
     Slice(0, 10, None)
 
     """
-    from . import Integer, Slice, Tuple, ellipsis, Newaxis, IntegerArray, BooleanArray
-
     if isinstance(obj, NDIndex):
         return obj
 
     if isinstance(obj, (bool, bool_)):
+        from . import BooleanArray
         return BooleanArray(obj)
 
     if isinstance(obj, (list, ndarray)):
+        from . import IntegerArray, BooleanArray
+
         try:
             return IntegerArray(obj)
         except TypeError:
@@ -41,16 +42,21 @@ def ndindex(obj):
             raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
     try:
+        from . import Integer
         # If operator.index() works, use that
         return Integer(obj)
     except TypeError:
         pass
 
     if isinstance(obj, slice):
+        from . import Slice
         return Slice(obj)
 
     if isinstance(obj, tuple):
+        from . import Tuple
         return Tuple(*obj)
+
+    from . import ellipsis
 
     if obj == ellipsis:
         raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
@@ -58,6 +64,7 @@ def ndindex(obj):
         return ellipsis()
 
     if obj == newaxis:
+        from . import Newaxis
         return Newaxis()
 
     raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
