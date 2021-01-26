@@ -21,7 +21,10 @@ def ndindex(obj):
     if isinstance(obj, NDIndex):
         return obj
 
-    if isinstance(obj, (list, ndarray, bool, bool_)):
+    if isinstance(obj, (bool, bool_)):
+        return BooleanArray(obj)
+
+    if isinstance(obj, (list, ndarray)):
         try:
             return IntegerArray(obj)
         except TypeError:
