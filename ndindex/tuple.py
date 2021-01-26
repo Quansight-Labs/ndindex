@@ -88,7 +88,7 @@ class Tuple(NDIndex):
                     # that we actually need it.
                     raise NotImplementedError("Array indices separated by slices, ellipses (...), or newaxes (None) are not supported")
 
-        if newargs.count(ellipsis()) > 1:
+        if newargs.count(...) > 1:
             raise IndexError("an index can only have a single ellipsis ('...')")
         if len(arrays) > 0:
             if has_boolean_scalar:
@@ -145,9 +145,7 @@ class Tuple(NDIndex):
         """
         Returns True if self has an ellipsis
         """
-        from .ellipsis import ellipsis
-
-        return ellipsis() in self.args
+        return ... in self.args
 
     @property
     def ellipsis_index(self):
@@ -176,10 +174,8 @@ class Tuple(NDIndex):
         2
 
         """
-        from .ellipsis import ellipsis
-
         if self.has_ellipsis:
-            return self.args.index(ellipsis())
+            return self.args.index(...)
         return len(self.args)
 
     @property
@@ -269,15 +265,14 @@ class Tuple(NDIndex):
         .BooleanArray.reduce
 
         """
-        from .ellipsis import ellipsis
         from .slice import Slice
         from .integer import Integer
         from .booleanarray import BooleanArray, _is_boolean_scalar
         from .integerarray import IntegerArray
 
         args = list(self.args)
-        if ellipsis() not in args:
-            return type(self)(*args, ellipsis()).reduce(shape)
+        if ... not in args:
+            return type(self)(*args, ...).reduce(shape)
 
         boolean_scalars = [i for i in args if _is_boolean_scalar(i)]
         if len(boolean_scalars) > 1:
