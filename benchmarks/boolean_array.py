@@ -1,7 +1,7 @@
 import numpy as np
 from ndindex import BooleanArray
 
-class TimeIntegerArray:
+class TimeBooleanArray:
     def setup(self):
         self.ba = BooleanArray([[False, True], [True, False]]*100)
 
