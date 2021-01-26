@@ -11,6 +11,9 @@ class TimeIntegerArray:
     def time_constructor_array(self):
         BooleanArray(self.ba.array)
 
+    def time_constructor_bool(self):
+        BooleanArray(True)
+
     def time_constructor_invalid(self):
         try:
             BooleanArray(np.array([0]))
