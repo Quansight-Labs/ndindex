@@ -1,5 +1,25 @@
 # ndindex Changelog
 
+## Version 1.5.1 (2020-02-03)
+
+### Major Changes
+
+- The [`ChunkSize.as_subchunks`](ChunkSize.as_subchunks) method now only
+  iterates the chunk indices. Previously it iterated `(c,
+  index.as_subindex(c))`. But the subindex can always be computed manually
+  (there was nothing more efficient about the way it was computed previously),
+  and this is much slower if the subindex is not actually needed. This is a
+  backwards incompatible change, but since the `ChunkSize` object was only
+  introduced in the previous release, it should hopefully not have a major
+  impact.
+
+- Made improvements to performance throughout the library. The improvements in
+  some instances are drastic.
+
+- Added a benchmarking suite using [airspeed
+  velocity](https://asv.readthedocs.io/en/stable/). Graphs of the benchmarks
+  can be viewed at <https://quansight-labs.github.io/ndindex/benchmarks/>.
+
 ## Version 1.5 (2020-12-23)
 
 ### Major Changes
