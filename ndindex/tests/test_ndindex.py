@@ -7,6 +7,7 @@ from hypothesis import given, example, settings
 from pytest import raises, warns
 
 from ..ndindex import ndindex, asshape
+from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
@@ -64,6 +65,10 @@ def test_eq_explicit():
     assert Integer(0) != False
     assert Integer(1) != True
     assert Integer(0) != IntegerArray(0)
+    assert IntegerArray([0, 1]) != [False, True]
+    assert IntegerArray([0, 1]) == [0, 1]
+    assert BooleanArray([False, True]) != [0, 1]
+    assert BooleanArray([False, True]) == [False, True]
 
 @example((np.array([1, 2]), 0))
 @example([1, 2, 3])

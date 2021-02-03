@@ -1,4 +1,4 @@
-from numpy import bool_, count_nonzero
+from numpy import bool_, count_nonzero, ndarray
 
 from .array import ArrayIndex
 from .ndindex import asshape
@@ -168,6 +168,23 @@ class BooleanArray(ArrayIndex):
     def broadcast_arrays(self):
         from .tuple import Tuple
         return Tuple(self).broadcast_arrays()
+
+    def __eq__(self, other):
+        if isinstance(other, (bool, bool_)):
+            return self.shape == () and self.array == other
+        if isinstance(other, BooleanArray):
+            b = other.array
+        elif isinstance(other, ndarray):
+            b = other
+        elif isinstance(other, list):
+            try:
+                b = BooleanArray(other)
+            except TypeError:
+                return False
+        else:
+            return False
+        a = self.array
+        return a.shape == b.shape and (a == b).all()
 
 def _is_boolean_scalar(idx):
     """

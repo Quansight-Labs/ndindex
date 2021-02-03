@@ -21,7 +21,7 @@
 
 - Make `np.ndarray == ndindex(array)` give `True` or `False` (@telamonian).
 
-- Add [ChunkSize](`ChunkSize`), a new object to represent chunking over an
+- Add [`ChunkSize`](ChunkSize), a new object to represent chunking over an
   array and manipulate indices over chunks.
 
 ### Minor Changes

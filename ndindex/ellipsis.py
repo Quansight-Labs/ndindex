@@ -86,3 +86,9 @@ class ellipsis(NDIndex):
 
     def isempty(self, shape=None):
         return Tuple().isempty(shape=shape)
+
+    def __eq__(self, other):
+        return other is ... or isinstance(other, ellipsis)
+
+    def __hash__(self):
+        return super().__hash__()

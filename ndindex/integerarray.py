@@ -1,4 +1,4 @@
-from numpy import intp
+from numpy import intp, ndarray
 
 from .array import ArrayIndex
 from .ndindex import asshape
@@ -165,3 +165,21 @@ class IntegerArray(ArrayIndex):
             return IntegerArray(start)
 
         raise NotImplementedError("IntegerArray.as_subindex is only implemented for slices")
+
+    def __eq__(self, other):
+        if isinstance(other, IntegerArray):
+            b = other.array
+        elif isinstance(other, ndarray):
+            b = other
+        elif isinstance(other, list):
+            try:
+                b = IntegerArray(other)
+            except TypeError:
+                return False
+        else:
+            return False
+        a = self.array
+        return a.shape == b.shape and (a == b).all()
+
+    def __hash__(self):
+        return super().__hash__()

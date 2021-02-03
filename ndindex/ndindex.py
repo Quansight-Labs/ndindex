@@ -16,12 +16,16 @@ def ndindex(obj):
     Slice(0, 10, None)
 
     """
-    from . import Integer, Slice, Tuple, ellipsis, Newaxis, IntegerArray, BooleanArray
-
     if isinstance(obj, NDIndex):
         return obj
 
-    if isinstance(obj, (list, ndarray, bool, bool_)):
+    if isinstance(obj, (bool, bool_)):
+        from . import BooleanArray
+        return BooleanArray(obj)
+
+    if isinstance(obj, (list, ndarray)):
+        from . import IntegerArray, BooleanArray
+
         try:
             return IntegerArray(obj)
         except TypeError:
@@ -38,16 +42,21 @@ def ndindex(obj):
             raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
     try:
+        from . import Integer
         # If operator.index() works, use that
         return Integer(obj)
     except TypeError:
         pass
 
     if isinstance(obj, slice):
+        from . import Slice
         return Slice(obj)
 
     if isinstance(obj, tuple):
+        from . import Tuple
         return Tuple(*obj)
+
+    from . import ellipsis
 
     if obj == ellipsis:
         raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
@@ -55,6 +64,7 @@ def ndindex(obj):
         return ellipsis()
 
     if obj == newaxis:
+        from . import Newaxis
         return Newaxis()
 
     raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
@@ -145,24 +155,7 @@ class ImmutableObject:
             except TypeError:
                 return False
 
-        def test_equal(a, b):
-            """
-            Check if a == b, allowing for numpy arrays
-            """
-            if not (isinstance(a, b.__class__)
-                    or isinstance(b, a.__class__)):
-                return False
-            if isinstance(a, ndarray):
-                return a.shape == b.shape and (a == b).all()
-            if isinstance(a, tuple):
-                return len(a) == len(b) and all(test_equal(i, j) for i, j in
-                                                zip(a, b))
-            if isinstance(a, ImmutableObject):
-                return test_equal(a.args, b.args)
-
-            return a == b
-
-        return test_equal(self, other)
+        return self.args == other.args
 
     def __hash__(self): # pragma: no cover
         # Note: subclasses where .args is not hashable should redefine
@@ -233,7 +226,10 @@ class NDIndex(ImmutableObject):
         """
         raise NotImplementedError
 
-    def __eq__(self, other):
+    # This is still here as a fallback implementation, but it isn't actually
+    # used by any present subclasses, because it is faster to implement __eq__
+    # on each class specifically.
+    def __eq__(self, other): # pragma: no cover
         if not isinstance(other, NDIndex):
             try:
                 other = ndindex(other)
@@ -428,8 +424,7 @@ class NDIndex(ImmutableObject):
         ========
 
         An example usage of `as_subindex` is to split an index up into
-        subindices of chunks of an array (see :any:`ChunkSize.as_subchunks()`
-        for a high-level implementation of this). For example, say a 1-D array
+        subindices of chunks of an array. For example, say a 1-D array
         `a` is chunked up into chunks of size `N`, so that `a[0:N]`,
         `a[N:2*N]`, `[2*N:3*N]`, etc. are stored separately. Then an index
         `a[i]` can be reindexed onto the chunks via `i.as_subindex(Slice(0,
@@ -461,7 +456,9 @@ class NDIndex(ImmutableObject):
         See Also
         ========
 
-        ndindex.ChunkSize.as_subchunks
+        ndindex.ChunkSize.as_subchunks:
+            a high-level iterator that efficiently gives only those chunks
+            that intersect with a given index
 
         """
         index = ndindex(index) # pragma: no cover
