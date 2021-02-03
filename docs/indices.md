@@ -7,7 +7,7 @@ basic single dimension indices, the built-in Python sequence types such as
 is critical making the best use of ndindex, as well as for making the best use
 of NumPy arrays themselves.
 
-There are 8 types of indices supported by NumPy, which correspond to the [8
+There are 7 types of indices supported by NumPy, which correspond to the [8
 top-level types](index-types). These can be sorted into three categories:
 
 ### Basic single-axis indices
