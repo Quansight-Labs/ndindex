@@ -107,6 +107,18 @@ should not be used in non-indexing contexts. See the document on
 <a class="reference internal" href="type-confusion.html"><span class="doc">Type Confusion</span></a> for more details.</p>
 </div>
 <dl class="py method">
+<dt id="ndindex.Integer.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ndindex.Integer.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="ndindex.Integer.__len__">
 <code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of elements indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code></p>
@@ -150,8 +162,7 @@ will be the array of elements indexed by both <code class="code docutils literal
 <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
 <p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
-subindices of chunks of an array (see <a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a>
-for a high-level implementation of this). For example, say a 1-D array
+subindices of chunks of an array. For example, say a 1-D array
 <code class="code docutils literal notranslate"><span class="pre">a</span></code> is chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index
 <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span>
@@ -183,7 +194,10 @@ for a high-level implementation of this). For example, say a 1-D array
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>a high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -323,6 +337,12 @@ corresponding attributes.</p>
 </pre></div>
 </div>
 <dl class="py method">
+<dt id="ndindex.Slice.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="ndindex.Slice.__hash__">
 <code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.__hash__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return hash(self).</p>
@@ -408,8 +428,7 @@ will be the array of elements indexed by both <code class="code docutils literal
 <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
 <p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
-subindices of chunks of an array (see <a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a>
-for a high-level implementation of this). For example, say a 1-D array
+subindices of chunks of an array. For example, say a 1-D array
 <code class="code docutils literal notranslate"><span class="pre">a</span></code> is chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index
 <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span>
@@ -441,7 +460,10 @@ for a high-level implementation of this). For example, say a 1-D array
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>a high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -719,8 +741,7 @@ will be the array of elements indexed by both <code class="code docutils literal
 <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
 <p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
-subindices of chunks of an array (see <a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a>
-for a high-level implementation of this). For example, say a 1-D array
+subindices of chunks of an array. For example, say a 1-D array
 <code class="code docutils literal notranslate"><span class="pre">a</span></code> is chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index
 <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span>
@@ -752,7 +773,10 @@ for a high-level implementation of this). For example, say a 1-D array
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>a high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -1056,8 +1080,7 @@ will be the array of elements indexed by both <code class="code docutils literal
 <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
 <p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
-subindices of chunks of an array (see <a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a>
-for a high-level implementation of this). For example, say a 1-D array
+subindices of chunks of an array. For example, say a 1-D array
 <code class="code docutils literal notranslate"><span class="pre">a</span></code> is chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index
 <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span>
@@ -1089,7 +1112,10 @@ for a high-level implementation of this). For example, say a 1-D array
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>a high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -1470,8 +1496,7 @@ will be the array of elements indexed by both <code class="code docutils literal
 <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
 <p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
-subindices of chunks of an array (see <a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a>
-for a high-level implementation of this). For example, say a 1-D array
+subindices of chunks of an array. For example, say a 1-D array
 <code class="code docutils literal notranslate"><span class="pre">a</span></code> is chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index
 <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span>
@@ -1503,7 +1528,10 @@ for a high-level implementation of this). For example, say a 1-D array
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>a high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -1873,8 +1901,7 @@ will be the array of elements indexed by both <code class="code docutils literal
 <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
 <p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
-subindices of chunks of an array (see <a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a>
-for a high-level implementation of this). For example, say a 1-D array
+subindices of chunks of an array. For example, say a 1-D array
 <code class="code docutils literal notranslate"><span class="pre">a</span></code> is chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index
 <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span>
@@ -1906,7 +1933,10 @@ for a high-level implementation of this). For example, say a 1-D array
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>a high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -2186,38 +2216,65 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 <dl class="py class">
 <dt id="ndindex.ChunkSize">
 <em class="property">class </em><code class="sig-prename descclassname">ndindex.</code><code class="sig-name descname">ChunkSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chunk_size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ChunkSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a chunk size.</p>
+<dd><p>Represents a chunk size tuple.</p>
 <p>A chunk size is a tuple of length n where each element is either a
 positive integer or <code class="code docutils literal notranslate"><span class="pre">None</span></code>. It represents a chunking of an array with n
 dimensions, where each corresponding dimension is chunked by the
-corresponding chunk size, or not chunked for <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p>
+corresponding chunk size, or not chunked for <code class="code docutils literal notranslate"><span class="pre">None</span></code> (note, <code class="code docutils literal notranslate"><span class="pre">None</span></code> chunks
+are currently not yet implemented).</p>
 <p>For example, given a 3 dimensional chunk size of <code class="code docutils literal notranslate"><span class="pre">(20,</span> <span class="pre">20,</span> <span class="pre">None)</span></code> and an
 array of shape <code class="code docutils literal notranslate"><span class="pre">(40,</span> <span class="pre">30,</span> <span class="pre">10)</span></code>, the array would be split into four chunks,
 corresponding to the indices <code class="code docutils literal notranslate"><span class="pre">0:20,0:20,:</span></code>, <code class="code docutils literal notranslate"><span class="pre">0:20,20:30,:</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">20:40,0:20,:</span></code>, and <code class="code docutils literal notranslate"><span class="pre">20:40,20:30,:</span></code>. Note that the size of a chunk may be
 less than the total chunk size if the array shape is not a multiple of the
 chunk size in a given dimension.</p>
-<p>ChunkSize behaves like a <code class="code docutils literal notranslate"><span class="pre">tuple</span></code>, for example, <code class="code docutils literal notranslate"><span class="pre">chunk_size[0]</span></code> gives the
-first chunk shape, and <code class="code docutils literal notranslate"><span class="pre">len(chunk_size)</span></code> gives the number of dimensions of
-a chunk.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">ChunkSize</span></code> behaves like a <code class="code docutils literal notranslate"><span class="pre">tuple</span></code>. For example, <code class="code docutils literal notranslate"><span class="pre">chunk_size[0]</span></code> gives the
+first chunk dimension, and <code class="code docutils literal notranslate"><span class="pre">len(chunk_size)</span></code> gives the number of
+dimensions of a chunk. Also, the input to ChunkSize should be a tuple,
+just as with the <code class="code docutils literal notranslate"><span class="pre">tuple</span></code> constructor, even for single dimensional chunk
+sizes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ChunkSize</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
+<span class="go">ChunkSize((20, 30, 40))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ChunkSize</span><span class="p">((</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,))</span>
+<span class="go">ChunkSize((4096,))</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt id="ndindex.ChunkSize.as_subchunks">
 <code class="sig-name descname">as_subchunks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span></em>, <em class="sig-param"><span class="n">shape</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">_force_slow</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ChunkSize.as_subchunks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split an index <code class="code docutils literal notranslate"><span class="pre">idx</span></code> on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> into subchunk indices.</p>
-<p>Yields tuples <code class="code docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">index)</span></code>, where <code class="code docutils literal notranslate"><span class="pre">c</span></code> is an index for the chunk that
-should be sliced, and <code class="code docutils literal notranslate"><span class="pre">index</span></code> is an index into that chunk giving the
-elements of <code class="code docutils literal notranslate"><span class="pre">idx</span></code> that are included in it (<code class="code docutils literal notranslate"><span class="pre">c</span></code> and <code class="code docutils literal notranslate"><span class="pre">index</span></code> are both
-ndindex indices).</p>
-<p>That is to say, for each <code class="code docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">index)</span></code> pair yielded, <code class="code docutils literal notranslate"><span class="pre">a[c][index]</span></code> will
-give those elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code> that are part of the <code class="code docutils literal notranslate"><span class="pre">c</span></code> chunk.</p>
-<p>Note that this only yields those indices that are nonempty.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex.chunking</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<p>Yields indices <code class="code docutils literal notranslate"><span class="pre">c</span></code>, where <code class="code docutils literal notranslate"><span class="pre">c</span></code> is an index for the chunk that
+should be sliced. Only those <code class="code docutils literal notranslate"><span class="pre">c</span></code> for which <code class="code docutils literal notranslate"><span class="pre">idx</span></code> includes at least one
+element are yielded.</p>
+<p>That is to say, for each <code class="code docutils literal notranslate"><span class="pre">c</span></code> index yielded, <code class="code docutils literal notranslate"><span class="pre">a[c][idx.as_subindex(c)]</span></code>
+will give those elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code> that are part of the <code class="code docutils literal notranslate"><span class="pre">c</span></code> chunk,
+and together they give all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. See also the
+docstring of <a class="reference internal" href="#ndindex.ndindex.NDIndex.as_subindex" title="ndindex.ndindex.NDIndex.as_subindex"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_subindex()</span></code></a>.</p>
+<p>This method is roughly equivalent to</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">as_subchunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># as_subindex raises ValueError in some cases when the</span>
+            <span class="c1"># indices do not intersect (see the docstring of</span>
+            <span class="c1"># as_subindex())</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="o">.</span><span class="n">isempty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="c1"># Yield those c for which idx.as_subindex(c) is nonempty</span>
+            <span class="k">yield</span> <span class="n">c</span>
+</pre></div>
+</div>
+<p>except it is more efficient.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">chunk_size</span><span class="o">.</span><span class="n">as_subchunks</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chunk_size</span><span class="o">.</span><span class="n">as_subchunks</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;    &#39;</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;    &#39;</span><span class="p">,</span> <span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
 <span class="go">Tuple(slice(0, 10, 1), slice(0, 10, 1))</span>
 <span class="go">    Tuple(slice(5, 10, 1), 0)</span>
 <span class="go">Tuple(slice(10, 20, 1), slice(0, 10, 1))</span>
@@ -2264,7 +2321,7 @@ of shape <code class="code docutils literal notranslate"><span class="pre">(5,</
 <dt id="ndindex.ChunkSize.num_chunks">
 <code class="sig-name descname">num_chunks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ChunkSize.num_chunks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Give the number of chunks for the given <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
-<p>This is the same as <code class="code docutils literal notranslate"><span class="pre">len(self.indices(shape))</span></code>, but much faster.
+<p>This is the same as <code class="code docutils literal notranslate"><span class="pre">len(list(self.indices(shape)))</span></code>, but much faster.
 <code class="code docutils literal notranslate"><span class="pre">shape</span></code> must have the same number of dimensions as <code class="code docutils literal notranslate"><span class="pre">self</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
@@ -2410,8 +2467,7 @@ will be the array of elements indexed by both <code class="code docutils literal
 <code class="code docutils literal notranslate"><span class="pre">i</span></code> and <code class="code docutils literal notranslate"><span class="pre">j</span></code> do not intersect at all.</p>
 <p class="rubric">Examples</p>
 <p>An example usage of <code class="code docutils literal notranslate"><span class="pre">as_subindex</span></code> is to split an index up into
-subindices of chunks of an array (see <a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a>
-for a high-level implementation of this). For example, say a 1-D array
+subindices of chunks of an array. For example, say a 1-D array
 <code class="code docutils literal notranslate"><span class="pre">a</span></code> is chunked up into chunks of size <code class="code docutils literal notranslate"><span class="pre">N</span></code>, so that <code class="code docutils literal notranslate"><span class="pre">a[0:N]</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">a[N:2*N]</span></code>, <code class="code docutils literal notranslate"><span class="pre">[2*N:3*N]</span></code>, etc. are stored separately. Then an index
 <code class="code docutils literal notranslate"><span class="pre">a[i]</span></code> can be reindexed onto the chunks via <code class="code docutils literal notranslate"><span class="pre">i.as_subindex(Slice(0,</span>
@@ -2443,7 +2499,10 @@ for a high-level implementation of this). For example, say a 1-D array
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>a high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -3084,7 +3143,7 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
