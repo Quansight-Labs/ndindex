@@ -45,14 +45,22 @@ the basic indices, advanced indices in NumPy always return a copy of the array.
 
 Nominally, an index is any object that can go between the square brackets
 after an array. That is, if `a` is a NumPy array, then in `a[x]`, *`x`* is an
-*index* of `a`. Semantically, an index picks some subset of the elements of
-`a`. An index `a[x]` always either returns a new array (which may or may not
-be a [view](https://numpy.org/doc/stable/glossary.html#term-view) on `a`),
-with the same dtype as `a`, and indeed, some subset of the same elements that
-were in `a`, or it raises `IndexError`.
+*index* of `a`. This also applies to built-in sequence types in Python such as
+`list`,`tuple`, and `str`, but be careful to not confuse the same notation
+used on Python dictionaries. If `d` is a Python dictionary, it uses the same
+notation `d[x]`, but the meaning of `x` is completely different than what is
+being discussed in this document (and indeed, many index types will not even
+work if you try them on a dictionary). This document also does not apply to
+indexing on Pandas DataFrame or Series objects, except insomuch as they reuse
+the same semantics as NumPy.
 
-Critically, indices do not in any way depend on the *values* of the
-elements they select. They only depend on their *position* in the array `a`.
+Semantically, an index `x` picks some subset of the elements of `a`. An index
+`a[x]` always either returns a new array with the same dtype as `a`, and
+indeed, some subset of the same elements that were in `a`, or it raises
+`IndexError`.
+
+**Critically, indices do not in any way depend on the *values* of the
+elements they select. They only depend on their *position* in the array `a`.**
 
 For example, suppose `a` is an array of integers of shape `(2, 3, 2)`:
 
@@ -99,17 +107,20 @@ same:
 
 So the following are always true about any index:
 
-- An index always either produces a new array (unless it raises `IndexError`).
+- An index on an array always produces a new array (unless it raises
+  `IndexError`).
 - The elements of the new array correspond to elements of the original array.
 - These elements are chosen by their position in the original array only.
   Their value is irrelevant.
+- As such, the exact same index on any other array with the same shape
+  produces an array with the exact same corresponding elements.
 
 To be sure, it is possible to *construct* indices that chose specific elements
 based on their values. A common example of this is masks (i.e., [boolean array
-indices](, such as `a[a > 0]`. However, the resulting index *itself* (such as
-`a > 0`) does not depend on values (`a > 0` is simply an array of booleans).
-It can be reused for any other array with the same shape and it would select
-exactly the same elements.
+indices]), such as `a[a > 0]`. However, the resulting index *itself* does not
+depend on values (`a > 0` is simply an array of booleans). It can be reused
+for any other array with the same shape and it would select exactly the same
+elements.
 
 The full range of valid indices allow generating more or less arbitrary new
 arrays whose elements come from the indexed array `a`. In practice, the most
