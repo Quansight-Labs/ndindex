@@ -283,6 +283,7 @@ MIT License
 ```{toctree}
 index.md
 api.md
+indices.md
 slices.md
 type-confusion.md
 changelog.md
