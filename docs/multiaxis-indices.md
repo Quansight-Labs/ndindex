@@ -872,7 +872,7 @@ or by inserting a new axis into `x1`:
 (2, 1, 3)
 >>> x1[:, np.newaxis] + x2
 array([[[3, 5, 2]],
-
+<BLANKLINE>
        [[5, 2, 1]]])
 >>> (x1[:, np.newaxis] + x2).shape
 (2, 1, 3)
