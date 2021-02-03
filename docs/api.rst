@@ -15,7 +15,8 @@ ndindex
 
 .. autofunction:: ndindex.ndindex
 
-(index-types)=
+.. _index-types:
+
 Index Types
 ===========
 
