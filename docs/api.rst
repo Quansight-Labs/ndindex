@@ -15,10 +15,13 @@ ndindex
 
 .. autofunction:: ndindex.ndindex
 
+(index-types)=
 Index Types
 ===========
 
 The following classes represent different types of indices.
+
+.. _integer-api:
 
 Integer
 -------
@@ -36,12 +39,15 @@ Slice
    :members:
    :special-members:
 
+.. _ellipsis-api:
+
 ellipsis
 --------
 
 .. autoclass:: ndindex.ellipsis
    :members:
 
+.. _newaxis-api:
 
 Newaxis
 -------
@@ -49,11 +55,15 @@ Newaxis
 .. autoclass:: ndindex.Newaxis
    :members:
 
+.. _tuple-api:
+
 Tuple
 -----
 
 .. autoclass:: ndindex.Tuple
    :members:
+
+.. _integerarray-api:
 
 IntegerArray
 ------------
@@ -65,6 +75,8 @@ IntegerArray
 
    .. autoattribute:: dtype
       :annotation:
+
+.. _booleanarray-api:
 
 BooleanArray
 ------------
