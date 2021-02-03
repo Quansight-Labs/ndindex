@@ -284,6 +284,7 @@ MIT License
 index.md
 api.md
 indices.md
+multiaxis-indices.md
 slices.md
 type-confusion.md
 changelog.md
