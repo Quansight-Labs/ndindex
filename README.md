@@ -74,3 +74,14 @@ on what ndindex can do.
 ## License
 
 [MIT License](LICENSE)
+
+## Acknowledgments
+
+ndindex development is supported by [Quansight
+Labs](https://labs.quansight.org/). It is also sponsored in part by [the D. E.
+Shaw group](https://www.deshaw.com/). The D. E. Shaw group collaborates with
+Quansight on numerous open source projects, including Numba, Dask and Project
+Jupyter.
+
+<div style="text-align:center"><a href="https://www.deshaw.com"><img src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" alt="https://www.deshaw.com"
+width="200"></a></div>
