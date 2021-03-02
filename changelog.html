@@ -12,8 +12,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS"}}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Documentation Style Guide" href="style-guide.html" />
@@ -172,7 +170,7 @@ it raised <code class="docutils literal notranslate"><span class="pre">NotImplem
 arrays. It was decided to not allow treating a tuple as an array to avoid
 the <a class="reference internal" href="type-confusion.html#type-confusion-tuples"><span class="std std-ref">type confusion</span></a> between <code class="docutils literal notranslate"><span class="pre">Tuple((1,</span> <span class="pre">2))</span></code> and
 <code class="docutils literal notranslate"><span class="pre">Tuple(1,</span> <span class="pre">2)</span></code> (only the latter form is correct).</p></li>
-<li><p>Document the <a class="reference internal" href="api.html#ndindex.ndindex.ImmutableObject.args" title="ndindex.ndindex.ImmutableObject.args"><span class="xref myst py py-attr"><code class="docutils literal notranslate"><span class="pre">.args</span></code></span></a> attribute.</p></li>
+<li><p>Document the <a class="reference internal" href="api.html#ndindex.IntegerArray.args" title="ndindex.IntegerArray.args"><span class="xref myst py py-attr"><code class="docutils literal notranslate"><span class="pre">.args</span></code></span></a> attribute.</p></li>
 <li><p>New internal function <a class="reference internal" href="api.html#ndindex.ndindex.operator_index" title="ndindex.ndindex.operator_index"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">operator_index()</span></code></span></a>, which acts like
 <code class="docutils literal notranslate"><span class="pre">operator.index()</span></code> except it disallows boolean types. A consequence of this
 is that calling the <a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Integer</span></code></span></a> or <a class="reference internal" href="api.html#ndindex.Slice" title="ndindex.Slice"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Slice</span></code></span></a> constructors
@@ -580,7 +578,7 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
