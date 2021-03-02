@@ -1,5 +1,7 @@
 # ndindex
 
+![ndindex logo](docs/_static/ndindex_logo_white_bg.svg)
+
 A Python library for manipulating indices of ndarrays.
 
 The documentation for ndindex can be found at https://quansight-labs.github.io/ndindex/
