@@ -110,6 +110,8 @@ html_sidebars = {
     '**': ['globaltocindex.html', 'searchbox.html'],
 }
 
+html_favicon = "logo/favicon.ico"
+
 mathjax_config = {
   'TeX': {
       'equationNumbers': {
