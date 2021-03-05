@@ -1,0 +1,727 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Type Confusion &#8212; ndindex  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ndindex Changelog" href="changelog.html" />
+    <link rel="prev" title="Slices" href="slices.html" />
+ 
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+ 
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="slices.html" title="Previous document">Slices</a>
+        </li>
+        <li>
+          <a href="changelog.html" title="Next document">ndindex Changelog</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="type-confusion">
+<h1>Type Confusion<a class="headerlink" href="#type-confusion" title="Permalink to this headline">¶</a></h1>
+<p>When using the ndindex API, it is important to avoid type confusion. Many
+types that are used as indices for arrays also have semantic meaning outside
+of indexing. For example, tuples and arrays mean one thing when they are
+indices, but they are also used in contexts that have nothing to do with indexing.</p>
+<p>ndindex classes have names that are based on the native class names for the
+index type they represent. One must be careful, however, to not confuse these
+classes with the classes they represent. Most methods that work on the native
+classes are not available on the ndindex classes.</p>
+<p>Some general types to help avoid type confusion:</p>
+<ul>
+<li><p><strong>Always use the <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></span></a> function to create ndindex
+types.</strong> When calling ndindex methods or creating <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Tuple</span></code></span></a> objects,
+it is not necessary to convert arguments to ndindex types first. Slice
+literals (using <code class="docutils literal notranslate"><span class="pre">:</span></code>) are not valid syntax outside of a getitem (square
+brackets), but you can use the <code class="docutils literal notranslate"><span class="pre">slice</span></code> built-in object to create slices.
+<code class="docutils literal notranslate"><span class="pre">slice(a,</span> <span class="pre">b,</span> <span class="pre">c)</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a:b:c</span></code>.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span> <span class="c1"># More verbose than necessary</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Keep all index objects as ndindex types until performing actual
+indexing.</strong> If all you are doing with an index is indexing it, and not
+manipulating it or storing it somewhere else, there is no need to use
+ndindex. But if you are storing ndindex types separately before indexing, or
+plan to manipulate them in any way, it is best to convert them to ndindex
+types with <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></span></a> as early as possible, and store
+them in that form. Only convert back to a raw index (with <code class="docutils literal notranslate"><span class="pre">.raw</span></code>, see the
+next bullet point) once doing an actual index operation. Avoid mixing
+ndindex and “raw” or non-ndindex types. There are many reasons to avoid
+this:</p>
+<ul>
+<li><p>Raw types (such as <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">slice</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">array</span></code>, and so on), do not
+have any of the same methods as ndindex, so your code may fail</p></li>
+<li><p>Some raw types, such as slices, arrays, and tuples containing slices or
+arrays, are not hashable, so if you try to use them as a dictionary key,
+they will fail. ndindex types are always hashable.</p>
+<p><strong>Wrong</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fails with a TypeError: unhashable type: &#39;slice&#39;</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nb">slice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Right</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)):</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)):</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>ndindex does basic type checking on indices that would otherwise not
+happen until they are actually used as an index. For example, <code class="docutils literal notranslate"><span class="pre">slice(1.0,</span> <span class="pre">2.0)</span></code> does not fail until you try to index an array with it, but
+<code class="docutils literal notranslate"><span class="pre">Slice(1.0,</span> <span class="pre">2.0)</span></code> fails immediately.</p>
+<p><strong>Wrong</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typo would not be caught until idx is actually used to index an array</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Right</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typo would be caught right away</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">))</span>
+<span class="c1"># OR</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>NumPy arrays and tuples containing NumPy arrays are not easy to compare,
+since using <code class="docutils literal notranslate"><span class="pre">==</span></code> on an <code class="docutils literal notranslate"><span class="pre">array</span></code> does not produce a boolean. <code class="docutils literal notranslate"><span class="pre">==</span></code> on an
+ndindex type will always produce a boolean, which compares if the two
+indices are exactly equal.</p>
+<p><strong>Wrong</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fails with ValueError: The truth value of an array with more than one element is ambiguous.</span>
+<span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>Right</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ndindex</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="n">ndindex</span><span class="p">((</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><strong>Use <code class="docutils literal notranslate"><span class="pre">.raw</span></code> to convert an ndindex object to an indexable type.</strong> With the
+exception of <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, it is impossible for custom types to define
+themselves as indices to NumPy arrays, so it is necessary to use
+<code class="docutils literal notranslate"><span class="pre">a[idx.raw]</span></code> rather than <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> when <code class="docutils literal notranslate"><span class="pre">idx</span></code> is an ndindex type. Since
+native index types do not have a <code class="docutils literal notranslate"><span class="pre">.raw</span></code> method, it is recommended to always
+keep any index object that you are using as an ndindex type, and use <code class="docutils literal notranslate"><span class="pre">.raw</span></code>
+only when you need to use it as an index. If you get the error “<code class="docutils literal notranslate"><span class="pre">IndexError:</span> <span class="pre">only</span> <span class="pre">integers,</span> <span class="pre">slices</span> <span class="pre">(`:`),</span> <span class="pre">ellipsis</span> <span class="pre">(`...`),</span> <span class="pre">numpy.newaxis</span> <span class="pre">(`None`)</span> <span class="pre">and</span> <span class="pre">integer</span> <span class="pre">or</span> <span class="pre">boolean</span> <span class="pre">arrays</span> <span class="pre">are</span> <span class="pre">valid</span> <span class="pre">indices</span></code>”, it indicates you forgot to
+use <code class="docutils literal notranslate"><span class="pre">.raw</span></code>.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Use ndindex classes only for objects that represent indices.</strong> Do not use
+classes like <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code>, or <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> unless
+the object in question is going to be an index to an array. For example,
+array shapes are always tuples of integers, but they are not indices, so
+<code class="docutils literal notranslate"><span class="pre">Tuple</span></code> should not be used to represent an array shape, but rather just a
+normal <code class="docutils literal notranslate"><span class="pre">tuple</span></code>. If an object will be used both as an index and an
+integer/tuple/array in its own right, either make use of <code class="docutils literal notranslate"><span class="pre">.raw</span></code> when using
+it in non-index contexts, or store the objects separately (note that
+<code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> always make a copy of the input argument,
+so there is no issue with managing it separately).</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="c1"># idx is an ndindex object</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c1"># gives an error</span>
+<span class="c1"># idx is an ndindex object</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c1"># gives an error</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Try to use ndindex methods to manipulate indices.</strong> The whole reason
+ndindex exists is that writing formulas for manipulating indices is hard,
+and it’s easy to get the corner cases wrong. If you find yourself
+manipulating index args directly in complex ways, it’s a sign you should
+probably be using a higher level abstraction. If what you are trying to do
+doesn’t exist yet, <a class="reference external" href="https://github.com/Quansight-labs/ndindex/issues">open an
+issue</a> so we can implement it.</p></li>
+</ul>
+<p>Additionally, some advice for specific types:</p>
+<div class="section" id="integer">
+<h2>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong><a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It represents integers
+<strong>as indices</strong>. It is not usable in contexts where integers are usable. For
+example, arithmetic will not work on it. If you need to manipulate the
+integer index as an integer, use <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># Produces an error</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Integer</span></code> is the only index type that can be used directly as an array
+index. This is because the <code class="docutils literal notranslate"><span class="pre">__index__</span></code> API allows custom integer objects to
+define themselves as indices. However, this API does not extend to other
+index types like slices or tuples. <strong>It is recommended to always use
+<code class="docutils literal notranslate"><span class="pre">idx.raw</span></code> even if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is an <code class="docutils literal notranslate"><span class="pre">Integer</span></code></strong>, so that it will also work even if
+it is another index type. You should not rely on any ndindex function
+returning a specific index type (unless it states that it does so in its
+docstring).</p></li>
+</ul>
+</div>
+<div class="section" id="tuple">
+<span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong><a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular, things
+like <code class="docutils literal notranslate"><span class="pre">idx[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">len(idx)</span></code> will not work if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>. If you
+need to access the specific term in a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, use <code class="docutils literal notranslate"><span class="pre">Tuple.args</span></code> if you want
+the ndindex type, or <code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code> if you want the raw type.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Gives int(0)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Gives Integer(0)</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Produces an error</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Tuple</span></code> is defined as <code class="docutils literal notranslate"><span class="pre">Tuple(*args)</span></code>. <code class="docutils literal notranslate"><span class="pre">Tuple(args)</span></code> gives an error.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Better:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">Tuple</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="ellipsis">
+<span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
+Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex(...)</span></code></strong>. As noted above, all ndindex
+methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will automatically convert <code class="docutils literal notranslate"><span class="pre">...</span></code> into the ndindex type.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+</li>
+<li><p>We recommend preferring <code class="docutils literal notranslate"><span class="pre">...</span></code> over the built-in name <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code>, as it is
+more readable. The <code class="docutils literal notranslate"><span class="pre">...</span></code> syntax is allowed everywhere that <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> would
+work.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Less readable</span>
+</pre></div>
+</div>
+</li>
+<li><p>If you do use <code class="docutils literal notranslate"><span class="pre">ellipsis</span></code> beware that it is the <em>class</em>, not the <em>instance</em>,
+unlike the built-in <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> object. This is done for consistency in the
+internal ndindex class hierarchy.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+<p>The below do not give errors, but it is easy to confuse them with the above.
+It is best to just use <code class="docutils literal notranslate"><span class="pre">...</span></code>, which is more concise and easier to read.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Easy to confuse, less readable</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Easy to confuse, less readable</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code> is <strong>not</strong> singletonized, unlike the built-in <code class="docutils literal notranslate"><span class="pre">...</span></code>. Aside from
+singletonization not being necessary for ndindex types, it would be
+impossible to make <code class="docutils literal notranslate"><span class="pre">ellipsis()</span> <span class="pre">is</span> <span class="pre">...</span></code> return True. If you are using
+ndindex, <strong>you should use <code class="docutils literal notranslate"><span class="pre">==</span></code> to compare against <code class="docutils literal notranslate"><span class="pre">...</span></code></strong>, and avoid using
+<code class="docutils literal notranslate"><span class="pre">is</span></code>. Note that as long as you know <code class="docutils literal notranslate"><span class="pre">idx</span></code> is an ndindex type, this is safe
+to do, since even the array index types <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code>
+allow <code class="docutils literal notranslate"><span class="pre">==</span></code> comparison (unlike NumPy arrays).</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="o">...</span><span class="p">:</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span> <span class="c1"># Will be False if idx is the ndindex ellipsis type</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="n">ellipsis</span><span class="p">():</span> <span class="c1"># Will always be False (ellipsis() creates a new instance)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="newaxis">
+<h2>Newaxis<a class="headerlink" href="#newaxis" title="Permalink to this headline">¶</a></h2>
+<p>The advice for <code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is almost identical to the advice for
+<a class="reference internal" href="#type-confusion-ellipsis"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></span></a>. Note that <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> is just an alias
+for <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<ul>
+<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> class directly.
+Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">ndindex(np.newaxis)</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">ndindex(None)</span></code></strong>. As noted above, all ndindex methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will
+automatically convert <code class="docutils literal notranslate"><span class="pre">None</span></code> into the ndindex type.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+</li>
+<li><p>If you do use <code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> beware that it is the <em>class</em>, not the <em>instance</em>,
+unlike the NumPy <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> object (i.e., <code class="docutils literal notranslate"><span class="pre">None</span></code>). This is done for
+consistency in the internal ndindex class hierarchy.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+<p>The below does not give an error, but it is easy to confuse it with the
+above. It is best to just use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>, which is more concise
+and easier to read.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Easy to confuse</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is <strong>not</strong> singletonized, unlike the built-in <code class="docutils literal notranslate"><span class="pre">None</span></code>. It would
+also be impossible to make <code class="docutils literal notranslate"><span class="pre">Newaxis()</span> <span class="pre">is</span> <span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">Newaxis()</span> <span class="pre">is</span> <span class="pre">None</span></code>
+return True. If you are using ndindex, <strong>you should use <code class="docutils literal notranslate"><span class="pre">==</span></code> to compare
+against <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code></strong>, and avoid using <code class="docutils literal notranslate"><span class="pre">is</span></code>. Note that as long as
+you know <code class="docutils literal notranslate"><span class="pre">idx</span></code> is an ndindex type, this is safe to do, since even the array
+index types <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> allow <code class="docutils literal notranslate"><span class="pre">==</span></code> comparison (unlike
+NumPy arrays).</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">:</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">:</span> <span class="c1"># Will be False if idx is the ndindex Newaxis type</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># Will be False if idx is the ndindex Newaxis type</span>
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="n">Newaxis</span><span class="p">():</span> <span class="c1"># Will be False (Newaxis() creates a new instance)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="integerarray-and-booleanarray">
+<h2>IntegerArray and BooleanArray<a class="headerlink" href="#integerarray-and-booleanarray" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong><a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought of as
+arrays.</strong> They do not have the methods that <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> would have. They
+also have fixed dtypes (<code class="docutils literal notranslate"><span class="pre">intp</span></code> and <code class="docutils literal notranslate"><span class="pre">bool_</span></code>) and are restricted by what is
+allowed as indices by NumPy. To access the array they represent, use
+<code class="docutils literal notranslate"><span class="pre">idx.array</span></code> or <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Like all other ndindex types, <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> are
+immutable.</strong>. The <code class="docutils literal notranslate"><span class="pre">.array</span></code> object on them is set as read-only to enforce
+this. To modify an array index, create a new object. All ndindex methods
+that manipulate indices, like <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></span></a>, return new
+objects. If you create an <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> or <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> object out of an
+existing array, the array is copied so that modifications to the original
+array do not affect the ndindex objects.</p>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">idx2</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Wrong:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Gives an error</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="slices.html" title="Previous document">Slices</a>
+        </li>
+        <li>
+          <a href="changelog.html" title="Next document">ndindex Changelog</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+<h1 class="logo"><a href="index.html">ndindex</a></h1>
+
+
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ndindex</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#acknowledgments">Acknowledgments</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l5"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Type Confusion</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#integer">Integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tuple">Tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#newaxis">Newaxis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-1-2020-02-03">Version 1.5.1 (2020-02-03)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#rules">Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#based">0-based</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Confusion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#integer">Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tuple">Tuple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#newaxis">Newaxis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-1-2020-02-03">Version 1.5.1 (2020-02-03)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2020, Quansight Labs.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/type-confusion.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    <span id="forkongithub"><a href="https://github.com/Quansight-Labs/ndindex">Fork me on GitHub</a></span>
+  </body>
+</html>
