@@ -11,11 +11,13 @@
 ./_static/custom.css
 ./_static/doctools.js
 ./_static/documentation_options.js
+./_static/favicon.ico
 ./_static/file.png
 ./_static/jquery-3.5.1.js
 ./_static/jquery.js
 ./_static/language_data.js
 ./_static/minus.png
+./_static/ndindex_logo_white_bg.svg
 ./_static/plus.png
 ./_static/pygments.css
 ./_static/searchtools.js
