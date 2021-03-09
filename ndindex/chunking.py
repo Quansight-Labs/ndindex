@@ -3,10 +3,13 @@ from itertools import product
 from functools import reduce
 from operator import mul
 
+import numpy as np
+
 from .ndindex import ImmutableObject, operator_index, asshape, ndindex
 from .tuple import Tuple
 from .slice import Slice
 from .integer import Integer
+from .integerarray import IntegerArray
 from .subindex_helpers import ceiling
 
 # np.prod has overflow and math.prod is Python 3.8+ only
@@ -222,6 +225,8 @@ class ChunkSize(ImmutableObject, Sequence):
         for i, n in zip(idx.args, self):
             if isinstance(i, Integer):
                 iters.append([i.raw//n])
+            elif isinstance(i, IntegerArray):
+                iters.append(np.unique(i.array//n).flat)
             elif isinstance(i, Slice) and i.step > 0:
                 a, N, m = i.args
                 if m > n:
