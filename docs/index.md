@@ -281,7 +281,7 @@ hypothesis test.
 ## Acknowledgments
 
 ndindex development is supported by [Quansight
-Labs](https://labs.quansight.org/). It is also sponsored in part by [the D. E.
+Labs](https://labs.quansight.org/) and is sponsored in part by [the D. E.
 Shaw group](https://www.deshaw.com/). The D. E. Shaw group collaborates with
 Quansight on numerous open source projects, including Numba, Dask and Project
 Jupyter.
