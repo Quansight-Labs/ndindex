@@ -59,6 +59,9 @@ def test_integer_reduce_exhaustive():
         else:
             assert reduced.raw >= 0
 
+            # Idempotency
+            assert reduced.reduce() == reduced
+            assert reduced.reduce(10) == reduced
 
 @given(ints(), shapes)
 def test_integer_reduce_hypothesis(i, shape):
@@ -74,6 +77,10 @@ def test_integer_reduce_hypothesis(i, shape):
         pass
     else:
         assert reduced.raw >= 0
+
+        # Idempotency
+        assert reduced.reduce() == reduced
+        assert reduced.reduce(shape) == reduced
 
 def test_integer_reduce_no_shape_exhaustive():
     a = arange(10)

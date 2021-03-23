@@ -128,6 +128,7 @@ def test_slice_reduce_no_shape_exhaustive():
             assert abs(reduced.step) <= abs(S.step)
         if reduced.stop is None:
             assert S.stop is None
+        # Idempotency
         assert reduced.reduce() == reduced, S
 
         B = []
@@ -169,6 +170,7 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
         assert abs(reduced.step) <= abs(S.step)
     if reduced.stop is None:
         assert S.stop is None
+    # Idempotency
     assert reduced.reduce() == reduced, S
 
 def test_slice_reduce_exhaustive():
@@ -225,6 +227,10 @@ def test_slice_reduce_exhaustive():
                 assert slices[B] == reduced, f"{S} reduced to {reduced}, but should be equal to {slices[B]} for shape {n}"
             else:
                 slices[B] = reduced
+
+            # Idempotency
+            assert reduced.reduce() == reduced, S
+            assert reduced.reduce((n,)) == reduced, S
 
 @example(slice(None, None, -1), 2)
 @example(slice(-10, 11, 3), 10)
@@ -286,6 +292,10 @@ def test_slice_reduce_hypothesis(s, shape):
                 assert reduced.stop >= S.stop
     if L == 1:
         assert reduced == Slice(reduced.start, reduced.start+1, 1)
+
+    # Idempotency
+    assert reduced.reduce() == reduced, S
+    assert reduced.reduce(shape) == reduced, S
 
 def test_slice_newshape_exhaustive():
     def raw_func(a, idx):

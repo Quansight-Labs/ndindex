@@ -75,6 +75,10 @@ def test_integerarray_reduce_hypothesis(idx, shape):
             assert isinstance(reduced, IntegerArray)
             assert (reduced.raw >= 0).all()
 
+        # Idempotency
+        assert reduced.reduce() == reduced
+        assert reduced.reduce(shape) == reduced
+
 @example([], (1,))
 @example([0], (1, 0))
 @given(integer_arrays, one_of(short_shapes, integers(0, 10)))
