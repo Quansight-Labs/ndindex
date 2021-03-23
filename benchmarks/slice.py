@@ -34,3 +34,7 @@ class TimeSlice:
 
     def time_isempty_shape(self):
         self.s1.isempty((10, 5))
+
+    def time_len(self):
+        len(self.s1)
+        len(self.s2)
