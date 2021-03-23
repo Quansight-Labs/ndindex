@@ -106,6 +106,7 @@ def test_indices(chunk_size, shape):
 def test_as_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
+@example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
 @example((1,), (0,), ...)
 @example((2, 2), (5, 5), (0, 3))
 @example((2, 2), (5, 5), (slice(0, 5, 2), slice(0, 5, 3)))
