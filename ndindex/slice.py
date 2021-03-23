@@ -152,7 +152,10 @@ class Slice(NDIndex):
         isempty
 
         """
-        start, stop, step = self.reduce().args
+        s = self
+        if None in self.args or self.start < 0 or self.stop < 0:
+            s = s.reduce()
+        start, stop, step = s.args
         error = ValueError("Cannot determine max length of slice")
         # We reuse the logic in range.__len__. However, it is only correct if
         # start and stop are nonnegative.
