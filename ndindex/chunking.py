@@ -10,6 +10,7 @@ from .tuple import Tuple
 from .slice import Slice
 from .integer import Integer
 from .integerarray import IntegerArray
+from .newaxis import Newaxis
 from .subindex_helpers import ceiling
 
 # np.prod has overflow and math.prod is Python 3.8+ only
@@ -217,7 +218,7 @@ class ChunkSize(ImmutableObject, Sequence):
                     yield c
             return
 
-        if _force_slow or len(idx.args) > len(self):
+        if _force_slow:
             yield from _fallback()
             return
 
@@ -229,7 +230,16 @@ class ChunkSize(ImmutableObject, Sequence):
             return
 
         iters = []
-        for i, n in zip(idx.args, self):
+        idx_args = iter(idx.args)
+        self_ = iter(self)
+        while True:
+            try:
+                i = next(idx_args)
+                if isinstance(i, Newaxis):
+                    continue
+                n = next(self_)
+            except StopIteration:
+                break
             if isinstance(i, Integer):
                 iters.append([i.raw//n])
             elif isinstance(i, IntegerArray):
