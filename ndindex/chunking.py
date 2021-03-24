@@ -259,7 +259,7 @@ class ChunkSize(ImmutableObject, Sequence):
                 # happen in cases where the naive as_subindex algorithm will
                 # raise NotImplementedError.
                 yield from _fallback()
-                return
+                return # pragma: no cover
 
         def _indices(iters):
             for p in product(*iters):
