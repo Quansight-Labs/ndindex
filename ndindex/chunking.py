@@ -221,6 +221,13 @@ class ChunkSize(ImmutableObject, Sequence):
             yield from _fallback()
             return
 
+        if idx.isempty(shape):
+            return
+
+        if self == ():
+            yield Tuple()
+            return
+
         iters = []
         for i, n in zip(idx.args, self):
             if isinstance(i, Integer):
