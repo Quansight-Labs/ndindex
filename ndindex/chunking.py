@@ -146,7 +146,7 @@ class ChunkSize(ImmutableObject, Sequence):
             yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
                           for n, chunk_size, i in zip(shape, self, p)])
 
-    def as_subchunks(self, idx, shape, *, _force_slow=False):
+    def as_subchunks(self, idx, shape, *, _force_slow=None):
         """
         Split an index `idx` on an array of shape `shape` into subchunk indices.
 
@@ -208,6 +208,8 @@ class ChunkSize(ImmutableObject, Sequence):
         # The slow naive fallback is kept here for testing purposes and to support
         # indices that aren't supported in the fast way yet below.
         def _fallback():
+            if _force_slow is False: # pragma: no cover
+                raise RuntimeError("as_subchunks() attempted fallback with _force_slow=False")
             for c in self.indices(shape):
                 try:
                     index = idx.as_subindex(c)
@@ -253,7 +255,9 @@ class ChunkSize(ImmutableObject, Sequence):
                         yield from range(a//n, ceiling(N, n))
                 iters.append(_slice_iter(i, n))
             else:
-                # fallback to the naive algorithm
+                # Fallback to the naive algorithm. This should currently only
+                # happen in cases where the naive as_subindex algorithm will
+                # raise NotImplementedError.
                 yield from _fallback()
                 return
 

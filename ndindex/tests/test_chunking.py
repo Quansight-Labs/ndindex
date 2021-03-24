@@ -1,4 +1,4 @@
-from itertools import zip_longest
+from itertools import zip_longest, tee
 
 from numpy import arange, isin, sort, concatenate
 
@@ -125,13 +125,30 @@ def test_as_subchunks(chunk_size, shape, idx):
 
     full_idx = a[idx.raw]
 
+    subarrays = []
+    fast = chunk_size.as_subchunks(idx, shape)
+    slow = chunk_size.as_subchunks(idx, shape, _force_slow=True)
+    slow2 = chunk_size.as_subchunks(idx, shape, _force_slow=True)
+    no_fallback = chunk_size.as_subchunks(idx, shape, _force_slow=False)
+    slow_raised_notimplementederror = False
     try:
-        subarrays = []
-        fast = chunk_size.as_subchunks(idx, shape)
-        slow = chunk_size.as_subchunks(idx, shape, _force_slow=True)
+        next(slow2)
+    except StopIteration:
+        pass
+    except NotImplementedError:
+        # The fallback isn't implemented, but the fast case may still be.
+        slow, fast = tee(fast, 2)
+        slow_raised_notimplementederror = True
+    if not slow_raised_notimplementederror:
+        # If it works (no NotImplementedError), it shouldn't use the fallback.
+        try:
+            next(no_fallback)
+        except StopIteration:
+            pass
+    try:
         for c, cslow in zip_longest(fast, slow):
             assert c == cslow
-            index = idx.as_subindex(c)
+            index = idx.expand(shape).as_subindex(c)
             chunk = a[c.raw]
             subchunk = chunk[index.raw]
             # Not empty
@@ -140,6 +157,9 @@ def test_as_subchunks(chunk_size, shape, idx):
             assert_equal(subchunk.flatten(), full_idx[isin(full_idx, chunk)])
             subarrays.append(subchunk)
     except NotImplementedError:
+        # NotImplementedError should only be allowed from the fallback algorithm
+        if not slow_raised_notimplementederror:
+            raise
         return
 
     # Picks all elements
