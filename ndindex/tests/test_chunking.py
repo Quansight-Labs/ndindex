@@ -106,14 +106,14 @@ def test_indices(chunk_size, shape):
 def test_as_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
-@example((1,), (1,), True)
+@example((1,), True, (1,))
 @example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
-@example((1,), (0,), ...)
-@example((2, 2), (5, 5), (0, 3))
-@example((2, 2), (5, 5), (slice(0, 5, 2), slice(0, 5, 3)))
-@example((2, 2), (5, 5), ([0, 0],))
-@given(chunk_sizes(), chunk_shapes, ndindices)
-def test_as_subchunks(chunk_size, shape, idx):
+@example((1,), ..., (0,))
+@example((2, 2), (0, 3), (5, 5))
+@example((2, 2), (slice(0, 5, 2), slice(0, 5, 3)), (5, 5))
+@example((2, 2), ([0, 0],), (5, 5))
+@given(chunk_sizes(), ndindices, chunk_shapes)
+def test_as_subchunks(chunk_size, idx, shape):
     chunk_size = ChunkSize(chunk_size)
     size = prod(shape)
     a = arange(size).reshape(shape)
