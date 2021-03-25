@@ -459,6 +459,7 @@ class NDIndex(ImmutableObject):
         ndindex.ChunkSize.as_subchunks:
             a high-level iterator that efficiently gives only those chunks
             that intersect with a given index
+        ndindex.ChunkSize.num_subchunks
 
         """
         index = ndindex(index) # pragma: no cover

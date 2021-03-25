@@ -195,6 +195,7 @@ class ChunkSize(ImmutableObject, Sequence):
         ========
 
         ndindex.NDIndex.as_subindex
+        num_subchunks
 
         """
         shape = asshape(shape)
@@ -271,3 +272,65 @@ class ChunkSize(ImmutableObject, Sequence):
             # Empty indices should be impossible by the construction of the
             # iterators above.
             yield c
+
+    def num_subchunks(self, idx, shape):
+        """
+        Give the number of chunks indexed by `idx` on an array of shape
+        `shape`.
+
+        This is equivalent to `len(list(self.as_subindex(idx, shape)))`, but
+        more efficient.
+
+        >>> from ndindex import ChunkSize, Tuple
+        >>> idx = Tuple(slice(5, 15), 0)
+        >>> shape = (20, 20)
+        >>> chunk_size = ChunkSize((10, 10))
+        >>> chunk_size.num_subchunks(idx, shape)
+        2
+
+        See Also
+        ========
+
+        ndindex.NDIndex.as_subindex
+        num_subchunks
+
+        """
+        shape = asshape(shape)
+        if len(shape) != len(self):
+            raise ValueError("chunks dimensions must equal the array dimensions")
+
+        if 0 in shape:
+            return 0
+        idx = ndindex(idx).expand(shape)
+
+        if idx.isempty(shape):
+            return 0
+
+        if self == ():
+            return 1
+
+        idx_args = iter(idx.args)
+        self_ = iter(self)
+        res = 1
+        while True:
+            try:
+                i = next(idx_args)
+                if isinstance(i, Newaxis):
+                    continue
+                n = next(self_)
+            except StopIteration:
+                break
+            if isinstance(i, Integer):
+                continue
+            elif isinstance(i, IntegerArray):
+                res *= np.unique(i.array//n).size
+            elif isinstance(i, Slice) and i.step > 0:
+                a, N, m = i.args
+                if m > n:
+                    res *= ceiling(N-a, m)
+                else:
+                    res *= ceiling(N, n) - a//n
+            else:
+                raise NotImplementedError(f"num_subchunks() is not implemented for {type(i).__name__}")
+
+        return res
