@@ -1,5 +1,6 @@
 import inspect
 import numbers
+import operator
 
 from numpy import ndarray, bool_, newaxis
 
@@ -622,8 +623,6 @@ def operator_index(idx):
     TypeError: 'bool' object cannot be interpreted as an integer
 
     """
-    import operator
-
     if isinstance(idx, bool):
         raise TypeError("'bool' object cannot be interpreted as an integer")
     if isinstance(idx, bool_):

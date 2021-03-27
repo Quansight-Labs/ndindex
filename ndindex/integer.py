@@ -96,10 +96,6 @@ class Integer(NDIndex):
         return shape[1:]
 
     def as_subindex(self, index):
-        from .ndindex import ndindex
-        from .slice import Slice
-        from .tuple import Tuple
-
         index = ndindex(index)
 
         if isinstance(index, Tuple):
@@ -149,3 +145,8 @@ class Integer(NDIndex):
 
     def __hash__(self):
         return super().__hash__()
+
+# Imports at the bottom to avoid circular import issues
+from .ndindex import ndindex
+from .slice import Slice
+from .tuple import Tuple

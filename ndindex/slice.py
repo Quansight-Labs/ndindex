@@ -481,13 +481,6 @@ class Slice(NDIndex):
     def as_subindex(self, index):
         # The docstring of this method is currently on NDindex.as_subindex, as
         # this is the only method that is actually implemented so far.
-
-        from .ndindex import ndindex
-        from .tuple import Tuple
-        from .integer import Integer
-        from .integerarray import IntegerArray
-        from .booleanarray import BooleanArray
-
         index = ndindex(index)
         index_orig = index
 
@@ -570,3 +563,10 @@ class Slice(NDIndex):
         elif isinstance(other, Slice):
             return self.args == other.args
         return False
+
+# Imports at the bottom to avoid circular import issues
+from .ndindex import ndindex
+from .tuple import Tuple
+from .integer import Integer
+from .integerarray import IntegerArray
+from .booleanarray import BooleanArray
