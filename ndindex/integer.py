@@ -26,6 +26,8 @@ class Integer(NDIndex):
        :any:`type-confusion` for more details.
 
     """
+    __slots__ = ()
+
     def _typecheck(self, idx):
         idx = operator_index(idx)
         return (idx,)

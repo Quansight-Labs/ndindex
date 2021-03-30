@@ -49,6 +49,8 @@ class Slice(NDIndex):
     slice(None, 10, None)
 
     """
+    __slots__ = ()
+
     def _typecheck(self, start, stop=default, step=None):
         if isinstance(start, Slice):
             return start.args

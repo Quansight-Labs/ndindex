@@ -33,6 +33,8 @@ class Newaxis(NDIndex):
        more details.
 
     """
+    __slots__ = ()
+
     def _typecheck(self):
         return ()
 

@@ -67,6 +67,7 @@ class BooleanArray(ArrayIndex):
        :any:`type-confusion` for more details.
 
     """
+    __slots__ = ()
 
     dtype = bool_
     """

@@ -110,6 +110,8 @@ class ImmutableObject:
     NDIndex
 
     """
+    __slots__ = ('args',)
+
     def __init__(self, *args, **kwargs):
         """
         This method should be called by subclasses (via super()) after type-checking
@@ -203,6 +205,8 @@ class NDIndex(ImmutableObject):
     ImmutableObject
 
     """
+    __slots__ = ()
+
     # TODO: Make NDIndex and ImmutableObject abstract base classes
     @property
     def raw(self):

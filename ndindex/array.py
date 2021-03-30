@@ -14,6 +14,8 @@ class ArrayIndex(NDIndex):
     To subclass this, define the `dtype` attribute, as well as all the usual
     ndindex methods.
     """
+    __slots__ = ()
+
     # Subclasses should redefine this
     dtype = None
 

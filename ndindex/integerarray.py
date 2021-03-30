@@ -42,6 +42,8 @@ class IntegerArray(ArrayIndex):
        :any:`type-confusion` for more details.
 
     """
+    __slots__ = ()
+
     dtype = intp
     """
     The dtype of `IntegerArray` is `np.intp`, which is typically either
