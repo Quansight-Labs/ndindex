@@ -893,6 +893,52 @@ sometimes the correct way to achieve this.
 
 ## Advanced Indices
 
+Finally we come to the so-called advanced indices. These are "advanced" in the
+sense that they are more complex. They allow selecting arbitrary parts of an
+array, in ways that are impossible with the basic index types. Advanced
+indexing is also sometimes called indexing by arrays, as there are two types
+of advanced indices, both of which are arrays: integer arrays and boolean
+arrays. Indexing by an array that does not have an integer or boolean dtype is
+an error.
+
+### Integer Arrays
+
+### Boolean Arrays
+
+### Views vs. Copies
+
+Advanced indices in NumPy also have a property that is important to make note
+of in some situations, which is that they always create a **copy** of the
+underlying array. This can matter for performance in some situations. It is
+also relevant if you are modifying the array. For example:
+
+```py
+>>> a = np.arange(24).reshape((3, 2, 4))
+>>> b = a[:, 0]
+>>> c = a[np.array([[0, 0], [1, 1]])]
+>>> c[:] = 0
+>>> a
+array([[[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7]],
+
+       [[ 8,  9, 10, 11],
+        [12, 13, 14, 15]],
+
+       [[16, 17, 18, 19],
+        [20, 21, 22, 23]]])
+>>> b[:] = 0
+>>> a
+array([[[ 0,  0,  0,  0],
+        [ 4,  5,  6,  7]],
+
+       [[ 0,  0,  0,  0],
+        [12, 13, 14, 15]],
+
+       [[ 0,  0,  0,  0],
+        [20, 21, 22, 23]]])
+
+```
+
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
