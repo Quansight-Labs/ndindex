@@ -1,6 +1,6 @@
 # ndindex Changelog
 
-## Version 1.5.1 (2020-02-03)
+## Version 1.5.1 (2021-02-03)
 
 ### Major Changes
 
