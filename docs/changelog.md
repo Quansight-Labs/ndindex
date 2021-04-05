@@ -1,5 +1,36 @@
 # ndindex Changelog
 
+## Version 1.5.2 (2021-04-05)
+
+### Major Changes
+
+- ndindex now has a logo: ![ndindex logo](_static/ndindex_logo_white_bg.svg)
+  Thanks to [Irina Fumarel](mailto:ifumarel@quansight.com) for the logo design.
+
+- Improve {any}`ChunkSize.as_subchunks()` to never use the slow fallback
+  method. This in particular improves the performance for array indices.
+
+- Add a new function {any}`ChunkSize.num_subchunks()`. This is a more efficient
+  way of computing `len(list(chunk_size.as_subindex(idx, shape)))`.
+
+### Minor Changes
+
+- Added
+  [CODE_OF_CONDUCT.md](https://github.com/Quansight-Labs/ndindex/blob/master/CODE_OF_CONDUCT.md)
+  to the ndindex repository. ndindex follows the [Quansight Code of
+  Conduct](https://github.com/Quansight/.github/blob/master/CODE_OF_CONDUCT.md).
+
+- Avoid precomputing all iterated values for slices with large steps in
+  {any}`ChunkSize.as_subchunks()`.
+
+- Improve the performance of {any}`Slice.__len__()` for slices that
+  are already reduced.
+
+- Some minor general performance improvements from moving imports outside of
+  functions and adding `__slots__` to all classes.
+
+- Add an [acknowledgments section](acknowledgments) to the README and docs.
+
 ## Version 1.5.1 (2021-02-03)
 
 ### Major Changes

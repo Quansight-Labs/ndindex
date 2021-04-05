@@ -278,6 +278,7 @@ hypothesis test.
 
 [MIT License](https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE)
 
+(acknowledgments)=
 ## Acknowledgments
 
 ndindex development is supported by [Quansight
