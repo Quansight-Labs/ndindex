@@ -5,7 +5,7 @@
 set -e
 set -x
 
-asv run -k
+asv run -k ALL
 asv publish
 git checkout gh-pages
 git pull
