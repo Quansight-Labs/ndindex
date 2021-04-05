@@ -77,8 +77,8 @@ html_theme_options = {
     'github_user': 'Quansight-Labs',
     'github_repo': 'ndindex',
     'github_banner': False,
-    # 'logo': 'logo.jpg',
-    # 'logo_name': True,
+    'logo': 'ndindex_logo_white_bg.svg',
+    'logo_name': False,
     # 'show_related': True,
     # Needs a release with https://github.com/bitprophet/alabaster/pull/101 first
     'show_relbars': True,
@@ -109,6 +109,8 @@ html_theme_options = {
 html_sidebars = {
     '**': ['globaltocindex.html', 'searchbox.html'],
 }
+
+html_favicon = "logo/favicon.ico"
 
 mathjax_config = {
   'TeX': {
