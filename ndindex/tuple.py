@@ -43,14 +43,9 @@ class Tuple(NDIndex):
        more details.
 
     """
-    def _typecheck(self, *args):
-        from .array import ArrayIndex
-        from .ellipsis import ellipsis
-        from .newaxis import Newaxis
-        from .slice import Slice
-        from .integer import Integer
-        from .booleanarray import BooleanArray, _is_boolean_scalar
+    __slots__ = ()
 
+    def _typecheck(self, *args):
         newargs = []
         arrays = []
         array_block_start = False
@@ -115,7 +110,6 @@ class Tuple(NDIndex):
         return hash(self.args)
 
     def __repr__(self):
-        from .array import ArrayIndex
         # Since tuples are nested, we can print the raw form of the args to
         # make them a little more readable.
         def _repr(s):
@@ -129,7 +123,6 @@ class Tuple(NDIndex):
         return f"{self.__class__.__name__}({', '.join(map(_repr, self.args))})"
 
     def __str__(self):
-        from .array import ArrayIndex
         # Since tuples are nested, we can print the raw form of the args to
         # make them a little more readable.
         def _str(s):
@@ -265,11 +258,6 @@ class Tuple(NDIndex):
         .BooleanArray.reduce
 
         """
-        from .slice import Slice
-        from .integer import Integer
-        from .booleanarray import BooleanArray, _is_boolean_scalar
-        from .integerarray import IntegerArray
-
         args = list(self.args)
         if ... not in args:
             return type(self)(*args, ...).reduce(shape)
@@ -401,10 +389,6 @@ class Tuple(NDIndex):
         return type(self)(*newargs)
 
     def broadcast_arrays(self):
-        from .booleanarray import BooleanArray, _is_boolean_scalar
-        from .integerarray import IntegerArray
-        from .integer import Integer
-
         args = self.args
         boolean_scalars = [i for i in args if _is_boolean_scalar(i)]
         if len(boolean_scalars) > 1:
@@ -458,12 +442,6 @@ class Tuple(NDIndex):
 
     def expand(self, shape):
         # The expand() docstring is on NDIndex.expand()
-        from .array import ArrayIndex
-        from .booleanarray import BooleanArray, _is_boolean_scalar
-        from .integer import Integer
-        from .integerarray import IntegerArray
-        from .slice import Slice
-
         args = list(self.args)
         if ... not in args:
             return type(self)(*args, ...).expand(shape)
@@ -595,9 +573,6 @@ class Tuple(NDIndex):
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
-        from .array import ArrayIndex
-        from .booleanarray import BooleanArray
-
         shape = asshape(shape)
 
         if self == Tuple():
@@ -640,13 +615,6 @@ class Tuple(NDIndex):
         return tuple(newshape)
 
     def as_subindex(self, index):
-        from .ndindex import ndindex
-        from .array import ArrayIndex
-        from .slice import Slice
-        from .integer import Integer
-        from .integerarray import IntegerArray
-        from .booleanarray import BooleanArray
-
         index = ndindex(index).reduce().broadcast_arrays()
 
         self = self.broadcast_arrays()
@@ -761,3 +729,12 @@ class Tuple(NDIndex):
             return 0 in self.newshape(shape)
 
         return any(i.isempty() for i in self.args)
+
+# Imports at the bottom to avoid circular import issues
+from .array import ArrayIndex
+from .ellipsis import ellipsis
+from .newaxis import Newaxis
+from .slice import Slice
+from .integer import Integer
+from .booleanarray import BooleanArray, _is_boolean_scalar
+from .integerarray import IntegerArray

@@ -1,4 +1,4 @@
-from itertools import zip_longest
+from itertools import zip_longest, tee
 
 from numpy import arange, isin, sort, concatenate
 
@@ -106,12 +106,14 @@ def test_indices(chunk_size, shape):
 def test_as_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
-@example((1,), (0,), ...)
-@example((2, 2), (5, 5), (0, 3))
-@example((2, 2), (5, 5), (slice(0, 5, 2), slice(0, 5, 3)))
-@example((2, 2), (5, 5), ([0, 0],))
-@given(chunk_sizes(), chunk_shapes, ndindices)
-def test_as_subchunks(chunk_size, shape, idx):
+@example((1,), True, (1,))
+@example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
+@example((1,), ..., (0,))
+@example((2, 2), (0, 3), (5, 5))
+@example((2, 2), (slice(0, 5, 2), slice(0, 5, 3)), (5, 5))
+@example((2, 2), ([0, 0],), (5, 5))
+@given(chunk_sizes(), ndindices, chunk_shapes)
+def test_as_subchunks(chunk_size, idx, shape):
     chunk_size = ChunkSize(chunk_size)
     size = prod(shape)
     a = arange(size).reshape(shape)
@@ -124,13 +126,30 @@ def test_as_subchunks(chunk_size, shape, idx):
 
     full_idx = a[idx.raw]
 
+    subarrays = []
+    fast = chunk_size.as_subchunks(idx, shape)
+    slow = chunk_size.as_subchunks(idx, shape, _force_slow=True)
+    slow2 = chunk_size.as_subchunks(idx, shape, _force_slow=True)
+    no_fallback = chunk_size.as_subchunks(idx, shape, _force_slow=False)
+    slow_raised_notimplementederror = False
     try:
-        subarrays = []
-        fast = chunk_size.as_subchunks(idx, shape)
-        slow = chunk_size.as_subchunks(idx, shape, _force_slow=True)
+        next(slow2)
+    except StopIteration:
+        pass
+    except NotImplementedError:
+        # The fallback isn't implemented, but the fast case may still be.
+        slow, fast = tee(fast, 2)
+        slow_raised_notimplementederror = True
+    if not slow_raised_notimplementederror:
+        # If it works (no NotImplementedError), it shouldn't use the fallback.
+        try:
+            next(no_fallback)
+        except StopIteration:
+            pass
+    try:
         for c, cslow in zip_longest(fast, slow):
             assert c == cslow
-            index = idx.as_subindex(c)
+            index = idx.expand(shape).as_subindex(c)
             chunk = a[c.raw]
             subchunk = chunk[index.raw]
             # Not empty
@@ -139,6 +158,9 @@ def test_as_subchunks(chunk_size, shape, idx):
             assert_equal(subchunk.flatten(), full_idx[isin(full_idx, chunk)])
             subarrays.append(subchunk)
     except NotImplementedError:
+        # NotImplementedError should only be allowed from the fallback algorithm
+        if not slow_raised_notimplementederror:
+            raise
         return
 
     # Picks all elements
@@ -147,3 +169,30 @@ def test_as_subchunks(chunk_size, shape, idx):
     else:
         elements = arange(0)
     assert_equal(sort(elements), sort(full_idx.flatten()))
+
+def test_num_subchunks_error():
+    raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
+
+@example((1,), True, (1,))
+@example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
+@example((1,), ..., (0,))
+@example((2, 2), (0, 3), (5, 5))
+@example((2, 2), (slice(0, 5, 2), slice(0, 5, 3)), (5, 5))
+@example((2, 2), ([0, 0],), (5, 5))
+@given(chunk_sizes(), ndindices, chunk_shapes)
+def test_num_subchunks(chunk_size, idx, shape):
+    chunk_size = ChunkSize(chunk_size)
+    idx = ndindex(idx)
+
+    try:
+        idx.reduce(shape)
+    except IndexError:
+        assume(False)
+
+    subchunks = chunk_size.as_subchunks(idx, shape)
+    try:
+        actual_num_subchunks = len(list(subchunks))
+        computed_num_subchunks = chunk_size.num_subchunks(idx, shape)
+    except NotImplementedError:
+        return
+    assert computed_num_subchunks == actual_num_subchunks

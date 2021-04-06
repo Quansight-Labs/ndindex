@@ -1,11 +1,11 @@
 #!/bin/bash
-# Run and update the benchmarks in the gh-pages branch. This commits to that
-# branch but does not push. The resulting benchmarks are served at
+# Run and update the benchmarks in the gh-pages branch. The resulting
+# benchmarks are served at
 # https://quansight-labs.github.io/ndindex/benchmarks/index.html
 set -e
 set -x
 
-asv run -k
+asv run -k ALL
 asv publish
 git checkout gh-pages
 git pull
@@ -14,3 +14,4 @@ cp -R .asv/html benchmarks
 git add benchmarks
 git commit -m "Update benchmarks"
 git checkout -
+git push gh-pages

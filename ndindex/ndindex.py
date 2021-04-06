@@ -1,5 +1,6 @@
 import inspect
 import numbers
+import operator
 
 from numpy import ndarray, bool_, newaxis
 
@@ -109,6 +110,8 @@ class ImmutableObject:
     NDIndex
 
     """
+    __slots__ = ('args',)
+
     def __init__(self, *args, **kwargs):
         """
         This method should be called by subclasses (via super()) after type-checking
@@ -202,6 +205,8 @@ class NDIndex(ImmutableObject):
     ImmutableObject
 
     """
+    __slots__ = ()
+
     # TODO: Make NDIndex and ImmutableObject abstract base classes
     @property
     def raw(self):
@@ -459,6 +464,7 @@ class NDIndex(ImmutableObject):
         ndindex.ChunkSize.as_subchunks:
             a high-level iterator that efficiently gives only those chunks
             that intersect with a given index
+        ndindex.ChunkSize.num_subchunks
 
         """
         index = ndindex(index) # pragma: no cover
@@ -621,8 +627,6 @@ def operator_index(idx):
     TypeError: 'bool' object cannot be interpreted as an integer
 
     """
-    import operator
-
     if isinstance(idx, bool):
         raise TypeError("'bool' object cannot be interpreted as an integer")
     if isinstance(idx, bool_):
