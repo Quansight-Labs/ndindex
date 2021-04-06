@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
     <title>Type Confusion &#8212; ndindex  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
@@ -51,7 +52,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="type-confusion">
+  <section id="type-confusion">
 <h1>Type Confusion<a class="headerlink" href="#type-confusion" title="Permalink to this headline">¶</a></h1>
 <p>When using the ndindex API, it is important to avoid type confusion. Many
 types that are used as indices for arrays also have semantic meaning outside
@@ -193,7 +194,7 @@ doesn’t exist yet, <a class="reference external" href="https://github.com/Quan
 issue</a> so we can implement it.</p></li>
 </ul>
 <p>Additionally, some advice for specific types:</p>
-<div class="section" id="integer">
+<section id="integer">
 <h2>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It represents integers
@@ -220,8 +221,8 @@ it is another index type. You should not rely on any ndindex function
 returning a specific index type (unless it states that it does so in its
 docstring).</p></li>
 </ul>
-</div>
-<div class="section" id="tuple">
+</section>
+<section id="tuple">
 <span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular, things
@@ -255,8 +256,8 @@ the ndindex type, or <code class="docutils literal notranslate"><span class="pre
 </div>
 </li>
 </ul>
-</div>
-<div class="section" id="ellipsis">
+</section>
+<section id="ellipsis">
 <span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
@@ -327,8 +328,8 @@ allow <code class="docutils literal notranslate"><span class="pre">==</span></co
 </div>
 </li>
 </ul>
-</div>
-<div class="section" id="newaxis">
+</section>
+<section id="newaxis">
 <h2>Newaxis<a class="headerlink" href="#newaxis" title="Permalink to this headline">¶</a></h2>
 <p>The advice for <code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is almost identical to the advice for
 <a class="reference internal" href="#type-confusion-ellipsis"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></span></a>. Note that <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> is just an alias
@@ -397,8 +398,8 @@ NumPy arrays).</p>
 </div>
 </li>
 </ul>
-</div>
-<div class="section" id="integerarray-and-booleanarray">
+</section>
+<section id="integerarray-and-booleanarray">
 <h2>IntegerArray and BooleanArray<a class="headerlink" href="#integerarray-and-booleanarray" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought of as
@@ -438,8 +439,8 @@ array do not affect the ndindex objects.</p>
 </div>
 </li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -541,42 +542,47 @@ array do not affect the ndindex objects.</p>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-1-2020-02-03">Version 1.5.1 (2020-02-03)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -651,42 +657,47 @@ array do not affect the ndindex objects.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-1-2020-02-03">Version 1.5.1 (2020-02-03)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -717,7 +728,7 @@ array do not affect the ndindex objects.</p>
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
