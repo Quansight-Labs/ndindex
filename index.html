@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ndindex &#8212; ndindex  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
@@ -47,7 +46,7 @@
 
           <div class="body" role="main">
             
-  <section id="ndindex">
+  <div class="section" id="ndindex">
 <h1>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this headline">¶</a></h1>
 <p>A Python library for manipulating indices of ndarrays.</p>
 <p>ndindex is a library that allows representing and manipulating objects that
@@ -71,7 +70,7 @@ method to reduce an index to a simpler index that is equivalent for the
 given shape.</p></li>
 <li><p>Enable useful transformation and manipulation functions on index objects.</p></li>
 </ul>
-<section id="motivation">
+<div class="section" id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
 <p>If you’ve ever worked with Python’s <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects, you will quickly discover
 their limitations:</p>
@@ -111,8 +110,8 @@ don’t have to try to figure out all the different cases yourself. And due to
 extensive testing (see below), you can be assured that ndindex is correct.</p>
 </li>
 </ul>
-</section>
-<section id="features">
+</div>
+<div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p>ndindex is still a work in progress. The following things are currently
 implemented:</p>
@@ -267,8 +266,8 @@ indexing</a>.</p></li>
 <p>And more. If there is something you would like to see this library be able to
 do, please <a class="reference external" href="https://github.com/quansight-labs/ndindex/issues">open an issue</a>. Pull
 requests are welcome as well.</p>
-</section>
-<section id="testing-and-correctness">
+</div>
+<div class="section" id="testing-and-correctness">
 <span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Permalink to this headline">¶</a></h2>
 <p>The most important priority for a library like this is correctness. Index
 manipulations, and especially slice manipulations, are complicated to code
@@ -317,12 +316,17 @@ tests only 1-dimensional shapes. This doesn’t affect things because hypotheses
 will always shrink large shapes to a 1-dimensional shape in the case of a
 failure. Consequently every exhaustive test will also have a corresponding
 hypothesis test.</p>
-</section>
-<section id="license">
+</div>
+<div class="section" id="benchmarks">
+<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this headline">¶</a></h2>
+<p>Benchmarks for ndindex are published
+<a class="reference external" href="https://quansight-labs.github.io/ndindex/benchmarks/">here</a>.</p>
+</div>
+<div class="section" id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE">MIT License</a></p>
-</section>
-<section id="acknowledgments">
+</div>
+<div class="section" id="acknowledgments">
 <span id="id1"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this headline">¶</a></h2>
 <p>ndindex development is supported by <a class="reference external" href="https://labs.quansight.org/">Quansight
 Labs</a> and is sponsored in part by <a class="reference external" href="https://www.deshaw.com/">the D. E.
@@ -335,8 +339,8 @@ width="200"></a>
 <a href="https://www.deshaw.com"><img src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" alt="https://www.deshaw.com"
 width="200"></a>
 </div>
-</section>
-<section id="table-of-contents">
+</div>
+<div class="section" id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul class="current">
@@ -344,6 +348,7 @@ width="200"></a>
 <li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmarks">Benchmarks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a><ul>
@@ -575,8 +580,8 @@ width="200"></a>
 </li>
 </ul>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -610,6 +615,7 @@ width="200"></a>
 <li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmarks">Benchmarks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a><ul>

@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Type Confusion &#8212; ndindex  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
@@ -52,7 +51,7 @@
 
           <div class="body" role="main">
             
-  <section id="type-confusion">
+  <div class="section" id="type-confusion">
 <h1>Type Confusion<a class="headerlink" href="#type-confusion" title="Permalink to this headline">¶</a></h1>
 <p>When using the ndindex API, it is important to avoid type confusion. Many
 types that are used as indices for arrays also have semantic meaning outside
@@ -194,7 +193,7 @@ doesn’t exist yet, <a class="reference external" href="https://github.com/Quan
 issue</a> so we can implement it.</p></li>
 </ul>
 <p>Additionally, some advice for specific types:</p>
-<section id="integer">
+<div class="section" id="integer">
 <h2>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It represents integers
@@ -221,8 +220,8 @@ it is another index type. You should not rely on any ndindex function
 returning a specific index type (unless it states that it does so in its
 docstring).</p></li>
 </ul>
-</section>
-<section id="tuple">
+</div>
+<div class="section" id="tuple">
 <span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular, things
@@ -256,8 +255,8 @@ the ndindex type, or <code class="docutils literal notranslate"><span class="pre
 </div>
 </li>
 </ul>
-</section>
-<section id="ellipsis">
+</div>
+<div class="section" id="ellipsis">
 <span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
@@ -328,8 +327,8 @@ allow <code class="docutils literal notranslate"><span class="pre">==</span></co
 </div>
 </li>
 </ul>
-</section>
-<section id="newaxis">
+</div>
+<div class="section" id="newaxis">
 <h2>Newaxis<a class="headerlink" href="#newaxis" title="Permalink to this headline">¶</a></h2>
 <p>The advice for <code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is almost identical to the advice for
 <a class="reference internal" href="#type-confusion-ellipsis"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></span></a>. Note that <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> is just an alias
@@ -398,8 +397,8 @@ NumPy arrays).</p>
 </div>
 </li>
 </ul>
-</section>
-<section id="integerarray-and-booleanarray">
+</div>
+<div class="section" id="integerarray-and-booleanarray">
 <h2>IntegerArray and BooleanArray<a class="headerlink" href="#integerarray-and-booleanarray" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought of as
@@ -439,8 +438,8 @@ array do not affect the ndindex objects.</p>
 </div>
 </li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -478,6 +477,7 @@ array do not affect the ndindex objects.</p>
 <li class="toctree-l2"><a class="reference internal" href="index.html#motivation">Motivation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#benchmarks">Benchmarks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#acknowledgments">Acknowledgments</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">

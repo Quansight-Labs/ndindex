@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Slices &#8212; ndindex  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
@@ -54,7 +53,7 @@
 
           <div class="body" role="main">
             
-  <section id="slices">
+  <div class="section" id="slices">
 <span id="slices-docs"></span><h1>Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h1>
 <p>Python’s slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
@@ -82,7 +81,7 @@ equally applies to sliceable Python builtin objects like lists, tuples, and
 strings. This is because on a single dimension, NumPy slice semantics are
 identical to the Python slice semantics (NumPy only begins to differ from
 Python for multi-dimensional indices).</p>
-<section id="what-is-a-slice">
+<div class="section" id="what-is-a-slice">
 <h2>What is a slice?<a class="headerlink" href="#what-is-a-slice" title="Permalink to this headline">¶</a></h2>
 <p>In Python, a slice is a special syntax that is allowed only in an index, that
 is, inside of square brackets proceeding an expression. A slice consists of
@@ -109,8 +108,8 @@ brackets. However, slice objects can be created manually using the <code class="
 builtin (<code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[slice(x,</span> <span class="pre">y,</span> <span class="pre">z)]</span></code>). You can also use the
 <a class="reference internal" href="api.html#slice-api"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code></span></a> object if you want to perform more advanced
 operations.</p>
-</section>
-<section id="rules">
+</div>
+<div class="section" id="rules">
 <span id="id1"></span><h2>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
 <p>These are the rules to keep in mind to understand how slices work. Each of
 these is explained in detail below. Many of the detailed descriptions below
@@ -138,8 +137,8 @@ left or right of an index. (See section <a class="reference internal" href="#omi
 For a NumPy array, a slice always keeps the axis being sliced, even if that
 means the resulting dimension will be 0 or 1. (See section <a class="reference internal" href="#subarray"><span class="std std-ref">Subarray</span></a>)</p></li>
 </ol>
-</section>
-<section id="integer-indices">
+</div>
+<div class="section" id="integer-indices">
 <span id="id2"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this headline">¶</a></h2>
 <p>To understand slices, it is good to first review how integer indices work.
 Throughout this guide, we will use as an example this prototype list:</p>
@@ -240,8 +239,8 @@ is out of bounds and will raise an <code class="docutils literal notranslate"><s
 <span class="gr">IndexError</span>: <span class="n">list index out of range</span>
 </pre></div>
 </div>
-</section>
-<section id="points-of-confusion">
+</div>
+<div class="section" id="points-of-confusion">
 <h2>Points of Confusion<a class="headerlink" href="#points-of-confusion" title="Permalink to this headline">¶</a></h2>
 <p>Now let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
@@ -263,7 +262,7 @@ particular subset of my array”.<a class="footnote-reference brackets" href="#n
 <p>Instead, we shall examine slices by carefully going over all the various
 aspects of the syntax and semantics that can lead to confusion, and attempting
 to demystify them through simple <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>.</p>
-<section id="subarray">
+<div class="section" id="subarray">
 <span id="id5"></span><h3>Subarray<a class="headerlink" href="#subarray" title="Permalink to this headline">¶</a></h3>
 <p><strong>A slice always produces a subarray (or sub-list, sub-tuple, sub-string,
 etc.). For NumPy arrays, this means that a slice will always <em>preserve</em> the
@@ -296,8 +295,8 @@ raise <code class="docutils literal notranslate"><span class="pre">IndexError</s
 runtime errors to alert you to coding mistakes relating to slice bounds that
 are too large. A slice cannot be “out of bounds.” See the section on
 <a class="reference external" href="#clipping">clipping</a> below.</p>
-</section>
-<section id="based">
+</div>
+<div class="section" id="based">
 <span id="id6"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this headline">¶</a></h3>
 <p>For the slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code>, with <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> nonnegative integers,
 the indices <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are 0-based, just as with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
@@ -332,8 +331,8 @@ find yourself forgetting about it. Even experienced Python developers (this
 author included) still find themselves writing <code class="docutils literal notranslate"><span class="pre">a[3]</span></code> instead of <code class="docutils literal notranslate"><span class="pre">a[2]</span></code> from
 time to time. The best way to learn to use 0-based indexing is to practice
 using it enough that you use it automatically without thinking about it.</p>
-</section>
-<section id="half-open">
+</div>
+<div class="section" id="half-open">
 <span id="id7"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this headline">¶</a></h3>
 <p>Slices behave like half-open intervals. What this means is that the <code class="docutils literal notranslate"><span class="pre">stop</span></code> in
 <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is <em>never</em> included in the slice (the exception is if the
@@ -401,7 +400,7 @@ list <code class="docutils literal notranslate"><span class="pre">a</span></code
 slice <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> can be split as <code class="docutils literal notranslate"><span class="pre">a[i:k]</span></code> and <code class="docutils literal notranslate"><span class="pre">a[k:j]</span></code>.</p>
 </li>
 </ul>
-<section id="wrong-ways-of-thinking-about-half-open-semantics">
+<div class="section" id="wrong-ways-of-thinking-about-half-open-semantics">
 <h4>Wrong Ways of Thinking about Half-open Semantics<a class="headerlink" href="#wrong-ways-of-thinking-about-half-open-semantics" title="Permalink to this headline">¶</a></h4>
 <p><strong>The proper rule to remember for half-open semantics is “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not
 included”.</strong></p>
@@ -912,12 +911,10 @@ long with posts spaced every 10 feet. How many fenceposts do you need?</p>
 <p>The naive answer is 10, but the correct answer is 11. The reason is the
 fenceposts go in between the 10 feet divisions, including at the end points.
 So there is an “extra” fencepost compared to the number of fence sections.</p>
-<figure class="align-default" id="id17">
+<div class="figure align-default" id="id17">
 <img alt="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" src="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" />
-<figcaption>
-<p><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak-footnote" id="id8">3</a></span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak-footnote" id="id8">3</a></span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+</div>
 <p>Fencepost problems are a leading cause of off-by-one errors. Thinking about
 slices in this way is to think about lists as separated by fenceposts, and
 is only begging for problems. This will especially be the case if you still
@@ -943,9 +940,9 @@ negative indices. <code class="docutils literal notranslate"><span class="pre">a
 indexing to the (−3)rd element with 0-based indexing (and of course, negative
 and nonnegative starts and stops can be mixed, like <code class="docutils literal notranslate"><span class="pre">a[3:-3]</span></code>). Don’t get cute
 here. It isn’t worth it.</p>
-</section>
-</section>
-<section id="negative-indices">
+</div>
+</div>
+<div class="section" id="negative-indices">
 <span id="id9"></span><h3>Negative Indices<a class="headerlink" href="#negative-indices" title="Permalink to this headline">¶</a></h3>
 <p>Negative indices in slices work the same way they do with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
 indices</span></a>. <strong>For <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>, negative <code class="docutils literal notranslate"><span class="pre">start</span></code> or
@@ -1056,8 +1053,8 @@ example, instead of using <code class="docutils literal notranslate"><span class
 <span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
 </pre></div>
 </div>
-</section>
-<section id="clipping">
+</div>
+<div class="section" id="clipping">
 <span id="id10"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this headline">¶</a></h3>
 <p>Slices can never give an out-of-bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This is different from
 <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer indices</span></a> which require the index to be in bounds.
@@ -1104,8 +1101,8 @@ slice (see <a class="reference internal" href="api.html#ndindex.Slice.__len__" t
 course, if you already have a NumPy array, you can just slice the array and
 check the shape (slicing a NumPy array always produces a view on the array, so
 it is a very inexpensive operation).</p>
-</section>
-<section id="steps">
+</div>
+<div class="section" id="steps">
 <span id="id11"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <p>Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every <code class="docutils literal notranslate"><span class="pre">step</span></code> element contained in
@@ -1225,8 +1222,8 @@ wrong, as it is easy to fail to properly account for <a class="reference interna
 indices</span></a>, <a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a>, and <a class="reference internal" href="#negative-steps"><span class="std std-ref">negative
 steps</span></a>. As noted before, any correct “formula” regarding
 slices will necessarily have many piecewise conditions.</p>
-</section>
-<section id="negative-steps">
+</div>
+<div class="section" id="negative-steps">
 <span id="id12"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this headline">¶</a></h3>
 <p>Recall what we said <a class="reference internal" href="#steps"><span class="std std-ref">above</span></a>:</p>
 <p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and
@@ -1322,8 +1319,8 @@ $$
 <span class="gr">ValueError</span>: <span class="n">slice step cannot be zero</span>
 </pre></div>
 </div>
-</section>
-<section id="omitted-entries">
+</div>
+<div class="section" id="omitted-entries">
 <span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this headline">¶</a></h3>
 <p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#omitted-none-footnote" id="id13">4</a></p>
 <p><strong>The best way to think about omitted entries is just like that, as omitted
@@ -1516,9 +1513,9 @@ $$
 <span class="go">[&#39;d&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;]</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="soapbox">
+</div>
+</div>
+<div class="section" id="soapbox">
 <h2>Soapbox<a class="headerlink" href="#soapbox" title="Permalink to this headline">¶</a></h2>
 <p>While this guide is opinionated about the right and wrong ways to think about
 slices in Python, I have tried to stay neutral regarding the merits of the
@@ -1819,8 +1816,8 @@ slicing rules are superior, despite the endless confusion that they provide.
 Finally, I believe that simply understanding that Python has made these
 decisions, whether you agree with them or not, will help you to remember the
 slicing <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>, and that’s my true goal here.</p>
-</section>
-<section id="footnotes">
+</div>
+<div class="section" id="footnotes">
 <h2>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this headline">¶</a></h2>
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
@@ -1870,8 +1867,8 @@ has a nice writeup of <em>why</em> the fencepost problem exists. It’s related 
 difference between measurement and enumeration that I touched on earlier.</p>
 </dd>
 </dl>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -1909,6 +1906,7 @@ difference between measurement and enumeration that I touched on earlier.</p>
 <li class="toctree-l2"><a class="reference internal" href="index.html#motivation">Motivation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#testing-and-correctness">Testing and correctness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#benchmarks">Benchmarks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#license">License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#acknowledgments">Acknowledgments</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">
