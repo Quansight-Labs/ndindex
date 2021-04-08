@@ -274,6 +274,11 @@ will always shrink large shapes to a 1-dimensional shape in the case of a
 failure. Consequently every exhaustive test will also have a corresponding
 hypothesis test.
 
+## Benchmarks
+
+Benchmarks for ndindex are published
+[here](https://quansight-labs.github.io/ndindex/benchmarks/).
+
 ## License
 
 [MIT License](https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE)
