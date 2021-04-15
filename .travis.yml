@@ -11,7 +11,6 @@ matrix:
       env:
         - TESTS=true
         - DOCS=true
-        - CODECOV=true
         # Doctr deploy key for Quansight/ndindex
         - secure: "e0sPsQ2FgguRv8qzByrRRFCHIOxI9ixUgsl1LeUdRw9M0yX8O6O9/CFeQBL+/l5FNu7ECM71I+a++pl/mkKkWexZwnR9zhYYRaPPBAjlyCmmEHemdIA9rlEd3hm5E8Z8+4CxoPFH3WaiIFBZwcTQtzlBen0EZpP6UjsaI+/XFdUb9Nw/uMlacXOxVetBFKoCTk218GXvjRRf5mPoHu3or5Rf7vAOOoPWYNuZEptWx/JJ1/p6EO05LqJPJVW6gRS7XZykCQytaXTD2dvvtAl21z6ppaQ0OfH5ku5DUY8NHgKuRcKRb56H0/pq6jIR/ALFkoPPy/43ildW66jDxVET0k9Ucm1bmHJPtGvH8r2ECAhY2PLvjDxAbOpuqejczaYPC75Nin7rileu738RTOxwmW/6NSPr2TmqUuhgzkyvi7cU4iizLmjEQQrYizNPDjwP0LMhxc6kE9ArWcaZIvZMUOddLwVaP8akoKkLuRlL+sMjWqb5Cm/ofcohAdBdBiakg50kIHldw65m+aqsz+JBlMQAejSm0keiiJaa494Sq1DiJrnjeylra4lru7pWK61/WfqMy4kDe1Y3LRaEx7KCNDllknFTcC/+R90x0WqeVXV6FEKVfPKgU2/rx4Hr2N89Svwgta2lZOicfsiLVrvdDN6eQ4N+eIRgN63zSbK8BcI="
     - name: python 3.9
@@ -51,10 +50,7 @@ script:
             doctr deploy --no-require-master "_docs-$TRAVIS_BRANCH";
         fi
     fi
-  - if [[ "${COVERAGE}" == "true" ]]; then
-        bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports";
-    fi
-  # Here in case codecov fails. This also sets the failing status if the
+  # Coverage. This also sets the failing status if the
   # coverage is not 100%. Travis sometimes cuts off the last command, which is
   # why we print stuff at the end.
   - if ! coverage report -m; then
