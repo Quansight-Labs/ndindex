@@ -259,8 +259,6 @@ class Tuple(NDIndex):
 
         """
         args = list(self.args)
-        if ... not in args:
-            return type(self)(*args, ...).reduce(shape)
 
         boolean_scalars = [i for i in args if _is_boolean_scalar(i)]
         if len(boolean_scalars) > 1:
