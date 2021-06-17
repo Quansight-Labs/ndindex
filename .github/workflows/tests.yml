@@ -20,7 +20,7 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -n test-environment python=${PYTHON_VERSION:-$TRAVIS_PYTHON_VERSION} pyflakes pytest pytest-doctestplus sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes
-          conda activate test-environment
+          conda init
 
       - name: Run Tests
         run: |
