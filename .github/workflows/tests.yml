@@ -27,9 +27,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          set -x
-          set -e
-
           # Copied from .bashrc. We can't just source .bashrc because it exits
           # when the shell isn't interactive.
 
@@ -47,6 +44,10 @@ jobs:
           fi
           unset __conda_setup
           # <<< conda initialize <<<
+
+          set -x
+          set -e
+
           conda activate test-environment
           python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
           # The coverage requirement check is done by the coverage report line below
