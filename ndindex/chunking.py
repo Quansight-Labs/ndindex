@@ -324,7 +324,9 @@ class ChunkSize(ImmutableObject, Sequence):
                 continue
             elif isinstance(i, IntegerArray):
                 res *= np.unique(i.array//n).size
-            elif isinstance(i, Slice) and i.step > 0:
+            elif isinstance(i, Slice):
+                if i.step < 0:
+                    raise NotImplementedError("num_subchunks() is not implemented for slices with negative step")
                 a, N, m = i.args
                 if m > n:
                     res *= ceiling(N-a, m)
@@ -400,11 +402,13 @@ class ChunkSize(ImmutableObject, Sequence):
                 m = np.min(i.array, initial=0)
                 M = np.max(i.array, initial=s)
                 res.append(Slice(m//n*n, (M//n + 1)*n))
-            elif isinstance(i, Slice) and i.step > 0:
+            elif isinstance(i, Slice):
+                if i.step < 0:
+                    raise NotImplementedError("block() is not implemented for slices with negative step")
                 res.append(Slice(i.start - (i.start % n), ceiling(i.stop, n)*n))
             elif i == False:
                 res.append(Slice(0, 0))
             else:
-                raise NotImplementedError
+                raise NotImplementedError(f"block() is not implemented for {type(i).__name__}")
 
         return Tuple(*res).expand(shape)
