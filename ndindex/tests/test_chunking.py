@@ -171,9 +171,6 @@ def test_as_subchunks(chunk_size, idx, shape):
         elements = arange(0)
     assert_equal(sort(elements), sort(full_idx.flatten()))
 
-def test_num_subchunks_error():
-    raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
-
 @example(chunk_size=(1,), idx=None, shape=(1,))
 @example((1,), True, (1,))
 @example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
@@ -198,6 +195,9 @@ def test_num_subchunks(chunk_size, idx, shape):
     except NotImplementedError:
         return
     assert computed_num_subchunks == actual_num_subchunks
+
+def test_num_subchunks_error():
+    raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
 
 @given(chunk_sizes(), ndindices, chunk_shapes)
 def test_block(chunk_size, idx, shape):
