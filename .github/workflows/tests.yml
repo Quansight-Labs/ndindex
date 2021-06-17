@@ -1,0 +1,46 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9']
+    env:
+      PATH: "$HOME/miniconda/bin:$PATH"
+    steps:
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+      - run: bash miniconda.sh -b -p $HOME/miniconda
+      - run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda config --add channels conda-forge
+          conda update -q conda
+          conda info -a
+          conda create -n test-environment python=${PYTHON_VERSION:-$TRAVIS_PYTHON_VERSION} pyflakes pytest pytest-doctestplus sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes
+          source activate test-environment
+          pip install --pre numpy>=1.20
+
+      - run: |
+          set -e
+          source activate test-environment
+          python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
+          # The coverage requirement check is done by the coverage report line below
+          PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
+          pytest $PYTEST_FLAGS
+          ./run_doctests
+          # Make sure it installs
+          python setup.py install
+          # Coverage. This also sets the failing status if the
+          # coverage is not 100%. Travis sometimes cuts off the last command, which is
+          # why we print stuff at the end.
+          if ! coverage report -m; then
+              echo "Coverage failed";
+              false;
+          else
+              echo "Coverage passed";
+          fi;
