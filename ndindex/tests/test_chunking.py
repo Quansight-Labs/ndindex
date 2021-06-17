@@ -1,6 +1,6 @@
 from itertools import zip_longest, tee
 
-from numpy import arange, isin, sort, concatenate
+from numpy import all as np_all, arange, isin, sort, concatenate
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import one_of
@@ -8,6 +8,7 @@ from hypothesis.strategies import one_of
 from pytest import raises
 
 from ..chunking import ChunkSize
+from ..slice import Slice
 from ..tuple import Tuple
 from ..ndindex import ndindex
 
@@ -197,3 +198,34 @@ def test_num_subchunks(chunk_size, idx, shape):
     except NotImplementedError:
         return
     assert computed_num_subchunks == actual_num_subchunks
+
+@given(chunk_sizes(), ndindices, chunk_shapes)
+def test_block(chunk_size, idx, shape):
+    chunk_size = ChunkSize(chunk_size)
+    idx = ndindex(idx)
+
+    size = prod(shape)
+    a = arange(size).reshape(shape)
+
+    try:
+        idx.reduce(shape)
+    except IndexError:
+        assume(False)
+
+    try:
+        block = chunk_size.block(idx, shape)
+    except NotImplementedError:
+        return
+
+    assert isinstance(block, Tuple), block
+    assert len(block.args) == len(chunk_size)
+    assert all(isinstance(i, Slice) for i in block.args)
+    assert all(i.start >= 0 and i.start % n == 0 for i, n in zip(block.args, chunk_size)), block
+    assert all(i.stop >= 0 and (i.stop == s or i.stop % n == 0) for i, s, n in
+               zip(block.args, shape, chunk_size)), block
+    assert all(i.step == 1 for i in block.args), block
+
+    a_idx = a[idx.raw]
+    a_block = a[block.raw]
+
+    assert np_all(isin(a_idx, a_block))

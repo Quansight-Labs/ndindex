@@ -334,3 +334,58 @@ class ChunkSize(ImmutableObject, Sequence):
                 raise NotImplementedError(f"num_subchunks() is not implemented for {type(i).__name__}")
 
         return res
+
+    def block(self, idx, shape):
+        """
+        Compute the index for the smallest block that contains `idx` on an array of shape `shape`.
+
+        A block is a subset of an array that is contiguous in all dimensions
+        and is aligned along the chunk size. A block index is always of the
+        form `(Slice(k1, m1), Slice(k2, m2), …, Slice(kn, mn))` where `n` is
+        the number of dimensions in the chunk size, and the `ki` and `mi` are
+        multiples of the corresponding chunk dimension (the `mi` may be
+        truncated to the shape).
+
+        For example, given a chunk size of `(10, 15)`, an example block might
+        be `(Slice(0, 20), Slice(30, 45))`. Such a block would be the smallest
+        block that contains the index `(Slice(0, 12), 40)`, for example.
+
+        >>> from ndindex import ChunkSize
+        >>> chunk_size = ChunkSize((10, 15))
+        >>> idx = (slice(0, 12), 40)
+        >>> shape = (100, 100)
+        >>> chunk_size.block(idx, shape)
+        Tuple(slice(0, 20, 1), slice(30, 45, 1))
+
+        """
+        shape = asshape(shape)
+        if len(shape) != len(self):
+            raise ValueError("chunks dimensions must equal the array dimensions")
+        idx = ndindex(idx).expand(shape)
+
+        idx_args = iter(idx.args)
+        self_ = iter(self)
+        shape_ = iter(shape)
+        res = []
+        while True:
+            try:
+                i = next(idx_args)
+                if isinstance(i, Newaxis):
+                    continue
+                n = next(self_)
+                s = next(shape_)
+            except StopIteration:
+                break
+            if isinstance(i, Integer):
+                chunk_n = i.raw//n
+                res.append(Slice(chunk_n*n, (chunk_n + 1)*n))
+            elif isinstance(i, IntegerArray):
+                m = np.min(i.array, initial=0)
+                M = np.max(i.array, initial=s)
+                res.append(Slice(m//n*n, (M//n + 1)*n))
+            elif isinstance(i, Slice) and i.step > 0:
+                res.append(Slice(i.start - (i.start % n), ceiling(i.stop, n)*n))
+            else:
+                raise NotImplementedError
+
+        return Tuple(*res).expand(shape)
