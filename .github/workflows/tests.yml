@@ -25,6 +25,7 @@ jobs:
 
       - name: Run Tests
         run: |
+          set -x
           set -e
           source /home/runner/.bashrc
           conda activate test-environment
