@@ -29,7 +29,6 @@ jobs:
         run: |
           set -x
           set -e
-          cat /home/runner/.bashrc
           source /home/runner/.bashrc
           conda activate test-environment
           python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
