@@ -238,7 +238,7 @@ class ChunkSize(ImmutableObject, Sequence):
         while True:
             try:
                 i = next(idx_args)
-                if isinstance(i, Newaxis):
+                if isinstance(i, Newaxis) or i == True:
                     continue
                 n = next(self_)
             except StopIteration:
@@ -315,7 +315,7 @@ class ChunkSize(ImmutableObject, Sequence):
         while True:
             try:
                 i = next(idx_args)
-                if isinstance(i, Newaxis):
+                if isinstance(i, Newaxis) or i == True:
                     continue
                 n = next(self_)
             except StopIteration:
@@ -387,7 +387,7 @@ class ChunkSize(ImmutableObject, Sequence):
         while True:
             try:
                 i = next(idx_args)
-                if isinstance(i, Newaxis):
+                if isinstance(i, Newaxis) or i == True:
                     continue
                 n = next(self_)
                 s = next(shape_)
@@ -402,6 +402,8 @@ class ChunkSize(ImmutableObject, Sequence):
                 res.append(Slice(m//n*n, (M//n + 1)*n))
             elif isinstance(i, Slice) and i.step > 0:
                 res.append(Slice(i.start - (i.start % n), ceiling(i.stop, n)*n))
+            elif i == False:
+                res.append(Slice(0, 0))
             else:
                 raise NotImplementedError
 
