@@ -28,8 +28,8 @@ jobs:
       - name: Run Tests
         run: |
           set -x
-          set -e
           source /home/runner/.bashrc
+          set -e
           conda activate test-environment
           python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
           # The coverage requirement check is done by the coverage report line below
