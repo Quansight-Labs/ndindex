@@ -354,8 +354,25 @@ class ChunkSize(ImmutableObject, Sequence):
         >>> chunk_size = ChunkSize((10, 15))
         >>> idx = (slice(0, 12), 40)
         >>> shape = (100, 100)
-        >>> chunk_size.block(idx, shape)
+        >>> block = chunk_size.block(idx, shape)
+        >>> block
         Tuple(slice(0, 20, 1), slice(30, 45, 1))
+
+        The method :meth:`as_subchunks` can be used on the block to determine
+        which chunks are contained in it, and :meth:`num_subchunks` to
+        determine how many:
+
+        >>> chunk_size.num_subchunks(block, shape)
+        2
+        >>> for c in chunk_size.as_subchunks(block, shape):
+        ...     print(c)
+        Tuple(slice(0, 10, 1), slice(30, 45, 1))
+        Tuple(slice(10, 20, 1), slice(30, 45, 1))
+
+        In this example, `chunk_size.as_subchunk(block, shape)` and
+        `chunk_size.as_subchunks(idx, shape)` are the same, but in general, a
+        block may overlap with more chunks than the original index because the
+        block is contiguous.
 
         """
         shape = asshape(shape)
