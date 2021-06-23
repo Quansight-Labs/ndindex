@@ -200,7 +200,7 @@ def test_num_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
 
 @given(chunk_sizes(), ndindices, chunk_shapes)
-def test_block(chunk_size, idx, shape):
+def test_containing_block(chunk_size, idx, shape):
     chunk_size = ChunkSize(chunk_size)
     idx = ndindex(idx)
 
@@ -213,7 +213,7 @@ def test_block(chunk_size, idx, shape):
         assume(False)
 
     try:
-        block = chunk_size.block(idx, shape)
+        block = chunk_size.containing_block(idx, shape)
     except NotImplementedError:
         return
 

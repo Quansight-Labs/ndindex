@@ -337,7 +337,7 @@ class ChunkSize(ImmutableObject, Sequence):
 
         return res
 
-    def block(self, idx, shape):
+    def containing_block(self, idx, shape):
         """
         Compute the index for the smallest block that contains `idx` on an array of shape `shape`.
 
@@ -356,7 +356,7 @@ class ChunkSize(ImmutableObject, Sequence):
         >>> chunk_size = ChunkSize((10, 15))
         >>> idx = (slice(0, 12), 40)
         >>> shape = (100, 100)
-        >>> block = chunk_size.block(idx, shape)
+        >>> block = chunk_size.containing_block(idx, shape)
         >>> block
         Tuple(slice(0, 20, 1), slice(30, 45, 1))
 
@@ -404,11 +404,11 @@ class ChunkSize(ImmutableObject, Sequence):
                 res.append(Slice(m//n*n, (M//n + 1)*n))
             elif isinstance(i, Slice):
                 if i.step < 0:
-                    raise NotImplementedError("block() is not implemented for slices with negative step")
+                    raise NotImplementedError("containing_block() is not implemented for slices with negative step")
                 res.append(Slice(i.start - (i.start % n), ceiling(i.stop, n)*n))
             elif i == False:
                 res.append(Slice(0, 0))
             else:
-                raise NotImplementedError(f"block() is not implemented for {type(i).__name__}")
+                raise NotImplementedError(f"containing_block() is not implemented for {type(i).__name__}")
 
         return Tuple(*res).expand(shape)
