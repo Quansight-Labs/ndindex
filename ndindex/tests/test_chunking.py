@@ -104,6 +104,7 @@ def test_indices(chunk_size, shape):
     elements = [i for x in subarrays for i in x.flatten()]
     assert sorted(elements) == list(range(size))
 
+@example(chunk_size=(1,), idx=slice(None, None, -1), shape=(2,))
 @example((1,), True, (1,))
 @example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
 @example((1,), ..., (0,))
