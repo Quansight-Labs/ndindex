@@ -229,3 +229,6 @@ def test_containing_block(chunk_size, idx, shape):
     a_block = a[block.raw]
 
     assert np_all(isin(a_idx, a_block))
+
+def test_containing_block_error():
+    raises(ValueError, lambda: ChunkSize((1, 2)).containing_block(..., (1, 2, 3)))
