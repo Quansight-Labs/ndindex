@@ -104,9 +104,6 @@ def test_indices(chunk_size, shape):
     elements = [i for x in subarrays for i in x.flatten()]
     assert sorted(elements) == list(range(size))
 
-def test_as_subchunks_error():
-    raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
-
 @example((1,), True, (1,))
 @example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
 @example((1,), ..., (0,))
@@ -170,6 +167,9 @@ def test_as_subchunks(chunk_size, idx, shape):
     else:
         elements = arange(0)
     assert_equal(sort(elements), sort(full_idx.flatten()))
+
+def test_as_subchunks_error():
+    raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
 @example(chunk_size=(1,), idx=None, shape=(1,))
 @example((1,), True, (1,))
