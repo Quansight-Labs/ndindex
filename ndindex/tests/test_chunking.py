@@ -231,5 +231,26 @@ def test_containing_block(chunk_size, idx, shape):
 
     assert np_all(isin(a_idx, a_block))
 
+    # Verify that the block is indeed the smallest possible by shrinking it
+    # and making sure that misses some of the index. This check doesn't work
+    # for empty indices, so those are handled separately. Also shape == ()
+    # cannot give an empty tuple index because we want only tuples of slices..
+    if (0 in shape or idx.reduce(shape).isempty()) and shape != ():
+        assert block.isempty()
+    else:
+        for i in range(len(block.args)):
+            s = block.args[i]
+            new_s1 = Slice(s.start + chunk_size[i], s.stop)
+            if s.stop == shape[i] and shape[i] % chunk_size[i]:
+                new_s2 = Slice(s.start, s.stop - s.stop % chunk_size[i])
+            else:
+                new_s2 = Slice(s.start, s.stop - chunk_size[i])
+            new_block1 = Tuple(*(block.args[:i] + (new_s1,) + block.args[i+1:]))
+            new_block2 = Tuple(*(block.args[:i] + (new_s2,) + block.args[i+1:]))
+            a_block1 = a[new_block1.raw]
+            a_block2 = a[new_block2.raw]
+            assert not np_all(isin(a_idx, a_block1))
+            assert not np_all(isin(a_idx, a_block2))
+
 def test_containing_block_error():
     raises(ValueError, lambda: ChunkSize((1, 2)).containing_block(..., (1, 2, 3)))
