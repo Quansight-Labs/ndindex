@@ -220,11 +220,11 @@ def test_containing_block(chunk_size, idx, shape):
 
     assert isinstance(block, Tuple), block
     assert len(block.args) == len(chunk_size)
-    assert all(isinstance(i, Slice) for i in block.args)
-    assert all(i.start >= 0 and i.start % n == 0 for i, n in zip(block.args, chunk_size)), block
-    assert all(i.stop >= 0 and (i.stop == s or i.stop % n == 0) for i, s, n in
-               zip(block.args, shape, chunk_size)), block
-    assert all(i.step == 1 for i in block.args), block
+    assert all(isinstance(s, Slice) for s in block.args)
+    assert all(s.start >= 0 and s.start % n == 0 for s, n in zip(block.args, chunk_size)), block
+    assert all(s.stop >= 0 and (s.stop == i or s.stop % n == 0) and s.stop <=
+               i for s, i, n in zip(block.args, shape, chunk_size)), block
+    assert all(s.step == 1 for s in block.args), block
 
     a_idx = a[idx.raw]
     a_block = a[block.raw]
