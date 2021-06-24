@@ -200,6 +200,7 @@ def test_num_subchunks(chunk_size, idx, shape):
 def test_num_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
 
+@example((5,), [0, 7], (15,))
 @given(chunk_sizes(), ndindices, chunk_shapes)
 def test_containing_block(chunk_size, idx, shape):
     chunk_size = ChunkSize(chunk_size)
