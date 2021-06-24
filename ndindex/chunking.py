@@ -386,6 +386,10 @@ class ChunkSize(ImmutableObject, Sequence):
         self_ = iter(self)
         shape_ = iter(shape)
         res = []
+
+        if False in idx.args:
+            return Tuple(*[slice(0, 0, 1) for i in range(len(shape))])
+
         while True:
             try:
                 i = next(idx_args)
@@ -406,8 +410,6 @@ class ChunkSize(ImmutableObject, Sequence):
                 if i.step < 0:
                     raise NotImplementedError("containing_block() is not implemented for slices with negative step")
                 res.append(Slice(i.start - (i.start % n), ceiling(i.stop, n)*n))
-            elif i == False:
-                res.append(Slice(0, 0))
             else:
                 raise NotImplementedError(f"containing_block() is not implemented for {type(i).__name__}")
 
