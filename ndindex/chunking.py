@@ -384,7 +384,6 @@ class ChunkSize(ImmutableObject, Sequence):
 
         idx_args = iter(idx.args)
         self_ = iter(self)
-        shape_ = iter(shape)
         res = []
 
         if False in idx.args:
@@ -396,15 +395,17 @@ class ChunkSize(ImmutableObject, Sequence):
                 if isinstance(i, Newaxis) or i == True:
                     continue
                 n = next(self_)
-                s = next(shape_)
             except StopIteration:
                 break
             if isinstance(i, Integer):
                 chunk_n = i.raw//n
                 res.append(Slice(chunk_n*n, (chunk_n + 1)*n))
             elif isinstance(i, IntegerArray):
-                m = np.min(i.array, initial=0)
-                M = np.max(i.array, initial=s)
+                if i.size == 0:
+                    res.append(Slice(0, 0))
+                    continue
+                m = np.min(i.array)
+                M = np.max(i.array)
                 res.append(Slice(m//n*n, (M//n + 1)*n))
             elif isinstance(i, Slice):
                 if i.step < 0:
