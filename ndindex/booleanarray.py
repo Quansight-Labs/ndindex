@@ -67,6 +67,7 @@ class BooleanArray(ArrayIndex):
        :any:`type-confusion` for more details.
 
     """
+    __slots__ = ()
 
     dtype = bool_
     """
@@ -159,14 +160,11 @@ class BooleanArray(ArrayIndex):
         return self.count_nonzero == 0
 
     def as_subindex(self, index):
-        from .tuple import Tuple
-
         if self in [True, False]:
             raise NotImplementedError("as_subindex is not supported for scalar boolean indices")
         return Tuple(*self.array.nonzero()).as_subindex(index)
 
     def broadcast_arrays(self):
-        from .tuple import Tuple
         return Tuple(self).broadcast_arrays()
 
     def __eq__(self, other):
@@ -195,3 +193,6 @@ def _is_boolean_scalar(idx):
     """
     # TODO: Instead of this function, make BooleanScalar a separate class.
     return isinstance(idx, BooleanArray) and idx.shape == ()
+
+# Imports at the bottom to avoid circular import issues
+from .tuple import Tuple

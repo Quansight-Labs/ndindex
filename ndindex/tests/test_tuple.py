@@ -100,6 +100,9 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
         assert len(reduced.args) != 1
         assert reduced == () or reduced.args[-1] != ...
 
+    # Idempotency
+    assert reduced.reduce() == reduced
+
 @example((..., None), ())
 @example((..., empty((0, 0), dtype=bool)), (0, 0))
 @example((empty((0, 0), dtype=bool), 0), (0, 0, 1))
@@ -111,6 +114,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
 @example((0, ..., slice(None)), (2, 3, 4, 5, 6, 7))
 @example((slice(None, None, -1),), (2,))
 @example((..., slice(None, None, -1),), (2, 3, 4))
+@example((..., False, slice(None)), 0)
 @given(Tuples, one_of(short_shapes, integers(0, 10)))
 def test_tuple_reduce_hypothesis(t, shape):
     if isinstance(shape, int):
@@ -132,6 +136,12 @@ def test_tuple_reduce_hypothesis(t, shape):
             assert len(reduced.args) != 1
             assert reduced == () or reduced.args[-1] != ...
         # TODO: Check the other properties from the Tuple.reduce docstring.
+
+        # Idempotency
+        assert reduced.reduce() == reduced
+        # This is currently not implemented, for example, (..., False, :)
+        # takes two steps to remove the redundant slice.
+        # assert reduced.reduce(shape) == reduced
 
 def test_tuple_reduce_explicit():
     # Some aspects of Tuple.reduce are hard to test as properties, so include
@@ -155,6 +165,10 @@ def test_tuple_reduce_explicit():
         a = arange(prod(shape)).reshape(shape)
         check_same(a, before.raw, ndindex_func=lambda a, x:
                    a[x.reduce(shape).raw])
+
+        # Idempotency
+        assert reduced.reduce() == reduced
+        assert reduced.reduce(shape) == reduced
 
 @example((slice(0, 0),), 2)
 @example((0, slice(0, 0)), (1, 2))

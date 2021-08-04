@@ -3,10 +3,14 @@ from itertools import product
 from functools import reduce
 from operator import mul
 
+import numpy as np
+
 from .ndindex import ImmutableObject, operator_index, asshape, ndindex
 from .tuple import Tuple
 from .slice import Slice
 from .integer import Integer
+from .integerarray import IntegerArray
+from .newaxis import Newaxis
 from .subindex_helpers import ceiling
 
 # np.prod has overflow and math.prod is Python 3.8+ only
@@ -142,7 +146,7 @@ class ChunkSize(ImmutableObject, Sequence):
             yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
                           for n, chunk_size, i in zip(shape, self, p)])
 
-    def as_subchunks(self, idx, shape, *, _force_slow=False):
+    def as_subchunks(self, idx, shape, *, _force_slow=None):
         """
         Split an index `idx` on an array of shape `shape` into subchunk indices.
 
@@ -191,6 +195,7 @@ class ChunkSize(ImmutableObject, Sequence):
         ========
 
         ndindex.NDIndex.as_subindex
+        num_subchunks
 
         """
         shape = asshape(shape)
@@ -204,6 +209,8 @@ class ChunkSize(ImmutableObject, Sequence):
         # The slow naive fallback is kept here for testing purposes and to support
         # indices that aren't supported in the fast way yet below.
         def _fallback():
+            if _force_slow is False: # pragma: no cover
+                raise RuntimeError("as_subchunks() attempted fallback with _force_slow=False")
             for c in self.indices(shape):
                 try:
                     index = idx.as_subindex(c)
@@ -214,24 +221,46 @@ class ChunkSize(ImmutableObject, Sequence):
                     yield c
             return
 
-        if _force_slow or len(idx.args) > len(self):
+        if _force_slow:
             yield from _fallback()
             return
 
+        if idx.isempty(shape):
+            return
+
+        if self == ():
+            yield Tuple()
+            return
+
         iters = []
-        for i, n in zip(idx.args, self):
+        idx_args = iter(idx.args)
+        self_ = iter(self)
+        while True:
+            try:
+                i = next(idx_args)
+                if isinstance(i, Newaxis):
+                    continue
+                n = next(self_)
+            except StopIteration:
+                break
             if isinstance(i, Integer):
                 iters.append([i.raw//n])
+            elif isinstance(i, IntegerArray):
+                iters.append(np.unique(i.array//n).flat)
             elif isinstance(i, Slice) and i.step > 0:
-                a, N, m = i.args
-                if m > n:
-                    iters.append([(a + k*m)//n for k in range(ceiling(N-a, m))])
-                else:
-                    iters.append(range(a//n, ceiling(N, n)))
+                def _slice_iter(s, n):
+                    a, N, m = s.args
+                    if m > n:
+                        yield from ((a + k*m)//n for k in range(ceiling(N-a, m)))
+                    else:
+                        yield from range(a//n, ceiling(N, n))
+                iters.append(_slice_iter(i, n))
             else:
-                # fallback to the naive algorithm
+                # Fallback to the naive algorithm. This should currently only
+                # happen in cases where the naive as_subindex algorithm will
+                # raise NotImplementedError.
                 yield from _fallback()
-                return
+                return # pragma: no cover
 
         def _indices(iters):
             for p in product(*iters):
@@ -243,3 +272,65 @@ class ChunkSize(ImmutableObject, Sequence):
             # Empty indices should be impossible by the construction of the
             # iterators above.
             yield c
+
+    def num_subchunks(self, idx, shape):
+        """
+        Give the number of chunks indexed by `idx` on an array of shape
+        `shape`.
+
+        This is equivalent to `len(list(self.as_subindex(idx, shape)))`, but
+        more efficient.
+
+        >>> from ndindex import ChunkSize, Tuple
+        >>> idx = Tuple(slice(5, 15), 0)
+        >>> shape = (20, 20)
+        >>> chunk_size = ChunkSize((10, 10))
+        >>> chunk_size.num_subchunks(idx, shape)
+        2
+
+        See Also
+        ========
+
+        ndindex.NDIndex.as_subindex
+        num_subchunks
+
+        """
+        shape = asshape(shape)
+        if len(shape) != len(self):
+            raise ValueError("chunks dimensions must equal the array dimensions")
+
+        if 0 in shape:
+            return 0
+        idx = ndindex(idx).expand(shape)
+
+        if idx.isempty(shape):
+            return 0
+
+        if self == ():
+            return 1
+
+        idx_args = iter(idx.args)
+        self_ = iter(self)
+        res = 1
+        while True:
+            try:
+                i = next(idx_args)
+                if isinstance(i, Newaxis):
+                    continue
+                n = next(self_)
+            except StopIteration:
+                break
+            if isinstance(i, Integer):
+                continue
+            elif isinstance(i, IntegerArray):
+                res *= np.unique(i.array//n).size
+            elif isinstance(i, Slice) and i.step > 0:
+                a, N, m = i.args
+                if m > n:
+                    res *= ceiling(N-a, m)
+                else:
+                    res *= ceiling(N, n) - a//n
+            else:
+                raise NotImplementedError(f"num_subchunks() is not implemented for {type(i).__name__}")
+
+        return res

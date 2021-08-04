@@ -71,6 +71,10 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         # give an IndexError
         assert reduced == index
 
+        # Idempotency
+        assert reduced.reduce() == reduced
+        assert reduced.reduce(shape) == reduced
+
 @given(boolean_arrays, one_of(short_shapes, integers(0, 10)))
 def test_booleanarray_isempty_hypothesis(idx, shape):
     if isinstance(shape, int):

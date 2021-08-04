@@ -49,6 +49,8 @@ class Slice(NDIndex):
     slice(None, 10, None)
 
     """
+    __slots__ = ()
+
     def _typecheck(self, start, stop=default, step=None):
         if isinstance(start, Slice):
             return start.args
@@ -152,7 +154,10 @@ class Slice(NDIndex):
         isempty
 
         """
-        start, stop, step = self.reduce().args
+        s = self
+        if None in self.args or self.start < 0 or self.stop < 0:
+            s = s.reduce()
+        start, stop, step = s.args
         error = ValueError("Cannot determine max length of slice")
         # We reuse the logic in range.__len__. However, it is only correct if
         # start and stop are nonnegative.
@@ -478,13 +483,6 @@ class Slice(NDIndex):
     def as_subindex(self, index):
         # The docstring of this method is currently on NDindex.as_subindex, as
         # this is the only method that is actually implemented so far.
-
-        from .ndindex import ndindex
-        from .tuple import Tuple
-        from .integer import Integer
-        from .integerarray import IntegerArray
-        from .booleanarray import BooleanArray
-
         index = ndindex(index)
         index_orig = index
 
@@ -567,3 +565,10 @@ class Slice(NDIndex):
         elif isinstance(other, Slice):
             return self.args == other.args
         return False
+
+# Imports at the bottom to avoid circular import issues
+from .ndindex import ndindex
+from .tuple import Tuple
+from .integer import Integer
+from .integerarray import IntegerArray
+from .booleanarray import BooleanArray

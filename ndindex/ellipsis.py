@@ -40,6 +40,8 @@ class ellipsis(NDIndex):
        compare it. See the document on :any:`type-confusion` for more details.
 
     """
+    __slots__ = ()
+
     def _typecheck(self):
         return ()
 

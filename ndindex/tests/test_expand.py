@@ -75,3 +75,6 @@ def test_expand_hypothesis(idx, shape):
         assert expanded.args.count(True) <= 1
         assert expanded.args.count(False) <= 1
         assert not (True in expanded.args and False in expanded.args)
+
+        # Idempotency
+        assert expanded.expand(shape) == expanded
