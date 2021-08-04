@@ -304,10 +304,10 @@ width="200"></a>
 ```{toctree}
 index.md
 api.md
-indices.md
-multiaxis-indices.md
-slices.md
 type-confusion.md
+indices.md
+slices.md
+multiaxis-indices.md
 changelog.md
 style-guide.md
 ```

@@ -5,15 +5,15 @@ only on NumPy arrays but also on built-in Python sequence types such as
 `list`, `tuple`, and `str`, the remaining index types do not work at all on
 non-NumPy arrays. If you try to use one on a `list`, for example, you will get
 an `IndexError`. The semantics of these indices are defined by the NumPy
-library, not by the Python language.
+library, not the Python language.
 
 ## What is an array?
 
-Before we look at indices, let's take a step back and look at just what is a
-NumPy array. Just what is it that makes NumPy arrays so ubiquitous and makes
-NumPy the most successful numerical tools ever? The answer is quite a few
-things, which come together to make NumPy a fast and easy to use library for
-array computations. But one in particular is multidimensional indexing.
+Before we look at indices, let's take a step back and look at the NumPy array.
+Just what is it that makes NumPy arrays so ubiquitous and makes NumPy the most
+successful numerical tools ever? The answer is quite a few things, which come
+together to make NumPy a fast and easy to use library for array computations.
+But one in particular is multidimensional indexing.
 
 Let's consider pure Python for a second. Suppose we have a list of values.
 Say, these values correspond to your bowling scores.
@@ -83,8 +83,8 @@ Now you can much more easily get the scores for the first game
 ```
 
 Except now you want to look at just your scores for all games (that was your
-original purpose after all, before Bob got you to add his data). And it's the
-same problem again. To extract that you have to do
+original purpose after all, before Bob got involved). And it's the same
+problem again. To extract that you have to do
 
 ```py
 >>> [game[0] for game in scores]
@@ -103,10 +103,11 @@ be lists. For example, `l = [1, [2, 3]]` is a perfectly valid Python `list`, but
 the expression `[i[0] for i in l]` is meaningless, because not every element
 of `l` is a list.
 
-NumPy arrays work like a list of lists, but restricted so that things always
-"make sense". More specifically, if you have a "list of lists", each element
-of the "outer list" must be a list. `[1, [2, 3]` is not a valid NumPy array.
-Furthermore, each inner list must have the same length.
+NumPy arrays work like a list of lists, but restricted so that these kinds of
+things always "make sense". More specifically, if you have a "list of lists",
+each element of the "outer list" must be a list. `[1, [2, 3]]` is not a valid
+NumPy array. Furthermore, each inner list must have the same length, or more
+precisely, the lists at each level of nesting must have the same length.
 
 Lists of lists can be nested more than just two times. For example, you might
 want to take your scores and create a new outer list, splitting them by
@@ -114,10 +115,10 @@ season. Then you would have a list of lists of lists, and your indexing
 operations would look like `[[game[0] for game in season] for season in
 scores]`.
 
-In NumPy, these nested lists are called *axes*, and the number of axes is
-called the number of *dimensions*. The lengths of each of these levels of
-lists is called the *shape* of the array (remember that each level has to have
-the same number of elements).
+In NumPy, these nested lists are called *axes*. The number of axes---the level
+of nesting---is called the number of *dimensions*. Together, the lengths of
+these lists at each level is called the *shape* of the array (remember that
+each level has to have the same number of elements).
 
 A NumPy array of our scores (using the last representation) looks like this
 
@@ -148,8 +149,8 @@ slice `:` says to take everything from the first axis (which represents
 games), and the integer index `0` says to take the first element of the second
 axis (which represents people).
 
-The shape of our array is the number of games (the outer axis) and the number
-of people (the inner axis).
+The shape of our array is a tuple with the number of games (the outer axis)
+and the number of people (the inner axis).
 
 ```py
 >>> scores.shape
@@ -158,13 +159,13 @@ of people (the inner axis).
 
 This is the power of multiaxis indexing in NumPy arrays. If we have a list of
 lists of elements, or a list of lists of lists of elements, and so on, we can
-index lists at any "nesting level" just as easily. There is a small,
+index things at any "nesting level" equally easily. There is a small,
 reasonable restriction, namely that each "level" (dimension) of lists (axis)
 must have the same number of elements. This restriction is reasonable because
 in the real world, data tends to be tabular, like bowling scores, meaning each
-axis will naturally have the same number of elements (and even if this isn't
+axis will naturally have the same number of elements (and even if this weren't
 the case, for instance, if Bob was out sick for a game, we could easily use a
-sentinel value like `-1` for a missing value).
+sentinel value like `-1` or `nan` for a missing value).
 
 The indexing semantics are only a small part of what makes NumPy arrays so
 powerful. They have many other advantages as well, which are unrelated to
@@ -178,6 +179,7 @@ scikits, are really what have made NumPy such a popular and essential tool.
 
 ## Basic Multiaxis Indices
 
+(tuple-indices)=
 ### Tuples
 
 The basic building block of multiaxis indexing is the `tuple` index. A tuple
@@ -228,10 +230,10 @@ We also see that integer indices remove the axis, and slices keep the axis
 
 A tuple index indices the corresponding element of the corresponding axis. So
 for example, the index `(1, 0, 2)` grabs the element in the second element of
-the first axis, the first element of the second axis, and the third element
-of the third axis (remember that indexing is 0-based, so index `0` corresponds
-to the first element, index `1` to the second, and so on). Looking up at the list of lists representation of `a` that
-was printed by NumPy:
+the first axis, the first element of the second axis, and the third element of
+the third axis (remember that indexing is 0-based, so index `0` corresponds to
+the first element, index `1` to the second, and so on). Looking at the list of
+lists representation of `a` that was printed by NumPy:
 
 ```py
 >>> a
@@ -290,6 +292,17 @@ And `(1, 0)` gives use the second intermediate array we looked at:
 array([ 8,  9, 10, 11])
 ```
 
+In each case, the integers remove the corresponding axes from the array shape:
+
+```py
+>>> a.shape
+(3, 2, 4)
+>>> a[(1,)].shape
+(2, 4)
+>>> a[(1, 0)].shape
+(4,)
+```
+
 We can actually think of the final element, `10`, as being an array with shape
 `()` (0 dimensions). Indeed, NumPy agrees with this idea:
 
@@ -298,7 +311,7 @@ We can actually think of the final element, `10`, as being an array with shape
 ()
 ```
 
-Now, an important point about tuple indices should be made. **The parentheses
+Now, an important point about tuple indices should be made: **the parentheses
 in a tuple index are completely optional.** Instead of writing `a[(1, 0, 2)]`,
 we could have instead just wrote `a[1, 0, 2]`.
 
@@ -309,9 +322,9 @@ we could have instead just wrote `a[1, 0, 2]`.
 
 These are exactly the same. When the parentheses are omitted, Python
 automatically treats the index as a tuple. From here on out, we will always
-omit the parentheses. Not only is this cleaner, it is important to do so for
-another reason: syntactically, Python will not allow slices in a tuple index
-if we include the parentheses:
+omit the parentheses, as is common practice. Not only is this cleaner, it is
+important to do so for another reason: syntactically, Python will not allow
+slices in a tuple index if we include the parentheses:
 
 ```py
 >>> a[(1:, :, :-1)] # doctest: +SKIP
@@ -331,12 +344,11 @@ This is because the slice syntax using `:` is very special in Python. It is
 only allowed directly inside of square brackets. When Python parses `a[(1:, :,
 :-1)]`, it first looks at the inner `(1:, :, :-1)` and tries to parse that
 separately. But this is not valid syntax, because the `:` slice expressions
-are not directly inside of square brackets. To be sure, if you really need to
-do this, you can instead used the `slice` builtin function to create the
-equivalent tuple `(slice(1), slice(None, slice(None, -1))`. But this is far
-less readable than `1:, :, :-1`, so you should only do it if you are trying to
-generate an index object separately from the array you are indexing.
-
+are not directly inside of square brackets. If you really need to do this, you
+can instead used the `slice` builtin function to create the equivalent tuple
+`(slice(1), slice(None), slice(None, -1))`. But this is far less readable than
+`1:, :, :-1`, so you should only do it if you are trying to generate an index
+object separately from the array you are indexing (e.g., when using ndindex!).
 
 Now, let's go back and look at an example we just showed:
 
@@ -357,22 +369,22 @@ array([[ 8,  9, 10, 11],
 ```
 
 This illustrates the first important fact about tuple indices. **A tuple index
-with a single element, `a[i,]` is exactly the same index as that element, `a[i]`.**
-The reason is that in both cases, the index `i` indexes over the first axis of
-the array. This is true no matter what kind of index `i` is. `i` can be an
-integer index, a slice, an ellipsis, and so on. With one exception, that is.
-`i` cannot itself be a tuple index. Nested tuple indices are not allowed. A
-tuple index can contain any other index type, but not another tuple index
-type.
+with a single element, `a[i,]` is exactly the same index as that element,
+`a[i]`.** The reason is that in both cases, the index `i` indexes over the
+first axis of the array. This is true no matter what kind of index `i` is. `i`
+can be an integer index, a slice, an ellipsis, and so on. With one exception,
+that is: `i` cannot itself be a tuple index! Nested tuple indices are not
+allowed.
 
-In practice, this means that you can think of every index type as a single
-element tuple index. An integer index `0` is *actually* the tuple index
-`(0,)`. The slice `a[0:3]` is actually a tuple `a[0:3,]`. This is a good way
-to think about indices, because it will help you to remember that non-tuple
-indices always operate as if they were the first element of a single element
-tuple index, namely, the operate on the first axis of the array (although
-remember that this fact is not true for Python builtin types: `l[0,]` and
-`l[0:3,]` will both error if `l` is a `list`, `tuple`, or `str`).
+In practice, this means that when working with NumPy arrays, you can think of
+every index type as a single element tuple index. An integer index `0` is
+*actually* the tuple index `(0,)`. The slice `a[0:3]` is actually a tuple
+`a[0:3,]`. This is a good way to think about indices, because it will help you
+to remember that non-tuple indices always operate as if they were the first
+element of a single element tuple index, namely, the operate on the first axis
+of the array (but also remember that this is not true for Python builtin
+types. `l[0,]` and `l[0:3,]` will both error if `l` is a `list`, `tuple`, or
+`str`).
 
 Up to now, we looked at the tuple index `(1, 0, 2)`, which selected a single
 element. And we considered sub-tuples of this, `(1,)` and `(1, 0)`, which
@@ -393,11 +405,12 @@ array([[ 0,  4],
        [16, 20]])
 ```
 
-`:` serves as a convenient way to "skip" axes. It is by far the most common
-slice that you will see in indices for this reason. It is important to
-remember that `:` is not special. It is just a slice, which picks every
-element of the corresponding axis. We could also replace `:` with `0:n`, where
-`n` is the size of the corresponding axis.
+`:` serves as a convenient way to "skip" axes. It is one of the most common
+types of indices that you will see in practice for this reason. However, it is
+important to remember that `:` is not special. It is just a slice, which picks
+every element of the corresponding axis. We could also replace `:` with `0:n`,
+where `n` is the size of the corresponding axis (see the [slices
+documentation](omitted)).
 
 ```py
 >>> a[0:3, 0:2, 0]
@@ -406,8 +419,8 @@ array([[ 0,  4],
        [16, 20]])
 ```
 
-Of course, in practice using `:` is better because the axis might not know or
-care what the actual size of the axis is.
+Of course, in practice using `:` is better because we might not know or care
+what the actual size of the axis is, and it's less typing anyway.
 
 When we used the indices `(1,)` and `(1, 0)`, we saw that these indexed the
 first and the first and second axes, respectively, and left the last axis/es
@@ -428,11 +441,11 @@ array([ 8,  9, 10, 11])
 ```
 
 This is a rule in general, **a tuple index implicitly ends in as many slices
-`:` as there are remaining dimensions of the array.** Put another way, if an
-array has $n$ dimensions and you use a tuple with $k$ elements where $k < n$,
-then the index implicitly selects the entirety of the last $n - k$ axes, which
-is exactly the same as if you had appended $n - k$ trivial `:` slices to the
-end of the index.
+`:` as there are remaining dimensions of the array.** A more mathematically
+precise way to say this might be this:  Suppose an array `a` has $n$
+dimensions and a tuple index `i` has $k$ elements, where $k < n$. Then `a[i]`
+is exactly the same as `a[i2]`, where `i2` is `i` with $n - k$ trivial `:`
+slices appended to the end.
 
 (single-axis-tuple)=
 The [slices](slices-docs) document stressed the point that slices always keep
@@ -507,8 +520,8 @@ work, because our index assumed three axes, but `c` only has two:
 (2, 4)
 ```
 
-Thus, when it comes to indexing, all axes matter, even "trivial" axes. It's
-often a good idea to maintain the same number of dimensions in an array
+Thus, when it comes to indexing, all axes, even "trivial" axes, matter. It's
+sometimes a good idea to maintain the same number of dimensions in an array
 throughout a computation, even if one of them sometimes has size 1, simply
 because it means that you can index the array uniformly.
 
@@ -560,6 +573,7 @@ unchanged.**[^tuple-ellipsis-footnote]
     places where you need one and not the other, and the above trick can be
     used to convert between them.
 
+(ellipsis-indices)=
 ### Ellipses
 
 Now that we understand how tuple indices work, the remaining basic index types
@@ -606,11 +620,12 @@ array([[ 0,  4],
 ```
 
 However, this is only actually correct for our specific array, because we know
-that it has 3 dimensions. If it instead of 5 dimensions, we would need to use
-`:, :, :, :, 0`. This is not only tedious, but it makes it impossible to write
-our index in a way that works for any number of dimensions. To contrast, if we
-wanted the first element of the *first* axis, we could write `a[0]`, which
-works if `a` has 3 dimensions or 5 dimensions or any $n \geq 1$ dimensions.
+that it has 3 dimensions. If it instead of 5 dimensions, we would need to
+instead use `a[:, :, :, :, 0]`. This is not only tedious, but it makes it
+impossible to write our index in a way that works for any number of
+dimensions. To contrast, if we wanted the first element of the *first* axis,
+we could write `a[0]`, which works if `a` has 3 dimensions or 5 dimensions or
+any number of dimensions.
 
 The ellipsis solves this problem. An ellipsis index skips all the axes of an
 array to the end, so that the indices after it select the last axes of the
@@ -624,10 +639,10 @@ array([[ 0,  4],
 ```
 
 You are also allowed to put indices before the ellipsis. The indices before
-the ellipsis will select the axes at the beginning of the array, and the
-indices at the end will select the axes at the end. The ellipsis automatically
-skips all intermediate axes. For example, to select the first element of the
-first axis and the last element of the last axis, we could use
+the ellipsis will select the first axes of the array, and the indices after it
+will select the last axes. The ellipsis automatically skips all intermediate
+axes. For example, to select the first element of the first axis and the last
+element of the last axis, we could use
 
 ```py
 >>> a[0, ..., -1]
@@ -635,7 +650,8 @@ array([3, 7])
 ```
 
 An ellipsis is also allowed to select zero axes, if all the axes of the array
-are already accounted for. For example:
+are already accounted for. For example, these are the same because `a` has 3
+dimensions:
 
 ```py
 >>> a[1, 0:2, 2]
@@ -665,8 +681,8 @@ array([[[ 0,  1,  2,  3],
         [20, 21, 22, 23]]])
 ```
 
-Finally, only one ellipsis is allowed (otherwise it would be ambiguous in
-general which axis is being indexed):
+Finally, only one ellipsis is allowed (otherwise it would be ambiguous which
+axes are being indexed):
 
 ```py
 >>> a[0, ..., 1, ..., 2]
@@ -686,11 +702,13 @@ The rules for an ellipsis are
   an ellipsis index.**
 - **At most one ellipsis index is allowed in a tuple index.**
 
+(newaxis-indices)=
 ### newaxis
 
 The final basic index type is `newaxis`. `np.newaxis` is an alias for `None`.
-Both work exactly the same. However, `newaxis` is often more explicit than
-`None`, which may look odd in an index, so it's generally preferred.
+Both `newaxis` and `None` work exactly the same, however, `newaxis` is often
+more explicit than `None`, which may look odd in an index, so it's generally
+preferred.
 
 `newaxis`, as the name suggests, adds a new axis. This new axis has size `1`.
 The new axis is added in the corresponding location in the array. Take our
@@ -715,7 +733,7 @@ array([[0, 1, 2, 3],
 ```
 
 Now look at the shape of `a` when we insert `newaxis` in various locations in
-the index.
+the index `a[0, :2]`.
 
 ```py
 >>> a[np.newaxis, 0, :2].shape
@@ -756,49 +774,44 @@ array([[[0],
 
 The only difference is where the shape 1 axis is inserted. In the first
 example, `a[newaxis, 0, :2]`, the new axis is inserted before the first axis,
-but the 0 and :2 still index the original first and second axes. The resulting
-shape is `(1, 2, 4)`. In the second example, the newaxis is inserted after the
-first axis, but because the `0` removes the first axis when it indexes it, the
-resulting shape is still `(1, 2, 4)`. In general, in a tuple index, the axis
-that an index indices corresponds to its position in the tuple index, after
-removing any `newaxis` indices (equivalently, newaxis indices can be though of
-as adding new axes *after* the existing axes are indexed).
+but the `0` and `:2` still index the original first and second axes. The
+resulting shape is `(1, 2, 4)`. In the second example, the new axis is
+inserted after the first axis, but because the `0` removes this axis when it
+indexes it, the resulting shape is still `(1, 2, 4)`. In the third example,
+the new axis is inserted after the second axis, because the `newaxis` comes
+right after the `:2`, which indexes the second axis. And in the fourth
+example, the `newaxis` is after an ellipsis, so the new axis is inserted at
+the end of the shape. In general, in a tuple index, the axis that an index
+indices corresponds to its position in the tuple index, after removing any
+`newaxis` indices (equivalently, `newaxis` indices can be though of as adding
+new axes *after* the existing axes are indexed).
 
 A shape 1 axis can always be inserted anywhere in an array's shape without
 changing the underlying elements. This only corresponds to adding another
 level of "nesting" to the array, when thinking of it as a list of lists.
 
-An array index can include multiple newaxes, (or `None`s). Each will add a
+An array index can include multiple `newaxis`'s, (or `None`'s). Each will add a
 shape 1 axis in the corresponding location. Can you figure out what the shape
-of `a[np.newaxis, 0, newaxis, :2, newaxis, ..., newaxis]` will be?[^newaxis-footnote]
+of `a[np.newaxis, 0, newaxis, :2, newaxis, ..., newaxis]` will be (remember
+that `a.shape` is `(3, 2, 4)`)?[^newaxis-footnote]
 
 [^newaxis-footnote]: Solution:
 
     ```py
-    >>> a[np.newaxis, 0, np.newaxis, :2, np.newaxis, ..., np.newaxis]
-    array([[[[[[0],
-               [1],
-               [2],
-               [3]]],
-    <BLANKLINE>
-    <BLANKLINE>
-             [[[4],
-               [5],
-               [6],
-               [7]]]]]])
     >>> a[np.newaxis, 0, np.newaxis, :2, np.newaxis, ..., np.newaxis].shape
     (1, 1, 2, 1, 4, 1)
     ```
 
-A newaxis index by itself, `a[newaxis]`, simply adds a newaxis at the
-beginning of an array.
+A `newaxis` index by itself, `a[newaxis]`, simply adds a new axis at the
+beginning of the shape.
 
-To summarize, **`newaxis` (or `None`) inserts a new, size 1 axis in the
-corresponding location in the tuple index. The remaining, non-newaxis indices
-in the tuple index are indexed as if the `newaxis` indices were not there.**
+To summarize, **`newaxis` (or `None`) inserts a new size 1 axis in the
+corresponding location in the tuple index. The remaining, non-`newaxis`
+indices in the tuple index are indexed as if the `newaxis` indices were not
+there.**
 
-What I haven't said yet is why you would want such a thing. One use case is to
-explicitly convert a dimension 1 vector into a 2d matrix representing a row or
+What I haven't said yet is why you would want such a thing. One use-case is to
+explicitly convert a 1-D vector into a 2-D matrix representing a row or
 column vector. For example,
 
 ```py
@@ -817,33 +830,35 @@ array([[ 0],
 (3, 1)
 ```
 
-`v[newaxis]` inserts an axis at the beginning, making `v` a `(1, 3)` row
-vector. `v[..., newaxis]` inserts an axis at the end, making it a `(3, 1)`
-column vector.
+`v[newaxis]` inserts an axis at the beginning of the shape, making `v` a `(1,
+3)` row vector. `v[..., newaxis]` inserts an axis at the end, making it a `(3,
+1)` column vector.
+
+<!-- TODO: Better example here. Explain broadcasting more.  -->
 
 Another common usage is due to broadcasting. Suppose we have the arrays
 
 ```py
->>> x1 = np.array([[1, 2, -1], [0, 0, 1]])
->>> x2 = np.array([[[2, 3, 3]], [[5, 2, 0]]])
->>> x1.shape
+>>> x = np.array([[1, 2, -1], [0, 0, 1]])
+>>> y = np.array([[[2, 3, 3]], [[5, 2, 0]]])
+>>> x.shape
 (2, 3)
->>> x2.shape
+>>> y.shape
 (2, 1, 3)
 ```
 
-Suppose we want to add each element of `x1` to the corresponding element of
-`x2`, that is, `1 + 2`, `2 + 3`, `-1 + 3`, and so on. If we just add `x1 +
-x2`, this gives us something else:
+Suppose we want to add each element of `x` to the corresponding element of
+`y`, that is, `1 + 2`, `2 + 3`, `-1 + 3`, and so on. If we just add `x + y`,
+this gives us something else:
 
 ```py
->>> x1 + x2
+>>> x + y
 array([[[ 3,  5,  2],
         [ 2,  3,  4]],
 <BLANKLINE>
        [[ 6,  4, -1],
         [ 5,  2,  1]]])
->>> (x1 + x2).shape
+>>> (x + y).shape
 (2, 2, 3)
 ```
 
@@ -851,35 +866,35 @@ What happened is that NumPy's [broadcasting
 rules](https://numpy.org/doc/stable/user/basics.broadcasting.html) converted
 the shape `(2, 3)` and `(2, 1, 3)` arrays to shape `(2, 2, 3)`. What we really
 want is for the shapes to match, so that it doesn't broadcast. We can do this
-in two ways, by deleting the second axis of `x2` using `x2[:, 0]` (remember
+in two ways, by deleting the second axis of `x` using `x[:, 0]` (remember
 that integer indices will remove an axis, so `0` effectively deletes a size 1
 axis)
 
 ```py
->>> x2[:, 0].shape
+>>> y[:, 0].shape
 (2, 3)
->>> x1 + x2[:, 0]
+>>> x + y[:, 0]
 array([[3, 5, 2],
        [5, 2, 1]])
->>> (x1 + x2[:, 0]).shape
+>>> (x + y[:, 0]).shape
 (2, 3)
 ```
 
-or by inserting a new axis into `x1`:
+or by inserting a new axis into `x`:
 
 ```py
->>> x1[:, np.newaxis].shape
+>>> x[:, np.newaxis].shape
 (2, 1, 3)
->>> x1[:, np.newaxis] + x2
+>>> x[:, np.newaxis] + y
 array([[[3, 5, 2]],
 <BLANKLINE>
        [[5, 2, 1]]])
->>> (x1[:, np.newaxis] + x2).shape
+>>> (x[:, np.newaxis] + y).shape
 (2, 1, 3)
 ```
 
-If we want our end result to look like `x1`, we should choose the former
-option, but if we want it to look like `x2`, we should insert the intermediate
+If we want our end result to look like `x`, we should choose the former
+option, but if we want it to look like `y`, we should insert the intermediate
 axis.
 
 Remember, as we saw [above](single-axis-tuple), size 1 axes may seem
@@ -901,8 +916,10 @@ of advanced indices, both of which are arrays: integer arrays and boolean
 arrays. Indexing by an array that does not have an integer or boolean dtype is
 an error.
 
+(integer-array-indices)=
 ### Integer Arrays
 
+(boolean-array-indices)=
 ### Boolean Arrays
 
 ### Views vs. Copies
@@ -920,20 +937,20 @@ also relevant if you are modifying the array. For example:
 >>> a
 array([[[ 0,  1,  2,  3],
         [ 4,  5,  6,  7]],
-
+<BLANKLINE>
        [[ 8,  9, 10, 11],
         [12, 13, 14, 15]],
-
+<BLANKLINE>
        [[16, 17, 18, 19],
         [20, 21, 22, 23]]])
 >>> b[:] = 0
 >>> a
 array([[[ 0,  0,  0,  0],
         [ 4,  5,  6,  7]],
-
+<BLANKLINE>
        [[ 0,  0,  0,  0],
         [12, 13, 14, 15]],
-
+<BLANKLINE>
        [[ 0,  0,  0,  0],
         [20, 21, 22, 23]]])
 
