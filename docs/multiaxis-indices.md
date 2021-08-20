@@ -834,77 +834,148 @@ array([[ 0],
 3)` row vector. `v[..., newaxis]` inserts an axis at the end, making it a `(3,
 1)` column vector.
 
-<!-- TODO: Better example here. Explain broadcasting more.  -->
-
-Another common usage is due to broadcasting. Suppose we have the arrays
+Another common usage is due to
+[broadcasting](https://numpy.org/doc/stable/user/basics.broadcasting.html).
+Broadcasting is a powerful abstraction that applies to all operations in
+NumPy. It allows arrays with mismatched shapes to be combined together as if
+one or more of their dimensions were simply repeated the appropriate number of
+times. Broadcasting is a generalization of this behavior
 
 ```py
->>> x = np.array([[1, 2, -1], [0, 0, 1]])
->>> y = np.array([[[2, 3, 3]], [[5, 2, 0]]])
+>>> x = np.array([[1, 2], [3, 4]])
+>>> x + 1
+array([[2, 3],
+       [4, 5]])
+```
+
+Here we can think of the scalar `1` as a shape `()` array, whereas `x` is a
+shape `(2, 2)` array. Thus, `x` and `1` do not have the same shape, but `x +
+1` is allowed via repeating `1` across every element of `x`. This means taking
+`1` and treating it as if it were the shape `(2, 2)` array `[[1, 1], [1, 1]]`.
+
+In general, broadcasting allows repeating only some dimensions. For example,
+here we multiply `x`, a shape `(3, 2)` array, with `y`, a shape `(2,)` array.
+`y` is virtually repeated into a shape `(3, 2)` array with each element of the
+last dimension repeated 3 times.
+
+```py
+>>> x = np.array([[1, 2], [3, 4], [5, 6]])
 >>> x.shape
-(2, 3)
->>> y.shape
-(2, 1, 3)
+(3, 2)
+>>> y = np.array([0, 2])
+>>> x*y
+array([[ 0,  4],
+       [ 0,  8],
+       [ 0, 12]])
 ```
 
-Suppose we want to add each element of `x` to the corresponding element of
-`y`, that is, `1 + 2`, `2 + 3`, `-1 + 3`, and so on. If we just add `x + y`,
-this gives us something else:
+We can see how broadcasting works using `np.broadcast_to`
 
 ```py
->>> x + y
-array([[[ 3,  5,  2],
-        [ 2,  3,  4]],
-<BLANKLINE>
-       [[ 6,  4, -1],
-        [ 5,  2,  1]]])
->>> (x + y).shape
-(2, 2, 3)
+>>> np.broadcast_to(y, x.shape)
+array([[0, 2],
+       [0, 2],
+       [0, 2]])
 ```
 
-What happened is that NumPy's [broadcasting
-rules](https://numpy.org/doc/stable/user/basics.broadcasting.html) converted
-the shape `(2, 3)` and `(2, 1, 3)` arrays to shape `(2, 2, 3)`. What we really
-want is for the shapes to match, so that it doesn't broadcast. We can do this
-in two ways, by deleting the second axis of `x` using `x[:, 0]` (remember
-that integer indices will remove an axis, so `0` effectively deletes a size 1
-axis)
+This is what the array `y` looks like before it is combined with `x` (except
+the power of broadcasting is that the repeated entries are not literally
+repeated in memory).
+
+Broadcasting always happens automatically in NumPy whenever two arrays with
+different shapes are combined, assuming those shapes are broadcast compatible.
+The rule with broadcasting is that the shorter of the shapes are prepended
+with length 1 dimensions so that they have the same number of dimensions. Then
+any dimensions that are size 1 in a shape are replaced with the corresponding
+size in the other shape. The other non-1 sizes must be equal or broadcasting
+is not allowed. In the above example, we broadcast `(3, 2)` with `(2,)` by
+first extending `(2,)` to `(1, 2)` then broadcasting the size `1` dimension to
+the corresponding size in the other shape, `3`, giving a broadcasted shape of
+`(3, 2)`. In more advanced examples, both shapes may have broadcasted
+dimensions. For instance, `(3, 1)` can broadcast with `(2,)` giving `(3, 2)`.
+The first shape would repeat the first axis 2 times along the second axis, and
+the second would insert a new axis in the beginning that would repeat 3 times.
+See the [NumPy
+documentation](https://numpy.org/doc/stable/user/basics.broadcasting.html) for
+more examples of broadcasting.
+
+The key idea of broadcasting is that size 1 axes are not directly useful, in
+the sense that they could be removed without actually changing anything about
+the underlying data in the array. So they are used as a signal that that
+dimension can be repeated in operations. `newaxis` is therefore useful for
+inserting these size 1 axes in situations where you want to force your data to
+be repeated. For example, suppose we have the two arrays
 
 ```py
->>> y[:, 0].shape
-(2, 3)
->>> x + y[:, 0]
-array([[3, 5, 2],
-       [5, 2, 1]])
->>> (x + y[:, 0]).shape
-(2, 3)
+>>> x = np.array([1, 2, 3])
+>>> y = np.array([100, 200])
 ```
 
-or by inserting a new axis into `x`:
+and suppose we want to compute an "outer" sum of `x` and `y`, that is, we want
+to compute every combination of `i + j` where `i` is from `x` and `j` is from
+`y`. If we instead wanted to compute the outer product, we could use the
+`np.outer` function, which does exactly this. But we instead want the sum. The
+key realization here is that what we want is simply to repeat each entry of
+`x` 3 times, to correspond to each entry of `y`, and respectively repeat each
+entry of `y` 3 times to correspond to each entry of `x`. And this is exactly
+the sort of thing broadcasting does! We only need to make the shapes of `x`
+and `y` match in such a way that the broadcasting will do that. Since we want
+both `x` and `y` to be repeated, we will need to broadcast both arrays. We
+want to compute
+
+```py
+[[ x[0] + y[0], x[0] + y[1] ],
+ [ x[1] + y[0], x[1] + y[1] ],
+ [ x[2] + y[0], x[2] + y[1] ]]
+```
+
+That way the first dimension of the resulting array will correspond to values
+from `x`, and the second dimension will correspond to values from `y`, i.e.,
+`a[i, j]` will be `x[i] + y[j]`. Thus the resulting array will have shape `(3,
+2)`. So to make `x` (shape `(3,)`) and `y` (shape `(2,)`) broadcast to this,
+we need to make them `(3, 1)` and `(1, 2)`, respectively. This can easily be
+done with `np.newaxis`.
 
 ```py
 >>> x[:, np.newaxis].shape
-(2, 1, 3)
->>> x[:, np.newaxis] + y
-array([[[3, 5, 2]],
-<BLANKLINE>
-       [[5, 2, 1]]])
->>> (x[:, np.newaxis] + y).shape
-(2, 1, 3)
+(3, 1)
+>>> y[np.newaxis, :].shape
+(1, 2)
 ```
 
-If we want our end result to look like `x`, we should choose the former
-option, but if we want it to look like `y`, we should insert the intermediate
-axis.
+Once we have the desired shapes, we just perform the operation, and NumPy will
+do the broadcasting automatically.[^outer-footnote]
+
+[^outer-footnote]: We could have also used the
+    [`outer`](https://numpy.org/doc/stable/reference/generated/numpy.ufunc.outer.html)
+    method of the `add` ufunc to achieve this, but using this for more a more
+    complicated function than just `x + y` would be tedious, and it would not
+    work in situations where you want to only repeat certain dimensions.
+    Broadcasting is a more general way to do this, and `newaxis` is an
+    important tool for making shapes align properly to make broadcasting do
+    what you want.
+
+```py
+>>> x[:, np.newaxis] + y[np.newaxis, :]
+array([[101, 201],
+       [102, 202],
+       [103, 203]])
+```
+
+Note: broadcasting automatically prepends shape `1` dimensions, so the
+`y[np.newaxis, :]` operation is unnecessary.
+
+```py
+>>> x[:, np.newaxis] + y
+array([[101, 201],
+       [102, 202],
+       [103, 203]])
+```
 
 Remember, as we saw [above](single-axis-tuple), size 1 axes may seem
-redundant, but they are not a bad thing. They allow indexing an array
-uniformly, and they are very important in the way the interact with NumPy's
-[broadcasting
-rules](https://numpy.org/doc/stable/user/basics.broadcasting.html). And in
-general, it's often important that an array has the correct number of
-dimensions, and adding size 1 axes to an array with fewer dimensions is
-sometimes the correct way to achieve this.
+redundant, but they are not a bad thing. Not only do they allow indexing an
+array uniformly, they are also very important in the way they interact with
+NumPy's broadcasting rules.
 
 ## Advanced Indices
 
