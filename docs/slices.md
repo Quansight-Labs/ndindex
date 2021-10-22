@@ -1725,8 +1725,8 @@ indexing](negative-indices) disagrees with the concept of
 [clipping](clipping). `a[i:j]` will slice "as far as it can" if `j` is "too
 big" (greater than `len(a)`), but it does something completely different if
 `i` is "too small" as soon as "too small" means "negative". Clipping is a good
-idea. It tends to lead to behavior that gives what you would want slices that
-go out of bounds.
+idea. It tends to lead to behavior that gives what you would want for slices
+that go out of bounds.
 
 Negative indexing is, strictly speaking, a syntactic sugar only.
 Slicing/indexing from the end of a list can always be done in terms of the
