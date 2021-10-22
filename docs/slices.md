@@ -32,6 +32,12 @@ strings. This is because on a single dimension, NumPy slice semantics are
 identical to the Python slice semantics (NumPy only begins to differ from
 Python for multi-dimensional indices).
 
+```{contents}
+:local:
+:backlinks: none
+
+```
+
 ## What is a slice?
 
 In Python, a slice is a special syntax that is allowed only in an index, that
