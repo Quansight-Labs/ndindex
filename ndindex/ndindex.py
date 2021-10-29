@@ -571,6 +571,12 @@ def iter_indices(shape, skip_axes=()):
     >>> from ndindex import iter_indices
     >>> for idx in iter_indices((3, 2, 4, 4), skip_axes=(-1, -2)):
     ...     print(idx)
+    Tuple(0, 0, slice(0, 4, 1), slice(0, 4, 1))
+    Tuple(0, 1, slice(0, 4, 1), slice(0, 4, 1))
+    Tuple(1, 0, slice(0, 4, 1), slice(0, 4, 1))
+    Tuple(1, 1, slice(0, 4, 1), slice(0, 4, 1))
+    Tuple(2, 0, slice(0, 4, 1), slice(0, 4, 1))
+    Tuple(2, 1, slice(0, 4, 1), slice(0, 4, 1))
 
     """
     shape = asshape(shape)
