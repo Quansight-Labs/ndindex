@@ -6,13 +6,13 @@ from hypothesis import given, example, settings
 
 from pytest import raises, warns
 
-from ..ndindex import ndindex, asshape
+from ..ndindex import ndindex, asshape, iter_indices
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, assert_equal
+from .helpers import ndindices, check_same, assert_equal, short_shapes, prod
 
 @given(ndindices)
 def test_eq(idx):
@@ -149,3 +149,21 @@ def test_asshape():
     raises(TypeError, lambda: asshape(Integer(1)))
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
     raises(TypeError, lambda: asshape((True,)))
+
+@given(short_shapes)
+def test_iter_indices(shape):
+    res = iter_indices(shape)
+    size = prod(shape)
+    a = np.arange(size).reshape(shape)
+
+    vals = set()
+    i = -1
+    for i, idx in enumerate(res):
+        assert isinstance(idx, Tuple)
+        assert idx.expand(shape) == idx
+        assert a[idx.raw].shape == ()
+        assert int(a[idx.raw]) not in vals
+        vals.add(int(a[idx.raw]))
+
+    assert vals == set(range(size))
+    assert i == size - 1

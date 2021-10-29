@@ -1,4 +1,5 @@
 import inspect
+import itertools
 import numbers
 import operator
 
@@ -545,6 +546,35 @@ class NDIndex(ImmutableObject):
 
         """
         return self
+
+
+def iter_indices(shape, skip_axes=()):
+    """
+    Iterate an index for every element of an array of shape `shape`.
+
+    This is a generalization of the NumPy `np.ndindex()` function (which
+    otherwise has no relation). However, this function also supports the
+    ability to skip axes of the shape using `skip_axes`. These axes will be
+    fully sliced in each index. The remaining axes will be indexed one element
+    at a time with integer indices.
+
+    `skip_axes` should be a tuple of axes to skip. It can use negative
+    integers, e.g., `skip_axes=(-1,)` to skip the last axis. The order of the
+    axes in `skip_axes` does not matter, but it should not contain duplicate
+    axes.
+
+    For example, suppose `a` were a shape `(3, 2, 4, 4)` array, which we wish
+    to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
+    iterator for each matrix in the "stack" with `iter_indices((3, 2, 4, 4),
+    skip_axes=(-1, -2))`
+
+    """
+    shape = asshape(shape)
+    if skip_axes:
+        raise NotImplementedError("skip_axes is not yet implemented")
+
+    for idx in itertools.product(*[range(i) for i in shape]):
+        yield ndindex(idx)
 
 def asshape(shape, axis=None):
     """
