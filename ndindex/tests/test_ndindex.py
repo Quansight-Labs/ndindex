@@ -2,7 +2,8 @@ import inspect
 
 import numpy as np
 
-from hypothesis import given, example, settings
+from hypothesis import given, example, settings, assume
+from hypothesis.strategies import one_of, tuples, none, integers
 
 from pytest import raises, warns
 
@@ -150,20 +151,40 @@ def test_asshape():
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
     raises(TypeError, lambda: asshape((True,)))
 
-@given(short_shapes)
-def test_iter_indices(shape):
-    res = iter_indices(shape)
+@given(short_shapes,
+       short_shapes.flatmap(lambda s: one_of(none(),
+                                             tuples(*(integers(-i, max(0, i-1))
+                                                      for i in range(len(s)))))))
+def test_iter_indices(shape, skip_axes):
+    if skip_axes is None:
+        res = iter_indices(shape)
+        skip_axes = ()
+    else:
+        res = iter_indices(shape, skip_axes)
     size = prod(shape)
+    ndim = len(shape)
     a = np.arange(size).reshape(shape)
+
+    normalized_skip_axes = sorted(ndindex(i).reduce(ndim).args[0] for i in skip_axes)
+    skip_shape = tuple(shape[i] for i in normalized_skip_axes)
+    non_skip_shape = tuple(shape[i] for i in range(ndim) if i not in normalized_skip_axes)
 
     vals = set()
     i = -1
-    for i, idx in enumerate(res):
-        assert isinstance(idx, Tuple)
-        assert idx.expand(shape) == idx
-        assert a[idx.raw].shape == ()
-        assert int(a[idx.raw]) not in vals
-        vals.add(int(a[idx.raw]))
+    try:
+        for i, idx in enumerate(res):
+            assert isinstance(idx, Tuple)
+            assert idx.expand(shape) == idx
+            assert a[idx.raw].shape == skip_shape
+            assert set(a[idx.raw].flat).intersection(vals) == set()
+            vals.update(set(a[idx.raw].flat))
+    except ValueError as e:
+        # Handled in test_iter_indices_errors()
+        if "duplicate axes" in str(e):
+            assume(False)
+        raise
 
     assert vals == set(range(size))
-    assert i == size - 1
+
+    nitems = prod(non_skip_shape)
+    assert i == nitems - 1

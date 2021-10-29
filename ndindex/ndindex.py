@@ -3,7 +3,7 @@ import itertools
 import numbers
 import operator
 
-from numpy import ndarray, bool_, newaxis
+from numpy import ndarray, bool_, newaxis, AxisError
 
 def ndindex(obj):
     """
@@ -566,14 +566,30 @@ def iter_indices(shape, skip_axes=()):
     For example, suppose `a` were a shape `(3, 2, 4, 4)` array, which we wish
     to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
     iterator for each matrix in the "stack" with `iter_indices((3, 2, 4, 4),
-    skip_axes=(-1, -2))`
+    skip_axes=(-1, -2))`:
+
+    >>> from ndindex import iter_indices
+    >>> for idx in iter_indices((3, 2, 4, 4), skip_axes=(-1, -2)):
+    ...     print(idx)
 
     """
     shape = asshape(shape)
-    if skip_axes:
-        raise NotImplementedError("skip_axes is not yet implemented")
+    ndim = len(shape)
+    _skip_axes = []
+    for a in skip_axes:
+        try:
+            a = ndindex(a).reduce(ndim).args[0]
+        except IndexError:
+            # Raise the same error as NumPy functions that take axis arguments
+            raise AxisError(f"axis {a} is out of bounds for array of dimension {ndim}")
+        if a in _skip_axes:
+            raise ValueError("skip_axes should not contain duplicate axes")
+        _skip_axes.append(a)
 
-    for idx in itertools.product(*[range(i) for i in shape]):
+    iters = [range(n) if i not in _skip_axes else [slice(0, n, 1)]
+             for i, n in enumerate(shape)]
+
+    for idx in itertools.product(*iters):
         yield ndindex(idx)
 
 def asshape(shape, axis=None):
