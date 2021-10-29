@@ -1,8 +1,8 @@
 __all__ = []
 
-from .ndindex import ndindex
+from .ndindex import ndindex, iter_indices
 
-__all__ += ['ndindex']
+__all__ += ['ndindex', 'iter_indices']
 
 from .slice import Slice
 
