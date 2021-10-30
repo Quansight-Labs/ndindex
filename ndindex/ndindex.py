@@ -581,6 +581,8 @@ def iter_indices(shape, skip_axes=()):
     """
     shape = asshape(shape)
     ndim = len(shape)
+    if isinstance(skip_axes, int):
+        skip_axes = (skip_axes,)
     _skip_axes = []
     for a in skip_axes:
         try:
