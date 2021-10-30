@@ -594,7 +594,7 @@ def iter_indices(shape, skip_axes=()):
             raise ValueError("skip_axes should not contain duplicate axes")
         _skip_axes.append(a)
 
-    iters = [range(n) if i not in _skip_axes else [slice(0, n, 1)]
+    iters = [range(n) if i not in _skip_axes else [slice(None)]
              for i, n in enumerate(shape)]
 
     for idx in itertools.product(*iters):
