@@ -40,15 +40,17 @@ def tuples(elements, *, min_size=0, max_size=None, unique_by=None, unique=False)
     return lists(elements, min_size=min_size, max_size=max_size,
                  unique_by=unique_by, unique=unique).map(tuple)
 
+MAX_ARRAY_SIZE = 100000
+SHORT_MAX_ARRAY_SIZE = 1000
 shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
-             lambda shape: prod([i for i in shape if i]) < 100000)
+             lambda shape: prod([i for i in shape if i]) < MAX_ARRAY_SIZE)
 
 _short_shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
-             lambda shape: prod([i for i in shape if i]) < 1000)
+             lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
 
 # We need to make sure shapes for boolean arrays are generated in a way that
 # makes them related to the test array shape. Otherwise, it will be very
@@ -199,4 +201,4 @@ chunk_shapes = shared(shapes)
 def chunk_sizes(draw, shapes=chunk_shapes):
     shape = draw(shapes)
     return draw(tuples(integers(1, 10), min_size=len(shape),
-                       max_size=len(shape)).filter(lambda shape: prod(shape) < 10000))
+                       max_size=len(shape)).filter(lambda shape: prod(shape) < MAX_ARRAY_SIZE))
