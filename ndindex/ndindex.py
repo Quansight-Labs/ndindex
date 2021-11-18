@@ -3,7 +3,7 @@ import itertools
 import numbers
 import operator
 
-from numpy import ndarray, bool_, newaxis, AxisError
+from numpy import ndarray, bool_, newaxis, AxisError, broadcast_shapes
 
 def ndindex(obj):
     """
@@ -548,15 +548,23 @@ class NDIndex(ImmutableObject):
         return self
 
 
-def iter_indices(shape, skip_axes=()):
+def iter_indices(*shapes, skip_axes=(), _debug=False):
     """
-    Iterate an index for every element of an array of shape `shape`.
+    Iterate an index for every element of an arrays of shape `shapes`.
+
+    `shapes` should be tuples of shapes. The shapes should be broadcast
+    compatible. Each iteration step will produce a tuple of indices, one for
+    each shape, which would correspond to the same elements if the arrays of
+    the given shapes were first broadcast together.
 
     This is a generalization of the NumPy `np.ndindex()` function (which
     otherwise has no relation). However, this function also supports the
     ability to skip axes of the shape using `skip_axes`. These axes will be
     fully sliced in each index. The remaining axes will be indexed one element
-    at a time with integer indices.
+    at a time with integer indices. It also supports generating indices for
+    multiple broadcast compatible shapes at once. This is equivalent to first
+    broadcasting the arrays then generating indices for the single broadcasted
+    shape.
 
     `skip_axes` should be a tuple of axes to skip. It can use negative
     integers, e.g., `skip_axes=(-1,)` to skip the last axis. The order of the
@@ -571,16 +579,43 @@ def iter_indices(shape, skip_axes=()):
     >>> from ndindex import iter_indices
     >>> for idx in iter_indices((3, 2, 4, 4), skip_axes=(-1, -2)):
     ...     print(idx)
-    Tuple(0, 0, slice(0, 4, 1), slice(0, 4, 1))
-    Tuple(0, 1, slice(0, 4, 1), slice(0, 4, 1))
-    Tuple(1, 0, slice(0, 4, 1), slice(0, 4, 1))
-    Tuple(1, 1, slice(0, 4, 1), slice(0, 4, 1))
-    Tuple(2, 0, slice(0, 4, 1), slice(0, 4, 1))
-    Tuple(2, 1, slice(0, 4, 1), slice(0, 4, 1))
+    Tuple(0, 0, slice(None, None, None), slice(None, None, None))
+    Tuple(0, 1, slice(None, None, None), slice(None, None, None))
+    Tuple(1, 0, slice(None, None, None), slice(None, None, None))
+    Tuple(1, 1, slice(None, None, None), slice(None, None, None))
+    Tuple(2, 0, slice(None, None, None), slice(None, None, None))
+    Tuple(2, 1, slice(None, None, None), slice(None, None, None))
+
+    As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 3)`.
+    And you want to generate indices for every value of the broadcasted
+    operation `a + b`. Then one could use `a[idx1.raw] + b[idx2.raw]` for
+    every `idx1` and `idx2` as below:
+
+    >>> import numpy as np
+    >>> a = np.arange(3).reshape((1, 3))
+    >>> b = np.arange(100, 106).reshape((2, 3))
+    >>> a
+    array([[0, 1, 2]])
+    >>> b
+    array([[100, 101, 102],
+           [103, 104, 105]])
+    >>> for idx1, idx2 in iter_indices((1, 3), (2, 3)):
+    ...     print(f"{idx1 = }; {idx2 = }; {(a[idx1.raw], b[idx2.raw]) = }")
+    idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (0, 100)
+    idx1 = Tuple(0, 1); idx2 = Tuple(0, 1); (a[idx1.raw], b[idx2.raw]) = (1, 101)
+    idx1 = Tuple(0, 2); idx2 = Tuple(0, 2); (a[idx1.raw], b[idx2.raw]) = (2, 102)
+    idx1 = Tuple(0, 0); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (0, 103)
+    idx1 = Tuple(0, 1); idx2 = Tuple(1, 1); (a[idx1.raw], b[idx2.raw]) = (1, 104)
+    idx1 = Tuple(0, 2); idx2 = Tuple(1, 2); (a[idx1.raw], b[idx2.raw]) = (2, 105)
 
     """
-    shape = asshape(shape)
-    ndim = len(shape)
+    if not shapes:
+        yield ()
+        return
+
+    shapes = [asshape(shape) for shape in shapes]
+    ndim = len(max(shapes, key=len))
+
     if isinstance(skip_axes, int):
         skip_axes = (skip_axes,)
     _skip_axes = []
@@ -594,11 +629,58 @@ def iter_indices(shape, skip_axes=()):
             raise ValueError("skip_axes should not contain duplicate axes")
         _skip_axes.append(a)
 
-    iters = [range(n) if i not in _skip_axes else [slice(None)]
-             for i, n in enumerate(shape)]
+    _shapes = [(1,)*(ndim - len(shape)) + shape for shape in shapes]
+    iters = [[] for i in range(len(shapes))]
+    broadcasted_shape = broadcast_shapes(*shapes)
 
-    for idx in itertools.product(*iters):
-        yield ndindex(idx)
+    for i in range(-1, -ndim-1, -1):
+        for it, shape, _shape in zip(iters, shapes, _shapes):
+            if -i > len(shape):
+                for j in range(len(it)):
+                    if j not in _skip_axes:
+                        if broadcasted_shape[i] != 1:
+                            it[j] = ncycles(it[j], broadcasted_shape[i])
+                        break
+            elif ndim + i in _skip_axes:
+                it.insert(0, [slice(None)])
+            else:
+                if broadcasted_shape[i] != 1 and shape[i] == 1:
+                    it.insert(0, ncycles(range(shape[i]), broadcasted_shape[i]))
+                else:
+                    it.insert(0, range(shape[i]))
+
+    if _debug:
+        print(iters)
+    for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
+                                         iters], fillvalue=()):
+        yield tuple(ndindex(idx) for idx in idxes)
+
+# math.prod is Python 3.8+ only and np.prod overflows
+def prod(seq):
+    import functools
+    return functools.reduce(operator.mul, seq, 1)
+
+# Based on https://docs.python.org/3/library/itertools.html#itertools-recipes
+class ncycles:
+    "Returns the sequence elements n times"
+    def __new__(cls, iterable, n):
+        if n == 1:
+            return iterable
+        return object.__new__(cls)
+
+    def __init__(self, iterable, n):
+        if isinstance(iterable, ncycles):
+            self.iterable = iterable.iterable
+            self.n = iterable.n*n
+        else:
+            self.iterable = iterable
+            self.n = n
+
+    def __repr__(self):
+        return f"ncycles({self.iterable!r}, {self.n!r})"
+
+    def __iter__(self):
+        return itertools.chain.from_iterable(itertools.repeat(tuple(self.iterable), self.n))
 
 def asshape(shape, axis=None):
     """

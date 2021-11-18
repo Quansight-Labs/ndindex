@@ -13,7 +13,8 @@ from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, assert_equal, short_shapes, prod
+from .helpers import (ndindices, check_same, assert_equal, short_shapes, prod,
+                      mutually_broadcastable_shapes)
 
 @given(ndindices)
 def test_eq(idx):
@@ -151,40 +152,51 @@ def test_asshape():
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
     raises(TypeError, lambda: asshape((True,)))
 
-@given(short_shapes,
-       short_shapes.flatmap(lambda s: one_of(none(),
-                                             tuples(*(integers(-i, max(0, i-1))
-                                                      for i in range(len(s)))))))
-def test_iter_indices(shape, skip_axes):
+@given(mutually_broadcastable_shapes,
+       mutually_broadcastable_shapes.flatmap(
+           lambda bs: one_of(none(), tuples(*(integers(-i, max(0, i-1)) for i in range(len(bs.result_shape)))))))
+def test_iter_indices(broadcastable_shapes, skip_axes):
+    shapes, result_shape = broadcastable_shapes
+
     if skip_axes is None:
-        res = iter_indices(shape)
+        res = iter_indices(*shapes)
         skip_axes = ()
     else:
-        res = iter_indices(shape, skip_axes)
-    size = prod(shape)
-    ndim = len(shape)
-    a = np.arange(size).reshape(shape)
+        res = iter_indices(*shapes, skip_axes=skip_axes)
+
+    sizes = [prod(shape) for shape in shapes]
+    ndim = len(result_shape)
+    arrays = [np.arange(size).reshape(shape) for size, shape in zip(sizes, shapes)]
 
     normalized_skip_axes = sorted(ndindex(i).reduce(ndim).args[0] for i in skip_axes)
-    skip_shape = tuple(shape[i] for i in normalized_skip_axes)
-    non_skip_shape = tuple(shape[i] for i in range(ndim) if i not in normalized_skip_axes)
+    # skip_shape = tuple(shape[i] for i in normalized_skip_axes)
+    non_skip_shape = tuple(result_shape[i] for i in range(ndim) if i not in normalized_skip_axes)
+    nitems = prod(non_skip_shape)
 
-    vals = set()
-    i = -1
+    vals = []
+    n = -1
     try:
-        for i, idx in enumerate(res):
-            assert isinstance(idx, Tuple)
-            assert idx.expand(shape) == idx
-            assert a[idx.raw].shape == skip_shape
-            assert set(a[idx.raw].flat).intersection(vals) == set()
-            vals.update(set(a[idx.raw].flat))
+        for n, idxes in enumerate(res):
+            assert len(idxes) == len(shapes)
+            for idx, shape in zip(idxes, shapes):
+                assert isinstance(idx, Tuple)
+                assert len(idx.args) == len(shape)
+                for i in range(len(idx.args)):
+                    if i in normalized_skip_axes:
+                        assert idx.args[i] == slice(None)
+                    else:
+                        assert isinstance(idx.args[i], Integer)
+
+
+                # assert a[idx.raw].shape == skip_shape
+                # assert set(a[idx.raw].flat).intersection(vals) == set()
+                # vals.update(set(a[idx.raw].flat))
     except ValueError as e:
         # Handled in test_iter_indices_errors()
         if "duplicate axes" in str(e):
             assume(False)
         raise
 
-    assert vals == set(range(size))
+    # assert vals == set(range(size))
 
-    nitems = prod(non_skip_shape)
-    assert i == nitems - 1
+    assert n == nitems - 1
