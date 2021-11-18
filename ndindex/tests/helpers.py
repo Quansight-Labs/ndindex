@@ -3,14 +3,15 @@ from itertools import chain
 from functools import reduce
 from operator import mul
 
-from numpy import intp, bool_, array
+from numpy import intp, bool_, array, broadcast_shapes
 import numpy.testing
 
 from pytest import fail
 
 from hypothesis.strategies import (integers, none, one_of, lists, just,
-                                   builds, shared, composite)
-from hypothesis.extra.numpy import arrays
+                                   builds, shared, composite, sampled_from)
+from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
+                                    mbs, BroadcastableShapes)
 
 from ..ndindex import ndindex
 
@@ -51,6 +52,27 @@ _short_shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
+
+# The hypothesis mutually_broadcastable_shapes doesn't allow num_shapes to be
+# a strategy.
+
+# Note: We could use something like this:
+
+# mutually_broadcastable_shapes = shared(integers(1, 32).flatmap(lambda i: mbs(num_shapes=i).filter(
+#     lambda broadcastable_shapes: prod([i for i in broadcastable_shapes.result_shape if i]) < MAX_ARRAY_SIZE)))
+
+# However, this strategy shrinks poorly. See
+# https://github.com/HypothesisWorks/hypothesis/issues/3151. So instead of
+# using a strategy to draw the number of shapes, we just generate 32 shapes
+# and pick a subset of them.
+
+@composite
+def _mutually_broadcastable_shapes(draw):
+    all_shapes = draw(mbs(num_shapes=32)).input_shapes
+    shapes = draw(lists(sampled_from(all_shapes), min_size=0, max_size=32, unique_by=id))
+    return BroadcastableShapes(shapes, broadcast_shapes(*shapes))
+
+mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
 # We need to make sure shapes for boolean arrays are generated in a way that
 # makes them related to the test array shape. Otherwise, it will be very
