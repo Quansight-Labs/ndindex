@@ -3,7 +3,7 @@ import inspect
 import numpy as np
 
 from hypothesis import given, example, settings, assume
-from hypothesis.strategies import one_of, tuples, none, integers
+from hypothesis.strategies import one_of, lists, none, integers
 
 from pytest import raises, warns
 
@@ -13,7 +13,7 @@ from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
-from .helpers import (ndindices, check_same, assert_equal, short_shapes, prod,
+from .helpers import (ndindices, check_same, assert_equal, prod,
                       mutually_broadcastable_shapes)
 
 @given(ndindices)
@@ -154,7 +154,7 @@ def test_asshape():
 
 @given(mutually_broadcastable_shapes,
        mutually_broadcastable_shapes.flatmap(
-           lambda bs: one_of(none(), tuples(*(integers(-i, max(0, i-1)) for i in range(len(bs.result_shape)))))))
+           lambda bs: one_of(none(), lists(integers(-len(bs.result_shape), max(0, len(bs.result_shape)-1))).map(tuple))))
 def test_iter_indices(broadcastable_shapes, skip_axes):
     shapes, result_shape = broadcastable_shapes
 
