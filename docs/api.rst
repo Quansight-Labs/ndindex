@@ -77,6 +77,17 @@ BooleanArray
    .. autoattribute:: dtype
       :annotation:
 
+Index Helpers
+=============
+
+The functions here are helpers for working with indices that aren't methods of
+the index objects
+
+iter_indices
+------------
+
+.. autofunction:: ndindex.iter_indices
+
 Chunking
 ========
 
