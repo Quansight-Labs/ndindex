@@ -192,9 +192,10 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
                 # assert set(a[idx.raw].flat).intersection(vals) == set()
                 # vals.update(set(a[idx.raw].flat))
     except ValueError as e:
-        # Handled in test_iter_indices_errors()
         if "duplicate axes" in str(e):
-            assume(False)
+            # There should be actual duplicate axes
+            assert len({result_shape[i] for i in skip_axes}) < len(skip_axes)
+            return
         raise
 
     # assert vals == set(range(size))
