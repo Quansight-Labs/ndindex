@@ -166,9 +166,11 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     ndim = len(result_shape)
     arrays = [np.arange(size).reshape(shape) for size, shape in zip(sizes, shapes)]
 
-    normalized_skip_axes = sorted(ndindex(i).reduce(ndim).args[0] for i in skip_axes)
+    # Use negative indices to index the skip axes since only shapes that have
+    # the skip axis will include a slice.
+    normalized_skip_axes = sorted(ndindex(i).reduce(ndim).args[0] - ndim for i in skip_axes)
     # skip_shape = tuple(shape[i] for i in normalized_skip_axes)
-    non_skip_shape = tuple(result_shape[i] for i in range(ndim) if i not in normalized_skip_axes)
+    non_skip_shape = tuple(result_shape[i] for i in range(-1, -ndim-1, -1) if i not in normalized_skip_axes)
     nitems = prod(non_skip_shape)
 
     vals = []
@@ -179,8 +181,8 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             for idx, shape in zip(idxes, shapes):
                 assert isinstance(idx, Tuple)
                 assert len(idx.args) == len(shape)
-                for i in range(len(idx.args)):
-                    if i in normalized_skip_axes:
+                for i in range(-1, -len(idx.args)-1, -1):
+                    if i in normalized_skip_axes and len(idx.args) >= -i:
                         assert idx.args[i] == slice(None)
                     else:
                         assert isinstance(idx.args[i], Integer)
