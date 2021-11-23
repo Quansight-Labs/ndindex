@@ -547,29 +547,34 @@ class NDIndex(ImmutableObject):
         """
         return self
 
-
 def iter_indices(*shapes, skip_axes=(), _debug=False):
     """
-    Iterate an index for every element of an arrays of shape `shapes`.
+    Iterate indices for every element of an arrays of shape `shapes`.
 
-    `shapes` should be tuples of shapes. The shapes should be broadcast
-    compatible. Each iteration step will produce a tuple of indices, one for
-    each shape, which would correspond to the same elements if the arrays of
-    the given shapes were first broadcast together.
+    `shapes` should be tuples of shapes, which are broadcast compatible. Each
+    iteration step will produce a tuple of indices, one for each shape, which
+    would correspond to the same elements if the arrays of the given shapes
+    were first broadcast together.
 
     This is a generalization of the NumPy `np.ndindex()` function (which
-    otherwise has no relation). However, this function also supports the
-    ability to skip axes of the shape using `skip_axes`. These axes will be
-    fully sliced in each index. The remaining axes will be indexed one element
-    at a time with integer indices. It also supports generating indices for
-    multiple broadcast compatible shapes at once. This is equivalent to first
-    broadcasting the arrays then generating indices for the single broadcasted
-    shape.
+    otherwise has no relation), but unlike `np.ndindex()`, `iter_indices()`
+    supports generating indices for multiple broadcast compatible shapes at
+    once. This is equivalent to first broadcasting the arrays then generating
+    indices for the single broadcasted shape.
+
+    Additionally, this function supports the ability to skip axes of the
+    shapes using `skip_axes`. These axes will be fully sliced in each index.
+    The remaining axes will be indexed one element at a time with integer
+    indices.
 
     `skip_axes` should be a tuple of axes to skip. It can use negative
-    integers, e.g., `skip_axes=(-1,)` to skip the last axis. The order of the
-    axes in `skip_axes` does not matter, but it should not contain duplicate
-    axes.
+    integers, e.g., `skip_axes=(-1,)` will skip the last axis. The order of
+    the axes in `skip_axes` does not matter, but it should not contain
+    duplicate axes. The axes in `skip_axes` refer to the final broadcasted
+    shape of `shapes`. For example, `iter_indices((3,), (1, 2, 3),
+    skip_axes=(0,))` will skip the first axis and only applies to the second
+    shape since the first shape only corresponds to axis `2` of the final
+    broadcasted shape `(1, 2, 3)`
 
     For example, suppose `a` were a shape `(3, 2, 4, 4)` array, which we wish
     to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
@@ -579,34 +584,52 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     >>> from ndindex import iter_indices
     >>> for idx in iter_indices((3, 2, 4, 4), skip_axes=(-1, -2)):
     ...     print(idx)
-    Tuple(0, 0, slice(None, None, None), slice(None, None, None))
-    Tuple(0, 1, slice(None, None, None), slice(None, None, None))
-    Tuple(1, 0, slice(None, None, None), slice(None, None, None))
-    Tuple(1, 1, slice(None, None, None), slice(None, None, None))
-    Tuple(2, 0, slice(None, None, None), slice(None, None, None))
-    Tuple(2, 1, slice(None, None, None), slice(None, None, None))
+    (Tuple(0, 0, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(0, 1, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(1, 0, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(1, 1, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(2, 0, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(2, 1, slice(None, None, None), slice(None, None, None)),)
 
-    As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 3)`.
+    As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 1)`.
     And you want to generate indices for every value of the broadcasted
-    operation `a + b`. Then one could use `a[idx1.raw] + b[idx2.raw]` for
-    every `idx1` and `idx2` as below:
+    operation `a + b`. You could use `a[idx1.raw] + b[idx2.raw]` for every
+    `idx1` and `idx2` as below:
 
     >>> import numpy as np
     >>> a = np.arange(3).reshape((1, 3))
-    >>> b = np.arange(100, 106).reshape((2, 3))
+    >>> b = np.arange(100, 111, 10).reshape((2, 1))
     >>> a
     array([[0, 1, 2]])
     >>> b
-    array([[100, 101, 102],
-           [103, 104, 105]])
-    >>> for idx1, idx2 in iter_indices((1, 3), (2, 3)):
+    array([[100],
+           [110]])
+    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)):
     ...     print(f"{idx1 = }; {idx2 = }; {(a[idx1.raw], b[idx2.raw]) = }")
     idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (0, 100)
-    idx1 = Tuple(0, 1); idx2 = Tuple(0, 1); (a[idx1.raw], b[idx2.raw]) = (1, 101)
-    idx1 = Tuple(0, 2); idx2 = Tuple(0, 2); (a[idx1.raw], b[idx2.raw]) = (2, 102)
-    idx1 = Tuple(0, 0); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (0, 103)
-    idx1 = Tuple(0, 1); idx2 = Tuple(1, 1); (a[idx1.raw], b[idx2.raw]) = (1, 104)
-    idx1 = Tuple(0, 2); idx2 = Tuple(1, 2); (a[idx1.raw], b[idx2.raw]) = (2, 105)
+    idx1 = Tuple(0, 1); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (1, 100)
+    idx1 = Tuple(0, 2); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (2, 100)
+    idx1 = Tuple(0, 0); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (0, 110)
+    idx1 = Tuple(0, 1); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (1, 110)
+    idx1 = Tuple(0, 2); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (2, 110)
+    >>> a + b
+    array([[100, 101, 102],
+           [110, 111, 112]])
+
+    To include index into the final broadcasted array, you can simply include
+    the final broadcasted shape as one of the shapes (the NumPy function
+    `np.broadcast_shapes` is useful here).
+
+    >>> np.broadcast_shapes((1, 3), (2, 1))
+    (2, 3)
+    >>> for idx1, idx2, broadcasted_idx in iter_indices((1, 3), (2, 1), (2, 3)):
+    ...     print(broadcasted_idx)
+    Tuple(0, 0)
+    Tuple(0, 1)
+    Tuple(0, 2)
+    Tuple(1, 0)
+    Tuple(1, 1)
+    Tuple(1, 2)
 
     """
     if not shapes:
