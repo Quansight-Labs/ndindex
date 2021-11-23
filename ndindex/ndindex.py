@@ -556,11 +556,12 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     would correspond to the same elements if the arrays of the given shapes
     were first broadcast together.
 
-    This is a generalization of the NumPy `np.ndindex()` function (which
-    otherwise has no relation), but unlike `np.ndindex()`, `iter_indices()`
-    supports generating indices for multiple broadcast compatible shapes at
-    once. This is equivalent to first broadcasting the arrays then generating
-    indices for the single broadcasted shape.
+    This is a generalization of the NumPy :py:class:`np.ndindex()
+    <numpy.ndindex>` function (which otherwise has no relation),
+    but unlike `np.ndindex()`, `iter_indices()` supports generating indices
+    for multiple broadcast compatible shapes at once. This is equivalent to
+    first broadcasting the arrays then generating indices for the single
+    broadcasted shape.
 
     Additionally, this function supports the ability to skip axes of the
     shapes using `skip_axes`. These axes will be fully sliced in each index.
@@ -616,9 +617,9 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     array([[100, 101, 102],
            [110, 111, 112]])
 
-    To include index into the final broadcasted array, you can simply include
-    the final broadcasted shape as one of the shapes (the NumPy function
-    `np.broadcast_shapes` is useful here).
+    To include an index into the final broadcasted array, you can simply
+    include the final broadcasted shape as one of the shapes (the NumPy
+    function :func:`np.broadcast_shapes <numpy:numpy.broadcast_shapes>` is useful here).
 
     >>> np.broadcast_shapes((1, 3), (2, 1))
     (2, 3)
