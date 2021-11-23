@@ -14,7 +14,7 @@ from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import (ndindices, check_same, assert_equal, prod,
-                      mutually_broadcastable_shapes)
+                      mutually_broadcastable_shapes, skip_axes)
 
 @given(ndindices)
 def test_eq(idx):
@@ -152,9 +152,7 @@ def test_asshape():
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
     raises(TypeError, lambda: asshape((True,)))
 
-@given(mutually_broadcastable_shapes,
-       mutually_broadcastable_shapes.flatmap(
-           lambda bs: one_of(none(), lists(integers(-len(bs.result_shape), max(0, len(bs.result_shape)-1))).map(tuple))))
+@given(mutually_broadcastable_shapes, skip_axes())
 def test_iter_indices(broadcastable_shapes, skip_axes):
     shapes, result_shape = broadcastable_shapes
 

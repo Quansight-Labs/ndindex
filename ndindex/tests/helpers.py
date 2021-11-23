@@ -74,6 +74,16 @@ def _mutually_broadcastable_shapes(draw):
 
 mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
+@composite
+def skip_axes(draw):
+    shapes, result_shape = draw(mutually_broadcastable_shapes)
+    n = len(result_shape)
+    axes = draw(one_of(none(),
+                      lists(integers(-n, max(0, n-1)), max_size=n)))
+    if isinstance(axes, list):
+        axes = tuple(axes)
+    return axes
+
 # We need to make sure shapes for boolean arrays are generated in a way that
 # makes them related to the test array shape. Otherwise, it will be very
 # difficult for the boolean array index to match along the test array, which
