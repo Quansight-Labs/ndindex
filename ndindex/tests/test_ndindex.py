@@ -154,29 +154,38 @@ def test_asshape():
 
 @given(mutually_broadcastable_shapes, skip_axes())
 def test_iter_indices(broadcastable_shapes, skip_axes):
-    shapes, result_shape = broadcastable_shapes
+    shapes, broadcasted_shape = broadcastable_shapes
 
     if skip_axes is None:
         res = iter_indices(*shapes)
+        broadcasted_res = iter_indices(np.broadcast_shapes(*shapes))
         skip_axes = ()
     else:
         res = iter_indices(*shapes, skip_axes=skip_axes)
+        broadcasted_res = iter_indices(np.broadcast_shapes(*shapes),
+                                       skip_axes=skip_axes)
 
     sizes = [prod(shape) for shape in shapes]
-    ndim = len(result_shape)
+    ndims = [len(shape) for shape in shapes]
+    ndim = len(broadcasted_shape)
     arrays = [np.arange(size).reshape(shape) for size, shape in zip(sizes, shapes)]
+    broadcasted_arrays = np.broadcast_arrays(*arrays)
 
     # Use negative indices to index the skip axes since only shapes that have
     # the skip axis will include a slice.
     normalized_skip_axes = sorted(ndindex(i).reduce(ndim).args[0] - ndim for i in skip_axes)
-    # skip_shape = tuple(shape[i] for i in normalized_skip_axes)
-    non_skip_shape = tuple(result_shape[i] for i in range(-1, -ndim-1, -1) if i not in normalized_skip_axes)
-    nitems = prod(non_skip_shape)
+    skip_shapes = [tuple(shape[i] for i in normalized_skip_axes if -i <= len(shape)) for shape in shapes]
+    broadcasted_skip_shape = tuple(broadcasted_shape[i] for i in normalized_skip_axes)
+
+    non_skip_shapes = [tuple(shape[i] for i in range(-1, -n-1, -1) if i not in
+                             normalized_skip_axes) for shape, n in zip(shapes, ndims)]
+    broadcasted_non_skip_shape = tuple(broadcasted_shape[i] for i in range(-1, -ndim-1, -1) if i not in normalized_skip_axes)
+    nitems = prod(broadcasted_non_skip_shape)
 
     vals = []
     n = -1
     try:
-        for n, idxes in enumerate(res):
+        for n, (idxes, bidxes) in enumerate(zip(res, broadcasted_res)):
             assert len(idxes) == len(shapes)
             for idx, shape in zip(idxes, shapes):
                 assert isinstance(idx, Tuple)
@@ -187,14 +196,20 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
                     else:
                         assert isinstance(idx.args[i], Integer)
 
+            aidxes = [a[idx.raw] for a, idx in zip(arrays, idxes)]
+            a_broadcasted_idxs = [a[idx.raw] for a, idx in
+                                  zip(broadcasted_arrays, bidxes)]
 
-                # assert a[idx.raw].shape == skip_shape
-                # assert set(a[idx.raw].flat).intersection(vals) == set()
-                # vals.update(set(a[idx.raw].flat))
+            for aidx, abidx, skip_shape in zip(aidxes, a_broadcasted_idxs, skip_shapes):
+                if skip_shape == broadcasted_skip_shape:
+                    assert_equal(aidx, abidx)
+                assert aidx.shape == skip_shape
+            # assert set(a[idx.raw].flat).intersection(vals) == set()
+            # vals.update(set(a[idx.raw].flat))
     except ValueError as e:
         if "duplicate axes" in str(e):
             # There should be actual duplicate axes
-            assert len({result_shape[i] for i in skip_axes}) < len(skip_axes)
+            assert len({broadcasted_shape[i] for i in skip_axes}) < len(skip_axes)
             return
         raise
 
