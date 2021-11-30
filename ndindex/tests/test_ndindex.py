@@ -2,8 +2,7 @@ import inspect
 
 import numpy as np
 
-from hypothesis import given, example, settings, assume
-from hypothesis.strategies import one_of, lists, none, integers
+from hypothesis import given, example, settings
 
 from pytest import raises, warns
 
@@ -177,10 +176,9 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     skip_shapes = [tuple(shape[i] for i in normalized_skip_axes if -i <= len(shape)) for shape in shapes]
     broadcasted_skip_shape = tuple(broadcasted_shape[i] for i in normalized_skip_axes)
 
-    non_skip_shapes = [tuple(shape[i] for i in range(-1, -n-1, -1) if i not in
-                             normalized_skip_axes) for shape, n in zip(shapes, ndims)]
     broadcasted_non_skip_shape = tuple(broadcasted_shape[i] for i in range(-1, -ndim-1, -1) if i not in normalized_skip_axes)
     nitems = prod(broadcasted_non_skip_shape)
+    broadcasted_nitems = prod(broadcasted_shape)
 
     vals = []
     n = -1
@@ -196,7 +194,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
                     else:
                         assert isinstance(idx.args[i], Integer)
 
-            aidxes = [a[idx.raw] for a, idx in zip(arrays, idxes)]
+            aidxes = tuple([a[idx.raw] for a, idx in zip(arrays, idxes)])
             a_broadcasted_idxs = [a[idx.raw] for a, idx in
                                   zip(broadcasted_arrays, bidxes)]
 
@@ -204,8 +202,14 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
                 if skip_shape == broadcasted_skip_shape:
                     assert_equal(aidx, abidx)
                 assert aidx.shape == skip_shape
-            # assert set(a[idx.raw].flat).intersection(vals) == set()
-            # vals.update(set(a[idx.raw].flat))
+
+            if skip_axes:
+                # If there are skipped axes, recursively call iter_indices to
+                # get each individual element of the resulting subarrays.
+                for subidxes in iter_indices(*[x.shape for x in aidxes]):
+                    vals.append(tuple(x[i.raw] for x, i in zip(aidxes, subidxes)))
+            else:
+                vals.append(aidxes)
     except ValueError as e:
         if "duplicate axes" in str(e):
             # There should be actual duplicate axes
@@ -213,6 +217,23 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             return
         raise
 
-    # assert vals == set(range(size))
+    assert len(set(vals)) == len(vals) == broadcasted_nitems
+
+    # The indices should correspond to the values that would be matched up
+    # if the arrays were broadcasted together.
+    if not arrays:
+        assert vals == [()]
+    else:
+        correct_vals = [tuple(i) for i in np.stack(broadcasted_arrays, axis=-1)
+                        .reshape((broadcasted_nitems, len(arrays)))]
+        # Also test that the indices are produced in a lexicographic order
+        # (even though this isn't strictly guaranteed by the iter_indices
+        # docstring) in the case when there are no skip axes. The order when
+        # there are skip axes is more complicated because the skipped axes are
+        # iterated together.
+        if not skip_axes:
+            assert vals == correct_vals
+        else:
+            assert set(vals) == set(correct_vals)
 
     assert n == nitems - 1
