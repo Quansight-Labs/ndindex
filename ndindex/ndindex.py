@@ -592,6 +592,10 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     (Tuple(2, 0, slice(None, None, None), slice(None, None, None)),)
     (Tuple(2, 1, slice(None, None, None), slice(None, None, None)),)
 
+    Note that the iterates of `iter_indices` are always a tuple, even if only
+    a single shape is provided (one could instead use `for idx, in
+    iter_indices(...)` above).
+
     As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 1)`.
     And you want to generate indices for every value of the broadcasted
     operation `a + b`. You could use `a[idx1.raw] + b[idx2.raw]` for every
