@@ -683,11 +683,6 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)
 
-# math.prod is Python 3.8+ only and np.prod overflows
-def prod(seq):
-    import functools
-    return functools.reduce(operator.mul, seq, 1)
-
 # Based on https://docs.python.org/3/library/itertools.html#itertools-recipes
 class ncycles:
     "Returns the sequence elements n times"
