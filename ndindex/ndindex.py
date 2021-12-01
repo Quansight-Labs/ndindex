@@ -551,10 +551,10 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     """
     Iterate indices for every element of an arrays of shape `shapes`.
 
-    `shapes` should be tuples of shapes, which are broadcast compatible. Each
-    iteration step will produce a tuple of indices, one for each shape, which
-    would correspond to the same elements if the arrays of the given shapes
-    were first broadcast together.
+    Each shape in `shapes` should be a shape tuple, which are broadcast
+    compatible. Each iteration step will produce a tuple of indices, one for
+    each shape, which would correspond to the same elements if the arrays of
+    the given shapes were first broadcast together.
 
     This is a generalization of the NumPy :py:class:`np.ndindex()
     <numpy.ndindex>` function (which otherwise has no relation),
