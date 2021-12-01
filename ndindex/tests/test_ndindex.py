@@ -215,7 +215,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             # There should be actual duplicate axes
             assert len({broadcasted_shape[i] for i in skip_axes}) < len(skip_axes)
             return
-        raise
+        raise # pragma: no cover
 
     assert len(set(vals)) == len(vals) == broadcasted_nitems
 

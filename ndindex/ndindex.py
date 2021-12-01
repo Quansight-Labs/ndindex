@@ -677,7 +677,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                 else:
                     it.insert(0, range(shape[i]))
 
-    if _debug:
+    if _debug: # pragma: no cover
         print(iters)
     for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
                                          iters], fillvalue=()):
