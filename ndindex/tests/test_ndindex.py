@@ -164,6 +164,9 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
         broadcasted_res = iter_indices(np.broadcast_shapes(*shapes),
                                        skip_axes=skip_axes)
 
+    if isinstance(skip_axes, int):
+        skip_axes = (skip_axes,)
+
     sizes = [prod(shape) for shape in shapes]
     ndims = [len(shape) for shape in shapes]
     ndim = len(broadcasted_shape)

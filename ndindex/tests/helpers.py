@@ -9,7 +9,8 @@ import numpy.testing
 from pytest import fail
 
 from hypothesis.strategies import (integers, none, one_of, lists, just,
-                                   builds, shared, composite, sampled_from)
+                                   builds, shared, composite, sampled_from,
+                                   booleans)
 from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
                                     mbs, BroadcastableShapes)
 
@@ -82,6 +83,9 @@ def skip_axes(draw):
                       lists(integers(-n, max(0, n-1)), max_size=n)))
     if isinstance(axes, list):
         axes = tuple(axes)
+        # Sometimes return an integer
+        if len(axes) == 1 and draw(booleans()):
+            return axes[0]
     return axes
 
 # We need to make sure shapes for boolean arrays are generated in a way that
