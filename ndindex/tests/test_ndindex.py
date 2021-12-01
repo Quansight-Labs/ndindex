@@ -239,3 +239,21 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             assert set(vals) == set(correct_vals)
 
     assert n == nitems - 1
+
+def test_iter_indices_errors():
+    try:
+        list(iter_indices((10,), skip_axes=(2,)))
+    except np.AxisError as e:
+        msg1 = e.args[0]
+    else:
+        raise RuntimeError("iter_indices did not raise AxisError") # pragma: no cover
+
+    # Check that the message is the same one used by NumPy
+    try:
+        np.sum(np.arange(10), axis=2)
+    except np.AxisError as e:
+        msg2 = e.args[0]
+    else:
+        raise RuntimeError("np.sum() did not raise AxisError") # pramga: no cover
+
+    assert msg1 == msg2
