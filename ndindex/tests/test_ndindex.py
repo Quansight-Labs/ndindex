@@ -168,7 +168,6 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
         skip_axes = (skip_axes,)
 
     sizes = [prod(shape) for shape in shapes]
-    ndims = [len(shape) for shape in shapes]
     ndim = len(broadcasted_shape)
     arrays = [np.arange(size).reshape(shape) for size, shape in zip(sizes, shapes)]
     broadcasted_arrays = np.broadcast_arrays(*arrays)
