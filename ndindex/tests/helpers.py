@@ -8,6 +8,7 @@ import numpy.testing
 
 from pytest import fail
 
+from hypothesis import assume, note
 from hypothesis.strategies import (integers, none, one_of, lists, just,
                                    builds, shared, composite, sampled_from,
                                    booleans)
@@ -69,9 +70,27 @@ _short_shapes = tuples(integers(0, 10)).filter(
 
 @composite
 def _mutually_broadcastable_shapes(draw):
-    all_shapes = draw(mbs(num_shapes=32)).input_shapes
-    shapes = draw(lists(sampled_from(all_shapes), min_size=0, max_size=32, unique_by=id))
-    return BroadcastableShapes(shapes, broadcast_shapes(*shapes))
+    num_shapes = draw(integers(1, 32))
+    broadcastable_shapes = all_shapes, result_shape = draw(
+        mbs(
+            # num_shapes=32,
+            num_shapes=num_shapes,
+            # mutually_broadcastable_shapes has terrible default
+            # values for these, so we need to set them manually (see
+            # https://github.com/HypothesisWorks/hypothesis/issues/3170)
+            min_side=0, max_side=10, max_dims=10))
+    if not prod([i for i in result_shape if i]) < SHORT_MAX_ARRAY_SIZE:
+        note(f"Filtering {result_shape}")
+        assume(False)
+    return broadcastable_shapes
+
+    # Just kidding about the above, if you fix num_shapes at 32, it rarely
+    # generates shapes with dimension < max_dims (see
+    # https://github.com/HypothesisWorks/hypothesis/issues/3170).
+
+    # shapes = draw(lists(sampled_from(all_shapes), min_size=0, max_size=32,
+    #                     unique_by=id,))
+    # return BroadcastableShapes(shapes, broadcast_shapes(*shapes))
 
 mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
