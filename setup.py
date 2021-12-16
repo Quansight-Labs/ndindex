@@ -4,16 +4,15 @@ import versioneer
 try:
     from Cython.Build import cythonize
 except ImportError:
-    cythonize = None
+    pass
 
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-if cythonize and os.getenv("CYTHONIZE_NDINDEX"):
-    ext_modules = list(cythonize(["ndindex/*.py"]))
-else:
-    ext_modules = []
+ext_modules = []
+if int(os.getenv("CYTHONIZE_NDINDEX", 0)):
+    ext_modules.extend(cythonize(["ndindex/*.py"]))
 
 setuptools.setup(
     name="ndindex",
