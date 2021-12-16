@@ -1,8 +1,19 @@
+import os
 import setuptools
 import versioneer
+try:
+    from Cython.Build import cythonize
+except ImportError:
+    cythonize = None
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+if cythonize and os.getenv("CYTHONIZE_NDINDEX"):
+    ext_modules = list(cythonize(["ndindex/*.py"]))
+else:
+    ext_modules = []
 
 setuptools.setup(
     name="ndindex",
@@ -14,6 +25,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://quansight-labs.github.io/ndindex/",
     packages=['ndindex', 'ndindex.tests'],
+    ext_modules = ext_modules,
     license="MIT",
     install_requires=[
         "numpy",
