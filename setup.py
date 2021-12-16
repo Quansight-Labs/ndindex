@@ -1,10 +1,6 @@
 import os
 import setuptools
 import versioneer
-try:
-    from Cython.Build import cythonize
-except ImportError:
-    pass
 
 
 with open("README.md", "r") as fh:
@@ -12,6 +8,7 @@ with open("README.md", "r") as fh:
 
 ext_modules = []
 if int(os.getenv("CYTHONIZE_NDINDEX", 0)):
+    from Cython.Build import cythonize
     ext_modules.extend(cythonize(["ndindex/*.py"]))
 
 setuptools.setup(
