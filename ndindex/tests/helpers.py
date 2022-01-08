@@ -55,42 +55,61 @@ _short_shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
 
-# The hypothesis mutually_broadcastable_shapes doesn't allow num_shapes to be
-# a strategy.
-
 # Note: We could use something like this:
 
 # mutually_broadcastable_shapes = shared(integers(1, 32).flatmap(lambda i: mbs(num_shapes=i).filter(
 #     lambda broadcastable_shapes: prod([i for i in broadcastable_shapes.result_shape if i]) < MAX_ARRAY_SIZE)))
 
-# However, this strategy shrinks poorly. See
-# https://github.com/HypothesisWorks/hypothesis/issues/3151. So instead of
-# using a strategy to draw the number of shapes, we just generate 32 shapes
-# and pick a subset of them.
 
 @composite
 def _mutually_broadcastable_shapes(draw):
-    num_shapes = draw(integers(1, 32))
-    broadcastable_shapes = all_shapes, result_shape = draw(
+    # mutually_broadcastable_shapes() with the default inputs doesn't generate
+    # very interesting examples (see
+    # https://github.com/HypothesisWorks/hypothesis/issues/3170). It's very
+    # difficult to get it to do so by tweaking the max_* parameters, because
+    # making them too big leads to generating too large shapes and filtering
+    # too much. So instead, we trick it into generating more interesting
+    # examples by telling it to create shapes that broadcast against some base
+    # shape.
+
+    # Unfortunately, this, along with the filtering below, has a downside that
+    # it tends to generate a result shape of () more often than you might
+    # like. But it generates enough "real" interesting shapes that both of
+    # these workarounds are worth doing (plus I don't know if any other better
+    # way of handling the situation).
+    base_shape = draw(short_shapes)
+
+    input_shapes, result_shape = draw(
         mbs(
-            # num_shapes=32,
-            num_shapes=num_shapes,
-            # mutually_broadcastable_shapes has terrible default
-            # values for these, so we need to set them manually (see
-            # https://github.com/HypothesisWorks/hypothesis/issues/3170)
-            min_side=0, max_side=10, max_dims=10))
-    if not prod([i for i in result_shape if i]) < SHORT_MAX_ARRAY_SIZE:
+            num_shapes=32,
+            base_shape=base_shape,
+            min_side=0,
+        ))
+
+    # The hypothesis mutually_broadcastable_shapes doesn't allow num_shapes to
+    # be a strategy. It's tempting to do something like num_shapes =
+    # draw(integers(1, 32)), but this shrinks poorly. See
+    # https://github.com/HypothesisWorks/hypothesis/issues/3151. So instead of
+    # using a strategy to draw the number of shapes, we just generate 32
+    # shapes and pick a subset of them.
+    final_input_shapes = draw(lists(sampled_from(input_shapes), min_size=0, max_size=32,
+                        unique_by=id,))
+
+
+    # Note: result_shape is input_shapes broadcasted with base_shape, but
+    # base_shape itself is not part of input_shapes. We "really" want our base
+    # shape to be (). We are only using it here to trick
+    # mutually_broadcastable_shapes into giving more interesting examples.
+    final_result_shape = broadcast_shapes(*final_input_shapes)
+
+    # The broadcast compatible shapes can be bigger than the base shape. This
+    # is already somewhat limited by the mutually_broadcastable_shapes
+    # defaults, and pretty unlikely, but we filter again here just to be safe.
+    if not prod([i for i in final_result_shape if i]) < SHORT_MAX_ARRAY_SIZE:
         note(f"Filtering {result_shape}")
         assume(False)
-    return broadcastable_shapes
 
-    # Just kidding about the above, if you fix num_shapes at 32, it rarely
-    # generates shapes with dimension < max_dims (see
-    # https://github.com/HypothesisWorks/hypothesis/issues/3170).
-
-    # shapes = draw(lists(sampled_from(all_shapes), min_size=0, max_size=32,
-    #                     unique_by=id,))
-    # return BroadcastableShapes(shapes, broadcast_shapes(*shapes))
+    return BroadcastableShapes(final_input_shapes, final_result_shape)
 
 mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
