@@ -209,7 +209,11 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
                 # If there are skipped axes, recursively call iter_indices to
                 # get each individual element of the resulting subarrays.
                 for subidxes in iter_indices(*[x.shape for x in aidxes]):
-                    vals.append(tuple(x[i.raw] for x, i in zip(aidxes, subidxes)))
+                    items = [x[i.raw] for x, i in zip(aidxes, subidxes)]
+                    # An empty array means the iteration would be skipped.
+                    if any(a.size == 0 for a in items):
+                        continue
+                    vals.append(tuple(items))
             else:
                 vals.append(aidxes)
     except ValueError as e:
