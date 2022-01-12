@@ -409,7 +409,7 @@ class NDIndex(ImmutableObject):
                 |                           |
                 +- self.as_subindex(index) -+
 
-        `i.as_subindex(j)` is currently only implemented when `j` is a slices
+        `i.as_subindex(j)` is currently only implemented when `j` is a slice
         with positive steps and nonnegative start and stop, or a Tuple of the
         same. To use it with slices with negative start or stop, call
         :meth:`reduce` with a shape first.
