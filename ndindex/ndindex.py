@@ -682,9 +682,23 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)
 
-# Based on https://docs.python.org/3/library/itertools.html#itertools-recipes
 class ncycles:
-    "Iterate `iterable` copied `n` times"
+    """
+    Iterate `iterable` repeated `n` times.
+
+    This is based on a recipe from the `Python itertools docs
+    <https://docs.python.org/3/library/itertools.html#itertools-recipes>`_,
+    but improved to give a repr, and to denest in cases (this makes debugging
+    :func:`iter_indices` easier).
+
+    >>> from ndindex.ndindex import ncycles
+    >>> ncycles(range(3), 2)
+    ncycles(range(0, 3), 2)
+    >>> list(_)
+    [0, 1, 2, 0, 1, 2]
+    >>> ncycles(ncycles(range(3), 3), 2)
+    ncycles(range(0, 3), 6)
+    """
     def __new__(cls, iterable, n):
         if n == 1:
             return iterable
