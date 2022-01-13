@@ -275,14 +275,13 @@ def test_ncycles(i, n, m):
         assert isinstance(N, ncycles)
         assert N.iterable == range(i)
         assert N.n == n
+        assert f"range(0, {i})" in repr(N)
+        assert str(n) in repr(N)
 
     L = list(N)
     assert len(L) == i*n
     for j in range(i*n):
         assert L[j] == j % i
-
-    assert f"range(0, {i})" in repr(N)
-    assert str(n) in repr(N)
 
     M = ncycles(N, m)
     if n*m == 1:
