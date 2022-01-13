@@ -105,7 +105,7 @@ def _mutually_broadcastable_shapes(draw):
     # The broadcast compatible shapes can be bigger than the base shape. This
     # is already somewhat limited by the mutually_broadcastable_shapes
     # defaults, and pretty unlikely, but we filter again here just to be safe.
-    if not prod([i for i in final_result_shape if i]) < SHORT_MAX_ARRAY_SIZE:
+    if not prod([i for i in final_result_shape if i]) < SHORT_MAX_ARRAY_SIZE: # pragma: no cover
         note(f"Filtering {result_shape}")
         assume(False)
 

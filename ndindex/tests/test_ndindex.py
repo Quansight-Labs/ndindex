@@ -153,7 +153,7 @@ def test_asshape():
     raises(TypeError, lambda: asshape((True,)))
 
 @example([((1, 1), (1, 1)), (1, 1)], (0, 0))
-@example([((0, 1), (1, 2)), (0, 2)], (1,))
+@example([((), (0,)), (0,)], (0,))
 @given(mutually_broadcastable_shapes, skip_axes())
 def test_iter_indices(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
