@@ -3,10 +3,11 @@ import inspect
 import numpy as np
 
 from hypothesis import given, example, settings
+from hypothesis.strategies import integers
 
 from pytest import raises, warns
 
-from ..ndindex import ndindex, asshape, iter_indices
+from ..ndindex import ndindex, asshape, iter_indices, ncycles
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
@@ -258,6 +259,32 @@ def test_iter_indices_errors():
     except np.AxisError as e:
         msg2 = str(e)
     else:
-        raise RuntimeError("np.sum() did not raise AxisError") # pramga: no cover
+        raise RuntimeError("np.sum() did not raise AxisError") # pragma: no cover
 
     assert msg1 == msg2
+
+@given(integers(0, 100), integers(0, 100), integers(0, 100))
+def test_ncycles(i, n, m):
+    N = ncycles(range(i), n)
+    if n == 1:
+        assert N == range(i)
+    else:
+        assert isinstance(N, ncycles)
+        assert N.iterable == range(i)
+        assert N.n == n
+
+    L = list(N)
+    assert len(L) == i*n
+    for j in range(i*n):
+        assert L[j] == j % i
+
+    assert f"range(0, {i})" in repr(N)
+    assert str(n) in repr(N)
+
+    M = ncycles(N, m)
+    if n*m == 1:
+        assert M == range(i)
+    else:
+        assert isinstance(M, ncycles)
+        assert M.iterable == range(i)
+        assert M.n == n*m
