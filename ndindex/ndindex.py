@@ -678,7 +678,9 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                     it.insert(0, range(shape[i]))
 
     if _debug: # pragma: no cover
-        print(f"{iters = }")
+        print(iters)
+        # Use this instead when we drop Python 3.7 support
+        # print(f"{iters = }")
     for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)
