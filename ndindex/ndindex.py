@@ -557,11 +557,11 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     the given shapes were first broadcast together.
 
     This is a generalization of the NumPy :py:class:`np.ndindex()
-    <numpy.ndindex>` function (which otherwise has no relation),
-    but unlike `np.ndindex()`, `iter_indices()` supports generating indices
-    for multiple broadcast compatible shapes at once. This is equivalent to
-    first broadcasting the arrays then generating indices for the single
-    broadcasted shape.
+    <numpy.ndindex>` function (which otherwise has no relation).
+    `np.ndindex()` only iterates indices for a single shape, whereas
+    `iter_indices()` supports generating indices for multiple broadcast
+    compatible shapes at once. This is equivalent to first broadcasting the
+    arrays then generating indices for the single broadcasted shape.
 
     Additionally, this function supports the ability to skip axes of the
     shapes using `skip_axes`. These axes will be fully sliced in each index.
@@ -573,12 +573,12 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     the axes in `skip_axes` does not matter, but it should not contain
     duplicate axes. The axes in `skip_axes` refer to the final broadcasted
     shape of `shapes`. For example, `iter_indices((3,), (1, 2, 3),
-    skip_axes=(0,))` will skip the first axis and only applies to the second
-    shape since the first shape only corresponds to axis `2` of the final
+    skip_axes=(0,))` will skip the first axis, and only applies to the second
+    shape, since the first shape corresponds to axis `2` of the final
     broadcasted shape `(1, 2, 3)`
 
-    For example, suppose `a` were a shape `(3, 2, 4, 4)` array, which we wish
-    to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
+    For example, suppose `a` is an array with shape `(3, 2, 4, 4)`, which we
+    wish to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
     iterator for each matrix in the "stack" with `iter_indices((3, 2, 4, 4),
     skip_axes=(-1, -2))`:
 
@@ -596,9 +596,9 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     a single shape is provided (one could instead use `for idx, in
     iter_indices(...)` above).
 
-    As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 1)`.
-    And you want to generate indices for every value of the broadcasted
-    operation `a + b`. You could use `a[idx1.raw] + b[idx2.raw]` for every
+    As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 1)`,
+    and we want to generate indices for every value of the broadcasted
+    operation `a + b`. We can do this by using `a[idx1.raw] + b[idx2.raw]` for every
     `idx1` and `idx2` as below:
 
     >>> import numpy as np
@@ -623,7 +623,8 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
 
     To include an index into the final broadcasted array, you can simply
     include the final broadcasted shape as one of the shapes (the NumPy
-    function :func:`np.broadcast_shapes <numpy:numpy.broadcast_shapes>` is useful here).
+    function :func:`np.broadcast_shapes() <numpy:numpy.broadcast_shapes>` is
+    useful here).
 
     >>> np.broadcast_shapes((1, 3), (2, 1))
     (2, 3)
@@ -688,8 +689,8 @@ class ncycles:
 
     This is based on a recipe from the `Python itertools docs
     <https://docs.python.org/3/library/itertools.html#itertools-recipes>`_,
-    but improved to give a repr, and to denest in cases (this makes debugging
-    :func:`iter_indices` easier).
+    but improved to give a repr, and to denest when it can. This makes
+    debugging :func:`~.iter_indices` easier.
 
     >>> from ndindex.ndindex import ncycles
     >>> ncycles(range(3), 2)
@@ -698,6 +699,7 @@ class ncycles:
     [0, 1, 2, 0, 1, 2]
     >>> ncycles(ncycles(range(3), 3), 2)
     ncycles(range(0, 3), 6)
+
     """
     def __new__(cls, iterable, n):
         if n == 1:
