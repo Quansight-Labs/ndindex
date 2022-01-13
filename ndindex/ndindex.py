@@ -653,7 +653,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
             a = ndindex(a).reduce(ndim).args[0]
         except IndexError:
             # Raise the same error as NumPy functions that take axis arguments
-            raise AxisError(f"axis {a} is out of bounds for array of dimension {ndim}")
+            raise AxisError(a, ndim)
         if a in _skip_axes:
             raise ValueError("skip_axes should not contain duplicate axes")
         _skip_axes.append(a)
