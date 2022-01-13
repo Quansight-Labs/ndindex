@@ -152,6 +152,8 @@ def test_asshape():
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
     raises(TypeError, lambda: asshape((True,)))
 
+@example([((1, 1), (1, 1)), (1, 1)], (0, 0))
+@example([((0, 1), (1, 2)), (0, 2)], (1,))
 @given(mutually_broadcastable_shapes, skip_axes())
 def test_iter_indices(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
@@ -263,6 +265,7 @@ def test_iter_indices_errors():
 
     assert msg1 == msg2
 
+@example(1, 1, 1)
 @given(integers(0, 100), integers(0, 100), integers(0, 100))
 def test_ncycles(i, n, m):
     N = ncycles(range(i), n)
