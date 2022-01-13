@@ -20,9 +20,9 @@ jobs:
           echo $CONDA/bin >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
           conda config --add channels conda-forge
-          conda install -q mamba
+          conda update -q conda
           conda info -a
-          mamba create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes packaging
+          conda create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes packaging
           conda init
 
       - name: Run Tests
