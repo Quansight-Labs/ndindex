@@ -665,10 +665,9 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
         for it, shape, _shape in zip(iters, shapes, _shapes):
             if -i > len(shape):
                 for j in range(len(it)):
-                    if j not in _skip_axes:
-                        if broadcasted_shape[i] != 1:
-                            it[j] = ncycles(it[j], broadcasted_shape[i])
-                        break
+                    if broadcasted_shape[i] not in [0, 1]:
+                        it[j] = ncycles(it[j], broadcasted_shape[i])
+                    break
             elif ndim + i in _skip_axes:
                 it.insert(0, [slice(None)])
             else:
@@ -685,7 +684,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
 
 # Based on https://docs.python.org/3/library/itertools.html#itertools-recipes
 class ncycles:
-    "Returns the sequence elements n times"
+    "Iterate `iterable` copied `n` times"
     def __new__(cls, iterable, n):
         if n == 1:
             return iterable
