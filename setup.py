@@ -29,7 +29,11 @@ def check_cython():
 if os.getenv("CYTHONIZE_NDINDEX") is None:
     CYTHONIZE_NDINDEX = check_cython()
 else:
-    CYTHONIZE_NDINDEX = bool(int(os.getenv("CYTHONIZE_NDINDEX")))
+    try:
+        CYTHONIZE_NDINDEX = bool(int(os.getenv("CYTHONIZE_NDINDEX")))
+    except ValueError:
+        sys.exit("Acceptable values for CYTHONIZE_NDINDEX are '0' and '1', "
+                 "got: %r" % os.getenv("CYTHONIZE_NDINDEX"))
 
 if CYTHONIZE_NDINDEX:
     from Cython.Build import cythonize
@@ -47,7 +51,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://quansight-labs.github.io/ndindex/",
     packages=['ndindex', 'ndindex.tests'],
-    ext_modules = ext_modules,
+    ext_modules=ext_modules,
     license="MIT",
     install_requires=[
         "numpy",
