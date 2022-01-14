@@ -1,4 +1,5 @@
 import os
+import sys
 import setuptools
 import versioneer
 
@@ -6,8 +7,27 @@ import versioneer
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+def check_cython():
+    argv_org = list(sys.argv)
+    try:
+        from Cython.Build import cythonize
+        sys.argv = argv_org[:1] + ["build_ext"]
+        setuptools.setup(name="foo", version="1.0.0",
+                         ext_modules=cythonize(["ndindex/__init__.py"]))
+    except:
+        return False
+    finally:
+        sys.argv = argv_org
+    return True
+
+
+if os.getenv("CYTHONIZE_NDINDEX") is None:
+    CYTHONIZE_NDINDEX = check_cython()
+else:
+    CYTHONIZE_NDINDEX = bool(int(os.getenv("CYTHONIZE_NDINDEX")))
+
 ext_modules = []
-if int(os.getenv("CYTHONIZE_NDINDEX", 0)):
+if CYTHONIZE_NDINDEX:
     from Cython.Build import cythonize
     ext_modules.extend(cythonize(["ndindex/*.py"]))
 
@@ -38,3 +58,5 @@ setuptools.setup(
     ],
     python_requires='>=3.7',
 )
+
+print("CYTHONIZE_NDINDEX: %r" % CYTHONIZE_NDINDEX)
