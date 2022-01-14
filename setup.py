@@ -8,6 +8,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 def check_cython():
+    """
+    Check to see if Cython is installed and able to compile extensions (which
+    requires a C compiler and the Python headers to be installed).
+    Return True on success, False on failure.
+    """
     argv_org = list(sys.argv)
     try:
         from Cython.Build import cythonize
@@ -26,10 +31,11 @@ if os.getenv("CYTHONIZE_NDINDEX") is None:
 else:
     CYTHONIZE_NDINDEX = bool(int(os.getenv("CYTHONIZE_NDINDEX")))
 
-ext_modules = []
 if CYTHONIZE_NDINDEX:
     from Cython.Build import cythonize
-    ext_modules.extend(cythonize(["ndindex/*.py"]))
+    ext_modules = cythonize(["ndindex/*.py"])
+else:
+    ext_modules = []
 
 setuptools.setup(
     name="ndindex",
