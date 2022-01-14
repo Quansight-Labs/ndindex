@@ -25,17 +25,17 @@ def check_cython():
         sys.argv = argv_org
     return True
 
-
-if os.getenv("CYTHONIZE_NDINDEX") is None:
-    CYTHONIZE_NDINDEX = check_cython()
+CYTHONIZE_NDINDEX = os.getenv("CYTHONIZE_NDINDEX")
+if CYTHONIZE_NDINDEX is None:
+    use_cython = check_cython()
 else:
     try:
-        CYTHONIZE_NDINDEX = bool(int(os.getenv("CYTHONIZE_NDINDEX")))
+        use_cython = bool(int(CYTHONIZE_NDINDEX))
     except ValueError:
         sys.exit("Acceptable values for CYTHONIZE_NDINDEX are '0' and '1', "
-                 "got: %r" % os.getenv("CYTHONIZE_NDINDEX"))
+                 "got: %r" % CYTHONIZE_NDINDEX)
 
-if CYTHONIZE_NDINDEX:
+if use_cython:
     from Cython.Build import cythonize
     ext_modules = cythonize(["ndindex/*.py"])
 else:
