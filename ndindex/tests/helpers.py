@@ -122,7 +122,7 @@ def skip_axes(draw):
     if isinstance(axes, list):
         axes = tuple(axes)
         # Sometimes return an integer
-        if len(axes) == 1 and draw(booleans()):
+        if len(axes) == 1 and draw(booleans()): # pragma: no cover
             return axes[0]
     return axes
 
