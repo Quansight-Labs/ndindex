@@ -609,7 +609,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     >>> b
     array([[100],
            [110]])
-    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)):
+    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)): # doctest: +SKIP37
     ...     print(f"{idx1 = }; {idx2 = }; {(a[idx1.raw], b[idx2.raw]) = }")
     idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (0, 100)
     idx1 = Tuple(0, 1); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (1, 100)
