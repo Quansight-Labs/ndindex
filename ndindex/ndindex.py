@@ -1,8 +1,9 @@
 import inspect
+import itertools
 import numbers
 import operator
 
-from numpy import ndarray, bool_, newaxis
+from numpy import ndarray, bool_, newaxis, AxisError, broadcast_shapes
 
 def ndindex(obj):
     """
@@ -408,7 +409,7 @@ class NDIndex(ImmutableObject):
                 |                           |
                 +- self.as_subindex(index) -+
 
-        `i.as_subindex(j)` is currently only implemented when `j` is a slices
+        `i.as_subindex(j)` is currently only implemented when `j` is a slice
         with positive steps and nonnegative start and stop, or a Tuple of the
         same. To use it with slices with negative start or stop, call
         :meth:`reduce` with a shape first.
@@ -545,6 +546,181 @@ class NDIndex(ImmutableObject):
 
         """
         return self
+
+def iter_indices(*shapes, skip_axes=(), _debug=False):
+    """
+    Iterate indices for every element of an arrays of shape `shapes`.
+
+    Each shape in `shapes` should be a shape tuple, which are broadcast
+    compatible. Each iteration step will produce a tuple of indices, one for
+    each shape, which would correspond to the same elements if the arrays of
+    the given shapes were first broadcast together.
+
+    This is a generalization of the NumPy :py:class:`np.ndindex()
+    <numpy.ndindex>` function (which otherwise has no relation).
+    `np.ndindex()` only iterates indices for a single shape, whereas
+    `iter_indices()` supports generating indices for multiple broadcast
+    compatible shapes at once. This is equivalent to first broadcasting the
+    arrays then generating indices for the single broadcasted shape.
+
+    Additionally, this function supports the ability to skip axes of the
+    shapes using `skip_axes`. These axes will be fully sliced in each index.
+    The remaining axes will be indexed one element at a time with integer
+    indices.
+
+    `skip_axes` should be a tuple of axes to skip. It can use negative
+    integers, e.g., `skip_axes=(-1,)` will skip the last axis. The order of
+    the axes in `skip_axes` does not matter, but it should not contain
+    duplicate axes. The axes in `skip_axes` refer to the final broadcasted
+    shape of `shapes`. For example, `iter_indices((3,), (1, 2, 3),
+    skip_axes=(0,))` will skip the first axis, and only applies to the second
+    shape, since the first shape corresponds to axis `2` of the final
+    broadcasted shape `(1, 2, 3)`
+
+    For example, suppose `a` is an array with shape `(3, 2, 4, 4)`, which we
+    wish to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
+    iterator for each matrix in the "stack" with `iter_indices((3, 2, 4, 4),
+    skip_axes=(-1, -2))`:
+
+    >>> from ndindex import iter_indices
+    >>> for idx in iter_indices((3, 2, 4, 4), skip_axes=(-1, -2)):
+    ...     print(idx)
+    (Tuple(0, 0, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(0, 1, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(1, 0, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(1, 1, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(2, 0, slice(None, None, None), slice(None, None, None)),)
+    (Tuple(2, 1, slice(None, None, None), slice(None, None, None)),)
+
+    Note that the iterates of `iter_indices` are always a tuple, even if only
+    a single shape is provided (one could instead use `for idx, in
+    iter_indices(...)` above).
+
+    As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 1)`,
+    and we want to generate indices for every value of the broadcasted
+    operation `a + b`. We can do this by using `a[idx1.raw] + b[idx2.raw]` for every
+    `idx1` and `idx2` as below:
+
+    >>> import numpy as np
+    >>> a = np.arange(3).reshape((1, 3))
+    >>> b = np.arange(100, 111, 10).reshape((2, 1))
+    >>> a
+    array([[0, 1, 2]])
+    >>> b
+    array([[100],
+           [110]])
+    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)): # doctest: +SKIP37
+    ...     print(f"{idx1 = }; {idx2 = }; {(a[idx1.raw], b[idx2.raw]) = }")
+    idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (0, 100)
+    idx1 = Tuple(0, 1); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (1, 100)
+    idx1 = Tuple(0, 2); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (2, 100)
+    idx1 = Tuple(0, 0); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (0, 110)
+    idx1 = Tuple(0, 1); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (1, 110)
+    idx1 = Tuple(0, 2); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (2, 110)
+    >>> a + b
+    array([[100, 101, 102],
+           [110, 111, 112]])
+
+    To include an index into the final broadcasted array, you can simply
+    include the final broadcasted shape as one of the shapes (the NumPy
+    function :func:`np.broadcast_shapes() <numpy:numpy.broadcast_shapes>` is
+    useful here).
+
+    >>> np.broadcast_shapes((1, 3), (2, 1))
+    (2, 3)
+    >>> for idx1, idx2, broadcasted_idx in iter_indices((1, 3), (2, 1), (2, 3)):
+    ...     print(broadcasted_idx)
+    Tuple(0, 0)
+    Tuple(0, 1)
+    Tuple(0, 2)
+    Tuple(1, 0)
+    Tuple(1, 1)
+    Tuple(1, 2)
+
+    """
+    if not shapes:
+        yield ()
+        return
+
+    shapes = [asshape(shape) for shape in shapes]
+    ndim = len(max(shapes, key=len))
+
+    if isinstance(skip_axes, int):
+        skip_axes = (skip_axes,)
+    _skip_axes = []
+    for a in skip_axes:
+        try:
+            a = ndindex(a).reduce(ndim).args[0]
+        except IndexError:
+            # Raise the same error as NumPy functions that take axis arguments
+            raise AxisError(a, ndim)
+        if a in _skip_axes:
+            raise ValueError("skip_axes should not contain duplicate axes")
+        _skip_axes.append(a)
+
+    _shapes = [(1,)*(ndim - len(shape)) + shape for shape in shapes]
+    iters = [[] for i in range(len(shapes))]
+    broadcasted_shape = broadcast_shapes(*shapes)
+
+    for i in range(-1, -ndim-1, -1):
+        for it, shape, _shape in zip(iters, shapes, _shapes):
+            if -i > len(shape):
+                for j in range(len(it)):
+                    if broadcasted_shape[i] not in [0, 1]:
+                        it[j] = ncycles(it[j], broadcasted_shape[i])
+                    break
+            elif ndim + i in _skip_axes:
+                it.insert(0, [slice(None)])
+            else:
+                if broadcasted_shape[i] != 1 and shape[i] == 1:
+                    it.insert(0, ncycles(range(shape[i]), broadcasted_shape[i]))
+                else:
+                    it.insert(0, range(shape[i]))
+
+    if _debug: # pragma: no cover
+        print(iters)
+        # Use this instead when we drop Python 3.7 support
+        # print(f"{iters = }")
+    for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
+                                         iters], fillvalue=()):
+        yield tuple(ndindex(idx) for idx in idxes)
+
+class ncycles:
+    """
+    Iterate `iterable` repeated `n` times.
+
+    This is based on a recipe from the `Python itertools docs
+    <https://docs.python.org/3/library/itertools.html#itertools-recipes>`_,
+    but improved to give a repr, and to denest when it can. This makes
+    debugging :func:`~.iter_indices` easier.
+
+    >>> from ndindex.ndindex import ncycles
+    >>> ncycles(range(3), 2)
+    ncycles(range(0, 3), 2)
+    >>> list(_)
+    [0, 1, 2, 0, 1, 2]
+    >>> ncycles(ncycles(range(3), 3), 2)
+    ncycles(range(0, 3), 6)
+
+    """
+    def __new__(cls, iterable, n):
+        if n == 1:
+            return iterable
+        return object.__new__(cls)
+
+    def __init__(self, iterable, n):
+        if isinstance(iterable, ncycles):
+            self.iterable = iterable.iterable
+            self.n = iterable.n*n
+        else:
+            self.iterable = iterable
+            self.n = n
+
+    def __repr__(self):
+        return f"ncycles({self.iterable!r}, {self.n!r})"
+
+    def __iter__(self):
+        return itertools.chain.from_iterable(itertools.repeat(tuple(self.iterable), self.n))
 
 def asshape(shape, axis=None):
     """

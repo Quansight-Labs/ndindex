@@ -92,7 +92,11 @@ class Tuple(NDIndex):
             try:
                 broadcast(*[i for i in arrays])
             except ValueError as e:
-                assert e.args == ("shape mismatch: objects cannot be broadcast to a single shape",)
+                assert str(e).startswith("shape mismatch: objects cannot be broadcast to a single shape"), e.args
+                # TODO: Newer versions of NumPy include where the mismatch is
+                # in the error message in a more informative way than this
+                # (but we can't use it directly because it talks about the
+                # "arg"s to broadcast()).
                 raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
 
         return tuple(newargs)

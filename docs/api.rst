@@ -77,6 +77,17 @@ BooleanArray
    .. autoattribute:: dtype
       :annotation:
 
+Index Helpers
+=============
+
+The functions here are helpers for working with indices that aren't methods of
+the index objects.
+
+iter_indices
+------------
+
+.. autofunction:: ndindex.iter_indices
+
 Chunking
 ========
 
@@ -91,7 +102,8 @@ ChunkSize
 Internal API
 ============
 
-These classes are only intended for internal use in ndindex.
+These classes are only intended for internal use in ndindex. They shouldn't
+relied on as they may be removed or changed.
 
 ImmutableObject
 ---------------
@@ -129,3 +141,8 @@ operator_index
 --------------
 
 .. autofunction:: ndindex.ndindex.operator_index
+
+ncycles
+-------
+
+.. autofunction:: ndindex.ndindex.ncycles
