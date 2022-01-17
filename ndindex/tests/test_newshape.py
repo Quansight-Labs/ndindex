@@ -48,6 +48,5 @@ def test_newshape_hypothesis(idx, shape):
     def assert_equal(raw_shape, newshape):
         assert raw_shape == newshape
 
-
     check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
                assert_equal=assert_equal, same_exception=False)
