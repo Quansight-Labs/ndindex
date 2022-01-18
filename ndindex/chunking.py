@@ -1,7 +1,5 @@
 from collections.abc import Sequence
 from itertools import product
-from functools import reduce
-from operator import mul
 
 from .ndindex import ImmutableObject, operator_index, asshape, ndindex
 from .tuple import Tuple
@@ -10,10 +8,7 @@ from .integer import Integer
 from .integerarray import IntegerArray
 from .newaxis import Newaxis
 from .subindex_helpers import ceiling
-
-# np.prod has overflow and math.prod is Python 3.8+ only
-def prod(seq):
-    return reduce(mul, seq, 1)
+from ._crt import prod
 
 class ChunkSize(ImmutableObject, Sequence):
     """

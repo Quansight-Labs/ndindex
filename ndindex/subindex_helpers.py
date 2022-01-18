@@ -14,6 +14,8 @@ algorithm), but depending on SymPy also isn't a big deal for the time being.
 
 import sys
 
+from ._crt import crt
+
 def _crt(m1, m2, v1, v2):
     """
     Chinese Remainder Theorem
@@ -28,14 +30,12 @@ def _crt(m1, m2, v1, v2):
     if m2 == 1:
         return v1 % m1
 
-    # Only import SymPy when necessary
-    from sympy.ntheory.modular import crt as sympy_crt
-
-    res = sympy_crt([m1, m2], [v1, v2])
+    assert m1 > 0
+    assert m2 > 0
+    res = crt([m1, m2], [v1, v2])
     if res is None:
         return res
-    # Make sure the result isn't a gmpy2.mpz
-    return int(res[0])
+    return res
 
 def _ilcm(a, b):
     # Avoid calling sympy_ilcm in the cases where the inputs would be arrays.
