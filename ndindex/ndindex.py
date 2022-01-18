@@ -25,7 +25,7 @@ def ndindex(obj):
 
     if 'numpy' in sys.modules:
         from numpy import ndarray, bool_
-    else:
+    else: # pragma: no cover
         bool_ = bool
         ndarray = ()
 

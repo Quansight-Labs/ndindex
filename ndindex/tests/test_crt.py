@@ -2,7 +2,7 @@ from math import gcd
 
 from .._crt import crt, ilcm, gcdex
 
-from hypothesis import given
+from hypothesis import given, example
 from hypothesis.strategies import integers, lists, shared
 
 size = shared(integers(min_value=1, max_value=10))
@@ -40,6 +40,9 @@ def test_ilcm(x, y):
         for i in range(min(x, y), L):
             assert i % x != 0 or i % y != 0
 
+@example(0, 3)
+@example(3, 0)
+@example(0, 0)
 @given(integers(), integers())
 def test_gcdex(a, b):
     x, y, g = gcdex(a, b)

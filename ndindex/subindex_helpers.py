@@ -47,7 +47,7 @@ def where(cond, x, y):
     if 'numpy' in sys.modules:
         from numpy import where
         return where(cond, x, y)
-    return x if cond else y
+    return x if cond else y # pragma: no cover
 
 def ceiling(a, b):
     """

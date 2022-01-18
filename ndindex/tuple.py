@@ -48,7 +48,7 @@ class Tuple(NDIndex):
         if 'numpy' in sys.modules:
             from numpy import ndarray, bool_
         else:
-            ndarray, bool_ = (), ()
+            ndarray, bool_ = (), () # pragma: no cover
         newargs = []
         arrays = []
         array_block_start = False
