@@ -20,7 +20,7 @@ class ArrayIndex(NDIndex):
     def _typecheck(self, idx, shape=None, _copy=True):
         try:
             from numpy import ndarray, asarray, integer, bool_, empty, intp
-        except ImportError:
+        except ImportError: # pragma: no cover
             raise ImportError("NumPy must be installed to create array indices")
 
         if self.dtype is None:

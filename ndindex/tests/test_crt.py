@@ -1,4 +1,6 @@
-from .._crt import crt, ilcm
+from math import gcd
+
+from .._crt import crt, ilcm, gcdex
 
 from hypothesis import given
 from hypothesis.strategies import integers, lists, shared
@@ -18,7 +20,7 @@ def test_crt(m, v):
     for m_i, v_i in zip(m, v):
         assert v_i % m_i == res % m_i
 
-@given(integers(min_value=1), integers(min_value=1))
+@given(integers(min_value=0), integers(min_value=0))
 def test_ilcm(x, y):
     L = ilcm(x, y)
 
@@ -33,3 +35,10 @@ def test_ilcm(x, y):
         # L is the least common multiple
         for i in range(min(x, y), L):
             assert i % x != 0 or i % y != 0
+
+@given(integers(), integers())
+def test_gcdex(a, b):
+    x, y, g = gcdex(a, b)
+
+    assert g == gcd(a, b)
+    assert x*a + y*b == g

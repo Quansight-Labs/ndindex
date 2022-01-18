@@ -135,16 +135,13 @@ def _crt(U, M):
     return v % p
 
 
-def solve_congruence(*remainder_modulus_pairs, check=True):
+def solve_congruence(*remainder_modulus_pairs):
     """Compute the integer ``n`` that has the residual ``ai`` when it is
     divided by ``mi`` where the ``ai`` and ``mi`` are given as pairs to
     this function: ((a1, m1), (a2, m2), ...). If there is no solution,
     return None. Otherwise return ``n`` and its modulus.
 
-    The ``mi`` values need not be co-prime. If it is known that the moduli are
-    not co-prime then the hint ``check`` can be set to False (default=True) and
-    the check for a quicker solution via crt() (valid when the moduli are
-    co-prime) will be skipped.
+    The ``mi`` values need not be co-prime.
 
     Examples
     ========
@@ -197,29 +194,6 @@ def solve_congruence(*remainder_modulus_pairs, check=True):
         return a, m
 
     rm = remainder_modulus_pairs
-
-    if check:
-        # ignore redundant pairs but raise an error otherwise; also
-        # make sure that a unique set of bases is sent to gf_crt if
-        # they are all prime.
-        #
-        # The routine will work out less-trivial violations and
-        # return None, e.g. for the pairs (1,3) and (14,42) there
-        # is no answer because 14 mod 42 (having a gcd of 14) implies
-        # (14/2) mod (42/2), (14/7) mod (42/7) and (14/14) mod (42/14)
-        # which, being 0 mod 3, is inconsistent with 1 mod 3. But to
-        # preprocess the input beyond checking of another pair with 42
-        # or 3 as the modulus (for this example) is not necessary.
-        uniq = {}
-        for r, m in rm:
-            r %= m
-            if m in uniq:
-                if r != uniq[m]:
-                    return None
-                continue
-            uniq[m] = r
-        rm = [(r, m) for m, r in uniq.items()]
-        del uniq
 
     rv = (0, 1)
     for rmi in rm:
@@ -285,12 +259,11 @@ def crt(m, v, check=True):
 
     if check:
         if not all(v % m == result % m for v, m in zip(v, m)):
-            result = solve_congruence(*list(zip(v, m)),
-                    check=False)
+            result = solve_congruence(*list(zip(v, m)))
 
     return result
 
-def ilcm(*args):
+def ilcm(a, b):
     """Computes integer least common multiple.
 
     Examples
@@ -301,16 +274,8 @@ def ilcm(*args):
     10
     >>> ilcm(7, 3)
     21
-    >>> ilcm(5, 10, 15)
-    30
 
     """
-    if len(args) < 2:
-        raise TypeError(
-            'ilcm() takes at least 2 arguments (%s given)' % len(args))
-    if 0 in args:
+    if 0 in [a, b]:
         return 0
-    a = args[0]
-    for b in args[1:]:
-        a = a // gcd(a, b) * b # since gcd(a,b) | a
-    return a
+    return a // gcd(a, b) * b # since gcd(a,b) | a
