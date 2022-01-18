@@ -556,6 +556,7 @@ class NDIndex(ImmutableObject):
         return self
 
 
+# TODO: Use this in other places in the code that check broadcast compatibility.
 class BroadcastError(ValueError):
     """
     Exception raised by :func:`iter_indices()` when the input shapes are not
@@ -621,7 +622,8 @@ def broadcast_shapes(*shapes):
             elif d1 == d2:
                 shape[i] = d1
             else:
-                raise BroadcastError
+                # TODO: Build an error message that matches NumPy
+                raise BroadcastError("shape mismatch: objects cannot be broadcast to a single shape.")
 
             i = i - 1
 
