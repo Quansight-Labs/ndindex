@@ -558,14 +558,16 @@ class NDIndex(ImmutableObject):
 
 class BroadcastError(ValueError):
     """
-    Exception raised by :func:`broadcast_shapes()` on invalid input.
+    Exception raised by :func:`iter_indices()` when the input shapes are not
+    broadcast compatible.
+
     """
 
 def broadcast_shapes(*shapes):
     """
     Broadcast the input shapes `shapes` to a single shape.
 
-    This is the same as :py:function:`np.broadcast_shapes()
+    This is the same as :py:func:`np.broadcast_shapes()
     <numpy.broadcast_shapes>`. It is included as a separate helper function
     because `np.broadcast_shapes()` is on available in NumPy 1.20 or newer, and
     so that ndindex functions that use this function can do without requiring

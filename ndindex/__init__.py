@@ -1,8 +1,8 @@
 __all__ = []
 
-from .ndindex import ndindex, iter_indices
+from .ndindex import ndindex, iter_indices, BroadcastError
 
-__all__ += ['ndindex', 'iter_indices']
+__all__ += ['ndindex', 'iter_indices', 'BroadcastError']
 
 from .slice import Slice
 
