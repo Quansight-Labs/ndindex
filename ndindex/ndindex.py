@@ -561,7 +561,27 @@ class BroadcastError(ValueError):
     Exception raised by :func:`iter_indices()` when the input shapes are not
     broadcast compatible.
 
+    This is used instead of the NumPy exception of the same name so that
+    `iter_indices` does not need to depend on NumPy.
     """
+
+class AxisError(ValueError, IndexError):
+    """
+    Exception raised by :func:`iter_indices()` when the `skip_axes` argument
+    is out of bounds.
+
+    This is used instead of the NumPy exception of the same name so that
+    `iter_indices` does not need to depend on NumPy.
+
+    """
+    __slots__ = ("axis", "ndim")
+
+    def __init__(self, axis, ndim):
+        self.axis = axis
+        self.ndim = ndim
+
+    def __str__(self):
+        return f"axis {self.axis} is out of bounds for array of dimension {self.ndim}"
 
 def broadcast_shapes(*shapes):
     """
@@ -714,12 +734,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
         try:
             a = ndindex(a).reduce(ndim).args[0]
         except IndexError:
-            try:
-                from numpy import AxisError
-                # Raise the same error as NumPy functions that take axis arguments
-                raise AxisError(a, ndim)
-            except ImportError:
-                raise
+            raise AxisError(a, ndim)
         if a in _skip_axes:
             raise ValueError("skip_axes should not contain duplicate axes")
         _skip_axes.append(a)

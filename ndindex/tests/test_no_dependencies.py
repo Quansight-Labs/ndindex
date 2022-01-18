@@ -16,7 +16,7 @@ import subprocess
 import pytest
 
 from ndindex import (ndindex, iter_indices, Integer, Slice, Tuple, ellipsis,
-                     Newaxis, ChunkSize)
+                     Newaxis, ChunkSize, BroadcastError, AxisError)
 
 def _test_dependency_ndindex(mod):
     assert mod not in sys.modules
@@ -55,6 +55,22 @@ def _test_dependency_iter_indices(mod):
     assert mod not in sys.modules
 
     list(iter_indices((1, 2), (2, 1), skip_axes=(1,)))
+    assert mod not in sys.modules
+
+    try:
+        list(iter_indices((2, 3), (3, 2)))
+    except BroadcastError:
+        pass
+    else:
+        assert False
+    assert mod not in sys.modules
+
+    try:
+        list(iter_indices((2, 3), skip_axes=(2,)))
+    except AxisError:
+        pass
+    else:
+        assert False
     assert mod not in sys.modules
 
 def _test_dependency_indices(mod):

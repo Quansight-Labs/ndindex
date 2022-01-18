@@ -93,6 +93,11 @@ BroadcastError
 
 .. autoexception:: ndindex.BroadcastError
 
+AxisError
+---------
+
+.. autoexception:: ndindex.AxisError
+
 Chunking
 ========
 
