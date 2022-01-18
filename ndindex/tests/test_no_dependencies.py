@@ -76,7 +76,7 @@ def _test_dependency_iter_indices(mod):
 def _test_dependency_indices(mod):
     for index_type, args in [
             (Integer, (1,)),
-            (Slice, (0, 3)),
+            (Slice, (2, 10, 3)),
             (ellipsis, ()),
             (Newaxis, ()),
             (Tuple, (slice(0, 3), 1)),
@@ -103,7 +103,7 @@ def _test_dependency_indices(mod):
         assert mod not in sys.modules, index_type
 
         try:
-            idx.as_subindex(slice(0, 2))
+            idx.as_subindex(slice(1, 20, 5))
         except NotImplementedError:
             pass
         assert mod not in sys.modules, index_type

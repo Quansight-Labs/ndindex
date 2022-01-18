@@ -1,4 +1,4 @@
-from .._crt import crt
+from .._crt import crt, ilcm
 
 from hypothesis import given
 from hypothesis.strategies import integers, lists, shared
@@ -17,3 +17,19 @@ def test_crt(m, v):
 
     for m_i, v_i in zip(m, v):
         assert v_i % m_i == res % m_i
+
+@given(integers(min_value=1), integers(min_value=1))
+def test_ilcm(x, y):
+    L = ilcm(x, y)
+
+    assert L >= x
+    assert L >= y
+
+    # L is a common multiple
+    assert L % x == 0
+    assert L % y == 0
+
+    if L - min(x, y) <= 1000:
+        # L is the least common multiple
+        for i in range(min(x, y), L):
+            assert i % x != 0 or i % y != 0

@@ -289,3 +289,28 @@ def crt(m, v, check=True):
                     check=False)
 
     return result
+
+def ilcm(*args):
+    """Computes integer least common multiple.
+
+    Examples
+    ========
+
+    >>> from ndindex._crt import ilcm
+    >>> ilcm(5, 10)
+    10
+    >>> ilcm(7, 3)
+    21
+    >>> ilcm(5, 10, 15)
+    30
+
+    """
+    if len(args) < 2:
+        raise TypeError(
+            'ilcm() takes at least 2 arguments (%s given)' % len(args))
+    if 0 in args:
+        return 0
+    a = args[0]
+    for b in args[1:]:
+        a = a // gcd(a, b) * b # since gcd(a,b) | a
+    return a

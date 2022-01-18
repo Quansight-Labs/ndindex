@@ -4,17 +4,11 @@ This file has the main algorithm for Slice.as_subindex(Slice)
 Since Integer can use the same algorithm via Slice(i, i+1), and IntegerArray
 needs to do this but in a way that only uses array friendly operations, we
 need to have this factored out into a separately callable function.
-
-TODO: we could remove the dependency on SymPy if we wanted to, by implementing
-the special cases for ilcm(a, b) and the Chinese Remainder Theorem for 2
-equations. It wouldn't be too bad (it just requires the extended gcd
-algorithm), but depending on SymPy also isn't a big deal for the time being.
-
 """
 
 import sys
 
-from ._crt import crt
+from ._crt import crt, ilcm
 
 def _crt(m1, m2, v1, v2):
     """
@@ -24,7 +18,7 @@ def _crt(m1, m2, v1, v2):
     such solution exists.
 
     """
-    # Avoid calling sympy_crt in the cases where the inputs would be arrays.
+    # Avoid calling crt in the cases where the inputs would be arrays.
     if m1 == 1:
         return v2 % m2
     if m2 == 1:
@@ -38,16 +32,16 @@ def _crt(m1, m2, v1, v2):
     return res
 
 def _ilcm(a, b):
-    # Avoid calling sympy_ilcm in the cases where the inputs would be arrays.
+    # Avoid calling ilcm in the cases where the inputs would be arrays.
     if a == 1:
         return b
     if b == 1:
         return a
 
-    # Only import SymPy when necessary
-    from sympy import ilcm as sympy_ilcm
+    assert a > 0
+    assert b > 0
 
-    return sympy_ilcm(a, b)
+    return ilcm(a, b)
 
 def where(cond, x, y):
     if 'numpy' in sys.modules:
