@@ -238,7 +238,7 @@ class ChunkSize(ImmutableObject, Sequence):
         while True:
             try:
                 i = next(idx_args)
-                if isinstance(i, Newaxis):
+                if isinstance(i, Newaxis) or i == True:
                     continue
                 n = next(self_)
             except StopIteration:
@@ -315,7 +315,7 @@ class ChunkSize(ImmutableObject, Sequence):
         while True:
             try:
                 i = next(idx_args)
-                if isinstance(i, Newaxis):
+                if isinstance(i, Newaxis) or i == True:
                     continue
                 n = next(self_)
             except StopIteration:
@@ -324,7 +324,9 @@ class ChunkSize(ImmutableObject, Sequence):
                 continue
             elif isinstance(i, IntegerArray):
                 res *= np.unique(i.array//n).size
-            elif isinstance(i, Slice) and i.step > 0:
+            elif isinstance(i, Slice):
+                if i.step < 0:
+                    raise NotImplementedError("num_subchunks() is not implemented for slices with negative step")
                 a, N, m = i.args
                 if m > n:
                     res *= ceiling(N-a, m)
@@ -334,3 +336,82 @@ class ChunkSize(ImmutableObject, Sequence):
                 raise NotImplementedError(f"num_subchunks() is not implemented for {type(i).__name__}")
 
         return res
+
+    def containing_block(self, idx, shape):
+        """
+        Compute the index for the smallest block that contains `idx` on an array of shape `shape`.
+
+        A block is a subset of an array that is contiguous in all dimensions
+        and is aligned along the chunk size. A block index is always of the
+        form `(Slice(k1, m1), Slice(k2, m2), …, Slice(kn, mn))` where `n` is
+        the number of dimensions in the chunk size, and the `ki` and `mi` are
+        multiples of the corresponding chunk dimension (the `mi` may be
+        truncated to the shape).
+
+        For example, given a chunk size of `(10, 15)`, an example block might
+        be `(Slice(0, 20), Slice(30, 45))`. Such a block would be the smallest
+        block that contains the index `(Slice(0, 12), 40)`, for example.
+
+        >>> from ndindex import ChunkSize
+        >>> chunk_size = ChunkSize((10, 15))
+        >>> idx = (slice(0, 12), 40)
+        >>> shape = (100, 100)
+        >>> block = chunk_size.containing_block(idx, shape)
+        >>> block
+        Tuple(slice(0, 20, 1), slice(30, 45, 1))
+
+        The method :meth:`as_subchunks` can be used on the block to determine
+        which chunks are contained in it, and :meth:`num_subchunks` to
+        determine how many:
+
+        >>> chunk_size.num_subchunks(block, shape)
+        2
+        >>> for c in chunk_size.as_subchunks(block, shape):
+        ...     print(c)
+        Tuple(slice(0, 10, 1), slice(30, 45, 1))
+        Tuple(slice(10, 20, 1), slice(30, 45, 1))
+
+        In this example, `chunk_size.as_subchunk(block, shape)` and
+        `chunk_size.as_subchunks(idx, shape)` are the same, but in general, a
+        block may overlap with more chunks than the original index because the
+        block is contiguous.
+
+        """
+        shape = asshape(shape)
+        if len(shape) != len(self):
+            raise ValueError("chunks dimensions must equal the array dimensions")
+        idx = ndindex(idx).expand(shape)
+
+        idx_args = iter(idx.args)
+        self_ = iter(self)
+        res = []
+
+        if False in idx.args:
+            return Tuple(*[slice(0, 0, 1) for i in range(len(shape))])
+
+        while True:
+            try:
+                i = next(idx_args)
+                if isinstance(i, Newaxis) or i == True:
+                    continue
+                n = next(self_)
+            except StopIteration:
+                break
+            if isinstance(i, Integer):
+                chunk_n = i.raw//n
+                res.append(Slice(chunk_n*n, (chunk_n + 1)*n))
+            elif isinstance(i, IntegerArray):
+                if i.size == 0:
+                    res.append(Slice(0, 0))
+                    continue
+                m = np.min(i.array)
+                M = np.max(i.array)
+                res.append(Slice(m//n*n, (M//n + 1)*n))
+            elif isinstance(i, Slice):
+                if i.step < 0:
+                    raise NotImplementedError("containing_block() is not implemented for slices with negative step")
+                res.append(Slice(i.start - (i.start % n), ceiling(i.stop, n)*n))
+            else:
+                raise NotImplementedError(f"containing_block() is not implemented for {type(i).__name__}")
+
+        return Tuple(*res).expand(shape)

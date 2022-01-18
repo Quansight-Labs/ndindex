@@ -1,6 +1,6 @@
 from itertools import zip_longest, tee
 
-from numpy import arange, isin, sort, concatenate
+from numpy import all as np_all, arange, isin, sort, concatenate
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import one_of
@@ -8,6 +8,7 @@ from hypothesis.strategies import one_of
 from pytest import raises
 
 from ..chunking import ChunkSize
+from ..slice import Slice
 from ..tuple import Tuple
 from ..ndindex import ndindex
 
@@ -103,9 +104,7 @@ def test_indices(chunk_size, shape):
     elements = [i for x in subarrays for i in x.flatten()]
     assert sorted(elements) == list(range(size))
 
-def test_as_subchunks_error():
-    raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
-
+@example(chunk_size=(1,), idx=slice(None, None, -1), shape=(2,))
 @example((1,), True, (1,))
 @example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
 @example((1,), ..., (0,))
@@ -170,8 +169,8 @@ def test_as_subchunks(chunk_size, idx, shape):
         elements = arange(0)
     assert_equal(sort(elements), sort(full_idx.flatten()))
 
-def test_num_subchunks_error():
-    raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
+def test_as_subchunks_error():
+    raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
 @example(chunk_size=(1,), idx=None, shape=(1,))
 @example((1,), True, (1,))
@@ -197,3 +196,64 @@ def test_num_subchunks(chunk_size, idx, shape):
     except NotImplementedError:
         return
     assert computed_num_subchunks == actual_num_subchunks
+
+def test_num_subchunks_error():
+    raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
+
+
+@example((5,), [0, 7], (15,))
+@example((5,), [], (15,))
+@given(chunk_sizes(), ndindices, chunk_shapes)
+def test_containing_block(chunk_size, idx, shape):
+    chunk_size = ChunkSize(chunk_size)
+    idx = ndindex(idx)
+
+    size = prod(shape)
+    a = arange(size).reshape(shape)
+
+    try:
+        idx.reduce(shape)
+    except IndexError:
+        assume(False)
+
+    try:
+        block = chunk_size.containing_block(idx, shape)
+    except NotImplementedError:
+        return
+
+    assert isinstance(block, Tuple), block
+    assert len(block.args) == len(chunk_size)
+    assert all(isinstance(s, Slice) for s in block.args)
+    assert all(s.start >= 0 and s.start % n == 0 for s, n in zip(block.args, chunk_size)), block
+    assert all(s.stop >= 0 and (s.stop == i or s.stop % n == 0) and s.stop <=
+               i for s, i, n in zip(block.args, shape, chunk_size)), block
+    assert all(s.step == 1 for s in block.args), block
+
+    a_idx = a[idx.raw]
+    a_block = a[block.raw]
+
+    assert np_all(isin(a_idx, a_block))
+
+    # Verify that the block is indeed the smallest possible by shrinking it
+    # and making sure that misses some of the index. This check doesn't work
+    # for empty indices, so those are handled separately. Also shape == ()
+    # cannot give an empty tuple index because we want only tuples of slices..
+    if (0 in shape or idx.reduce(shape).isempty()) and shape != ():
+        assert block.isempty()
+    else:
+        for i in range(len(block.args)):
+            s = block.args[i]
+            new_s1 = Slice(s.start + chunk_size[i], s.stop)
+            if s.stop == shape[i] and shape[i] % chunk_size[i]:
+                new_s2 = Slice(s.start, s.stop - s.stop % chunk_size[i])
+            else:
+                new_s2 = Slice(s.start, s.stop - chunk_size[i])
+            new_block1 = Tuple(*(block.args[:i] + (new_s1,) + block.args[i+1:]))
+            new_block2 = Tuple(*(block.args[:i] + (new_s2,) + block.args[i+1:]))
+            a_block1 = a[new_block1.raw]
+            a_block2 = a[new_block2.raw]
+            assert not np_all(isin(a_idx, a_block1))
+            assert not np_all(isin(a_idx, a_block2))
+
+def test_containing_block_error():
+    raises(ValueError, lambda: ChunkSize((1, 2)).containing_block(..., (1, 2, 3)))
