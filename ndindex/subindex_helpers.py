@@ -11,7 +11,8 @@ equations. It wouldn't be too bad (it just requires the extended gcd
 algorithm), but depending on SymPy also isn't a big deal for the time being.
 
 """
-from numpy import broadcast_arrays, amin, amax, where
+
+import sys
 
 def _crt(m1, m2, v1, v2):
     """
@@ -48,6 +49,12 @@ def _ilcm(a, b):
 
     return sympy_ilcm(a, b)
 
+def where(cond, x, y):
+    if 'numpy' in sys.modules:
+        from numpy import where
+        return where(cond, x, y)
+    return x if cond else y
+
 def ceiling(a, b):
     """
     Returns ceil(a/b)
@@ -57,11 +64,17 @@ def ceiling(a, b):
 def _max(a, b):
     if isinstance(a, int) and isinstance(b, int):
         return max(a, b)
+
+    from numpy import broadcast_arrays, amax
+
     return amax(broadcast_arrays(a, b), axis=0)
 
 def _min(a, b):
     if isinstance(a, int) and isinstance(b, int):
         return min(a, b)
+
+    from numpy import broadcast_arrays, amin
+
     return amin(broadcast_arrays(a, b), axis=0)
 
 def _smallest(x, a, m):

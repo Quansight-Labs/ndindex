@@ -1,5 +1,3 @@
-from numpy import bool_, count_nonzero, ndarray
-
 from .array import ArrayIndex
 from .ndindex import asshape
 
@@ -69,10 +67,13 @@ class BooleanArray(ArrayIndex):
     """
     __slots__ = ()
 
-    dtype = bool_
-    """
-    The dtype of `BooleanArray` is `np.bool_`.
-    """
+    @property
+    def dtype(self):
+        """
+        The dtype of `BooleanArray` is `np.bool_`.
+        """
+        from numpy import bool_
+        return bool_
 
     def __hash__(self):
         # Match the hash for scalar booleans. Otherwise, hash(True) won't
@@ -98,6 +99,7 @@ class BooleanArray(ArrayIndex):
         >>> BooleanArray([True, False, True]).count_nonzero
         2
         """
+        from numpy import count_nonzero
         return count_nonzero(self.array)
 
     def reduce(self, shape=None, axis=0):
@@ -168,6 +170,8 @@ class BooleanArray(ArrayIndex):
         return Tuple(self).broadcast_arrays()
 
     def __eq__(self, other):
+        from numpy import bool_, ndarray
+
         if isinstance(other, (bool, bool_)):
             return self.shape == () and self.array == other
         if isinstance(other, BooleanArray):

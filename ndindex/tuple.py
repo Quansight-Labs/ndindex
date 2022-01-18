@@ -1,5 +1,4 @@
-from numpy import (broadcast, broadcast_to, array, intp, ndarray, bool_,
-                   logical_and, broadcast_arrays)
+import sys
 
 from .ndindex import NDIndex, ndindex, asshape
 from .subindex_helpers import subindex_slice
@@ -46,6 +45,10 @@ class Tuple(NDIndex):
     __slots__ = ()
 
     def _typecheck(self, *args):
+        if 'numpy' in sys.modules:
+            from numpy import ndarray, bool_
+        else:
+            ndarray, bool_ = (), ()
         newargs = []
         arrays = []
         array_block_start = False
@@ -89,6 +92,7 @@ class Tuple(NDIndex):
             if has_boolean_scalar:
                 raise NotImplementedError("Tuples mixing boolean scalars (True or False) with arrays are not yet supported.")
 
+            from numpy import broadcast
             try:
                 broadcast(*[i for i in arrays])
             except ValueError as e:
@@ -287,11 +291,13 @@ class Tuple(NDIndex):
             elif isinstance(i, BooleanArray):
                 # TODO: Avoid explicitly calling nonzero
                 arrays.extend(i.raw.nonzero())
-        if not arrays:
-            # Older versions of NumPy do not allow broadcast() with no arguments
-            broadcast_shape = ()
-        else:
+        if arrays:
+            from numpy import broadcast, broadcast_to
+
             broadcast_shape = broadcast(*arrays).shape
+        else:
+            broadcast_shape = ()
+
         # If the broadcast shape is empty, out of bounds indices in
         # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
         # ([], []), so the bounds for 10 are not checked. Thus, we must do
@@ -421,6 +427,9 @@ class Tuple(NDIndex):
                 boolean_nonzero[s] = nz
         if not arrays:
             return self
+
+        from numpy import array, broadcast, broadcast_to, intp
+
         broadcast_shape = broadcast(*arrays).shape
 
         newargs = []
@@ -476,17 +485,17 @@ class Tuple(NDIndex):
             elif isinstance(i, BooleanArray):
                 # TODO: Avoid calling nonzero twice
                 arrays.extend(i.raw.nonzero())
-        if not arrays:
-            # Older versions of NumPy do not allow broadcast() with no arguments
-            broadcast_shape = ()
-        else:
-            broadcast_shape = broadcast(*arrays).shape
-        # If the broadcast shape is empty, out of bounds indices in
-        # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
-        # ([], []), so the bounds for 10 are not checked. Thus, we must do
-        # this before calling reduce() on the arguments. This rule, however,
-        # is *not* followed for scalar integer indices.
+
         if arrays:
+            from numpy import broadcast, broadcast_to, array, intp
+
+            broadcast_shape = broadcast(*arrays).shape
+            # If the broadcast shape is empty, out of bounds indices in
+            # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
+            # ([], []), so the bounds for 10 are not checked. Thus, we must do
+            # this before calling reduce() on the arguments. This rule, however,
+            # is *not* followed for scalar integer indices.
+
             for i in range(len(args)):
                 s = args[i]
                 if isinstance(s, IntegerArray):
@@ -683,6 +692,7 @@ class Tuple(NDIndex):
                 raise ValueError("Indices do not intersect")
             if boolean_arrays:
                 if len(boolean_arrays) > 1:
+                    from numpy import logical_and
                     new_array = BooleanArray(logical_and.reduce([i.array for i in boolean_arrays]))
                 else:
                     new_array = boolean_arrays[0]
@@ -700,6 +710,7 @@ class Tuple(NDIndex):
             # Mask out integer arrays to only where the start is less than the
             # stop for all arrays.
             if integer_arrays:
+                from numpy import array, broadcast_arrays, logical_and
                 starts, stops = zip(*integer_arrays)
                 starts = array(broadcast_arrays(*starts))
                 stops = array(broadcast_arrays(*stops))

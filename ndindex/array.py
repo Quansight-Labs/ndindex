@@ -1,7 +1,5 @@
 import warnings
 
-from numpy import ndarray, asarray, integer, bool_, array2string, empty, intp
-
 from .ndindex import NDIndex, asshape
 
 class ArrayIndex(NDIndex):
@@ -20,6 +18,8 @@ class ArrayIndex(NDIndex):
     dtype = None
 
     def _typecheck(self, idx, shape=None, _copy=True):
+        from numpy import ndarray, asarray, integer, bool_, empty, intp
+
         if self.dtype is None:
             raise TypeError("Do not instantiate the superclass ArrayIndex directly")
 
@@ -147,6 +147,8 @@ class ArrayIndex(NDIndex):
         return f"{self.__class__.__name__}({arg})"
 
     def __str__(self):
+        from numpy import array2string
+
         return (self.__class__.__name__
                 + "("
                 + array2string(self.array).replace('\n', '')

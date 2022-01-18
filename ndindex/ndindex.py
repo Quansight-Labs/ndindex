@@ -1,9 +1,11 @@
+import sys
 import inspect
 import itertools
 import numbers
 import operator
+import functools
 
-from numpy import ndarray, bool_, newaxis, AxisError, broadcast_shapes
+newaxis = None
 
 def ndindex(obj):
     """
@@ -20,6 +22,12 @@ def ndindex(obj):
     """
     if isinstance(obj, NDIndex):
         return obj
+
+    if 'numpy' in sys.modules:
+        from numpy import ndarray, bool_
+    else:
+        bool_ = bool
+        ndarray = ()
 
     if isinstance(obj, (bool, bool_)):
         from . import BooleanArray
@@ -547,6 +555,58 @@ class NDIndex(ImmutableObject):
         """
         return self
 
+
+class BroadcastError(ValueError):
+    """
+    Exception raised by :func:`broadcast_shapes()` on invalid input.
+    """
+
+def broadcast_shapes(*shapes):
+    """
+    Broadcast the input shapes `shapes` to a single shape.
+
+    This is the same as :py:function:`np.broadcast_shapes()
+    <numpy.broadcast_shapes>`. It is included as a separate helper function
+    because `np.broadcast_shapes()` is on available in NumPy 1.20 or newer, and
+    so that ndindex functions that use this function can do without requiring
+    NumPy to be installed.
+
+    """
+
+    def _broadcast_shapes(shape1, shape2):
+        """Broadcasts `shape1` and `shape2`"""
+        N1 = len(shape1)
+        N2 = len(shape2)
+        N = max(N1, N2)
+        shape = [None for _ in range(N)]
+        i = N - 1
+        while i >= 0:
+            n1 = N1 - N + i
+            if N1 - N + i >= 0:
+                d1 = shape1[n1]
+            else:
+                d1 = 1
+            n2 = N2 - N + i
+            if N2 - N + i >= 0:
+                d2 = shape2[n2]
+            else:
+                d2 = 1
+
+            if d1 == 1:
+                shape[i] = d2
+            elif d2 == 1:
+                shape[i] = d1
+            elif d1 == d2:
+                shape[i] = d1
+            else:
+                raise BroadcastError
+
+            i = i - 1
+
+        return tuple(shape)
+
+    return functools.reduce(_broadcast_shapes, shapes, ())
+
 def iter_indices(*shapes, skip_axes=(), _debug=False):
     """
     Iterate indices for every element of an arrays of shape `shapes`.
@@ -652,8 +712,12 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
         try:
             a = ndindex(a).reduce(ndim).args[0]
         except IndexError:
-            # Raise the same error as NumPy functions that take axis arguments
-            raise AxisError(a, ndim)
+            try:
+                from numpy import AxisError
+                # Raise the same error as NumPy functions that take axis arguments
+                raise AxisError(a, ndim)
+            except ImportError:
+                raise
         if a in _skip_axes:
             raise ValueError("skip_axes should not contain duplicate axes")
         _skip_axes.append(a)
@@ -773,7 +837,6 @@ def asshape(shape, axis=None):
 
     return tuple(newshape)
 
-
 def operator_index(idx):
     """
     Convert `idx` into an integer index using `__index__()` or raise
@@ -805,6 +868,6 @@ def operator_index(idx):
     """
     if isinstance(idx, bool):
         raise TypeError("'bool' object cannot be interpreted as an integer")
-    if isinstance(idx, bool_):
+    if 'numpy' in sys.modules and isinstance(idx, sys.modules['numpy'].bool_):
         raise TypeError("'np.bool_' object cannot be interpreted as an integer")
     return operator.index(idx)
