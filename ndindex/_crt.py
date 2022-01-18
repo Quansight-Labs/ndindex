@@ -154,7 +154,7 @@ def solve_congruence(*remainder_modulus_pairs, check=True):
     What number is 2 mod 3, 3 mod 5 and 2 mod 7?
 
     >>> solve_congruence((2, 3), (3, 5), (2, 7))
-    (23, 105)
+    23
     >>> [23 % m for m in [3, 5, 7]]
     [2, 3, 2]
 
@@ -162,7 +162,7 @@ def solve_congruence(*remainder_modulus_pairs, check=True):
     all moduli in another, send the arguments like this:
 
     >>> solve_congruence(*zip((2, 3, 2), (3, 5, 7)))
-    (23, 105)
+    23
 
     The moduli need not be co-prime; in this case there may or
     may not be a solution:
@@ -171,7 +171,7 @@ def solve_congruence(*remainder_modulus_pairs, check=True):
     True
 
     >>> solve_congruence((2, 3), (5, 6))
-    (5, 6)
+    5
 
     """
     def combine(c1, c2):
@@ -254,7 +254,7 @@ def crt(m, v, check=True):
        >>> from ndindex._crt import crt
 
        >>> crt([99, 97, 95], [49, 76, 65])
-       (639985, 912285)
+       639985
 
     This is the correct result because::
 
@@ -265,13 +265,13 @@ def crt(m, v, check=True):
     if you use ``check=False``:
 
        >>> crt([12, 6, 17], [3, 4, 2], check=False)
-       (954, 1224)
+       954
        >>> [954 % m for m in [12, 6, 17]]
        [6, 0, 2]
        >>> crt([12, 6, 17], [3, 4, 2]) is None
        True
        >>> crt([3, 6], [2, 5])
-       (5, 6)
+       5
 
     Note: the order of gf_crt's arguments is reversed relative to crt,
     and that solve_congruence takes residue, modulus pairs.
