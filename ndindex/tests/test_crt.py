@@ -24,6 +24,10 @@ def test_crt(m, v):
 def test_ilcm(x, y):
     L = ilcm(x, y)
 
+    if 0 in [x, y]:
+        assert L == 0
+        return
+
     assert L >= x
     assert L >= y
 
