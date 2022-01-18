@@ -198,6 +198,7 @@ def _test_dependency_ChunkSize(mod):
     c.containing_block((0, slice(0, 50)), (100, 100))
     assert mod not in sys.modules
 
+@pytest.mark.no_cover
 @pytest.mark.parametrize('func', [func for func in globals() if func.startswith('_test')])
 def test_numpy_dependency(func):
     # This unfortunately won't go through any of the pytest machinery. We
@@ -213,7 +214,7 @@ from ndindex.tests.test_no_dependencies import {func}
         print(e.stdout, end='')
         raise AssertionError(e.stderr)
 
-
+@pytest.mark.no_cover
 @pytest.mark.parametrize('func', [func for func in globals() if func.startswith('_test')])
 def test_sympy_dependency(func):
     # This unfortunately won't go through any of the pytest machinery. We
