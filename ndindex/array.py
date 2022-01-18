@@ -18,7 +18,10 @@ class ArrayIndex(NDIndex):
     dtype = None
 
     def _typecheck(self, idx, shape=None, _copy=True):
-        from numpy import ndarray, asarray, integer, bool_, empty, intp
+        try:
+            from numpy import ndarray, asarray, integer, bool_, empty, intp
+        except ImportError:
+            raise ImportError("NumPy must be installed to create array indices")
 
         if self.dtype is None:
             raise TypeError("Do not instantiate the superclass ArrayIndex directly")
