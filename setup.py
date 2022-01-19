@@ -15,11 +15,12 @@ setuptools.setup(
     url="https://quansight-labs.github.io/ndindex/",
     packages=['ndindex', 'ndindex.tests'],
     license="MIT",
-    install_requires=[
-        "numpy",
-        "sympy",
-    ],
+    # NumPy is only required when using array indices
+    extras_require={
+        "arrays": "numpy",
+    },
     tests_require=[
+        'numpy',
         'pytest',
         'hypothesis',
     ],

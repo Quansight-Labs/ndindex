@@ -7,7 +7,7 @@ from hypothesis.strategies import integers
 
 from pytest import raises, warns
 
-from ..ndindex import ndindex, asshape, iter_indices, ncycles
+from ..ndindex import ndindex, asshape, iter_indices, ncycles, BroadcastError, AxisError
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
@@ -251,7 +251,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
 def test_iter_indices_errors():
     try:
         list(iter_indices((10,), skip_axes=(2,)))
-    except np.AxisError as e:
+    except AxisError as e:
         msg1 = str(e)
     else:
         raise RuntimeError("iter_indices did not raise AxisError") # pragma: no cover
@@ -265,6 +265,23 @@ def test_iter_indices_errors():
         raise RuntimeError("np.sum() did not raise AxisError") # pragma: no cover
 
     assert msg1 == msg2
+
+    try:
+        list(iter_indices((2, 3), (3, 2)))
+    except BroadcastError as e:
+        msg1 = str(e)
+    else:
+        raise RuntimeError("iter_indices did not raise BroadcastError") # pragma: no cover
+
+    # TODO: Check that the message is the same one used by NumPy
+    # try:
+    #     np.broadcast_shapes((2, 3), (3, 2))
+    # except np.Error as e:
+    #     msg2 = str(e)
+    # else:
+    #     raise RuntimeError("np.broadcast_shapes() did not raise AxisError") # pragma: no cover
+    #
+    # assert msg1 == msg2
 
 @example(1, 1, 1)
 @given(integers(0, 100), integers(0, 100), integers(0, 100))

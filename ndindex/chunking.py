@@ -1,9 +1,5 @@
 from collections.abc import Sequence
 from itertools import product
-from functools import reduce
-from operator import mul
-
-import numpy as np
 
 from .ndindex import ImmutableObject, operator_index, asshape, ndindex
 from .tuple import Tuple
@@ -12,10 +8,7 @@ from .integer import Integer
 from .integerarray import IntegerArray
 from .newaxis import Newaxis
 from .subindex_helpers import ceiling
-
-# np.prod has overflow and math.prod is Python 3.8+ only
-def prod(seq):
-    return reduce(mul, seq, 1)
+from ._crt import prod
 
 class ChunkSize(ImmutableObject, Sequence):
     """
@@ -246,7 +239,8 @@ class ChunkSize(ImmutableObject, Sequence):
             if isinstance(i, Integer):
                 iters.append([i.raw//n])
             elif isinstance(i, IntegerArray):
-                iters.append(np.unique(i.array//n).flat)
+                from numpy import unique
+                iters.append(unique(i.array//n).flat)
             elif isinstance(i, Slice) and i.step > 0:
                 def _slice_iter(s, n):
                     a, N, m = s.args
@@ -323,7 +317,8 @@ class ChunkSize(ImmutableObject, Sequence):
             if isinstance(i, Integer):
                 continue
             elif isinstance(i, IntegerArray):
-                res *= np.unique(i.array//n).size
+                from numpy import unique
+                res *= unique(i.array//n).size
             elif isinstance(i, Slice):
                 if i.step < 0:
                     raise NotImplementedError("num_subchunks() is not implemented for slices with negative step")
@@ -401,6 +396,8 @@ class ChunkSize(ImmutableObject, Sequence):
                 chunk_n = i.raw//n
                 res.append(Slice(chunk_n*n, (chunk_n + 1)*n))
             elif isinstance(i, IntegerArray):
+                import numpy as np
+
                 if i.size == 0:
                     res.append(Slice(0, 0))
                     continue

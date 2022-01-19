@@ -1,5 +1,3 @@
-from numpy import intp, ndarray
-
 from .array import ArrayIndex
 from .ndindex import asshape
 from .subindex_helpers import subindex_slice
@@ -44,11 +42,14 @@ class IntegerArray(ArrayIndex):
     """
     __slots__ = ()
 
-    dtype = intp
-    """
-    The dtype of `IntegerArray` is `np.intp`, which is typically either
-    `np.int32` or `np.int64` depending on the platform.
-    """
+    @property
+    def dtype(self):
+        """
+        The dtype of `IntegerArray` is `np.intp`, which is typically either
+        `np.int32` or `np.int64` depending on the platform.
+        """
+        from numpy import intp
+        return intp
 
     def reduce(self, shape=None, axis=0):
         """
@@ -163,6 +164,8 @@ class IntegerArray(ArrayIndex):
         raise NotImplementedError("IntegerArray.as_subindex is only implemented for slices")
 
     def __eq__(self, other):
+        from numpy import ndarray
+
         if isinstance(other, IntegerArray):
             b = other.array
         elif isinstance(other, ndarray):

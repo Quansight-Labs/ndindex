@@ -88,6 +88,16 @@ iter_indices
 
 .. autofunction:: ndindex.iter_indices
 
+BroadcastError
+--------------
+
+.. autoexception:: ndindex.BroadcastError
+
+AxisError
+---------
+
+.. autoexception:: ndindex.AxisError
+
 Chunking
 ========
 
@@ -146,3 +156,8 @@ ncycles
 -------
 
 .. autofunction:: ndindex.ndindex.ncycles
+
+broadcast_shapes
+----------------
+
+.. autofunction:: ndindex.ndindex.broadcast_shapes
