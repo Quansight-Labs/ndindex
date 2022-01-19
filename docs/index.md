@@ -302,7 +302,6 @@ width="200"></a>
 ## Table of Contents
 
 ```{toctree}
-index.md
 api.md
 slices.md
 type-confusion.md

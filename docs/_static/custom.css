@@ -21,7 +21,10 @@ nav#rellinks li+li:before {
 
 div.sphinxsidebar p.logo {
     display: inline;
+}
 
+div.sphinxsidebar hr {
+    width: 100%;
 }
 
 /* Disable white background on some links, since our background is not white. */
