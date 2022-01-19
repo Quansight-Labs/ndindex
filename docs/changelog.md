@@ -1,5 +1,42 @@
 # ndindex Changelog
 
+## Version 1.6 (????-??-??)
+
+### Major Changes
+
+- SymPy is no longer a dependency of ndindex.
+
+- NumPy is now an optional dependency of ndindex. It is only required when
+  constructing array indices {any}`BooleanArray` or {any}`IntegerArray`. This
+  does not change the semantics of ndindex. ndindex objects still match NumPy
+  indexing semantics everywhere. Note that NumPy is still a hard requirement
+  for all tests in the ndindex test suite.
+
+- Added a new function {any}`iter_indices` which is a generalization of the
+  `np.ndindex()` function (which is otherwise unrelated) to allow multiple
+  broadcast compatible shapes, and to allow skipping axes.
+
+- Added a new method {any}`ChunkSize.containing_block`, which computes the
+  smallest continuous block of chunks containing a given index.
+
+### Minor Changes
+
+- Fix an issue with the {any}`Tuple` constructor with broadcast incompatible
+  arrays with the latest version of NumPy.
+
+- Small performance improvement to {any}`Tuple.reduce`.
+
+- Add better support for boolean scalar indices in various {any}`ChunkSize`
+  methods.
+
+- Better `NotImplementedError` messages from {any}`ChunkSize` methods.
+
+- Switch from Travis CI to GitHub Actions.
+
+- Update CI to test Python 3.10.
+
+- Remove Codecov from CI.
+
 ## Version 1.5.2 (2021-04-06)
 
 ### Major Changes
