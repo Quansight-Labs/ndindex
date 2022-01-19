@@ -19,6 +19,11 @@ nav#rellinks li+li:before {
     content: "";
 }
 
+div.sphinxsidebar {
+    max-height: 95%;
+    overflow-y: auto;
+}
+
 div.sphinxsidebar p.logo {
     display: inline;
 }
