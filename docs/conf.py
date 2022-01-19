@@ -121,7 +121,7 @@ html_sidebars = {
 
 html_favicon = "logo/favicon.ico"
 
-mathjax_config = {
+mathjax3_config = {
   'TeX': {
       'equationNumbers': {
           'autoNumber': "AMS",
