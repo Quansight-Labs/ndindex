@@ -37,6 +37,8 @@
 
 - Remove Codecov from CI.
 
+- The docs now have a cleaner sidebar which always stays fixed on screen.
+
 ## Version 1.5.2 (2021-04-06)
 
 ### Major Changes
