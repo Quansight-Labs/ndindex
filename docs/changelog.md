@@ -19,6 +19,12 @@
 - Added a new method {any}`ChunkSize.containing_block`, which computes the
   smallest continuous block of chunks containing a given index.
 
+- ndindex can now be installed with optional Cythonization support. This is
+  still experimental and is only enabled when installing ndindex from source
+  when Cython is installed (see [the installation
+  instructions](installation)). This improves the general performance of
+  ndindex.
+
 ### Minor Changes
 
 - Fix an issue with the {class}`~.Tuple` constructor with broadcast incompatible
