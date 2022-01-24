@@ -20,6 +20,7 @@ def test_crt(m, v):
     for m_i, v_i in zip(m, v):
         assert v_i % m_i == res % m_i
 
+@example(1, 2)
 @given(integers(min_value=0), integers(min_value=0))
 def test_ilcm(x, y):
     L = ilcm(x, y)
