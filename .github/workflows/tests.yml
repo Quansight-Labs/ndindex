@@ -22,7 +22,7 @@ jobs:
           conda config --add channels conda-forge
           conda update -q conda
           conda info -a
-          conda create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes packaging
+          conda create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes packaging
           conda init
 
       - name: Run Tests

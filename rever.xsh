@@ -16,9 +16,8 @@ def mktmp():
 def run_tests():
     # Don't use the built-in pytest action because that uses Docker, which is
     # overkill and requires installing Docker
-    with run_in_conda_env(['python=3.10', 'pytest', 'hypothesis', 'sympy',
-                           'pyflakes', 'pytest-cov', 'pytest-flakes',
-                           'mkl']):
+    with run_in_conda_env(['python=3.10', 'pytest', 'hypothesis', 'numpy',
+                           'pyflakes', 'pytest-cov', 'pytest-flakes', 'mkl']):
         # Until numpy 1.20 is out, the tests require the git version to run
         pip install git+https://github.com/numpy/numpy.git
         pyflakes ndindex
@@ -28,7 +27,7 @@ def run_tests():
 
 @activity
 def build_docs():
-    with run_in_conda_env(['python=3.10', 'sphinx', 'myst-parser', 'numpy', 'sympy']):
+    with run_in_conda_env(['python=3.10', 'sphinx', 'myst-parser', 'numpy']):
         cd docs
         make html
         cd ..
