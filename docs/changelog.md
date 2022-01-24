@@ -1,6 +1,6 @@
 # ndindex Changelog
 
-## Version 1.6 (????-??-??)
+## Version 1.6 (2022-01-24)
 
 ### Major Changes
 
