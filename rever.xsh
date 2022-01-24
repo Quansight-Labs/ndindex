@@ -18,8 +18,6 @@ def run_tests():
     # overkill and requires installing Docker
     with run_in_conda_env(['python=3.10', 'pytest', 'hypothesis', 'numpy',
                            'pyflakes', 'pytest-cov', 'pytest-flakes', 'mkl']):
-        # Until numpy 1.20 is out, the tests require the git version to run
-        pip install git+https://github.com/numpy/numpy.git
         pyflakes ndindex
         python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
         ./run_doctests
