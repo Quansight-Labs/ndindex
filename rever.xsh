@@ -38,6 +38,9 @@ def annotated_tag():
     # https://github.com/regro/rever/issues/212
     git tag -a -m "$GITHUB_REPO $VERSION release" $VERSION
 
+# Ensure the wheels do not build with Cythonization.
+$CYTHONIZE_NDINDEX = 0
+
 $PROJECT = 'ndindex'
 $ACTIVITIES = [
     # 'mktmp',
