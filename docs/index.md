@@ -70,6 +70,23 @@ their limitations:
   don't have to try to figure out all the different cases yourself. And due to
   extensive testing (see below), you can be assured that ndindex is correct.
 
+## Installation
+
+ndindex can be installed using pip (`pip install ndindex`).
+When installing ndindex from source (using `python setup.py install`) all
+Python modules (except tests) will be cythonized when Cython and a working
+compiler are installed.  The environment variable `CYTHONIZE_NDINDEX` is
+used to explicitly control this default behavior:
+
+- `CYTHONIZE_NDINDEX=0`: disables cythonization (even if a
+  working Cython environment is available)
+
+- `CYTHONIZE_NDINDEX=1`: force cythonization (will fail when Cython or a
+  compiler isn't present)
+
+- `CYTHONIZE_NDINDEX` not set: the default behavior
+
+
 ## Features
 
 ndindex is still a work in progress. The following things are currently
