@@ -6,9 +6,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Type Confusion &#8212; ndindex  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -27,9 +27,46 @@
     <script type="text/javascript" src="_static/copybutton.js"></script>
  
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
 
-    <div class="document">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/ndindex_logo_white_bg.svg" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Confusion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#integer">Integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tuple">Tuple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#newaxis">Newaxis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
               <div class="related top">
@@ -63,12 +100,12 @@ classes with the classes they represent. Most methods that work on the native
 classes are not available on the ndindex classes.</p>
 <p>Some general types to help avoid type confusion:</p>
 <ul>
-<li><p><strong>Always use the <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></span></a> function to create ndindex
-types.</strong> When calling ndindex methods or creating <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Tuple</span></code></span></a> objects,
-it is not necessary to convert arguments to ndindex types first. Slice
-literals (using <code class="docutils literal notranslate"><span class="pre">:</span></code>) are not valid syntax outside of a getitem (square
-brackets), but you can use the <code class="docutils literal notranslate"><span class="pre">slice</span></code> built-in object to create slices.
-<code class="docutils literal notranslate"><span class="pre">slice(a,</span> <span class="pre">b,</span> <span class="pre">c)</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a:b:c</span></code>.</p>
+<li><p><strong>Always use the <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><code class="xref py py-func docutils literal notranslate"><span class="pre">ndindex()</span></code></a> function to create ndindex types.</strong> When
+calling ndindex methods or creating <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> objects, it is not
+necessary to convert arguments to ndindex types first. Slice literals (using
+<code class="docutils literal notranslate"><span class="pre">:</span></code>) are not valid syntax outside of a getitem (square brackets), but you
+can use the <code class="docutils literal notranslate"><span class="pre">slice</span></code> built-in object to create slices. <code class="docutils literal notranslate"><span class="pre">slice(a,</span> <span class="pre">b,</span> <span class="pre">c)</span></code> is
+the same as <code class="docutils literal notranslate"><span class="pre">a:b:c</span></code>.</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>
 </pre></div>
@@ -196,10 +233,10 @@ issue</a> so we can implement it.</p></li>
 <div class="section" id="integer">
 <h2>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p><strong><a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It represents integers
-<strong>as indices</strong>. It is not usable in contexts where integers are usable. For
-example, arithmetic will not work on it. If you need to manipulate the
-integer index as an integer, use <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
+<li><p><strong><a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It
+represents integers <strong>as indices</strong>. It is not usable in contexts where
+integers are usable. For example, arithmetic will not work on it. If you
+need to manipulate the integer index as an integer, use <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mi">1</span>
@@ -224,10 +261,10 @@ docstring).</p></li>
 <div class="section" id="tuple">
 <span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p><strong><a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular, things
-like <code class="docutils literal notranslate"><span class="pre">idx[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">len(idx)</span></code> will not work if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>. If you
-need to access the specific term in a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, use <code class="docutils literal notranslate"><span class="pre">Tuple.args</span></code> if you want
-the ndindex type, or <code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code> if you want the raw type.</p>
+<li><p><strong><a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular,
+things like <code class="docutils literal notranslate"><span class="pre">idx[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">len(idx)</span></code> will not work if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>. If
+you need to access the specific term in a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, use <code class="docutils literal notranslate"><span class="pre">Tuple.args</span></code> if you
+want the ndindex type, or <code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code> if you want the raw type.</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Gives int(0)</span>
@@ -259,7 +296,7 @@ the ndindex type, or <code class="docutils literal notranslate"><span class="pre
 <div class="section" id="ellipsis">
 <span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
+<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
 Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex(...)</span></code></strong>. As noted above, all ndindex
 methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will automatically convert <code class="docutils literal notranslate"><span class="pre">...</span></code> into the ndindex type.</p>
 <p><strong>Right:</strong></p>
@@ -334,7 +371,7 @@ allow <code class="docutils literal notranslate"><span class="pre">==</span></co
 <a class="reference internal" href="#type-confusion-ellipsis"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></span></a>. Note that <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> is just an alias
 for <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <ul>
-<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> class directly.
+<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> class directly.
 Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">ndindex(np.newaxis)</span></code>, or
 <code class="docutils literal notranslate"><span class="pre">ndindex(None)</span></code></strong>. As noted above, all ndindex methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will
 automatically convert <code class="docutils literal notranslate"><span class="pre">None</span></code> into the ndindex type.</p>
@@ -401,11 +438,11 @@ NumPy arrays).</p>
 <div class="section" id="integerarray-and-booleanarray">
 <h2>IntegerArray and BooleanArray<a class="headerlink" href="#integerarray-and-booleanarray" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p><strong><a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought of as
-arrays.</strong> They do not have the methods that <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> would have. They
-also have fixed dtypes (<code class="docutils literal notranslate"><span class="pre">intp</span></code> and <code class="docutils literal notranslate"><span class="pre">bool_</span></code>) and are restricted by what is
-allowed as indices by NumPy. To access the array they represent, use
-<code class="docutils literal notranslate"><span class="pre">idx.array</span></code> or <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
+<li><p><strong><a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought
+of as arrays.</strong> They do not have the methods that <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> would
+have. They also have fixed dtypes (<code class="docutils literal notranslate"><span class="pre">intp</span></code> and <code class="docutils literal notranslate"><span class="pre">bool_</span></code>) and are restricted by
+what is allowed as indices by NumPy. To access the arrays they represent,
+use <code class="docutils literal notranslate"><span class="pre">idx.array</span></code> or <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -461,274 +498,14 @@ array do not affect the ndindex objects.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-
-<p class="logo">
-  <a href="index.html">
-    <img class="logo" src="_static/ndindex_logo_white_bg.svg" alt="Logo"/>
-    
-  </a>
-</p>
-
-
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">ndindex</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html#motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#testing-and-correctness">Testing and correctness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#benchmarks">Benchmarks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#license">License</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#acknowledgments">Acknowledgments</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#default">default</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#asshape">asshape</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Type Confusion</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#integer">Integer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#tuple">Tuple</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#newaxis">Newaxis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#rules">Rules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#based">0-based</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#steps">Steps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Confusion</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#integer">Integer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tuple">Tuple</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#newaxis">Newaxis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
-</ul>
-</li>
-</ul>
-
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     
     <div class="footer">
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

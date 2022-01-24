@@ -6,9 +6,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ndindex &#8212; ndindex  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -26,9 +26,39 @@
     <script type="text/javascript" src="_static/copybutton.js"></script>
  
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
 
-    <div class="document">
+<p class="logo">
+  <a href="#">
+    <img class="logo" src="_static/ndindex_logo_white_bg.svg" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="type-confusion.html">Type Confusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
               <div class="related top">
@@ -111,14 +141,36 @@ extensive testing (see below), you can be assured that ndindex is correct.</p>
 </li>
 </ul>
 </div>
+<div class="section" id="installation">
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>ndindex can be installed using pip (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ndindex</span></code>) or conda (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-f</span> <span class="pre">conda-forge</span> <span class="pre">ndindex</span></code>).</p>
+<div class="section" id="experimental-cythonization">
+<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Permalink to this headline">¶</a></h3>
+<p>When installing ndindex from source (using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>) all
+Python modules (except tests) will be Cythonized when Cython and a working
+compiler are installed. This can improve the general performance of ndindex.
+The environment variable <code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX</span></code> is used to explicitly control
+this default behavior:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX=0</span></code>: disables Cythonization (even if a
+working Cython environment is available)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX=1</span></code>: force Cythonization (will fail when Cython or a
+compiler isn’t present)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX</span></code> not set: the default behavior</p></li>
+</ul>
+<p>Cythonization is still experimental, and is only enabled for direct source
+installations. The pip and conda packages are not Cythonized. Future versions
+of ndindex may enable Cythonization for all installs.</p>
+</div>
+</div>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p>ndindex is still a work in progress. The following things are currently
 implemented:</p>
 <ul>
-<li><p><a class="reference internal" href="api.html#ndindex.Slice" title="ndindex.Slice"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Slice</span></code></a>, <a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a>, <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a>, <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a>, <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref any py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a>,
-<a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a>, and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref any py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> classes to represent any valid
-index to a NumPy array.</p></li>
+<li><p><a class="reference internal" href="api.html#ndindex.Slice" title="ndindex.Slice"><code class="xref py py-class docutils literal notranslate"><span class="pre">Slice</span></code></a>, <a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a>, <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a>, <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a>,
+<a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a>, <a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a>, and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a>
+classes to represent any valid index to a NumPy array.</p></li>
 <li><p>Classes do not canonicalize by default (the constructor only does basic type
 checking). Objects can be put into canonical form by calling
 <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></span></a>.</p>
@@ -189,7 +241,7 @@ True
 </pre></div>
 </div>
 </li>
-<li><p>A real index object can be accessed with <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.raw" title="ndindex.ndindex.NDIndex.raw"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">idx.raw</span></code></span></a>. Use this
+<li><p>A real index object can be accessed with <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.raw" title="ndindex.ndindex.NDIndex.raw"><span class="xref myst py py-attr"><code class="docutils literal notranslate"><span class="pre">idx.raw</span></code></span></a>. Use this
 to use an ndindex index to index an array.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; s = Slice(0, 2)
 &gt;&gt;&gt; arange(4)[s.raw]
@@ -327,7 +379,7 @@ hypothesis test.</p>
 <p><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE">MIT License</a></p>
 </div>
 <div class="section" id="acknowledgments">
-<span id="id1"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this headline">¶</a></h2>
 <p>ndindex development is supported by <a class="reference external" href="https://labs.quansight.org/">Quansight
 Labs</a> and is sponsored in part by <a class="reference external" href="https://www.deshaw.com/">the D. E.
 Shaw group</a>. The D. E. Shaw group collaborates with
@@ -343,130 +395,7 @@ width="200"></a>
 <div class="section" id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#benchmarks">Benchmarks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#default">default</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#asshape">asshape</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="type-confusion.html">Type Confusion</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integer">Integer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#tuple">Tuple</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#newaxis">Newaxis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
@@ -482,6 +411,12 @@ width="200"></a>
 <li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#index-helpers">Index Helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#iter-indices">iter_indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#broadcasterror">BroadcastError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#axiserror">AxisError</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
 </ul>
@@ -493,6 +428,8 @@ width="200"></a>
 <li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ncycles">ncycles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#broadcast-shapes">broadcast_shapes</a></li>
 </ul>
 </li>
 </ul>
@@ -528,47 +465,52 @@ width="200"></a>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-6-2022-01-24">Version 1.6 (2022-01-24)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Major Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id15">Minor Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id16">Major Changes</a></li>
 </ul>
 </li>
 </ul>
@@ -599,274 +541,14 @@ width="200"></a>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-
-<p class="logo">
-  <a href="#">
-    <img class="logo" src="_static/ndindex_logo_white_bg.svg" alt="Logo"/>
-    
-  </a>
-</p>
-
-
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ndindex</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#benchmarks">Benchmarks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#id1">ndindex</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#integer">Integer</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#slice">Slice</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#default">default</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#asshape">asshape</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html">Slices</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#rules">Rules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#based">0-based</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#steps">Steps</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
-<li class="toctree-l5"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="type-confusion.html">Type Confusion</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integer">Integer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#tuple">Tuple</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#newaxis">Newaxis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="type-confusion.html#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#what-is-a-slice">What is a slice?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#rules">Rules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#integer-indices">Integer indices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#points-of-confusion">Points of Confusion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#subarray">Subarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#based">0-based</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#half-open">Half-open</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="slices.html#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-indices">Negative Indices</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#clipping">Clipping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#steps">Steps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#negative-steps">Negative Steps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="slices.html#omitted-entries">Omitted Entries</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#soapbox">Soapbox</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slices.html#footnotes">Footnotes</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="type-confusion.html">Type Confusion</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#integer">Integer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#tuple">Tuple</a></li>
-<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#newaxis">Newaxis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="type-confusion.html#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#major-changes">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#minor-changes">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Major Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id8">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id9">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id11">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id12">Major Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id13">Minor Changes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id14">Major Changes</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="style-guide.html#english-conventions">English Conventions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="style-guide.html#markup-conventions">Markup Conventions</a></li>
-</ul>
-</li>
-</ul>
-
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     
     <div class="footer">
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
