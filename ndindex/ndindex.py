@@ -136,12 +136,12 @@ class ImmutableObject:
 
            type(idx)(*idx.args) == idx
 
-        For :any:`Tuple` indices, the elements
-        of `.args` are themselves ndindex types. For other types, `.args`
-        contains raw Python types. Note that `.args` contains NumPy arrays for
-        :any:`IntegerArray` and :any:`BooleanArray` types, so one should
-        always do equality testing or hashing on the ndindex type itself, not
-        its `.args`.
+        For :class:`Tuple` indices, the elements of `.args` are themselves
+        ndindex types. For other types, `.args` contains raw Python types.
+        Note that `.args` contains NumPy arrays for :class:`~.IntegerArray`
+        and :class:`~.BooleanArray` types, so one should always do equality
+        testing or hashing on the ndindex type itself, not its `.args`.
+
         """
     @classproperty
     def __signature__(self):
@@ -301,40 +301,41 @@ class NDIndex(ImmutableObject):
         r"""
         Expand a Tuple index on an array of shape `shape`
 
-        An expanded index is as explicit as possible. Unlike :any:`reduce
-        <NDIndex.reduce>`, which tries to simplify an index and remove
-        redundancies, `expand()` typically makes an index larger.
+        An expanded index is as explicit as possible. Unlike :meth:`reduce
+        <ndindex.ndindex.NDIndex.reduce>`, which tries to simplify an index
+        and remove redundancies, `expand()` typically makes an index larger.
 
         If `self` is invalid for the given shape, an `IndexError` is raised.
         Otherwise, the returned index satisfies the following:
 
-        - It is always a :any:`Tuple`.
+        - It is always a :class:`Tuple`.
 
-        - All the elements of the :any:`Tuple` are recursively :any:`reduced
-          <NDIndex.reduce>`.
+        - All the elements of the :class:`Tuple` are recursively :any:`reduced
+          <ndindex.ndindex.NDIndex.reduce>`.
 
         - The length of the `.args` is equal to the length of the shape plus
-          the number of :any:`Newaxis` indices in `self` plus 1 if there is a
-          scalar :any:`BooleanArray` (`True` or `False`).
+          the number of :class:`~.Newaxis` indices in `self` plus 1 if there
+          is a scalar :class:`~.BooleanArray` (`True` or `False`).
 
-        - The resulting :any:`Tuple` has no :any:`ellipses <ellipsis>`. If
-          there are axes that would be matched by an ellipsis or an implicit
-          ellipsis at the end of the tuple, `Slice(0, n, 1)` indices are
-          inserted, where `n` is the corresponding axis of the `shape`.
+        - The resulting :class:`Tuple` has no :class:`ellipses
+          <ndindex.ellipsis>`. If there are axes that would be matched by an
+          ellipsis or an implicit ellipsis at the end of the tuple, `Slice(0,
+          n, 1)` indices are inserted, where `n` is the corresponding axis of
+          the `shape`.
 
         - Any array indices in `self` are broadcast together. If `self`
-          contains array indices (:any:`IntegerArray` or :any:`BooleanArray`),
-          then any :any:`Integer` indices are converted into
-          :any:`IntegerArray` indices of shape `()` and broadcast. Note that
-          broadcasting is done in a memory efficient way so that even if the
-          broadcasted shape is large it will not take up more memory than the
-          original.
+          contains array indices (:class:`~.IntegerArray` or
+          :class:`~.BooleanArray`), then any :class:`~.Integer` indices are
+          converted into :class:`~.IntegerArray` indices of shape `()` and
+          broadcast. Note that broadcasting is done in a memory efficient way
+          so that even if the broadcasted shape is large it will not take up
+          more memory than the original.
 
-        - Scalar :any:`BooleanArray` arguments (`True` or `False`) are
-          combined into a single term (the same as with :any:`Tuple.reduce`).
+        - Scalar :class:`~.BooleanArray` arguments (`True` or `False`) are
+          combined into a single term (the same as with :meth:`.Tuple.reduce`).
 
-        - Non-scalar :any:`BooleanArray`\ s are all converted into equivalent
-          :any:`IntegerArray`\ s via `nonzero()` and broadcast.
+        - Non-scalar :class:`~.BooleanArray`\ s are all converted into
+          equivalent :class:`~.IntegerArray`\ s via `nonzero()` and broadcast.
 
         >>> from ndindex import Tuple, Slice
         >>> Slice(None).expand((2, 3))
@@ -525,14 +526,15 @@ class NDIndex(ImmutableObject):
         (:any:`isempty` is True) where bounds would be checked before
         broadcasting but not after.
 
-        Any :any:`BooleanArray` indices are converted to :any:`IntegerArray`
-        indices. Furthermore, if there are :any:`BooleanArray` or
-        :any:`IntegerArray` indices, then any :any:`Integer` indices are also
-        converted into scalar :any:`IntegerArray` indices and broadcast.
-        Furthermore, if there are multiple boolean scalar indices (`True` or
-        `False`), they are combined into a single one.
+        Any :class:`~.BooleanArray` indices are converted to
+        :class:`~.IntegerArray` indices. Furthermore, if there are
+        :class:`~.BooleanArray` or :class:`~.IntegerArray` indices, then any
+        :class:`~.Integer` indices are also converted into scalar
+        :class:`~.IntegerArray` indices and broadcast. Furthermore, if there are
+        multiple boolean scalar indices (`True` or `False`), they are combined
+        into a single one.
 
-        Note that array broadcastability is checked in the :any:`Tuple`
+        Note that array broadcastability is checked in the :class:`Tuple`
         constructor, so this method will not raise any exceptions.
 
         This is part of what is performed by :any:`expand`, but unlike

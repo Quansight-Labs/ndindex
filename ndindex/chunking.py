@@ -334,7 +334,8 @@ class ChunkSize(ImmutableObject, Sequence):
 
     def containing_block(self, idx, shape):
         """
-        Compute the index for the smallest block that contains `idx` on an array of shape `shape`.
+        Compute the index for the smallest contiguous block of chunks that
+        contains `idx` on an array of shape `shape`.
 
         A block is a subset of an array that is contiguous in all dimensions
         and is aligned along the chunk size. A block index is always of the

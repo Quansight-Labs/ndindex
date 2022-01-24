@@ -19,9 +19,17 @@ nav#rellinks li+li:before {
     content: "";
 }
 
+div.sphinxsidebar {
+    max-height: 95%;
+    overflow-y: auto;
+}
+
 div.sphinxsidebar p.logo {
     display: inline;
+}
 
+div.sphinxsidebar hr {
+    width: 100%;
 }
 
 /* Disable white background on some links, since our background is not white. */

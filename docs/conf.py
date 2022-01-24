@@ -52,9 +52,6 @@ intersphinx_mapping = {
 # def setup(app):
 #     app.connect('autodoc-process-docstring', docstring)
 
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
-
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
@@ -75,10 +72,16 @@ suppress_warnings = ['toc.circular']
 #
 html_theme = 'alabaster'
 
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
+
+# Add any paths that contain custom static files (such as style sheets) here,
+# relative to this directory. They are copied after the builtin static files,
+# so a file named "default.css" will overwrite the builtin "default.css".
+html_static_path = ['_static']
 
 html_theme_options = {
+    'fixed_sidebar': True,
     'github_user': 'Quansight-Labs',
     'github_repo': 'ndindex',
     'github_banner': False,
@@ -115,9 +118,10 @@ html_sidebars = {
     '**': ['globaltocindex.html', 'searchbox.html'],
 }
 
+
 html_favicon = "logo/favicon.ico"
 
-mathjax_config = {
+mathjax3_config = {
   'TeX': {
       'equationNumbers': {
           'autoNumber': "AMS",
@@ -126,11 +130,6 @@ mathjax_config = {
 }
 
 myst_update_mathjax=False
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
 
 # Lets us use single backticks for code
 default_role = 'code'
