@@ -638,9 +638,9 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     Iterate indices for every element of an arrays of shape `shapes`.
 
     Each shape in `shapes` should be a shape tuple, which are broadcast
-    compatible. Each iteration step will produce a tuple of indices, one for
-    each shape, which would correspond to the same elements if the arrays of
-    the given shapes were first broadcast together.
+    compatible along the non-skipped axes. Each iteration step will produce a
+    tuple of indices, one for each shape, which would correspond to the same
+    elements if the arrays of the given shapes were first broadcast together.
 
     This is a generalization of the NumPy :py:class:`np.ndindex()
     <numpy.ndindex>` function (which otherwise has no relation).
@@ -661,7 +661,8 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     shape of `shapes`. For example, `iter_indices((3,), (1, 2, 3),
     skip_axes=(0,))` will skip the first axis, and only applies to the second
     shape, since the first shape corresponds to axis `2` of the final
-    broadcasted shape `(1, 2, 3)`
+    broadcasted shape `(1, 2, 3)`. Note that the skipped axes do not
+    themselves need to be broadcast compatible.
 
     For example, suppose `a` is an array with shape `(3, 2, 4, 4)`, which we
     wish to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
@@ -744,8 +745,10 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
         _skip_axes.append(a)
 
     _shapes = [(1,)*(ndim - len(shape)) + shape for shape in shapes]
+    _shapes = [tuple(1 if i in _skip_axes else shape[i] for i in range(ndim))
+               for shape in _shapes]
     iters = [[] for i in range(len(shapes))]
-    broadcasted_shape = broadcast_shapes(*shapes)
+    broadcasted_shape = broadcast_shapes(*_shapes)
 
     for i in range(-1, -ndim-1, -1):
         for it, shape, _shape in zip(iters, shapes, _shapes):
