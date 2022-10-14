@@ -114,7 +114,7 @@ def _mutually_broadcastable_shapes(draw):
 mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
 @composite
-def skip_axes(draw):
+def _skip_axes(draw):
     shapes, result_shape = draw(mutually_broadcastable_shapes)
     n = len(result_shape)
     axes = draw(one_of(none(),
@@ -125,6 +125,40 @@ def skip_axes(draw):
         if len(axes) == 1 and draw(booleans()): # pragma: no cover
             return axes[0]
     return axes
+
+skip_axes = shared(_skip_axes())
+
+@composite
+def mutually_broadcastable_shapes_with_skipped_axes(draw):
+    """
+    mutually_broadcastable_shapes except skip_axes() axes might not be
+    broadcastable
+
+    The result_shape will be None in the position of skip_axes.
+    """
+    skip_axes_ = draw(skip_axes)
+    shapes, result_shape = draw(mutually_broadcastable_shapes)
+    if skip_axes_ is None:
+        return shapes, result_shape
+    if isinstance(skip_axes_, int):
+        skip_axes_ = (skip_axes_,)
+
+    _shapes = []
+    for shape in shapes:
+        _shape = list(shape)
+        for i in skip_axes_:
+            if draw(booleans()):
+                _shape[i] = draw(integers(0))
+
+        _shapes.append(tuple(_shape))
+
+    _result_shape = list(result_shape)
+    for i in skip_axes_:
+        _result_shape[i] = None
+    _result_shape = tuple(_result_shape)
+
+    return BroadcastableShapes(_shapes, _result_shape)
+
 
 # We need to make sure shapes for boolean arrays are generated in a way that
 # makes them related to the test array shape. Otherwise, it will be very
