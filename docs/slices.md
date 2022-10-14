@@ -231,7 +231,7 @@ IndexError: list index out of range
 Now let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
 would necessitate several "if" conditions. The [NumPy
-docs](https://numpy.org/doc/stable/reference/arrays.indexing.html) on slices
+docs](https://numpy.org/doc/stable/user/basics.indexing.html#slicing-and-striding) on slices
 say
 
 (numpy-definition)=
