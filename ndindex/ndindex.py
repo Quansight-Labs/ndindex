@@ -297,6 +297,27 @@ class NDIndex(ImmutableObject):
         # XXX: Should the default be raise NotImplementedError or return self?
         raise NotImplementedError
 
+    def isvalid(self, shape):
+        """
+        Check whether a given index is valid on an array of a given shape.
+
+        Returns True if an array of shape `shape` can be indexed by `self` and
+        False if it would raise `IndexError`.
+
+        >>> from ndindex import ndindex
+        >>> ndindex(3).isvalid((4,))
+        True
+        >>> ndindex(3).isvalid((2,))
+        False
+
+        """
+        # TODO: More direct, efficient implementation
+        try:
+            self.reduce(shape)
+            return True
+        except IndexError:
+            return False
+
     def expand(self, shape):
         r"""
         Expand a Tuple index on an array of shape `shape`
