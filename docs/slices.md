@@ -286,7 +286,7 @@ One consequence of this is that, unlike integer indices, **slices will never
 raise `IndexError`, even if the slice is empty**. Therefore you cannot rely on
 runtime errors to alert you to coding mistakes relating to slice bounds that
 are too large. A slice cannot be "out of bounds." See the section on
-[clipping](#clipping) below.
+[clipping](clipping) below.
 
 (0-based)=
 ### 0-based
