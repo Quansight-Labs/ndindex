@@ -53,6 +53,11 @@ def pytest_configure(config):
 
         hypothesis.settings.load_profile("ndindex-hypothesis-overridden")
 
+    if config.args not in [[], ['ndindex'], ['ndindex/']]:
+        cov = config.pluginmanager.get_plugin('_cov')
+        cov.options.no_cov = True
+        if cov.cov_controller:
+            cov.cov_controller.pause()
 
 settings.register_profile('ndindex_hypothesis_profile', deadline=800)
 settings.load_profile('ndindex_hypothesis_profile')
