@@ -17,6 +17,7 @@ from ..tuple import Tuple
 from .helpers import (ndindices, check_same, assert_equal, prod,
                       mutually_broadcastable_shapes, skip_axes)
 
+@example([1, 2])
 @given(ndindices)
 def test_eq(idx):
     index = ndindex(idx)
