@@ -214,3 +214,14 @@ myst_update_mathjax=False
 
 # Lets us use single backticks for code
 default_role = 'code'
+
+# Add a header for PR preview builds. See the Circle CI configuration.
+if os.environ.get("CIRCLECI") == "true":
+    PR_NUMBER = os.environ.get('CIRCLE_PR_NUMBER')
+    SHA1 = os.environ.get('CIRCLE_SHA1')
+    html_theme_options['announcement'] = f"""This is a preview build from
+ndindex pull request <a href="https://github.com/Quansight-Labs/ndindex/pull/{PR_NUMBER}">
+#{PR_NUMBER}</a>. It was built against <a
+href="https://github.com/Quansight-Labs/ndindex/pull/{PR_NUMBER}/commits/{SHA1}">{SHA1[:7]}</a>.
+If you aren't looking for a PR preview, go to <a
+href="https://quansight-labs.github.io/ndindex//">the main ndindex documentation</a>. """
