@@ -202,6 +202,8 @@ pygments_dark_style = 'styles.NativeHighContrastStyle'
 html_logo = '_static/ndindex_logo_white_bg.svg'
 html_favicon = "logo/favicon.ico"
 
+myst_enable_extensions = ["dollarmath"]
+
 mathjax3_config = {
   'TeX': {
       'equationNumbers': {
