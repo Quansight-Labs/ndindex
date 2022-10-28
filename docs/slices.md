@@ -135,14 +135,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}3{\phantom{,}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}3{\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -170,14 +170,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{-7\phantom{,}}
-    & \color{red}{-6\phantom{,}}
-    & \color{red}{-5\phantom{,}}
-    & \color{red}{-4\phantom{,}}
-    & \color{blue}{-3\phantom{,}}
-    & \color{red}{-2\phantom{,}}
-    & \color{red}{-1\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{-7\phantom{,}}
+    & \color{#EE0000}{-6\phantom{,}}
+    & \color{#EE0000}{-5\phantom{,}}
+    & \color{#EE0000}{-4\phantom{,}}
+    & \color{#5E5EFF}{-3\phantom{,}}
+    & \color{#EE0000}{-2\phantom{,}}
+    & \color{#EE0000}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -304,14 +304,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -346,14 +346,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{blue}{\enclose{circle}{4}}
-    & \color{red}{\enclose{circle}{5}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
+    & \color{#EE0000}{\enclose{circle}{5}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -450,20 +450,20 @@ $[3, 5)$ but in reverse order.
 <!-- TODO: improve this -->
 <div style="text-align:center;" >
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-<div style="font-size: 16pt;color:red;">(WRONG)</div>
+<div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
-\color{red}{\text{WRONG}}&
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
+\color{#EE0000}{\text{WRONG}}&
     &
     &
     & [\phantom{3,}
@@ -500,14 +500,14 @@ $$
 \begin{aligned}
 \begin{array}{r r r r r r r r}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{\textsf{'},}}
-    & \color{red}{1\phantom{\textsf{'},}}
-    & \color{red}{2\phantom{\textsf{'},}}
-    & \color{red}{\enclose{circle}{3}\phantom{,}}
-    & \leftarrow\color{blue}{\enclose{circle}{4}\phantom{,}}
-    & \leftarrow\color{blue}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{\textsf{'},}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{\textsf{'},}}
+    & \color{#EE0000}{1\phantom{\textsf{'},}}
+    & \color{#EE0000}{2\phantom{\textsf{'},}}
+    & \color{#EE0000}{\enclose{circle}{3}\phantom{,}}
+    & \leftarrow\color{#5E5EFF}{\enclose{circle}{4}\phantom{,}}
+    & \leftarrow\color{#5E5EFF}{\enclose{circle}{5}\phantom{,}}
+    & \color{#EE0000}{6\phantom{\textsf{'},}}\\
 \end{array}
 \end{aligned}
 $$
@@ -559,38 +559,38 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
 a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{0}
+    & \color{#EE0000}{0}
     &
-    & \color{red}{1}
+    & \color{#EE0000}{1}
     &
-    & \color{red}{2}
+    & \color{#EE0000}{2}
     &
-    & \color{blue}{3}
+    & \color{#5E5EFF}{3}
     &
-    & \color{blue}{4}
+    & \color{#5E5EFF}{4}
     &
-    & \color{blue}{5}
+    & \color{#5E5EFF}{5}
     &
-    & \color{red}{6}
+    & \color{#EE0000}{6}
     &
-    & \color{red}{7}\\
+    & \color{#EE0000}{7}\\
 \end{array}\\
 \end{aligned}
 $$
@@ -615,7 +615,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:red;">(WRONG)</div>
+  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -623,40 +623,40 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{0}
+      & \color{#EE0000}{0}
       &
-      & \color{red}{1}
+      & \color{#EE0000}{1}
       &
-      & \color{red}{2}
+      & \color{#EE0000}{2}
       &
-      & \color{blue}{3}
+      & \color{#5E5EFF}{3}
       &
-      & \color{blue}{4}
+      & \color{#5E5EFF}{4}
       &
-      & \color{blue}{5}
+      & \color{#5E5EFF}{5}
       &
-      & \color{red}{6}
+      & \color{#EE0000}{6}
       &
-      & \color{red}{7}\\
+      & \color{#EE0000}{7}\\
   \end{array}\\
-  \small{\color{red}{\textbf{THIS IS WRONG!}}}
+  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -690,31 +690,31 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{r r c c c c c c c c c c c c l}
   a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-  \color{red}{\text{index}}
-      & \color{red}{0\phantom{,}}
+  \color{#EE0000}{\text{index}}
+      & \color{#EE0000}{0\phantom{,}}
       &
-      & \color{red}{1\phantom{,}}
+      & \color{#EE0000}{1\phantom{,}}
       &
-      & \color{red}{2\phantom{,}}
+      & \color{#EE0000}{2\phantom{,}}
       &
-      & \color{red}{\enclose{circle}{3}}
+      & \color{#EE0000}{\enclose{circle}{3}}
       &
-      & \color{blue}{\enclose{circle}{4}}
+      & \color{#5E5EFF}{\enclose{circle}{4}}
       &
-      & \color{blue}{\enclose{circle}{5}}
+      & \color{#5E5EFF}{\enclose{circle}{5}}
       &
-      & \color{red}{6\phantom{,}}\\
-      &
-      & \phantom{\leftarrow}
+      & \color{#EE0000}{6\phantom{,}}\\
       &
       & \phantom{\leftarrow}
       &
       & \phantom{\leftarrow}
-      & \color{red}{-1}
+      &
+      & \phantom{\leftarrow}
+      & \color{#EE0000}{-1}
       & \leftarrow
-      & \color{blue}{-1}
+      & \color{#5E5EFF}{-1}
       & \leftarrow
-      & \color{blue}{\text{start}}
+      & \color{#5E5EFF}{\text{start}}
   \end{array}
   \end{aligned}
   $$
@@ -733,38 +733,38 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}
+      & \color{#EE0000}{-1}
       &
-      & \color{red}{0}\\
+      & \color{#EE0000}{0}\\
   \end{array}\\
   \small{\text{(not a great way of thinking about negative indices)}}
   \end{array}
@@ -785,7 +785,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
-  <div style="font-size: 16pt;color:red;">(WRONG)</div>
+  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -793,40 +793,40 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-8}
+      & \color{#EE0000}{-8}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}\\
+      & \color{#EE0000}{-1}\\
   \end{array}\\
-  \small{\color{red}{\textbf{THIS IS WRONG!}}}
+  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -847,7 +847,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
-  <div style="font-size: 16pt;color:blue;">NOW RIGHT!</div>
+  <div style="font-size: 16pt;color:#5E5EFF;">NOW RIGHT!</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -855,38 +855,38 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-8}
+      & \color{#EE0000}{-8}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}\\
+      & \color{#EE0000}{-1}\\
   \end{array}\\
   \small{\text{(not a great way of thinking about negative indices)}}
   \end{array}
@@ -896,7 +896,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:red;">(WRONG)</div>
+  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -904,40 +904,40 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}
+      & \color{#EE0000}{-1}
       &
-      & \color{red}{0}\\
+      & \color{#EE0000}{0}\\
   \end{array}\\
-  \small{\color{red}{\textbf{THIS IS WRONG!}}}
+  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -1023,22 +1023,22 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{nonnegative index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{\enclose{circle}{2}\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
-\color{red}{\text{negative index}}
-    & \color{red}{-7\phantom{,}}
-    & \color{red}{-6\phantom{,}}
-    & \color{red}{\enclose{circle}{-5}\phantom{,}}
-    & \color{blue}{-4\phantom{,}}
-    & \color{blue}{-3\phantom{,}}
-    & \color{red}{\enclose{circle}{-2}\phantom{,}}
-    & \color{red}{-1\phantom{,}}\\
+\color{#EE0000}{\text{nonnegative index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{2}\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{5}\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
+\color{#EE0000}{\text{negative index}}
+    & \color{#EE0000}{-7\phantom{,}}
+    & \color{#EE0000}{-6\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{-5}\phantom{,}}
+    & \color{#5E5EFF}{-4\phantom{,}}
+    & \color{#5E5EFF}{-3\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{-2}\phantom{,}}
+    & \color{#EE0000}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -1218,21 +1218,21 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{\enclose{circle}{6}}\\
-    & \color{blue}{\text{start}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{6}}\\
+    & \color{#5E5EFF}{\text{start}}
     &
     & \rightarrow
-    & \color{blue}{+3}
+    & \color{#5E5EFF}{+3}
     &
     & \rightarrow
-    & \color{red}{+3\ (\geq \text{stop})}
+    & \color{#EE0000}{+3\ (\geq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1265,23 +1265,23 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{blue}{\enclose{circle}{1}}
-    & \color{red}{2\phantom{,}}
-    & \color{red}{3\phantom{,}}
-    & \color{blue}{\enclose{circle}{4}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{\underline{6}\phantom{,}}
-    & \color{red}{\enclose{circle}{\phantom{7}}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#EE0000}{3\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{\underline{6}\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{\phantom{7}}}\\
     &
-    & \color{blue}{\text{start}}
-    &
-    & \rightarrow
-    & \color{blue}{+3}
+    & \color{#5E5EFF}{\text{start}}
     &
     & \rightarrow
-    & \color{red}{+3\ (\geq \text{stop})}
+    & \color{#5E5EFF}{+3}
+    &
+    & \rightarrow
+    & \color{#EE0000}{+3\ (\geq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1415,22 +1415,22 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{\enclose{circle}{0}\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{blue}{\enclose{circle}{6}}\\
-    & \color{red}{-3}\phantom{\mathtt{\textsf{'},}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{\enclose{circle}{0}\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{6}}\\
+    & \color{#EE0000}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{-3}\phantom{\mathtt{\textsf{'},}}
+    & \color{#5E5EFF}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{\text{start}}\\
-    &  \color{red}{(\leq \text{stop})}
+    & \color{#5E5EFF}{\text{start}}\\
+    &  \color{#EE0000}{(\leq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1493,28 +1493,28 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
     &
-    & \color{blue}{\enclose{circle}{1}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
     &
-    & \color{blue}{\enclose{circle}{2}}
+    & \color{#5E5EFF}{\enclose{circle}{2}}
     &
-    & \color{red}{\enclose{circle}{3}}
+    & \color{#EE0000}{\enclose{circle}{3}}
     &
-    & \color{red}{4\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
     &
-    & \color{red}{5\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
     &
-    & \color{red}{6\phantom{,}}\\
-    \color{blue}{\text{start}}
-    & \color{blue}{\text{(beginning)}}
+    & \color{#EE0000}{6\phantom{,}}\\
+    \color{#5E5EFF}{\text{start}}
+    & \color{#5E5EFF}{\text{(beginning)}}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{red}{\text{stop}}
+    & \color{#EE0000}{\text{stop}}
     &
     & \phantom{\rightarrow}
     &
@@ -1533,34 +1533,34 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
     &
-    & \color{red}{1\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
     &
-    & \color{red}{2\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
     &
-    & \color{blue}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
     &
-    & \color{blue}{\enclose{circle}{4}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
     &
-    & \color{blue}{\enclose{circle}{5}}
+    & \color{#5E5EFF}{\enclose{circle}{5}}
     &
-    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\rightarrow}
+    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
     &
     & \phantom{\rightarrow}
     &
     & \phantom{\rightarrow}
-    & \color{blue}{\text{start}}
+    &
+    & \phantom{\rightarrow}
+    & \color{#5E5EFF}{\text{start}}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{\text{stop}}
-    & \color{blue}{\text{(end)}}
+    & \color{#5E5EFF}{\text{stop}}
+    & \color{#5E5EFF}{\text{(end)}}
 \end{array}
 \end{aligned}
 $$
@@ -1573,34 +1573,34 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
     &
-    & \color{red}{1\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
     &
-    & \color{red}{2\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
     &
-    & \color{red}{\enclose{circle}{3}}
+    & \color{#EE0000}{\enclose{circle}{3}}
     &
-    & \color{blue}{\enclose{circle}{4}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
     &
-    & \color{blue}{\enclose{circle}{5}}
+    & \color{#5E5EFF}{\enclose{circle}{5}}
     &
-    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\leftarrow}
+    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
     &
     & \phantom{\leftarrow}
     &
     & \phantom{\leftarrow}
-    & \color{red}{\text{stop}}
+    &
+    & \phantom{\leftarrow}
+    & \color{#EE0000}{\text{stop}}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{\text{start}}
-    & \color{blue}{\text{(end)}}
+    & \color{#5E5EFF}{\text{start}}
+    & \color{#5E5EFF}{\text{(end)}}
 \end{array}
 \end{aligned}
 $$
@@ -1613,28 +1613,28 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
     &
-    & \color{blue}{\enclose{circle}{1}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
     &
-    & \color{blue}{\enclose{circle}{2}}
+    & \color{#5E5EFF}{\enclose{circle}{2}}
     &
-    & \color{blue}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
     &
-    & \color{red}{4\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
     &
-    & \color{red}{5\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
     &
-    & \color{red}{6\phantom{,}}\\
-    \color{blue}{\text{stop}}
-    & \color{blue}{\text{(beginning)}}
+    & \color{#EE0000}{6\phantom{,}}\\
+    \color{#5E5EFF}{\text{stop}}
+    & \color{#5E5EFF}{\text{(beginning)}}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{\text{start}}
+    & \color{#5E5EFF}{\text{start}}
     &
     & \phantom{\leftarrow}
     &
