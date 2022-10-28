@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +11,9 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
@@ -55,7 +57,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -119,8 +121,16 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#ndindex.ndindex.ImmutableObject.args">args (ndindex.ndindex.ImmutableObject attribute)</a>
+      <li><a href="api.html#ndindex.BooleanArray.args">args (ndindex.BooleanArray attribute)</a>
+
+      <ul>
+        <li><a href="api.html#ndindex.ChunkSize.args">(ndindex.ChunkSize attribute)</a>
 </li>
+        <li><a href="api.html#ndindex.IntegerArray.args">(ndindex.IntegerArray attribute)</a>
+</li>
+        <li><a href="api.html#ndindex.ndindex.ImmutableObject.args">(ndindex.ndindex.ImmutableObject attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api.html#ndindex.array.ArrayIndex.array">array (ndindex.array.ArrayIndex property)</a>
 
       <ul>
@@ -133,6 +143,8 @@
 </li>
       <li><a href="api.html#ndindex.ChunkSize.as_subchunks">as_subchunks() (ndindex.ChunkSize method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#ndindex.BooleanArray.as_subindex">as_subindex() (ndindex.BooleanArray method)</a>
 
       <ul>
@@ -149,8 +161,6 @@
         <li><a href="api.html#ndindex.Tuple.as_subindex">(ndindex.Tuple method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#ndindex.ndindex.asshape">asshape() (in module ndindex.ndindex)</a>
 </li>
       <li><a href="api.html#ndindex.AxisError">AxisError</a>
@@ -436,7 +446,7 @@
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

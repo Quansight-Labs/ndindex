@@ -1,17 +1,20 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
     <title>ndindex &#8212; ndindex  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -56,7 +59,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -76,8 +79,8 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="ndindex">
-<h1>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this headline">¶</a></h1>
+  <section id="ndindex">
+<h1>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this heading">¶</a></h1>
 <p>A Python library for manipulating indices of ndarrays.</p>
 <p>ndindex is a library that allows representing and manipulating objects that
 can be valid indices to numpy arrays, i.e., slices, integers, ellipses,
@@ -100,8 +103,8 @@ method to reduce an index to a simpler index that is equivalent for the
 given shape.</p></li>
 <li><p>Enable useful transformation and manipulation functions on index objects.</p></li>
 </ul>
-<div class="section" id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">¶</a></h2>
 <p>If you’ve ever worked with Python’s <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects, you will quickly discover
 their limitations:</p>
 <ul>
@@ -140,12 +143,12 @@ don’t have to try to figure out all the different cases yourself. And due to
 extensive testing (see below), you can be assured that ndindex is correct.</p>
 </li>
 </ul>
-</div>
-<div class="section" id="installation">
-<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="installation">
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
 <p>ndindex can be installed using pip (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ndindex</span></code>) or conda (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-f</span> <span class="pre">conda-forge</span> <span class="pre">ndindex</span></code>).</p>
-<div class="section" id="experimental-cythonization">
-<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Permalink to this headline">¶</a></h3>
+<section id="experimental-cythonization">
+<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Permalink to this heading">¶</a></h3>
 <p>When installing ndindex from source (using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>) all
 Python modules (except tests) will be Cythonized when Cython and a working
 compiler are installed. This can improve the general performance of ndindex.
@@ -161,10 +164,10 @@ compiler isn’t present)</p></li>
 <p>Cythonization is still experimental, and is only enabled for direct source
 installations. The pip and conda packages are not Cythonized. Future versions
 of ndindex may enable Cythonization for all installs.</p>
-</div>
-</div>
-<div class="section" id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
 <p>ndindex is still a work in progress. The following things are currently
 implemented:</p>
 <ul>
@@ -318,9 +321,9 @@ indexing</a>.</p></li>
 <p>And more. If there is something you would like to see this library be able to
 do, please <a class="reference external" href="https://github.com/quansight-labs/ndindex/issues">open an issue</a>. Pull
 requests are welcome as well.</p>
-</div>
-<div class="section" id="testing-and-correctness">
-<span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="testing-and-correctness">
+<span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Permalink to this heading">¶</a></h2>
 <p>The most important priority for a library like this is correctness. Index
 manipulations, and especially slice manipulations, are complicated to code
 correctly, and the code for them typically involves dozens of different
@@ -368,18 +371,18 @@ tests only 1-dimensional shapes. This doesn’t affect things because hypotheses
 will always shrink large shapes to a 1-dimensional shape in the case of a
 failure. Consequently every exhaustive test will also have a corresponding
 hypothesis test.</p>
-</div>
-<div class="section" id="benchmarks">
-<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="benchmarks">
+<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this heading">¶</a></h2>
 <p>Benchmarks for ndindex are published
 <a class="reference external" href="https://quansight-labs.github.io/ndindex/benchmarks/">here</a>.</p>
-</div>
-<div class="section" id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE">MIT License</a></p>
-</div>
-<div class="section" id="acknowledgments">
-<span id="id2"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="acknowledgments">
+<span id="id2"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this heading">¶</a></h2>
 <p>ndindex development is supported by <a class="reference external" href="https://labs.quansight.org/">Quansight
 Labs</a> and is sponsored in part by <a class="reference external" href="https://www.deshaw.com/">the D. E.
 Shaw group</a>. The D. E. Shaw group collaborates with
@@ -391,45 +394,151 @@ width="200"></a>
 <a href="https://www.deshaw.com"><img src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" alt="https://www.deshaw.com"
 width="200"></a>
 </div>
-</div>
-<div class="section" id="table-of-contents">
-<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#ndindex">ndindex</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id1">ndindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ndindex"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#index-types">Index Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#integer">Integer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#slice">Slice</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#ellipsis">ellipsis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#newaxis">Newaxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tuple">Tuple</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#integerarray">IntegerArray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#booleanarray">BooleanArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.Integer"><code class="docutils literal notranslate"><span class="pre">Integer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.__eq__"><code class="docutils literal notranslate"><span class="pre">Integer.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.__hash__"><code class="docutils literal notranslate"><span class="pre">Integer.__hash__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.__len__"><code class="docutils literal notranslate"><span class="pre">Integer.__len__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.as_subindex"><code class="docutils literal notranslate"><span class="pre">Integer.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.isempty"><code class="docutils literal notranslate"><span class="pre">Integer.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.newshape"><code class="docutils literal notranslate"><span class="pre">Integer.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.raw"><code class="docutils literal notranslate"><span class="pre">Integer.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Integer.reduce"><code class="docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.Slice"><code class="docutils literal notranslate"><span class="pre">Slice</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.__eq__"><code class="docutils literal notranslate"><span class="pre">Slice.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.__hash__"><code class="docutils literal notranslate"><span class="pre">Slice.__hash__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.__len__"><code class="docutils literal notranslate"><span class="pre">Slice.__len__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.as_subindex"><code class="docutils literal notranslate"><span class="pre">Slice.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.isempty"><code class="docutils literal notranslate"><span class="pre">Slice.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.newshape"><code class="docutils literal notranslate"><span class="pre">Slice.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.raw"><code class="docutils literal notranslate"><span class="pre">Slice.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.reduce"><code class="docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.start"><code class="docutils literal notranslate"><span class="pre">Slice.start</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.step"><code class="docutils literal notranslate"><span class="pre">Slice.step</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Slice.stop"><code class="docutils literal notranslate"><span class="pre">Slice.stop</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ellipsis"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ellipsis.as_subindex"><code class="docutils literal notranslate"><span class="pre">ellipsis.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ellipsis.isempty"><code class="docutils literal notranslate"><span class="pre">ellipsis.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ellipsis.newshape"><code class="docutils literal notranslate"><span class="pre">ellipsis.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ellipsis.raw"><code class="docutils literal notranslate"><span class="pre">ellipsis.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ellipsis.reduce"><code class="docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.Newaxis"><code class="docutils literal notranslate"><span class="pre">Newaxis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Newaxis.isempty"><code class="docutils literal notranslate"><span class="pre">Newaxis.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Newaxis.newshape"><code class="docutils literal notranslate"><span class="pre">Newaxis.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Newaxis.raw"><code class="docutils literal notranslate"><span class="pre">Newaxis.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Newaxis.reduce"><code class="docutils literal notranslate"><span class="pre">Newaxis.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.Tuple"><code class="docutils literal notranslate"><span class="pre">Tuple</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.as_subindex"><code class="docutils literal notranslate"><span class="pre">Tuple.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">Tuple.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.ellipsis_index"><code class="docutils literal notranslate"><span class="pre">Tuple.ellipsis_index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.expand"><code class="docutils literal notranslate"><span class="pre">Tuple.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.has_ellipsis"><code class="docutils literal notranslate"><span class="pre">Tuple.has_ellipsis</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.isempty"><code class="docutils literal notranslate"><span class="pre">Tuple.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.newshape"><code class="docutils literal notranslate"><span class="pre">Tuple.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.raw"><code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.Tuple.reduce"><code class="docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.IntegerArray"><code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.dtype"><code class="docutils literal notranslate"><span class="pre">IntegerArray.dtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.args"><code class="docutils literal notranslate"><span class="pre">IntegerArray.args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.array"><code class="docutils literal notranslate"><span class="pre">IntegerArray.array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.as_subindex"><code class="docutils literal notranslate"><span class="pre">IntegerArray.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">IntegerArray.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.expand"><code class="docutils literal notranslate"><span class="pre">IntegerArray.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.isempty"><code class="docutils literal notranslate"><span class="pre">IntegerArray.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.ndim"><code class="docutils literal notranslate"><span class="pre">IntegerArray.ndim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.newshape"><code class="docutils literal notranslate"><span class="pre">IntegerArray.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.raw"><code class="docutils literal notranslate"><span class="pre">IntegerArray.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.reduce"><code class="docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.shape"><code class="docutils literal notranslate"><span class="pre">IntegerArray.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.IntegerArray.size"><code class="docutils literal notranslate"><span class="pre">IntegerArray.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.BooleanArray"><code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.dtype"><code class="docutils literal notranslate"><span class="pre">BooleanArray.dtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.args"><code class="docutils literal notranslate"><span class="pre">BooleanArray.args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.array"><code class="docutils literal notranslate"><span class="pre">BooleanArray.array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.as_subindex"><code class="docutils literal notranslate"><span class="pre">BooleanArray.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">BooleanArray.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.count_nonzero"><code class="docutils literal notranslate"><span class="pre">BooleanArray.count_nonzero</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.expand"><code class="docutils literal notranslate"><span class="pre">BooleanArray.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.isempty"><code class="docutils literal notranslate"><span class="pre">BooleanArray.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.ndim"><code class="docutils literal notranslate"><span class="pre">BooleanArray.ndim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.newshape"><code class="docutils literal notranslate"><span class="pre">BooleanArray.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.raw"><code class="docutils literal notranslate"><span class="pre">BooleanArray.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.reduce"><code class="docutils literal notranslate"><span class="pre">BooleanArray.reduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.shape"><code class="docutils literal notranslate"><span class="pre">BooleanArray.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.BooleanArray.size"><code class="docutils literal notranslate"><span class="pre">BooleanArray.size</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#index-helpers">Index Helpers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#iter-indices">iter_indices</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#broadcasterror">BroadcastError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#axiserror">AxisError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.iter_indices"><code class="docutils literal notranslate"><span class="pre">iter_indices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.BroadcastError"><code class="docutils literal notranslate"><span class="pre">BroadcastError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.AxisError"><code class="docutils literal notranslate"><span class="pre">AxisError</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#chunking">Chunking</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#chunksize">ChunkSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ChunkSize"><code class="docutils literal notranslate"><span class="pre">ChunkSize</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ChunkSize.args"><code class="docutils literal notranslate"><span class="pre">ChunkSize.args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ChunkSize.as_subchunks"><code class="docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ChunkSize.containing_block"><code class="docutils literal notranslate"><span class="pre">ChunkSize.containing_block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ChunkSize.indices"><code class="docutils literal notranslate"><span class="pre">ChunkSize.indices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ChunkSize.num_chunks"><code class="docutils literal notranslate"><span class="pre">ChunkSize.num_chunks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ChunkSize.num_subchunks"><code class="docutils literal notranslate"><span class="pre">ChunkSize.num_subchunks()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#internal-api">Internal API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#immutableobject">ImmutableObject</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id2">NDIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#arrayindex">ArrayIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#default">default</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#asshape">asshape</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#operator-index">operator_index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#ncycles">ncycles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#broadcast-shapes">broadcast_shapes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ndindex.ImmutableObject"><code class="docutils literal notranslate"><span class="pre">ImmutableObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.ImmutableObject.args"><code class="docutils literal notranslate"><span class="pre">ImmutableObject.args</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex"><code class="docutils literal notranslate"><span class="pre">NDIndex</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.as_subindex"><code class="docutils literal notranslate"><span class="pre">NDIndex.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">NDIndex.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.expand"><code class="docutils literal notranslate"><span class="pre">NDIndex.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.isempty"><code class="docutils literal notranslate"><span class="pre">NDIndex.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.newshape"><code class="docutils literal notranslate"><span class="pre">NDIndex.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.raw"><code class="docutils literal notranslate"><span class="pre">NDIndex.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.reduce"><code class="docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.array.ArrayIndex"><code class="docutils literal notranslate"><span class="pre">ArrayIndex</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.array.ArrayIndex.dtype"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.dtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.array.ArrayIndex.array"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.array.ArrayIndex.ndim"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.ndim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.array.ArrayIndex.raw"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.array.ArrayIndex.shape"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html#ndindex.array.ArrayIndex.size"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.slice.default"><code class="docutils literal notranslate"><span class="pre">default</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ndindex.asshape"><code class="docutils literal notranslate"><span class="pre">asshape()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ndindex.operator_index"><code class="docutils literal notranslate"><span class="pre">operator_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ndindex.ncycles"><code class="docutils literal notranslate"><span class="pre">ncycles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#ndindex.ndindex.broadcast_shapes"><code class="docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -522,8 +631,8 @@ width="200"></a>
 </li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -548,7 +657,7 @@ width="200"></a>
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

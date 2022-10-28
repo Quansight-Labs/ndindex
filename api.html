@@ -1,17 +1,20 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
     <title>API Reference &#8212; ndindex  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -43,38 +46,144 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ndindex">ndindex</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">ndindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ndindex"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#index-types">Index Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#integer">Integer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#slice">Slice</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ellipsis">ellipsis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#newaxis">Newaxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tuple">Tuple</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#integerarray">IntegerArray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#booleanarray">BooleanArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.Integer"><code class="docutils literal notranslate"><span class="pre">Integer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.__eq__"><code class="docutils literal notranslate"><span class="pre">Integer.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.__hash__"><code class="docutils literal notranslate"><span class="pre">Integer.__hash__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.__len__"><code class="docutils literal notranslate"><span class="pre">Integer.__len__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.as_subindex"><code class="docutils literal notranslate"><span class="pre">Integer.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.isempty"><code class="docutils literal notranslate"><span class="pre">Integer.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.newshape"><code class="docutils literal notranslate"><span class="pre">Integer.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.raw"><code class="docutils literal notranslate"><span class="pre">Integer.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Integer.reduce"><code class="docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.Slice"><code class="docutils literal notranslate"><span class="pre">Slice</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.__eq__"><code class="docutils literal notranslate"><span class="pre">Slice.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.__hash__"><code class="docutils literal notranslate"><span class="pre">Slice.__hash__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.__len__"><code class="docutils literal notranslate"><span class="pre">Slice.__len__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.as_subindex"><code class="docutils literal notranslate"><span class="pre">Slice.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.isempty"><code class="docutils literal notranslate"><span class="pre">Slice.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.newshape"><code class="docutils literal notranslate"><span class="pre">Slice.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.raw"><code class="docutils literal notranslate"><span class="pre">Slice.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.reduce"><code class="docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.start"><code class="docutils literal notranslate"><span class="pre">Slice.start</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.step"><code class="docutils literal notranslate"><span class="pre">Slice.step</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Slice.stop"><code class="docutils literal notranslate"><span class="pre">Slice.stop</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ellipsis"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ellipsis.as_subindex"><code class="docutils literal notranslate"><span class="pre">ellipsis.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ellipsis.isempty"><code class="docutils literal notranslate"><span class="pre">ellipsis.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ellipsis.newshape"><code class="docutils literal notranslate"><span class="pre">ellipsis.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ellipsis.raw"><code class="docutils literal notranslate"><span class="pre">ellipsis.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ellipsis.reduce"><code class="docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.Newaxis"><code class="docutils literal notranslate"><span class="pre">Newaxis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Newaxis.isempty"><code class="docutils literal notranslate"><span class="pre">Newaxis.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Newaxis.newshape"><code class="docutils literal notranslate"><span class="pre">Newaxis.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Newaxis.raw"><code class="docutils literal notranslate"><span class="pre">Newaxis.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Newaxis.reduce"><code class="docutils literal notranslate"><span class="pre">Newaxis.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.Tuple"><code class="docutils literal notranslate"><span class="pre">Tuple</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.as_subindex"><code class="docutils literal notranslate"><span class="pre">Tuple.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">Tuple.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.ellipsis_index"><code class="docutils literal notranslate"><span class="pre">Tuple.ellipsis_index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.expand"><code class="docutils literal notranslate"><span class="pre">Tuple.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.has_ellipsis"><code class="docutils literal notranslate"><span class="pre">Tuple.has_ellipsis</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.isempty"><code class="docutils literal notranslate"><span class="pre">Tuple.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.newshape"><code class="docutils literal notranslate"><span class="pre">Tuple.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.raw"><code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.Tuple.reduce"><code class="docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.IntegerArray"><code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.dtype"><code class="docutils literal notranslate"><span class="pre">IntegerArray.dtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.args"><code class="docutils literal notranslate"><span class="pre">IntegerArray.args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.array"><code class="docutils literal notranslate"><span class="pre">IntegerArray.array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.as_subindex"><code class="docutils literal notranslate"><span class="pre">IntegerArray.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">IntegerArray.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.expand"><code class="docutils literal notranslate"><span class="pre">IntegerArray.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.isempty"><code class="docutils literal notranslate"><span class="pre">IntegerArray.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.ndim"><code class="docutils literal notranslate"><span class="pre">IntegerArray.ndim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.newshape"><code class="docutils literal notranslate"><span class="pre">IntegerArray.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.raw"><code class="docutils literal notranslate"><span class="pre">IntegerArray.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.reduce"><code class="docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.shape"><code class="docutils literal notranslate"><span class="pre">IntegerArray.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.IntegerArray.size"><code class="docutils literal notranslate"><span class="pre">IntegerArray.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.BooleanArray"><code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.dtype"><code class="docutils literal notranslate"><span class="pre">BooleanArray.dtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.args"><code class="docutils literal notranslate"><span class="pre">BooleanArray.args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.array"><code class="docutils literal notranslate"><span class="pre">BooleanArray.array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.as_subindex"><code class="docutils literal notranslate"><span class="pre">BooleanArray.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">BooleanArray.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.count_nonzero"><code class="docutils literal notranslate"><span class="pre">BooleanArray.count_nonzero</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.expand"><code class="docutils literal notranslate"><span class="pre">BooleanArray.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.isempty"><code class="docutils literal notranslate"><span class="pre">BooleanArray.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.ndim"><code class="docutils literal notranslate"><span class="pre">BooleanArray.ndim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.newshape"><code class="docutils literal notranslate"><span class="pre">BooleanArray.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.raw"><code class="docutils literal notranslate"><span class="pre">BooleanArray.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.reduce"><code class="docutils literal notranslate"><span class="pre">BooleanArray.reduce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.shape"><code class="docutils literal notranslate"><span class="pre">BooleanArray.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.BooleanArray.size"><code class="docutils literal notranslate"><span class="pre">BooleanArray.size</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#index-helpers">Index Helpers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#iter-indices">iter_indices</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#broadcasterror">BroadcastError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#axiserror">AxisError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.iter_indices"><code class="docutils literal notranslate"><span class="pre">iter_indices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.BroadcastError"><code class="docutils literal notranslate"><span class="pre">BroadcastError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.AxisError"><code class="docutils literal notranslate"><span class="pre">AxisError</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#chunking">Chunking</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#chunksize">ChunkSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ChunkSize"><code class="docutils literal notranslate"><span class="pre">ChunkSize</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ChunkSize.args"><code class="docutils literal notranslate"><span class="pre">ChunkSize.args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks"><code class="docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ChunkSize.containing_block"><code class="docutils literal notranslate"><span class="pre">ChunkSize.containing_block()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ChunkSize.indices"><code class="docutils literal notranslate"><span class="pre">ChunkSize.indices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ChunkSize.num_chunks"><code class="docutils literal notranslate"><span class="pre">ChunkSize.num_chunks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ChunkSize.num_subchunks"><code class="docutils literal notranslate"><span class="pre">ChunkSize.num_subchunks()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#internal-api">Internal API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#immutableobject">ImmutableObject</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">NDIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#arrayindex">ArrayIndex</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#default">default</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#asshape">asshape</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#operator-index">operator_index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ncycles">ncycles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#broadcast-shapes">broadcast_shapes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ndindex.ImmutableObject"><code class="docutils literal notranslate"><span class="pre">ImmutableObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.ImmutableObject.args"><code class="docutils literal notranslate"><span class="pre">ImmutableObject.args</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ndindex.NDIndex"><code class="docutils literal notranslate"><span class="pre">NDIndex</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.NDIndex.as_subindex"><code class="docutils literal notranslate"><span class="pre">NDIndex.as_subindex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.NDIndex.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">NDIndex.broadcast_arrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.NDIndex.expand"><code class="docutils literal notranslate"><span class="pre">NDIndex.expand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.NDIndex.isempty"><code class="docutils literal notranslate"><span class="pre">NDIndex.isempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape"><code class="docutils literal notranslate"><span class="pre">NDIndex.newshape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.NDIndex.raw"><code class="docutils literal notranslate"><span class="pre">NDIndex.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce"><code class="docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.array.ArrayIndex"><code class="docutils literal notranslate"><span class="pre">ArrayIndex</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.array.ArrayIndex.dtype"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.dtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.array.ArrayIndex.array"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.array.ArrayIndex.ndim"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.ndim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.array.ArrayIndex.raw"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.raw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.array.ArrayIndex.shape"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ndindex.array.ArrayIndex.size"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.slice.default"><code class="docutils literal notranslate"><span class="pre">default</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ndindex.asshape"><code class="docutils literal notranslate"><span class="pre">asshape()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ndindex.operator_index"><code class="docutils literal notranslate"><span class="pre">operator_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ndindex.ncycles"><code class="docutils literal notranslate"><span class="pre">ncycles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ndindex.ndindex.broadcast_shapes"><code class="docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -94,7 +203,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -118,15 +227,13 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading">¶</a></h1>
 <p>The ndindex API consists of classes representing the different types of index
 objects (integers, slices, etc.), as well as some helper functions for dealing
 with indices.</p>
-<div class="section" id="ndindex">
-<h2>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>ndindex<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<section id="ndindex">
+<h2>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.ndindex">
 <span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">ndindex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex" title="Permalink to this definition">¶</a></dt>
@@ -141,13 +248,10 @@ with indices.</p>
 </div>
 </dd></dl>
 
-</div>
-</div>
-<div class="section" id="index-types">
-<h2>Index Types<a class="headerlink" href="#index-types" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="index-types">
+<h2>Index Types<a class="headerlink" href="#index-types" title="Permalink to this heading">¶</a></h2>
 <p>The following classes represent different types of indices.</p>
-<div class="section" id="integer">
-<h3>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.Integer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">Integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer" title="Permalink to this definition">¶</a></dt>
@@ -368,10 +472,7 @@ given shape, or an Integer index where the value is nonnegative.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="slice">
-<span id="slice-api"></span><h3>Slice<a class="headerlink" href="#slice" title="Permalink to this headline">¶</a></h3>
-<dl class="py class">
+<span class="target" id="slice-api"></span><dl class="py class">
 <dt class="sig sig-object py" id="ndindex.Slice">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">Slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop=&lt;class</span> <span class="pre">'ndindex.slice.default'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a slice on an axis of an nd-array.</p>
@@ -734,9 +835,6 @@ for a single dimension.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="ellipsis">
-<h3>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.ellipsis">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">ellipsis</span></span><a class="headerlink" href="#ndindex.ellipsis" title="Permalink to this definition">¶</a></dt>
@@ -945,9 +1043,6 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 
 </dd></dl>
 
-</div>
-<div class="section" id="newaxis">
-<h3>Newaxis<a class="headerlink" href="#newaxis" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.Newaxis">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">Newaxis</span></span><a class="headerlink" href="#ndindex.Newaxis" title="Permalink to this definition">¶</a></dt>
@@ -1073,9 +1168,6 @@ itself, so <code class="code docutils literal notranslate"><span class="pre">New
 
 </dd></dl>
 
-</div>
-<div class="section" id="tuple">
-<h3>Tuple<a class="headerlink" href="#tuple" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.Tuple">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">Tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple" title="Permalink to this definition">¶</a></dt>
@@ -1472,9 +1564,6 @@ instead of a scalar.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="integerarray">
-<h3>IntegerArray<a class="headerlink" href="#integerarray" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.IntegerArray">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">IntegerArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray" title="Permalink to this definition">¶</a></dt>
@@ -1515,6 +1604,21 @@ should not be used in array contexts. See the document on
 <span class="sig-name descname"><span class="pre">dtype</span></span><a class="headerlink" href="#ndindex.IntegerArray.dtype" title="Permalink to this definition">¶</a></dt>
 <dd><p>The dtype of <code class="code docutils literal notranslate"><span class="pre">IntegerArray</span></code> is <code class="code docutils literal notranslate"><span class="pre">np.intp</span></code>, which is typically either
 <code class="code docutils literal notranslate"><span class="pre">np.int32</span></code> or <code class="code docutils literal notranslate"><span class="pre">np.int64</span></code> depending on the platform.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ndindex.IntegerArray.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#ndindex.IntegerArray.args" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> contains the arguments needed to create <code class="code docutils literal notranslate"><span class="pre">idx</span></code>.</p>
+<p>For an ndindex object <code class="code docutils literal notranslate"><span class="pre">idx</span></code>, <code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> is always a tuple such that</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)(</span><span class="o">*</span><span class="n">idx</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="n">idx</span>
+</pre></div>
+</div>
+<p>For <a class="reference internal" href="#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> indices, the elements of <code class="code docutils literal notranslate"><span class="pre">.args</span></code> are themselves
+ndindex types. For other types, <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains raw Python types.
+Note that <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains NumPy arrays for <a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a>
+and <a class="reference internal" href="#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> types, so one should always do equality
+testing or hashing on the ndindex type itself, not its <code class="code docutils literal notranslate"><span class="pre">.args</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -1857,9 +1961,6 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 
 </dd></dl>
 
-</div>
-<div class="section" id="booleanarray">
-<h3>BooleanArray<a class="headerlink" href="#booleanarray" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.BooleanArray">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BooleanArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray" title="Permalink to this definition">¶</a></dt>
@@ -1922,6 +2023,21 @@ should not be used in array contexts. See the document on
 <dt class="sig sig-object py" id="ndindex.BooleanArray.dtype">
 <span class="sig-name descname"><span class="pre">dtype</span></span><a class="headerlink" href="#ndindex.BooleanArray.dtype" title="Permalink to this definition">¶</a></dt>
 <dd><p>The dtype of <code class="code docutils literal notranslate"><span class="pre">BooleanArray</span></code> is <code class="code docutils literal notranslate"><span class="pre">np.bool_</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ndindex.BooleanArray.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#ndindex.BooleanArray.args" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> contains the arguments needed to create <code class="code docutils literal notranslate"><span class="pre">idx</span></code>.</p>
+<p>For an ndindex object <code class="code docutils literal notranslate"><span class="pre">idx</span></code>, <code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> is always a tuple such that</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)(</span><span class="o">*</span><span class="n">idx</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="n">idx</span>
+</pre></div>
+</div>
+<p>For <a class="reference internal" href="#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> indices, the elements of <code class="code docutils literal notranslate"><span class="pre">.args</span></code> are themselves
+ndindex types. For other types, <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains raw Python types.
+Note that <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains NumPy arrays for <a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a>
+and <a class="reference internal" href="#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> types, so one should always do equality
+testing or hashing on the ndindex type itself, not its <code class="code docutils literal notranslate"><span class="pre">.args</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -2281,14 +2397,11 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 
 </dd></dl>
 
-</div>
-</div>
-<div class="section" id="index-helpers">
-<h2>Index Helpers<a class="headerlink" href="#index-helpers" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="index-helpers">
+<h2>Index Helpers<a class="headerlink" href="#index-helpers" title="Permalink to this heading">¶</a></h2>
 <p>The functions here are helpers for working with indices that aren’t methods of
 the index objects.</p>
-<div class="section" id="iter-indices">
-<h3>iter_indices<a class="headerlink" href="#iter-indices" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.iter_indices">
 <span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">iter_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.iter_indices" title="Permalink to this definition">¶</a></dt>
@@ -2297,7 +2410,7 @@ the index objects.</p>
 compatible. Each iteration step will produce a tuple of indices, one for
 each shape, which would correspond to the same elements if the arrays of
 the given shapes were first broadcast together.</p>
-<p>This is a generalization of the NumPy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v1.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndindex()</span></code></a> function (which otherwise has no relation).
+<p>This is a generalization of the NumPy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v1.23)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndindex()</span></code></a> function (which otherwise has no relation).
 <code class="code docutils literal notranslate"><span class="pre">np.ndindex()</span></code> only iterates indices for a single shape, whereas
 <code class="code docutils literal notranslate"><span class="pre">iter_indices()</span></code> supports generating indices for multiple broadcast
 compatible shapes at once. This is equivalent to first broadcasting the
@@ -2359,7 +2472,7 @@ operation <code class="code docutils literal notranslate"><span class="pre">a</s
 </div>
 <p>To include an index into the final broadcasted array, you can simply
 include the final broadcasted shape as one of the shapes (the NumPy
-function <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.22)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a> is
+function <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.23)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a> is
 useful here).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="go">(2, 3)</span>
@@ -2375,9 +2488,6 @@ useful here).</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="broadcasterror">
-<h3>BroadcastError<a class="headerlink" href="#broadcasterror" title="Permalink to this headline">¶</a></h3>
 <dl class="py exception">
 <dt class="sig sig-object py" id="ndindex.BroadcastError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BroadcastError</span></span><a class="headerlink" href="#ndindex.BroadcastError" title="Permalink to this definition">¶</a></dt>
@@ -2387,9 +2497,6 @@ broadcast compatible.</p>
 <code class="code docutils literal notranslate"><span class="pre">iter_indices</span></code> does not need to depend on NumPy.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="axiserror">
-<h3>AxisError<a class="headerlink" href="#axiserror" title="Permalink to this headline">¶</a></h3>
 <dl class="py exception">
 <dt class="sig sig-object py" id="ndindex.AxisError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">AxisError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.AxisError" title="Permalink to this definition">¶</a></dt>
@@ -2399,13 +2506,10 @@ is out of bounds.</p>
 <code class="code docutils literal notranslate"><span class="pre">iter_indices</span></code> does not need to depend on NumPy.</p>
 </dd></dl>
 
-</div>
-</div>
-<div class="section" id="chunking">
-<h2>Chunking<a class="headerlink" href="#chunking" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="chunking">
+<h2>Chunking<a class="headerlink" href="#chunking" title="Permalink to this heading">¶</a></h2>
 <p>ndindex contains objects to represent chunking an array.</p>
-<div class="section" id="chunksize">
-<h3>ChunkSize<a class="headerlink" href="#chunksize" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.ChunkSize">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">ChunkSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ChunkSize" title="Permalink to this definition">¶</a></dt>
@@ -2433,6 +2537,21 @@ sizes.</p>
 <span class="go">ChunkSize((4096,))</span>
 </pre></div>
 </div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ndindex.ChunkSize.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#ndindex.ChunkSize.args" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> contains the arguments needed to create <code class="code docutils literal notranslate"><span class="pre">idx</span></code>.</p>
+<p>For an ndindex object <code class="code docutils literal notranslate"><span class="pre">idx</span></code>, <code class="code docutils literal notranslate"><span class="pre">idx.args</span></code> is always a tuple such that</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)(</span><span class="o">*</span><span class="n">idx</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="n">idx</span>
+</pre></div>
+</div>
+<p>For <a class="reference internal" href="#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> indices, the elements of <code class="code docutils literal notranslate"><span class="pre">.args</span></code> are themselves
+ndindex types. For other types, <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains raw Python types.
+Note that <code class="code docutils literal notranslate"><span class="pre">.args</span></code> contains NumPy arrays for <a class="reference internal" href="#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a>
+and <a class="reference internal" href="#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> types, so one should always do equality
+testing or hashing on the ndindex type itself, not its <code class="code docutils literal notranslate"><span class="pre">.args</span></code>.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ChunkSize.as_subchunks">
 <span class="sig-name descname"><span class="pre">as_subchunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_force_slow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ChunkSize.as_subchunks" title="Permalink to this definition">¶</a></dt>
@@ -2594,14 +2713,11 @@ more efficient.</p>
 
 </dd></dl>
 
-</div>
-</div>
-<div class="section" id="internal-api">
-<h2>Internal API<a class="headerlink" href="#internal-api" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="internal-api">
+<h2>Internal API<a class="headerlink" href="#internal-api" title="Permalink to this heading">¶</a></h2>
 <p>These classes are only intended for internal use in ndindex. They shouldn’t
 relied on as they may be removed or changed.</p>
-<div class="section" id="immutableobject">
-<h3>ImmutableObject<a class="headerlink" href="#immutableobject" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.ndindex.ImmutableObject">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">ImmutableObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.ImmutableObject" title="Permalink to this definition">¶</a></dt>
@@ -2647,9 +2763,6 @@ testing or hashing on the ndindex type itself, not its <code class="code docutil
 
 </dd></dl>
 
-</div>
-<div class="section" id="id2">
-<h3>NDIndex<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.ndindex.NDIndex">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">NDIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex" title="Permalink to this definition">¶</a></dt>
@@ -2967,9 +3080,6 @@ optional <code class="code docutils literal notranslate"><span class="pre">axis<
 
 </dd></dl>
 
-</div>
-<div class="section" id="arrayindex">
-<h3>ArrayIndex<a class="headerlink" href="#arrayindex" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.array.ArrayIndex">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.array.</span></span><span class="sig-name descname"><span class="pre">ArrayIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.array.ArrayIndex" title="Permalink to this definition">¶</a></dt>
@@ -3068,9 +3178,6 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 
 </dd></dl>
 
-</div>
-<div class="section" id="default">
-<h3>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.slice.default">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.slice.</span></span><span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#ndindex.slice.default" title="Permalink to this definition">¶</a></dt>
@@ -3079,9 +3186,6 @@ Use <code class="code docutils literal notranslate"><span class="pre">np.prod</s
 meaningful value but not the default.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="asshape">
-<h3>asshape<a class="headerlink" href="#asshape" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.ndindex.asshape">
 <span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">asshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.asshape" title="Permalink to this definition">¶</a></dt>
@@ -3101,9 +3205,6 @@ of bounds for the shape.</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="operator-index">
-<h3>operator_index<a class="headerlink" href="#operator-index" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.ndindex.operator_index">
 <span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">operator_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.operator_index" title="Permalink to this definition">¶</a></dt>
@@ -3133,9 +3234,6 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="ncycles">
-<h3>ncycles<a class="headerlink" href="#ncycles" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.ndindex.ncycles">
 <span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">ncycles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.ncycles" title="Permalink to this definition">¶</a></dt>
@@ -3154,22 +3252,18 @@ debugging <a class="reference internal" href="#ndindex.iter_indices" title="ndin
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="broadcast-shapes">
-<h3>broadcast_shapes<a class="headerlink" href="#broadcast-shapes" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.ndindex.broadcast_shapes">
 <span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">broadcast_shapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.broadcast_shapes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Broadcast the input shapes <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> to a single shape.</p>
-<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.22)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>. It is included as a separate helper function
+<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.23)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>. It is included as a separate helper function
 because <code class="code docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code> is on available in NumPy 1.20 or newer, and
 so that ndindex functions that use this function can do without requiring
 NumPy to be installed.</p>
 </dd></dl>
 
-</div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -3198,7 +3292,7 @@ NumPy to be installed.</p>
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

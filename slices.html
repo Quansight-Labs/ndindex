@@ -1,19 +1,20 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
     <title>Slices &#8212; ndindex  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
-    <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -80,7 +81,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -104,8 +105,8 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="slices">
-<span id="slices-docs"></span><h1>Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h1>
+  <section id="slices">
+<span id="slices-docs"></span><h1>Slices<a class="headerlink" href="#slices" title="Permalink to this heading">¶</a></h1>
 <p>Python’s slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.</p>
@@ -132,8 +133,8 @@ equally applies to sliceable Python builtin objects like lists, tuples, and
 strings. This is because on a single dimension, NumPy slice semantics are
 identical to the Python slice semantics (NumPy only begins to differ from
 Python for multi-dimensional indices).</p>
-<div class="section" id="what-is-a-slice">
-<h2>What is a slice?<a class="headerlink" href="#what-is-a-slice" title="Permalink to this headline">¶</a></h2>
+<section id="what-is-a-slice">
+<h2>What is a slice?<a class="headerlink" href="#what-is-a-slice" title="Permalink to this heading">¶</a></h2>
 <p>In Python, a slice is a special syntax that is allowed only in an index, that
 is, inside of square brackets proceeding an expression. A slice consists of
 one or two colons, with either an expression or nothing on either side of each
@@ -159,15 +160,15 @@ brackets. However, slice objects can be created manually using the <code class="
 builtin (<code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[slice(x,</span> <span class="pre">y,</span> <span class="pre">z)]</span></code>). You can also use the
 <a class="reference internal" href="api.html#slice-api"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code></span></a> object if you want to perform more advanced
 operations.</p>
-</div>
-<div class="section" id="rules">
-<span id="id1"></span><h2>Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="rules">
+<span id="id1"></span><h2>Rules<a class="headerlink" href="#rules" title="Permalink to this heading">¶</a></h2>
 <p>These are the rules to keep in mind to understand how slices work. Each of
 these is explained in detail below. Many of the detailed descriptions below
 also outline several <em>wrong</em> rules, which are bad ways of thinking about
 slices but which you may be tempted to think about as rules. The below 7 rules
 are always correct.</p>
-<p>In this document, “<em>nonnegative</em>” means <span class="math notranslate nohighlight">\(\geq 0\)</span> and “<em>negative</em>” means <span class="math notranslate nohighlight">\(&lt; 0\)</span>.</p>
+<p>In this document, “<em>nonnegative</em>” means $\geq 0$ and “<em>negative</em>” means $&lt; 0$.</p>
 <p>For a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> use <strong>0-based indexing</strong> from the <strong>beginning</strong> of <code class="docutils literal notranslate"><span class="pre">a</span></code>
@@ -188,20 +189,19 @@ left or right of an index. (See section <a class="reference internal" href="#omi
 For a NumPy array, a slice always keeps the axis being sliced, even if that
 means the resulting dimension will be 0 or 1. (See section <a class="reference internal" href="#subarray"><span class="std std-ref">Subarray</span></a>)</p></li>
 </ol>
-</div>
-<div class="section" id="integer-indices">
-<span id="id2"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="integer-indices">
+<span id="id2"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this heading">¶</a></h2>
 <p>To understand slices, it is good to first review how integer indices work.
 Throughout this guide, we will use as an example this prototype list:</p>
-<div class="math notranslate nohighlight">
-\[
-a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
-\mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
-\]</div>
+<p>$$
+a = [\mathtt{\textsf{‘}a\textsf{‘}},\ \mathtt{\textsf{‘}b\textsf{‘}},\ \mathtt{\textsf{‘}c\textsf{‘}},<br />
+\mathtt{\textsf{‘}d\textsf{‘}},\ \mathtt{\textsf{‘}e\textsf{‘}},\ \mathtt{\textsf{‘}f\textsf{‘}},\ \mathtt{\textsf{‘}g\textsf{‘}}]
+$$</p>
 <p>The list <code class="docutils literal notranslate"><span class="pre">a</span></code> has 7 elements.</p>
 <p>The elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> are strings, but the indices and slices on the list <code class="docutils literal notranslate"><span class="pre">a</span></code>
 will always use integers. An index or slice is never based on the value of the
-elements, but rather the position of the elements in the list.<a class="footnote-reference brackets" href="#dict-footnote" id="id3">1</a></p>
+elements, but rather the position of the elements in the list.<a class="footnote-reference brackets" href="#dict-footnote" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 <p>An integer index picks a single element from the list <code class="docutils literal notranslate"><span class="pre">a</span></code>. For NumPy arrays,
 integer indices pick a subarray corresponding to a particular element from a
 given axis (and as a result, an integer index always reduces the
@@ -290,9 +290,9 @@ is out of bounds and will raise an <code class="docutils literal notranslate"><s
 <span class="gr">IndexError</span>: <span class="n">list index out of range</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="points-of-confusion">
-<h2>Points of Confusion<a class="headerlink" href="#points-of-confusion" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="points-of-confusion">
+<h2>Points of Confusion<a class="headerlink" href="#points-of-confusion" title="Permalink to this heading">¶</a></h2>
 <p>Now let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
 would necessitate several “if” conditions. The <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.indexing.html">NumPy
@@ -300,21 +300,21 @@ docs</a> on slices
 say</p>
 <blockquote id="numpy-definition">
 <div><p>The basic slice syntax is <code class="docutils literal notranslate"><span class="pre">i:j:k</span></code> where <em>i</em> is the starting index, <em>j</em> is
-the stopping index, and <em>k</em> is the step ( <span class="math notranslate nohighlight">\(k\neq 0\)</span> ). This selects the <code class="docutils literal notranslate"><span class="pre">m</span></code>
+the stopping index, and <em>k</em> is the step ( $k\neq 0$ ). This selects the <code class="docutils literal notranslate"><span class="pre">m</span></code>
 elements (in the corresponding dimension) with index values <em>i, i + k, …,
-i + (m - 1) k</em> where <span class="math notranslate nohighlight">\(m = q + (r\neq 0)\)</span> and <em>q</em> and <em>r</em> are the quotient and
+i + (m - 1) k</em> where $m = q + (r\neq 0)$ and <em>q</em> and <em>r</em> are the quotient and
 remainder obtained by dividing <em>j - i</em> by <em>k</em>: <em>j - i = q k + r</em>, so that
 <em>i + (m - 1) k &lt; j</em>.</p>
 </div></blockquote>
 <p>While definitions like this may give a technically accurate description of
 slices, they aren’t especially helpful to someone who is trying to construct a
 slice from a higher level of abstraction such as “I want to select this
-particular subset of my array”.<a class="footnote-reference brackets" href="#numpy-definition-footnote" id="id4">2</a></p>
+particular subset of my array”.<a class="footnote-reference brackets" href="#numpy-definition-footnote" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
 <p>Instead, we shall examine slices by carefully going over all the various
 aspects of the syntax and semantics that can lead to confusion, and attempting
 to demystify them through simple <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>.</p>
-<div class="section" id="subarray">
-<span id="id5"></span><h3>Subarray<a class="headerlink" href="#subarray" title="Permalink to this headline">¶</a></h3>
+<section id="subarray">
+<span id="id5"></span><h3>Subarray<a class="headerlink" href="#subarray" title="Permalink to this heading">¶</a></h3>
 <p><strong>A slice always produces a subarray (or sub-list, sub-tuple, sub-string,
 etc.). For NumPy arrays, this means that a slice will always <em>preserve</em> the
 dimension that is sliced.</strong> This is true even if the slice chooses only a
@@ -345,10 +345,10 @@ index.</p>
 raise <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>, even if the slice is empty</strong>. Therefore you cannot rely on
 runtime errors to alert you to coding mistakes relating to slice bounds that
 are too large. A slice cannot be “out of bounds.” See the section on
-<a class="reference external" href="#clipping">clipping</a> below.</p>
-</div>
-<div class="section" id="based">
-<span id="id6"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a> below.</p>
+</section>
+<section id="based">
+<span id="id6"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this heading">¶</a></h3>
 <p>For the slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code>, with <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> nonnegative integers,
 the indices <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are 0-based, just as with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
 indexing</span></a> (although one should be careful that even though
@@ -382,9 +382,9 @@ find yourself forgetting about it. Even experienced Python developers (this
 author included) still find themselves writing <code class="docutils literal notranslate"><span class="pre">a[3]</span></code> instead of <code class="docutils literal notranslate"><span class="pre">a[2]</span></code> from
 time to time. The best way to learn to use 0-based indexing is to practice
 using it enough that you use it automatically without thinking about it.</p>
-</div>
-<div class="section" id="half-open">
-<span id="id7"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="half-open">
+<span id="id7"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this heading">¶</a></h3>
 <p>Slices behave like half-open intervals. What this means is that the <code class="docutils literal notranslate"><span class="pre">stop</span></code> in
 <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is <em>never</em> included in the slice (the exception is if the
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> is omitted, see <a class="reference internal" href="#omitted"><span class="std std-ref">below</span></a>).</p>
@@ -451,8 +451,8 @@ list <code class="docutils literal notranslate"><span class="pre">a</span></code
 slice <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code> can be split as <code class="docutils literal notranslate"><span class="pre">a[i:k]</span></code> and <code class="docutils literal notranslate"><span class="pre">a[k:j]</span></code>.</p>
 </li>
 </ul>
-<div class="section" id="wrong-ways-of-thinking-about-half-open-semantics">
-<h4>Wrong Ways of Thinking about Half-open Semantics<a class="headerlink" href="#wrong-ways-of-thinking-about-half-open-semantics" title="Permalink to this headline">¶</a></h4>
+<section id="wrong-ways-of-thinking-about-half-open-semantics">
+<h4>Wrong Ways of Thinking about Half-open Semantics<a class="headerlink" href="#wrong-ways-of-thinking-about-half-open-semantics" title="Permalink to this heading">¶</a></h4>
 <p><strong>The proper rule to remember for half-open semantics is “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not
 included”.</strong></p>
 <p>There are several alternative ways that one might think of slice semantics,
@@ -474,16 +474,16 @@ or <code class="docutils literal notranslate"><span class="pre">step</span></cod
 rule obviously doesn’t apply as-is, and so you can fallback to the rule about
 omitted <code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">stop</span></code> (see <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a> below).</p>
 <p id="wrong-rule-1"><strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: “a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> slices the half-open interval
-<span class="math notranslate nohighlight">\([\text{start}, \text{stop})\)</span> (equivalently, a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> picks the
+$[\text{start}, \text{stop})$ (equivalently, a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> picks the
 elements <code class="docutils literal notranslate"><span class="pre">i</span></code> such that <code class="docutils literal notranslate"><span class="pre">start</span> <span class="pre">&lt;=</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">stop</span></code>).” <a class="headerlink"
 href="#wrong-rule-1" title="Permalink to this headline">¶</a> </strong></p>
 <p>This is <em>only</em> the case if the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive. It also isn’t directly true
 for negative <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code>. For example, with a <code class="docutils literal notranslate"><span class="pre">step</span></code> of <code class="docutils literal notranslate"><span class="pre">-1</span></code>,
 <code class="docutils literal notranslate"><span class="pre">a[start:stop:-1]</span></code> slices starting at <code class="docutils literal notranslate"><span class="pre">start</span></code> going in reverse order to
 <code class="docutils literal notranslate"><span class="pre">stop</span></code>, but not including <code class="docutils literal notranslate"><span class="pre">stop</span></code>. Mathematically, this creates a half open
-interval <span class="math notranslate nohighlight">\((\text{stop}, \text{start}]\)</span> (except reversed).</p>
+interval $(\text{stop}, \text{start}]$ (except reversed).</p>
 <p>For example, say way believed that <code class="docutils literal notranslate"><span class="pre">a[5:3:-1]</span></code> sliced the half-open interval
-<span class="math notranslate nohighlight">\([3, 5)\)</span> but in reverse order.</p>
+$[3, 5)$ but in reverse order.</p>
 <!-- TODO: improve this -->
 <div style="text-align:center;" >
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
@@ -962,10 +962,12 @@ long with posts spaced every 10 feet. How many fenceposts do you need?</p>
 <p>The naive answer is 10, but the correct answer is 11. The reason is the
 fenceposts go in between the 10 feet divisions, including at the end points.
 So there is an “extra” fencepost compared to the number of fence sections.</p>
-<div class="figure align-default" id="id17">
+<figure class="align-default" id="id17">
 <img alt="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" src="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" />
-<p class="caption"><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak-footnote" id="id8">3</a></span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak-footnote" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>Fencepost problems are a leading cause of off-by-one errors. Thinking about
 slices in this way is to think about lists as separated by fenceposts, and
 is only begging for problems. This will especially be the case if you still
@@ -991,10 +993,10 @@ negative indices. <code class="docutils literal notranslate"><span class="pre">a
 indexing to the (−3)rd element with 0-based indexing (and of course, negative
 and nonnegative starts and stops can be mixed, like <code class="docutils literal notranslate"><span class="pre">a[3:-3]</span></code>). Don’t get cute
 here. It isn’t worth it.</p>
-</div>
-</div>
-<div class="section" id="negative-indices">
-<span id="id9"></span><h3>Negative Indices<a class="headerlink" href="#negative-indices" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="negative-indices">
+<span id="id9"></span><h3>Negative Indices<a class="headerlink" href="#negative-indices" title="Permalink to this heading">¶</a></h3>
 <p>Negative indices in slices work the same way they do with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
 indices</span></a>. <strong>For <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>, negative <code class="docutils literal notranslate"><span class="pre">start</span></code> or
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> use −1-based indexing from the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</strong> However, negative <code class="docutils literal notranslate"><span class="pre">start</span></code>
@@ -1051,8 +1053,8 @@ slice is empty, the same as if <code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 <p>Similar to integer indices, negative indices <code class="docutils literal notranslate"><span class="pre">-i</span></code> in slices can always be
-replaced by adding <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> to <code class="docutils literal notranslate"><span class="pre">-i</span></code> until it is in the range <span class="math notranslate nohighlight">\([0,
-\operatorname{len}(a))\)</span> (replacing <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> with the size of the given axis
+replaced by adding <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> to <code class="docutils literal notranslate"><span class="pre">-i</span></code> until it is in the range $[0,
+\operatorname{len}(a))$ (replacing <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> with the size of the given axis
 for NumPy arrays), so they are primarily a syntactic convenience.</p>
 <p>The negative indexing behavior is convenient, but it can also lead to subtle
 bugs, due to the fundamental discontinuity it produces. This is especially
@@ -1104,9 +1106,9 @@ example, instead of using <code class="docutils literal notranslate"><span class
 <span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="clipping">
-<span id="id10"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="clipping">
+<span id="id10"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this heading">¶</a></h3>
 <p>Slices can never give an out-of-bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This is different from
 <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer indices</span></a> which require the index to be in bounds.
 <strong>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> index before the beginning or after the end of the
@@ -1152,9 +1154,9 @@ slice (see <a class="reference internal" href="api.html#ndindex.Slice.__len__" t
 course, if you already have a NumPy array, you can just slice the array and
 check the shape (slicing a NumPy array always produces a view on the array, so
 it is a very inexpensive operation).</p>
-</div>
-<div class="section" id="steps">
-<span id="id11"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="steps">
+<span id="id11"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this heading">¶</a></h3>
 <p>Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every <code class="docutils literal notranslate"><span class="pre">step</span></code> element contained in
 the bounds of <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>.</p>
@@ -1208,8 +1210,8 @@ than 1 because you are dealing with modular arithmetic in some way. However,
 this requires care.</p>
 <p>Indeed, we can note that resulting indices <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">3</span></code> of the above slice
 <code class="docutils literal notranslate"><span class="pre">a[0:6:3]</span></code> are all multiples of 3. This is because the <code class="docutils literal notranslate"><span class="pre">start</span></code> index, <code class="docutils literal notranslate"><span class="pre">0</span></code>, is
-a multiple of 3. If we instead choose a start index that is <span class="math notranslate nohighlight">\(1 \pmod{3}\)</span> then
-all the indices would also be <span class="math notranslate nohighlight">\(1 \pmod{3}\)</span>.</p>
+a multiple of 3. If we instead choose a start index that is $1 \pmod{3}$ then
+all the indices would also be $1 \pmod{3}$.</p>
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[1:6:3] == ['b', 'e']</code>
 $$
@@ -1273,9 +1275,9 @@ wrong, as it is easy to fail to properly account for <a class="reference interna
 indices</span></a>, <a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a>, and <a class="reference internal" href="#negative-steps"><span class="std std-ref">negative
 steps</span></a>. As noted before, any correct “formula” regarding
 slices will necessarily have many piecewise conditions.</p>
-</div>
-<div class="section" id="negative-steps">
-<span id="id12"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="negative-steps">
+<span id="id12"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this heading">¶</a></h3>
 <p>Recall what we said <a class="reference internal" href="#steps"><span class="std std-ref">above</span></a>:</p>
 <p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and
 successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches an index that is at or past the
@@ -1370,10 +1372,10 @@ $$
 <span class="gr">ValueError</span>: <span class="n">slice step cannot be zero</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="omitted-entries">
-<span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this headline">¶</a></h3>
-<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#omitted-none-footnote" id="id13">4</a></p>
+</section>
+<section id="omitted-entries">
+<span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this heading">¶</a></h3>
+<p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#omitted-none-footnote" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
 <p><strong>The best way to think about omitted entries is just like that, as omitted
 entries.</strong> That is, for a slice like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code>, think of it as the <code class="docutils literal notranslate"><span class="pre">start</span></code> being
 omitted, and <code class="docutils literal notranslate"><span class="pre">stop</span></code> equal to <code class="docutils literal notranslate"><span class="pre">i</span></code>. Conversely, <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> has the <code class="docutils literal notranslate"><span class="pre">start</span></code> as <code class="docutils literal notranslate"><span class="pre">i</span></code>
@@ -1564,10 +1566,10 @@ $$
 <span class="go">[&#39;d&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="soapbox">
-<h2>Soapbox<a class="headerlink" href="#soapbox" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="soapbox">
+<h2>Soapbox<a class="headerlink" href="#soapbox" title="Permalink to this heading">¶</a></h2>
 <p>While this guide is opinionated about the right and wrong ways to think about
 slices in Python, I have tried to stay neutral regarding the merits of the
 rules themselves. But I want to take a moment to give my views on them. I have
@@ -1589,7 +1591,7 @@ the modular nature of <code class="docutils literal notranslate"><span class="pr
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> increases this tenfold. If you are unconvinced of this, take a look at
 the <a class="reference external" href="https://github.com/Quansight-labs/ndindex/blob/master/ndindex/slice.py">source
 code</a> for
-<code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code>. You will see lots of nested <code class="docutils literal notranslate"><span class="pre">if</span></code> blocks.<a class="footnote-reference brackets" href="#source-footnote" id="id14">5</a>
+<code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code>. You will see lots of nested <code class="docutils literal notranslate"><span class="pre">if</span></code> blocks.<a class="footnote-reference brackets" href="#source-footnote" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>
 This is because slices have <em>fundamentally</em> different definitions if the
 <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are <code class="docutils literal notranslate"><span class="pre">None</span></code>, negative, or nonnegative. Furthermore, <code class="docutils literal notranslate"><span class="pre">None</span></code> is
 not an integer, so one must always be careful to either check for it first or
@@ -1742,11 +1744,11 @@ really does make more sense, you can easily use it. Indices should also be
 able to start at any other number, including negative numbers (which is
 another reason to remove the special meaning of negative indices). An example
 of a use-case where 0-based indexing truly is more natural than 1-based
-indexing is polynomials. Say we have a polynomial <span class="math notranslate nohighlight">\(a_0 + a_1x + a_2x^2 +
-\cdots\)</span>. Then we can represent the coefficients <span class="math notranslate nohighlight">\(a_0, a_1, a_2, \ldots\)</span> in a
+indexing is polynomials. Say we have a polynomial $a_0 + a_1x + a_2x^2 +
+\cdots$. Then we can represent the coefficients $a_0, a_1, a_2, \ldots$ in a
 list <code class="docutils literal notranslate"><span class="pre">[a0,</span> <span class="pre">a1,</span> <span class="pre">a2,</span> <span class="pre">...]</span></code>. Since a polynomial naturally has a 0th coefficient,
 it makes sense to index the list starting at 0 (and one must still be careful
-about off-by-one errors; a degree-<span class="math notranslate nohighlight">\(n\)</span> polynomial has <span class="math notranslate nohighlight">\(n+1\)</span> coefficients).</p>
+about off-by-one errors; a degree-$n$ polynomial has $n+1$ coefficients).</p>
 <p>If this seems like absurd idea, note that this is how Fortran works (see
 <a class="reference external" href="https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering">https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering</a>).
 In Fortran, arrays index starting at 1 by default, but any integer can be used
@@ -1774,7 +1776,7 @@ endpoints, as there is no letter after Z to not include.</p>
 <p>It is simply more natural to think about a range as including both endpoints.
 Half-open semantics are often tied to 0-based indexing, since it is a
 convenient way to allow the range 0–N to contain N values, by not including
-N.<a class="footnote-reference brackets" href="#python-history-footnote" id="id15">6</a> I see this as taking a bad decision (0-based
+N.<a class="footnote-reference brackets" href="#python-history-footnote" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> I see this as taking a bad decision (0-based
 indexing) and putting a bad bandaid on it that makes it worse. But certainly
 this argument goes away for 1-based indexing. The range 1–N contains N values
 exactly when N <em>is</em> included in the range.</p>
@@ -1811,20 +1813,20 @@ same as <code class="docutils literal notranslate"><span class="pre">a[0:M]</spa
 perfectly used to adding 1 to get to the next term in a sequence, and it is
 more natural to see <code class="docutils literal notranslate"><span class="pre">[1:N]</span></code> and <code class="docutils literal notranslate"><span class="pre">[N+1:M]</span></code> as being non-overlapping if they
 do not share endpoint values. Ranges that include both endpoints are
-standard in both mathematics and everyday language. <span class="math notranslate nohighlight">\(\sum_{i=1}^n\)</span> means a
-summation from <span class="math notranslate nohighlight">\(1\)</span> to <span class="math notranslate nohighlight">\(n\)</span> inclusive. Formulas like <span class="math notranslate nohighlight">\(\sum_{i=1}^n a_i =
-\sum_{i=1}^k a_i + \sum_{i=k+1}^n a_i\)</span> are natural to anyone who has studied
-enough mathematics. If you were to rewrite the sentences “the first <span class="math notranslate nohighlight">\(n\)</span>
-numbers are <span class="math notranslate nohighlight">\(1\ldots n\)</span>; the next <span class="math notranslate nohighlight">\(n\)</span> numbers are <span class="math notranslate nohighlight">\(n+1\ldots 2n\)</span>”, or “‘the
+standard in both mathematics and everyday language. $\sum_{i=1}^n$ means a
+summation from $1$ to $n$ inclusive. Formulas like $\sum_{i=1}^n a_i =
+\sum_{i=1}^k a_i + \sum_{i=k+1}^n a_i$ are natural to anyone who has studied
+enough mathematics. If you were to rewrite the sentences “the first $n$
+numbers are $1\ldots n$; the next $n$ numbers are $n+1\ldots 2n$”, or “‘the
 70s’ refers to the years 1970–1979” using half-open semantics, anyone would
 tell you they were phrased wrong.</p></li>
 <li><p>Another benefit of half-open intervals is that they allow the range <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code>
-to contain <span class="math notranslate nohighlight">\(j - i\)</span> elements (assuming <span class="math notranslate nohighlight">\(0 \leq i \leq j\)</span> and <code class="docutils literal notranslate"><span class="pre">a</span></code> is large
+to contain $j - i$ elements (assuming $0 \leq i \leq j$ and <code class="docutils literal notranslate"><span class="pre">a</span></code> is large
 enough). I tout this myself in the guide above, since it is a useful <a class="reference internal" href="#sanity-check"><span class="std std-ref">sanity
 check</span></a>. However, as useful as it is, it isn’t worth the more
 general confusion caused by half-open semantics. I contend people are
 perfectly used to the usual <a class="reference internal" href="#fencepost"><span class="std std-ref">fencepost</span></a> offset that a range
-<span class="math notranslate nohighlight">\(i\ldots j\)</span> contains <span class="math notranslate nohighlight">\(j - i + 1\)</span> numbers. Half-open semantics replace this
+$i\ldots j$ contains $j - i + 1$ numbers. Half-open semantics replace this
 fencepost error with more subtle ones, which arise from forgetting that the
 range doesn’t include the endpoint, unlike most natural ranges that occur in
 day-to-day life. See <a class="reference internal" href="#wrong-rule-3"><span class="std std-ref">wrong rule 3</span></a> above for an example of how
@@ -1834,10 +1836,10 @@ errors</span></a>. But the fencepost problem is fundamentally unavoidable. A
 100 foot fence truly has one more fencepost than fence lengths. The best way
 to deal with the fencepost problem is not to try to change the way we count
 fenceposts, so that somehow 11 fenceposts is really only
-10.<a class="footnote-reference brackets" href="#fencepost-footnote" id="id16">7</a> It is rather to reuse the most natural and intuitive
+10.<a class="footnote-reference brackets" href="#fencepost-footnote" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a> It is rather to reuse the most natural and intuitive
 way of thinking about the problem, which occurs both in programming and
 non-programming contexts, which is that certain quantities, like the number of
-elements in a range <span class="math notranslate nohighlight">\(1\ldots N\)</span> will require an extra “+ 1” to be correct.</p>
+elements in a range $1\ldots N$ will require an extra “+ 1” to be correct.</p>
 </li>
 </ul>
 <ul class="simple">
@@ -1867,59 +1869,66 @@ slicing rules are superior, despite the endless confusion that they provide.
 Finally, I believe that simply understanding that Python has made these
 decisions, whether you agree with them or not, will help you to remember the
 slicing <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>, and that’s my true goal here.</p>
-</div>
-<div class="section" id="footnotes">
-<h2>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="footnotes">
+<h2>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this heading">¶</a></h2>
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
 <hr class="footnotes docutils" />
-<dl class="footnote brackets">
-<dt class="label" id="dict-footnote"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
-<dd><p>If you are looking for something that allows non-integer
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="dict-footnote" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
+<p>If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a <code class="docutils literal notranslate"><span class="pre">dict</span></code>. Despite using similar
 syntax, <code class="docutils literal notranslate"><span class="pre">dict</span></code>s do not allow slicing.</p>
-</dd>
-<dt class="label" id="numpy-definition-footnote"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
-<dd><p>This formulation actually isn’t particularly
+</aside>
+<aside class="footnote brackets" id="numpy-definition-footnote" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
+<p>This formulation actually isn’t particularly
 helpful for formulating higher level slice formulas such as the ones used by
 ndindex either.</p>
-</dd>
-<dt class="label" id="fencepost-jeff-burbak-footnote"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
-<dd><p>Image credit <a class="reference external" href="https://unsplash.com/photos/lPO0VzF_4s8">Jeff Burak via
+</aside>
+<aside class="footnote brackets" id="fencepost-jeff-burbak-footnote" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">3</a><span class="fn-bracket">]</span></span>
+<p>Image credit <a class="reference external" href="https://unsplash.com/photos/lPO0VzF_4s8">Jeff Burak via
 Unsplash</a>. The image is of
 Chautauqua Park in Boulder, Colorado.</p>
-</dd>
-<dt class="label" id="omitted-none-footnote"><span class="brackets"><a class="fn-backref" href="#id13">4</a></span></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> may also be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which
+</aside>
+<aside class="footnote brackets" id="omitted-none-footnote" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">4</a><span class="fn-bracket">]</span></span>
+<p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> may also be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which
 is syntactically equivalent to them being omitted. That is to say, <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is
 a syntactic shorthand for <code class="docutils literal notranslate"><span class="pre">a[None:None:None]</span></code>. It is rare to see <code class="docutils literal notranslate"><span class="pre">None</span></code> in a
 slice. This is only relevant for code that consumes slices, such as a
 <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> method on an object. The <code class="docutils literal notranslate"><span class="pre">slice()</span></code> object corresponding to
 <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is <code class="docutils literal notranslate"><span class="pre">slice(None,</span> <span class="pre">None,</span> <span class="pre">None)</span></code>. <a class="reference internal" href="api.html#slice-api"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code></span></a> also uses
 <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate omitted entries in the same way.</p>
-</dd>
-<dt class="label" id="source-footnote"><span class="brackets"><a class="fn-backref" href="#id14">5</a></span></dt>
-<dd><p>To be sure, I make no claims that the source of any
+</aside>
+<aside class="footnote brackets" id="source-footnote" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">5</a><span class="fn-bracket">]</span></span>
+<p>To be sure, I make no claims that the source of any
 function in ndindex cannot be simplified. In writing ndindex, I have primarily
 focused on making the logic correct, and less on making it elegant. I welcome
 any pull requests that simplifies the logic of a function. The extensive
 <a class="reference internal" href="index.html#testing"><span class="std std-ref">testing</span></a> should ensure that any rewritten function remains correct.</p>
-</dd>
-<dt class="label" id="python-history-footnote"><span class="brackets"><a class="fn-backref" href="#id15">6</a></span></dt>
-<dd><p>In fact, the original reason that Python uses
+</aside>
+<aside class="footnote brackets" id="python-history-footnote" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">6</a><span class="fn-bracket">]</span></span>
+<p>In fact, the original reason that Python uses
 0-based indexing is that Guido preferred the half-open semantics, which only
 work out well when combined with 0-based indexing
 (<a class="reference external" href="https://web.archive.org/web/20190321101606/https://plus.google.com/115212051037621986145/posts/YTUxbXYZyfi">reference</a>).</p>
-</dd>
-<dt class="label" id="fencepost-footnote"><span class="brackets"><a class="fn-backref" href="#id16">7</a></span></dt>
-<dd><p><a class="reference external" href="https://betterexplained.com/articles/learning-how-to-count-avoiding-the-fencepost-problem/">This blog
+</aside>
+<aside class="footnote brackets" id="fencepost-footnote" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://betterexplained.com/articles/learning-how-to-count-avoiding-the-fencepost-problem/">This blog
 post</a>
 has a nice writeup of <em>why</em> the fencepost problem exists. It’s related to the
 difference between measurement and enumeration that I touched on earlier.</p>
-</dd>
-</dl>
-</div>
-</div>
+</aside>
+</aside>
+</section>
+</section>
 
 
           </div>
@@ -1948,7 +1957,7 @@ difference between measurement and enumeration that I touched on earlier.</p>
       &copy;2020, Quansight Labs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
