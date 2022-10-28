@@ -15,6 +15,8 @@
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
+    <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -137,7 +139,7 @@ like <code class="docutils literal notranslate"><span class="pre">`code`</span><
 Note that only single backticks are required even for RST as the default
 role is set to <code class="docutils literal notranslate"><span class="pre">'code'</span></code>.</p></li>
 <li><p>Inline mathematical formulas can be formatted with single dollar signs, like
-<code class="docutils literal notranslate"><span class="pre">$x^2</span> <span class="pre">+</span> <span class="pre">1$</span></code>, which creates $x^2 + 1$. Display formulas, which appear on
+<code class="docutils literal notranslate"><span class="pre">$x^2</span> <span class="pre">+</span> <span class="pre">1$</span></code>, which creates <span class="math notranslate nohighlight">\(x^2 + 1\)</span>. Display formulas, which appear on
 their own line, should use the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">math::</span></code> directive for RST or <code class="docutils literal notranslate"><span class="pre">```{math}</span></code> for Markdown.</p></li>
 <li><p>Docstrings are currently written in RST. We may move to Markdown at some
 point. Docstrings use the napoleon extension, meaning they can be written in

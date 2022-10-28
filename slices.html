@@ -15,6 +15,8 @@
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
+    <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -168,7 +170,7 @@ these is explained in detail below. Many of the detailed descriptions below
 also outline several <em>wrong</em> rules, which are bad ways of thinking about
 slices but which you may be tempted to think about as rules. The below 7 rules
 are always correct.</p>
-<p>In this document, “<em>nonnegative</em>” means $\geq 0$ and “<em>negative</em>” means $&lt; 0$.</p>
+<p>In this document, “<em>nonnegative</em>” means <span class="math notranslate nohighlight">\(\geq 0\)</span> and “<em>negative</em>” means <span class="math notranslate nohighlight">\(&lt; 0\)</span>.</p>
 <p>For a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> use <strong>0-based indexing</strong> from the <strong>beginning</strong> of <code class="docutils literal notranslate"><span class="pre">a</span></code>
@@ -194,10 +196,11 @@ means the resulting dimension will be 0 or 1. (See section <a class="reference i
 <span id="id2"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this heading">¶</a></h2>
 <p>To understand slices, it is good to first review how integer indices work.
 Throughout this guide, we will use as an example this prototype list:</p>
-<p>$$
-a = [\mathtt{\textsf{‘}a\textsf{‘}},\ \mathtt{\textsf{‘}b\textsf{‘}},\ \mathtt{\textsf{‘}c\textsf{‘}},<br />
-\mathtt{\textsf{‘}d\textsf{‘}},\ \mathtt{\textsf{‘}e\textsf{‘}},\ \mathtt{\textsf{‘}f\textsf{‘}},\ \mathtt{\textsf{‘}g\textsf{‘}}]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
+\mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
+\]</div>
 <p>The list <code class="docutils literal notranslate"><span class="pre">a</span></code> has 7 elements.</p>
 <p>The elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> are strings, but the indices and slices on the list <code class="docutils literal notranslate"><span class="pre">a</span></code>
 will always use integers. An index or slice is never based on the value of the
@@ -300,9 +303,9 @@ docs</a> on slices
 say</p>
 <blockquote id="numpy-definition">
 <div><p>The basic slice syntax is <code class="docutils literal notranslate"><span class="pre">i:j:k</span></code> where <em>i</em> is the starting index, <em>j</em> is
-the stopping index, and <em>k</em> is the step ( $k\neq 0$ ). This selects the <code class="docutils literal notranslate"><span class="pre">m</span></code>
+the stopping index, and <em>k</em> is the step ( <span class="math notranslate nohighlight">\(k\neq 0\)</span> ). This selects the <code class="docutils literal notranslate"><span class="pre">m</span></code>
 elements (in the corresponding dimension) with index values <em>i, i + k, …,
-i + (m - 1) k</em> where $m = q + (r\neq 0)$ and <em>q</em> and <em>r</em> are the quotient and
+i + (m - 1) k</em> where <span class="math notranslate nohighlight">\(m = q + (r\neq 0)\)</span> and <em>q</em> and <em>r</em> are the quotient and
 remainder obtained by dividing <em>j - i</em> by <em>k</em>: <em>j - i = q k + r</em>, so that
 <em>i + (m - 1) k &lt; j</em>.</p>
 </div></blockquote>
@@ -474,16 +477,16 @@ or <code class="docutils literal notranslate"><span class="pre">step</span></cod
 rule obviously doesn’t apply as-is, and so you can fallback to the rule about
 omitted <code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">stop</span></code> (see <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a> below).</p>
 <p id="wrong-rule-1"><strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: “a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> slices the half-open interval
-$[\text{start}, \text{stop})$ (equivalently, a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> picks the
+<span class="math notranslate nohighlight">\([\text{start}, \text{stop})\)</span> (equivalently, a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> picks the
 elements <code class="docutils literal notranslate"><span class="pre">i</span></code> such that <code class="docutils literal notranslate"><span class="pre">start</span> <span class="pre">&lt;=</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">stop</span></code>).” <a class="headerlink"
 href="#wrong-rule-1" title="Permalink to this headline">¶</a> </strong></p>
 <p>This is <em>only</em> the case if the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive. It also isn’t directly true
 for negative <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code>. For example, with a <code class="docutils literal notranslate"><span class="pre">step</span></code> of <code class="docutils literal notranslate"><span class="pre">-1</span></code>,
 <code class="docutils literal notranslate"><span class="pre">a[start:stop:-1]</span></code> slices starting at <code class="docutils literal notranslate"><span class="pre">start</span></code> going in reverse order to
 <code class="docutils literal notranslate"><span class="pre">stop</span></code>, but not including <code class="docutils literal notranslate"><span class="pre">stop</span></code>. Mathematically, this creates a half open
-interval $(\text{stop}, \text{start}]$ (except reversed).</p>
+interval <span class="math notranslate nohighlight">\((\text{stop}, \text{start}]\)</span> (except reversed).</p>
 <p>For example, say way believed that <code class="docutils literal notranslate"><span class="pre">a[5:3:-1]</span></code> sliced the half-open interval
-$[3, 5)$ but in reverse order.</p>
+<span class="math notranslate nohighlight">\([3, 5)\)</span> but in reverse order.</p>
 <!-- TODO: improve this -->
 <div style="text-align:center;" >
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
@@ -1053,8 +1056,8 @@ slice is empty, the same as if <code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 <p>Similar to integer indices, negative indices <code class="docutils literal notranslate"><span class="pre">-i</span></code> in slices can always be
-replaced by adding <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> to <code class="docutils literal notranslate"><span class="pre">-i</span></code> until it is in the range $[0,
-\operatorname{len}(a))$ (replacing <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> with the size of the given axis
+replaced by adding <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> to <code class="docutils literal notranslate"><span class="pre">-i</span></code> until it is in the range <span class="math notranslate nohighlight">\([0,
+\operatorname{len}(a))\)</span> (replacing <code class="docutils literal notranslate"><span class="pre">len(a)</span></code> with the size of the given axis
 for NumPy arrays), so they are primarily a syntactic convenience.</p>
 <p>The negative indexing behavior is convenient, but it can also lead to subtle
 bugs, due to the fundamental discontinuity it produces. This is especially
@@ -1210,8 +1213,8 @@ than 1 because you are dealing with modular arithmetic in some way. However,
 this requires care.</p>
 <p>Indeed, we can note that resulting indices <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">3</span></code> of the above slice
 <code class="docutils literal notranslate"><span class="pre">a[0:6:3]</span></code> are all multiples of 3. This is because the <code class="docutils literal notranslate"><span class="pre">start</span></code> index, <code class="docutils literal notranslate"><span class="pre">0</span></code>, is
-a multiple of 3. If we instead choose a start index that is $1 \pmod{3}$ then
-all the indices would also be $1 \pmod{3}$.</p>
+a multiple of 3. If we instead choose a start index that is <span class="math notranslate nohighlight">\(1 \pmod{3}\)</span> then
+all the indices would also be <span class="math notranslate nohighlight">\(1 \pmod{3}\)</span>.</p>
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[1:6:3] == ['b', 'e']</code>
 $$
@@ -1744,11 +1747,11 @@ really does make more sense, you can easily use it. Indices should also be
 able to start at any other number, including negative numbers (which is
 another reason to remove the special meaning of negative indices). An example
 of a use-case where 0-based indexing truly is more natural than 1-based
-indexing is polynomials. Say we have a polynomial $a_0 + a_1x + a_2x^2 +
-\cdots$. Then we can represent the coefficients $a_0, a_1, a_2, \ldots$ in a
+indexing is polynomials. Say we have a polynomial <span class="math notranslate nohighlight">\(a_0 + a_1x + a_2x^2 +
+\cdots\)</span>. Then we can represent the coefficients <span class="math notranslate nohighlight">\(a_0, a_1, a_2, \ldots\)</span> in a
 list <code class="docutils literal notranslate"><span class="pre">[a0,</span> <span class="pre">a1,</span> <span class="pre">a2,</span> <span class="pre">...]</span></code>. Since a polynomial naturally has a 0th coefficient,
 it makes sense to index the list starting at 0 (and one must still be careful
-about off-by-one errors; a degree-$n$ polynomial has $n+1$ coefficients).</p>
+about off-by-one errors; a degree-<span class="math notranslate nohighlight">\(n\)</span> polynomial has <span class="math notranslate nohighlight">\(n+1\)</span> coefficients).</p>
 <p>If this seems like absurd idea, note that this is how Fortran works (see
 <a class="reference external" href="https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering">https://www.fortran90.org/src/faq.html#what-is-the-most-natural-starting-index-for-numbering</a>).
 In Fortran, arrays index starting at 1 by default, but any integer can be used
@@ -1813,20 +1816,20 @@ same as <code class="docutils literal notranslate"><span class="pre">a[0:M]</spa
 perfectly used to adding 1 to get to the next term in a sequence, and it is
 more natural to see <code class="docutils literal notranslate"><span class="pre">[1:N]</span></code> and <code class="docutils literal notranslate"><span class="pre">[N+1:M]</span></code> as being non-overlapping if they
 do not share endpoint values. Ranges that include both endpoints are
-standard in both mathematics and everyday language. $\sum_{i=1}^n$ means a
-summation from $1$ to $n$ inclusive. Formulas like $\sum_{i=1}^n a_i =
-\sum_{i=1}^k a_i + \sum_{i=k+1}^n a_i$ are natural to anyone who has studied
-enough mathematics. If you were to rewrite the sentences “the first $n$
-numbers are $1\ldots n$; the next $n$ numbers are $n+1\ldots 2n$”, or “‘the
+standard in both mathematics and everyday language. <span class="math notranslate nohighlight">\(\sum_{i=1}^n\)</span> means a
+summation from <span class="math notranslate nohighlight">\(1\)</span> to <span class="math notranslate nohighlight">\(n\)</span> inclusive. Formulas like <span class="math notranslate nohighlight">\(\sum_{i=1}^n a_i =
+\sum_{i=1}^k a_i + \sum_{i=k+1}^n a_i\)</span> are natural to anyone who has studied
+enough mathematics. If you were to rewrite the sentences “the first <span class="math notranslate nohighlight">\(n\)</span>
+numbers are <span class="math notranslate nohighlight">\(1\ldots n\)</span>; the next <span class="math notranslate nohighlight">\(n\)</span> numbers are <span class="math notranslate nohighlight">\(n+1\ldots 2n\)</span>”, or “‘the
 70s’ refers to the years 1970–1979” using half-open semantics, anyone would
 tell you they were phrased wrong.</p></li>
 <li><p>Another benefit of half-open intervals is that they allow the range <code class="docutils literal notranslate"><span class="pre">a[i:j]</span></code>
-to contain $j - i$ elements (assuming $0 \leq i \leq j$ and <code class="docutils literal notranslate"><span class="pre">a</span></code> is large
+to contain <span class="math notranslate nohighlight">\(j - i\)</span> elements (assuming <span class="math notranslate nohighlight">\(0 \leq i \leq j\)</span> and <code class="docutils literal notranslate"><span class="pre">a</span></code> is large
 enough). I tout this myself in the guide above, since it is a useful <a class="reference internal" href="#sanity-check"><span class="std std-ref">sanity
 check</span></a>. However, as useful as it is, it isn’t worth the more
 general confusion caused by half-open semantics. I contend people are
 perfectly used to the usual <a class="reference internal" href="#fencepost"><span class="std std-ref">fencepost</span></a> offset that a range
-$i\ldots j$ contains $j - i + 1$ numbers. Half-open semantics replace this
+<span class="math notranslate nohighlight">\(i\ldots j\)</span> contains <span class="math notranslate nohighlight">\(j - i + 1\)</span> numbers. Half-open semantics replace this
 fencepost error with more subtle ones, which arise from forgetting that the
 range doesn’t include the endpoint, unlike most natural ranges that occur in
 day-to-day life. See <a class="reference internal" href="#wrong-rule-3"><span class="std std-ref">wrong rule 3</span></a> above for an example of how
@@ -1839,7 +1842,7 @@ fenceposts, so that somehow 11 fenceposts is really only
 10.<a class="footnote-reference brackets" href="#fencepost-footnote" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a> It is rather to reuse the most natural and intuitive
 way of thinking about the problem, which occurs both in programming and
 non-programming contexts, which is that certain quantities, like the number of
-elements in a range $1\ldots N$ will require an extra “+ 1” to be correct.</p>
+elements in a range <span class="math notranslate nohighlight">\(1\ldots N\)</span> will require an extra “+ 1” to be correct.</p>
 </li>
 </ul>
 <ul class="simple">
