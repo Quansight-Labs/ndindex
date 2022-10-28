@@ -25,7 +25,7 @@ jobs:
           no_output_timeout: 25m
           command: |
             cd docs
-            pip install sphinx myst-parser furo sphinx-copybutton linkify-it-py
+            pip install -r docs/requirements.txt
       - run:
           name: Build docs
           no_output_timeout: 25m
