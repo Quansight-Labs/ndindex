@@ -2,6 +2,10 @@
 .sidebar-brand-text {
     font-weight: bold;
 }
+/* Remove the underline from the title text on hover */
+.sidebar-brand:hover {
+    text-decoration: none !important;
+}
 
 :root {
     --color-brand-light-blue: #8DBEFE;
