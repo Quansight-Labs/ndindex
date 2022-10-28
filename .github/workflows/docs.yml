@@ -51,3 +51,10 @@ jobs:
           conda activate test-environment
           cd docs
           make html
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          folder: docs/_build/html
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
