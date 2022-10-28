@@ -121,6 +121,8 @@ html_sidebars = {
 
 html_favicon = "logo/favicon.ico"
 
+myst_enable_extensions = ["dollarmath"]
+
 mathjax3_config = {
   'TeX': {
       'equationNumbers': {
