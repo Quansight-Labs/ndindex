@@ -113,6 +113,8 @@ theme_colors_common = {
 
     }
 html_theme_options = {
+    'light_logo': 'ndindex_logo_white_bg.svg',
+    'dark_logo': 'ndindex_logo_dark_bg.svg',
     "light_css_variables": {
         **theme_colors_common,
         "color-brand-primary": dark_blue,
@@ -165,7 +167,6 @@ sys.path.append(os.path.abspath("./_pygments"))
 pygments_style = 'styles.SphinxHighContrastStyle'
 pygments_dark_style = 'styles.NativeHighContrastStyle'
 
-html_logo = '_static/ndindex_logo_white_bg.svg'
 html_favicon = "logo/favicon.ico"
 
 myst_enable_extensions = ["dollarmath", "linkify"]
