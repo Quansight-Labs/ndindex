@@ -89,6 +89,7 @@ medium_blue = "#1041F3"
 dark_blue = "#0D2B9C"
 dark_bg = "#05002A"
 white = "white"
+gray = "#EEEEEE"
 
 theme_colors_common = {
     "color-sidebar-background-border": "var(--color-background-primary)",
@@ -120,9 +121,9 @@ html_theme_options = {
         "color-brand-primary": dark_blue,
         "color-brand-content": dark_blue,
 
-        "color-sidebar-background": light_blue,
-        "color-sidebar-item-background--hover": medium_blue,
-        "color-sidebar-item-expander-background--hover": medium_blue,
+        "color-sidebar-background": gray,
+        "color-sidebar-item-background--hover": light_blue,
+        "color-sidebar-item-expander-background--hover": light_blue,
 
     },
     "dark_css_variables": {

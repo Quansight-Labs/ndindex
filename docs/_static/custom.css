@@ -12,23 +12,25 @@
     --color-brand-green: #1EB881;
     --color-brand-medium-blue: #1041F3;
     --color-brand-dark-blue: #0D2B9C;
-
+    --color-brand-dark-bg: #05002A;
     --color-brand-bg: white;
 
     --color-sidebar-current: white;
-    --color-sidebar-background-current: var(--color-brand-dark-blue);
-
+    --color-sidebar-background-current: var(--color-brand-medium-blue);
+    --color-sidebar--hover: var(--color-brand-dark-blue);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --color-sidebar-background-current: var(--color-brand-dark-blue);
-        --color-brand-bg: #05002A;
+        --color-brand-bg: var(--color-brand-dark-bg);
+        --color-sidebar--hover: white;
     }
 }
 [data-theme='dark'] {
     --color-sidebar-background-current: var(--color-brand-dark-blue);
-    --color-brand-bg: #05002A;
+    --color-brand-bg: var(--color-brand-dark-bg);
+    --color-sidebar--hover: white;
 }
 
 /* Make top-level items in the sidebar bold */
@@ -43,7 +45,7 @@
     color: var(--color-sidebar-current);
 }
 .sidebar-tree .reference:hover {
-    color: white;
+    color: var(--color-sidebar--hover);
 }
 
 /* The "hide search matches" text after doing a search. Defaults to the same
