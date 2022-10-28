@@ -81,14 +81,14 @@ templates_path = ['_templates']
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-# ndindex brand colors, from logo/ndindex_final_2.pdf.
-
-light_blue = "#8DBEFE"
-green = "#1EB881"
-medium_blue = "#1041F3"
-dark_blue = "#0D2B9C"
-dark_bg = "#05002A"
+# These are defined in _static/custom.css
+light_blue = "var(--color-brand-light-blue)"
+green = "var(--color-brand-green)"
+medium_blue = "var(--color-brand-medium-blue)"
+dark_blue = "var(--color-brand-dark-blue)"
+dark_bg = "var(--color-brand-dark-bg)"
 white = "white"
+black = "black"
 gray = "#EEEEEE"
 
 theme_colors_common = {
@@ -96,11 +96,11 @@ theme_colors_common = {
     "color-sidebar-brand-text": "var(--color-sidebar-link-text--top-level)",
 
     "color-admonition-title-background--seealso": "#CCCCCC",
-    "color-admonition-title--seealso": "black",
+    "color-admonition-title--seealso": black,
     "color-admonition-title-background--note": "#CCCCCC",
-    "color-admonition-title--note": "black",
+    "color-admonition-title--note": black,
     "color-admonition-title-background--warning": "var(--color-problematic)",
-    "color-admonition-title--warning": "white",
+    "color-admonition-title--warning": white,
     "admonition-font-size": "var(--font-size--normal)",
     "admonition-title-font-size": "var(--font-size--normal)",
 
@@ -135,7 +135,7 @@ html_theme_options = {
         "color-api-overall": "#FFFFFF90",
         "color-api-paren": "#FFFFFF90",
 
-        "color-background-primary": "black",
+        "color-background-primary": black,
 
         "color-sidebar-background": dark_bg,
         "color-sidebar-item-background--hover": medium_blue,
