@@ -22,7 +22,7 @@ jobs:
           conda config --add channels conda-forge
           conda update -q conda
           conda info -a
-          conda create -n test-environment python=${{ matrix.python-version }} sphinx myst-parser furo sphinx-copybutton
+          conda create -n test-environment python=${{ matrix.python-version }} sphinx myst-parser furo sphinx-copybutton linkify-it-py
           conda init
 
       - name: Build Docs
