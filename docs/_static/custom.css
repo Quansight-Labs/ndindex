@@ -1,110 +1,92 @@
-nav#rellinks {
-    float: left;
-    width: 100%;
-}
-
-.related.prev {
-    float: left;
-    text-align: left;
-    width: 50%;
-}
-
-.related.next {
-    float: right;
-    text-align: right;
-    width: 50%
-}
-
-nav#rellinks li+li:before {
-    content: "";
-}
-
-div.sphinxsidebar {
-    max-height: 95%;
-    overflow-y: auto;
-}
-
-div.sphinxsidebar p.logo {
-    display: inline;
-}
-
-div.sphinxsidebar hr {
-    width: 100%;
-}
-
-/* Disable white background on some links, since our background is not white. */
-tt, code {
-    background-color: inherit;
-}
-
-div.admonition tt.xref, div.admonition code.xref, div.admonition a tt, tt.xref, code.xref, a tt {
-    background-color: inherit;
-    border-bottom: 0;
-}
-
-/* Pure CSS "Fork me on GitHub" ribbon.
- * From
- * https://github.com/ssokolow/quicktile/commit/1ae5388ac0f2a2bfa494045644b0ba19eb042329
- * See https://github.com/bitprophet/alabaster/issues/166
- */
-
-#forkongithub {
-    position: absolute;
-    display: block;
-    top: 0;
-    right: 0;
-    width: 200px;
-    overflow: hidden;
-    height: 200px;
-    z-index: 9999;
-}
-#forkongithub a {
-    background: #000;
-    color: #fff;
-    text-decoration: none;
-    font-family: arial, sans-serif;
-    text-align: center;
+/* Make the title text in the sidebar bold */
+.sidebar-brand-text {
     font-weight: bold;
-    padding: 5px 40px;
-    font-size: 10pt;
-    line-height: 15pt;
-    width: 200px;
-    position: absolute;
-    top: 40px;
-    right: -82px;
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-}
-#forkongithub a::before,
-#forkongithub a::after {
-    content: "";
-    width: 100%;
-    display: block;
-    position: absolute;
-    top: 1px;
-    left: 0;
-    height: 1px;
-    background: #777;
-}
-#forkongithub a::after {
-    bottom: 1px;
-    top: auto;
-}
-@media screen and (max-width: 979px) {
-    #forkongithub a {
-        display: none;
-    }
-}
-@media print {
-    #forkongithub a {
-        display: none;
-    }
 }
 
-strong:hover > a.headerlink {
-    visibility: visible;
+:root {
+    --color-brand-light-blue: #8DBEFE;
+    --color-brand-green: #1EB881;
+    --color-brand-medium-blue: #1041F3;
+    --color-brand-dark-blue: #0D2B9C;
+
+    --color-brand-bg: white;
+
+    --color-sidebar-current: white;
+    --color-sidebar-background-current: var(--color-brand-dark-blue);
+
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-brand-bg: #05002A;
+    }
+}
+[data-theme='dark'] {
+    --color-brand-bg: #05002A;
+}
+
+/* Make top-level items in the sidebar bold */
+.sidebar-tree .toctree-l1>.reference, .sidebar-tree .toctree-l1>label .icon {
+    font-weight: bold !important;
+}
+
+/* Indicate the current page using a background color rather than bold text */
+.sidebar-tree .current-page>.reference {
+    font-weight: normal;
+    background-color: var(--color-sidebar-background-current);
+    color: var(--color-sidebar-current);
+}
+.sidebar-tree .reference:hover {
+    color: white;
+}
+
+/* The "hide search matches" text after doing a search. Defaults to the same
+   color as the icon which is illegible on the colored background. */
+.highlight-link a {
+    color: white !important;
+}
+
+.admonition.warning>.admonition-title {
+    color: white;
+}
+
+/* Disable underlines on links except on hover */
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+/* Keep the underline in the announcement header */
+.announcement-content a {
+    text-decoration: underline;
+}
+
+/* Remove the background from code in titles and the sidebar */
+code.literal {
+    background: inherit;
+}
+
+/* Make "Warning" white */
+.admonition.warning>.admonition-title {
+    color: white;
+}
+
+/* Makes the text look better on Mac retina displays (the Furo CSS disables*/
+/* subpixel antialiasing). */
+body {
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
+
+/* Disable upcasing of headers 4+ (they are still distinguishable by*/
+/* font-weight and size) */
+h4, h5, h6 {
+    text-transform: inherit;
+}
+
+/* Disable the fancy scrolling behavior when jumping to headers (this is too
+   slow for long pages) */
+html {
+    scroll-behavior: auto;
 }
