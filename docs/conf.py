@@ -135,6 +135,8 @@ html_theme_options = {
         "color-api-overall": "#FFFFFF90",
         "color-api-paren": "#FFFFFF90",
 
+        "color-background-primary": "black",
+
         "color-sidebar-background": dark_bg,
         "color-sidebar-item-background--hover": medium_blue,
         "color-sidebar-item-expander-background--hover": medium_blue,
