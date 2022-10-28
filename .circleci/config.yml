@@ -24,16 +24,16 @@ jobs:
           name: Install dependencies
           no_output_timeout: 25m
           command: |
-            cd doc
+            cd docs
             pip install sphinx myst-parser furo sphinx-copybutton
       - run:
           name: Build docs
           no_output_timeout: 25m
           command: |
-            cd doc
+            cd docs
             make html
       - store_artifacts:
-          path: doc/_build/html
+          path: docs/_build/html
 
 workflows:
   version: 2
