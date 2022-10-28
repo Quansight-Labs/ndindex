@@ -22,10 +22,12 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
+        --color-sidebar-background-current: var(--color-brand-dark-blue);
         --color-brand-bg: #05002A;
     }
 }
 [data-theme='dark'] {
+    --color-sidebar-background-current: var(--color-brand-dark-blue);
     --color-brand-bg: #05002A;
 }
 

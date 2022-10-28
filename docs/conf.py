@@ -133,8 +133,8 @@ html_theme_options = {
         "color-api-paren": "#FFFFFF90",
 
         "color-sidebar-background": dark_bg,
-        "color-sidebar-item-background--hover": dark_blue,
-        "color-sidebar-item-expander-background--hover": dark_blue,
+        "color-sidebar-item-background--hover": medium_blue,
+        "color-sidebar-item-expander-background--hover": medium_blue,
 
         "color-highlight-on-target": dark_blue,
 
