@@ -157,40 +157,6 @@ html_theme_options = {
     ],
 }
 
-# html_theme_options = {
-#     'fixed_sidebar': True,
-#     'github_user': 'Quansight-Labs',
-#     'github_repo': 'ndindex',
-#     'github_banner': False,
-#     'logo': 'ndindex_logo_white_bg.svg',
-#     'logo_name': False,
-#     # 'show_related': True,
-#     # Needs a release with https://github.com/bitprophet/alabaster/pull/101 first
-#     'show_relbars': True,
-#
-#     # Colors
-#
-#     'base_bg': '#EEEEEE',
-#     'narrow_sidebar_bg': '#DDDDDD',
-#     # Sidebar text
-#     'gray_1': '#000000',
-#     'narrow_sidebar_link': '#333333',
-#     # Doctest background
-#     'gray_2': '#F0F8FF',
-#
-#     # Remove gray background from inline code
-#     'code_bg': '#EEEEEE',
-#
-#     # Originally 940px
-#     'page_width': '1000px',
-#
-#     # Fonts
-#     'font_family': "Palatino, 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
-#     'font_size': '18px',
-#     'code_font_family': "'Menlo', 'DejaVu Sans Mono', 'Consolas', 'Bitstream Vera Sans Mono', monospace",
-#     'code_font_size': '0.85em',
-#     }
-
 # custom.css contains changes that aren't possible with the above because they
 # aren't specified in the Furo theme as CSS variables
 html_css_files = ['custom.css']
