@@ -8,11 +8,12 @@
 }
 
 :root {
-    --color-brand-light-blue: #8DBEFE;
-    --color-brand-green: #1EB881;
-    --color-brand-medium-blue: #1041F3;
-    --color-brand-dark-blue: #0D2B9C;
-    --color-brand-dark-bg: #05002A;
+    /* ndindex brand colors, from logo/ndindex_final_2.pdf. */
+    --color-brand-light-blue: #9ECBFF;
+    --color-brand-green: #15C293;
+    --color-brand-medium-blue: #115DF6;
+    --color-brand-dark-blue: #0D41AC;
+    --color-brand-dark-bg: #050038;
     --color-brand-bg: white;
 
     --color-sidebar-current: white;
