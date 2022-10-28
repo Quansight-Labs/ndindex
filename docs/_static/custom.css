@@ -41,7 +41,7 @@
 }
 
 /* The "hide search matches" text after doing a search. Defaults to the same
-   color as the icon which is illegible on the colored background. */
+   color as the search icon which is illegible on the colored background. */
 .highlight-link a {
     color: white !important;
 }

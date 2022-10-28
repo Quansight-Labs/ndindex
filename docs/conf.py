@@ -123,7 +123,6 @@ html_theme_options = {
         "color-sidebar-item-expander-background--hover": medium_blue,
 
     },
-    # Don't use any custom colors for dark mode. See https://github.com/pradyunsg/furo/blob/main/src/furo/assets/styles/variables/_colors.scss
     "dark_css_variables": {
         **theme_colors_common,
         "color-brand-primary": light_blue,
