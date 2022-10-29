@@ -206,7 +206,7 @@ allows one to specify parts of a list that would otherwise need to be
 specified in terms of the size of the list.
 
 If an integer index is greater than or equal to the size of the list, or less
-than negative the size of the list (`i >= len(a)` or `i < len(a)`), then it
+than negative the size of the list (`i >= len(a)` or `i < -len(a)`), then it
 is out of bounds and will raise an `IndexError`.
 
 ```py
