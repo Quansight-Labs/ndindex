@@ -141,8 +141,6 @@ html_theme_options = {
         "color-sidebar-item-background--hover": medium_blue,
         "color-sidebar-item-expander-background--hover": medium_blue,
 
-        "color-highlight-on-target": dark_blue,
-
         "color-admonition-title-background--seealso": "#555555",
         "color-admonition-title-background--note": "#555555",
         "color-problematic": "#B30000",
