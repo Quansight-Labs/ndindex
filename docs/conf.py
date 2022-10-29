@@ -111,6 +111,7 @@ theme_colors_common = {
     "color-api-pre-name": "var(--color-brand-content)",
     "api-font-size": "var(--font-size--normal)",
 
+    "code-font-size": "var(--font-size--small)",
 
     }
 html_theme_options = {
