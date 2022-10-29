@@ -62,9 +62,9 @@ We will use these names throughout this guide.
 
 It is worth noting that the `x:y:z` syntax is not valid outside of square
 brackets. However, slice objects can be created manually using the `slice()`
-builtin (`a[x:y:z]` is the same as `a[slice(x, y, z)]`). You can also use the
-[`ndindex.Slice()`](slice-api) object if you want to perform more advanced
-operations.
+builtin (`a[x:y:z]` is the same as `a[slice(x, y, z)]`). If you want to
+perform more advanced operations like arithmetic on slices, consider using
+the [`ndindex.Slice()`](slice-api) object.
 
 (rules)=
 ## Rules
