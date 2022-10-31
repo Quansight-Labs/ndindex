@@ -1,114 +1,278 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Type Confusion" href="type-confusion.html" /><link rel="prev" title="API Reference" href="api.html" />
 
-<!DOCTYPE html>
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>Slices &#8212; ndindex  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Type Confusion" href="type-confusion.html" />
-    <link rel="prev" title="API Reference" href="api.html" />
- 
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-    <script type="text/javascript" src="_static/copybutton.js"></script>
- 
-  </head><body>
-  <div class="document">
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+        <title>Slices - ndindex documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-
-<p class="logo">
-  <a href="index.html">
-    <img class="logo" src="_static/ndindex_logo_white_bg.svg" alt="Logo"/>
     
-  </a>
-</p>
 
 
-<ul class="current">
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  --color-sidebar-background-border: var(--color-background-primary);
+  --color-sidebar-brand-text: var(--color-sidebar-link-text--top-level);
+  --color-admonition-title-background--seealso: #CCCCCC;
+  --color-admonition-title--seealso: black;
+  --color-admonition-title-background--note: #CCCCCC;
+  --color-admonition-title--note: black;
+  --color-admonition-title-background--warning: var(--color-problematic);
+  --color-admonition-title--warning: white;
+  --admonition-font-size: var(--font-size--normal);
+  --admonition-title-font-size: var(--font-size--normal);
+  --color-link-underline--hover: var(--color-link);
+  --color-api-keyword: #000000bd;
+  --color-api-name: var(--color-brand-content);
+  --color-api-pre-name: var(--color-brand-content);
+  --api-font-size: var(--font-size--normal);
+  --code-font-size: var(--font-size--small);
+  --color-brand-primary: var(--color-brand-dark-blue);
+  --color-brand-content: var(--color-brand-dark-blue);
+  --color-sidebar-background: #EEEEEE;
+  --color-sidebar-item-background--hover: var(--color-brand-light-blue);
+  --color-sidebar-item-expander-background--hover: var(--color-brand-light-blue);
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-sidebar-background-border: var(--color-background-primary);
+  --color-sidebar-brand-text: var(--color-sidebar-link-text--top-level);
+  --color-admonition-title-background--seealso: #555555;
+  --color-admonition-title--seealso: black;
+  --color-admonition-title-background--note: #555555;
+  --color-admonition-title--note: black;
+  --color-admonition-title-background--warning: var(--color-problematic);
+  --color-admonition-title--warning: white;
+  --admonition-font-size: var(--font-size--normal);
+  --admonition-title-font-size: var(--font-size--normal);
+  --color-link-underline--hover: var(--color-link);
+  --color-api-keyword: #FFFFFFbd;
+  --color-api-name: var(--color-brand-content);
+  --color-api-pre-name: var(--color-brand-content);
+  --api-font-size: var(--font-size--normal);
+  --code-font-size: var(--font-size--small);
+  --color-brand-primary: var(--color-brand-light-blue);
+  --color-brand-content: var(--color-brand-light-blue);
+  --color-api-overall: #FFFFFF90;
+  --color-api-paren: #FFFFFF90;
+  --color-background-primary: black;
+  --color-sidebar-background: var(--color-brand-dark-bg);
+  --color-sidebar-item-background--hover: var(--color-brand-medium-blue);
+  --color-sidebar-item-expander-background--hover: var(--color-brand-medium-blue);
+  --color-problematic: #B30000;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-sidebar-background-border: var(--color-background-primary);
+  --color-sidebar-brand-text: var(--color-sidebar-link-text--top-level);
+  --color-admonition-title-background--seealso: #555555;
+  --color-admonition-title--seealso: black;
+  --color-admonition-title-background--note: #555555;
+  --color-admonition-title--note: black;
+  --color-admonition-title-background--warning: var(--color-problematic);
+  --color-admonition-title--warning: white;
+  --admonition-font-size: var(--font-size--normal);
+  --admonition-title-font-size: var(--font-size--normal);
+  --color-link-underline--hover: var(--color-link);
+  --color-api-keyword: #FFFFFFbd;
+  --color-api-name: var(--color-brand-content);
+  --color-api-pre-name: var(--color-brand-content);
+  --api-font-size: var(--font-size--normal);
+  --code-font-size: var(--font-size--small);
+  --color-brand-primary: var(--color-brand-light-blue);
+  --color-brand-content: var(--color-brand-light-blue);
+  --color-api-overall: #FFFFFF90;
+  --color-api-paren: #FFFFFF90;
+  --color-background-primary: black;
+  --color-sidebar-background: var(--color-brand-dark-bg);
+  --color-sidebar-item-background--hover: var(--color-brand-medium-blue);
+  --color-sidebar-item-expander-background--hover: var(--color-brand-medium-blue);
+  --color-problematic: #B30000;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">ndindex  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="_static/ndindex_logo_white_bg.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="_static/ndindex_logo_dark_bg.svg" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">ndindex  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Slices</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#what-is-a-slice">What is a slice?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#rules">Rules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#integer-indices">Integer indices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#points-of-confusion">Points of Confusion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subarray">Subarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#based">0-based</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#half-open">Half-open</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#negative-indices">Negative Indices</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#clipping">Clipping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#steps">Steps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#negative-steps">Negative Steps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#omitted-entries">Omitted Entries</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#soapbox">Soapbox</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#footnotes">Footnotes</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Slices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="type-confusion.html">Type Confusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a></li>
 </ul>
 
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-        </div>
-      </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-              <div class="related top">
-                &nbsp;
-  <nav id="rellinks">
-    <ul>
-        <li>
-          &larr;
-          <a href="api.html" title="Previous document">API Reference</a>
-        </li>
-        <li>
-          <a href="type-confusion.html" title="Next document">Type Confusion</a>
-          &rarr;
-        </li>
-    </ul>
-  </nav>
-              </div>
-          
+</div>
 
-          <div class="body" role="main">
-            
-  <section id="slices">
-<span id="slices-docs"></span><h1>Slices<a class="headerlink" href="#slices" title="Permalink to this heading">¶</a></h1>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="slices">
+<span id="slices-docs"></span><h1>Slices<a class="headerlink" href="#slices" title="Permalink to this heading">#</a></h1>
 <p>Python’s slice syntax is one of the more confusing parts of the language, even
 to experienced developers. In this page, I carefully break down the rules for
 slicing, and examine just what it is that makes it so confusing.</p>
@@ -136,7 +300,7 @@ strings. This is because on a single dimension, NumPy slice semantics are
 identical to the Python slice semantics (NumPy only begins to differ from
 Python for multi-dimensional indices).</p>
 <section id="what-is-a-slice">
-<h2>What is a slice?<a class="headerlink" href="#what-is-a-slice" title="Permalink to this heading">¶</a></h2>
+<h2>What is a slice?<a class="headerlink" href="#what-is-a-slice" title="Permalink to this heading">#</a></h2>
 <p>In Python, a slice is a special syntax that is allowed only in an index, that
 is, inside of square brackets proceeding an expression. A slice consists of
 one or two colons, with either an expression or nothing on either side of each
@@ -159,12 +323,12 @@ expressions <code class="docutils literal notranslate"><span class="pre">x</span
 <p>We will use these names throughout this guide.</p>
 <p>It is worth noting that the <code class="docutils literal notranslate"><span class="pre">x:y:z</span></code> syntax is not valid outside of square
 brackets. However, slice objects can be created manually using the <code class="docutils literal notranslate"><span class="pre">slice()</span></code>
-builtin (<code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[slice(x,</span> <span class="pre">y,</span> <span class="pre">z)]</span></code>). You can also use the
-<a class="reference internal" href="api.html#slice-api"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code></span></a> object if you want to perform more advanced
-operations.</p>
+builtin (<code class="docutils literal notranslate"><span class="pre">a[x:y:z]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[slice(x,</span> <span class="pre">y,</span> <span class="pre">z)]</span></code>). If you want to
+perform more advanced operations like arithmetic on slices, consider using
+the <a class="reference internal" href="api.html#slice-api"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code></span></a> object.</p>
 </section>
 <section id="rules">
-<span id="id1"></span><h2>Rules<a class="headerlink" href="#rules" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2>Rules<a class="headerlink" href="#rules" title="Permalink to this heading">#</a></h2>
 <p>These are the rules to keep in mind to understand how slices work. Each of
 these is explained in detail below. Many of the detailed descriptions below
 also outline several <em>wrong</em> rules, which are bad ways of thinking about
@@ -193,14 +357,16 @@ means the resulting dimension will be 0 or 1. (See section <a class="reference i
 </ol>
 </section>
 <section id="integer-indices">
-<span id="id2"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this heading">¶</a></h2>
+<span id="id2"></span><h2>Integer indices<a class="headerlink" href="#integer-indices" title="Permalink to this heading">#</a></h2>
 <p>To understand slices, it is good to first review how integer indices work.
 Throughout this guide, we will use as an example this prototype list:</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
 a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
 \mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
 \]</div>
+</div>
 <p>The list <code class="docutils literal notranslate"><span class="pre">a</span></code> has 7 elements.</p>
 <p>The elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> are strings, but the indices and slices on the list <code class="docutils literal notranslate"><span class="pre">a</span></code>
 will always use integers. An index or slice is never based on the value of the
@@ -219,14 +385,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}3{\phantom{,}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}3{\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -250,14 +416,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{-7\phantom{,}}
-    & \color{red}{-6\phantom{,}}
-    & \color{red}{-5\phantom{,}}
-    & \color{red}{-4\phantom{,}}
-    & \color{blue}{-3\phantom{,}}
-    & \color{red}{-2\phantom{,}}
-    & \color{red}{-1\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{-7\phantom{,}}
+    & \color{#EE0000}{-6\phantom{,}}
+    & \color{#EE0000}{-5\phantom{,}}
+    & \color{#EE0000}{-4\phantom{,}}
+    & \color{#5E5EFF}{-3\phantom{,}}
+    & \color{#EE0000}{-2\phantom{,}}
+    & \color{#EE0000}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -281,7 +447,7 @@ with the size of the axis being sliced). For example, <code class="docutils lite
 allows one to specify parts of a list that would otherwise need to be
 specified in terms of the size of the list.</p>
 <p>If an integer index is greater than or equal to the size of the list, or less
-than negative the size of the list (<code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&gt;=</span> <span class="pre">len(a)</span></code> or <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">len(a)</span></code>), then it
+than negative the size of the list (<code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&gt;=</span> <span class="pre">len(a)</span></code> or <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">-len(a)</span></code>), then it
 is out of bounds and will raise an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
 <span class="gt">Traceback (most recent call last):</span>
@@ -295,7 +461,7 @@ is out of bounds and will raise an <code class="docutils literal notranslate"><s
 </div>
 </section>
 <section id="points-of-confusion">
-<h2>Points of Confusion<a class="headerlink" href="#points-of-confusion" title="Permalink to this heading">¶</a></h2>
+<h2>Points of Confusion<a class="headerlink" href="#points-of-confusion" title="Permalink to this heading">#</a></h2>
 <p>Now let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
 would necessitate several “if” conditions. The <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.indexing.html">NumPy
@@ -317,15 +483,17 @@ particular subset of my array”.<a class="footnote-reference brackets" href="#n
 aspects of the syntax and semantics that can lead to confusion, and attempting
 to demystify them through simple <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>.</p>
 <section id="subarray">
-<span id="id5"></span><h3>Subarray<a class="headerlink" href="#subarray" title="Permalink to this heading">¶</a></h3>
-<p><strong>A slice always produces a subarray (or sub-list, sub-tuple, sub-string,
+<span id="id5"></span><h3>Subarray<a class="headerlink" href="#subarray" title="Permalink to this heading">#</a></h3>
+<blockquote>
+<div><p><strong>A slice always produces a subarray (or sub-list, sub-tuple, sub-string,
 etc.). For NumPy arrays, this means that a slice will always <em>preserve</em> the
-dimension that is sliced.</strong> This is true even if the slice chooses only a
-single element, or even if it chooses no elements. This is also true for
-lists, tuples, and strings, in the sense that a slice on a list, tuple, or
-string will always produce a list, tuple, or string. This behavior is
-different from integer indices, which always remove the dimension that they
-index.</p>
+dimension that is sliced.</strong></p>
+</div></blockquote>
+<p>This is true even if the slice chooses only a single element, or even if it
+chooses no elements. This is also true for lists, tuples, and strings, in the
+sense that a slice on a list, tuple, or string will always produce a list,
+tuple, or string. This behavior is different from integer indices, which
+always remove the dimension that they index.</p>
 <p>For example</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
@@ -351,7 +519,7 @@ are too large. A slice cannot be “out of bounds.” See the section on
 <a class="reference internal" href="#clipping"><span class="std std-ref">clipping</span></a> below.</p>
 </section>
 <section id="based">
-<span id="id6"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this heading">¶</a></h3>
+<span id="id6"></span><h3>0-based<a class="headerlink" href="#based" title="Permalink to this heading">#</a></h3>
 <p>For the slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code>, with <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> nonnegative integers,
 the indices <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are 0-based, just as with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
 indexing</span></a> (although one should be careful that even though
@@ -363,14 +531,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -387,7 +555,7 @@ time to time. The best way to learn to use 0-based indexing is to practice
 using it enough that you use it automatically without thinking about it.</p>
 </section>
 <section id="half-open">
-<span id="id7"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this heading">¶</a></h3>
+<span id="id7"></span><h3>Half-open<a class="headerlink" href="#half-open" title="Permalink to this heading">#</a></h3>
 <p>Slices behave like half-open intervals. What this means is that the <code class="docutils literal notranslate"><span class="pre">stop</span></code> in
 <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is <em>never</em> included in the slice (the exception is if the
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> is omitted, see <a class="reference internal" href="#omitted"><span class="std std-ref">below</span></a>).</p>
@@ -400,14 +568,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{blue}{\enclose{circle}{4}}
-    & \color{red}{\enclose{circle}{5}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
+    & \color{#EE0000}{\enclose{circle}{5}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -455,9 +623,11 @@ slice <code class="docutils literal notranslate"><span class="pre">a[i:j]</span>
 </li>
 </ul>
 <section id="wrong-ways-of-thinking-about-half-open-semantics">
-<h4>Wrong Ways of Thinking about Half-open Semantics<a class="headerlink" href="#wrong-ways-of-thinking-about-half-open-semantics" title="Permalink to this heading">¶</a></h4>
-<p><strong>The proper rule to remember for half-open semantics is “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not
+<h4>Wrong Ways of Thinking about Half-open Semantics<a class="headerlink" href="#wrong-ways-of-thinking-about-half-open-semantics" title="Permalink to this heading">#</a></h4>
+<blockquote>
+<div><p><strong>The proper rule to remember for half-open semantics is “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not
 included”.</strong></p>
+</div></blockquote>
 <p>There are several alternative ways that one might think of slice semantics,
 but they are all wrong in subtle ways. To be sure, for each of these, one
 could “fix” the rule by adding some conditions, “it’s this in the case where
@@ -490,20 +660,20 @@ interval <span class="math notranslate nohighlight">\((\text{stop}, \text{start}
 <!-- TODO: improve this -->
 <div style="text-align:center;" >
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-<div style="font-size: 16pt;color:red;">(WRONG)</div>
+<div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
-\color{red}{\text{WRONG}}&
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
+\color{#EE0000}{\text{WRONG}}&
     &
     &
     & [\phantom{3,}
@@ -526,7 +696,7 @@ $$
 </pre></div>
 </div>
 <p>This is because the slice <code class="docutils literal notranslate"><span class="pre">5:3:-1</span></code> starts at index <code class="docutils literal notranslate"><span class="pre">5</span></code> and steps backwards to
-index <code class="docutils literal notranslate"><span class="pre">3</span></code>, but not including <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+index <code class="docutils literal notranslate"><span class="pre">3</span></code>, but not including <code class="docutils literal notranslate"><span class="pre">3</span></code> (see <a class="reference internal" href="#negative-steps"><span class="std std-ref">Negative Steps</span></a> below).</p>
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
 $$
@@ -534,14 +704,14 @@ $$
 \begin{aligned}
 \begin{array}{r r r r r r r r}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{\textsf{'},}}
-    & \color{red}{1\phantom{\textsf{'},}}
-    & \color{red}{2\phantom{\textsf{'},}}
-    & \color{red}{\enclose{circle}{3}\phantom{,}}
-    & \leftarrow\color{blue}{\enclose{circle}{4}\phantom{,}}
-    & \leftarrow\color{blue}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{\textsf{'},}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{\textsf{'},}}
+    & \color{#EE0000}{1\phantom{\textsf{'},}}
+    & \color{#EE0000}{2\phantom{\textsf{'},}}
+    & \color{#EE0000}{\enclose{circle}{3}\phantom{,}}
+    & \leftarrow\color{#5E5EFF}{\enclose{circle}{4}\phantom{,}}
+    & \leftarrow\color{#5E5EFF}{\enclose{circle}{5}\phantom{,}}
+    & \color{#EE0000}{6\phantom{\textsf{'},}}\\
 \end{array}
 \end{aligned}
 $$
@@ -584,38 +754,38 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
 a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{0}
+    & \color{#EE0000}{0}
     &
-    & \color{red}{1}
+    & \color{#EE0000}{1}
     &
-    & \color{red}{2}
+    & \color{#EE0000}{2}
     &
-    & \color{blue}{3}
+    & \color{#5E5EFF}{3}
     &
-    & \color{blue}{4}
+    & \color{#5E5EFF}{4}
     &
-    & \color{blue}{5}
+    & \color{#5E5EFF}{5}
     &
-    & \color{red}{6}
+    & \color{#EE0000}{6}
     &
-    & \color{red}{7}\\
+    & \color{#EE0000}{7}\\
 \end{array}\\
 \end{aligned}
 $$
@@ -636,7 +806,7 @@ positive, but falls apart when it is negative.</p>
 imagine it to give the same incorrect subarray that we imagined before.</p>
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-<div style="font-size: 16pt;color:red;">(WRONG)</div>
+<div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
 $$
 \require{enclose}
 \begin{aligned}
@@ -644,40 +814,40 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
   a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{0}
+    & \color{#EE0000}{0}
     &
-    & \color{red}{1}
+    & \color{#EE0000}{1}
     &
-    & \color{red}{2}
+    & \color{#EE0000}{2}
     &
-    & \color{blue}{3}
+    & \color{#5E5EFF}{3}
     &
-    & \color{blue}{4}
+    & \color{#5E5EFF}{4}
     &
-    & \color{blue}{5}
+    & \color{#5E5EFF}{5}
     &
-    & \color{red}{6}
+    & \color{#EE0000}{6}
     &
-    & \color{red}{7}\\
+    & \color{#EE0000}{7}\\
 \end{array}\\
-\small{\color{red}{\textbf{THIS IS WRONG!}}}
+\small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
 \end{array}
 \end{aligned}
 $$
@@ -705,31 +875,31 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
     &
-    & \color{red}{1\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
     &
-    & \color{red}{2\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
     &
-    & \color{red}{\enclose{circle}{3}}
+    & \color{#EE0000}{\enclose{circle}{3}}
     &
-    & \color{blue}{\enclose{circle}{4}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
     &
-    & \color{blue}{\enclose{circle}{5}}
+    & \color{#5E5EFF}{\enclose{circle}{5}}
     &
-    & \color{red}{6\phantom{,}}\\
-    &
-    & \phantom{\leftarrow}
+    & \color{#EE0000}{6\phantom{,}}\\
     &
     & \phantom{\leftarrow}
     &
     & \phantom{\leftarrow}
-    & \color{red}{-1}
+    &
+    & \phantom{\leftarrow}
+    & \color{#EE0000}{-1}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{\text{start}}
+    & \color{#5E5EFF}{\text{start}}
 \end{array}
 \end{aligned}
 $$
@@ -747,38 +917,38 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
   a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{-7}
+    & \color{#EE0000}{-7}
     &
-    & \color{red}{-6}
+    & \color{#EE0000}{-6}
     &
-    & \color{red}{-5}
+    & \color{#EE0000}{-5}
     &
-    & \color{blue}{-4}
+    & \color{#5E5EFF}{-4}
     &
-    & \color{blue}{-3}
+    & \color{#5E5EFF}{-3}
     &
-    & \color{blue}{-2}
+    & \color{#5E5EFF}{-2}
     &
-    & \color{red}{-1}
+    & \color{#EE0000}{-1}
     &
-    & \color{red}{0}\\
+    & \color{#EE0000}{0}\\
 \end{array}\\
 \small{\text{(not a great way of thinking about negative indices)}}
 \end{array}
@@ -795,7 +965,7 @@ thinking about negative indices (the way we are recommending) is that the
 end starts at -1. So you might mistakenly imagine something like this:</p>
 <div style="text-align:center" >
 <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
-<div style="font-size: 16pt;color:red;">(WRONG)</div>
+<div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
 $$
 \require{enclose}
 \begin{aligned}
@@ -803,40 +973,40 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
   a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{-8}
+    & \color{#EE0000}{-8}
     &
-    & \color{red}{-7}
+    & \color{#EE0000}{-7}
     &
-    & \color{red}{-6}
+    & \color{#EE0000}{-6}
     &
-    & \color{red}{-5}
+    & \color{#EE0000}{-5}
     &
-    & \color{blue}{-4}
+    & \color{#5E5EFF}{-4}
     &
-    & \color{blue}{-3}
+    & \color{#5E5EFF}{-3}
     &
-    & \color{blue}{-2}
+    & \color{#5E5EFF}{-2}
     &
-    & \color{red}{-1}\\
+    & \color{#EE0000}{-1}\\
 \end{array}\\
-\small{\color{red}{\textbf{THIS IS WRONG!}}}
+\small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
 \end{array}
 \end{aligned}
 $$
@@ -852,7 +1022,7 @@ slice <code class="docutils literal notranslate"><span class="pre">a[-2:-4:-1]</
 diagram:</p>
 <div style="text-align:center" >
 <code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
-<div style="font-size: 16pt;color:blue;">NOW RIGHT!</div>
+<div style="font-size: 16pt;color:#5E5EFF;">NOW RIGHT!</div>
 $$
 \require{enclose}
 \begin{aligned}
@@ -860,38 +1030,38 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
   a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{-8}
+    & \color{#EE0000}{-8}
     &
-    & \color{red}{-7}
+    & \color{#EE0000}{-7}
     &
-    & \color{red}{-6}
+    & \color{#EE0000}{-6}
     &
-    & \color{red}{-5}
+    & \color{#EE0000}{-5}
     &
-    & \color{blue}{-4}
+    & \color{#5E5EFF}{-4}
     &
-    & \color{blue}{-3}
+    & \color{#5E5EFF}{-3}
     &
-    & \color{blue}{-2}
+    & \color{#5E5EFF}{-2}
     &
-    & \color{red}{-1}\\
+    & \color{#EE0000}{-1}\\
 \end{array}\\
 \small{\text{(not a great way of thinking about negative indices)}}
 \end{array}
@@ -900,7 +1070,7 @@ $$
 </div>
 <div style="text-align:center" >
 <code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
-<div style="font-size: 16pt;color:red;">(WRONG)</div>
+<div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
 $$
 \require{enclose}
 \begin{aligned}
@@ -908,40 +1078,40 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
   a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{-7}
+    & \color{#EE0000}{-7}
     &
-    & \color{red}{-6}
+    & \color{#EE0000}{-6}
     &
-    & \color{red}{-5}
+    & \color{#EE0000}{-5}
     &
-    & \color{blue}{-4}
+    & \color{#5E5EFF}{-4}
     &
-    & \color{blue}{-3}
+    & \color{#5E5EFF}{-3}
     &
-    & \color{blue}{-2}
+    & \color{#5E5EFF}{-2}
     &
-    & \color{red}{-1}
+    & \color{#EE0000}{-1}
     &
-    & \color{red}{0}\\
+    & \color{#EE0000}{0}\\
 \end{array}\\
-\small{\color{red}{\textbf{THIS IS WRONG!}}}
+\small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
 \end{array}
 \end{aligned}
 $$
@@ -968,7 +1138,7 @@ So there is an “extra” fencepost compared to the number of fence sections.</
 <figure class="align-default" id="id17">
 <img alt="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" src="_images/jeff-burak-lPO0VzF_4s8-unsplash.jpg" />
 <figcaption>
-<p><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak-footnote" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">A section of a fence that has 6 segments and 7 fenceposts.<a class="footnote-reference brackets" href="#fencepost-jeff-burbak-footnote" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#id17" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Fencepost problems are a leading cause of off-by-one errors. Thinking about
@@ -999,14 +1169,18 @@ here. It isn’t worth it.</p>
 </section>
 </section>
 <section id="negative-indices">
-<span id="id9"></span><h3>Negative Indices<a class="headerlink" href="#negative-indices" title="Permalink to this heading">¶</a></h3>
+<span id="id9"></span><h3>Negative Indices<a class="headerlink" href="#negative-indices" title="Permalink to this heading">#</a></h3>
 <p>Negative indices in slices work the same way they do with <a class="reference internal" href="#integer-indices"><span class="std std-ref">integer
-indices</span></a>. <strong>For <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>, negative <code class="docutils literal notranslate"><span class="pre">start</span></code> or
-<code class="docutils literal notranslate"><span class="pre">stop</span></code> use −1-based indexing from the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</strong> However, negative <code class="docutils literal notranslate"><span class="pre">start</span></code>
-or <code class="docutils literal notranslate"><span class="pre">stop</span></code> does <em>not</em> change the order of the slicing—only the <code class="docutils literal notranslate"><span class="pre">step</span></code> does
-that. The other <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a> of slicing do not change when the <code class="docutils literal notranslate"><span class="pre">start</span></code> or
-<code class="docutils literal notranslate"><span class="pre">stop</span></code> is negative. <a class="reference internal" href="#half-open"><span class="std std-ref">The <code class="docutils literal notranslate"><span class="pre">stop</span></code> is still not included</span></a>, values less
-than <code class="docutils literal notranslate"><span class="pre">-len(a)</span></code> still <a class="reference internal" href="#clipping"><span class="std std-ref">clip</span></a>, and so on.</p>
+indices</span></a>.</p>
+<blockquote>
+<div><p><strong>For <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>, negative <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> use −1-based indexing
+from the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</strong></p>
+</div></blockquote>
+<p>However, negative <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> does <em>not</em> change the order of the
+slicing—only the <a class="reference internal" href="#steps"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">step</span></code></span></a> does that. The other <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a> of
+slicing do not change when the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> is negative. <a class="reference internal" href="#half-open"><span class="std std-ref">The <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
+still not included</span></a>, values less than <code class="docutils literal notranslate"><span class="pre">-len(a)</span></code> still
+<a class="reference internal" href="#clipping"><span class="std std-ref">clip</span></a>, and so on.</p>
 <p>Note that positive and negative indices can be mixed. The following slices of
 <code class="docutils literal notranslate"><span class="pre">a</span></code> all produce <code class="docutils literal notranslate"><span class="pre">['d',</span> <span class="pre">'e']</span></code>:</p>
 <div style="text-align:center">
@@ -1016,22 +1190,22 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{nonnegative index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{\enclose{circle}{2}\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
-\color{red}{\text{negative index}}
-    & \color{red}{-7\phantom{,}}
-    & \color{red}{-6\phantom{,}}
-    & \color{red}{\enclose{circle}{-5}\phantom{,}}
-    & \color{blue}{-4\phantom{,}}
-    & \color{blue}{-3\phantom{,}}
-    & \color{red}{\enclose{circle}{-2}\phantom{,}}
-    & \color{red}{-1\phantom{,}}\\
+\color{#EE0000}{\text{nonnegative index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{2}\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{5}\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
+\color{#EE0000}{\text{negative index}}
+    & \color{#EE0000}{-7\phantom{,}}
+    & \color{#EE0000}{-6\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{-5}\phantom{,}}
+    & \color{#5E5EFF}{-4\phantom{,}}
+    & \color{#5E5EFF}{-3\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{-2}\phantom{,}}
+    & \color{#EE0000}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -1111,11 +1285,13 @@ example, instead of using <code class="docutils literal notranslate"><span class
 </div>
 </section>
 <section id="clipping">
-<span id="id10"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this heading">¶</a></h3>
+<span id="id10"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Permalink to this heading">#</a></h3>
 <p>Slices can never give an out-of-bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This is different from
-<a class="reference internal" href="#integer-indices"><span class="std std-ref">integer indices</span></a> which require the index to be in bounds.
-<strong>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> index before the beginning or after the end of the
+<a class="reference internal" href="#integer-indices"><span class="std std-ref">integer indices</span></a> which require the index to be in bounds.</p>
+<blockquote>
+<div><p><strong>If <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> index before the beginning or after the end of the
 <code class="docutils literal notranslate"><span class="pre">a</span></code>, they will clip to the bounds of <code class="docutils literal notranslate"><span class="pre">a</span></code></strong>:</p>
+</div></blockquote>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span>
 <span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
@@ -1159,13 +1335,15 @@ check the shape (slicing a NumPy array always produces a view on the array, so
 it is a very inexpensive operation).</p>
 </section>
 <section id="steps">
-<span id="id11"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this heading">¶</a></h3>
+<span id="id11"></span><h3>Steps<a class="headerlink" href="#steps" title="Permalink to this heading">#</a></h3>
 <p>Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every <code class="docutils literal notranslate"><span class="pre">step</span></code> element contained in
 the bounds of <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>.</p>
-<p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and
-successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches an index that is at or past the
-<code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without including that index.</strong></p>
+<blockquote>
+<div><p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code>
+and successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches an index that is at or past
+the <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without including that index.</strong></p>
+</div></blockquote>
 <p>The important thing to remember about the <code class="docutils literal notranslate"><span class="pre">step</span></code> is that it being non-1 does
 not change the fundamental <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a> of slices that we have learned so
 far. <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> still use <a class="reference internal" href="#based"><span class="std std-ref">0-based indexing</span></a>. The <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
@@ -1180,21 +1358,21 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{\enclose{circle}{6}}\\
-    & \color{blue}{\text{start}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{6}}\\
+    & \color{#5E5EFF}{\text{start}}
     &
     & \rightarrow
-    & \color{blue}{+3}
+    & \color{#5E5EFF}{+3}
     &
     & \rightarrow
-    & \color{red}{+3\ (\geq \text{stop})}
+    & \color{#EE0000}{+3\ (\geq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1222,23 +1400,23 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{blue}{\enclose{circle}{1}}
-    & \color{red}{2\phantom{,}}
-    & \color{red}{3\phantom{,}}
-    & \color{blue}{\enclose{circle}{4}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{\underline{6}\phantom{,}}
-    & \color{red}{\enclose{circle}{\phantom{7}}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#EE0000}{3\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{\underline{6}\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{\phantom{7}}}\\
     &
-    & \color{blue}{\text{start}}
-    &
-    & \rightarrow
-    & \color{blue}{+3}
+    & \color{#5E5EFF}{\text{start}}
     &
     & \rightarrow
-    & \color{red}{+3\ (\geq \text{stop})}
+    & \color{#5E5EFF}{+3}
+    &
+    & \rightarrow
+    & \color{#EE0000}{+3\ (\geq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1280,11 +1458,13 @@ steps</span></a>. As noted before, any correct “formula” regarding
 slices will necessarily have many piecewise conditions.</p>
 </section>
 <section id="negative-steps">
-<span id="id12"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this heading">¶</a></h3>
+<span id="id12"></span><h3>Negative Steps<a class="headerlink" href="#negative-steps" title="Permalink to this heading">#</a></h3>
 <p>Recall what we said <a class="reference internal" href="#steps"><span class="std std-ref">above</span></a>:</p>
-<p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> and
-successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches an index that is at or past the
-<code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without including that index.</strong></p>
+<blockquote>
+<div><p><strong>The proper way to think about <code class="docutils literal notranslate"><span class="pre">step</span></code> is that the slice starts at <code class="docutils literal notranslate"><span class="pre">start</span></code>
+and successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it reaches an index that is at or past
+the <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without including that index.</strong></p>
+</div></blockquote>
 <p>The key thing to remember with negative <code class="docutils literal notranslate"><span class="pre">step</span></code> is that this rule still
 applies. That is, the index starts at <code class="docutils literal notranslate"><span class="pre">start</span></code> then adds the <code class="docutils literal notranslate"><span class="pre">step</span></code> (which
 makes the index smaller), and stops when it is at or past the <code class="docutils literal notranslate"><span class="pre">stop</span></code>. Note the
@@ -1348,22 +1528,22 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{\enclose{circle}{0}\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{blue}{\enclose{circle}{6}}\\
-    & \color{red}{-3}\phantom{\mathtt{\textsf{'},}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{\enclose{circle}{0}\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{6}}\\
+    & \color{#EE0000}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{-3}\phantom{\mathtt{\textsf{'},}}
+    & \color{#5E5EFF}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{\text{start}}\\
-    &  \color{red}{(\leq \text{stop})}
+    & \color{#5E5EFF}{\text{start}}\\
+    &  \color{#EE0000}{(\leq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1377,7 +1557,7 @@ $$
 </div>
 </section>
 <section id="omitted-entries">
-<span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this heading">¶</a></h3>
+<span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Permalink to this heading">#</a></h3>
 <p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#omitted-none-footnote" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
 <p><strong>The best way to think about omitted entries is just like that, as omitted
 entries.</strong> That is, for a slice like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code>, think of it as the <code class="docutils literal notranslate"><span class="pre">start</span></code> being
@@ -1387,18 +1567,24 @@ before or after the index <code class="docutils literal notranslate"><span class
 confusion, because you won’t be thinking about <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>, but rather
 trying to remember some rule based on where a colon is. But the colons in a
 slice are not indicators, they are separators.</p>
-<p>As to the semantic meaning of omitted entries, the easiest one is the <code class="docutils literal notranslate"><span class="pre">step</span></code>.
-<strong>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted, it always defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</strong> If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is
-omitted the second colon before the <code class="docutils literal notranslate"><span class="pre">step</span></code> can also be omitted. That is to
-say, the following are completely equivalent:</p>
+<p>As to the semantic meaning of omitted entries, the easiest one is the <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p>
+<blockquote>
+<div><p><strong>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted, it always defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</strong></p>
+</div></blockquote>
+<p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted the second colon before the <code class="docutils literal notranslate"><span class="pre">step</span></code> can also be
+omitted. That is to say, the following are completely equivalent:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">:]</span>
 <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">]</span>
 </pre></div>
 </div>
 <!-- TODO: Better wording for this rule? -->
-<p><strong>For the <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the rule is that being omitted extends the slice
-all the way to the beginning or end of <code class="docutils literal notranslate"><span class="pre">a</span></code> in the direction being sliced.</strong> If
+<blockquote>
+<div><p><strong>For the <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>, the rule is that being omitted extends the
+slice all the way to the beginning or end of <code class="docutils literal notranslate"><span class="pre">a</span></code> in the direction being
+sliced.</strong></p>
+</div></blockquote>
+<p>If
 the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive, this means <code class="docutils literal notranslate"><span class="pre">start</span></code> extends to the beginning of <code class="docutils literal notranslate"><span class="pre">a</span></code> and
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends to the end. If <code class="docutils literal notranslate"><span class="pre">step</span></code> is negative, it is reversed: <code class="docutils literal notranslate"><span class="pre">start</span></code>
 extends to the end of <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> extends to the beginning.</p>
@@ -1409,28 +1595,28 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
     &
-    & \color{blue}{\enclose{circle}{1}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
     &
-    & \color{blue}{\enclose{circle}{2}}
+    & \color{#5E5EFF}{\enclose{circle}{2}}
     &
-    & \color{red}{\enclose{circle}{3}}
+    & \color{#EE0000}{\enclose{circle}{3}}
     &
-    & \color{red}{4\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
     &
-    & \color{red}{5\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
     &
-    & \color{red}{6\phantom{,}}\\
-    \color{blue}{\text{start}}
-    & \color{blue}{\text{(beginning)}}
+    & \color{#EE0000}{6\phantom{,}}\\
+    \color{#5E5EFF}{\text{start}}
+    & \color{#5E5EFF}{\text{(beginning)}}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{red}{\text{stop}}
+    & \color{#EE0000}{\text{stop}}
     &
     & \phantom{\rightarrow}
     &
@@ -1448,34 +1634,34 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
     &
-    & \color{red}{1\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
     &
-    & \color{red}{2\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
     &
-    & \color{blue}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
     &
-    & \color{blue}{\enclose{circle}{4}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
     &
-    & \color{blue}{\enclose{circle}{5}}
+    & \color{#5E5EFF}{\enclose{circle}{5}}
     &
-    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\rightarrow}
+    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
     &
     & \phantom{\rightarrow}
     &
     & \phantom{\rightarrow}
-    & \color{blue}{\text{start}}
+    &
+    & \phantom{\rightarrow}
+    & \color{#5E5EFF}{\text{start}}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{\text{stop}}
-    & \color{blue}{\text{(end)}}
+    & \color{#5E5EFF}{\text{stop}}
+    & \color{#5E5EFF}{\text{(end)}}
 \end{array}
 \end{aligned}
 $$
@@ -1487,34 +1673,34 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
     &
-    & \color{red}{1\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
     &
-    & \color{red}{2\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
     &
-    & \color{red}{\enclose{circle}{3}}
+    & \color{#EE0000}{\enclose{circle}{3}}
     &
-    & \color{blue}{\enclose{circle}{4}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
     &
-    & \color{blue}{\enclose{circle}{5}}
+    & \color{#5E5EFF}{\enclose{circle}{5}}
     &
-    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\leftarrow}
+    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
     &
     & \phantom{\leftarrow}
     &
     & \phantom{\leftarrow}
-    & \color{red}{\text{stop}}
+    &
+    & \phantom{\leftarrow}
+    & \color{#EE0000}{\text{stop}}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{\text{start}}
-    & \color{blue}{\text{(end)}}
+    & \color{#5E5EFF}{\text{start}}
+    & \color{#5E5EFF}{\text{(end)}}
 \end{array}
 \end{aligned}
 $$
@@ -1526,28 +1712,28 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
     &
-    & \color{blue}{\enclose{circle}{1}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
     &
-    & \color{blue}{\enclose{circle}{2}}
+    & \color{#5E5EFF}{\enclose{circle}{2}}
     &
-    & \color{blue}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
     &
-    & \color{red}{4\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
     &
-    & \color{red}{5\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
     &
-    & \color{red}{6\phantom{,}}\\
-    \color{blue}{\text{stop}}
-    & \color{blue}{\text{(beginning)}}
+    & \color{#EE0000}{6\phantom{,}}\\
+    \color{#5E5EFF}{\text{stop}}
+    & \color{#5E5EFF}{\text{(beginning)}}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{\text{start}}
+    & \color{#5E5EFF}{\text{start}}
     &
     & \phantom{\leftarrow}
     &
@@ -1572,7 +1758,7 @@ $$
 </section>
 </section>
 <section id="soapbox">
-<h2>Soapbox<a class="headerlink" href="#soapbox" title="Permalink to this heading">¶</a></h2>
+<h2>Soapbox<a class="headerlink" href="#soapbox" title="Permalink to this heading">#</a></h2>
 <p>While this guide is opinionated about the right and wrong ways to think about
 slices in Python, I have tried to stay neutral regarding the merits of the
 rules themselves. But I want to take a moment to give my views on them. I have
@@ -1874,7 +2060,7 @@ decisions, whether you agree with them or not, will help you to remember the
 slicing <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a>, and that’s my true goal here.</p>
 </section>
 <section id="footnotes">
-<h2>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this heading">¶</a></h2>
+<h2>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this heading">#</a></h2>
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
 <hr class="footnotes docutils" />
@@ -1933,44 +2119,109 @@ difference between measurement and enumeration that I touched on earlier.</p>
 </section>
 </section>
 
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="type-confusion.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Type Confusion</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="api.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">API Reference</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Quansight Labs
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/Quansight-Labs/ndindex" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Slices</a><ul>
+<li><a class="reference internal" href="#what-is-a-slice">What is a slice?</a></li>
+<li><a class="reference internal" href="#rules">Rules</a></li>
+<li><a class="reference internal" href="#integer-indices">Integer indices</a></li>
+<li><a class="reference internal" href="#points-of-confusion">Points of Confusion</a><ul>
+<li><a class="reference internal" href="#subarray">Subarray</a></li>
+<li><a class="reference internal" href="#based">0-based</a></li>
+<li><a class="reference internal" href="#half-open">Half-open</a><ul>
+<li><a class="reference internal" href="#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#negative-indices">Negative Indices</a></li>
+<li><a class="reference internal" href="#clipping">Clipping</a></li>
+<li><a class="reference internal" href="#steps">Steps</a></li>
+<li><a class="reference internal" href="#negative-steps">Negative Steps</a></li>
+<li><a class="reference internal" href="#omitted-entries">Omitted Entries</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#soapbox">Soapbox</a></li>
+<li><a class="reference internal" href="#footnotes">Footnotes</a></li>
+</ul>
+</li>
+</ul>
 
           </div>
-              <div class="related bottom">
-                &nbsp;
-  <nav id="rellinks">
-    <ul>
-        <li>
-          &larr;
-          <a href="api.html" title="Previous document">API Reference</a>
-        </li>
-        <li>
-          <a href="type-confusion.html" title="Next document">Type Confusion</a>
-          &rarr;
-        </li>
-    </ul>
-  </nav>
-              </div>
-          
         </div>
       </div>
-    <div class="clearer"></div>
+      
+      
+    </aside>
   </div>
-    
-    <div class="footer">
-      &copy;2020, Quansight Labs.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/slices.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-    <span id="forkongithub"><a href="https://github.com/Quansight-Labs/ndindex">Fork me on GitHub</a></span>
-  </body>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
 </html>

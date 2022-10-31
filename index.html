@@ -1,48 +1,237 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="api.html" />
 
-<!DOCTYPE html>
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>ndindex &#8212; ndindex  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="api.html" />
- 
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-    <script type="text/javascript" src="_static/copybutton.js"></script>
- 
-  </head><body>
-  <div class="document">
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+        <title>ndindex documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-
-<p class="logo">
-  <a href="#">
-    <img class="logo" src="_static/ndindex_logo_white_bg.svg" alt="Logo"/>
     
-  </a>
-</p>
 
 
-<ul>
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  --color-sidebar-background-border: var(--color-background-primary);
+  --color-sidebar-brand-text: var(--color-sidebar-link-text--top-level);
+  --color-admonition-title-background--seealso: #CCCCCC;
+  --color-admonition-title--seealso: black;
+  --color-admonition-title-background--note: #CCCCCC;
+  --color-admonition-title--note: black;
+  --color-admonition-title-background--warning: var(--color-problematic);
+  --color-admonition-title--warning: white;
+  --admonition-font-size: var(--font-size--normal);
+  --admonition-title-font-size: var(--font-size--normal);
+  --color-link-underline--hover: var(--color-link);
+  --color-api-keyword: #000000bd;
+  --color-api-name: var(--color-brand-content);
+  --color-api-pre-name: var(--color-brand-content);
+  --api-font-size: var(--font-size--normal);
+  --code-font-size: var(--font-size--small);
+  --color-brand-primary: var(--color-brand-dark-blue);
+  --color-brand-content: var(--color-brand-dark-blue);
+  --color-sidebar-background: #EEEEEE;
+  --color-sidebar-item-background--hover: var(--color-brand-light-blue);
+  --color-sidebar-item-expander-background--hover: var(--color-brand-light-blue);
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-sidebar-background-border: var(--color-background-primary);
+  --color-sidebar-brand-text: var(--color-sidebar-link-text--top-level);
+  --color-admonition-title-background--seealso: #555555;
+  --color-admonition-title--seealso: black;
+  --color-admonition-title-background--note: #555555;
+  --color-admonition-title--note: black;
+  --color-admonition-title-background--warning: var(--color-problematic);
+  --color-admonition-title--warning: white;
+  --admonition-font-size: var(--font-size--normal);
+  --admonition-title-font-size: var(--font-size--normal);
+  --color-link-underline--hover: var(--color-link);
+  --color-api-keyword: #FFFFFFbd;
+  --color-api-name: var(--color-brand-content);
+  --color-api-pre-name: var(--color-brand-content);
+  --api-font-size: var(--font-size--normal);
+  --code-font-size: var(--font-size--small);
+  --color-brand-primary: var(--color-brand-light-blue);
+  --color-brand-content: var(--color-brand-light-blue);
+  --color-api-overall: #FFFFFF90;
+  --color-api-paren: #FFFFFF90;
+  --color-background-primary: black;
+  --color-sidebar-background: var(--color-brand-dark-bg);
+  --color-sidebar-item-background--hover: var(--color-brand-medium-blue);
+  --color-sidebar-item-expander-background--hover: var(--color-brand-medium-blue);
+  --color-problematic: #B30000;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-sidebar-background-border: var(--color-background-primary);
+  --color-sidebar-brand-text: var(--color-sidebar-link-text--top-level);
+  --color-admonition-title-background--seealso: #555555;
+  --color-admonition-title--seealso: black;
+  --color-admonition-title-background--note: #555555;
+  --color-admonition-title--note: black;
+  --color-admonition-title-background--warning: var(--color-problematic);
+  --color-admonition-title--warning: white;
+  --admonition-font-size: var(--font-size--normal);
+  --admonition-title-font-size: var(--font-size--normal);
+  --color-link-underline--hover: var(--color-link);
+  --color-api-keyword: #FFFFFFbd;
+  --color-api-name: var(--color-brand-content);
+  --color-api-pre-name: var(--color-brand-content);
+  --api-font-size: var(--font-size--normal);
+  --code-font-size: var(--font-size--small);
+  --color-brand-primary: var(--color-brand-light-blue);
+  --color-brand-content: var(--color-brand-light-blue);
+  --color-api-overall: #FFFFFF90;
+  --color-api-paren: #FFFFFF90;
+  --color-background-primary: black;
+  --color-sidebar-background: var(--color-brand-dark-bg);
+  --color-sidebar-item-background--hover: var(--color-brand-medium-blue);
+  --color-sidebar-item-expander-background--hover: var(--color-brand-medium-blue);
+  --color-problematic: #B30000;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">ndindex  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="_static/ndindex_logo_white_bg.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="_static/ndindex_logo_dark_bg.svg" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">ndindex  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="type-confusion.html">Type Confusion</a></li>
@@ -50,37 +239,40 @@
 <li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a></li>
 </ul>
 
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-        </div>
-      </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-              <div class="related top">
-                &nbsp;
-  <nav id="rellinks">
-    <ul>
-        <li>
-          <a href="api.html" title="Next document">API Reference</a>
-          &rarr;
-        </li>
-    </ul>
-  </nav>
-              </div>
-          
+</div>
 
-          <div class="body" role="main">
-            
-  <section id="ndindex">
-<h1>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this heading">¶</a></h1>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="ndindex">
+<h1>ndindex<a class="headerlink" href="#ndindex" title="Permalink to this heading">#</a></h1>
 <p>A Python library for manipulating indices of ndarrays.</p>
 <p>ndindex is a library that allows representing and manipulating objects that
 can be valid indices to numpy arrays, i.e., slices, integers, ellipses,
@@ -104,7 +296,7 @@ given shape.</p></li>
 <li><p>Enable useful transformation and manipulation functions on index objects.</p></li>
 </ul>
 <section id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">¶</a></h2>
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h2>
 <p>If you’ve ever worked with Python’s <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects, you will quickly discover
 their limitations:</p>
 <ul>
@@ -145,10 +337,10 @@ extensive testing (see below), you can be assured that ndindex is correct.</p>
 </ul>
 </section>
 <section id="installation">
-<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>ndindex can be installed using pip (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ndindex</span></code>) or conda (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-f</span> <span class="pre">conda-forge</span> <span class="pre">ndindex</span></code>).</p>
 <section id="experimental-cythonization">
-<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Permalink to this heading">¶</a></h3>
+<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Permalink to this heading">#</a></h3>
 <p>When installing ndindex from source (using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>) all
 Python modules (except tests) will be Cythonized when Cython and a working
 compiler are installed. This can improve the general performance of ndindex.
@@ -167,7 +359,7 @@ of ndindex may enable Cythonization for all installs.</p>
 </section>
 </section>
 <section id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">#</a></h2>
 <p>ndindex is still a work in progress. The following things are currently
 implemented:</p>
 <ul>
@@ -323,7 +515,7 @@ do, please <a class="reference external" href="https://github.com/quansight-labs
 requests are welcome as well.</p>
 </section>
 <section id="testing-and-correctness">
-<span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Permalink to this heading">¶</a></h2>
+<span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Permalink to this heading">#</a></h2>
 <p>The most important priority for a library like this is correctness. Index
 manipulations, and especially slice manipulations, are complicated to code
 correctly, and the code for them typically involves dozens of different
@@ -373,16 +565,16 @@ failure. Consequently every exhaustive test will also have a corresponding
 hypothesis test.</p>
 </section>
 <section id="benchmarks">
-<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this heading">¶</a></h2>
+<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this heading">#</a></h2>
 <p>Benchmarks for ndindex are published
 <a class="reference external" href="https://quansight-labs.github.io/ndindex/benchmarks/">here</a>.</p>
 </section>
 <section id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this heading">¶</a></h2>
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading">#</a></h2>
 <p><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE">MIT License</a></p>
 </section>
 <section id="acknowledgments">
-<span id="id2"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this heading">¶</a></h2>
+<span id="id2"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this heading">#</a></h2>
 <p>ndindex development is supported by <a class="reference external" href="https://labs.quansight.org/">Quansight
 Labs</a> and is sponsored in part by <a class="reference external" href="https://www.deshaw.com/">the D. E.
 Shaw group</a>. The D. E. Shaw group collaborates with
@@ -396,7 +588,7 @@ width="200"></a>
 </div>
 </section>
 <section id="table-of-contents">
-<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">¶</a></h2>
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
@@ -634,40 +826,89 @@ width="200"></a>
 </section>
 </section>
 
-
-          </div>
-              <div class="related bottom">
-                &nbsp;
-  <nav id="rellinks">
-    <ul>
-        <li>
-          <a href="api.html" title="Next document">API Reference</a>
-          &rarr;
-        </li>
-    </ul>
-  </nav>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="api.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">API Reference</div>
               </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
           
         </div>
-      </div>
-    <div class="clearer"></div>
-  </div>
-    
-    <div class="footer">
-      &copy;2020, Quansight Labs.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/index.md.txt"
-          rel="nofollow">Page source</a>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Quansight Labs
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/Quansight-Labs/ndindex" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
     </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">ndindex</a><ul>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#experimental-cythonization">Experimental Cythonization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
+<li><a class="reference internal" href="#benchmarks">Benchmarks</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
+<li><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+</ul>
+</li>
+</ul>
 
-    
-
-    
-    <span id="forkongithub"><a href="https://github.com/Quansight-Labs/ndindex">Fork me on GitHub</a></span>
-  </body>
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    </body>
 </html>

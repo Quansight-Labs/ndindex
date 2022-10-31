@@ -1,115 +1,220 @@
-// Modified from copybutton.js from python-docs-theme https://github.com/python/python-docs-theme
+// Localization support
+const messages = {
+  'en': {
+    'copy': 'Copy',
+    'copy_to_clipboard': 'Copy to clipboard',
+    'copy_success': 'Copied!',
+    'copy_failure': 'Failed to copy',
+  },
+  'es' : {
+    'copy': 'Copiar',
+    'copy_to_clipboard': 'Copiar al portapapeles',
+    'copy_success': '¡Copiado!',
+    'copy_failure': 'Error al copiar',
+  },
+  'de' : {
+    'copy': 'Kopieren',
+    'copy_to_clipboard': 'In die Zwischenablage kopieren',
+    'copy_success': 'Kopiert!',
+    'copy_failure': 'Fehler beim Kopieren',
+  },
+  'fr' : {
+    'copy': 'Copier',
+    'copy_to_clipboard': 'Copié dans le presse-papier',
+    'copy_success': 'Copié !',
+    'copy_failure': 'Échec de la copie',
+  },
+  'ru': {
+    'copy': 'Скопировать',
+    'copy_to_clipboard': 'Скопировать в буфер',
+    'copy_success': 'Скопировано!',
+    'copy_failure': 'Не удалось скопировать',
+  },
+  'zh-CN': {
+    'copy': '复制',
+    'copy_to_clipboard': '复制到剪贴板',
+    'copy_success': '复制成功!',
+    'copy_failure': '复制失败',
+  },
+  'it' : {
+    'copy': 'Copiare',
+    'copy_to_clipboard': 'Copiato negli appunti',
+    'copy_success': 'Copiato!',
+    'copy_failure': 'Errore durante la copia',
+  }
+}
 
-// PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
-// --------------------------------------------
-//
-// 1. This LICENSE AGREEMENT is between the Python Software Foundation
-// ("PSF"), and the Individual or Organization ("Licensee") accessing and
-// otherwise using this software ("Python") in source or binary form and
-// its associated documentation.
-//
-// 2. Subject to the terms and conditions of this License Agreement, PSF hereby
-// grants Licensee a nonexclusive, royalty-free, world-wide license to reproduce,
-// analyze, test, perform and/or display publicly, prepare derivative works,
-// distribute, and otherwise use Python alone or in any derivative version,
-// provided, however, that PSF's License Agreement and PSF's notice of copyright,
-// i.e., "Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
-// 2011, 2012, 2013, 2014, 2015, 2016, 2017 Python Software Foundation; All Rights
-// Reserved" are retained in Python alone or in any derivative version prepared by
-// Licensee.
-//
-// 3. In the event Licensee prepares a derivative work that is based on
-// or incorporates Python or any part thereof, and wants to make
-// the derivative work available to others as provided herein, then
-// Licensee hereby agrees to include in any such work a brief summary of
-// the changes made to Python.
-//
-// 4. PSF is making Python available to Licensee on an "AS IS"
-// basis.  PSF MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
-// IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, PSF MAKES NO AND
-// DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
-// FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON WILL NOT
-// INFRINGE ANY THIRD PARTY RIGHTS.
-//
-// 5. PSF SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON
-// FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS
-// A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON,
-// OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
-//
-// 6. This License Agreement will automatically terminate upon a material
-// breach of its terms and conditions.
-//
-// 7. Nothing in this License Agreement shall be deemed to create any
-// relationship of agency, partnership, or joint venture between PSF and
-// Licensee.  This License Agreement does not grant permission to use PSF
-// trademarks or trade name in a trademark sense to endorse or promote
-// products or services of Licensee, or any third party.
-//
-// 8. By copying, installing or otherwise using Python, Licensee
-// agrees to be bound by the terms and conditions of this License
-// Agreement.
+let locale = 'en'
+if( document.documentElement.lang !== undefined
+    && messages[document.documentElement.lang] !== undefined ) {
+  locale = document.documentElement.lang
+}
 
-$(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
-     * the >>> and ... prompts and the output and thus make the code
-     * copyable. */
-    var highlight = $('.highlight');
+let doc_url_root = DOCUMENTATION_OPTIONS.URL_ROOT;
+if (doc_url_root == '#') {
+    doc_url_root = '';
+}
 
-    var pre = highlight.find('pre');
+/**
+ * SVG files for our copy buttons
+ */
+let iconCheck = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" width="44" height="44" viewBox="0 0 24 24" stroke-width="2" stroke="#22863a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>${messages[locale]['copy_success']}</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M5 12l5 5l10 -10" />
+</svg>`
 
-    // get the styles from the current theme
-    pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide the prompts and output';
-    var show_text = 'Show the prompts and output';
-    var border_width = pre.css('border-top-width');
-    var border_style = pre.css('border-top-style');
-    var border_color = pre.css('border-top-color');
-    var button_styles = {
-        'cursor':'pointer', 'position': 'absolute', 'top': '0', 'right': '0',
-        'border-width': border_width, 'text-size': '75%',
-        'border-style': border_style, 'border-color': border_color,
-        'font-family': 'monospace', 'padding-left': '0.2em', 'padding-right': '0.2em',
-        'border-radius': '0 3px 0 0'
+// If the user specified their own SVG use that, otherwise use the default
+let iconCopy = ``;
+if (!iconCopy) {
+  iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>${messages[locale]['copy_to_clipboard']}</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <rect x="8" y="8" width="12" height="12" rx="2" />
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+</svg>`
+}
+
+/**
+ * Set up copy/paste for code blocks
+ */
+
+const runWhenDOMLoaded = cb => {
+  if (document.readyState != 'loading') {
+    cb()
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', cb)
+  } else {
+    document.attachEvent('onreadystatechange', function() {
+      if (document.readyState == 'complete') cb()
+    })
+  }
+}
+
+const codeCellId = index => `codecell${index}`
+
+// Clears selected text since ClipboardJS will select the text when copying
+const clearSelection = () => {
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges()
+  } else if (document.selection) {
+    document.selection.empty()
+  }
+}
+
+// Changes tooltip text for two seconds, then changes it back
+const temporarilyChangeTooltip = (el, oldText, newText) => {
+  el.setAttribute('data-tooltip', newText)
+  el.classList.add('success')
+  setTimeout(() => el.setAttribute('data-tooltip', oldText), 2000)
+  setTimeout(() => el.classList.remove('success'), 2000)
+}
+
+// Changes the copy button icon for two seconds, then changes it back
+const temporarilyChangeIcon = (el) => {
+  el.innerHTML = iconCheck;
+  setTimeout(() => {el.innerHTML = iconCopy}, 2000)
+}
+
+const addCopyButtonToCodeCells = () => {
+  // If ClipboardJS hasn't loaded, wait a bit and try again. This
+  // happens because we load ClipboardJS asynchronously.
+  if (window.ClipboardJS === undefined) {
+    setTimeout(addCopyButtonToCodeCells, 250)
+    return
+  }
+
+  // Add copybuttons to all of our code cells
+  const codeCells = document.querySelectorAll('div.highlight pre')
+  codeCells.forEach((codeCell, index) => {
+    const id = codeCellId(index)
+    codeCell.setAttribute('id', id)
+
+    const clipboardButton = id =>
+    `<button class="copybtn o-tooltip--left" data-tooltip="${messages[locale]['copy']}" data-clipboard-target="#${id}">
+      ${iconCopy}
+    </button>`
+    codeCell.insertAdjacentHTML('afterend', clipboardButton(id))
+  })
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+// Callback when a copy button is clicked. Will be passed the node that was clicked
+// should then grab the text and replace pieces of text that shouldn't be used in output
+function formatCopyText(textContent, copybuttonPromptText, isRegexp = false, onlyCopyPromptLines = true, removePrompts = true, copyEmptyLines = true, lineContinuationChar = "", hereDocDelim = "") {
+
+    var regexp;
+    var match;
+
+    // Do we check for line continuation characters and "HERE-documents"?
+    var useLineCont = !!lineContinuationChar
+    var useHereDoc = !!hereDocDelim
+
+    // create regexp to capture prompt and remaining line
+    if (isRegexp) {
+        regexp = new RegExp('^(' + copybuttonPromptText + ')(.*)')
+    } else {
+        regexp = new RegExp('^(' + escapeRegExp(copybuttonPromptText) + ')(.*)')
     }
 
-    // create and add the button to all the code blocks that contain >>>
-    highlight.each(function(index) {
-        var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton gp">&gt;&gt;&gt;</span>');
-            button.css(button_styles)
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
+    const outputLines = [];
+    var promptFound = false;
+    var gotLineCont = false;
+    var gotHereDoc = false;
+    const lineGotPrompt = [];
+    for (const line of textContent.split('\n')) {
+        match = line.match(regexp)
+        if (match || gotLineCont || gotHereDoc) {
+            promptFound = regexp.test(line)
+            lineGotPrompt.push(promptFound)
+            if (removePrompts && promptFound) {
+                outputLines.push(match[2])
+            } else {
+                outputLines.push(line)
+            }
+            gotLineCont = line.endsWith(lineContinuationChar) & useLineCont
+            if (line.includes(hereDocDelim) & useHereDoc)
+                gotHereDoc = !gotHereDoc
+        } else if (!onlyCopyPromptLines) {
+            outputLines.push(line)
+        } else if (copyEmptyLines && line.trim() === '') {
+            outputLines.push(line)
         }
-        // tracebacks (.gt) contain bare text elements that need to be
-        // wrapped in a span to work with .nextUntil() (see later)
-        jthis.find('pre:has(.gt)').contents().filter(function() {
-            return ((this.nodeType == 3) && (this.data.trim().length > 0));
-        }).wrap('<span>');
-    });
+    }
 
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-            // unhide the button itself
-            button.css('visibility', 'visible');
-            button.css('display', 'block');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
-    });
-});
+    // If no lines with the prompt were found then just use original lines
+    if (lineGotPrompt.some(v => v === true)) {
+        textContent = outputLines.join('\n');
+    }
+
+    // Remove a trailing newline to avoid auto-running when pasting
+    if (textContent.endsWith("\n")) {
+        textContent = textContent.slice(0, -1)
+    }
+    return textContent
+}
+
+
+var copyTargetText = (trigger) => {
+  var target = document.querySelector(trigger.attributes['data-clipboard-target'].value);
+  return formatCopyText(target.innerText, '', false, true, true, true, '', '')
+}
+
+  // Initialize with a callback so we can modify the text before copy
+  const clipboard = new ClipboardJS('.copybtn', {text: copyTargetText})
+
+  // Update UI with error/success messages
+  clipboard.on('success', event => {
+    clearSelection()
+    temporarilyChangeTooltip(event.trigger, messages[locale]['copy'], messages[locale]['copy_success'])
+    temporarilyChangeIcon(event.trigger)
+  })
+
+  clipboard.on('error', event => {
+    temporarilyChangeTooltip(event.trigger, messages[locale]['copy'], messages[locale]['copy_failure'])
+  })
+}
+
+runWhenDOMLoaded(addCopyButtonToCodeCells)

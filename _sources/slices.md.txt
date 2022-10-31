@@ -62,9 +62,9 @@ We will use these names throughout this guide.
 
 It is worth noting that the `x:y:z` syntax is not valid outside of square
 brackets. However, slice objects can be created manually using the `slice()`
-builtin (`a[x:y:z]` is the same as `a[slice(x, y, z)]`). You can also use the
-[`ndindex.Slice()`](slice-api) object if you want to perform more advanced
-operations.
+builtin (`a[x:y:z]` is the same as `a[slice(x, y, z)]`). If you want to
+perform more advanced operations like arithmetic on slices, consider using
+the [`ndindex.Slice()`](slice-api) object.
 
 (rules)=
 ## Rules
@@ -135,14 +135,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}3{\phantom{,}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}3{\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -170,14 +170,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{-7\phantom{,}}
-    & \color{red}{-6\phantom{,}}
-    & \color{red}{-5\phantom{,}}
-    & \color{red}{-4\phantom{,}}
-    & \color{blue}{-3\phantom{,}}
-    & \color{red}{-2\phantom{,}}
-    & \color{red}{-1\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{-7\phantom{,}}
+    & \color{#EE0000}{-6\phantom{,}}
+    & \color{#EE0000}{-5\phantom{,}}
+    & \color{#EE0000}{-4\phantom{,}}
+    & \color{#5E5EFF}{-3\phantom{,}}
+    & \color{#EE0000}{-2\phantom{,}}
+    & \color{#EE0000}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -206,7 +206,7 @@ allows one to specify parts of a list that would otherwise need to be
 specified in terms of the size of the list.
 
 If an integer index is greater than or equal to the size of the list, or less
-than negative the size of the list (`i >= len(a)` or `i < len(a)`), then it
+than negative the size of the list (`i >= len(a)` or `i < -len(a)`), then it
 is out of bounds and will raise an `IndexError`.
 
 ```py
@@ -253,14 +253,15 @@ to demystify them through simple [rules](rules).
 (subarray)=
 ### Subarray
 
-**A slice always produces a subarray (or sub-list, sub-tuple, sub-string,
+> **A slice always produces a subarray (or sub-list, sub-tuple, sub-string,
 etc.). For NumPy arrays, this means that a slice will always *preserve* the
-dimension that is sliced.** This is true even if the slice chooses only a
-single element, or even if it chooses no elements. This is also true for
-lists, tuples, and strings, in the sense that a slice on a list, tuple, or
-string will always produce a list, tuple, or string. This behavior is
-different from integer indices, which always remove the dimension that they
-index.
+dimension that is sliced.**
+
+This is true even if the slice chooses only a single element, or even if it
+chooses no elements. This is also true for lists, tuples, and strings, in the
+sense that a slice on a list, tuple, or string will always produce a list,
+tuple, or string. This behavior is different from integer indices, which
+always remove the dimension that they index.
 
 For example
 
@@ -304,14 +305,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -346,14 +347,14 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{blue}{\enclose{circle}{4}}
-    & \color{red}{\enclose{circle}{5}}
-    & \color{red}{6\phantom{,}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
+    & \color{#EE0000}{\enclose{circle}{5}}
+    & \color{#EE0000}{6\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -409,8 +410,8 @@ advantages:
 
 #### Wrong Ways of Thinking about Half-open Semantics
 
-**The proper rule to remember for half-open semantics is "the `stop` is not
-included".**
+> **The proper rule to remember for half-open semantics is "the `stop` is not
+  included".**
 
 There are several alternative ways that one might think of slice semantics,
 but they are all wrong in subtle ways. To be sure, for each of these, one
@@ -450,20 +451,20 @@ $[3, 5)$ but in reverse order.
 <!-- TODO: improve this -->
 <div style="text-align:center;" >
 <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-<div style="font-size: 16pt;color:red;">(WRONG)</div>
+<div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
 $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
-\color{red}{\text{WRONG}}&
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
+\color{#EE0000}{\text{WRONG}}&
     &
     &
     & [\phantom{3,}
@@ -491,7 +492,7 @@ Actually, what we really get is
 ```
 
 This is because the slice `5:3:-1` starts at index `5` and steps backwards to
-index `3`, but not including `3`.
+index `3`, but not including `3` (see [](negative-steps) below).
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
@@ -500,14 +501,14 @@ $$
 \begin{aligned}
 \begin{array}{r r r r r r r r}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{\textsf{'},}}
-    & \color{red}{1\phantom{\textsf{'},}}
-    & \color{red}{2\phantom{\textsf{'},}}
-    & \color{red}{\enclose{circle}{3}\phantom{,}}
-    & \leftarrow\color{blue}{\enclose{circle}{4}\phantom{,}}
-    & \leftarrow\color{blue}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{\textsf{'},}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{\textsf{'},}}
+    & \color{#EE0000}{1\phantom{\textsf{'},}}
+    & \color{#EE0000}{2\phantom{\textsf{'},}}
+    & \color{#EE0000}{\enclose{circle}{3}\phantom{,}}
+    & \leftarrow\color{#5E5EFF}{\enclose{circle}{4}\phantom{,}}
+    & \leftarrow\color{#5E5EFF}{\enclose{circle}{5}\phantom{,}}
+    & \color{#EE0000}{6\phantom{\textsf{'},}}\\
 \end{array}
 \end{aligned}
 $$
@@ -559,38 +560,38 @@ $$
 \begin{array}{r r r r r r r r r r r r r r r r r r}
 a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{blue}{|}
+    & \color{#5E5EFF}{|}
     &
-    & \color{red}{|}
+    & \color{#EE0000}{|}
     &
-    & \color{red}{|}\\
-\color{red}{\text{index}}
+    & \color{#EE0000}{|}\\
+\color{#EE0000}{\text{index}}
     &
-    & \color{red}{0}
+    & \color{#EE0000}{0}
     &
-    & \color{red}{1}
+    & \color{#EE0000}{1}
     &
-    & \color{red}{2}
+    & \color{#EE0000}{2}
     &
-    & \color{blue}{3}
+    & \color{#5E5EFF}{3}
     &
-    & \color{blue}{4}
+    & \color{#5E5EFF}{4}
     &
-    & \color{blue}{5}
+    & \color{#5E5EFF}{5}
     &
-    & \color{red}{6}
+    & \color{#EE0000}{6}
     &
-    & \color{red}{7}\\
+    & \color{#EE0000}{7}\\
 \end{array}\\
 \end{aligned}
 $$
@@ -615,7 +616,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:red;">(WRONG)</div>
+  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -623,40 +624,40 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{0}
+      & \color{#EE0000}{0}
       &
-      & \color{red}{1}
+      & \color{#EE0000}{1}
       &
-      & \color{red}{2}
+      & \color{#EE0000}{2}
       &
-      & \color{blue}{3}
+      & \color{#5E5EFF}{3}
       &
-      & \color{blue}{4}
+      & \color{#5E5EFF}{4}
       &
-      & \color{blue}{5}
+      & \color{#5E5EFF}{5}
       &
-      & \color{red}{6}
+      & \color{#EE0000}{6}
       &
-      & \color{red}{7}\\
+      & \color{#EE0000}{7}\\
   \end{array}\\
-  \small{\color{red}{\textbf{THIS IS WRONG!}}}
+  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -690,31 +691,31 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{aligned}
   \begin{array}{r r c c c c c c c c c c c c l}
   a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-  \color{red}{\text{index}}
-      & \color{red}{0\phantom{,}}
+  \color{#EE0000}{\text{index}}
+      & \color{#EE0000}{0\phantom{,}}
       &
-      & \color{red}{1\phantom{,}}
+      & \color{#EE0000}{1\phantom{,}}
       &
-      & \color{red}{2\phantom{,}}
+      & \color{#EE0000}{2\phantom{,}}
       &
-      & \color{red}{\enclose{circle}{3}}
+      & \color{#EE0000}{\enclose{circle}{3}}
       &
-      & \color{blue}{\enclose{circle}{4}}
+      & \color{#5E5EFF}{\enclose{circle}{4}}
       &
-      & \color{blue}{\enclose{circle}{5}}
+      & \color{#5E5EFF}{\enclose{circle}{5}}
       &
-      & \color{red}{6\phantom{,}}\\
-      &
-      & \phantom{\leftarrow}
+      & \color{#EE0000}{6\phantom{,}}\\
       &
       & \phantom{\leftarrow}
       &
       & \phantom{\leftarrow}
-      & \color{red}{-1}
+      &
+      & \phantom{\leftarrow}
+      & \color{#EE0000}{-1}
       & \leftarrow
-      & \color{blue}{-1}
+      & \color{#5E5EFF}{-1}
       & \leftarrow
-      & \color{blue}{\text{start}}
+      & \color{#5E5EFF}{\text{start}}
   \end{array}
   \end{aligned}
   $$
@@ -733,38 +734,38 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}
+      & \color{#EE0000}{-1}
       &
-      & \color{red}{0}\\
+      & \color{#EE0000}{0}\\
   \end{array}\\
   \small{\text{(not a great way of thinking about negative indices)}}
   \end{array}
@@ -785,7 +786,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
-  <div style="font-size: 16pt;color:red;">(WRONG)</div>
+  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -793,40 +794,40 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-8}
+      & \color{#EE0000}{-8}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}\\
+      & \color{#EE0000}{-1}\\
   \end{array}\\
-  \small{\color{red}{\textbf{THIS IS WRONG!}}}
+  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -847,7 +848,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
-  <div style="font-size: 16pt;color:blue;">NOW RIGHT!</div>
+  <div style="font-size: 16pt;color:#5E5EFF;">NOW RIGHT!</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -855,38 +856,38 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-8}
+      & \color{#EE0000}{-8}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}\\
+      & \color{#EE0000}{-1}\\
   \end{array}\\
   \small{\text{(not a great way of thinking about negative indices)}}
   \end{array}
@@ -896,7 +897,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:red;">(WRONG)</div>
+  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
   $$
   \require{enclose}
   \begin{aligned}
@@ -904,40 +905,40 @@ reasons why this way of thinking creates more confusion than it removes.
   \begin{array}{r r r r r r r r r r r r r r r r r r}
     a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{blue}{|}
+      & \color{#5E5EFF}{|}
       &
-      & \color{red}{|}
+      & \color{#EE0000}{|}
       &
-      & \color{red}{|}\\
-  \color{red}{\text{index}}
+      & \color{#EE0000}{|}\\
+  \color{#EE0000}{\text{index}}
       &
-      & \color{red}{-7}
+      & \color{#EE0000}{-7}
       &
-      & \color{red}{-6}
+      & \color{#EE0000}{-6}
       &
-      & \color{red}{-5}
+      & \color{#EE0000}{-5}
       &
-      & \color{blue}{-4}
+      & \color{#5E5EFF}{-4}
       &
-      & \color{blue}{-3}
+      & \color{#5E5EFF}{-3}
       &
-      & \color{blue}{-2}
+      & \color{#5E5EFF}{-2}
       &
-      & \color{red}{-1}
+      & \color{#EE0000}{-1}
       &
-      & \color{red}{0}\\
+      & \color{#EE0000}{0}\\
   \end{array}\\
-  \small{\color{red}{\textbf{THIS IS WRONG!}}}
+  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
   \end{array}
   \end{aligned}
   $$
@@ -1006,12 +1007,16 @@ here. It isn't worth it.
 ### Negative Indices
 
 Negative indices in slices work the same way they do with [integer
-indices](integer-indices). **For `a[start:stop:step]`, negative `start` or
-`stop` use −1-based indexing from the end of `a`.** However, negative `start`
-or `stop` does *not* change the order of the slicing---only the `step` does
-that. The other [rules](rules) of slicing do not change when the `start` or
-`stop` is negative. [The `stop` is still not included](half-open), values less
-than `-len(a)` still [clip](clipping), and so on.
+indices](integer-indices).
+
+> **For `a[start:stop:step]`, negative `start` or `stop` use −1-based indexing
+  from the end of `a`.**
+
+However, negative `start` or `stop` does *not* change the order of the
+slicing---only the [`step`](steps) does that. The other [rules](rules) of
+slicing do not change when the `start` or `stop` is negative. [The `stop` is
+still not included](half-open), values less than `-len(a)` still
+[clip](clipping), and so on.
 
 Note that positive and negative indices can be mixed. The following slices of
 `a` all produce `['d', 'e']`:
@@ -1023,22 +1028,22 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{nonnegative index}}
-    & \color{red}{0\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{\enclose{circle}{2}\phantom{,}}
-    & \color{blue}{3\phantom{,}}
-    & \color{blue}{4\phantom{,}}
-    & \color{red}{\enclose{circle}{5}\phantom{,}}
-    & \color{red}{6\phantom{,}}\\
-\color{red}{\text{negative index}}
-    & \color{red}{-7\phantom{,}}
-    & \color{red}{-6\phantom{,}}
-    & \color{red}{\enclose{circle}{-5}\phantom{,}}
-    & \color{blue}{-4\phantom{,}}
-    & \color{blue}{-3\phantom{,}}
-    & \color{red}{\enclose{circle}{-2}\phantom{,}}
-    & \color{red}{-1\phantom{,}}\\
+\color{#EE0000}{\text{nonnegative index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{2}\phantom{,}}
+    & \color{#5E5EFF}{3\phantom{,}}
+    & \color{#5E5EFF}{4\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{5}\phantom{,}}
+    & \color{#EE0000}{6\phantom{,}}\\
+\color{#EE0000}{\text{negative index}}
+    & \color{#EE0000}{-7\phantom{,}}
+    & \color{#EE0000}{-6\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{-5}\phantom{,}}
+    & \color{#5E5EFF}{-4\phantom{,}}
+    & \color{#5E5EFF}{-3\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{-2}\phantom{,}}
+    & \color{#EE0000}{-1\phantom{,}}\\
 \end{array}
 \end{aligned}
 $$
@@ -1141,7 +1146,8 @@ example, instead of using `mid - n//2`, we could use `max(mid - n//2, 0)`.
 
 Slices can never give an out-of-bounds `IndexError`. This is different from
 [integer indices](integer-indices) which require the index to be in bounds.
-**If `start` or `stop` index before the beginning or after the end of the
+
+> **If `start` or `stop` index before the beginning or after the end of the
 `a`, they will clip to the bounds of `a`**:
 
 ```py
@@ -1198,9 +1204,9 @@ Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every `step` element contained in
 the bounds of `start` and `stop`.
 
-**The proper way to think about `step` is that the slice starts at `start` and
-successively adds `step` until it reaches an index that is at or past the
-`stop`, and then stops without including that index.**
+> **The proper way to think about `step` is that the slice starts at `start`
+  and successively adds `step` until it reaches an index that is at or past
+  the `stop`, and then stops without including that index.**
 
 The important thing to remember about the `step` is that it being non-1 does
 not change the fundamental [rules](rules) of slices that we have learned so
@@ -1218,21 +1224,21 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{\enclose{circle}{6}}\\
-    & \color{blue}{\text{start}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{6}}\\
+    & \color{#5E5EFF}{\text{start}}
     &
     & \rightarrow
-    & \color{blue}{+3}
+    & \color{#5E5EFF}{+3}
     &
     & \rightarrow
-    & \color{red}{+3\ (\geq \text{stop})}
+    & \color{#EE0000}{+3\ (\geq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1265,23 +1271,23 @@ $$
 \begin{aligned}
 \begin{array}{r c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
-    & \color{blue}{\enclose{circle}{1}}
-    & \color{red}{2\phantom{,}}
-    & \color{red}{3\phantom{,}}
-    & \color{blue}{\enclose{circle}{4}}
-    & \color{red}{5\phantom{,}}
-    & \color{red}{\underline{6}\phantom{,}}
-    & \color{red}{\enclose{circle}{\phantom{7}}}\\
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#EE0000}{3\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#EE0000}{\underline{6}\phantom{,}}
+    & \color{#EE0000}{\enclose{circle}{\phantom{7}}}\\
     &
-    & \color{blue}{\text{start}}
-    &
-    & \rightarrow
-    & \color{blue}{+3}
+    & \color{#5E5EFF}{\text{start}}
     &
     & \rightarrow
-    & \color{red}{+3\ (\geq \text{stop})}
+    & \color{#5E5EFF}{+3}
+    &
+    & \rightarrow
+    & \color{#EE0000}{+3\ (\geq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1334,9 +1340,9 @@ slices will necessarily have many piecewise conditions.
 
 Recall what we said [above](steps):
 
-**The proper way to think about `step` is that the slice starts at `start` and
-successively adds `step` until it reaches an index that is at or past the
-`stop`, and then stops without including that index.**
+> **The proper way to think about `step` is that the slice starts at `start`
+  and successively adds `step` until it reaches an index that is at or past
+  the `stop`, and then stops without including that index.**
 
 The key thing to remember with negative `step` is that this rule still
 applies. That is, the index starts at `start` then adds the `step` (which
@@ -1415,22 +1421,22 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{\enclose{circle}{0}\phantom{,}}
-    & \color{red}{1\phantom{,}}
-    & \color{red}{2\phantom{,}}
-    & \color{blue}{\enclose{circle}{3}}
-    & \color{red}{4\phantom{,}}
-    & \color{red}{5\phantom{,}}
-    & \color{blue}{\enclose{circle}{6}}\\
-    & \color{red}{-3}\phantom{\mathtt{\textsf{'},}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{\enclose{circle}{0}\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
+    & \color{#EE0000}{4\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
+    & \color{#5E5EFF}{\enclose{circle}{6}}\\
+    & \color{#EE0000}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{-3}\phantom{\mathtt{\textsf{'},}}
+    & \color{#5E5EFF}{-3}\phantom{\mathtt{\textsf{'},}}
     & \leftarrow
     &
-    & \color{blue}{\text{start}}\\
-    &  \color{red}{(\leq \text{stop})}
+    & \color{#5E5EFF}{\text{start}}\\
+    &  \color{#EE0000}{(\leq \text{stop})}
 \end{array}
 \end{aligned}
 $$
@@ -1468,9 +1474,11 @@ trying to remember some rule based on where a colon is. But the colons in a
 slice are not indicators, they are separators.
 
 As to the semantic meaning of omitted entries, the easiest one is the `step`.
-**If the `step` is omitted, it always defaults to `1`.** If the `step` is
-omitted the second colon before the `step` can also be omitted. That is to
-say, the following are completely equivalent:
+
+> **If the `step` is omitted, it always defaults to `1`.**
+
+If the `step` is omitted the second colon before the `step` can also be
+omitted. That is to say, the following are completely equivalent:
 
 ```py
 a[i:j:1]
@@ -1480,8 +1488,11 @@ a[i:j]
 
 <!-- TODO: Better wording for this rule? -->
 
-**For the `start` and `stop`, the rule is that being omitted extends the slice
-all the way to the beginning or end of `a` in the direction being sliced.** If
+> **For the `start` and `stop`, the rule is that being omitted extends the
+  slice all the way to the beginning or end of `a` in the direction being
+  sliced.**
+
+If
 the `step` is positive, this means `start` extends to the beginning of `a` and
 `stop` extends to the end. If `step` is negative, it is reversed: `start`
 extends to the end of `a` and `stop` extends to the beginning.
@@ -1493,28 +1504,28 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
     &
-    & \color{blue}{\enclose{circle}{1}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
     &
-    & \color{blue}{\enclose{circle}{2}}
+    & \color{#5E5EFF}{\enclose{circle}{2}}
     &
-    & \color{red}{\enclose{circle}{3}}
+    & \color{#EE0000}{\enclose{circle}{3}}
     &
-    & \color{red}{4\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
     &
-    & \color{red}{5\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
     &
-    & \color{red}{6\phantom{,}}\\
-    \color{blue}{\text{start}}
-    & \color{blue}{\text{(beginning)}}
+    & \color{#EE0000}{6\phantom{,}}\\
+    \color{#5E5EFF}{\text{start}}
+    & \color{#5E5EFF}{\text{(beginning)}}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{red}{\text{stop}}
+    & \color{#EE0000}{\text{stop}}
     &
     & \phantom{\rightarrow}
     &
@@ -1533,34 +1544,34 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
     &
-    & \color{red}{1\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
     &
-    & \color{red}{2\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
     &
-    & \color{blue}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
     &
-    & \color{blue}{\enclose{circle}{4}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
     &
-    & \color{blue}{\enclose{circle}{5}}
+    & \color{#5E5EFF}{\enclose{circle}{5}}
     &
-    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\rightarrow}
+    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
     &
     & \phantom{\rightarrow}
     &
     & \phantom{\rightarrow}
-    & \color{blue}{\text{start}}
+    &
+    & \phantom{\rightarrow}
+    & \color{#5E5EFF}{\text{start}}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{+1}
+    & \color{#5E5EFF}{+1}
     & \rightarrow
-    & \color{blue}{\text{stop}}
-    & \color{blue}{\text{(end)}}
+    & \color{#5E5EFF}{\text{stop}}
+    & \color{#5E5EFF}{\text{(end)}}
 \end{array}
 \end{aligned}
 $$
@@ -1573,34 +1584,34 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{red}{0\phantom{,}}
+\color{#EE0000}{\text{index}}
+    & \color{#EE0000}{0\phantom{,}}
     &
-    & \color{red}{1\phantom{,}}
+    & \color{#EE0000}{1\phantom{,}}
     &
-    & \color{red}{2\phantom{,}}
+    & \color{#EE0000}{2\phantom{,}}
     &
-    & \color{red}{\enclose{circle}{3}}
+    & \color{#EE0000}{\enclose{circle}{3}}
     &
-    & \color{blue}{\enclose{circle}{4}}
+    & \color{#5E5EFF}{\enclose{circle}{4}}
     &
-    & \color{blue}{\enclose{circle}{5}}
+    & \color{#5E5EFF}{\enclose{circle}{5}}
     &
-    & \color{blue}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\leftarrow}
+    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
     &
     & \phantom{\leftarrow}
     &
     & \phantom{\leftarrow}
-    & \color{red}{\text{stop}}
+    &
+    & \phantom{\leftarrow}
+    & \color{#EE0000}{\text{stop}}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{\text{start}}
-    & \color{blue}{\text{(end)}}
+    & \color{#5E5EFF}{\text{start}}
+    & \color{#5E5EFF}{\text{(end)}}
 \end{array}
 \end{aligned}
 $$
@@ -1613,28 +1624,28 @@ $$
 \begin{aligned}
 \begin{array}{r r c c c c c c c c c c c c l}
 a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{red}{\text{index}}
-    & \color{blue}{\enclose{circle}{0}}
+\color{#EE0000}{\text{index}}
+    & \color{#5E5EFF}{\enclose{circle}{0}}
     &
-    & \color{blue}{\enclose{circle}{1}}
+    & \color{#5E5EFF}{\enclose{circle}{1}}
     &
-    & \color{blue}{\enclose{circle}{2}}
+    & \color{#5E5EFF}{\enclose{circle}{2}}
     &
-    & \color{blue}{\enclose{circle}{3}}
+    & \color{#5E5EFF}{\enclose{circle}{3}}
     &
-    & \color{red}{4\phantom{,}}
+    & \color{#EE0000}{4\phantom{,}}
     &
-    & \color{red}{5\phantom{,}}
+    & \color{#EE0000}{5\phantom{,}}
     &
-    & \color{red}{6\phantom{,}}\\
-    \color{blue}{\text{stop}}
-    & \color{blue}{\text{(beginning)}}
+    & \color{#EE0000}{6\phantom{,}}\\
+    \color{#5E5EFF}{\text{stop}}
+    & \color{#5E5EFF}{\text{(beginning)}}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{-1}
+    & \color{#5E5EFF}{-1}
     & \leftarrow
-    & \color{blue}{\text{start}}
+    & \color{#5E5EFF}{\text{start}}
     &
     & \phantom{\leftarrow}
     &
