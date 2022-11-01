@@ -319,10 +319,10 @@ Quansight on numerous open source projects, including Numba, Dask and Project
 Jupyter.
 
 <div style="text-align:center">
-<a href="https://labs.quansight.org/"><img src="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" alt="https://labs.quansight.org/"
-width="200"></a>
-<a href="https://www.deshaw.com"><img src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" alt="https://www.deshaw.com"
-width="200"></a>
+<a class="reference external image-reference" href="https://labs.quansight.org/"><img alt="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" class="only-light-inline" src="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://labs.quansight.org/"><img alt="https://labs.quansight.org/images/QuansightLabs_logo_V2_white.png" class="only-dark-inline" src="https://labs.quansight.org/images/QuansightLabs_logo_V2_white.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://www.deshaw.com"><img alt="https://www.deshaw.com/" class="only-light-inline" src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://www.deshaw.com"><img alt="https://www.deshaw.com/" class="only-dark-inline" src="https://www.deshaw.com/assets/svg/embedded/logo-white.svg" style="width: 200px;"></a>
 </div>
 
 ## Table of Contents
