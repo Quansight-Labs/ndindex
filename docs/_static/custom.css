@@ -34,6 +34,33 @@
     --color-sidebar--hover: white;
 }
 
+/* The furo theme uses only-light and only-dark for light/dark-mode only
+   images, but they use display:block, so define
+   only-light-inline/only-dark-inline to use display:inline. */
+
+.only-light-inline {
+    display: inline !important;
+}
+html body .only-dark-inline {
+    display: none !important;
+}
+@media not print {
+    html body[data-theme=dark] .only-light-inline {
+        display: none !important;
+    }
+    body[data-theme=dark] .only-dark-inline {
+        display: inline !important;
+    }
+    @media (prefers-color-scheme: dark) {
+        html body:not([data-theme=light]) .only-light-inline {
+            display: none !important;
+        }
+        body:not([data-theme=light]) .only-dark-inline {
+            display: inline !important;
+        }
+    }
+}
+
 /* Make top-level items in the sidebar bold */
 .sidebar-tree .toctree-l1>.reference, .sidebar-tree .toctree-l1>label .icon {
     font-weight: bold !important;
