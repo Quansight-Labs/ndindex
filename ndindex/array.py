@@ -19,7 +19,7 @@ class ArrayIndex(NDIndex):
 
     def _typecheck(self, idx, shape=None, _copy=True):
         try:
-            from numpy import ndarray, asarray, integer, bool_, empty, intp
+            from numpy import ndarray, asarray, integer, bool_, empty, intp, VisibleDeprecationWarning
         except ImportError: # pragma: no cover
             raise ImportError("NumPy must be installed to create array indices")
 
@@ -37,7 +37,10 @@ class ArrayIndex(NDIndex):
         if isinstance(idx, (list, ndarray, bool, integer, int, bool_)):
             # Ignore deprecation warnings for things like [1, []]. These will be
             # filtered out anyway since they produce object arrays.
-            with warnings.catch_warnings(record=True):
+            with warnings.catch_warnings():
+                warnings.filterwarnings('ignore',
+                                        category=VisibleDeprecationWarning,
+                                        message='Creating an ndarray from ragged nested sequences')
                 a = asarray(idx)
                 if a is idx and _copy:
                     a = a.copy()

@@ -10,9 +10,6 @@ with indices.
 ndindex
 =======
 
-ndindex
--------
-
 .. autofunction:: ndindex.ndindex
 
 Index Types
@@ -20,8 +17,6 @@ Index Types
 
 The following classes represent different types of indices.
 
-Integer
--------
 
 .. autoclass:: ndindex.Integer
    :members:
@@ -29,34 +24,18 @@ Integer
 
 .. _slice-api:
 
-Slice
------
-
 .. autoclass:: ndindex.Slice
    :members:
    :special-members:
 
-ellipsis
---------
-
 .. autoclass:: ndindex.ellipsis
    :members:
-
-
-Newaxis
--------
 
 .. autoclass:: ndindex.Newaxis
    :members:
 
-Tuple
------
-
 .. autoclass:: ndindex.Tuple
    :members:
-
-IntegerArray
-------------
 
 .. autoclass:: ndindex.IntegerArray
    :members:
@@ -65,9 +44,6 @@ IntegerArray
 
    .. autoattribute:: dtype
       :annotation:
-
-BooleanArray
-------------
 
 .. autoclass:: ndindex.BooleanArray
    :members:
@@ -83,18 +59,9 @@ Index Helpers
 The functions here are helpers for working with indices that aren't methods of
 the index objects.
 
-iter_indices
-------------
-
 .. autofunction:: ndindex.iter_indices
 
-BroadcastError
---------------
-
 .. autoexception:: ndindex.BroadcastError
-
-AxisError
----------
 
 .. autoexception:: ndindex.AxisError
 
@@ -102,9 +69,6 @@ Chunking
 ========
 
 ndindex contains objects to represent chunking an array.
-
-ChunkSize
----------
 
 .. autoclass:: ndindex.ChunkSize
    :members:
@@ -115,20 +79,11 @@ Internal API
 These classes are only intended for internal use in ndindex. They shouldn't
 relied on as they may be removed or changed.
 
-ImmutableObject
----------------
-
 .. autoclass:: ndindex.ndindex.ImmutableObject
    :members:
 
-NDIndex
--------
-
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
-
-ArrayIndex
-----------
 
 .. autoclass:: ndindex.array.ArrayIndex
    :members:
@@ -137,27 +92,12 @@ ArrayIndex
    .. autoattribute:: dtype
       :annotation: Subclasses should redefine this
 
-default
--------
-
 .. autoclass:: ndindex.slice.default
-
-asshape
--------
 
 .. autofunction:: ndindex.ndindex.asshape
 
-operator_index
---------------
-
 .. autofunction:: ndindex.ndindex.operator_index
 
-ncycles
--------
-
 .. autofunction:: ndindex.ndindex.ncycles
-
-broadcast_shapes
-----------------
 
 .. autofunction:: ndindex.ndindex.broadcast_shapes
