@@ -147,7 +147,7 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
     for shape in shapes:
         _shape = list(shape)
         for i in skip_axes_:
-            if draw(booleans()):
+            if ndindex(i).isvalid(len(shape)) and draw(booleans()):
                 _shape[i] = draw(integers(0))
 
         _shapes.append(tuple(_shape))
