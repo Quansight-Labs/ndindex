@@ -157,7 +157,8 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
         _result_shape[i] = None
     _result_shape = tuple(_result_shape)
 
-    assume(prod([i for i in _result_shape if i]) < MAX_ARRAY_SIZE)
+    for shape in _shapes:
+        assume(prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
     return BroadcastableShapes(_shapes, _result_shape)
 
 
