@@ -301,14 +301,20 @@ class NDIndex(ImmutableObject):
         """
         Check whether a given index is valid on an array of a given shape.
 
-        Returns True if an array of shape `shape` can be indexed by `self` and
-        False if it would raise `IndexError`.
+        Returns `True` if an array of shape `shape` can be indexed by `self`
+        and `False` if it would raise `IndexError`.
 
         >>> from ndindex import ndindex
         >>> ndindex(3).isvalid((4,))
         True
         >>> ndindex(3).isvalid((2,))
         False
+
+        Note that :class:`~.Slice`, :class:`~.ellipsis`, and
+        :class:`~.Newaxis` indices are always valid regardless of the `shape`.
+
+        >>> ndindex(slice(0, 10)).isvalid((3,))
+        True
 
         """
         # TODO: More direct, efficient implementation
