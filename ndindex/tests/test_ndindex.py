@@ -153,9 +153,9 @@ def test_asshape():
     raises(TypeError, lambda: asshape(Tuple(1, 2)))
     raises(TypeError, lambda: asshape((True,)))
 
-@example([((1, 1), (1, 1)), (1, 1)], (0, 0))
-@example([((), (0,)), (0,)], (0,))
-@example([((1, 2), (2, 1)), (2, 2)], 1)
+@example([((1, 1), (1, 1)), (None, 1)], (0, 0))
+@example([((), (0,)), (None,)], (0,))
+@example([((1, 2), (2, 1)), (2, None)], 1)
 @given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes)
 def test_iter_indices(broadcastable_shapes, _skip_axes):
     # broadcasted_shape will contain None on the skip_axes, as those axes
@@ -163,8 +163,13 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
 
     # 1. Normalize inputs
-    skip_axes = (_skip_axes,) if isinstance(_skip_axes, int) else _skip_axes
+    skip_axes = (_skip_axes,) if isinstance(_skip_axes, int) else () if _skip_axes is None else _skip_axes
     ndim = len(broadcasted_shape)
+
+    # Double check the mutually_broadcastable_shapes_with_skipped_axes
+    # strategy
+    for i in skip_axes:
+        assert broadcasted_shape[i] is None
 
     # Use negative indices to index the skip axes since only shapes that have
     # the skip axis will include a slice.
@@ -172,19 +177,18 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
     canonical_shapes = [list(s) for s in shapes]
     for i in normalized_skip_axes:
         for s in canonical_shapes:
-            if ndindex(i).isvalid(s):
+            if ndindex(i).isvalid(len(s)):
                 s[i] = 1
-    skip_shapes = [tuple(shape[i] for i in normalized_skip_axes if ndindex(i).isvalid(shape)) for shape in canonical_shapes]
+    skip_shapes = [tuple(shape[i] for i in normalized_skip_axes if ndindex(i).isvalid(len(shape))) for shape in canonical_shapes]
     broadcasted_skip_shape = tuple(broadcasted_shape[i] for i in normalized_skip_axes)
 
     broadcasted_non_skip_shape = tuple(broadcasted_shape[i] for i in range(-1, -ndim-1, -1) if i not in normalized_skip_axes)
     nitems = prod(broadcasted_non_skip_shape)
     broadcasted_nitems = prod([i for i in broadcasted_shape if i is not None])
 
-    if skip_axes is None:
+    if _skip_axes is None:
         res = iter_indices(*shapes)
         broadcasted_res = iter_indices(np.broadcast_shapes(*shapes))
-        skip_axes = ()
     else:
         # Skipped axes may not be broadcast compatible. Since the index for a
         # skipped axis should always be a slice(None), the result should be
@@ -200,7 +204,7 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
     broadcasted_arrays = np.broadcast_arrays(*canonical_arrays)
 
     # 2. Check that iter_indices is the same whether or not the shapes are
-    # broadcasted together first. Also Check that every iterated index is the
+    # broadcasted together first. Also check that every iterated index is the
     # expected type and there are as many as expected.
     vals = []
     n = -1
@@ -230,7 +234,7 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
                 # If there are skipped axes, recursively call iter_indices to
                 # get each individual element of the resulting subarrays.
                 for subidxes in iter_indices(*[x.shape for x in canonical_aidxes]):
-                    items = [x[i.raw] for x, i in zip(aidxes, subidxes)]
+                    items = [x[i.raw] for x, i in zip(canonical_aidxes, subidxes)]
                     # An empty array means the iteration would be skipped.
                     if any(a.size == 0 for a in items):
                         continue
