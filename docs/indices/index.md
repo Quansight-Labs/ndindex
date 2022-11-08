@@ -144,3 +144,11 @@ arrays whose elements come from the indexed array `a`. In practice, the most
 commonly desired indices are represented by the basic indices such as [integer
 indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
+
+
+## Table of Contents
+
+```{toctree}
+../slices.md
+../multiaxis-indices.md
+```

@@ -330,9 +330,7 @@ Jupyter.
 ```{toctree}
 api.md
 type-confusion.md
-indices.md
-slices.md
-multiaxis-indices.md
+indices/index.md
 changelog.md
 style-guide.md
 ```
