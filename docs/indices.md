@@ -28,22 +28,22 @@ These indices also work for built-in sequence types such as `list` and `str`,
 and use the exact same semantics for which elements they select.
 
 - [Integer indices](integer-indices), corresponding to
-  [`ndindex.Integer`](integer-api).
-- [Slices](slices-docs), corresponding to [`ndindex.Slice`](slice-api).
+  [`ndindex.Integer`](ndindex.integer.Integer).
+- [Slices](slices-docs), corresponding to [`ndindex.Slice`](ndindex.slice.Slice).
 
 ### Basic multi-axis indices
 
 These are the indices that operate on multiple axes at once. These indices
 will not work on the built-in Python sequence types like `list` and `str`;
 they are only defined for NumPy arrays. However, like the basic single-axis
-indices, these indices are "basic indices", meaning that it returns a
+indices, these indices are "basic indices", meaning that they return a
 [view](https://numpy.org/doc/stable/glossary.html#term-view) of an array.
 
-- [Tuples](tuple-indices), corresponding to [`ndindex.Tuple`](tuple-api).
+- [Tuples](tuple-indices), corresponding to [`ndindex.Tuple`](ndindex.tuple.Tuple).
 - [Ellipses](ellipsis-indices), corresponding to
-  [`ndindex.ellipsis`](ellipsis-api)
+  [`ndindex.ellipsis`](ndindex.ellipsis.ellipsis)
 - [Newaxes](newaxis-indices) (i.e., `None`), corresponding to
-  [`ndindex.Newaxis`](newaxis-api).
+  [`ndindex.Newaxis`](ndindex.newaxis.Newaxis).
 
 ### Advanced indices
 
@@ -51,9 +51,9 @@ Advanced indices operate in general on multiple axes at once. However, unlike
 the basic indices, advanced indices in NumPy always return a copy of the array.
 
 - [Integer arrays](integer-array-indices), corresponding to
-  [`ndindex.IntegerArray`](integerarray-api).
+  [`ndindex.IntegerArray`](ndindex.integerarray.IntegerArray).
 - [Boolean arrays](boolean-array-indices), corresponding to
-  [`ndindex.BooleanArray`](booleanarray-api).
+  [`ndindex.BooleanArray`](ndindex.booleanarray.BooleanArray).
 
 ## What is an index?
 

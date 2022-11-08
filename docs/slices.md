@@ -70,7 +70,7 @@ It is worth noting that the `x:y:z` syntax is not valid outside of square
 brackets. However, slice objects can be created manually using the `slice()`
 builtin (`a[x:y:z]` is the same as `a[slice(x, y, z)]`). If you want to
 perform more advanced operations like arithmetic on slices, consider using
-the [`ndindex.Slice()`](slice-api) object.
+the [`ndindex.Slice()`](ndindex.slice.Slice) object.
 
 (rules)=
 ## Rules
@@ -546,7 +546,7 @@ start and stop values for the range. For example:
 
 This rule is tempting because `range()` makes some computations easy. For
 example, you can index or take the `len()` of a range. If you want to perform
-computations on slices, we recommend using [ndindex](slice-api). This is what
+computations on slices, we recommend using [ndindex](ndindex.slice.Slice). This is what
 it was designed for.
 
 (wrong-rule-3)=
@@ -1333,7 +1333,7 @@ clipping occurs *before* the step. That is, if the `start` is less than
 ```
 
 If you need to think about steps in terms of modular arithmetic,
-[`ndindex.Slice()`](slice-api) can be used to perform various slice
+[`ndindex.Slice()`](ndindex.slice.Slice) can be used to perform various slice
 calculations so that you don't have to come up with modulo formulas yourself.
 If you try to write such formulas yourself, chances are you will get them
 wrong, as it is easy to fail to properly account for [negative vs. nonnegative
@@ -1467,7 +1467,7 @@ is syntactically equivalent to them being omitted. That is to say, `a[::]` is
 a syntactic shorthand for `a[None:None:None]`. It is rare to see `None` in a
 slice. This is only relevant for code that consumes slices, such as a
 `__getitem__` method on an object. The `slice()` object corresponding to
-`a[::]` is `slice(None, None, None)`. [`ndindex.Slice()`](slice-api) also uses
+`a[::]` is `slice(None, None, None)`. [`ndindex.Slice()`](ndindex.slice.Slice) also uses
 `None` to indicate omitted entries in the same way.
 
 **The best way to think about omitted entries is just like that, as omitted

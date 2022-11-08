@@ -19,34 +19,22 @@ Index Types
 
 The following classes represent different types of indices.
 
-.. _integer-api:
-
 .. autoclass:: ndindex.Integer
    :members:
    :special-members:
-
-.. _slice-api:
 
 .. autoclass:: ndindex.Slice
    :members:
    :special-members:
 
-.. _ellipsis-api:
-
 .. autoclass:: ndindex.ellipsis
    :members:
-
-.. _newaxis-api:
 
 .. autoclass:: ndindex.Newaxis
    :members:
 
-.. _tuple-api:
-
 .. autoclass:: ndindex.Tuple
    :members:
-
-.. _integerarray-api:
 
 .. autoclass:: ndindex.IntegerArray
    :members:
@@ -55,8 +43,6 @@ The following classes represent different types of indices.
 
    .. autoattribute:: dtype
       :annotation:
-
-.. _booleanarray-api:
 
 .. autoclass:: ndindex.BooleanArray
    :members:
