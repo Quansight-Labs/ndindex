@@ -144,3 +144,5 @@ dmypy.json
 
 # project scratch dir
 /scratch/
+
+.DS_Store

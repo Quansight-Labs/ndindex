@@ -3,14 +3,17 @@ from itertools import chain
 from functools import reduce
 from operator import mul
 
-from numpy import intp, bool_, array
+from numpy import intp, bool_, array, broadcast_shapes
 import numpy.testing
 
 from pytest import fail
 
+from hypothesis import assume, note
 from hypothesis.strategies import (integers, none, one_of, lists, just,
-                                   builds, shared, composite)
-from hypothesis.extra.numpy import arrays
+                                   builds, shared, composite, sampled_from,
+                                   booleans)
+from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
+                                    mbs, BroadcastableShapes)
 
 from ..ndindex import ndindex
 
@@ -40,15 +43,88 @@ def tuples(elements, *, min_size=0, max_size=None, unique_by=None, unique=False)
     return lists(elements, min_size=min_size, max_size=max_size,
                  unique_by=unique_by, unique=unique).map(tuple)
 
+MAX_ARRAY_SIZE = 100000
+SHORT_MAX_ARRAY_SIZE = 1000
 shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
-             lambda shape: prod([i for i in shape if i]) < 100000)
+             lambda shape: prod([i for i in shape if i]) < MAX_ARRAY_SIZE)
 
 _short_shapes = tuples(integers(0, 10)).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
-             lambda shape: prod([i for i in shape if i]) < 1000)
+             lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
+
+# Note: We could use something like this:
+
+# mutually_broadcastable_shapes = shared(integers(1, 32).flatmap(lambda i: mbs(num_shapes=i).filter(
+#     lambda broadcastable_shapes: prod([i for i in broadcastable_shapes.result_shape if i]) < MAX_ARRAY_SIZE)))
+
+
+@composite
+def _mutually_broadcastable_shapes(draw):
+    # mutually_broadcastable_shapes() with the default inputs doesn't generate
+    # very interesting examples (see
+    # https://github.com/HypothesisWorks/hypothesis/issues/3170). It's very
+    # difficult to get it to do so by tweaking the max_* parameters, because
+    # making them too big leads to generating too large shapes and filtering
+    # too much. So instead, we trick it into generating more interesting
+    # examples by telling it to create shapes that broadcast against some base
+    # shape.
+
+    # Unfortunately, this, along with the filtering below, has a downside that
+    # it tends to generate a result shape of () more often than you might
+    # like. But it generates enough "real" interesting shapes that both of
+    # these workarounds are worth doing (plus I don't know if any other better
+    # way of handling the situation).
+    base_shape = draw(short_shapes)
+
+    input_shapes, result_shape = draw(
+        mbs(
+            num_shapes=32,
+            base_shape=base_shape,
+            min_side=0,
+        ))
+
+    # The hypothesis mutually_broadcastable_shapes doesn't allow num_shapes to
+    # be a strategy. It's tempting to do something like num_shapes =
+    # draw(integers(1, 32)), but this shrinks poorly. See
+    # https://github.com/HypothesisWorks/hypothesis/issues/3151. So instead of
+    # using a strategy to draw the number of shapes, we just generate 32
+    # shapes and pick a subset of them.
+    final_input_shapes = draw(lists(sampled_from(input_shapes), min_size=0, max_size=32,
+                        unique_by=id,))
+
+
+    # Note: result_shape is input_shapes broadcasted with base_shape, but
+    # base_shape itself is not part of input_shapes. We "really" want our base
+    # shape to be (). We are only using it here to trick
+    # mutually_broadcastable_shapes into giving more interesting examples.
+    final_result_shape = broadcast_shapes(*final_input_shapes)
+
+    # The broadcast compatible shapes can be bigger than the base shape. This
+    # is already somewhat limited by the mutually_broadcastable_shapes
+    # defaults, and pretty unlikely, but we filter again here just to be safe.
+    if not prod([i for i in final_result_shape if i]) < SHORT_MAX_ARRAY_SIZE: # pragma: no cover
+        note(f"Filtering {result_shape}")
+        assume(False)
+
+    return BroadcastableShapes(final_input_shapes, final_result_shape)
+
+mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
+
+@composite
+def skip_axes(draw):
+    shapes, result_shape = draw(mutually_broadcastable_shapes)
+    n = len(result_shape)
+    axes = draw(one_of(none(),
+                      lists(integers(-n, max(0, n-1)), max_size=n)))
+    if isinstance(axes, list):
+        axes = tuple(axes)
+        # Sometimes return an integer
+        if len(axes) == 1 and draw(booleans()): # pragma: no cover
+            return axes[0]
+    return axes
 
 # We need to make sure shapes for boolean arrays are generated in a way that
 # makes them related to the test array shape. Otherwise, it will be very
@@ -139,7 +215,10 @@ def check_same(a, idx, raw_func=lambda a, idx: a[idx],
             try:
                 a_raw = raw_func(a, idx)
             except Warning as w:
-                if ("Using a non-tuple sequence for multidimensional indexing is deprecated" in w.args[0]):
+                # In NumPy < 1.23, this is a FutureWarning. In 1.23 the
+                # deprecation was removed and lists are always interpreted as
+                # array indices.
+                if ("Using a non-tuple sequence for multidimensional indexing is deprecated" in w.args[0]): # pragma: no cover
                     idx = array(idx)
                     a_raw = raw_func(a, idx)
                 elif "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
@@ -199,4 +278,4 @@ chunk_shapes = shared(shapes)
 def chunk_sizes(draw, shapes=chunk_shapes):
     shape = draw(shapes)
     return draw(tuples(integers(1, 10), min_size=len(shape),
-                       max_size=len(shape)).filter(lambda shape: prod(shape) < 10000))
+                       max_size=len(shape)).filter(lambda shape: prod(shape) < MAX_ARRAY_SIZE))

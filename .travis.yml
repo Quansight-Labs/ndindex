@@ -27,7 +27,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -n test-environment python=${PYTHON_VERSION:-$TRAVIS_PYTHON_VERSION} pyflakes pytest pytest-doctestplus sympy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes
+  - conda create -n test-environment python=${PYTHON_VERSION:-$TRAVIS_PYTHON_VERSION} pyflakes pytest pytest-doctestplus hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes
   - source activate test-environment
   - pip install --pre numpy>=1.20
 

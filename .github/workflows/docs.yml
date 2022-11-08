@@ -1,11 +1,11 @@
-name: Tests
+name: Docs
 on: [push, pull_request]
 jobs:
-  tests:
+  docs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.10']
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
@@ -22,10 +22,10 @@ jobs:
           conda config --add channels conda-forge
           conda update -q conda
           conda info -a
-          conda create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy hypothesis pytest-cov pytest-flakes packaging
+          conda create -n test-environment python=${{ matrix.python-version }} --file docs/requirements.txt
           conda init
 
-      - name: Run Tests
+      - name: Build Docs
         run: |
           # Copied from .bashrc. We can't just source .bashrc because it exits
           # when the shell isn't interactive.
@@ -49,19 +49,15 @@ jobs:
           set -e
 
           conda activate test-environment
-          python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
-          # The coverage requirement check is done by the coverage report line below
-          PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
-          pytest $PYTEST_FLAGS
-          ./run_doctests
-          # Make sure it installs
-          python setup.py install
-          # Coverage. This also sets the failing status if the
-          # coverage is not 100%. Travis sometimes cuts off the last command, which is
-          # why we print stuff at the end.
-          if ! coverage report -m; then
-              echo "Coverage failed";
-              false;
-          else
-              echo "Coverage passed";
-          fi;
+          cd docs
+          make html
+
+      # Note, the gh-pages deployment requires setting up a SSH deploy key.
+      # See
+      # https://github.com/JamesIves/github-pages-deploy-action/tree/dev#using-an-ssh-deploy-key-
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          folder: docs/_build/html
+          ssh-key: ${{ secrets.DEPLOY_KEY }}

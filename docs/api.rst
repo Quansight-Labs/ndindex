@@ -10,9 +10,6 @@ with indices.
 ndindex
 =======
 
-ndindex
--------
-
 .. autofunction:: ndindex.ndindex
 
 .. _index-types:
@@ -24,17 +21,11 @@ The following classes represent different types of indices.
 
 .. _integer-api:
 
-Integer
--------
-
 .. autoclass:: ndindex.Integer
    :members:
    :special-members:
 
 .. _slice-api:
-
-Slice
------
 
 .. autoclass:: ndindex.Slice
    :members:
@@ -42,32 +33,20 @@ Slice
 
 .. _ellipsis-api:
 
-ellipsis
---------
-
 .. autoclass:: ndindex.ellipsis
    :members:
 
 .. _newaxis-api:
-
-Newaxis
--------
 
 .. autoclass:: ndindex.Newaxis
    :members:
 
 .. _tuple-api:
 
-Tuple
------
-
 .. autoclass:: ndindex.Tuple
    :members:
 
 .. _integerarray-api:
-
-IntegerArray
-------------
 
 .. autoclass:: ndindex.IntegerArray
    :members:
@@ -79,9 +58,6 @@ IntegerArray
 
 .. _booleanarray-api:
 
-BooleanArray
-------------
-
 .. autoclass:: ndindex.BooleanArray
    :members:
    :inherited-members:
@@ -90,13 +66,22 @@ BooleanArray
    .. autoattribute:: dtype
       :annotation:
 
+Index Helpers
+=============
+
+The functions here are helpers for working with indices that aren't methods of
+the index objects.
+
+.. autofunction:: ndindex.iter_indices
+
+.. autoexception:: ndindex.BroadcastError
+
+.. autoexception:: ndindex.AxisError
+
 Chunking
 ========
 
 ndindex contains objects to represent chunking an array.
-
-ChunkSize
----------
 
 .. autoclass:: ndindex.ChunkSize
    :members:
@@ -104,22 +89,14 @@ ChunkSize
 Internal API
 ============
 
-These classes are only intended for internal use in ndindex.
-
-ImmutableObject
----------------
+These classes are only intended for internal use in ndindex. They shouldn't
+relied on as they may be removed or changed.
 
 .. autoclass:: ndindex.ndindex.ImmutableObject
    :members:
 
-NDIndex
--------
-
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
-
-ArrayIndex
-----------
 
 .. autoclass:: ndindex.array.ArrayIndex
    :members:
@@ -128,17 +105,12 @@ ArrayIndex
    .. autoattribute:: dtype
       :annotation: Subclasses should redefine this
 
-default
--------
-
 .. autoclass:: ndindex.slice.default
-
-asshape
--------
 
 .. autofunction:: ndindex.ndindex.asshape
 
-operator_index
---------------
-
 .. autofunction:: ndindex.ndindex.operator_index
+
+.. autofunction:: ndindex.ndindex.ncycles
+
+.. autofunction:: ndindex.ndindex.broadcast_shapes

@@ -13,12 +13,12 @@ classes are not available on the ndindex classes.
 
 Some general types to help avoid type confusion:
 
-- **Always use the [`ndindex()`](ndindex.ndindex) function to create ndindex
-  types.** When calling ndindex methods or creating [`Tuple`](Tuple) objects,
-  it is not necessary to convert arguments to ndindex types first. Slice
-  literals (using `:`) are not valid syntax outside of a getitem (square
-  brackets), but you can use the `slice` built-in object to create slices.
-  `slice(a, b, c)` is the same as `a:b:c`.
+- **Always use the {func}`~.ndindex` function to create ndindex types.** When
+  calling ndindex methods or creating {class}`~.Tuple` objects, it is not
+  necessary to convert arguments to ndindex types first. Slice literals (using
+  `:`) are not valid syntax outside of a getitem (square brackets), but you
+  can use the `slice` built-in object to create slices. `slice(a, b, c)` is
+  the same as `a:b:c`.
 
   **Right:**
 
@@ -172,10 +172,10 @@ Additionally, some advice for specific types:
 
 ## Integer
 
-- **{any}`Integer` should not be thought of as an int type.** It represents integers
-  **as indices**. It is not usable in contexts where integers are usable. For
-  example, arithmetic will not work on it. If you need to manipulate the
-  integer index as an integer, use `idx.raw`.
+- **{class}`~.Integer` should not be thought of as an int type.** It
+  represents integers **as indices**. It is not usable in contexts where
+  integers are usable. For example, arithmetic will not work on it. If you
+  need to manipulate the integer index as an integer, use `idx.raw`.
 
   **Right:**
 
@@ -188,7 +188,7 @@ Additionally, some advice for specific types:
 
   ```py
   idx = ndindex(0)
-  idx.raw + 1 # Produces an error
+  idx + 1 # Produces an error
   ```
 
 - `Integer` is the only index type that can be used directly as an array
@@ -203,10 +203,10 @@ Additionally, some advice for specific types:
 (type-confusion-tuples)=
 ## Tuple
 
-- **{any}`Tuple` should not be thought of as a tuple.** In particular, things
-  like `idx[0]` and `len(idx)` will not work if `idx` is a `Tuple`. If you
-  need to access the specific term in a `Tuple`, use `Tuple.args` if you want
-  the ndindex type, or `Tuple.raw` if you want the raw type.
+- **{class}`~.Tuple` should not be thought of as a tuple.** In particular,
+  things like `idx[0]` and `len(idx)` will not work if `idx` is a `Tuple`. If
+  you need to access the specific term in a `Tuple`, use `Tuple.args` if you
+  want the ndindex type, or `Tuple.raw` if you want the raw type.
 
   **Right:**
 
@@ -245,7 +245,7 @@ Additionally, some advice for specific types:
 (type-confusion-ellipsis)=
 ## ellipsis
 
-- You should almost never use the ndindex {any}`ellipsis` class directly.
+- You should almost never use the ndindex {class}`~.ellipsis` class directly.
   Instead, **use `...` or `ndindex(...)`**. As noted above, all ndindex
   methods and `Tuple` will automatically convert `...` into the ndindex type.
 
@@ -339,7 +339,7 @@ The advice for `Newaxis` is almost identical to the advice for
 [`ellipsis`](type-confusion-ellipsis). Note that `np.newaxis` is just an alias
 for `None`.
 
-- You should almost never use the ndindex {any}`Newaxis` class directly.
+- You should almost never use the ndindex {class}`~.Newaxis` class directly.
   Instead, **use `np.newaxis`, `None`, `ndindex(np.newaxis)`, or
   `ndindex(None)`**. As noted above, all ndindex methods and `Tuple` will
   automatically convert `None` into the ndindex type.
@@ -421,11 +421,11 @@ for `None`.
 
 ## IntegerArray and BooleanArray
 
-- **{any}`IntegerArray` and {any}`BooleanArray` should not be thought of as
-  arrays.** They do not have the methods that `numpy.ndarray` would have. They
-  also have fixed dtypes (`intp` and `bool_`) and are restricted by what is
-  allowed as indices by NumPy. To access the array they represent, use
-  `idx.array` or `idx.raw`.
+- **{class}`~.IntegerArray` and {class}`~.BooleanArray` should not be thought
+  of as arrays.** They do not have the methods that `numpy.ndarray` would
+  have. They also have fixed dtypes (`intp` and `bool_`) and are restricted by
+  what is allowed as indices by NumPy. To access the arrays they represent,
+  use `idx.array` or `idx.raw`.
 
   **Right:**
 

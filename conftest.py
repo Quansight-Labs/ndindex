@@ -1,13 +1,16 @@
 # Make sure the doctests in the docs can import the module
 import sys
 sys.path.insert(0, '.')
-from distutils.version import LooseVersion
+try:
+    from packaging.version import parse as LooseVersion
+except ImportError:
+    from distutils.version import LooseVersion
 
 from hypothesis import settings
 
 # Make sure a new enough version of NumPy is installed for the tests
 import numpy
-if LooseVersion(numpy.__version__) < '1.20':
+if LooseVersion(numpy.__version__) < LooseVersion('1.20'):
     raise RuntimeError("NumPy 1.20 (development version) or greater is required to run the ndindex tests")
 
 # Add a --hypothesis-max-examples flag to pytest. See

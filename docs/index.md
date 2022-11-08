@@ -70,14 +70,40 @@ their limitations:
   don't have to try to figure out all the different cases yourself. And due to
   extensive testing (see below), you can be assured that ndindex is correct.
 
+(installation)=
+## Installation
+
+ndindex can be installed using pip (`pip install ndindex`) or conda (`conda
+install -f conda-forge ndindex`).
+
+### Experimental Cythonization
+
+When installing ndindex from source (using `python setup.py install`) all
+Python modules (except tests) will be Cythonized when Cython and a working
+compiler are installed. This can improve the general performance of ndindex.
+The environment variable `CYTHONIZE_NDINDEX` is used to explicitly control
+this default behavior:
+
+- `CYTHONIZE_NDINDEX=0`: disables Cythonization (even if a
+  working Cython environment is available)
+
+- `CYTHONIZE_NDINDEX=1`: force Cythonization (will fail when Cython or a
+  compiler isn't present)
+
+- `CYTHONIZE_NDINDEX` not set: the default behavior
+
+Cythonization is still experimental, and is only enabled for direct source
+installations. The pip and conda packages are not Cythonized. Future versions
+of ndindex may enable Cythonization for all installs.
+
 ## Features
 
 ndindex is still a work in progress. The following things are currently
 implemented:
 
-- {any}`Slice`, {any}`Integer`, {any}`ellipsis`, {any}`Tuple`, {any}`Newaxis`,
-  {any}`IntegerArray`, and {any}`BooleanArray` classes to represent any valid
-  index to a NumPy array.
+- {class}`~.Slice`, {class}`~.Integer`, {class}`~.ellipsis`, {class}`~.Tuple`,
+  {class}`~.Newaxis`, {class}`~.IntegerArray`, and {class}`~.BooleanArray`
+  classes to represent any valid index to a NumPy array.
 
 - Classes do not canonicalize by default (the constructor only does basic type
   checking). Objects can be put into canonical form by calling
@@ -293,16 +319,15 @@ Quansight on numerous open source projects, including Numba, Dask and Project
 Jupyter.
 
 <div style="text-align:center">
-<a href="https://labs.quansight.org/"><img src="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" alt="https://labs.quansight.org/"
-width="200"></a>
-<a href="https://www.deshaw.com"><img src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" alt="https://www.deshaw.com"
-width="200"></a>
+<a class="reference external image-reference" href="https://labs.quansight.org/"><img alt="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" class="only-light-inline" src="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://labs.quansight.org/"><img alt="https://labs.quansight.org/images/QuansightLabs_logo_V2_white.png" class="only-dark-inline" src="https://labs.quansight.org/images/QuansightLabs_logo_V2_white.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://www.deshaw.com"><img alt="https://www.deshaw.com/" class="only-light-inline" src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://www.deshaw.com"><img alt="https://www.deshaw.com/" class="only-dark-inline" src="https://www.deshaw.com/assets/svg/embedded/logo-white.svg" style="width: 200px;"></a>
 </div>
 
 ## Table of Contents
 
 ```{toctree}
-index.md
 api.md
 type-confusion.md
 indices.md

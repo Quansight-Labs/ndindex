@@ -10,7 +10,6 @@ from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import ndindices, short_shapes, assert_equal
 
-
 @example((slice(0, 8), slice(0, 9), slice(0, 10)),
          ([2, 5, 6, 7], slice(1, 9, 1), slice(5, 10, 1)),
          (20, 20, 20))

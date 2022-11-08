@@ -2,6 +2,7 @@
 omit =
     ndindex/_version.py
     ndindex/tests/doctest.py
+    ndindex/tests/test_no_dependencies.py
 
 [report]
 exclude_lines =

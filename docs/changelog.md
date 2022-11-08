@@ -1,5 +1,50 @@
 # ndindex Changelog
 
+## Version 1.6 (2022-01-24)
+
+### Major Changes
+
+- SymPy is no longer a dependency of ndindex.
+
+- NumPy is now an optional dependency of ndindex. It is only required when
+  constructing array indices {class}`~.BooleanArray` or
+  {class}`~.IntegerArray`. This does not change the semantics of ndindex.
+  ndindex objects still match NumPy indexing semantics everywhere. Note that
+  NumPy is still a hard requirement for all tests in the ndindex test suite.
+
+- Added a new function {any}`iter_indices` which is a generalization of the
+  `np.ndindex()` function (which is otherwise unrelated) to allow multiple
+  broadcast compatible shapes, and to allow skipping axes.
+
+- Added a new method {any}`ChunkSize.containing_block`, which computes the
+  smallest continuous block of chunks containing a given index.
+
+- ndindex can now be installed with optional Cythonization support. This is
+  still experimental and is only enabled when installing ndindex from source
+  when Cython is installed (see [the installation
+  instructions](installation)). This improves the general performance of
+  ndindex.
+
+### Minor Changes
+
+- Fix an issue with the {class}`~.Tuple` constructor with broadcast incompatible
+  arrays with the latest version of NumPy.
+
+- Small performance improvement to {any}`Tuple.reduce`.
+
+- Add better support for boolean scalar indices in various
+  {class}`~.ChunkSize` methods.
+
+- Better `NotImplementedError` messages from {class}`~.ChunkSize` methods.
+
+- Switch from Travis CI to GitHub Actions.
+
+- Update CI to test Python 3.10.
+
+- Remove Codecov from CI.
+
+- The docs now have a cleaner sidebar which always stays fixed on screen.
+
 ## Version 1.5.2 (2021-04-06)
 
 ### Major Changes
@@ -72,8 +117,8 @@
 
 - Make `np.ndarray == ndindex(array)` give `True` or `False` (@telamonian).
 
-- Add [`ChunkSize`](ChunkSize), a new object to represent chunking over an
-  array and manipulate indices over chunks.
+- Add {class}`~.ChunkSize`, a new object to represent chunking over an array
+  and manipulate indices over chunks.
 
 ### Minor Changes
 
@@ -89,13 +134,13 @@
 
 ### Major Changes
 
-- New object [`Newaxis`](Newaxis) to represent `np.newaxis` (i.e., `None`).
+- New object {class}`~.Newaxis` to represent `np.newaxis` (i.e., `None`).
 
-- New object [`BooleanArray`](BooleanArray) to represent boolean array indices
-  (i.e., masks).
+- New object {class}`~.BooleanArray` to represent boolean array indices (i.e.,
+  masks).
 
-- New object [`IntegerArray`](IntegerArray) to represent integer array indices
-  (i.e., fancy indexing).
+- New object {class}`~.IntegerArray` to represent integer array indices (i.e.,
+  fancy indexing).
 
 With these three new objects, ndindex can now represent all valid NumPy index
 types. However, note that two corner cases with tuples of arrays are not
@@ -157,12 +202,12 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
   the [type confusion](type-confusion-tuples) between `Tuple((1, 2))` and
   `Tuple(1, 2)` (only the latter form is correct).
 
-- Document the [`.args`](args) attribute.
+- Document the [`.args`](ndindex.ndindex.ImmutableObject.args) attribute.
 
-- New internal function [`operator_index()`](operator_index), which acts like
+- New internal function {func}`~.operator_index`, which acts like
   `operator.index()` except it disallows boolean types. A consequence of this
-  is that calling the [`Integer`](Integer) or [`Slice`](Slice) constructors
-  with boolean arguments will now result in a `TypeError`. Note that scalar
+  is that calling the {class}`~.Integer` or {class}`~.Slice` constructors with
+  boolean arguments will now result in a `TypeError`. Note that scalar
   booleans (`False` and `True`) are valid indices, but they are not the same
   as the integer indices `0` and `1`.
 
@@ -251,7 +296,7 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
 ### Major Changes
 
 - Added `ellipsis` to represent ellipsis indices (`...`). See
-  [ellipsis](ellipsis).
+  {class}`~.ellipsis`.
 
 ### Minor Changes
 
@@ -263,7 +308,7 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
 
 - Make `inspect.signature` give the correct thing for ndindex types.
 
-- Fix `Tuple.reduce()` with no arguments.
+- Fix {any}`Tuple.reduce()` with no arguments.
 
 - ndindex now has 100% test coverage.
 
