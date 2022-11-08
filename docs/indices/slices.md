@@ -967,7 +967,7 @@ reasons why this way of thinking creates more confusion than it removes.
   So there is an "extra" fencepost compared to the number of fence sections.
 
 
-  ```{figure} imgs/jeff-burak-lPO0VzF_4s8-unsplash.jpg
+  ```{figure} ../imgs/jeff-burak-lPO0VzF_4s8-unsplash.jpg
   A section of a fence that has 6 segments and 7 fenceposts.[^fencepost-jeff-burbak-footnote]
 
   [^fencepost-jeff-burbak-footnote]: Image credit [Jeff Burak via

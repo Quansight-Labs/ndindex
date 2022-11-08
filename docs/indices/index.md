@@ -155,6 +155,6 @@ indices](integer-indices), [slices](slices-docs), and
 ```{toctree}
 :titlesonly:
 
-../slices.md
-../multiaxis-indices.md
+slices.md
+multiaxis-indices.md
 ```

@@ -33,6 +33,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
     'sphinx_copybutton',
+    'sphinx_reredirects',
 ]
 
 intersphinx_mapping = {
@@ -196,3 +197,17 @@ ndindex pull request <a href="https://github.com/Quansight-Labs/ndindex/pull/{PR
 href="https://github.com/Quansight-Labs/ndindex/pull/{PR_NUMBER}/commits/{SHA1}">{SHA1[:7]}</a>.
 If you aren't looking for a PR preview, go to <a
 href="https://quansight-labs.github.io/ndindex//">the main ndindex documentation</a>. """
+
+# Add redirects here. This should be done whenever a page that is in the
+# existing release docs is moved somewhere else so that the URLs don't break.
+# The format is
+
+# "page/path/without/extension": "../relative_path_with.html"
+
+# Note that the html path is relative to the redirected page. Always test the
+# redirect manually (they aren't tested automatically). See
+# https://documatt.gitlab.io/sphinx-reredirects/usage.html
+
+redirects = {
+    "slices": "indices/slices.html",
+}
