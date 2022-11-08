@@ -73,8 +73,9 @@ Semantically, an index `x` picks some subset of the elements of `a`. An index
 indeed, some subset of the same elements that were in `a`, or it raises
 `IndexError`.
 
-**Critically, indices do not in any way depend on the *values* of the elements
-they select. They only depend on their *position* in the array `a`.**
+> **Critically, indices do not in any way depend on the *values* of the
+  elements they select. They only depend on their *position* in the array
+  `a`.**
 
 
 For example, suppose `a` is an array of integers of shape `(2, 3, 2)`:
@@ -124,12 +125,15 @@ So the following are always true about any index:
 
 - An index on an array always produces a new array (unless it raises
   `IndexError`).
+
 - The elements of the new array correspond to elements of the original array.
+
 - These elements are chosen by their position in the original array only.
-  Their value is irrelevant.
+  Their values are irrelevant.
+
 - As such, the exact same index on any other array with the same shape
-  produces an array with the exact same shape with corresponding elements in
-  the same corresponding places.
+  produces an array with the exact same resulting shape with corresponding
+  elements in the same corresponding places.
 
 To be sure, it is possible to *construct* indices that chose specific elements
 based on their values. A common example of this is masks (i.e., [boolean array
