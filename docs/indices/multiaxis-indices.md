@@ -441,11 +441,13 @@ array([ 8,  9, 10, 11])
 ```
 
 This is a rule in general, **a tuple index implicitly ends in as many slices
-`:` as there are remaining dimensions of the array.** A more mathematically
-precise way to say this might be this:  Suppose an array `a` has $n$
-dimensions and a tuple index `i` has $k$ elements, where $k < n$. Then `a[i]`
-is exactly the same as `a[i2]`, where `i2` is `i` with $n - k$ trivial `:`
-slices appended to the end.
+`:` as there are remaining dimensions of the array.**[^tuple-slices-footnote]
+
+[^tuple-slices-footnote]: A more mathematically precise way to say this might
+    be this:  Suppose an array `a` has $n$ dimensions and a tuple index `i`
+    has $k$ elements, where $k < n$. Then `a[i]` is exactly the same as
+    `a[i2]`, where `i2` is `i` with $n - k$ trivial `:` slices appended to the
+    end.
 
 (single-axis-tuple)=
 The [slices](slices-docs) document stressed the point that slices always keep
@@ -649,7 +651,7 @@ element of the last axis, we could use
 array([3, 7])
 ```
 
-An ellipsis is also allowed to select zero axes, if all the axes of the array
+An ellipsis is also allowed to skip zero axes, if all the axes of the array
 are already accounted for. For example, these are the same because `a` has 3
 dimensions:
 
@@ -659,6 +661,10 @@ array([10, 14])
 >>> a[1, 0:2, ..., 2]
 array([10, 14])
 ```
+
+And indeed, the index `1, 0:2, ..., 2` will work with any array with *at
+least* 3 dimensions (assuming the first dimension is at least `2` and the last
+dimension is at least `3`).
 
 Above, we saw that a tuple index implicitly ends in some number of trivial `:`
 slices. We can also see here that a tuple index also always implicitly ends in
@@ -834,7 +840,7 @@ array([[ 0],
 3)` row vector. `v[..., newaxis]` inserts an axis at the end, making it a `(3,
 1)` column vector.
 
-Another common usage is due to
+But the most common usage is due to
 [broadcasting](https://numpy.org/doc/stable/user/basics.broadcasting.html).
 Broadcasting is a powerful abstraction that applies to all operations in
 NumPy. It allows arrays with mismatched shapes to be combined together as if
