@@ -19,6 +19,8 @@ plural of *index* is *indices*. *Indexes* is always a verb. For example,
 `(i, j)`, which *indexes* the array `a`.
 ```
 
+## Index Types
+
 ### Basic single-axis indices
 
 These are the indices that only work on a single axis of an array at a time.
