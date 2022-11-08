@@ -7,10 +7,6 @@ types such as `list` and `str`). However, understanding the underlying
 semantics of indices is critical making the best use of ndindex, as well as
 for making the best use of NumPy arrays themselves.
 
-There are 7 types of indices supported by NumPy, which correspond to the [7
-top-level ndindex types](index-types). These can be sorted into three
-categories:
-
 ```{note}
 For clarity, in this document, and throughout the ndindex documentation, the
 plural of *index* is *indices*. *Indexes* is always a verb. For example,
@@ -20,6 +16,10 @@ plural of *index* is *indices*. *Indexes* is always a verb. For example,
 ```
 
 ## Index Types
+
+There are 7 types of indices supported by NumPy, which correspond to the [7
+top-level ndindex types](index-types). These can be sorted into three
+categories:
 
 ### Basic single-axis indices
 
