@@ -310,11 +310,17 @@ class NDIndex(ImmutableObject):
         >>> ndindex(3).isvalid((2,))
         False
 
-        Note that :class:`~.Slice`, :class:`~.ellipsis`, and
-        :class:`~.Newaxis` indices are always valid regardless of the `shape`.
+        Some indices can never be valid and will raise a `TypeError` if you
+        attempt to construct them.
 
-        >>> ndindex(slice(0, 10)).isvalid((3,))
-        True
+        >>> ndindex((..., 0, ...))
+        Traceback (most recent call last):
+          ...
+        IndexError: an index can only have a single ellipsis ('...')
+
+        See Also
+        ========
+        .NDIndex.newshape
 
         """
         # TODO: More direct, efficient implementation
@@ -404,8 +410,8 @@ class NDIndex(ImmutableObject):
         `shape` should be a tuple of ints, or an int, which is equivalent to a
         1-D shape.
 
-        Raises `IndexError` if `self` would be out of shape for an array of
-        shape `shape`.
+        Raises `IndexError` if `self` would be invalid for an array of shape
+        `shape`.
 
         >>> from ndindex import Slice, Integer, Tuple
         >>> shape = (6, 7, 8)
@@ -419,6 +425,10 @@ class NDIndex(ImmutableObject):
         (3, 7, 8)
         >>> Tuple(0, ..., Slice(1, 3)).newshape(shape)
         (7, 2)
+
+        See Also
+        ========
+        .NDIndex.isvalid
 
         """
         raise NotImplementedError

@@ -102,6 +102,15 @@ class BooleanArray(ArrayIndex):
         from numpy import count_nonzero
         return count_nonzero(self.array)
 
+    def _raise_indexerror(self, shape, axis=0):
+        if len(shape) < self.ndim + axis:
+            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {self.ndim + axis} were indexed")
+
+        for i in range(axis, axis+self.ndim):
+            if self.shape[i-axis] != 0 and shape[i] != self.shape[i-axis]:
+
+                raise IndexError(f"boolean index did not match indexed array along dimension {i}; dimension is {shape[i]} but corresponding boolean dimension is {self.shape[i-axis]}")
+
     def reduce(self, shape=None, axis=0):
         """
         Reduce a `BooleanArray` index on an array of shape `shape`.
@@ -137,22 +146,14 @@ class BooleanArray(ArrayIndex):
 
         shape = asshape(shape)
 
-        if len(shape) < self.ndim + axis:
-            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {self.ndim + axis} were indexed")
-
-        for i in range(axis, axis+self.ndim):
-            if self.shape[i-axis] != 0 and shape[i] != self.shape[i-axis]:
-
-                raise IndexError(f"boolean index did not match indexed array along dimension {i}; dimension is {shape[i]} but corresponding boolean dimension is {self.shape[i-axis]}")
-
+        self._raise_indexerror(shape, axis)
         return self
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        # reduce will raise IndexError if it should be raised
-        self.reduce(shape)
+        self._raise_indexerror(shape)
         return (self.count_nonzero,) + shape[self.ndim:]
 
     def isempty(self, shape=None):

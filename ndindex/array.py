@@ -159,3 +159,13 @@ class ArrayIndex(NDIndex):
 
     def __hash__(self):
         return hash(self.array.tobytes())
+
+    def isvalid(self, shape, _axis=0):
+        try:
+            # The logic is in _raise_indexerror because the error message uses
+            # the additional information that is computed when checking if the
+            # array is valid.
+            self._raise_indexerror(shape, _axis)
+        except IndexError:
+            return False
+        return True

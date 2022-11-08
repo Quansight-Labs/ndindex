@@ -470,6 +470,12 @@ class Slice(NDIndex):
                 stop = start % -step - 1
         return self.__class__(start, stop, step)
 
+    def isvalid(self, shape):
+        # The docstring for this method is on the NDIndex base class
+
+        # All slices are valid as long as there is at least one dimension
+        return bool(shape)
+
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)

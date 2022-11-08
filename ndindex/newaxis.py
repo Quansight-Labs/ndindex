@@ -69,6 +69,9 @@ class Newaxis(NDIndex):
             shape = asshape(shape)
         return self
 
+    def isvalid(self, shape):
+        return True
+
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
