@@ -149,6 +149,8 @@ indices](integer-indices), [slices](slices-docs), and
 ## Table of Contents
 
 ```{toctree}
+:titlesonly:
+
 ../slices.md
 ../multiaxis-indices.md
 ```
