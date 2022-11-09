@@ -70,6 +70,7 @@ class Newaxis(NDIndex):
         return self
 
     def isvalid(self, shape):
+        shape = asshape(shape)
         return True
 
     def newshape(self, shape):

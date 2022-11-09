@@ -78,6 +78,7 @@ class ellipsis(NDIndex):
         return ...
 
     def isvalid(self, shape):
+        shape = asshape(shape)
         return True
 
     def newshape(self, shape):
