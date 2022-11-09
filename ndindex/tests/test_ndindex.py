@@ -238,9 +238,6 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
                 # get each individual element of the resulting subarrays.
                 for subidxes in iter_indices(*[x.shape for x in canonical_aidxes]):
                     items = [x[i.raw] for x, i in zip(canonical_aidxes, subidxes)]
-                    # An empty array means the iteration would be skipped.
-                    if any(a.size == 0 for a in items):
-                        continue
                     vals.append(tuple(items))
             else:
                 vals.append(aidxes)
