@@ -1,4 +1,4 @@
-from pytest import raises
+from pytest import raises, fail
 
 from hypothesis import given
 
@@ -21,4 +21,11 @@ def test_isvalid_hypothesis(idx, shape):
     if valid:
         a[idx] # doesn't raise
     else:
-        raises(IndexError, lambda: a[idx])
+        with raises(IndexError):
+            try:
+                a[idx]
+            except Warning as w:
+                if "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
+                    raise IndexError
+                else: # pragma: no cover
+                    fail(f"Unexpected warning raised: {w}")
