@@ -188,7 +188,6 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
 
     broadcasted_non_skip_shape = tuple(broadcasted_shape[i] for i in range(-1, -ndim-1, -1) if i not in normalized_skip_axes)
     nitems = prod(broadcasted_non_skip_shape)
-    broadcasted_nitems = prod([i for i in broadcasted_shape if i is not None])
 
     if _skip_axes is None:
         res = iter_indices(*shapes)
