@@ -188,7 +188,7 @@ Additionally, some advice for specific types:
 
   ```py
   idx = ndindex(0)
-  idx.raw + 1 # Produces an error
+  idx + 1 # Produces an error
   ```
 
 - `Integer` is the only index type that can be used directly as an array

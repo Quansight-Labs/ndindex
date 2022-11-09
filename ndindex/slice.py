@@ -28,8 +28,8 @@ class Slice(NDIndex):
 
     `Slice.args` always has three arguments, and does not make any distinction
     between, for instance, `Slice(x, y)` and `Slice(x, y, None)`. This is
-    because Python itself does not make the distinction between x:y and x:y:
-    syntactically.
+    because Python itself does not make the distinction between `x:y` and
+    `x:y:` syntactically.
 
     See :ref:`slices-docs` for a description of the semantic meaning of slices
     on arrays.

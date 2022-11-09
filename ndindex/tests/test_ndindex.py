@@ -1,11 +1,12 @@
 import inspect
+import warnings
 
 import numpy as np
 
 from hypothesis import given, example, settings
 from hypothesis.strategies import integers
 
-from pytest import raises, warns
+from pytest import raises
 
 from ..ndindex import ndindex, asshape, iter_indices, ncycles, BroadcastError, AxisError
 from ..booleanarray import BooleanArray
@@ -17,6 +18,7 @@ from .helpers import (ndindices, check_same, assert_equal, prod,
                       mutually_broadcastable_shapes_with_skipped_axes,
                       skip_axes)
 
+@example([1, 2])
 @given(ndindices)
 def test_eq(idx):
     index = ndindex(idx)
@@ -104,7 +106,9 @@ def test_ndindex_invalid():
 
     # This index is allowed by NumPy, but gives a deprecation warnings. We are
     # not going to allow indices that give deprecation warnings in ndindex.
-    with warns(None) as r: # Make sure no warnings are emitted from ndindex()
+    with warnings.catch_warnings(record=True) as r:
+        # Make sure no warnings are emitted from ndindex()
+        warnings.simplefilter("error")
         raises(IndexError, lambda: ndindex([1, []]))
     assert not r
 

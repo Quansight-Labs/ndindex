@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
           conda config --add channels conda-forge
           conda update -q conda
           conda info -a
-          conda create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes packaging
+          conda create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy hypothesis pytest-cov pytest-flakes packaging
           conda init
 
       - name: Run Tests
