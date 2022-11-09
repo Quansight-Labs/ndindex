@@ -138,6 +138,7 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
     """
     skip_axes_ = draw(skip_axes)
     shapes, result_shape = draw(mutually_broadcastable_shapes)
+    ndim = len(result_shape)
     if skip_axes_ is None:
         return shapes, result_shape
     if isinstance(skip_axes_, int):
@@ -147,8 +148,13 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
     for shape in shapes:
         _shape = list(shape)
         for i in skip_axes_:
-            if ndindex(i).isvalid(len(shape)) and draw(booleans()):
-                _shape[i] = draw(integers(0))
+            # skip axes index the broadcasted shape, so are only valid on the
+            # individual shapes in negative form. TODO: Add this as a keyword
+            # to reduce().
+            neg_i = ndindex(i).reduce(ndim).raw - ndim
+            assert ndindex(i).reduce(ndim) == ndindex(neg_i).reduce(ndim)
+            if ndindex(neg_i).isvalid(len(shape)) and draw(booleans()):
+                _shape[neg_i] = draw(integers(0))
 
         _shapes.append(tuple(_shape))
 
