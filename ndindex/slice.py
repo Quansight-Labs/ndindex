@@ -472,6 +472,7 @@ class Slice(NDIndex):
 
     def isvalid(self, shape):
         # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
 
         # All slices are valid as long as there is at least one dimension
         return bool(shape)
