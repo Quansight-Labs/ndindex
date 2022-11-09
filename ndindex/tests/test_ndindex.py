@@ -4,11 +4,13 @@ import warnings
 import numpy as np
 
 from hypothesis import given, example, settings
-from hypothesis.strategies import integers
+from hypothesis.strategies import (one_of, integers, tuples as
+                                   hypothesis_tuples, just)
 
 from pytest import raises
 
-from ..ndindex import ndindex, asshape, iter_indices, ncycles, BroadcastError, AxisError
+from ..ndindex import (ndindex, asshape, iter_indices, ncycles,
+                       BroadcastError, AxisError, broadcast_shapes)
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
@@ -16,7 +18,8 @@ from ..integerarray import IntegerArray
 from ..tuple import Tuple
 from .helpers import (ndindices, check_same, assert_equal, prod,
                       mutually_broadcastable_shapes_with_skipped_axes,
-                      skip_axes)
+                      skip_axes, mutually_broadcastable_shapes, tuples,
+                      shapes)
 
 @example([1, 2])
 @given(ndindices)
@@ -331,3 +334,22 @@ def test_ncycles(i, n, m):
         assert isinstance(M, ncycles)
         assert M.iterable == range(i)
         assert M.n == n*m
+
+@given(one_of(mutually_broadcastable_shapes,
+              hypothesis_tuples(tuples(shapes), just(None))))
+def test_broadcast_shapes(broadcastable_shapes):
+    shapes, broadcasted_shape = broadcastable_shapes
+    if broadcasted_shape is not None:
+        assert broadcast_shapes(*shapes) == broadcasted_shape
+
+    arrays = [np.empty(shape) for shape in shapes]
+    broadcastable = True
+    try:
+        broadcasted_shape = np.broadcast(*arrays).shape
+    except ValueError:
+        broadcastable = False
+
+    if broadcastable:
+        assert broadcast_shapes(*shapes) == broadcasted_shape
+    else:
+        raises(BroadcastError, lambda: broadcast_shapes(*shapes))
