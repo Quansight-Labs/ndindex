@@ -50,6 +50,7 @@ class Integer(NDIndex):
 
     def isvalid(self, shape, _axis=0):
         # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
         if not shape:
             return False
         size = shape[_axis]
