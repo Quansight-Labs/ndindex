@@ -647,12 +647,12 @@ def broadcast_shapes(*shapes):
         i = N - 1
         while i >= 0:
             n1 = N1 - N + i
-            if N1 - N + i >= 0:
+            if n1 >= 0:
                 d1 = shape1[n1]
             else:
                 d1 = 1
             n2 = N2 - N + i
-            if N2 - N + i >= 0:
+            if n2 >= 0:
                 d2 = shape2[n2]
             else:
                 d2 = 1
