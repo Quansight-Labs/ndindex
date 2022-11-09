@@ -328,6 +328,8 @@ Jupyter.
 ## Table of Contents
 
 ```{toctree}
+:titlesonly:
+
 api.md
 slices.md
 type-confusion.md
