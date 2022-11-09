@@ -1,13 +1,14 @@
 from pytest import raises, fail
 
 from hypothesis import given
+from hypothesis.strategies import one_of, integers
 
 from numpy import arange, prod
 
 from ..ndindex import ndindex
-from .helpers import ndindices, shapes
+from .helpers import ndindices, shapes, MAX_ARRAY_SIZE
 
-@given(ndindices, shapes)
+@given(ndindices, one_of(shapes, integers(0, MAX_ARRAY_SIZE)))
 def test_isvalid_hypothesis(idx, shape):
     index = ndindex(idx)
 

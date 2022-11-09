@@ -164,6 +164,7 @@ class ArrayIndex(NDIndex):
         return hash(self.array.tobytes())
 
     def isvalid(self, shape, _axis=0):
+        shape = asshape(shape)
         try:
             # The logic is in _raise_indexerror because the error message uses
             # the additional information that is computed when checking if the
