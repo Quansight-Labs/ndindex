@@ -323,7 +323,10 @@ class NDIndex(ImmutableObject):
         .NDIndex.newshape
 
         """
-        # TODO: More direct, efficient implementation
+        # Every class except for Tuple has a more direct efficient
+        # implementation. The logic for checking if a Tuple index is valid is
+        # basically the same as the logic in reduce/expand, so there's no
+        # point in duplicating it.
         try:
             self.reduce(shape)
             return True
