@@ -8,6 +8,7 @@ from numpy import arange, prod
 from ..ndindex import ndindex
 from .helpers import ndindices, shapes, MAX_ARRAY_SIZE
 
+@example((0,), ())
 @example([[1]], (0, 0, 1))
 @given(ndindices, one_of(shapes, integers(0, MAX_ARRAY_SIZE)))
 def test_isvalid_hypothesis(idx, shape):
