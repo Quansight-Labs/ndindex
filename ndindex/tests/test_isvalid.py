@@ -1,34 +1,37 @@
-from pytest import raises, fail
-
 from hypothesis import given, example
 from hypothesis.strategies import one_of, integers
 
-from numpy import arange, prod
+from numpy import arange
 
-from ..ndindex import ndindex
-from .helpers import ndindices, shapes, MAX_ARRAY_SIZE
+from .helpers import ndindices, shapes, MAX_ARRAY_SIZE, check_same, prod
 
 @example((0,), ())
 @example([[1]], (0, 0, 1))
 @given(ndindices, one_of(shapes, integers(0, MAX_ARRAY_SIZE)))
 def test_isvalid_hypothesis(idx, shape):
-    index = ndindex(idx)
-
     if isinstance(shape, int):
         a = arange(shape)
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    valid = index.isvalid(shape)
+    def raw_func(a, idx):
+        try:
+            a[idx]
+            return True
+        except Warning as w:
+            # check_same unconditionally turns this warning into raise
+            # IndexError, so we have to handle it separately here.
+            if "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
+                return False
+            raise
+        except IndexError:
+            return False
 
-    if valid:
-        a[idx] # doesn't raise
-    else:
-        with raises(IndexError):
-            try:
-                a[idx]
-            except Warning as w:
-                if "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
-                    raise IndexError
-                else: # pragma: no cover
-                    fail(f"Unexpected warning raised: {w}")
+    def ndindex_func(a, index):
+        return index.isvalid(a.shape)
+
+    def assert_equal(x, y):
+        assert x == y
+
+    check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
+               assert_equal=assert_equal)
