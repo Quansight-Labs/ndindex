@@ -7,6 +7,7 @@ from .helpers import ndindices, shapes, MAX_ARRAY_SIZE, check_same, prod
 
 @example((0,), ())
 @example([[1]], (0, 0, 1))
+@example(None, ())
 @given(ndindices, one_of(shapes, integers(0, MAX_ARRAY_SIZE)))
 def test_isvalid_hypothesis(idx, shape):
     if isinstance(shape, int):
