@@ -888,6 +888,8 @@ This is what the array `y` looks like before it is combined with `x` (except
 the power of broadcasting is that the repeated entries are not literally
 repeated in memory).
 
+<!-- TODO: Write a separate page on broadcasting -->
+(broadcasting)=
 Broadcasting always happens automatically in NumPy whenever two arrays with
 different shapes are combined, assuming those shapes are broadcast compatible.
 The rule with broadcasting is that the shorter of the shapes are prepended
@@ -995,6 +997,175 @@ an error.
 
 (integer-array-indices)=
 ### Integer Arrays
+
+Integer array indices are very powerful. Using them, it is possible to
+construct effectively arbitrary new arrays consisting of elements from the
+original indexed array.
+
+Let's consider, as a start, a simple one-dimensional array:
+
+```py
+>>> a = np.array([100, 101, 102, 103])
+```
+
+Let's suppose we wish to construct from this array, the array
+
+```
+[[ 100, 102, 100 ],
+ [ 103, 100, 102 ]]
+```
+
+That is, a 2-D array with the elements in that given order.
+This would be achieved by constructing an integer array index where the
+corresponding elements of the index array are the [integer
+index](integer-indices) of the elements in `a`. That is
+
+```
+>>> idx = np.array([[0, 2, 0], [3, 0, 2]])
+>>> a[idx]
+array([[100, 102, 100],
+       [103, 100, 102]])
+```
+
+This is, how integer array indices work. You can shuffle the elements of `a`
+into an arbitrary new array in arbitrary order simply by indexing where each
+element of the new array comes from.
+
+Note that `a[idx]` above is not the same size as `a` at all. `a` has 4
+elements and is 1-dimensional, whereas `a[idx]` has 6 elements and is
+2-dimensional. `a[idx]` also contains some duplicate elements from `a`, and
+some elements which aren't selected at all. Effectively, we could take *any*
+integer array of any shape, and as long as the elements are between 0 and 3,
+`a[idx]` would create a new array with the same shape as `idx` with
+corresponding elements selected from `a`.
+
+A useful way to think about integer array indexing is that it generalizes
+[integer indexing](integer-indices). With integer indexing, we are effectively
+indexing using a 0-dimensional integer array, that is, a single
+integer.[^integer-scalar-footnote] This always selects the corresponding
+element from the given axis and removes the dimension. That is, it replaces that
+dimension in the shape with `()`, the "shape" of the integer index.
+
+Similarly, an integer array index always selects elements from the given axis,
+and replaces the dimension in the shape with the shape of the array index. For
+example:
+
+```
+>>> a = np.empty((3, 4))
+>>> idx = np.zeros((2, 2), dtype=int)
+>>> a[idx].shape
+(2, 2, 4)
+>>> a[:, idx].shape # Index the second dimension
+(3, 2, 2)
+```
+
+When the indexed array `a` has more than one dimension, an integer array index
+selects elements from a single axis.
+
+```
+>>> a = np.array([[100, 101, 102], [103, 104, 105]])
+>>> a
+array([[100, 101, 102],
+       [103, 104, 105]])
+>>> idx = np.array([0, 0, 1])
+>>> a[idx]
+array([[100, 101, 102],
+       [100, 101, 102],
+       [103, 104, 105]])
+>>> a[:, idx] # Index the second dimension
+array([[100, 100, 101],
+       [103, 103, 104]])
+```
+
+It would appear now that this limits the ability to arbitrarily shuffle
+elements of `a` using integer indexing. For instance, suppose we wanted to
+create the array `[105, 100]` from the above `a`. Based on the above examples,
+it might not seem possible. The elements 104 and 100 are not in the same row
+or column of `a`. However, this is doable, by providing multiple
+integer array indices.
+
+When multiple integer array indices are provided, the elements of each index
+are correspondingly selected for that axis. It's perhaps most illustrative to
+show this as an example. Given the above `a`, we can produce the array `[104,
+100]` using.
+
+```
+>>> idx = (np.array([1, 0]), np.array([2, 0]))
+>>> a[idx]
+array([105, 100])
+```
+
+Let's break this down. `idx` is a [tuple index](tuple-indices) with two
+arrays, which are both the same shape. The first element of our desired
+result, `105` corresponds to index `(1, 2)` in `a`:
+
+```py
+>>> a[1, 2]
+105
+```
+
+So we write `1` in the first array and `2` in the second array. Similarly, the
+next element, `100` corresponds to index `(0, 0)`, so we write `0` in the
+first array and `0` in the second. In general, the first array contains the
+indices for the first axis, the second array contains the indices for the
+second axis, and so on. If we were to zip up our two index arrays, we would
+get the set of indices for each corresponding element, `(1, 2)` and `(0, 0)`.
+
+The resulting array has the same shape as our two index arrays. As before,
+this shape can be arbitrary. Suppose we wanted to create the array
+
+```
+[[[ 102, 103],
+  [ 102, 101]],
+ [[ 100, 105],
+  [ 102, 102]]]
+```
+
+Recall our `a`:
+
+```
+>>> a
+array([[100, 101, 102],
+       [103, 104, 105]])
+```
+
+Noting the index for each element in our desired array, we get
+
+```
+>>> idx0 = np.array([[[0, 1], [0, 0]], [[0, 1], [0, 0]]])
+>>> idx1 = np.array([[[2, 0], [2, 1]], [[0, 2], [2, 2]]])
+>>> a[idx0, idx1]
+array([[[102, 103],
+        [102, 101]],
+<BLANKLINE>
+       [[100, 105],
+        [102, 102]]])
+```
+
+Again, reading across, the first element, `102` corresponds to index `(0, 2)`,
+the next element, `103`, corresponds to index `(1, 0)`, and so on.
+
+Now a few advanced notes about integer array indexing:
+
+- Strictly speaking, the integer arrays only need to be able to broadcast
+  together to the same shape.  This is useful if the index array would
+  otherwise be repeated in a given dimension (see
+  [broadcasting](broadcasting)).
+
+  It also means that if you mix an integer array index with a single
+  [integer](integer-indices) index, it is the same as if you replaced the
+  single integer index with an array of the same shape filled with that
+  integer (because remember, a single integer index is the same thing as an
+  integer array index of shape `()`).
+
+  For example:
+
+[^integer-scalar-footnote]: In fact, if the integer array index itself has
+    shape `()`, then the behavior is exactly identical to simply using an
+    `int` with the same value. So it's a true generalization.
+    In ndindex, [`IntegerArray.reduce()`](ndindex.IntegerArray.reduce)
+    will always convert a 0-D array index into an
+    [`Integer`](ndindex.integer.Integer).
 
 (boolean-array-indices)=
 ### Boolean Arrays
