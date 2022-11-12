@@ -25,7 +25,7 @@ categories:
 
 These are the indices that only work on a single axis of an array at a time.
 These indices also work for built-in sequence types such as `list` and `str`,
-and use the exact same semantics for which elements they select.
+and use the exact same semantics as them for which elements they select.
 
 - [Integer indices](integer-indices), corresponding to
   [`ndindex.Integer`](ndindex.integer.Integer).

@@ -205,11 +205,12 @@ class Slice(NDIndex):
         given shape, or for any shape if `shape` is `None` (the default).
 
         `Slice.reduce` is a perfect canonicalization, meaning that two slices
-        are equal---for all array shapes if `shape=None` or for arrays of shape
-        `shape` otherwise---if and only if they `reduce` to the same Slice
-        object. Note that ndindex objects do not simplify automatically, and
-        `==` only does exact equality comparison, so to test that two slices
-        are equal, use `slice1.reduce(shape) == slice2.reduce(shape)`.
+        are equal---for all array shapes if `shape=None` or for arrays of
+        shape `shape` otherwise---if and only if they `reduce` to the same
+        `Slice` object. Note that ndindex objects do not simplify
+        automatically, and `==` only does exact equality comparison, so to
+        test that two slices are equal, use `slice1.reduce(shape) ==
+        slice2.reduce(shape)`.
 
         - If `shape` is `None`, the following properties hold after calling
           `reduce()`:

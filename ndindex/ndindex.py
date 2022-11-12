@@ -491,10 +491,10 @@ class NDIndex(ImmutableObject):
         `None`, isempty() will return `True` when `self` is always empty for
         any array shape. However, if it gives `False`, it could still give an
         empty array for some array shapes, but not all. If you know the shape
-        of the array that will be indexed, you can call `idx.isempty(shape)`
-        first and the result will be correct for arrays of shape `shape`. If
-        `shape` is given and `self` would raise an `IndexError` on an array of
-        shape `shape`, `isempty()` also raises `IndexError`.
+        of the array that will be indexed, use `idx.isempty(shape)` and the
+        result will be correct for arrays of shape `shape`. If `shape` is
+        given and `self` would raise an `IndexError` on an array of shape
+        `shape`, `isempty()` also raises `IndexError`.
 
         >>> from ndindex import Tuple, Slice
         >>> Tuple(0, slice(0, 1)).isempty()
