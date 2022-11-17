@@ -220,6 +220,7 @@ Traceback (most recent call last):
 IndexError: list index out of range
 ```
 
+(slices-points-of-confusion)=
 ## Points of Confusion
 
 Now let us come back to slices. The full definition of a slice could be
@@ -243,8 +244,9 @@ slice from a higher level of abstraction such as "I want to select this
 particular subset of my array".[^numpy-definition-footnote]
 
 [^numpy-definition-footnote]: This formulation actually isn't particularly
-helpful for formulating higher level slice formulas such as the ones used by
-ndindex either.
+    helpful for formulating higher level slice formulas such as the ones used
+    by ndindex either. Plus it fails to account for [some of the
+    details](clipping) discussed on this page.
 
 Instead, we shall examine slices by carefully going over all the various
 aspects of the syntax and semantics that can lead to confusion, and attempting
@@ -1327,6 +1329,9 @@ cases.
 (steps)=
 ### Steps
 
+If a third integer is provided in a slice, like `i:j:k`, this third integer is
+the step size. If it is not provided, the step size defaults to `1`.
+
 Thus far, we have only considered slices with the default step size of 1. When
 the step is greater than 1, the slice picks every `step` element contained in
 the bounds of `start` and `stop`.
@@ -1340,7 +1345,9 @@ not change the fundamental [rules](rules) of slices that we have learned so
 far. `start` and `stop` still use [0-based indexing](0-based). The `stop` is
 [never included](half-open) in the slice. [Negative](negative-indices) `start`
 and `stop` index from the end of the list. Out-of-bounds `start` and `stop`
-still [clip](clipping) to the beginning or end of the list.
+still [clip](clipping) to the beginning or end of the list. And (see below)
+[omitted](omitted) `start` or `stop` still extend to the beginning or end of
+`a`.
 
 Let us consider an example where the step size is `3`.
 
@@ -1459,8 +1466,9 @@ calculations so that you don't have to come up with modulo formulas yourself.
 If you try to write such formulas yourself, chances are you will get them
 wrong, as it is easy to fail to properly account for [negative vs. nonnegative
 indices](negative-indices), [clipping](clipping), and [negative
-steps](negative-steps). As noted before, any correct "formula" regarding
-slices will necessarily have many piecewise conditions.
+steps](negative-steps). As noted [before](slices-points-of-confusion), any
+correct "formula" regarding slices will necessarily have many piecewise
+conditions.
 
 (negative-steps)=
 ### Negative Steps
@@ -1604,8 +1612,8 @@ As to the semantic meaning of omitted entries, the easiest one is the `step`.
 
 > **If the `step` is omitted, it always defaults to `1`.**
 
-If the `step` is omitted the second colon before the `step` can also be
-omitted. That is to say, the following are completely equivalent:
+If the `step` is omitted the second colon can also be omitted. That is to say,
+the following are completely equivalent:
 
 ```py
 a[i:j:1]
@@ -1619,9 +1627,8 @@ a[i:j]
   slice all the way to the beginning or end of `a` in the direction being
   sliced.**
 
-If
-the `step` is positive, this means `start` extends to the beginning of `a` and
-`stop` extends to the end. If `step` is negative, it is reversed: `start`
+If the `step` is positive, this means `start` extends to the beginning of `a`
+and `stop` extends to the end. If `step` is negative, it is reversed: `start`
 extends to the end of `a` and `stop` extends to the beginning.
 
 <div style="text-align:center">
