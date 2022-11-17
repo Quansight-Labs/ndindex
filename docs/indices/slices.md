@@ -79,20 +79,26 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. `start` and `stop` use **0-based indexing** from the **beginning** of `a`
-   when they are **nonnegative**, and **−1-based indexing** from **end** of
-   `a` when they are **negative**. (See sections {ref}`0-based` and
-   {ref}`negative-indices`)
+1. `start` and `stop` use *0-based indexing* from the *beginning* of `a` when
+   they are *nonnegative*, and *−1-based indexing* from *end* of `a` when they
+   are *negative*. (See sections {ref}`0-based` and {ref}`negative-indices`)
+
 2. `stop` is never included in the slice. (See section {ref}`half-open`)
-3. `start` and `stop` are clipped to the bounds of `a`. (See section {ref}`clipping`)
+
+3. `start` and `stop` are clipped to the bounds of `a`. (See section
+   {ref}`clipping`)
+
 4. The slice starts at `start` and successively adds `step` until it reaches
    an index that is at or past `stop`, and then stops without including that
    `stop` index. (See sections {ref}`steps` and {ref}`negative-steps`)
+
 5. If `step` is omitted it defaults to `1`. (See section {ref}`omitted`)
+
 6. If `start` or `stop` are omitted they extend to the beginning or end of `a`
    in the direction being sliced. Slices like `a[:i]` or `a[i:]` should be
    though of as the `start` or `stop` being omitted, not as a colon to the
    left or right of an index. (See section {ref}`omitted`)
+
 7. Slicing something never raises an `IndexError`, even if the slice is empty.
    For a NumPy array, a slice always keeps the axis being sliced, even if that
    means the resulting dimension will be 0 or 1. (See section {ref}`subarray`)
@@ -111,8 +117,9 @@ $$
 The list `a` has 7 elements.
 
 The elements of `a` are strings, but the indices and slices on the list `a`
-will always use integers. An index or slice is never based on the value of the
-elements, but rather the position of the elements in the list.[^dict-footnote]
+will always use integers. Like [all other index types](what-is-an-index), **an
+integer index or slice is never based on the values of the elements, but
+rather their position of the elements in the list.**[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a `dict`. Despite using similar

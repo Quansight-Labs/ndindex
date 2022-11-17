@@ -55,6 +55,7 @@ the basic indices, advanced indices in NumPy always return a copy of the array.
 - [Boolean arrays](boolean-array-indices), corresponding to
   [`ndindex.BooleanArray`](ndindex.booleanarray.BooleanArray).
 
+(what-is-an-index)=
 ## What is an index?
 
 Nominally, an index is any object that can go between the square brackets
