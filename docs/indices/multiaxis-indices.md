@@ -1170,6 +1170,7 @@ Now a few advanced notes about integer array indexing:
 (boolean-array-indices)=
 ### Boolean Arrays
 
+(views-vs-copies)=
 ### Views vs. Copies
 
 Advanced indices in NumPy also have a property that is important to make note

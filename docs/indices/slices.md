@@ -408,6 +408,32 @@ advantages:
   A common usage of this is to split a slice into two slices. For example, the
   slice `a[i:j]` can be split as `a[i:k]` and `a[k:j]`.
 
+If `start` is on or after the `stop`, the resulting list will be empty. That
+is, the `stop` *not* being included takes precedence over the `start` being included.
+
+```py
+>>> a[3:3]
+[]
+>>> a[5:2]
+[]
+```
+
+For NumPy arrays, a consequence of this is that a slice will always keep the
+axis being sliced, even if the size of the resulting axis is 0 or 1.
+
+```py
+>>> import numpy as np
+>>> arr = np.array([[1, 2], [3, 4]])
+>>> arr.shape
+(2, 2)
+>>> arr[0].shape # Integer index removes the first dimension
+(2,)
+>>> arr[0:1].shape # Slice preserves the first dimension
+(1, 2)
+>>> arr[0:0].shape # Slice preserves the first dimension as an empty dimension
+(0, 2)
+```
+
 #### Wrong Ways of Thinking about Half-open Semantics
 
 > **The proper rule to remember for half-open semantics is "the `stop` is not
@@ -1147,8 +1173,12 @@ example, instead of using `mid - n//2`, we could use `max(mid - n//2, 0)`.
 Slices can never give an out-of-bounds `IndexError`. This is different from
 [integer indices](integer-indices) which require the index to be in bounds.
 
-> **If `start` or `stop` index before the beginning or after the end of the
-`a`, they will clip to the bounds of `a`**:
+The rule for clipping is this:
+
+> **If `start` or `stop` extend before the beginning or after the end of `a`,
+    they will clip to the bounds of `a`.**
+
+For example:
 
 ```py
 >>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
@@ -1156,46 +1186,143 @@ Slices can never give an out-of-bounds `IndexError`. This is different from
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
-Furthermore, if the `start` is on or after the `stop`, the slice will be
-empty.
+Here `-100` is "clipped" down to `-7`, the smallest possible negative start
+value that actually selects something, and `100` is clipped down to `7`, the
+smallest possible positive stop value that selects the last element.
 
-```py
->>> a[3:3]
-[]
->>> a[5:2]
-[]
+```
+>>> a[-7:7]
+['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
-For NumPy arrays, a consequence of this is that a slice will always keep the
-axis being sliced, even if the size of the resulting axis is 0 or 1.
+Of course, if we actually wanted to just select everything, we could use
+[omitted entries](omitted) (i.e., `a[:]`). The point with clipping is that the
+same slice can be used on lists or arrays that are smaller than the bounds of
+the slice, and it will just select "as much as it can".
 
-```py
->>> import numpy as np
->>> arr = np.array([[1, 2], [3, 4]])
->>> arr.shape
-(2, 2)
->>> arr[0].shape # Integer index removes the first dimension
-(2,)
->>> arr[0:1].shape # Slice preserves the first dimension
-(1, 2)
->>> arr[0:0].shape # Slice preserves the first dimension as an empty dimension
-(0, 2)
+```
+>>> a[1:3] # The second and third element
+['b', 'c']
+>>> ['a', 'b'][1:3] # There is no third element, so just the second
+['b']
 ```
 
-An important consequence of the clipping behavior of slices is that you cannot
-rely on runtime checks for out-of-bounds slices. See the [example
-above](negative-indices-example). Another consequence is that you can never
-rely on the length of a slice being `stop - start` (for `step = 1` and
-`start`, `stop` nonnegative). This is rather the *maximum* length of the
-slice. It could end up slicing something smaller. For example, an empty list
-will always slice to an empty list. ndindex can help in calculations here:
-`len(ndindex.Slice(...))` can be used to compute the *maximum* length of a
-slice. If the shape of the input is known,
-`len(ndindex.Slice(...).reduce(shape))` will compute the true length of the
-slice (see {meth}`ndindex.Slice.__len__` and {meth}`ndindex.Slice.reduce`). Of
-course, if you already have a NumPy array, you can just slice the array and
-check the shape (slicing a NumPy array always produces a view on the array, so
-it is a very inexpensive operation).
+This behavior can be useful, but it can also bite you. Quite often you really
+do want to just select something like "the first $n$ elements, or everything
+if there are fewer than $n$ elements," and a slice like `:n` will do exactly
+this for any size input. But you have to be careful. Simply seeing a slice
+like `a[:n]` does not mean that `a` must have at least `n` elements to select.
+Because of clipping behavior, you can never rely on the length of a slice
+being `stop - start` (for `step = 1` and `start`, `stop` nonnegative). This is
+rather the *maximum* length of the slice. It could end up slicing something
+smaller.
+
+ndindex can help in calculations here:  `len(ndindex.Slice(...))` can be used
+to compute the *maximum* length of a slice. If the shape of the input is
+known, `len(ndindex.Slice(...).reduce(shape))` will compute the true length of
+the slice (see {meth}`ndindex.Slice.__len__` and
+{meth}`ndindex.Slice.reduce`). Of course, if you already have a NumPy array,
+you can just slice the array and check the shape (slicing a NumPy array always
+produces a [view on the array](views-vs-copies), so it is a very inexpensive
+operation).
+
+Critically, the clipping behavior of slices means that you cannot rely on
+runtime checks for out-of-bounds slices. Simply put, there is no such thing as
+an "out-of-bounds slice".
+
+You can sometimes take advantage of this behavior by using a slice that
+selects a single element instead of an integer index to avoid `IndexError`
+when the integer index is out-of-bounds. For example, suppose you want to want
+to implement a script with a rudimentary optional command line argument
+(without the hassle of
+[argparse](https://docs.python.org/3/library/argparse.html)). This can be done
+by manually parsing `sys.argv`, which is a list of the arguments of passed at
+the command line, including the filename. For example, `python script.py arg1
+arg2` would have `sys.argv == ['script.py', 'arg1', 'arg2']`. Suppose you want
+your script to do something special if called as `myscript.py help`. You can
+do something like
+
+```py
+import sys
+if sys.argv[1] == 'help':
+    print("Usage: myscript.py")
+```
+
+The problem with this code is that it fails if no command line arguments are
+passed, because `sys.argv[1]` will give an `IndexError` for the out-of-bounds
+index 1. The most obvious fix is to add a length check:
+
+```py
+import sys
+if len(sys.argv) > 1 and sys.argv[1] == 'help':
+    print("Usage: myscript.py")
+```
+
+But another way would be to use a slice that gets the second element if there
+is one.
+
+```py
+import sys
+if sys.argv[1:2] == ['help']:
+    print("Usage: myscript.py")
+```
+
+Now if `sys.argv` has at least two elements, the slice `sys.argv[1:2]` will be
+the sublist consisting of just the second element. But if it has only one
+element, i.e., the script is just run as `python myscript.py` with no
+arguments, then `sys.argv[1:2]` will be an empty list. This will fail the `==`
+check without raising an exception.
+
+If instead we want to only support exactly `myscript.py help` with no further
+arguments, we could modify the check just slightly
+
+```py
+import sys
+if sys.argv[1:] == ['help']:
+    print("Usage: myscript.py")
+```
+
+Now `myscript.py help` would print the help message but `myscript.py help me`
+would not.
+
+The point here is that we are embedding both the bounds check and the element
+check into the same conditional. That's because `==` on a container type (like
+a `list` or `str`) checks two things: if containers have the same length and
+the elements are the same. Checking `if len(container) > 1` (or whatever) is
+unnecessary because it's already part of the `==` comparison.
+
+This trick works especially well when working with strings. Unlike with lists,
+both [integer ](integer-indices) and slice indices on a string result in a
+string, so changing the code logic to work in this way often only requires
+adding a `:` to the index so that it is a slice that picks a single element
+instead of an integer index. For example, take a function like
+
+```py
+# Wrong for a = ''
+def ends_in_punctuation(a: str) -> bool:
+    return a[-1] in ['.', '!', '?']
+```
+
+This function is wrong for an empty string input: `ends_in_punctuation('')`
+will raise `IndexError`. This could be fixed by adding a length check. Or we
+could simply change the `a[-1]` to `a[-1:]`. This will usually be a string
+consisting of the last character, but if `a` is empty it will be `''`. The
+`in` check will be correct either way.[^string-check-footnote]
+
+[^string-check-footnote]: As an aside, the `in` check would be *wrong* if we
+    instead wrote `a[-1:] in '.!?'`. The two forms of comparison are not
+    equivalent.
+
+```py
+# Better
+def ends_in_punctuation(a: str) -> bool:
+    return a[-1:] in ['.', '!', '?']
+```
+
+This sort of logic may seem scary and magic, but once you have digested this
+guide and become comfortable with slice semantics, it is a natural and clean
+way to combine length checks into other logic and avoid out-of-bounds corner
+cases.
 
 (steps)=
 ### Steps
