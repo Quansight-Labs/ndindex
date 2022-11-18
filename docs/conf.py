@@ -182,7 +182,9 @@ mathjax3_config = {
   },
 }
 
-myst_update_mathjax=False
+myst_update_mathjax = False
+
+myst_footnote_transition = False
 
 # Lets us use single backticks for code
 default_role = 'code'
