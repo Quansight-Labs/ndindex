@@ -30,7 +30,8 @@ integer indices pick a subarray corresponding to a particular element from a
 given axis (and as a result, an integer index always reduces the
 dimensionality of an array by one).
 
-(fourth-sentence)= The key thing to remember about indexing in Python, both
+(fourth-sentence)=
+The key thing to remember about indexing in Python, both
 for integer and slice indexing, is that it is 0-based. This means that the
 indices start counting at 0 (0, 1, 2, ...). This is the case for all
 **nonnegative** indices[^nonnegative]. For example, `a[3]` would pick the
