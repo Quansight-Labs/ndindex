@@ -103,11 +103,8 @@ For a slice `a[start:stop:step]`:
    For a NumPy array, a slice always keeps the axis being sliced, even if that
    means the resulting dimension will be 0 or 1. (See section {ref}`subarray`)
 
-(integer-indices)=
-## Integer indices
-
-To understand slices, it is good to first review how integer indices work.
-Throughout this guide, we will use as an example this prototype list:
+Throughout this guide, we will use as an example the same prototype list as we
+used in the [integer indexing section](prototype-example):
 
 $$
 a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
@@ -116,119 +113,20 @@ $$
 
 The list `a` has 7 elements.
 
-The elements of `a` are strings, but the indices and slices on the list `a`
-will always use integers. Like [all other index types](what-is-an-index), **an
-integer index or slice is never based on the values of the elements, but
+Reminder that as before, the elements of `a` are strings, but the slices on the list `a`
+will always use integers. Like [all other index types](what-is-an-index),
+**the result of a slice is never based on the values of the elements, but
 rather their position of the elements in the list.**[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a `dict`. Despite using similar
 syntax, `dict`s do not allow slicing.
 
-An integer index picks a single element from the list `a`. For NumPy arrays,
-integer indices pick a subarray corresponding to a particular element from a
-given axis (and as a result, an integer index always reduces the
-dimensionality of an array by one).
-
-(fourth-sentence)=
-The key thing to remember about indexing in Python, both for integer and
-slice indexing, is that it is 0-based. This means that the indices start
-at 0. This is the case for all **nonnegative** indices.
-For example, `a[3]` would pick the **fourth** element of `a`, in this case, `'d'`.
-
-<div style="text-align:center">
-<code style="font-size: 16pt;">a[3] == 'd'</code>
-$$
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#5E5EFF}3{\phantom{,}}
-    & \color{#EE0000}{4\phantom{,}}
-    & \color{#EE0000}{5\phantom{,}}
-    & \color{#EE0000}{6\phantom{,}}\\
-\end{array}
-\end{aligned}
-$$
-</div>
-
-```py
->>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
->>> a[3]
-'d'
-```
-
-0-based indexing is different from how people typically count things, which is
-1-based (1, 2, 3, ...). Thinking in terms of 0-based indexing requires some
-practice.
-
-For **negative** integers, indices index from the end of the list. These
-indices are necessarily 1-based (or rather, −1-based), since `0` already
-refers to the first element of the list. `-1` chooses the last element, `-2`
-the second-to-last, and so on. For example, `a[-3]` picks the
-**third-to-last** element of `a`, in this case, `'e'`:
-
-<div style="text-align:center">
-<code style="font-size: 16pt;">a[-3] == 'e'</code>
-$$
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{-7\phantom{,}}
-    & \color{#EE0000}{-6\phantom{,}}
-    & \color{#EE0000}{-5\phantom{,}}
-    & \color{#EE0000}{-4\phantom{,}}
-    & \color{#5E5EFF}{-3\phantom{,}}
-    & \color{#EE0000}{-2\phantom{,}}
-    & \color{#EE0000}{-1\phantom{,}}\\
-\end{array}
-\end{aligned}
-$$
-</div>
-
-```py
->>> a[-3]
-'e'
-```
-
-An equivalent way to think about negative indices is that an index
-`a[-i]` picks `a[len(a) - i]`, that is, you can subtract the negative
-index off of the size of `a` (for a NumPy array, replace `len(a)`
-with the size of the axis being sliced). For example, `len(a)` is `7`, so
-`a[-3]` is the same as `a[7 - 3]`:
-
-```py
->>> len(a)
-7
->>> a[7 - 3]
-'e'
-```
-
-Therefore, negative indices are primarily a syntactic convenience that
-allows one to specify parts of a list that would otherwise need to be
-specified in terms of the size of the list.
-
-If an integer index is greater than or equal to the size of the list, or less
-than negative the size of the list (`i >= len(a)` or `i < -len(a)`), then it
-is out of bounds and will raise an `IndexError`.
-
-```py
->>> a[7]
-Traceback (most recent call last):
-...
-IndexError: list index out of range
->>> a[-8]
-Traceback (most recent call last):
-...
-IndexError: list index out of range
-```
-
 (slices-points-of-confusion)=
 ## Points of Confusion
+
+Before running through this guide, be sure you have a good understanding of
+how integer indexing works. See the previous section, [](integer-indices).
 
 Now let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
@@ -1913,7 +1811,7 @@ level languages such as Python, people think of indexing as pointing to
 specific numbered elements of a collection, not as pointer arithmetic. Every
 human being is taught from an early age to count from 1. If you show someone
 the list "a, b, c", they will tell you that "a" is the 1st, "b" is the 2nd,
-and "c" is the 3rd. [Sentences](fourth-sentence) in the above guide like
+and "c" is the 3rd. [Sentences](fourth-sentence) in this guide like
 "`a[3]` would pick the fourth element of `a`" sound very off, even for those
 of us used to 0-based indexing. 0-based indexing requires a shift in thinking
 from the way that you have been taught to count from early childhood. Counting

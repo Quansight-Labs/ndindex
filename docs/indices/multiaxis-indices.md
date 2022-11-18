@@ -7,6 +7,7 @@ non-NumPy arrays. If you try to use one on a `list`, for example, you will get
 an `IndexError`. The semantics of these indices are defined by the NumPy
 library, not the Python language.
 
+(what-is-an-array)=
 ## What is an array?
 
 Before we look at indices, let's take a step back and look at the NumPy array.
