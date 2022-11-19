@@ -1174,6 +1174,9 @@ Now a few advanced notes about integer array indexing:
 (boolean-array-indices)=
 ### Boolean Arrays
 
+
+## Other Topics Relevant to Indexing
+
 (views-vs-copies)=
 ### Views vs. Copies
 
@@ -1208,6 +1211,132 @@ array([[[ 0,  0,  0,  0],
         [20, 21, 22, 23]]])
 
 ```
+
+Note that views are important for mutations in both directions. If `a` is a
+view, mutating it will also mutate whichever array it is a view on, but
+conversely, even if `a` is not a view, mutating it will modify any other
+arrays which are views into `a`. It's best to minimize mutations in the
+pretense of views, or to restrict them to a controlled part of the code, to
+avoid unexpected "[action at a
+distance](https://en.wikipedia.org/wiki/Action_at_a_distance_(computer_programming))"
+bugs.
+
+(c-vs-fortran-ordering)=
+### C vs. Fortran ordering
+
+NumPy has an internal distinction between C order and Fortran order.
+C ordered arrays are stored in memory so that the last axis varies the
+fastest. For example, if `a` has 3 dimensions, then its elements are stored in
+memory like `a[0, 0, 0], a[0, 0, 1], a[0, 0, 2], ..., a[0, 1, 0], a[0, 1, 1], ...`. Fortran
+ordering is the opposite: the elements are stored in memory so that the first axis varies
+fastest, like `a[0, 0, 0], a[1, 0, 0], a[2, 0, 0], ..., a[0, 1, 0], a[1, 1, 0], ...`.[^c-order-footnote]
+
+[^c-order-footnote]: C order and Fortran order are also sometimes row-major
+  and column-major ordering, respectively. However, this terminology is
+  confusing when the array has more than two axes or when it does not
+  represent a mathematical matrix. It's better to think of them in terms of
+  which axes vary the fastest---the last for C ordering and the first for
+  Fortran ordering.
+
+**The internal ordering of an array does not change any indexing semantics.**
+The same index will select the same elements on `a` regardless of whether it
+uses C or Fortran ordering internally.
+
+Note that this also applies to [boolean array indices](boolean-array-indices),
+even though they select elements in C order. A boolean mask always produces
+the elements in C order, even if the underlying arrays use Fortran ordering.
+
+```py
+>>> a = np.arange(9).reshape((3, 3))
+>>> a
+array([[0, 1, 2],
+       [3, 4, 5],
+       [6, 7, 8]])
+>>> idx = np.array([
+... [False,  True, False],
+... [ True,  True, False],
+... [False, False, False]])
+>>> a[idx]
+array([1, 3, 4])
+>>> a_f = np.asarray(a, order='F')
+>>> a_f # a_f looks the same as a, but the internal memory is ordered differently
+array([[0, 1, 2],
+       [3, 4, 5],
+       [6, 7, 8]])
+>>> idx_f = np.asarray(idx, order='F')
+>>> # These are all the same as a[idx]
+>>> a_f[idx]
+array([1, 3, 4])
+>>> a[idx_f]
+array([1, 3, 4])
+>>> a_f[idx_f]
+array([1, 3, 4])
+```
+
+**What ordering does affect is the performance of certain operations.** In
+particular, the ordering affects whether it is more optimal to index along the
+first axis or last axis of an array. For example, `a[0]` selects the first
+subarray along the first axis (recall that `a[0]` is a [view](views-vs-copies)
+into `a`, so it references the exact same memory as `a`). For a C ordered
+array, which is the default, this subarray is contiguous in memory. This is
+because the indices on the last axes vary the fastest (i.e., are next to each
+other in memory), so selecting a subarray of the first axis picks elements
+which are still contiguous. Conversely, for a Fortran ordered array, `a[0]` is
+not contiguous, but `a[..., 0]` is.
+
+```
+>>> a[0].data.contiguous
+True
+>>> a_f[0].data.contiguous
+False
+>>> a_f[..., 0].data.contiguous
+True
+```
+
+Operating on memory that is contiguous allows the CPU to place the entire
+memory in the cache at once, and as a result is more performant. This wont' be
+visible for our example `a` above, which is small enough to fix in cache
+entirely, but matters for larger arrays. Compare the time to sum along `a[0]`
+or `a[..., 0]` for C and Fortran ordered arrays for a 3-dimensional array with
+a million elements (using [IPython](https://ipython.org/)'s `%timeit`):
+
+```py
+In [1]: import numpy as np
+
+In [2]: a = np.ones((100, 100, 100)) # a has C order (the default)
+
+In [3]: %timeit np.sum(a[0])
+8.57 µs ± 121 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+
+In [4]: %timeit np.sum(a[..., 0])
+24.2 µs ± 1.29 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+
+In [5]: a_f = np.asarray(a, order='F')
+
+In [6]: %timeit np.sum(a_f[0])
+26.3 µs ± 952 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+
+In [7]: %timeit np.sum(a_f[..., 0])
+8.6 µs ± 130 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+```
+
+Summing along contiguous memory (`a[0]` for C ordering and `a[..., 0]` for
+Fortran ordering) is about 3 times faster.
+
+NumPy indexing semantics tend to favor thinking about arrays using the C
+order, as one does not need to use an ellipsis to select contiguous
+subarrays. C ordering also matches the [list-of-lists
+intuition](what-is-an-array) intuition of an array, since an array like
+`[[0, 1], [2, 3]]` is stored in memory as literally `[0, 1, 2, 3]` with C
+ordering.
+
+C ordering is the default in NumPy when creating arrays with functions like
+`asarray`, `ones`, `arange`, and so on. One typically only switches to
+Fortran ordering when calling certain Fortran codes, or when creating an
+array from another memory source that produces Fortran ordered data.
+
+Regardless of which ordering you are using, it is worth structuring your data
+so that operations are done on contiguous memory when possible.
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
