@@ -142,12 +142,12 @@ indices](boolean-array-indices)), such as `a[a > 0]`, which selects all the
 elements of `a` that are greater than zero. However, the resulting index
 *itself* does not depend on values. `a > 0` is simply an array of booleans. It
 could be reused for any other array with the same shape as `a`, and it would
-select exactly the same elements.
+select elements from the exact same positions.
 
 The full range of valid indices allow generating more or less arbitrary new
 arrays whose elements come from the indexed array `a`. In practice, the most
-commonly desired indices are represented by the basic indices such as [integer
-indices](integer-indices), [slices](slices-docs), and
+commonly desired indexing operations are represented by the basic indices such
+as [integer indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
 
 

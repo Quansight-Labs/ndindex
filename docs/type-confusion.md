@@ -430,14 +430,14 @@ for `None`.
   **Right:**
 
   ```py
-  idx = IntegerArray(array([0, 1]))
+  idx = IntegerArray(np.array([0, 1]))
   idx.array[0]
   ```
 
   **Wrong:**
 
   ```py
-  idx = IntegerArray(array([0, 1]))
+  idx = IntegerArray(np.array([0, 1]))
   idx[0] # Gives an error
   ```
 
@@ -452,7 +452,7 @@ for `None`.
   **Right:**
 
   ```py
-  idx = IntegerArray(array([0, 1]))
+  idx = IntegerArray(np.array([0, 1]))
   arr = idx.array.copy()
   arr[0] = 1
   idx2 = IntegerArray(arr)
@@ -461,6 +461,6 @@ for `None`.
   **Wrong:**
 
   ```py
-  idx = IntegerArray(array([0, 1]))
+  idx = IntegerArray(np.array([0, 1]))
   idx.array[0] = 1 # Gives an error
   ```

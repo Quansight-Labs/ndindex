@@ -579,9 +579,9 @@ unchanged.**[^tuple-ellipsis-footnote]
 (ellipsis-indices)=
 ### Ellipses
 
-Now that we understand how tuple indices work, the remaining basic index types
-are relatively straightforward. The first type of index we will look at is the
-ellipsis. An ellipsis is written as literally three dots,
+Now that we understand how [tuple indices](tuple-indices) work, the remaining
+basic index types are relatively straightforward. The first type of index we
+will look at is the ellipsis. An ellipsis is written as literally three dots,
 `...`.[^ellipsis-footnote]
 
 [^ellipsis-footnote]: You can also write out the word `Ellipsis`, but this is
@@ -596,6 +596,9 @@ ellipsis. An ellipsis is written as literally three dots,
     >>> ...
     Ellipsis
     ```
+
+    This is also why the type name for the [ndindex `ellipsis`](ellipsis)
+    object is lowercase, since `Ellipsis` is already a built-in name.
 
 Let's go back to one of the examples above. To remind, we have our array `a`:
 

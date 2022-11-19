@@ -37,7 +37,8 @@ class ellipsis(NDIndex):
        ndindex contexts, `...` can be used instead of `ellipsis()`, for
        instance, when creating a `Tuple` object. Also unlike `Ellipsis`,
        `ellipsis()` is not singletonized, so you should not use `is` to
-       compare it. See the document on :any:`type-confusion` for more details.
+       compare it. See the document on :any:`type confusion
+       <type-confusion-ellipsis>` for more details.
 
     """
     __slots__ = ()
