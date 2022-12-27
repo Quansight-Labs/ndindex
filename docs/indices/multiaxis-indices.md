@@ -1174,6 +1174,159 @@ Now a few advanced notes about integer array indexing:
 (boolean-array-indices)=
 ### Boolean Arrays
 
+The final index type is boolean arrays. Boolean array indices are also
+sometimes called *masks*. We don't use that terminology here, to avoid
+ambiguity with other types of array masking, but it's a useful way to think
+about a boolean array index.
+
+A boolean array index specifies which elements of an array should be selected
+and which should not be selected.
+
+The simplest and most common case is where a boolean array index has the same
+shape as the array being indexed, and is the sole index (i.e., not part of a
+larger [tuple index](tuple-indices)).
+
+Consider the array:
+
+```py
+>>> a = np.arange(9).reshape((3, 3))
+>>> a
+array([[0, 1, 2],
+       [3, 4, 5],
+       [6, 7, 8]])
+```
+
+Suppose want to select the elements `1`, `3`, and `4`. To do so, we create a
+boolean array of the same shape as `a` which is `True` in the positions where
+those elements are and `False` everywhere else.
+
+```py
+>>> idx = np.array([
+... [False,  True, False],
+... [ True,  True, False],
+... [False, False, False]])
+>>> a[idx]
+array([1, 3, 4])
+```
+
+From this we can see a few things:
+
+- The result of indexing by the boolean mask is a 1-D array. If we think about
+  it, this is the only possibility. A boolean index could select any number of
+  elements. In this case, it selected 3 elements, but it could select as few
+  as 0 and as many as 9 elements from `a`. So there would be no way to return
+  a higher dimensional shape, or for the shape of the result to be related to
+  the shape of `a`. The shape of `a[idx]` when `idx` is a boolean array is
+  `(n,)` where `n` is the number of `True` elements in `idx` (i.e.,
+  `np.count_nonzero(idx)`). `n` is always between `0` and `a.size`, inclusive.
+
+- The selected elements are "in order". Namely, they are in C order. That is,
+  C order iterates the array `a` so that the last axis varies the fastest, like
+  `(0, 0, 0)`, `(0, 0, 1)`, `(0, 0, 2)`, `(0, 1, 0)`, etc. This is also the
+  order that the elements of `a` are printed in, and corresponds to the order
+  they are selected in. Note, C ordering is always used, even when the
+  underlying memory is not C ordered (see [](c-vs-fortran-ordering) below).
+
+Usually these details are not important. That is because an array indexed by a
+boolean array is usually only used indirectly, such as the left-hand side of
+an assignment.
+
+A typical use-case of boolean indexing is to create a boolean mask using the
+array itself with some operators that return boolean arrays, like relational
+operators, such as `==`, `>`, `!=`, and so on, logical operators, such as `&`
+(and), `|` (or), `~` (not), and `^` (xor), and certain functions like `isnan`,
+or `isinf`.
+
+For example, take an example array of the integers from -10 to 10
+
+```py
+>>> a = np.arange(-10, 11)
+```
+
+Say we want to pick the elements of `a` that are both positive and odd. The
+boolean mask `a > 0` represents which elements are positive and the boolean
+mask `a % 2 == 1` represents which elements are odd. So our mask would be
+
+```py
+>>> mask = (a > 0) & (a % 2 == 1)
+```
+
+(Note the careful use of parentheses. Masks must use the logical operators so
+that they can be arrays. They cannot use the Python logical `and`, `or`, or
+`not`.)
+
+The `mask` is just an array of booleans:
+
+```py
+>>> mask
+array([False, False, False, False, False, False, False, False, False,
+       False, False,  True, False,  True, False,  True, False,  True,
+       False,  True, False])
+```
+
+To get the actual matching elements, we need to index `a` with the mask:
+
+```py
+>>> a[mask]
+array([1, 3, 5, 7, 9])
+```
+
+Often one will see the `mask` written directly in the index, like
+
+```py
+>>> a[(a > 0) & (a % 2 == 1)]
+array([1, 3, 5, 7, 9])
+```
+
+Suppose we wanted to set these elements of `a` to `-100` (i.e., to "mask" them
+out). This can be easily done with an indexing assignment:
+
+```
+>>> a[(a > 0) & (a % 2 == 1)] = -100
+>>> a
+array([ -10,   -9,   -8,   -7,   -6,   -5,   -4,   -3,   -2,   -1,    0,
+       -100,    2, -100,    4, -100,    6, -100,    8, -100,   10])
+```
+
+A common use-case of this is to mask out `nan` entries with a finite number,
+like `0`.
+
+```
+>>> a = np.linspace(-5, 5, 10)
+>>> b = np.log(a)
+>>> b
+array([        nan,         nan,         nan,         nan,         nan,
+       -0.58778666,  0.51082562,  1.02165125,  1.35812348,  1.60943791])
+>>> b[np.isnan(b)] = 0.
+>>> b
+array([ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
+       -0.58778666,  0.51082562,  1.02165125,  1.35812348,  1.60943791])
+```
+
+Here `np.isnan(x)` returns a boolean array of the same shape as `x` that is
+`True` if the corresponding element is `nan` and `False` otherwise.
+
+Note that for this kind of use-case, the actual shape of `a[mask]` is
+irrelevant. The important thing is that it is some subset of `a`, which is
+then assigned to, mutating only those elements of `a`.
+
+It's also important to not be fooled by this way of constructing a mask. Even
+though the *expression* `(a > 0) & (a % 2 == 1)` depends on `a`, the resulting
+array itself is just an array of booleans. **Boolean array indexing `a[mask]`,
+as with [all other types of indexing](what-is-an-index), does not depend on
+the values of the array `a`, only in the positions of its elements.**
+
+This distinction matters when you realize that a mask created with one array
+can be used on another array, so long as it has the same shape. For example,
+suppose we wanted to plot `x + log(x - 1)` on [-5, 5]. We can set `x =
+np.linspace(-5, 5)` and compute the array expression:
+
+```
+>>> x = np.linspace(-5, 5)
+>>> y = x + np.log(x - 1)
+```
+
+
 
 ## Other Topics Relevant to Indexing
 
