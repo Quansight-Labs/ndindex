@@ -1252,8 +1252,8 @@ mask `a % 2 == 1` represents which elements are odd. So our mask would be
 ```
 
 (Note the careful use of parentheses. Masks must use the logical operators so
-that they can be arrays. They cannot use the Python logical `and`, `or`, or
-`not`.)
+that they can be arrays. They cannot use the Python keywords `and`, `or`, and
+`not`, which only operate on single Python booleans, not arrays.)
 
 The `mask` is just an array of booleans:
 
@@ -1288,8 +1288,8 @@ array([ -10,   -9,   -8,   -7,   -6,   -5,   -4,   -3,   -2,   -1,    0,
        -100,    2, -100,    4, -100,    6, -100,    8, -100,   10])
 ```
 
-A common use-case of this is to mask out `nan` entries with a finite number,
-like `0`.
+One common use-case of this is to mask out `nan` entries with a finite number,
+like `0`:
 
 ```
 >>> a = np.linspace(-5, 5, 10)
@@ -1310,23 +1310,44 @@ Note that for this kind of use-case, the actual shape of `a[mask]` is
 irrelevant. The important thing is that it is some subset of `a`, which is
 then assigned to, mutating only those elements of `a`.
 
-It's also important to not be fooled by this way of constructing a mask. Even
+It's important to not be fooled by this way of constructing a mask. Even
 though the *expression* `(a > 0) & (a % 2 == 1)` depends on `a`, the resulting
-array itself is just an array of booleans. **Boolean array indexing `a[mask]`,
-as with [all other types of indexing](what-is-an-index), does not depend on
-the values of the array `a`, only in the positions of its elements.**
+array itself does not---it is just an array of booleans. **Boolean array
+indexing `a[mask]`, as with [all other types of indexing](what-is-an-index),
+does not depend on the values of the array `a`, only in the positions of its
+elements.**
 
-This distinction matters when you realize that a mask created with one array
-can be used on another array, so long as it has the same shape. For example,
-suppose we wanted to plot `x + log(x - 1)` on [-5, 5]. We can set `x =
-np.linspace(-5, 5)` and compute the array expression:
+This might seem like a superficial distinction, but it matters when you
+realize that a mask created with one array can be used on another array, so
+long as it has the same shape. It's common to have multiple arrays
+representing different data about the same set of points. You may wish to
+select a subset of one array based on the value of the corresponding point in
+another array.
 
-```
+For example, suppose we wanted to plot `x +
+log(x - 1)` on [-5, 5]. We can set `x = np.linspace(-5, 5)` and compute the
+array expression:
+
+```py
 >>> x = np.linspace(-5, 5)
 >>> y = x + np.log(x - 1)
 ```
 
 
+
+This sort of thing comes up all the time, for example, in image processing, an
+image, in for instance, [scikit-image](https://scikit-image.org/), is
+represented as an array of pixel values. Masks can be used to select subset of
+the image, and may be constructed based on the pixel values (e.g., all red
+pixels), or based on a geometric shape independent of the pixel values (e.g.,
+a
+[circle](https://scikit-image.org/docs/stable/auto_examples/numpy_operations/plot_camera_numpy.html).
+In machine learning, cross-validation if `group` is an array with group
+numbers and `X` is an array of features with repeated measurements per group,
+one can select the features for a single group, e.g., to do cross-validation
+like `X[group == 0]`. See
+https://twitter.com/asmeurer/status/1596273431657385984 for some more
+examples. 
 
 ## Other Topics Relevant to Indexing
 
