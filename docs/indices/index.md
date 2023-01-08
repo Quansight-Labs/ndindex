@@ -158,4 +158,5 @@ as [integer indices](integer-indices), [slices](slices-docs), and
 integer-indices.md
 slices.md
 multiaxis-indices.md
+other-topics.md
 ```
