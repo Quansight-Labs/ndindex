@@ -930,12 +930,15 @@ NumPy's broadcasting rules.
 ## Advanced Indices
 
 Finally we come to the so-called advanced indices. These are "advanced" in the
-sense that they are more complex. They allow selecting arbitrary parts of an
-array, in ways that are impossible with the basic index types. Advanced
-indexing is also sometimes called indexing by arrays, as there are two types
-of advanced indices, both of which are arrays: integer arrays and boolean
-arrays. Indexing by an array that does not have an integer or boolean dtype is
-an error.
+sense that they are more complex. They are also distinct from "basic" indices
+in that they always return a copy (see [](views-vs-copies)). Advanced indices
+allow selecting arbitrary parts of an array, in ways that are impossible with
+the basic index types. Advanced indexing is also sometimes called indexing by
+arrays, as the indices themselves in advanced indexing are arrays:  integer
+arrays and boolean arrays. Using an array that does not have an integer
+or boolean dtype as an index is an error (in this section, do not confuse the
+*array being indexed* with the *array that is the index*. The former can be
+anything and have any dtype. It is only the latter that is restricted).
 
 (integer-array-indices)=
 ### Integer Arrays
