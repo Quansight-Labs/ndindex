@@ -972,7 +972,7 @@ array([[100, 102, 100],
        [103, 100, 102]])
 ```
 
-This is, how integer array indices work. You can shuffle the elements of `a`
+This is how integer array indices work. You can shuffle the elements of `a`
 into an arbitrary new array in arbitrary order simply by indexing where each
 element of the new array comes from.
 
