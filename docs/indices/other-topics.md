@@ -78,7 +78,7 @@ more examples of broadcasting.
 (views-vs-copies)=
 ## Views vs. Copies
 
-There is an distinction between basic indices (i.e.,
+There is a distinction between basic indices (i.e.,
 [integers](integer-indices), [slices](slices-docs),
 [ellipses](ellipsis-indices), [newaxis](newaxis-indices)) and [advanced
 indices](advanced-indices) (i.e., [integer array
