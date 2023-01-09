@@ -90,9 +90,13 @@ an array[^view-scalar-footnote], whereas the advanced indices will always create
 multiaxis indices) will create a view if they do not contain an advanced index
 and a copy otherwise.
 
+
 [^view-scalar-footnote]: There is one exception to this rule, which is that an
     index that would return a scalar returns a copy, since scalars are
     supposed to be immutable.
+
+<!-- This is the only way to cross reference a footnote across documents -->
+    (view-scalar-footnote-ref)=
 
     ```py
     >>> a = np.arange(20)

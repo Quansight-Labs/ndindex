@@ -571,12 +571,12 @@ unchanged.**[^tuple-ellipsis-footnote]
     array(10)
     ```
 
-    The difference between scalars and shape `()` arrays in NumPy is
-    subtle. In most contexts, they will both work
-    identically, but there are some places where you need one and not the
-    other, and the above trick can be used to convert between them. See
-    footnotes [^view-scalar-footnote] for two
-    important differences related to indexing.
+    The difference between scalars and shape `()` arrays in NumPy is subtle.
+    In most contexts, they will both work identically, but there are some
+    places where you need one and not the other, and the above trick can be
+    used to convert between them. See footnotes [^integer-scalar-footnote] and
+    [Other Topics Relevant to Indexing footnote 1](view-scalar-footnote-ref)
+    for two important differences related to indexing.
 
 (ellipsis-indices)=
 ### Ellipses
@@ -1113,7 +1113,7 @@ Now a few advanced notes about integer array indexing:
 
     However, there is one difference between `a[0]` and `a[asarray(0)]`. The
     latter is considered an advanced index, so it does not create a
-    [view](views-vs-copies).[^view-scalar-footnote]
+    [view](views-vs-copies).
 
     ```py
     >>> a = np.empty((2, 3))
