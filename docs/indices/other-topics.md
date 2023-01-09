@@ -137,8 +137,8 @@ and a copy otherwise.
     ```
 
 A **view** is a special type of array whose data points to another array. This
-means that if you mutate the data in one array, the other array will also also
-have that data mutated as well. For example,
+means that if you mutate the data in one array, the other array will also have
+that data mutated as well. For example,
 
 ```py
 >>> a = np.arange(24).reshape((3, 2, 4))
