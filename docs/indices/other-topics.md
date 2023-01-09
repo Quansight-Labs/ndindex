@@ -8,28 +8,50 @@ important caveats to be aware of when doing indexing operations.
 (broadcasting)=
 ## Broadcasting
 
+
 Broadcasting is a powerful abstraction that applies to all operations in
 NumPy. It allows arrays with mismatched shapes to be combined together as if
 one or more of their dimensions were simply repeated the appropriate number of
-times. Broadcasting is a generalization of this behavior
+times.
+
+Normally, when we perform an operation on two arrays with the same shape, it
+does what we'd expect, i.e., the operation is applied to each corresponding
+element of each array. For example, if `x` and `y` are both `(2, 2)` arrays,
+then `x + y` is a `(2, 2)` array with the sum of the corresonding elements.
 
 ```py
+>>> import numpy as np
 >>> x = np.array([[1, 2],
 ...               [3, 4]])
+>>> y = np.array([[101, 102],
+...               [103, 104]])
+>>> x + y
+array([[102, 104],
+       [106, 108]])
+```
+
+However, you may have noticed that `x` and `y` doesn't always have to be two
+arrays with the same shape. For example, you can add a single scalar element
+to and array, and it will add it to each element.
+
+```py
 >>> x + 1
 array([[2, 3],
        [4, 5]])
 ```
 
-Here we can think of the scalar `1` as a shape `()` array, whereas `x` is a
-shape `(2, 2)` array. Thus, `x` and `1` do not have the same shape, but `x +
-1` is allowed via repeating `1` across every element of `x`. This means taking
-`1` and treating it as if it were the shape `(2, 2)` array `[[1, 1], [1, 1]]`.
+In the above example, we can think of the scalar `1` as a shape `()` array,
+whereas `x` is a shape `(2, 2)` array. Thus, `x` and `1` do not have the same
+shape, but `x + 1` is allowed via repeating `1` across every element of `x`.
+This means taking `1` and treating it as if it were the shape `(2, 2)` array
+`[[1, 1], [1, 1]]`.
 
-In general, broadcasting allows repeating only some dimensions. For example,
-here we multiply `x`, a shape `(3, 2)` array, with `y`, a shape `(2,)` array.
-`y` is virtually repeated into a shape `(3, 2)` array with each element of the
-last dimension repeated 3 times.
+Broadcasting is a generalization of this behavior. Specifically, instead of
+repeating just a single number into an array, we can repeat just some
+dimensions of an array into a bigger array. For example, here we multiply `x`,
+a shape `(3, 2)` array, with `y`, a shape `(2,)` array. `y` is virtually
+repeated into a shape `(3, 2)` array with each element of the last dimension
+repeated 3 times.
 
 ```py
 >>> x = np.array([[1, 2],
@@ -55,7 +77,8 @@ array([[0, 2],
 
 This is what the array `y` looks like before it is combined with `x` (except
 the power of broadcasting is that the repeated entries are not literally
-repeated in memory, see [](views-vs-copies) and [](strides) below).
+repeated in memory. It's implemented much more efficiently. See
+[](views-vs-copies) and [](strides) below).
 
 Broadcasting always happens automatically in NumPy whenever two arrays with
 different shapes are combined, assuming those shapes are broadcast compatible.
@@ -63,13 +86,16 @@ The rule with broadcasting is that the shorter of the shapes are prepended
 with length 1 dimensions so that they have the same number of dimensions. Then
 any dimensions that are size 1 in a shape are replaced with the corresponding
 size in the other shape. The other non-1 sizes must be equal or broadcasting
-is not allowed. In the above example, we broadcast `(3, 2)` with `(2,)` by
-first extending `(2,)` to `(1, 2)` then broadcasting the size `1` dimension to
-the corresponding size in the other shape, `3`, giving a broadcasted shape of
-`(3, 2)`. In more advanced examples, both shapes may have broadcasted
-dimensions. For instance, `(3, 1)` can broadcast with `(2,)` giving `(3, 2)`.
-The first shape would repeat the first axis 2 times along the second axis, and
-the second would insert a new axis in the beginning that would repeat 3 times.
+is not allowed.
+
+In the above example, we broadcast `(3, 2)` with `(2,)` by first extending
+`(2,)` to `(1, 2)` then broadcasting the size `1` dimension to the
+corresponding size in the other shape, `3`, giving a broadcasted shape of `(3,
+2)`. In more advanced examples, both shapes may have broadcasted dimensions.
+For instance, `(3, 1)` can broadcast with `(2,)` giving `(3, 2)`. The first
+shape would repeat the first axis 2 times along the second axis, and the
+second would insert a new axis in the beginning that would repeat 3 times.
+
 See the [NumPy
 documentation](https://numpy.org/doc/stable/user/basics.broadcasting.html) for
 more examples of broadcasting.
@@ -95,7 +121,7 @@ and a copy otherwise.
     index that would return a scalar returns a copy, since scalars are
     supposed to be immutable.
 
-<!-- This is the only way to cross reference a footnote across documents -->
+    <!-- This is the only way to cross reference a footnote across documents -->
     (view-scalar-footnote-ref)=
 
     ```py
@@ -136,7 +162,34 @@ array([[[ 0,  0,  0,  0],
 <BLANKLINE>
        [[ 0,  0,  0,  0],
         [20, 21, 22, 23]]])
+```
 
+Note that this behavior is exactly the opposed of Python lists. With Python
+lists, `a[:]` is a shorthand to copy `a`. But with NumPy, `a[:]` creates a
+view into `a` (to copy an array with NumPy, use `a.copy()`). Python lists do
+not have a notion of views.
+
+```py
+>>> a = [1, 2, 3] # list
+>>> b = a[:] # a copy of a
+>>> b[0] = 0 # Modifies b but not a
+>>> b
+[0, 2, 3]
+>>> a
+[1, 2, 3]
+>>> a = np.array([1, 2, 3]) # NumPy array
+>>> b = a[:] # A view of a
+>>> b[0] = 0 # Modifies both b and a
+>>> b
+array([0, 2, 3])
+>>> a
+array([0, 2, 3])
+>>> c = a.copy() # A copy of a
+>>> c[0] = -1 # Only modifies c
+>>> c
+array([-1, 2, 3])
+>>> a
+array([0, 2, 3])
 ```
 
 Views aren't just for indexing. When you reshape an array, that will also create a view.
@@ -249,7 +302,8 @@ Whether an array is a view or a copy matters for two reasons:
 (strides)=
 ## Strides
 
-The reason [views](views-vs-copies) work is because NumPy arrays aren't just a
+The reason so many types of indexing into arrays is able to be a
+[view](views-vs-copies) without a copy is that NumPy arrays aren't just a
 pointer to a blob of memory. They are a pointer along with something called
 **strides**. The strides tell NumPy how many bytes to skip in memory along
 each axis to get to the next element of the array. This along with the
@@ -257,7 +311,7 @@ each axis to get to the next element of the array. This along with the
 the **shape**, and the **itemsize** (the number of bytes each element takes
 up, which depends on the **dtype**), determines how the corresponding memory
 is organized into an array. For example, in the `reshape` example above, `a`
-is just a flat 1-dimensional array whose itemsize is 8 (an int64 takes up 8
+is just a flat 1-dimensional array whose itemsize is 8 (an `int64` takes up 8
 bytes), so its strides is `(8,)`:
 
 ```py
@@ -357,10 +411,11 @@ The memory offset also changes here so that it starts with the last element of
 105553170825400
 ```
 
-From this, we can see that every possible slice is just a manipulation of the
-memory offset, shape, and strides. It's not hard to see that this also applies
-to integer indices (which just removes the stride for the corresponding axis)
-and newaxis (which adds `0` to the strides):
+From this, you are hopefully convinced that every possible slice is just a
+manipulation of the memory offset, shape, and strides. It's not hard to see
+that this also applies to integer indices (which just removes the stride for
+the corresponding axis, adjusting the shape and memory offset accordingly) and
+newaxis (which just adds `0` to the strides):
 
 ```py
 >>> b.strides
@@ -375,7 +430,8 @@ This is why basic indexing always produces a view, because it can always be
 represented as a manipulation of the strides (plus shape and offset).
 
 Another important fact about strides is that broadcasting can be achieved by
-manipulating the strides, namely by adding a `0` to the strides.
+manipulating the strides, namely by using a `0` stride to repeate the same
+data along a given axis.
 
 ```py
 >>> c = a.reshape((1, 12, 2))
@@ -394,6 +450,10 @@ True
 True
 ```
 
+You might also notice that the array returned by `broadcast_to` is read-only.
+That's because writing into it would not do what you'd expect, since the
+repeated elements literally refer to the same memory.
+
 This shows why [broadcasting](broadcasting) is so powerful: it can be done
 without any actual copy of the data. When you perform an operation on two
 arrays, the broadcasting is implicit, but even explicitly creating a
@@ -407,10 +467,12 @@ indexing, `reshape`, `broadcast_to`, and `transpose`, but it's possible to use
 strides to represent some things which are not so easy to do with just these
 functions, for example, [sliding
 windows](https://numpy.org/doc/stable/reference/generated/numpy.lib.stride_tricks.sliding_window_view.html)
-and [convolutions](https://stackoverflow.com/a/43087507/161801). [This
-page](https://towardsdatascience.com/advanced-numpy-master-stride-tricks-with-25-illustrated-exercises-923a9393ab20)
-contains many examples of stride tricks. However, if you do use stride tricks,
-be careful of the caveats (see the [notes section of the `as_strided`
+and [convolutions](https://stackoverflow.com/a/43087507/161801). [This medium
+article by Raimi
+Karim](https://towardsdatascience.com/advanced-numpy-master-stride-tricks-with-25-illustrated-exercises-923a9393ab20)
+demonstrates many examples of the sorts of things you can do with stride
+tricks. However, if you do use stride tricks, be careful of the caveats (see
+the [notes section of the `as_strided`
 docs](https://numpy.org/doc/stable/reference/generated/numpy.lib.stride_tricks.as_strided.html)).
 
 (c-vs-fortran-ordering)=
