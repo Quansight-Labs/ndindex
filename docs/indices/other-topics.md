@@ -490,7 +490,9 @@ fastest, like `a[0, 0, 0], a[1, 0, 0], a[2, 0, 0], ..., a[0, 1, 0], a[1, 1, 0], 
   confusing when the array has more than two axes or when it does not
   represent a mathematical matrix. It's better to think of them in terms of
   which axes vary the fastest---the last for C ordering and the first for
-  Fortran ordering.
+  Fortran ordering. Also, I don't know about you, but I can never remember
+  which is supposed to be "row-" and "column-" major, but I do remember how
+  indexing works in C, so just thinking about that requires no mnemonic.
 
 **The internal ordering of an array does not change any indexing semantics.**
 The same index will select the same elements on `a` regardless of whether it
