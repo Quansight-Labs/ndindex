@@ -1105,6 +1105,8 @@ Now a few advanced notes about integer array indexing:
 
   For example:
 
+  TODO
+
 [^integer-scalar-footnote]: In fact, if the integer array index itself has
     shape `()`, then the behavior is identical to simply using an `int` with
     the same value. So it's a true generalization. In ndindex,
@@ -1284,6 +1286,8 @@ array expression:
 >>> x = np.linspace(-5, 5)
 >>> y = x + np.log(x - 1)
 ```
+
+TODO
 
 This sort of thing comes up all the time, for example, in image processing, an
 image, in for instance, [scikit-image](https://scikit-image.org/), is
