@@ -478,12 +478,13 @@ docs](https://numpy.org/doc/stable/reference/generated/numpy.lib.stride_tricks.a
 (c-vs-fortran-ordering)=
 ## C vs. Fortran ordering
 
-NumPy has an internal distinction between C order and Fortran order.
-C ordered arrays are stored in memory so that the last axis varies the
-fastest. For example, if `a` has 3 dimensions, then its elements are stored in
-memory like `a[0, 0, 0], a[0, 0, 1], a[0, 0, 2], ..., a[0, 1, 0], a[0, 1, 1], ...`. Fortran
-ordering is the opposite: the elements are stored in memory so that the first axis varies
-fastest, like `a[0, 0, 0], a[1, 0, 0], a[2, 0, 0], ..., a[0, 1, 0], a[1, 1, 0], ...`.[^c-order-footnote]
+NumPy has an internal distinction between C order and Fortran order. C ordered
+arrays are stored in memory so that the last axis varies the fastest. For
+example, if `a` has 3 dimensions, then its elements are stored in memory like
+`a[0, 0, 0], a[0, 0, 1], a[0, 0, 2], ..., a[0, 1, 0], a[0, 1, 1], ...`.
+Fortran ordering is the opposite: the elements are stored in memory so that
+the first axis varies fastest, like `a[0, 0, 0], a[1, 0, 0], a[2, 0, 0], ...,
+a[0, 1, 0], a[1, 1, 0], ...`.[^c-order-footnote]
 
 [^c-order-footnote]: C order and Fortran order are also sometimes row-major
   and column-major ordering, respectively. However, this terminology is
@@ -496,7 +497,14 @@ fastest, like `a[0, 0, 0], a[1, 0, 0], a[2, 0, 0], ..., a[0, 1, 0], a[1, 1, 0], 
 
 **The internal ordering of an array does not change any indexing semantics.**
 The same index will select the same elements on `a` regardless of whether it
-uses C or Fortran ordering internally.
+uses C or Fortran ordering internally.[^ordering-footnote]
+
+[^ordering-footnote]: More generally, the actual memory layout of an array has
+    no bearing on indexing semantics. Indexing operates on the logical
+    abstraction of the array as presented to the user, even if the true memory
+    doesn't look anything like that because the array is a
+    [view](views-vs-copies) or has some other layout due to [stride
+    tricks](strides).
 
 Note that this also applies to [boolean array indices](boolean-array-indices),
 even though they select elements in C order. A boolean mask always produces
@@ -529,7 +537,8 @@ array([1, 3, 4])
 array([1, 3, 4])
 ```
 
-If you read the preview section on [strides](strides), you probably guessed
+````{admonition} Aside
+If you read the previous section on [strides](strides), you probably guessed
 that the difference between C-ordered and Fortran-ordered arrays is a
 difference of...strides!
 
@@ -539,6 +548,10 @@ difference of...strides!
 >>> a_f.strides
 (8, 24)
 ```
+
+In a C-ordered array the strides decrease and in a Fortran-ordered array they
+increase, because a smaller stride corresponds to "faster varying".
+````
 
 **What ordering *does* affect is the performance of certain operations.** In
 particular, the ordering affects whether it is more optimal to index along the
@@ -594,7 +607,7 @@ NumPy indexing semantics tend to favor thinking about arrays using the C
 order, as one does not need to use an ellipsis to select contiguous
 subarrays. C ordering also matches the [list-of-lists
 intuition](what-is-an-array) intuition of an array, since an array like
-`[[0, 1], [2, 3]]` is stored in memory as literally `[0, 1, 2, 3]` with C
+`[[0, 1], [2, 3]]` is stored in memory as literally `0, 1, 2, 3` with C
 ordering.
 
 C ordering is the default in NumPy when creating arrays with functions like
