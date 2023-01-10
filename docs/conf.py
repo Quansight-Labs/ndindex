@@ -34,7 +34,13 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx_copybutton',
     'sphinx_reredirects',
+    'matplotlib.sphinxext.plot_directive',
 ]
+
+plot_html_show_source_link = False
+plot_include_source = False
+plot_html_show_formats = False
+plot_formats = ['svg']
 
 intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),

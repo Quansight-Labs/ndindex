@@ -1271,23 +1271,51 @@ indexing `a[mask]`, as with [all other types of indexing](what-is-an-index),
 does not depend on the values of the array `a`, only in the positions of its
 elements.**
 
-This might seem like a superficial distinction, but it matters when you
-realize that a mask created with one array can be used on another array, so
-long as it has the same shape. It's common to have multiple arrays
-representing different data about the same set of points. You may wish to
-select a subset of one array based on the value of the corresponding point in
-another array.
+The expression depending on `a` but the array itself not might seem like an
+overly subtle distinction. But it matters once you realize that a mask created
+with one array can be used on another array, so long as it has the same shape.
+It's common to have multiple arrays representing different data about the same
+set of points. You may wish to select a subset of one array based on the value
+of the corresponding point in another array.
 
-For example, suppose we wanted to plot `x +
-log(x - 1)` on [-5, 5]. We can set `x = np.linspace(-5, 5)` and compute the
-array expression:
+For example, suppose we wanted to plot some function, like $4x\sin(x) -
+\frac{x^2}{4} - 2x$ on $[-10,10]$. We can set `x = np.linspace(-10, 10)` and
+compute the array expression:
 
-```py
->>> x = np.linspace(-5, 5)
->>> y = x + np.log(x - 1)
+<!-- myst doesn't work with ```{plot}, and furthermore, if the two plot
+directives are put in separate eval-rst blocks, the same plot is copied to
+both. -->
+
+```{eval-rst}
+.. plot::
+   :context: reset
+   :include-source: True
+
+   >>> import matplotlib.pyplot as plt
+   >>> x = np.linspace(-10, 10, 10000) # 10000 evenly spaced points between -10 and 10
+   >>> y = 4*x*np.sin(x) - x**2/4 - 2*x # some function
+   >>> plt.scatter(x, y, marker=',', s=1)
+
+If we want to show only those x values that are positive, we could easily do
+this by modifying the ``linspace`` call that created ``x``, but what if we
+want to show only those y values that are positive? The only way to do this is
+to select them using a mask:
+
+.. plot::
+   :context: close-figs
+   :include-source: True
+
+   >>> plt.scatter(x[y > 0], y[y > 0], marker=',', s=1)
+
 ```
 
-TODO
+Here we are using the mask `y > 0` to select the corresponding values from
+both the `x` *and* `y` arrays. Since the same mask is used on both arrays, the
+values corresponding to this mask in both arrays will be selected, even though
+for `x[y > 0]`, the mask itself is not strictly created *from* `x`, it still
+makes sense as a mask for the array `x`. Note that this mask selects selects a
+nontrivial subset of `x`. We are effectively using the mask created from `y`
+to invert the function.
 
 This sort of thing comes up all the time, for example, in image processing, an
 image, in for instance, [scikit-image](https://scikit-image.org/), is
@@ -1302,6 +1330,8 @@ one can select the features for a single group, e.g., to do cross-validation
 like `X[group == 0]`. See
 https://twitter.com/asmeurer/status/1596273431657385984 for some more
 examples.
+
+TODO: Write rules for boolean masks
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
