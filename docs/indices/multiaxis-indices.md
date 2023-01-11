@@ -1295,6 +1295,7 @@ both. -->
    >>> x = np.linspace(-10, 10, 10000) # 10000 evenly spaced points between -10 and 10
    >>> y = 4*x*np.sin(x) - x**2/4 - 2*x # some function
    >>> plt.scatter(x, y, marker=',', s=1)
+   <matplotlib.collections.PathCollection object at ...>
 
 If we want to show only those x values that are positive, we could easily do
 this by modifying the ``linspace`` call that created ``x``, but what if we
@@ -1306,6 +1307,7 @@ to select them using a mask:
    :include-source: True
 
    >>> plt.scatter(x[y > 0], y[y > 0], marker=',', s=1)
+   <matplotlib.collections.PathCollection object at ...>
 
 ```
 
