@@ -1105,6 +1105,12 @@ Now a few advanced notes about integer array indexing:
 
   For example:
 
+  ```py
+  >>> a
+  array([[100, 101, 102],
+         [103, 104, 105]])
+  ```
+
   TODO
 
 [^integer-scalar-footnote]: In fact, if the integer array index itself has
