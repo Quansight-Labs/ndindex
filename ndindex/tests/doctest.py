@@ -28,7 +28,7 @@ import glob
 import os
 from contextlib import contextmanager
 from doctest import (DocTestRunner, DocFileSuite, DocTestSuite,
-                     NORMALIZE_WHITESPACE, register_optionflag, SKIP)
+                     NORMALIZE_WHITESPACE, ELLIPSIS, register_optionflag, SKIP)
 
 SKIP37 = register_optionflag("SKIP37")
 
@@ -72,7 +72,7 @@ def load_tests(loader, tests, ignore):
             tests.addTests(DocTestSuite(sys.modules[mod], globs={},
                                         optionflags=NORMALIZE_WHITESPACE))
     tests.addTests(DocFileSuite(*MARKDOWN, *RST, README,
-                                optionflags=NORMALIZE_WHITESPACE,
+                                optionflags=NORMALIZE_WHITESPACE | ELLIPSIS,
                                 module_relative=False))
     return tests
 
