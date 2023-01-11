@@ -19,6 +19,7 @@
     --color-sidebar-current: white;
     --color-sidebar-background-current: var(--color-brand-medium-blue);
     --color-sidebar--hover: var(--color-brand-dark-blue);
+    --color-sidebar-arrow-current: white;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,12 +27,14 @@
         --color-sidebar-background-current: var(--color-brand-dark-blue);
         --color-brand-bg: var(--color-brand-dark-bg);
         --color-sidebar--hover: white;
+        --color-sidebar-arrow-current: var(--color-sidebar-link-text--top-level);
     }
 }
 [data-theme='dark'] {
     --color-sidebar-background-current: var(--color-brand-dark-blue);
     --color-brand-bg: var(--color-brand-dark-bg);
     --color-sidebar--hover: white;
+    --color-sidebar-arrow-current: var(--color-sidebar-link-text--top-level);
 }
 
 /* The furo theme uses only-light and only-dark for light/dark-mode only
@@ -75,6 +78,15 @@ html body .only-dark-inline {
 .sidebar-tree .reference:hover {
     color: var(--color-sidebar--hover);
 }
+
+.sidebar-tree .current-page>label:not(:hover) .icon {
+    color: var(--color-sidebar-arrow-current);
+}
+
+.sidebar-tree .reference:hover ~ label .icon {
+    color: var(--color-sidebar-link-text--top-level) !important;
+}
+
 
 /* The "hide search matches" text after doing a search. Defaults to the same
    color as the search icon which is illegible on the colored background. */
