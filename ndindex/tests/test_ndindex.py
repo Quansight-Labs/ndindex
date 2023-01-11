@@ -103,12 +103,13 @@ def test_ndindex_invalid():
                 np.array([])]:
         check_same(a, idx)
 
-    # This index is allowed by NumPy, but gives a deprecation warnings. We are
-    # not going to allow indices that give deprecation warnings in ndindex.
+    # Older versions of NumPy gives a deprecation warning for this index. We
+    # are not going to allow indices that give deprecation warnings in
+    # ndindex.
     with warnings.catch_warnings(record=True) as r:
         # Make sure no warnings are emitted from ndindex()
         warnings.simplefilter("error")
-        raises(IndexError, lambda: ndindex([1, []]))
+        raises((IndexError, ValueError), lambda: ndindex([1, []]))
     assert not r
 
 def test_ndindex_ellipsis():
