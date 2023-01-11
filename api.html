@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Slices" href="slices.html" /><link rel="prev" title="ndindex" href="index.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
         <title>API Reference - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -226,7 +226,7 @@
   <span class="sidebar-brand-text">ndindex  documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -2454,7 +2454,7 @@ the index objects.</p>
 compatible. Each iteration step will produce a tuple of indices, one for
 each shape, which would correspond to the same elements if the arrays of
 the given shapes were first broadcast together.</p>
-<p>This is a generalization of the NumPy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v1.23)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndindex()</span></code></a> function (which otherwise has no relation).
+<p>This is a generalization of the NumPy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndindex()</span></code></a> function (which otherwise has no relation).
 <code class="code docutils literal notranslate"><span class="pre">np.ndindex()</span></code> only iterates indices for a single shape, whereas
 <code class="code docutils literal notranslate"><span class="pre">iter_indices()</span></code> supports generating indices for multiple broadcast
 compatible shapes at once. This is equivalent to first broadcasting the
@@ -2502,7 +2502,7 @@ operation <code class="code docutils literal notranslate"><span class="pre">a</s
 <span class="go">array([[100],</span>
 <span class="go">       [110]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span> <span class="ow">in</span> <span class="n">iter_indices</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span> 
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx1</span> <span class="si">= }</span><span class="s2">; </span><span class="si">{</span><span class="n">idx2</span> <span class="si">= }</span><span class="s2">; </span><span class="si">{</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">idx1</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">idx2</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span> <span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx1</span><span class="w"> </span><span class="si">= }</span><span class="s2">; </span><span class="si">{</span><span class="n">idx2</span><span class="w"> </span><span class="si">= }</span><span class="s2">; </span><span class="si">{</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">idx1</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">idx2</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="go">idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (0, 100)</span>
 <span class="go">idx1 = Tuple(0, 1); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (1, 100)</span>
 <span class="go">idx1 = Tuple(0, 2); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (2, 100)</span>
@@ -2516,7 +2516,7 @@ operation <code class="code docutils literal notranslate"><span class="pre">a</s
 </div>
 <p>To include an index into the final broadcasted array, you can simply
 include the final broadcasted shape as one of the shapes (the NumPy
-function <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.23)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a> is
+function <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.24)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a> is
 useful here).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="go">(2, 3)</span>
@@ -3300,7 +3300,7 @@ debugging <a class="reference internal" href="#ndindex.iter_indices" title="ndin
 <dt class="sig sig-object py" id="ndindex.ndindex.broadcast_shapes">
 <span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">broadcast_shapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.broadcast_shapes" title="Permalink to this definition">#</a></dt>
 <dd><p>Broadcast the input shapes <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> to a single shape.</p>
-<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.23)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>. It is included as a separate helper function
+<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.24)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>. It is included as a separate helper function
 because <code class="code docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code> is on available in NumPy 1.20 or newer, and
 so that ndindex functions that use this function can do without requiring
 NumPy to be installed.</p>
