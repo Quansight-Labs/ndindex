@@ -5,3 +5,4 @@ myst-parser
 sphinx
 sphinx-copybutton
 sphinx-reredirects
+sphinx-design

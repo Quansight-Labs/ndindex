@@ -34,6 +34,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx_copybutton',
     'sphinx_reredirects',
+    'sphinx_design',
     'matplotlib.sphinxext.plot_directive',
 ]
 

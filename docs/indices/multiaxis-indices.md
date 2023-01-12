@@ -178,6 +178,7 @@ itself be a nightmare using the list of lists representation. This, along with
 the powerful ecosystem of libraries like `scipy`, `matplotlib`, and the
 scikits, are really what have made NumPy such a popular and essential tool.
 
+(basic-indices)=
 ## Basic Multiaxis Indices
 
 (tuple-indices)=
@@ -1008,7 +1009,8 @@ When the indexed array `a` has more than one dimension, an integer array index
 selects elements from a single axis.
 
 ```
->>> a = np.array([[100, 101, 102], [103, 104, 105]])
+>>> a = np.array([[100, 101, 102],
+...               [103, 104, 105]])
 >>> a
 array([[100, 101, 102],
        [103, 104, 105]])
@@ -1090,7 +1092,86 @@ array([[[102, 103],
 Again, reading across, the first element, `102` corresponds to index `(0, 2)`,
 the next element, `103`, corresponds to index `(1, 0)`, and so on.
 
+A common use-case for integer array indexing is sampling. For example, to
+sample from a 1-D array of size $n$with replacement. We can simply construct
+an a random integer index in the range $[0, n)$ with $k$ elements (see the
+[`np.random.Generator.integers()`](numpy:numpy.random.Generator.integers)
+documentation):[^random-integers-footnote]
+
+[^random-integers-footnote]: Note that `np.random` also supports this
+    operation directly with
+    [`np.random.Generator.choice`](numpy:numpy.random.Generator.choice)..
+
+```
+>>> k = 10
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> rng = np.random.default_rng(11) # Seeded so this example reproduces
+>>> idx = rng.integers(0, a.size, k) # integers automatically excludes the upper bound
+>>> a[idx]
+array([100, 100, 103, 101, 102, 102, 102, 100, 101, 100])
+```
+
+Another common option is to permute an array. An array can be randomly
+permuted with
+[`np.random.Generator.permutation`](numpy:numpy.random.Generator.permutation).
+But what if we want to permute two arrays with the same permutation? We can
+compute a permutation index and apply it to both arrays. For a 1-D array `a` of
+size $n$, a permutation index
+is just a permutation of the index `np.arange(k)`, which itself is the
+identity permutation on `a`:
+
+```py
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> b = np.array([200, 201, 202, 203])
+>>> identity = np.arange(a.size)
+>>> a[identity]
+array([100, 101, 102, 103])
+>>> rng = np.random.default_rng(11) # Seeded so this example reproduces
+>>> random_permutation = rng.permutation(identity)
+>>> a[random_permutation]
+array([103, 101, 100, 102])
+>>> b[random_permutation]
+array([203, 201, 200, 202])
+```
+
 Now a few advanced notes about integer array indexing:
+
+- Indices can also be negative. Negative indices work the same as they do with
+  [integer indices](integer-indices). Negative and nonnegative indices can be
+  mixed arbitrarily.
+
+  ```py
+  >>> a = np.array([100, 101, 102, 103]) # as above
+  >>> idx = np.array([0, 1, -1])
+  >>> a[idx]
+  array([100, 101, 103])
+  ```
+
+  If you want to convert an index with negative indices to an index without
+  any negative indices, you can use the ndindex
+  [`reduce()`](ndindex.IntegerArray.reduce) method with a shape.
+
+- You can use a list instead of an array to represent an array. However, be
+  careful as older versions of NumPy (prior to
+  [1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
+  treated a single list as a tuple index rather than as an array, which has a
+  different meaning. Using a list is useful if you are writing an array index
+  by hand, but in all other cases, it is better to use an actual array
+  instead. This will perform basic type checking (like that the shape and
+  dtype are correct) when the index array is created rather than when the
+  indexing happens. In most real-world use-cases, the index itself is
+  constructed from some other array method.
+
+  ```py
+  >>> a = np.array([100, 101, 102, 103]) # as above
+  >>> a[[0, 1, -1]]
+  array([100, 101, 103])
+  >>> idx = np.array([0, 1, -1])
+  >>> a[idx] # this is the same
+  array([100, 101, 103])
+  ```
+
+  [`ndindex.ndindex()`](ndindex.ndindex) will always parse a list as an array.
 
 - Strictly speaking, the integer arrays only need to be able to broadcast
   together to the same shape.  This is useful if the index array would
@@ -1106,12 +1187,62 @@ Now a few advanced notes about integer array indexing:
   For example:
 
   ```py
+  >>> a = np.array([[100, 101, 102],  # as above
+  ...               [103, 104, 105]])
+  >>> idx0 = np.array([1, 0])
+  >>> idx0.shape
+  (2,)
+  >>> idx1 = np.array([[0], [1], [2]])
+  >>> idx1.shape
+  (3, 1)
+  >>> # idx0 and idx1 broadcast to shape (3, 2), which will
+  >>> # be the shape of a[idx0, idx1]
+  >>> a[idx0, idx1]
+  array([[103, 100],
+         [104, 101],
+         [105, 102]])
+  >>> a[idx0, idx1].shape
+  (3, 2)
+  >>> # This is the same as
+  >>> idx0_broadcasted = np.array([[1, 0], [1, 0], [1, 0]])
+  >>> idx1_broadcasted = np.array([[0, 0], [1, 1], [2, 2]])
+  >>> idx0_broadcasted.shape
+  (3, 2)
+  >>> idx1_broadcasted.shape
+  (3, 2)
+  >>> a[idx0_broadcasted, idx1_broadcasted]
+  array([[103, 100],
+         [104, 101],
+         [105, 102]])
+  ```
+
+  And mixing an array and an integer index:
+
+  ```
   >>> a
   array([[100, 101, 102],
          [103, 104, 105]])
+  >>> idx0
+  array([1, 0])
+  >>> a[idx0, 2]
+  array([105, 102])
+  >>> # This is the same as
+  >>> idx1 = np.array([2, 2])
+  >>> a[idx0, idx1]
+  array([105, 102])
   ```
 
-  TODO
+  Here the `idx0` array specifies the indices along the first dimension, `1`
+  and `0`, and the `2` species to always choose index `2` along the second
+  dimension. This is the same as using the array `[2, 2]` for the second
+  dimension, since this is the scalar `2` broadcasted to the shape of `[1,
+  0]`.
+
+  The ndindex method
+  [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
+  [`expand()`](ndindex.Tuple.expand)) will broadcast array indices together,
+  into a canonical form, since an index is always equivalent to one where the
+  arrays (and integers) are broadcased together.
 
 [^integer-scalar-footnote]: In fact, if the integer array index itself has
     shape `()`, then the behavior is identical to simply using an `int` with
@@ -1130,6 +1261,98 @@ Now a few advanced notes about integer array indexing:
     >>> print(a[np.array(0)].base)
     None
     ```
+
+- TODO
+
+Given the above, you should be able to do the following exercise: how might
+you randomly permute a 2-D array, using
+[`np.random.Generator.permutation`](numpy:numpy.random.Generator.permutation)
+and indexing, in such a way that each axis is permuted independently. This
+might correspond to multiplying the array by random [permutation
+matrices](https://en.wikipedia.org/wiki/Permutation_matrix) on the left and
+right, like $P_1AP_2$. (Hint, one of the [basic indices](basic-indices)
+discussed above may be useful here)
+
+For example, the array
+
+
+```py
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+```
+
+Might be permuted to
+
+```py
+array([[ 5,  4,  6,  7],
+       [ 1,  0,  2,  3],
+       [ 9,  8, 10, 11]])
+```
+
+````{dropdown} Click here to show the solution
+
+Suppose we have the following 2-D array `a`:
+
+```py
+>>> a = np.arange(12).reshape((3, 4))
+>>> a
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+```
+
+We can generate permutations for the two axes using
+[`np.random.Generator.permutation`](numpy:numpy.random.Generator.permutation)
+as above:
+
+```py
+>>> rng = np.random.default_rng(11) # Seeded so this example reproduces
+>>> idx0 = rng.permutation(np.arange(3))
+>>> idx1 = rng.permutation(np.arange(4))
+```
+
+However, we cannot do `a[idx0, idx1]` as this will fail.
+
+```py
+>>> a[idx0, idx1]
+Traceback (most recent call last):
+...
+IndexError: shape mismatch: indexing arrays could not be broadcast together
+with shapes (3,) (4,)
+```
+
+Remember that we want a permutation of `a`, so the result array should have
+the same shape as `a` (`(3, 4)`). This should therefore be the (broadcasted)
+shape of `idx0` and `idx1`, which are currently shapes `(3,)`, and `(4,)`. We
+can use [`newaxis`](newaxis-indices) to insert dimensions so that they are
+shape `(3, 1)` and `(1, 4)` so that they broadcast together to this shape.
+
+```py
+>>> a[idx0[:, None], idx1[None]]
+array([[ 5,  4,  6,  7],
+       [ 1,  0,  2,  3],
+       [ 9,  8, 10, 11]])
+```
+
+You can check that this is a permutation of `a` where each axis is permuted
+independently.[^random-permuted-footnote]
+
+As an extra bonus, here's how we can interpret this as a multiplication by
+permutation matrices, using the same indices (but of course, simply permuting
+`a` directly with the indices is more efficient):
+
+```py
+>>> P1 = np.eye(3, dtype=int)[idx0]
+>>> P2 = np.eye(4, dtype=int)[idx1]
+>>> P1 @ a @ P2.T
+array([[ 5,  4,  6,  7],
+       [ 1,  0,  2,  3],
+       [ 9,  8, 10, 11]])
+```
+
+Can you see why this works?
+````
 
 (boolean-array-indices)=
 ### Boolean Arrays
