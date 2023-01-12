@@ -335,7 +335,8 @@ class NDIndex(ImmutableObject):
           combined into a single term (the same as with :meth:`.Tuple.reduce`).
 
         - Non-scalar :class:`~.BooleanArray`\ s are all converted into
-          equivalent :class:`~.IntegerArray`\ s via `nonzero()` and broadcast.
+          equivalent :class:`~.IntegerArray`\ s via `nonzero()` and
+          broadcasted.
 
         >>> from ndindex import Tuple, Slice
         >>> Slice(None).expand((2, 3))
