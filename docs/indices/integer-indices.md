@@ -22,8 +22,7 @@ will always use integers. Like [all other index types](what-is-an-index),
 but rather their position of the elements in the list.**[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
-indices or that indexes by value, you may want a `dict`. Despite using similar
-syntax, `dict`s do not allow slicing.
+indices or that indexes by value, you may want a `dict`.
 
 An integer index picks a single element from the list `a`. For NumPy arrays,
 integer indices pick a subarray corresponding to a particular element from a
@@ -31,11 +30,14 @@ given axis (and as a result, an integer index always reduces the
 dimensionality of an array by one).
 
 (fourth-sentence)=
-The key thing to remember about indexing in Python, both
-for integer and slice indexing, is that it is 0-based. This means that the
-indices start counting at 0 (0, 1, 2, ...). This is the case for all
-**nonnegative** indices[^nonnegative]. For example, `a[3]` would pick the
-**fourth** element of `a`, in this case, `'d'`:
+**The key thing to remember about indexing in Python, both for integer and
+slice indexing, is that it is 0-based.** This means that the indices start
+counting at 0 (like "0, 1, 2, ..."). This is the case for all *nonnegative*
+indices[^nonnegative]. For example, `a[3]` would pick the *fourth* element of
+`a`, in this case, `'d'`:
+
+[^nonnegative]: In this guide, "*nonnegative*" means $\geq 0$ and
+    "*negative*" means $< 0$.
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3] == 'd'</code>
@@ -63,15 +65,15 @@ $$
 ```
 
 0-based indexing is different from how people typically count things, which is
-1-based (1, 2, 3, ...). Thinking in terms of 0-based indexing requires some
+1-based ("1, 2, 3, ..."). Thinking in terms of 0-based indexing requires some
 practice, but doing so is essential to becoming an effective Python
 programmer, especially if you are planning to work with arrays.
 
-For **negative** integers, indices index from the end of the list. These
-indices are necessarily 1-based (or rather, −1-based), since `0` already
-refers to the first element of the list. `-1` chooses the last element, `-2`
-the second-to-last, and so on. For example, `a[-3]` picks the
-**third-to-last** element of `a`, in this case, `'e'`:
+For *negative* integers, indices index from the end of the list. These indices
+are necessarily 1-based (or rather, −1-based), since `0` already refers to the
+first element of the list. `-1` chooses the last element, `-2` the
+second-to-last, and so on. For example, `a[-3]` picks the *third-to-last*
+element of `a`, in this case, `'e'`:
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[-3] == 'e'</code>
@@ -195,6 +197,14 @@ nesting level.[^nesting-level] See the [](what-is-an-array) section on the
 [](multiaxis-indices) page for more details on this analogy. For example, if
 `l` is a nested list of lists
 
+[^nesting-level]: Thinking about the `k`-th level of nesting gets confusing
+    once you start thinking about whether or not `k` is counted with 0-based
+    number, and which level counts as which considering that at the outermost
+    "level" there is always a single list. List-of-lists is a good analogy for
+    thinking about why one might want to use an nd-array in the first place,
+    but as you actually use NumPy arrays in practice, you'll find it's much
+    better to think about dimensions and axes, not "levels of nesting".
+
 ```py
 >>> l = [[0, 1], [2, 3]]
 ```
@@ -225,14 +235,3 @@ array([0, 2])
 ```
 
 ## Footnotes
-
-[^nonnegative]: In this document, "*nonnegative*" means $\geq 0$ and
-    "*negative*" means $< 0$.
-
-[^nesting-level]: Thinking about the `k`-th level of nesting gets confusing
-    once you start thinking about whether or not `k` is counted with 0-based
-    number, and which level counts as which considering that at the outermost
-    "level" there is always a single list. List-of-lists is a good analogy for
-    thinking about why one might want to use an nd-array in the first place,
-    but as you actually use NumPy arrays in practice, you'll find it's much
-    better to think about dimensions and axes, not "levels of nesting".
