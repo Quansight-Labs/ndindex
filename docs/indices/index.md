@@ -151,10 +151,9 @@ as [integer indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
 
 
-## Table of Contents
-
 ```{toctree}
 :titlesonly:
+:hidden:
 integer-indices.md
 slices.md
 multiaxis-indices.md
