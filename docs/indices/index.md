@@ -1,4 +1,4 @@
-# Indices
+# Guide to NumPy Indexing
 
 This section of the ndindex documentation discusses the semantics of NumPy
 indices. This really is more of a documentation of NumPy itself than of
