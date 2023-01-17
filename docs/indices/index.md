@@ -2,10 +2,16 @@
 
 This section of the ndindex documentation discusses the semantics of NumPy
 indices. This really is more of a documentation of NumPy itself than of
-ndindex (and for basic single dimension indices, the built-in Python sequence
-types such as `list` and `str`). However, understanding the underlying
-semantics of indices is critical making the best use of ndindex, as well as
-for making the best use of NumPy arrays themselves.
+ndindex. However, understanding the underlying semantics of indices is
+critical making the best use of ndindex, as well as for making the best use of
+NumPy arrays themselves. Furthermore, the sections on [integer
+indices](integer-indices) and [slices](slices-docs) also apply to the built-in
+Python sequence types like `list` and `str`.
+
+This guide is aimed for people who are new to NumPy indexing semantics, but it
+also tries to be as complete as possible and at least mention all the various
+corner cases. Some of these technical points can be glossed over if you are a
+beginner.
 
 ```{note}
 For clarity, in this document, and throughout the ndindex documentation, the
@@ -37,7 +43,7 @@ These are the indices that operate on multiple axes at once. These indices
 will not work on the built-in Python sequence types like `list` and `str`;
 they are only defined for NumPy arrays. However, like the basic single-axis
 indices, these indices are "basic indices", meaning that they return a
-[view](https://numpy.org/doc/stable/glossary.html#term-view) of an array.
+[view](views-vs-copies) of an array.
 
 - [Tuples](tuple-indices), corresponding to [`ndindex.Tuple`](ndindex.tuple.Tuple).
 - [Ellipses](ellipsis-indices), corresponding to
@@ -48,7 +54,8 @@ indices, these indices are "basic indices", meaning that they return a
 ### Advanced indices
 
 Advanced indices operate in general on multiple axes at once. However, unlike
-the basic indices, advanced indices in NumPy always return a copy of the array.
+the basic indices, advanced indices in NumPy always return a
+[copy](views-vs-copies) of the array.
 
 - [Integer arrays](integer-array-indices), corresponding to
   [`ndindex.IntegerArray`](ndindex.integerarray.IntegerArray).
@@ -67,17 +74,17 @@ notation `d[x]`, but the meaning of `x` is completely different than what is
 being discussed in this document (and indeed, many index types will not even
 work if you try them on a dictionary). This document also does not apply to
 indexing Pandas DataFrame or Series objects, except insomuch as they reuse the
-same semantics as NumPy.
+same semantics as NumPy. Finally, note that some other Python array libraries
+(e.g., PyTorch or Jax) have similar indexing rules, but most only implement a
+subset of the full NumPy semantics outlined here.
 
 Semantically, an index `x` picks some subset of the elements of `a`. An index
 `a[x]` always either returns a new array with the same dtype as `a`, and
 indeed, some subset of the same elements that were in `a`, or it raises
-`IndexError`.
+`IndexError`. The key rule that applies to all types of indices is this:
 
-> **Critically, indices do not in any way depend on the *values* of the
-  elements they select. They only depend on their *position* in the array
-  `a`.**
-
+> **Indices do not in any way depend on the *values* of the elements they
+  select. They only depend on their *position* in the array `a`.**
 
 For example, suppose `a` is an array of integers of shape `(2, 3, 2)`:
 
@@ -99,9 +106,9 @@ array([[1],
        [5]])
 ```
 
-If instead we had an array `b` with the exact same shape `(2, 3, 2)`, but
-completely different entries, say, strings, we would find that the index `0,
-..., 1:` chooses the exact same corresponding elements.
+Now take another array, `b`, with the exact same shape `(2, 3, 2)`, but
+completely different entries, say, strings. If we apply the same index `0,
+..., 1:` to be, it will choose the exact same corresponding elements.
 
 ```py
 >>> b = np.array([[['A', 'B'], ['C', 'D'], ['E', 'F']], [['G', 'H'], ['I', 'J'], ['K', 'L']]])
@@ -124,17 +131,18 @@ same:
 
 So the following are always true about any index:
 
-- An index on an array always produces a new array (unless it raises
-  `IndexError`).
+- An index on an array always produces a new array with the same dtype (unless
+  it raises `IndexError`).
 
-- The elements of the new array correspond to elements of the original array.
+- Each element of the new array correspond to some element of the original
+  array.
 
 - These elements are chosen by their position in the original array only.
   Their values are irrelevant.
 
-- As such, the exact same index on any other array with the same shape
-  produces an array with the exact same resulting shape with corresponding
-  elements in the same corresponding places.
+- As such, the same index applied to any other array with the same shape will
+  produce an array with the exact same resulting shape with corresponding
+  elements in the exact same corresponding places.
 
 To be sure, it is possible to *construct* indices that chose specific elements
 based on their values. A common example of this is masks (i.e., [boolean array
