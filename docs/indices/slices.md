@@ -397,11 +397,10 @@ rule obviously doesn't apply as-is, and so you can fallback to [the rule about
 omitted `start`/`stop`](omitted).
 
 (wrong-rule-1)=
-<strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: "a slice
-`a[start:stop]` slices the half-open interval $[\text{start}, \text{stop})$
-(or equivalently, a slice `a[start:stop]` picks the elements `i` such that
-`start <= i < stop`)." <a class="headerlink" href="#wrong-rule-1"
-title="Permalink to this headline">#</a> </strong>
+##### Wrong Rule 1: "A slice `a[start:stop]` slices the half-open interval $[\text{start}, \text{stop})$."
+
+(or equivalently, "a slice `a[start:stop]` picks the elements $i$ such that
+$\text{start} <= i < \text{stop}$")
 
 This is *only* the case if the `step` is positive. It also isn't directly true
 for negative `start` or `stop`. For example, with a `step` of `-1`,
@@ -460,6 +459,7 @@ index `3`, but not including `3` (see [](negative-steps) below).
 
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
+<div style="font-size: 16pt;color:#5E5EFF;">(CORRECT)</div>
 $$
 \require{enclose}
 \begin{aligned}
@@ -479,8 +479,7 @@ $$
 </div>
 
 (wrong-rule-2)=
-<strong style="font-size:120%;">Wrong Rule 2: "A slice works like `range()`." <a class="headerlink"
-href="#wrong-rule-2" title="Permalink to this headline">¶</a> </strong>
+##### Wrong Rule 2: "A slice works like `range()`."
 
 There are many similarities between the behaviors of slices and the behavior
 of `range()`. However, they do not behave the same. A slice
@@ -508,8 +507,7 @@ computations on slices, we recommend using [ndindex](ndindex.slice.Slice). This 
 it was designed for.
 
 (wrong-rule-3)=
-<strong style="font-size:120%;">Wrong Rule 3: "Slices index the spaces between the elements of the list."<a class="headerlink"
-href="#wrong-rule-3" title="Permalink to this headline">¶</a> </strong>
+##### Wrong Rule 3: "Slices index the spaces between the elements of the list."
 
 This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
@@ -559,7 +557,7 @@ a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\texts
 \end{array}\\
 \end{aligned}
 $$
-<i>(not a great way of thinking about indices)</i>
+<i>(not a great way of thinking about 0-based indexing)</i>
 </div>
 
 Using this way of thinking, the first element of `a` is to the left of
@@ -687,7 +685,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
 - The rule does work for negative `start` and `stop`, but only if you think
   about it correctly. The correct way to think about it is to reverse the
-  indices:
+  dividers:
 
   <div style="text-align:center" >
   <code style="font-size: 16pt;">a[-4:-2] == ['d', 'e']</code>
@@ -949,15 +947,14 @@ reasons why this way of thinking creates more confusion than it removes.
 
 Rather than trying to think about dividers between elements, it's much simpler
 to just think about the elements themselves, but being counted starting at 0.
-To be sure, 0-based indexing itself leads to off-by-one errors, since it is
-not the usually way humans are taught to count things, but this is nonetheless
-the best way to think about things, especially as you gain practice in
-counting that way. As long as you apply the rule "the `stop` is not included,"
-you will get the correct results.
+To be sure, 0-based indexing also leads to off-by-one errors, since it is not
+the usually way humans are taught to count things, but this is nonetheless the
+best way to think about things, especially as you gain practice in counting
+that way. As long as you apply the rule "the `stop` is not included," you will
+get the correct results.
 
 (wrong-rule-4)=
-<strong style="font-size:120%;">Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."<a class="headerlink"
-href="#wrong-rule-4" title="Permalink to this headline">¶</a> </strong>
+##### Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."
 
 You might get clever and say `a[3:5]` indexes from the 3rd element with
 0-based indexing to the 5th element with 1-based indexing. Don't do this. It
@@ -1057,9 +1054,9 @@ Something like the following would work
 ['b', 'c', 'd', 'e']
 ```
 
-From our [sanity check](sanity-check), `mid + n//2 - (mid - n//2)` does
-equal `n` if `n` is even (we could find a similar expression for `n` odd, but
-for now let us assume `n` is even).
+From our [sanity check](sanity-check), `mid + n//2 - (mid - n//2)` does equal
+`n` if `n` is even (we could find a similar expression for `n` odd, but for
+now let us assume `n` is even for simplicify).
 
 However, let's look at what happens when `n` is larger than the size of `a`:
 
@@ -1082,8 +1079,8 @@ What happened here? Let's look at the slice values:
 7
 ```
 
-The `stop` slice value is out of bounds for `a`, but this just causes it
-to [clip](clipping) to the end.
+The `stop` slice value is out of bounds for `a`, but this just causes it to
+[clip](clipping) to the end, which is what we want.
 
 But `start` contains a subtraction, which causes it to become negative. Rather
 than clipping to the start, it indexes from the end of `a`, producing the
@@ -1096,14 +1093,36 @@ Unfortunately, the "correct" fix here depends on the desired behavior for each
 individual slice. In some cases, the "slice from the end" behavior of negative
 values is in fact what is desired. In others, you might prefer an error, so
 should add a value check or assertion. In others, you might want clipping, in
-which case you could modify the expression to always be nonnegative. For
-example, instead of using `mid - n//2`, we could use `max(mid - n//2, 0)`.
+which case you could modify the expression to always be nonnegative.
+
+In this example, we do want clipping. Instead of using `mid - n//2`, we could
+use `max(mid - n//2, 0)`:
 
 ```py
+>>> n = 4
+>>> a[max(mid - n//2, 0): mid + n//2]
+['b', 'c', 'd', 'e']
 >>> n = 8
 >>> a[max(mid - n//2, 0): mid + n//2]
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
+
+Or we could replace the `start` with a value that is always negative. This
+avoids the discontinuity problem, but it requires thinking a bit about how to
+translate from 0-based indexing to −1-based indexing.
+
+```py
+>>> n = 4
+>>> a[-n//2 - mid - 1:mid + n//2]
+['b', 'c', 'd', 'e']
+>>> n = 8
+>>> a[-n//2 - mid - 1:mid + n//2]
+['a', 'b', 'c', 'd', 'e', 'f', 'g']
+```
+
+Playing around in an interpreter and checking all corner cases is recommended
+here. For example, these two fixes are inequivalent for odd `n`. Which you
+would choose would depend on what behavior you want there.
 
 (clipping)=
 ### Clipping
