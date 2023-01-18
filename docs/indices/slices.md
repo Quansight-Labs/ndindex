@@ -3,7 +3,7 @@ Slices
 ======
 
 Python's slice syntax is one of the more confusing parts of the language, even
-to experienced developers. In this page, I carefully break down the rules for
+to experienced developers. This page carefully breaks down the rules for
 slicing, and examine just what it is that makes it so confusing.
 
 There are two primary aspects of slices that make them difficult to
@@ -20,24 +20,33 @@ convenience, but it means that as a user, you must switch your mode of
 thinking about slices depending on value of the arguments. There are no
 uniform formulas that apply to all slices.
 
-The [ndindex](index) library can help with much of this, especially for people
-developing libraries that consume slices. But for end-users the challenge is
-often just to write down a slice. Even if you rarely work with NumPy arrays,
-you will most likely require slices to select parts of lists or strings as
-part of the normal course of Python coding.
+The [ndindex](../index) library can help with much of this, especially for
+people developing libraries that consume slices. But for end-users the
+challenge is often just to write down a slice.
 
-ndindex focuses on NumPy array index semantics, but everything on this page
-equally applies to sliceable Python builtin objects like lists, tuples, and
-strings. This is because on a single dimension, NumPy slice semantics are
-identical to the Python slice semantics (NumPy only begins to differ from
-Python for multi-dimensional indices).
+Even though this page is a part of a larger [guide](index) on indexing NumPy
+arrays, and indeed, the [ndindex](../index) library focuses on NumPy array
+index semantics, this page can be treated as a standalone guide to slicing,
+which should be useful for any Python programmer, even those who do not
+regularly use array libraries such as NumPy. That's because everything on this
+page also applies to the built-in Python sequence types like `list`, `tuple`,
+and `str`, and slicing these objects is a common operation for all types of
+Python code.
 
 ## What is a slice?
 
 In Python, a slice is a special syntax that is allowed only in an index, that
 is, inside of square brackets proceeding an expression. A slice consists of
 one or two colons, with either an expression or nothing on either side of each
-colon. For example, the following are all valid slices on the object `a`:
+colon. For example, the following are all valid slices on the object
+`a`:[^slice-name-footnote]
+
+[^slice-name-footnote]: Sometimes people call any kind of index `a[idx]` a
+*slice*. However, this sort of nomenclature is confusing, since there are many
+[valid possibilities](index) of `idx` that are not `slice` objects. It's
+better to use the word *index* to refer to an arbitrary object that can index
+an array or sequence, and reserve the word *slice* for `slice` instances, which
+are just one type of *index*.
 
 ```py
 a[x:y]
@@ -47,9 +56,16 @@ a[x::]
 a[x::z]
 ```
 
-Furthermore, for a slice `a[x:y:z]`, if `a` is a Python built-in object or a
-NumPy array, there is an additional semantic restriction, which is that the
-expressions `x`, `y`, and `z` must be integers.
+Furthermore, for a slice `a[x:y:z]`, `x`, `y`, and `z` must be
+integers.[^non-integer-footnote]
+
+[^non-integer-footnote]: Non-integer `start`, `stop`, and `step` are
+    syntatically allowed by Python, but the built-in types (`list`, `tuple`,
+    `str`) and NumPy arrays do not allow them. There are other libraries that
+    make use of this feature. For instance, the Pandas
+    [`loc`](pandas:pandas.DataFrame.loc) attribute allows slicing with strings
+    corresponding to labels. The semantics of such extensions to slicing may
+    not necessarily corresponding to the semantics outlined in this guide.
 
 The three arguments to a slice are traditionally called `start`, `stop`, and
 `step`:
@@ -59,6 +75,10 @@ a[start:stop:step]
 ```
 
 We will use these names throughout this guide.
+
+At a high level, **a slice is a convenient way to select a sequential subset
+of `a`** (roughly, "every `step` elements between `start` and `stop`"). The
+exact way in which this occurs is outlined throughout this guide.
 
 It is worth noting that the `x:y:z` syntax is not valid outside of square
 brackets. However, slice objects can be created manually using the `slice()`
@@ -79,29 +99,29 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. `start` and `stop` use *0-based indexing* from the *beginning* of `a` when
+1. Slicing something never raises an `IndexError`, even if the slice is empty.
+   For a NumPy array, a slice always keeps the axis being sliced, even if that
+   means the resulting dimension will be 0 or 1. (See section {ref}`subarray`)
+
+2. `start` and `stop` use *0-based indexing* from the *beginning* of `a` when
    they are *nonnegative*, and *−1-based indexing* from *end* of `a` when they
    are *negative*. (See sections {ref}`0-based` and {ref}`negative-indices`)
 
-2. `stop` is never included in the slice. (See section {ref}`half-open`)
+3. `stop` is never included in the slice. (See section {ref}`half-open`)
 
-3. `start` and `stop` are clipped to the bounds of `a`. (See section
+4. `start` and `stop` are clipped to the bounds of `a`. (See section
    {ref}`clipping`)
 
-4. The slice starts at `start` and successively adds `step` until it reaches
+5. The slice starts at `start` and successively adds `step` until it reaches
    an index that is at or past `stop`, and then stops without including that
    `stop` index. (See sections {ref}`steps` and {ref}`negative-steps`)
 
-5. If `step` is omitted it defaults to `1`. (See section {ref}`omitted`)
+6. If `step` is omitted it defaults to `1`. (See section {ref}`omitted`)
 
-6. If `start` or `stop` are omitted they extend to the beginning or end of `a`
+7. If `start` or `stop` are omitted they extend to the beginning or end of `a`
    in the direction being sliced. Slices like `a[:i]` or `a[i:]` should be
    though of as the `start` or `stop` being omitted, not as a colon to the
    left or right of an index. (See section {ref}`omitted`)
-
-7. Slicing something never raises an `IndexError`, even if the slice is empty.
-   For a NumPy array, a slice always keeps the axis being sliced, even if that
-   means the resulting dimension will be 0 or 1. (See section {ref}`subarray`)
 
 Throughout this guide, we will use as an example the same prototype list as we
 used in the [integer indexing section](prototype-example):
@@ -165,18 +185,19 @@ etc.). For NumPy arrays, this means that a slice will always *preserve* the
 dimension that is sliced.**
 
 This is true even if the slice chooses only a single element, or even if it
-chooses no elements. This is also true for lists, tuples, and strings, in the
-sense that a slice on a list, tuple, or string will always produce a list,
-tuple, or string. This behavior is different from integer indices, which
-always remove the dimension that they index.
+chooses no elements (a slice that selects no elements is called an *empty
+slice*). This is also true for lists, tuples, and strings, in the sense that a
+slice on a list, tuple, or string will always produce a list, tuple, or
+string. This behavior is different from [integer indices](integer-indices),
+which always remove the dimension that they index.
 
 For example
 
 ```py
 >>> a = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
->>> a[3]
+>>> a[3] # An element of the list
 'd'
->>> a[3:4]
+>>> a[3:4] # A sub-list
 ['d']
 >>> a[5:2] # Empty slice
 []
@@ -191,10 +212,14 @@ For example
 ```
 
 One consequence of this is that, unlike integer indices, **slices will never
-raise `IndexError`, even if the slice is empty**. Therefore you cannot rely on
-runtime errors to alert you to coding mistakes relating to slice bounds that
-are too large. A slice cannot be "out of bounds." See the section on
-[clipping](clipping) below.
+raise `IndexError`, even if the slice is empty**.[^slice-error-footnote]
+Therefore you cannot rely on runtime errors to alert you to coding mistakes
+relating to slice bounds that are too large. A slice cannot be "out of
+bounds." See also the section on [clipping](clipping) below.
+
+[^slice-error-footnote]: A slice might raise another exception, though, if it
+is completely invalid, e.g., `a[1.0:]` and `a[::0]` raise `TypeError` and
+`ValueError`, respectively.
 
 (0-based)=
 ### 0-based
@@ -202,7 +227,7 @@ are too large. A slice cannot be "out of bounds." See the section on
 For the slice `a[start:stop]`, with `start` and `stop` nonnegative integers,
 the indices `start` and `stop` are 0-based, just as with [integer
 indexing](integer-indices) (although one should be careful that even though
-`stop` is 0-based, it is not included in the slice, see [below](half-open)).
+`stop` is 0-based, [it is not included in the slice](half-open)).
 
 For example:
 
@@ -240,9 +265,11 @@ using it enough that you use it automatically without thinking about it.
 (half-open)=
 ### Half-open
 
-Slices behave like half-open intervals. What this means is that the `stop` in
-`a[start:stop]` is *never* included in the slice (the exception is if the
-`stop` is omitted, see [below](omitted)).
+Slices behave like half-open intervals. What this means is that
+
+> **the `stop` in `a[start:stop]` is *never* included in the slice**
+
+(the exception is if [the `stop` is omitted](omitted)).
 
 For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
 ([0-based](0-based)).
@@ -278,17 +305,19 @@ The half-open nature of slices means that you must always remember that the
 advantages:
 
 (sanity-check)=
+
 - The maximum length of a slice `a[start:stop]`, when `start` and `stop` are
   nonnegative, is always `stop - start`. For example, `a[i:i+n]` will slice
   `n` elements from `a`. The caveat "maximum" is here because if `stop`
-  extends beyond the end of `a`, then `a[start:stop]` will only slice up
-  to `len(a) - start` (see {ref}`clipping` below). Also be careful that this
-  is only true when `start` and `stop` are nonnegative (see
-  {ref}`negative-indices` below). However, given those caveats, this is often
-  a very useful sanity check that a slice is correct. If you expect a slice to
-  have length `n` but `stop - start` is clearly different from `n`, then the
-  slice is likely wrong. Length calculations are more complicated when `step
-  != 1`; in those cases, {meth}`len(ndindex.Slice(...)) <ndindex.Slice.__len__>` can be useful.
+  extends beyond the end of `a`, then `a[start:stop]` will only slice up to
+  `len(a) - start` (see {ref}`clipping` below). Also be careful that this is
+  not true when `start` or `stop` are negative (see {ref}`negative-indices`
+  below). However, given those caveats, this is often a very useful sanity
+  check that a slice is correct. If you expect a slice to have length `n` but
+  `stop - start` is clearly different from `n`, then the slice is likely
+  wrong. Length calculations are more complicated when `step != 1`; in those
+  cases, {meth}`len(ndindex.Slice(...)) <ndindex.Slice.__len__>` can be
+  useful.
 
 - `len(a)` can be used as a `stop` value to slice to the end of `a`. For
   example, `a[1:len(a)]` slices from the second element to the end of `a`
@@ -316,7 +345,8 @@ advantages:
   slice `a[i:j]` can be split as `a[i:k]` and `a[k:j]`.
 
 If `start` is on or after the `stop`, the resulting list will be empty. That
-is, the `stop` *not* being included takes precedence over the `start` being included.
+is to say, the `stop` *not* being included takes precedence over the `start`
+being included.
 
 ```py
 >>> a[3:3]
@@ -325,8 +355,8 @@ is, the `stop` *not* being included takes precedence over the `start` being incl
 []
 ```
 
-For NumPy arrays, a consequence of this is that a slice will always keep the
-axis being sliced, even if the size of the resulting axis is 0 or 1.
+For NumPy arrays, [recall](subarray) that a slice will always keep the axis
+being sliced. This applies even if the size of the resulting axis is 0 or 1.
 
 ```py
 >>> import numpy as np
@@ -363,14 +393,15 @@ Rather, it is best to remember the simplest rule possible that is *always*
 correct. That rule is, "the `stop` is not included". This rule is extremely
 simple, and is always right, regardless of what the values of `start`, `stop`,
 or `step` are. The only exception is if `stop` is omitted. In this case, the
-rule obviously doesn't apply as-is, and so you can fallback to the rule about
-omitted `start`/`stop` (see {ref}`omitted` below).
+rule obviously doesn't apply as-is, and so you can fallback to [the rule about
+omitted `start`/`stop`](omitted).
 
 (wrong-rule-1)=
-<strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: "a slice `a[start:stop]` slices the half-open interval
-$[\text{start}, \text{stop})$ (equivalently, a slice `a[start:stop]` picks the
-elements `i` such that `start <= i < stop`)." <a class="headerlink"
-href="#wrong-rule-1" title="Permalink to this headline">¶</a> </strong>
+<strong style="font-size:120%;" style="font-size:120%;">Wrong Rule 1: "a slice
+`a[start:stop]` slices the half-open interval $[\text{start}, \text{stop})$
+(or equivalently, a slice `a[start:stop]` picks the elements `i` such that
+`start <= i < stop`)." <a class="headerlink" href="#wrong-rule-1"
+title="Permalink to this headline">#</a> </strong>
 
 This is *only* the case if the `step` is positive. It also isn't directly true
 for negative `start` or `stop`. For example, with a `step` of `-1`,
@@ -2023,6 +2054,22 @@ reasons:
   endpoints included, this confusion would be impossible, because positive and
   negative steps would be symmetric in this regard.
 
+- Half-open semantics are generally undesirable to apply to extensions to
+  slicing on non-integer labels. For example, the pandas
+  [`loc`](pandas:pandas.DataFrame.loc) attribute allows slicing string labels
+  (like `df.loc['a':'f']`), but this syntax always includes both ends. This is
+  because when you slice on labels, you probably aren't thinking about which
+  label comes before or after the one you want, and you might not even know.
+  But this same reasoning also applies to integers. You're probably thinking
+  about the index that you want to slice up to, not the one before or after
+  it.
+
+  Furthermore, if label slicing used half-open semantics, to slice to the end
+  of the sequence, you'd have to use an [omitted](omitted) `end`, instead of
+  just using the last label. With integers you can get away with this because
+  [there is always a bigger
+  integer](https://en.wikipedia.org/wiki/Archimedean_property), but this
+  property doesn't apply to other types of label objects.
 
 In general, half-open semantics are naively superior because they have some
 properties that appear to be nice (easy unions, no +1s in length formulas).
