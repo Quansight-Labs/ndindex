@@ -1,5 +1,7 @@
 # Multiaxis Indices
 
+<!-- TODO: "multiaxis" or "multidimensional"? -->
+
 Unlike [slices](slices-docs) and [integers](integer-indices), which work not
 only on NumPy arrays but also on built-in Python sequence types such as
 `list`, `tuple`, and `str`, the remaining index types do not work at all on
@@ -11,10 +13,10 @@ library, not the Python language.
 ## What is an array?
 
 Before we look at indices, let's take a step back and look at the NumPy array.
-Just what is it that makes NumPy arrays so ubiquitous and makes NumPy the most
-successful numerical tools ever? The answer is quite a few things, which come
-together to make NumPy a fast and easy to use library for array computations.
-But one in particular is multidimensional indexing.
+Just what is it that makes NumPy arrays so ubiquitous and makes NumPy one of
+the most successful numerical tools ever? The answer is quite a few things,
+which come together to make NumPy a fast and easy to use library for array
+computations. But one in particular is multidimensional indexing.
 
 Let's consider pure Python for a second. Suppose we have a list of values.
 Say, these values correspond to your bowling scores.
@@ -29,9 +31,16 @@ integers or slices to get some subsets of it.
 ```py
 >>> scores[0] # The first score
 70
->>> scores[1:4] # second through fourth scores
-[65, 71, 80]
+>>> scores[-3:] # The last three scores
+[71, 80, 73]
 ```
+
+One can imagine all different sorts of things you'd want to do with your
+scores that might involve selecting individual scores or ranges of scores (for
+example, with the above examples, we could easily compute the average score of
+our last three games, and see how it compares to our first game). So hopefully
+you are convinced that at least the types of indices we have learned so far
+are useful.
 
 Now suppose your bowling buddy Bob learns that you are keeping track of scores
 and wants you to add his scores as well. He bowls with you, so his scores
@@ -68,9 +77,9 @@ game, you have to do something like this:
 [70, 100]
 ```
 
-That's a mess. Clearly, you should have inverted the list of lists, so that
-each list corresponds to a game, and each element of that list corresponds to
-the person (for now, just you and Bob):
+That's a mess. Clearly, you should have inverted the way you constructed your
+list of lists, so that each inner list corresponds to a game, and each element
+of that list corresponds to the person (for now, just you and Bob):
 
 ```py
 >>> scores = [[70, 100], [65, 93], [71, 111], [80, 104], [73, 113]]
@@ -83,8 +92,8 @@ Now you can much more easily get the scores for the first game
 [70, 100]
 ```
 
-Except now you want to look at just your scores for all games (that was your
-original purpose after all, before Bob got involved). And it's the same
+Except now if you want to look at just your scores for all games (that was
+your original purpose after all, before Bob got involved), it's the same
 problem again. To extract that you have to do
 
 ```py
@@ -116,10 +125,11 @@ season. Then you would have a list of lists of lists, and your indexing
 operations would look like `[[game[0] for game in season] for season in
 scores]`.
 
-In NumPy, these nested lists are called *axes*. The number of axes---the level
-of nesting---is called the number of *dimensions*. Together, the lengths of
-these lists at each level is called the *shape* of the array (remember that
-each level has to have the same number of elements).
+In NumPy, these different levels of nesting are called *axes*. The number of
+axes---the level of nesting---is called the number of *dimensions*. Together,
+the lengths of these lists at each level is called the *shape* of the array
+(remember that the lists at each level have to have the same number of
+elements).
 
 A NumPy array of our scores (using the last representation) looks like this
 
@@ -172,11 +182,12 @@ The indexing semantics are only a small part of what makes NumPy arrays so
 powerful. They have many other advantages as well, which are unrelated to
 indexing. They operate on contiguous memory using native machine datatypes,
 which makes them very fast. They can be manipulated using array expressions
-with broadcasting semantics. For example, you can easily add a handicap to the
-scores array with something like `scores + np.array([124, 95])`, which would
-itself be a nightmare using the list of lists representation. This, along with
-the powerful ecosystem of libraries like `scipy`, `matplotlib`, and the
-scikits, are really what have made NumPy such a popular and essential tool.
+with [broadcasting semantics](broadcasting). For example, you can easily add a
+handicap to the scores array with something like `scores + np.array([124,
+95])`, which would itself be a nightmare using the list of lists
+representation. This, along with the powerful ecosystem of libraries like
+`scipy`, `matplotlib`, and the scikits, are really what have made NumPy such a
+popular and essential tool.
 
 (basic-indices)=
 ## Basic Multiaxis Indices

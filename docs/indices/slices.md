@@ -1811,7 +1811,8 @@ A slice with both `start` and `stop` omitted, `a[:]`, therefore is just all of
 If `a` is a `list`, this is a convenient way of creating a (shallow) copy of
 `a`.[^tuple-copy-footnote] On the other hand, if `a` is a NumPy array, this is
 a convenient way of creating a [view](views-vs-copies) of all of `a` (which is
-*not* a copy).
+*not* a copy). Or more commonly, `:` is used to select an entire axis in a
+[multidimensional index](multiaxis-indices).
 
 [^tuple-copy-footnote]: If `a` is a `tuple` or `str`, there is little point to
     copying `a` since these are immutable types, meaning that a shallow copy
