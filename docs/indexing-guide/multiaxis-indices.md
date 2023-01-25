@@ -1163,7 +1163,7 @@ Now a few advanced notes about integer array indexing:
   [`reduce()`](ndindex.IntegerArray.reduce) method with a shape.
 
 - You can use a list instead of an array to represent an array. However, be
-  careful as older versions of NumPy (prior to
+  careful as versions of NumPy prior to
   [1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
   treated a single list as a tuple index rather than as an array, which has a
   different meaning. Using a list is useful if you are writing an array index
@@ -1273,7 +1273,88 @@ Now a few advanced notes about integer array indexing:
     None
     ```
 
-- TODO
+- When one or more [slice](slices-docs), [ellipsis](ellipsis-indices), or
+  [newaxis](newaxis-indices) index comes before or after all the
+  [integer](integer-indices) (which remember are treated the same as 0-D
+  arrays) and array indices, the two sets of indices operate independently of
+  one another. The slices and ellipses select the corresponding axes and
+  newaxes add new axes to the corresponding locations, and the the integer
+  array indices select the elements on their respective axes, as described
+  above.
+
+  For example, consider:
+
+  ```py
+  >>> a = np.array([[[100, 101, 102],  # Like above, but with an extra dimension
+  ...                [103, 104, 105]]])
+  ```
+
+  This is the same `a` as in the above examples, except it has an extra size 1
+  dimension:
+
+  ```py
+  >>> a.shape
+  (1, 2, 3)
+  ```
+
+  We can select this first dimension with a slice `:`, then use the exact same
+  index as in the example in the previous bullet:
+
+  ```py
+  >>> idx0
+  array([1, 0])
+  >>> a[:, idx0, 2]
+  array([[105, 102]])
+  >>> a[:, idx0, 2].shape
+  (1, 2)
+  ```
+
+  The main benefit of this is that you can use `...` at the beginning of an
+  index to select the last axes of an array with the integer array indices, or
+  some number of `:`s to select some axes in the middle. This lets you do with
+  indexing what you can also do with the [`numpy.take()`](numpy:numpy.take)
+  function.
+
+  To be sure, the slices can be any slice, and you can also include newaxes.
+  This may potentially allow combining two sequential indexing operations into
+  one, but they are mostly allowed for semantic completeness.
+
+- Finally, if the [slice](slices-docs), [ellipsis](ellipsis-indices), or
+  [newaxis](newaxis-indices) indices are *in between* the
+  [integer](integer-indices) or array indices, then something more strange
+  happens. The two index types still operate "independently", but instead of
+  the resulting array having the dimensions corresponding to the location of
+  the indices, like in the previous bullet (and, indeed, as indexing works in
+  every other instance), the shape corresponding to the (broadcasted) array
+  indices (including integer indices) is *prepended* to the shape
+  corresponding to the non-array indices. This is because there is inherent
+  ambiguity in where these dimensions should be placed in the final shape. An
+  example demonstrates this most clearly:
+
+  ```py
+  >>> a = np.arange(120).reshape((2, 3, 4, 5))
+  >>> a.shape
+  (2, 3, 4, 5)
+  >>> idx = np.zeros((10, 20), dtype=int)
+  >>> idx.shape
+  (10, 20)
+  >>> a[idx, :, :, idx].shape
+  (10, 20, 3, 4)
+  ```
+
+  Here the integer array index shape, `(10, 20)` comes first in the result
+  array, the the shape corresponding to the "rest", `(3, 4)` comes last.
+
+  If you find yourself running into this behavior, chances are you would be
+  better off rewriting the indexing operation to be simpler. It's considered
+  to be a design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and
+  it's not one that any other Python array library has copied. ndindex will
+  raise an exception on indices like these, because I don't want to deal with
+  implementing this obscure logic.
+
+[^advanced-indexing-design-flaw-footnote]: Travis Oliphant told me privately
+    that "somebody should have slapped me with a wet fish" when he designed
+    this.
 
 Given the above, you should be able to do the following exercise: how might
 you randomly permute a 2-D array, using
@@ -1412,7 +1493,8 @@ From this we can see a few things:
   a higher dimensional shape, or for the shape of the result to be related to
   the shape of `a`. The shape of `a[idx]` when `idx` is a boolean array is
   `(n,)` where `n` is the number of `True` elements in `idx` (i.e.,
-  `np.count_nonzero(idx)`). `n` is always between `0` and `a.size`, inclusive.
+  [`np.count_nonzero(idx)`](numpy:numpy.count_nonzero)). `n` is always between
+  `0` and `a.size`, inclusive.
 
 - The selected elements are "in order". Namely, they are in C order. That is,
   C order iterates the array `a` so that the last axis varies the fastest, like
@@ -1573,7 +1655,145 @@ like `X[group == 0]`. See
 https://twitter.com/asmeurer/status/1596273431657385984 for some more
 examples.
 
-TODO: Write rules for boolean masks
+The semantics of boolean array indices are described as
+
+- A boolean array index will remove as many dimensions as the index has, and
+  replace them with a single flat dimension which is the size of the number of
+  `True` elements in the index.
+
+  For example:
+
+  ```py
+  >>> a = np.arange(24).reshape((2, 3, 4))
+  >>> idx = np.array([[True, False, True],
+  ...                 [True, True, True]])
+  >>> a.shape
+  (2, 3, 4)
+  >>> idx.shape
+  (2, 3)
+  >>> np.count_nonzero(idx)
+  5
+  >>> a[idx].shape
+  (5, 4)
+  ```
+
+  This means that the final shape of an array indexed with a boolean mask
+  depends on the value of the mask, specifically, the number of `True` values
+  in it. It is easy to construct array expressions with boolean masks where
+  the size of the array is impossible to know until runtime. For example:
+
+  ```py
+  >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
+  >>> a = rng.integers(0, 2, (3, 4))
+  >>> a[a==0].shape # The shape here depends on the number of elements of a equal to 0
+  (7,)
+  ```
+
+  However, even if the number of elements of an indexed array is not knowable
+  until runtime, the number of dimensions *is* knowable. That's because a
+  boolean mask acts as a flattening operation. The number of dimensions of the
+  boolean array index are all removed from the indexed array and replaced with
+  a single dimension (whose *size*, to be sure, cannot be known unless you
+  know how many `True` elements there are in the index). The shape of the index
+  must match the dimensions that are being replaced.
+
+- The actual order of the elements selected by a boolean array index `idx`
+  corresponds to the elements being iterated in C-order (see
+  [](c-vs-fortran-ordering)). This is true regardless of the underlying order
+  of either array. For example:
+
+  ```py
+  >>> a = np.arange(12).reshape((3, 4))
+  >>> a
+  array([[ 0,  1,  2,  3],
+         [ 4,  5,  6,  7],
+         [ 8,  9, 10, 11]])
+  >>> idx = np.array([[ True, False,  True,  True],
+  ...                 [False,  True, False, False],
+  ...                 [ True,  True, False,  True]])
+  >>> a[idx]
+  array([ 0,  2,  3,  5,  8,  9, 11])
+  ```
+
+  In this example, the elements of `a` are ordered `0 1 2 ...` in C-order,
+  which why in the final indexed array `a[idx]`, they are still in sorted
+  order. C-order also corresponds to reading the elements of the array in the
+  order that NumPy prints them in, from left to right (ignoring the brackets
+  and commas).
+
+  The actual order of a boolean mask is usually not that important. However,
+  this fact has one important implication. It turns out that a boolean array
+  index is the same as if you replaced the array with the result of
+  [`np.nonzero(idx)`](numpy:numpy.nonzero) (unpacking the tuple), using the
+  rules for [integer array indices](integer-array-indices) outlined above.
+
+  ```py
+  >>> np.nonzero(idx)
+  (array([0, 0, 0, 1, 2, 2, 2]), array([0, 2, 3, 1, 0, 1, 3]))
+  >>> idx0, idx1 = np.nonzero(idx)
+  >>> a[idx0, idx1] # this is the same as a[idx]
+  array([ 0,  2,  3,  5,  8,  9, 11])
+  ```
+
+  Here `np.nonzero(idx)` returns two integer array indices, one for each
+  dimension of `idx`. These indices each have `7` elements, one for each
+  `True` element of `idx`, and they select (in C-order), the corresponding
+  elements. Another way to think of this is that `idx[np.nonzero(idx)]` will
+  always return an array of `np.count_nonzero(idx)` `True`s, because
+  `np.nonzero(idx)` is exactly the integer array indices that select the
+  `True` elements of `idx`:
+
+  ```py
+  >>> idx[np.nonzero(idx)]
+  array([ True,  True,  True,  True,  True,  True,  True])
+  ```
+
+  What that means is that all the rules that are outlined above about [integer
+  array indices](integer-array-indices), e.g., how they broadcast or combine
+  together with slices, all also apply to boolean array indices after this
+  transformation. This also specifies how boolean array indices and integer
+  array indices combine together.
+
+  Effectively, a boolean array index can be combined with other boolean array
+  indices or integer or integer array indices by first converting the boolean
+  index into integer indices (one for each dimension of the boolean index)
+  that select each `True` element of the index, then broadcasting them all to
+  a common shape.
+
+  What this means is that it is possible to use a boolean mask to select only
+  a subset of the dimensions of `a`: TODO
+
+  Note that none of the things stated in this bullet apply to 0-dimensional
+  boolean indices (see the next bullet).
+
+  The ndindex method
+  [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
+  [`expand()`](ndindex.Tuple.expand)) will convert boolean array indices into
+  integer array indices via [`np.nonzero`](numpy:numpy.nonzero) and broadcast
+  array indices together into a canonical form.
+
+
+- A 0-dimensional boolean index (i.e., just the scalar `True` or `False`) is a
+  little special.
+
+  However, the key point, that a boolean array index removes and flattens
+  `idx.ndim` dimensions from `a` is still True. Here, `idx.ndim` is `0`,
+  because `array(True)` and `array(False)` have shape `()`. So what these
+  indices do is remove 0 dimensions and add a single dimension of length 1 for
+  True or 0 for False. Hence, if `a` has shape `(s1, ..., sn)`, then `a[True]`
+  has shape `(1, s1, ..., sn)`, and `a[False]` has shape `(0, s1, ..., sn)`.
+
+  ```py
+  >>> a.shape # as above
+  (3, 4)
+  >>> a[True].shape
+  (1, 3, 4)
+  >>> a[False].shape
+  (0, 3, 4)
+  ```
+
+  This behavior may seem like an odd corner case, but it can come up in
+  practice. TODO
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
