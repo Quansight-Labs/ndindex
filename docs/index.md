@@ -332,7 +332,7 @@ Jupyter.
 
 api.md
 type-confusion.md
-indices/index.md
+indexing-guide/index.md
 changelog.md
 style-guide.md
 ```

@@ -216,5 +216,5 @@ href="https://quansight-labs.github.io/ndindex//">the main ndindex documentation
 # https://documatt.gitlab.io/sphinx-reredirects/usage.html
 
 redirects = {
-    "slices": "indices/slices.html",
+    "slices": "indexing-guide/slices.html",
 }

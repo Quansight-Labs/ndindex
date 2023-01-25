@@ -265,7 +265,7 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
 
 - SymPy is now a hard dependency of ndindex.
 
-- Added extensive documentation on [slice semantics](indices/slices) to the
+- Added extensive documentation on [slice semantics](indexing-guide/slices) to the
   documentation.
 
 ### Minor Changes
