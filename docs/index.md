@@ -16,12 +16,11 @@ are
 - Give 100% correct semantics as defined by numpy's ndarray. This means that
   ndindex will not make a transformation on an index object unless it is
   correct for all possible input array shapes. The only exception to this rule
-  is that ndindex assumes that any given index will not raise IndexError (for
-  instance, from an out of bounds integer index or from too few dimensions).
-  For those operations where the array shape is known, there is a
-  [`reduce()`](NDIndex.reduce)
-  method to reduce an index to a simpler index that is equivalent for the
-  given shape.
+  is that ndindex assumes that any given index will not raise `IndexError`
+  (for instance, from an out of bounds integer index or from too few
+  dimensions). For those operations where the array shape is known, there is a
+  [`reduce()`](NDIndex.reduce) method to reduce an index to a simpler index
+  that is equivalent for the given shape.
 
 - Enable useful transformation and manipulation functions on index objects.
 
@@ -42,10 +41,11 @@ their limitations:
   invalid slices like `slice(0.5)` or `slice(0, 10, 0)` are allowed. Also
   slices that would always be equivalent like `slice(None, 10)` and `slice(0,
   10)` are unequal. To contrast, ndindex objects always assume they are
-  indices to numpy arrays and type check their input. The `reduce` method can
-  be used to put the arguments into canonical form.
+  indices to numpy arrays and type check their input, and the
+  [`reduce()`](Slice.reduce) method can be used to put the arguments into
+  canonical form.
 
-- Once you generalizing `slice` objects to more general indices, it is
+- Once you start generalizing `slice` objects to more general indices, it is
   difficult to work with them in a uniform way. For example, `a[i]` and
   `a[(i,)]` are always equivalent for numpy arrays, but `tuple`, `slice`,
   `int`, etc. are not related to one another. To contrast, all ndindex types
@@ -54,11 +54,11 @@ their limitations:
 
 - The above limitations can be annoying, but you might consider them worth
   living with. The real pain comes when you start trying to do slice
-  arithmetic. Slices in Python behave fundamentally differently depending on
-  whether the step is positive or negative and the start and stop are
-  positive, negative, or None. Consider, for example, the meaning of the slice
-  `a[4:-2:-2]`, where `a` is a one-dimensional array. This slices every other
-  element from the fifth element to the second from the last, but not
+  arithmetic. [Slices in Python](slices-docs) behave fundamentally differently
+  depending on whether the step is positive or negative and the start and stop
+  are positive, negative, or None. Consider, for example, the meaning of the
+  slice `a[4:-2:-2]`, where `a` is a one-dimensional array. This slices every
+  other element from the fifth element to the second from the last, but not
   including the second from last. The resulting array will have shape `(0,)`
   if the original shape is less than 1 or greater than 5, and shape `(1,)`
   otherwise. In ndindex, one can use `len(Slice(4, -2, -2))` to compute the
@@ -68,7 +68,7 @@ their limitations:
 
   ndindex pre-codes common slice arithmetic into useful abstractions so you
   don't have to try to figure out all the different cases yourself. And due to
-  extensive testing (see below), you can be assured that ndindex is correct.
+  [extensive testing](testing), you can be assured that ndindex is correct.
 
 (installation)=
 ## Installation
@@ -85,12 +85,13 @@ The environment variable `CYTHONIZE_NDINDEX` is used to explicitly control
 this default behavior:
 
 - `CYTHONIZE_NDINDEX=0`: disables Cythonization (even if a
-  working Cython environment is available)
+  working Cython environment is available).
 
 - `CYTHONIZE_NDINDEX=1`: force Cythonization (will fail when Cython or a
-  compiler isn't present)
+  compiler isn't present).
 
-- `CYTHONIZE_NDINDEX` not set: the default behavior
+- `CYTHONIZE_NDINDEX` not set: the default behavior (Cythonize if Cython is
+  installed and working).
 
 Cythonization is still experimental, and is only enabled for direct source
 installations. The pip and conda packages are not Cythonized. Future versions
@@ -109,23 +110,27 @@ implemented:
   checking). Objects can be put into canonical form by calling
   [`reduce()`](NDIndex.reduce).
 
-      >>> from ndindex import Slice
-      >>> Slice(None, 12)
-      Slice(None, 12, None)
-      >>> Slice(None, 12).reduce()
-      Slice(0, 12, 1)
+  ```py
+  >>> from ndindex import Slice
+  >>> Slice(None, 12)
+  Slice(None, 12, None)
+  >>> Slice(None, 12).reduce()
+  Slice(0, 12, 1)
+  ```
 
   `reduce()` can also be called with a `shape` argument.
   [`idx.reduce(shape)`](NDIndex.reduce) reduces an index to an equivalent
   index over an array with the given shape.
 
-      >>> from numpy import arange
-      >>> Slice(2, -1).reduce((10,))
-      Slice(2, 9, 1)
-      >>> arange(10)[2:-1]
-      array([2, 3, 4, 5, 6, 7, 8])
-      >>> arange(10)[2:9:1]
-      array([2, 3, 4, 5, 6, 7, 8])
+  ```py
+  >>> from numpy import arange
+  >>> Slice(2, -1).reduce((10,))
+  Slice(2, 9, 1)
+  >>> arange(10)[2:-1]
+  array([2, 3, 4, 5, 6, 7, 8])
+  >>> arange(10)[2:9:1]
+  array([2, 3, 4, 5, 6, 7, 8])
+  ```
 
   `reduce()` simplifies all index types, but for [slice indices](Slice.reduce)
   in particular, it always puts them into canonical form, so that
@@ -135,27 +140,36 @@ implemented:
   array shapes. This can be used to test slice equality without indexing an
   array.
 
-      >>> Slice(2, 4, 3).reduce()
-      Slice(2, 3, 1)
-      >>> Slice(2, 5, 3).reduce()
-      Slice(2, 3, 1)
+  ```py
+  >>> Slice(2, 4, 3).reduce()
+  Slice(2, 3, 1)
+  >>> Slice(2, 5, 3).reduce()
+  Slice(2, 3, 1)
+  ```
 
-      >>> Slice(-2, 5, 3).reduce(3)
-      Slice(1, 2, 1)
-      >>> Slice(-2, -1).reduce(3)
-      Slice(1, 2, 1)
-      >>> a = [0, 1, 2]
-      >>> a[-2:5:3]
-      [1]
-      >>> a[-2:-1]
-      [1]
-      >>> a[1:2:1]
-      [1]
+  ```py
+  >>> Slice(-2, 5, 3).reduce(3)
+  Slice(1, 2, 1)
+  >>> Slice(-2, -1).reduce(3)
+  Slice(1, 2, 1)
+  >>> a = [0, 1, 2]
+  >>> a[-2:5:3]
+  [1]
+  >>> a[-2:-1]
+  [1]
+  >>> a[1:2:1]
+  [1]
+  ```
 
 - Object arguments can be accessed with `idx.args`
 
-      >>> Slice(1, 3).args
-      (1, 3, None)
+  ```
+  >>> Slice(1, 3).args
+  (1, 3, None)
+  ```
+
+  ndindex objects can always be recreated exactly from their args, so that
+  `type(idx)(idx.args) == idx`.
 
 - All ndindex objects are immutable/hashable and can be used as dictionary keys.
 
@@ -165,67 +179,111 @@ implemented:
   test if two indices index the same elements as each other (n.b. pure
   canonicalization is currently only guaranteed for slice indices).
 
-      >>> from ndindex import Tuple
-      >>> from numpy import array
-      >>> # This would fail with ValueError for a Python tuple containing an array
-      >>> Tuple(array([1, 2]), 0) == Tuple(array([1, 2]), 0)
-      True
-      >>> Slice(0, 10).reduce(5) == Slice(0, 5).reduce(5)
-      True
+  ```py
+  >>> from ndindex import Tuple
+  >>> from numpy import array
+  >>> # This would fail with ValueError for a Python tuple containing an array
+  >>> Tuple(array([1, 2]), 0) == Tuple(array([1, 2]), 0)
+  True
+  >>> Slice(0, 10).reduce(5) == Slice(0, 5).reduce(5)
+  True
+  ```
 
 - A real index object can be accessed with [`idx.raw`](NDIndex.raw). Use this
   to use an ndindex index to index an array.
 
-      >>> s = Slice(0, 2)
-      >>> arange(4)[s.raw]
-      array([0, 1])
+  ```py
+  >>> s = Slice(0, 2)
+  >>> arange(4)[s.raw]
+  array([0, 1])
+  ```
 
 - [`len()`](Slice.__len__) computes the maximum length of a slice index (over
   the first axis).
 
-      >>> len(Slice(2, 10, 3))
-      3
-      >>> len(arange(10)[2:10:3])
-      3
+  ```py
+  >>> len(Slice(2, 10, 3))
+  3
+  >>> len(arange(10)[2:10:3])
+  3
+  ```
 
 - [`idx.isempty()`](NDIndex.isempty) returns True if an index always indexes
   to an empty array (an array with a 0 in its shape). `isempty` can also be
   called with a shape like `idx.isempty(shape)`.
 
-      >>> Slice(0, 0).isempty()
-      True
+  ```py
+  >>> Slice(0, 0).isempty()
+  True
+  ```
 
 - [`idx.expand(shape)`](NDIndex.expand) expands an index so that it is as
   explicit as possible. An expanded index is always a [`Tuple`](ndindex.Tuple)
   where each indexed axis is indexed explicitly.
 
-      >>> from ndindex import Tuple
-      >>> Tuple(Slice(0, 10), ..., Slice(1, None)).expand((10, 11, 12))
-      Tuple(slice(0, 10, 1), slice(0, 11, 1), slice(1, 12, 1))
+  ```py
+  >>> from ndindex import Tuple
+  >>> Tuple(Slice(0, 10), ..., Slice(1, None)).expand((10, 11, 12))
+  Tuple(slice(0, 10, 1), slice(0, 11, 1), slice(1, 12, 1))
+  ```
 
 - [`idx.newshape(shape)`](NDIndex.newshape) returns the shape of `a[idx]`,
   assuming `a` has shape `shape`.
 
-      >>> Tuple(0, ..., Slice(0, 5)).newshape((10, 10, 10))
-      (10, 5)
+  ```py
+  >>> Tuple(0, ..., Slice(0, 5)).newshape((10, 10, 10))
+  (10, 5)
+  ```
 
 - [`idx.broadcast_arrays()`](NDIndex.broadcast_arrays) broadcasts the array
   indices in `idx`, and converts boolean arrays into equivalent integer arrays.
 
-      >>> Tuple(array([[True, False], [True, False]]), array([0, 1])).broadcast_arrays()
-      Tuple([0, 1], [0, 0], [0, 1])
+  ```py
+  >>> Tuple(array([[True, False], [True, False]]), array([0, 1])).broadcast_arrays()
+  Tuple([0, 1], [0, 0], [0, 1])
+  ```
 
 - [`i.as_subindex(j)`](NDIndex.as_subindex) produces an index `k` such that
   `a[j][k]` gives all the elements of `a[j]` that are also in `a[i]` (see the
   [documentation](NDIndex.as_subindex) for more information). This is useful
   for re-indexing an index onto chunks of an array.
 
-      >>> chunks = [Slice(0, 100), Slice(100, 200)]
-      >>> idx = Slice(50, 160)
-      >>> idx.as_subindex(chunks[0])
-      Slice(50, 100, 1)
-      >>> idx.as_subindex(chunks[1])
-      Slice(0, 60, 1)
+  ```py
+  >>> chunks = [Slice(0, 100), Slice(100, 200)]
+  >>> idx = Slice(50, 160)
+  >>> idx.as_subindex(chunks[0])
+  Slice(50, 100, 1)
+  >>> idx.as_subindex(chunks[1])
+  Slice(0, 60, 1)
+  ```
+
+- The [`ChunkSize`](ndindex.ChunkSize) object abstracts splitting an array
+  into uniform chunks and contains methods to compute things about these
+  chunks:
+
+  ```py
+  >>> from ndindex import ChunkSize
+  >>> chunk_size = ChunkSize((100, 200))
+  >>> shape = (10000, 10001)
+  >>> chunk_size.num_chunks(shape)
+  5100
+  >>> chunk_size.containing_block((slice(450, 1050), slice(100, 200)), shape)
+  Tuple(slice(400, 1100, 1), slice(0, 200, 1))
+  >>> for idx in chunk_size.as_subchunks(_, shape):
+  ...     print(idx)
+  Tuple(slice(400, 500, 1), slice(0, 200, 1))
+  Tuple(slice(500, 600, 1), slice(0, 200, 1))
+  Tuple(slice(600, 700, 1), slice(0, 200, 1))
+  Tuple(slice(700, 800, 1), slice(0, 200, 1))
+  Tuple(slice(800, 900, 1), slice(0, 200, 1))
+  Tuple(slice(900, 1000, 1), slice(0, 200, 1))
+  Tuple(slice(1000, 1100, 1), slice(0, 200, 1))
+  ```
+
+- Additionally, the ndindex documentation contains an extensive [guide to
+  NumPy indexing](indexing-guide/index.md), which goes over how all NumPy
+  index types work, and should be useful to all users of NumPy even if you
+  aren't a user of ndindex.
 
 The following things are not yet implemented, but are planned.
 
@@ -274,15 +332,14 @@ There are two primary types of tests that we employ to verify this:
   possible case. Unfortunately, it is often impossible to do full exhaustive
   testing due to combinatorial explosion.
 
-- Hypothesis tests. Hypothesis is a library that can intelligently check a
-  combinatorial search space of inputs. This requires writing hypothesis
-  strategies that can generate all the relevant types of indices (see
-  [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py)).
-  For more information on hypothesis, see
-  <https://hypothesis.readthedocs.io/en/latest/index.html>. All tests have
-  hypothesis tests, even if they are also tested exhaustively.
+- Hypothesis tests.
+  [Hypothesis](https://hypothesis.readthedocs.io/en/latest/index.html) is a
+  library that can intelligently check a combinatorial search space of inputs.
+  This requires writing hypothesis strategies that can generate all the
+  relevant types of indices (see [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py)).
+  All tests have hypothesis tests, even if they are also tested exhaustively.
 
-Why bother with hypothesis if the same thing is already tested exhaustively?
+Why bother with Hypothesis if the same thing is already tested exhaustively?
 The main reason is that hypothesis is much better at producing human-readable
 failure examples. When an exhaustive test fails, the failure will always be
 from the first set of inputs in the loop that produces a failure. Hypothesis
@@ -325,10 +382,9 @@ Jupyter.
 <a class="reference external image-reference" href="https://www.deshaw.com"><img alt="https://www.deshaw.com/" class="only-dark-inline" src="https://www.deshaw.com/assets/svg/embedded/logo-white.svg" style="width: 200px;"></a>
 </div>
 
-## Table of Contents
-
 ```{toctree}
 :titlesonly:
+:hidden:
 
 api.md
 type-confusion.md
