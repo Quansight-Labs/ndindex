@@ -387,8 +387,8 @@ Jupyter.
 :hidden:
 
 api.md
-type-confusion.md
 indexing-guide/index.md
+type-confusion.md
 changelog.md
 style-guide.md
 ```
