@@ -641,8 +641,8 @@ array([[ 0,  4],
 
 However, this is only actually correct for our specific array, because we know
 that it has 3 dimensions. If it instead of 5 dimensions, we would need to
-instead use `a[:, :, :, :, 0]`. This is not only tedious, but it makes it
-impossible to write our index in a way that works for any number of
+instead use `a[:, :, :, :, 0]`. This is not only tedious to type, but it makes
+it impossible to write our index in a way that works for any number of
 dimensions. To contrast, if we wanted the first element of the *first* axis,
 we could write `a[0]`, which works if `a` has 3 dimensions or 5 dimensions or
 any number of dimensions.
@@ -681,17 +681,18 @@ array([10, 14])
 ```
 
 And indeed, the index `1, 0:2, ..., 2` will work with any array with *at
-least* 3 dimensions (assuming the first dimension is at least `2` and the last
-dimension is at least `3`).
+least* 3 dimensions (assuming of course that the first dimension is at least
+`2` and the last dimension is at least `3`).
 
 Above, we saw that a tuple index implicitly ends in some number of trivial `:`
 slices. We can also see here that a tuple index also always implicitly ends in
-an ellipsis, which serves the exact same purpose. Namely, an ellipsis
+an ellipsis, which serves the exact same purpose. Namely, **an ellipsis
 automatically serves as a stand-in for the "correct" number of trivial `:`
-slices, to select the intermediate axes of an array. And just as with the
+slices to select the intermediate axes of an array**. And just as with the
 empty tuple index `()`, which we saw is the same as writing the right number
 of trivial `:` slices, a single ellipsis and nothing else is the same as
-selecting every axis of the array, i.e., it leaves the array intact.[^tuple-ellipsis-footnote]
+selecting every axis of the array, i.e., it leaves the array
+intact.[^tuple-ellipsis-footnote]
 
 ```py
 >>> a[...]
@@ -718,25 +719,59 @@ IndexError: an index can only have a single ellipsis ('...')
 The rules for an ellipsis are
 
 - **An ellipsis index is written with three dots: `...`.**
-- **An ellipsis index automatically selects 0 or more intermediate axes in an
-  array.**
-- **Every index before an ellipsis operates on the first axes of the array.
-  Every index after an ellipsis operates on the last axes of the array.**
+
+- **`...` automatically selects 0 or more intermediate axes in an array.**
+
+- **Every index before `...` operates on the first axes of the array. Every
+  index after `...` operates on the last axes of the array.**
+
 - **Every tuple index that does not have an ellipsis in it implicitly ends in
-  an ellipsis index.**
-- **At most one ellipsis index is allowed in a tuple index.**
+  `...`.**
+
+- **At most `...` is allowed in a tuple index.**
 
 (newaxis-indices)=
 ### newaxis
 
-The final basic index type is `newaxis`. `np.newaxis` is an alias for `None`.
-Both `newaxis` and `None` work exactly the same, however, `newaxis` is often
-more explicit than `None`, which may look odd in an index, so it's generally
-preferred.
+The final basic multiaxis index type is `newaxis`. `np.newaxis` is an alias
+for `None`. Both `np.newaxis` and `None` work exactly the same, however,
+`np.newaxis` is often more explicit than `None`, which may look odd in an
+index, so it's generally preferred. However, you will often see `None` used
+directly instead of `np.newaxis`, so it's important to remember that they are
+the same thing.
+
+```py
+>>> print(np.newaxis)
+None
+>>> np.newaxis is None # They are exactly the same thing
+True
+```
 
 `newaxis`, as the name suggests, adds a new axis. This new axis has size `1`.
-The new axis is added in the corresponding location in the array. Take our
-example array, which has shape `(3, 2, 4)`
+The new axis is added in the corresponding location in the array. A size `1`
+axis doesn't add or remove any of the elements from the array. Using the
+[nested lists analogy](what-is-an-array), it just adds a new "layer" to the
+list of lists.
+
+```py
+>>> b = np.arange(4)
+>>> b
+array([0, 1, 2, 3])
+>>> b[np.newaxis]
+array([[0, 1, 2, 3]])
+>>> b.shape
+(4,)
+>>> b[np.newaxis].shape
+(1, 4)
+```
+
+When you include `newaxis` alongside other indices in a [tuple
+index](tuple-indices), it doesn't affect which axes those indices select.
+You can think of the `newaxis` index as inserting the new axis in-place in the
+index, so that the other indices still select the same corresponding axes they
+would select if it weren't there.
+
+Take our example array, which has shape `(3, 2, 4)`
 
 ```py
 >>> a = np.arange(24).reshape((3, 2, 4))
@@ -745,8 +780,9 @@ example array, which has shape `(3, 2, 4)`
 ```
 
 The index `a[0, :2]` has shape `(2, 4)`, because the first integer index `0`
-removes the first axis, and the slice index `:2` selects 2 elements from the
-second axis.
+removes the first axis, the slice index `:2` selects 2 elements from the
+second axis, and the third axis is not selected at all, so it remains intact
+with 4 elements.
 
 ```py
 >>> a[0, :2]
@@ -770,7 +806,7 @@ the index `a[0, :2]`.
 (2, 4, 1)
 ```
 
-In each case, the exact same elements are indexed, that is, the `0` always
+In each case, the exact same elements are selected, that is, the `0` always
 indexes the first axis and the `:2` always indexes the second axis.
 
 ```py
@@ -796,28 +832,43 @@ array([[[0],
         [7]]])
 ```
 
-The only difference is where the shape 1 axis is inserted. In the first
-example, `a[newaxis, 0, :2]`, the new axis is inserted before the first axis,
-but the `0` and `:2` still index the original first and second axes. The
-resulting shape is `(1, 2, 4)`. In the second example, the new axis is
-inserted after the first axis, but because the `0` removes this axis when it
-indexes it, the resulting shape is still `(1, 2, 4)`. In the third example,
-the new axis is inserted after the second axis, because the `newaxis` comes
-right after the `:2`, which indexes the second axis. And in the fourth
-example, the `newaxis` is after an ellipsis, so the new axis is inserted at
-the end of the shape. In general, in a tuple index, the axis that an index
-indices corresponds to its position in the tuple index, after removing any
-`newaxis` indices (equivalently, `newaxis` indices can be though of as adding
-new axes *after* the existing axes are indexed).
+The only difference is where the shape 1 axis is inserted.
+
+- `a[np.newaxis, 0, :2]`: the new axis is inserted before the first axis, but
+the `0` and `:2` still index the original first and second axes. The resulting
+shape is `(1, 2, 4)`.
+
+- `a[0, np.newaxis, :2]`: the new axis is inserted after the first axis, but
+because the `0` removes this axis when it indexes it, the resulting shape is
+still `(1, 2, 4)` (and the resulting array is the same).
+
+- `a[0, :2, np.newaxis]`: the new axis is inserted after the second axis,
+because the `newaxis` comes right after the `:2`, which indexes the second
+axis. The resulting shape is `(2, 1, 4)`. Remember that the `4` in the shape
+corresponds to the last axis, which isn't represented in the index at all.
+That's why in this example, the `4` still comes at the end of the resulting
+shape.
+
+- `a[0, :2, ..., np.newaxis]`: the `newaxis` is after an ellipsis, so the new
+axis is inserted at the end of the shape. The resulting shape is `(2, 4, 1)`.
+
+In general, in a tuple index, the axis that an index indices corresponds to
+its position in the tuple index, after removing any `newaxis` indices
+(equivalently, `newaxis` indices can be though of as adding new axes *after*
+the existing axes are indexed).
 
 A shape 1 axis can always be inserted anywhere in an array's shape without
-changing the underlying elements. This only corresponds to adding another
-level of "nesting" to the array, when thinking of it as a list of lists.
+changing the underlying elements.
 
 An array index can include multiple `newaxis`'s, (or `None`'s). Each will add a
 shape 1 axis in the corresponding location. Can you figure out what the shape
-of `a[np.newaxis, 0, newaxis, :2, newaxis, ..., newaxis]` will be (remember
-that `a.shape` is `(3, 2, 4)`)?[^newaxis-footnote]
+of
+
+```py
+a[np.newaxis, 0, newaxis, :2, newaxis, ..., newaxis]
+```
+
+will be (remember that `a.shape` is `(3, 2, 4)`)?[^newaxis-footnote]
 
 [^newaxis-footnote]: Solution:
 
@@ -826,17 +877,14 @@ that `a.shape` is `(3, 2, 4)`)?[^newaxis-footnote]
     (1, 1, 2, 1, 4, 1)
     ```
 
-A `newaxis` index by itself, `a[newaxis]`, simply adds a new axis at the
-beginning of the shape.
-
 To summarize, **`newaxis` (or `None`) inserts a new size 1 axis in the
 corresponding location in the tuple index. The remaining, non-`newaxis`
 indices in the tuple index are indexed as if the `newaxis` indices were not
 there.**
 
-What I haven't said yet is why you would want such a thing. One use-case is to
-explicitly convert a 1-D vector into a 2-D matrix representing a row or
-column vector. For example,
+What I haven't said yet is why you would want to do such a thing in the first
+place. One use-case is to explicitly convert a 1-D vector into a 2-D matrix
+representing a row or column vector. For example,
 
 ```py
 >>> v = np.array([0, 1, -1])
@@ -855,8 +903,8 @@ array([[ 0],
 ```
 
 `v[newaxis]` inserts an axis at the beginning of the shape, making `v` a `(1,
-3)` row vector. `v[..., newaxis]` inserts an axis at the end, making it a `(3,
-1)` column vector.
+3)` row vector and `v[..., newaxis]` inserts an axis at the end, making it a
+`(3, 1)` column vector.
 
 But the most common usage is due to [broadcasting](broadcasting). The key idea
 of broadcasting is that size 1 axes are not directly useful, in the sense that
@@ -873,15 +921,13 @@ example, suppose we have the two arrays
 
 and suppose we want to compute an "outer" sum of `x` and `y`, that is, we want
 to compute every combination of `i + j` where `i` is from `x` and `j` is from
-`y`. If we instead wanted to compute the outer product, we could use the
-`np.outer` function, which does exactly this. But we instead want the sum. The
-key realization here is that what we want is simply to repeat each entry of
-`x` 3 times, to correspond to each entry of `y`, and respectively repeat each
-entry of `y` 3 times to correspond to each entry of `x`. And this is exactly
-the sort of thing broadcasting does! We only need to make the shapes of `x`
-and `y` match in such a way that the broadcasting will do that. Since we want
-both `x` and `y` to be repeated, we will need to broadcast both arrays. We
-want to compute
+`y`. The key realization here is that what we want is simply to
+repeat each entry of `x` 3 times, to correspond to each entry of `y`, and
+respectively repeat each entry of `y` 3 times to correspond to each entry of
+`x`. And this is exactly the sort of thing broadcasting does! We only need to
+make the shapes of `x` and `y` match in such a way that the broadcasting will
+do that. Since we want both `x` and `y` to be repeated, we will need to
+broadcast both arrays. We want to compute
 
 ```py
 [[ x[0] + y[0], x[0] + y[1] ],
@@ -892,9 +938,9 @@ want to compute
 That way the first dimension of the resulting array will correspond to values
 from `x`, and the second dimension will correspond to values from `y`, i.e.,
 `a[i, j]` will be `x[i] + y[j]`. Thus the resulting array will have shape `(3,
-2)`. So to make `x` (shape `(3,)`) and `y` (shape `(2,)`) broadcast to this,
-we need to make them `(3, 1)` and `(1, 2)`, respectively. This can easily be
-done with `np.newaxis`.
+2)`. So to make `x` (which is shape `(3,)`) and `y` (which is shape `(2,)`)
+broadcast to this, we need to make them `(3, 1)` and `(1, 2)`, respectively.
+This can easily be done with `np.newaxis`.
 
 ```py
 >>> x[:, np.newaxis].shape
@@ -945,12 +991,13 @@ Finally we come to the so-called advanced indices. These are "advanced" in the
 sense that they are more complex. They are also distinct from "basic" indices
 in that they always return a copy (see [](views-vs-copies)). Advanced indices
 allow selecting arbitrary parts of an array, in ways that are impossible with
-the basic index types. Advanced indexing is also sometimes called indexing by
-arrays, as the indices themselves in advanced indexing are arrays:  integer
-arrays and boolean arrays. Using an array that does not have an integer
-or boolean dtype as an index is an error (in this section, do not confuse the
-*array being indexed* with the *array that is the index*. The former can be
-anything and have any dtype. It is only the latter that is restricted).
+the basic index types. Advanced indexing is also sometimes called "fancy
+indexing" or indexing by arrays, as the indices themselves in advanced
+indexing are arrays:  integer arrays and boolean arrays. Using an array that
+does not have an integer or boolean dtype as an index is an error (in this
+section, do not confuse the *array being indexed* with the *array that is the
+index*. The former can be anything and have any dtype. It is only the latter
+that is restricted to being integer or boolean).
 
 (integer-array-indices)=
 ### Integer Arrays
@@ -965,33 +1012,63 @@ Let's consider, as a start, a simple one-dimensional array:
 >>> a = np.array([100, 101, 102, 103])
 ```
 
-Let's suppose we wish to construct from this array, the array
+Let's suppose we wish to construct from this array, the 2-D array
 
 ```
 [[ 100, 102, 100 ],
  [ 103, 100, 102 ]]
 ```
 
-That is, a 2-D array with the elements in that given order.
-This would be achieved by constructing an integer array index where the
-corresponding elements of the index array are the [integer
-index](integer-indices) of the elements in `a`. That is
+using **only indexing operations**.
 
+It should hopefully be clear that there's no way we could possibly construct
+this array as `a[idx]`, using only the index types we've seen so far. For one
+thing, [integer indices](integer-indices), [slices](slices-docs),
+[ellipses](ellipsis-indices), and [newaxes](newaxis-indices) all only select
+elements of the array in order (or possibly [reversed order](negative-steps)
+for slices), whereas this array has elements completely shuffled from `a`, and
+some are even repeated.
+
+However, we could "cheat" a bit here, and do something like
+
+```py
+>>> new_array = np.array([[a[0], a[2], a[0]],
+...                       [a[3], a[0], a[2]]])
+>>> new_array
+array([[100, 102, 100],
+       [103, 100, 102]])
 ```
->>> idx = np.array([[0, 2, 0], [3, 0, 2]])
+
+This is the array we wanted. We sort of constructed it using only indexing
+operations, but we didn't actually do `a[idx]` for some index `idx`. Instead,
+we just listed the index of each individual element.
+
+An integer array index is basically this "cheating" method, except as a single
+index. Instead of listing out `a[0]`, `a[2]`, and so on, we just create a
+single integer array with those [integer indices](integer-indices):
+
+```py
+>>> idx = np.array([[0, 2, 0],
+...                 [3, 0, 2]])
+```
+
+and then when we index `a` with this array, it works just as the index above:
+
+```py
 >>> a[idx]
 array([[100, 102, 100],
        [103, 100, 102]])
 ```
 
-This is how integer array indices work. You can shuffle the elements of `a`
-into an arbitrary new array in arbitrary order simply by indexing where each
-element of the new array comes from.
+This is how integer array indices work. An integer array index can construct
+*arbitrary* new arrays with elements from `a`, with the elements in any order
+and even repeated, simply by indexing where each element of the new array
+comes from.
 
 Note that `a[idx]` above is not the same size as `a` at all. `a` has 4
 elements and is 1-dimensional, whereas `a[idx]` has 6 elements and is
 2-dimensional. `a[idx]` also contains some duplicate elements from `a`, and
-some elements which aren't selected at all. Effectively, we could take *any*
+some elements which aren't selected at all. Indeed, we could take *any*
 integer array of any shape, and as long as the elements are between 0 and 3,
 `a[idx]` would create a new array with the same shape as `idx` with
 corresponding elements selected from `a`.
@@ -1022,9 +1099,6 @@ selects elements from a single axis.
 ```
 >>> a = np.array([[100, 101, 102],
 ...               [103, 104, 105]])
->>> a
-array([[100, 101, 102],
-       [103, 104, 105]])
 >>> idx = np.array([0, 0, 1])
 >>> a[idx]
 array([[100, 101, 102],
@@ -1035,16 +1109,16 @@ array([[100, 100, 101],
        [103, 103, 104]])
 ```
 
-It would appear now that this limits the ability to arbitrarily shuffle
-elements of `a` using integer indexing. For instance, suppose we wanted to
-create the array `[105, 100]` from the above `a`. Based on the above examples,
-it might not seem possible. The elements 104 and 100 are not in the same row
-or column of `a`. However, this is doable, by providing multiple
-integer array indices.
+It would appear that this limits the ability to arbitrarily shuffle elements
+of `a` using integer indexing. For instance, suppose we wanted to create the
+array `[105, 100]` from the above `a`. Based on the above examples, it might
+not seem possible. The elements `105` and `100` are not in the same row or
+column of `a`. However, this is doable, by providing multiple integer array
+indices.
 
 When multiple integer array indices are provided, the elements of each index
 are correspondingly selected for that axis. It's perhaps most illustrative to
-show this as an example. Given the above `a`, we can produce the array `[104,
+show this as an example. Given the above `a`, we can produce the array `[105,
 100]` using.
 
 ```
@@ -1104,20 +1178,21 @@ Again, reading across, the first element, `102` corresponds to index `(0, 2)`,
 the next element, `103`, corresponds to index `(1, 0)`, and so on.
 
 A common use-case for integer array indexing is sampling. For example, to
-sample from a 1-D array of size $n$with replacement. We can simply construct
-an a random integer index in the range $[0, n)$ with $k$ elements (see the
+sample $k$ elements from a 1-D array of size $n$ with replacement, we can
+simply construct an a random integer index in the range $[0, n)$ with $k$
+elements (see the
 [`np.random.Generator.integers()`](numpy:numpy.random.Generator.integers)
 documentation):[^random-integers-footnote]
 
 [^random-integers-footnote]: Note that `np.random` also supports this
     operation directly with
-    [`np.random.Generator.choice`](numpy:numpy.random.Generator.choice)..
+    [`np.random.Generator.choice`](numpy:numpy.random.Generator.choice).
 
 ```
 >>> k = 10
 >>> a = np.array([100, 101, 102, 103]) # as above
 >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
->>> idx = rng.integers(0, a.size, k) # integers automatically excludes the upper bound
+>>> idx = rng.integers(0, a.size, k) # rng.integers() automatically excludes the upper bound
 >>> a[idx]
 array([100, 100, 103, 101, 102, 102, 102, 100, 101, 100])
 ```
@@ -1141,15 +1216,15 @@ array([100, 101, 102, 103])
 >>> random_permutation = rng.permutation(identity)
 >>> a[random_permutation]
 array([103, 101, 100, 102])
->>> b[random_permutation]
+>>> b[random_permutation] # The same permutation on b
 array([203, 201, 200, 202])
 ```
 
 Now a few advanced notes about integer array indexing:
 
-- Indices can also be negative. Negative indices work the same as they do with
-  [integer indices](integer-indices). Negative and nonnegative indices can be
-  mixed arbitrarily.
+- Indices in the integer array can also be negative. Negative indices work the
+  same as they do with [integer indices](integer-indices). Negative and
+  nonnegative indices can be mixed arbitrarily.
 
   ```py
   >>> a = np.array([100, 101, 102, 103]) # as above
@@ -1163,7 +1238,7 @@ Now a few advanced notes about integer array indexing:
   [`reduce()`](ndindex.IntegerArray.reduce) method with a shape.
 
 - You can use a list instead of an array to represent an array. However, be
-  careful as versions of NumPy prior to
+  careful, as versions of NumPy prior to
   [1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
   treated a single list as a tuple index rather than as an array, which has a
   different meaning. Using a list is useful if you are writing an array index
