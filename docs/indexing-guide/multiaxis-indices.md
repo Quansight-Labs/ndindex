@@ -868,14 +868,15 @@ of
 a[np.newaxis, 0, newaxis, :2, newaxis, ..., newaxis]
 ```
 
-will be (remember that `a.shape` is `(3, 2, 4)`)?[^newaxis-footnote]
+will be (remember that `a.shape` is `(3, 2, 4)`)?
 
-[^newaxis-footnote]: Solution:
+````{dropdown} Click here to show the solution
 
-    ```py
-    >>> a[np.newaxis, 0, np.newaxis, :2, np.newaxis, ..., np.newaxis].shape
-    (1, 1, 2, 1, 4, 1)
-    ```
+```py
+>>> a[np.newaxis, 0, np.newaxis, :2, np.newaxis, ..., np.newaxis].shape
+(1, 1, 2, 1, 4, 1)
+```
+````
 
 To summarize, **`newaxis` (or `None`) inserts a new size 1 axis in the
 corresponding location in the tuple index. The remaining, non-`newaxis`
