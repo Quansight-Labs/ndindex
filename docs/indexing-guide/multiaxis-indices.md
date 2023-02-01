@@ -463,10 +463,10 @@ This is a rule in general, **a tuple index implicitly ends in as many slices
     end.
 
 (single-axis-tuple)=
-The [slices](slices-docs) document stressed the point that slices always keep
-the axis they index, but it wasn't clear why that is important until now.
-Suppose we slice the first axis of `a`, then later, we take that array and
-want to get the first element of the last row.
+The [slices](slices-docs) page stressed the point that [slices always keep the
+axis they index](subarray), but it wasn't clear why that is important until
+now. Suppose we slice the first axis of `a`, then later, we take that array
+and want to get the first element of the last row.
 
 
 ```py
@@ -555,9 +555,9 @@ unchanged.**[^tuple-ellipsis-footnote]
 
 [^tuple-ellipsis-footnote]: There is one important distinction between the
     empty tuple index (`a[()]`) and a single ellipsis index (`a[...]`). NumPy
-    makes a distinction between scalars and shape `()` arrays. On either, an
+    makes a distinction between scalars and 0-D (i.e., shape `()`) arrays. On either, an
     empty tuple index `()` will always produce a scalar, and a single ellipsis
-    `...` will always produce a shape `()` array:
+    `...` will always produce a 0-D array:
 
     ```py
     >>> s = np.int64(0) # Scalar
@@ -583,12 +583,12 @@ unchanged.**[^tuple-ellipsis-footnote]
     array(10)
     ```
 
-    The difference between scalars and shape `()` arrays in NumPy is subtle.
-    In most contexts, they will both work identically, but there are some
-    places where you need one and not the other, and the above trick can be
-    used to convert between them. See footnotes [^integer-scalar-footnote] and
-    [Other Topics Relevant to Indexing footnote 1](view-scalar-footnote-ref)
-    for two important differences related to indexing.
+    The difference between scalars and 0-D arrays in NumPy is subtle. In most
+    contexts, they will both work identically, but there are some places where
+    you need one and not the other, and the above trick can be used to convert
+    between them. See footnotes [^integer-scalar-footnote] and [Other Topics
+    Relevant to Indexing footnote 1](view-scalar-footnote-ref) for two
+    important differences between the two which are related to indexing.
 
 (ellipsis-indices)=
 ### Ellipses
