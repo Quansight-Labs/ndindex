@@ -187,10 +187,11 @@ dimension that is sliced.**
 (empty-slice)=
 This is true even if the slice chooses only a single element, or even if it
 chooses no elements (a slice that selects no elements is called an *empty
-slice*). This is also true for lists, tuples, and strings, in the sense that a
-slice on a list, tuple, or string will always produce a list, tuple, or
-string. This behavior is different from [integer indices](integer-indices),
-which always remove the dimension that they index.
+slice*, and produces an [size 0 array](size-0-arrays) or sequence). This is
+also true for lists, tuples, and strings, in the sense that a slice on a list,
+tuple, or string will always produce a list, tuple, or string. This behavior
+is different from [integer indices](integer-indices), which always remove the
+dimension that they index.
 
 For example
 

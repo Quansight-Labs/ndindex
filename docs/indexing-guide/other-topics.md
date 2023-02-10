@@ -618,6 +618,68 @@ array from another memory source that produces Fortran ordered data.
 Regardless of which ordering you are using, it is worth structuring your data
 so that operations are done on contiguous memory when possible.
 
+(size-0-arrays)=
+## Size 0 Arrays
+
+Something that sometimes confuses people when they first run across it is that
+it is possible to create NumPy arrays with 0 elements in them. Such an array
+will have 0 in its shape. You can construct such an array directly using
+`np.empty`:[^empty-footnote]
+
+[^empty-footnote]: "Empty" in the name `np.empty` refers to the fact that it
+    creates an array of any shape without initialing its elements from
+    memory. In general, something like `np.empty((2, 4))` will just create an
+    array of 8 elements with whatever values happened to be in the memory it
+    allocated to that array.
+
+
+```py
+>>> np.empty((0, 2, 4))
+array([], shape=(0, 2, 4))
+```
+
+Although more commonly, one would get such an array from an index that
+contains an [out-of-bounds slice](empty-slice):
+
+```py
+>>> a = np.ones((3, 2, 4))
+>>> a[4:]
+array([], shape=(0, 2, 4))
+```
+
+
+It might make sense that NumPy can represent an array with no elements,
+similar to a built-in Python `list` with no elements, `[]`. But the
+particularly confusing thing about these arrays is that they have a specified
+shape, despite having no elements.
+
+For example, the above array has shape `(0, 2, 4)`. The extra `(2, 4)` in the
+array shape does nothing. The number of elements in the array is the product
+of the shape, so it is 0 regardless of what the other dimensions are. It would
+seem, from the outset, that the following arrays are all equivalent, since
+they all have no elements:
+
+```py
+np.empty((0, 2, 4))
+np.empty((0, 200, 4))
+np.empty((1000, 24, 0, 3))
+np.empty((0,))
+```
+
+However, these arrays are all different in the way they behave with NumPy.
+
+The key point with size 0 arrays is that
+
+> **NumPy does not special case `0` in the shape of an array. The behavior
+> when a dimension has size `0` is the same as the behavior when the dimension
+> has any other size.**
+
+Only size `1` is special-cased, and there, only when it applies to
+[broadcasting](broadcasting). **When it comes to indexing, all dimension sizes
+follow exactly the same rules.**
+
+TODO
+
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

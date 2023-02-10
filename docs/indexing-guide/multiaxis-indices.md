@@ -538,7 +538,25 @@ work, because our index assumed three axes, but `c` only has two:
 Thus, when it comes to indexing, all axes, even "trivial" axes, matter. It's
 sometimes a good idea to maintain the same number of dimensions in an array
 throughout a computation, even if one of them sometimes has size 1, simply
-because it means that you can index the array uniformly.
+because it means that you can index the array
+uniformly.[^size-1-dimension-footnote]
+
+[^size-1-dimension-footnote]: In this example, if we knew that we were always
+    going to select exactly one element (say, the second one) from the first
+    dimension, we could equivalently use `a[1, np.newaxis]` (see
+    [](integer-indices) and [](newaxis-indices)). The advantage of this is
+    that we would get an error if the first dimension of `a` doesn't actually
+    have `2` elements, whereas `a[1:2]` would just silently give an [size 0 array](size-0-arrays).
+
+This also equally applies to slices that produce size 0 arrays, i.e., they
+select no elements, like
+
+```py
+>>> a[3:2].shape
+(0, 2, 4)
+```
+
+See [](size-0-arrays) for a more in-depth discussion of this.
 
 There are two final facts about tuple indices that should be noted before we
 move on to the other basic index types. First, as we noticed above, **if a
@@ -852,7 +870,7 @@ shape.
 - `a[0, :2, ..., np.newaxis]`: the `newaxis` is after an ellipsis, so the new
 axis is inserted at the end of the shape. The resulting shape is `(2, 4, 1)`.
 
-In general, in a tuple index, the axis that an index indices corresponds to
+In general, in a tuple index, the axis that each index indices corresponds to
 its position in the tuple index, after removing any `newaxis` indices
 (equivalently, `newaxis` indices can be though of as adding new axes *after*
 the existing axes are indexed).
@@ -876,14 +894,19 @@ will be (remember that `a.shape` is `(3, 2, 4)`)?
 >>> a[np.newaxis, 0, np.newaxis, :2, np.newaxis, ..., np.newaxis].shape
 (1, 1, 2, 1, 4, 1)
 ```
+
 ````
 
-To summarize, **`newaxis` (or `None`) inserts a new size 1 axis in the
+To summarize,
+
+> **`newaxis` (or `None`) inserts a new size 1 axis in the
 corresponding location in the tuple index. The remaining, non-`newaxis`
 indices in the tuple index are indexed as if the `newaxis` indices were not
 there.**
 
-What I haven't said yet is why you would want to do such a thing in the first
+#### Where `newaxis` is Used
+
+What we haven't said yet is why you would want to do such a thing in the first
 place. One use-case is to explicitly convert a 1-D vector into a 2-D matrix
 representing a row or column vector. For example,
 
@@ -924,7 +947,7 @@ and suppose we want to compute an "outer" sum of `x` and `y`, that is, we want
 to compute every combination of `i + j` where `i` is from `x` and `j` is from
 `y`. The key realization here is that what we want is simply to
 repeat each entry of `x` 3 times, to correspond to each entry of `y`, and
-respectively repeat each entry of `y` 3 times to correspond to each entry of
+respectively repeat each entry of `y` 3 times, to correspond to each entry of
 `x`. And this is exactly the sort of thing broadcasting does! We only need to
 make the shapes of `x` and `y` match in such a way that the broadcasting will
 do that. Since we want both `x` and `y` to be repeated, we will need to
