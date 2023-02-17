@@ -621,32 +621,37 @@ so that operations are done on contiguous memory when possible.
 (size-0-arrays)=
 ## Size 0 Arrays
 
-Something that sometimes confuses people when they first run across it is that
-it is possible to create NumPy arrays with 0 elements in them. Such an array
-will have 0 in its shape. You can construct such an array directly using
-`np.empty`:[^empty-footnote]
+Something that sometimes confuses people when they first run across it is the
+fact that it is possible to create NumPy arrays with 0 elements in them. Such
+an array will have `0` in its shape. You can construct such an array directly
+using `np.empty`:[^empty-footnote]
 
-[^empty-footnote]: "Empty" in the name `np.empty` refers to the fact that it
-    creates an array of any shape without initialing its elements from
-    memory. In general, something like `np.empty((2, 4))` will just create an
-    array of 8 elements with whatever values happened to be in the memory it
-    allocated to that array.
+[^empty-footnote]: The "empty" in the name `np.empty` is not related to the
+    fact that this array has 0 elements. Rather it is because `np.empty`
+    creates an without initialing its elements from memory. In general,
+    `np.empty` can create arrays of any size, not just 0, e.g., `np.empty((2,
+    4))` will create an array of 8 elements with whatever values happened to
+    be in that memory already.
 
 
 ```py
 >>> np.empty((0, 2, 4))
-array([], shape=(0, 2, 4))
+array([], shape=(0, 2, 4), dtype=float64)
+>>> _.size
+0
 ```
 
 Although more commonly, one would get such an array from an index that
-contains an [out-of-bounds slice](empty-slice):
+contains an [out-of-bounds slice](empty-slice) or a [boolean
+mask](boolean-array-indices) that is all `False`:
 
 ```py
 >>> a = np.ones((3, 2, 4))
 >>> a[4:]
-array([], shape=(0, 2, 4))
+array([], shape=(0, 2, 4), dtype=float64)
+>>> a[a == 0].shape
+(0,)
 ```
-
 
 It might make sense that NumPy can represent an array with no elements,
 similar to a built-in Python `list` with no elements, `[]`. But the
@@ -654,9 +659,9 @@ particularly confusing thing about these arrays is that they have a specified
 shape, despite having no elements.
 
 For example, the above array has shape `(0, 2, 4)`. The extra `(2, 4)` in the
-array shape does nothing. The number of elements in the array is the product
-of the shape, so it is 0 regardless of what the other dimensions are. It would
-seem, from the outset, that the following arrays are all equivalent, since
+array shape would appear to do nothing. The number of elements in the array is
+the product of the shape, so it is 0 regardless of what the other dimensions
+are. It would seem, then, that the following arrays are all equivalent, since
 they all have no elements:
 
 ```py
@@ -666,9 +671,9 @@ np.empty((1000, 24, 0, 3))
 np.empty((0,))
 ```
 
-However, these arrays are all different in the way they behave with NumPy.
+What then, is the point of NumPy allowing all these arrays to be distinct?
 
-The key point with size 0 arrays is that
+The key point to understand with size 0 arrays is that
 
 > **NumPy does not special case `0` in the shape of an array. The behavior
 > when a dimension has size `0` is the same as the behavior when the dimension
@@ -678,7 +683,225 @@ Only size `1` is special-cased, and there, only when it applies to
 [broadcasting](broadcasting). **When it comes to indexing, all dimension sizes
 follow exactly the same rules.**
 
-TODO
+In other words, these extra dimensions still function they way they would if
+the array didn't have 0 elements. For example, with `a` as the shape `(0, 2,
+4)` array as above:
+
+```py
+>>> a = np.empty((0, 2, 4))
+```
+
+Let's look at what happens if we try to add two differnt arrays of ones to
+`a`, one with shape `(1, 2, 3)` and one with shape `(1, 2, 4)`:
+
+```py
+>>> b = np.ones((1, 2, 3))
+>>> a + b
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: operands could not be broadcast together with shapes (0,2,4) (1,2,3)
+>>> c = np.ones((1, 2, 4))
+>>> a + c
+array([], shape=(0, 2, 4), dtype=float64)
+```
+
+When we add the shape `(1, 2, 3)` array, `b`, to `a`, it fails with a broadcast
+error. That's because, according to the rule of [broadcasting](broadcasting),
+the shapes `(1, 2, 3)` and `(0, 2, 4)` don't align, that is, they differ in
+dimensions other than a dimension that is equal to 1 (the last dimension).
+
+But when we add the shape `(1, 2, 4)` array, `c`, to `a`, it works. The result
+is another size `0` shape `(0, 2, 4)` array. According to the rules of
+broadcasting, the shapes `(1, 2, 4)` and `(0, 2, 4)` agree in every dimension
+except for the first one, which is equal to `1` for one of the arrays. Thus,
+that size `1` dimension broadcasts to the size in the other dimension, namely,
+`0`. So the result is a shape `(0, 2, 4)` array. We can also see directly
+using [`np.broadcast_shapes()`](numpy:numpy.broadcast_shapes) function that this
+is the result of broadcasting these two shapes:
+
+```py
+>>> np.broadcast_shapes((1, 2, 4), (0, 2, 4))
+(0, 2, 4)
+```
+
+Again, `0` is not special at all here. This is how this would work to
+broadcast `(1, 2, 4)` with any `(x, 2, 4)` shape:
+
+```py
+>>> np.broadcast_shapes((1, 2, 4), (3, 2, 4))
+(3, 2, 4)
+>>> np.broadcast_shapes((1, 2, 4), (10, 2, 4))
+(10, 2, 4)
+```
+
+Now that we understand this, there are two pieces to the puzzle to
+understanding why size 0 arrays exist in NumPy, and why they keep track of
+seemingly superfluous dimensions:
+
+1. How such arrays can naturally come about.
+2. How keeping track of the extra dimensions in the shape is useful.
+
+### How Size 0 Arrays Can Naturally Come About
+
+As noted above, there are two primary ways you might naturally come across a
+size 0 array (aside from creating one manually using an array constructor like
+`np.empty()`), an [out-of-bounds slice](empty-slice) or a [boolean
+mask](boolean-array-indices) that is all `False`. In both cases, the point is
+that **a size 0 array is the result of an edge case of a general index
+formula**.
+
+For example, suppose we want to write a function to trim the first `k` elements from a
+(1-D) array. This is simple with [slicing](slices-docs):
+
+```py
+>>> def trim(a, k):
+...    """Remove the first k elements from a."""
+...    assert k >= 0
+...    return a[k:]
+>>> a = np.arange(10)
+>>> a
+array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+>>> trim(a, 4)
+array([4, 5, 6, 7, 8, 9])
+```
+
+Now if we specify a `k` that is larger than the size of `a`, we will get an
+size 0 array as a result:
+
+```py
+>>> trim(a, 11)
+array([], dtype=int64)
+>>> _.shape
+(0,)
+```
+
+If `a`, `k`, or both are input by the user, we may not know until runtime
+whether or not `k` is actually within the bounds of `a`. It may make perfect
+sense for a user to specify a `k` that is larger than `a`. For example, if our
+`a` corresponds to time steps, and we are only interested in what happens
+after time step `11`, we can use `trim(a, 11)` (i.e., `a[11:]`). If `a`
+doesn't actually go [up to 11](https://en.wikipedia.org/wiki/Up_to_eleven), we
+still aren't interested in any of its elements, by definition. In that case,
+we have two choices: either return an error, or return a shape `(0,)` array.
+As we'll see below, returning a shape `(0,)` is often fine. Depending on what
+we do with the result, it will proceed through in a way that makes
+mathematical sense.
+
+It's perhaps even easier to understand how this can happen with a [boolean
+mask](boolean-array-indices). If a mask doesn't match any elements of the
+array, the result will have size 0.
+
+```py
+>>> a[a == 11]
+array([], dtype=int64)
+```
+
+Again, if we mask off some part of an array, and nothing actually matches,
+there are two choices: an error or a size 0 array. NumPy gives a size 0 array,
+because it can often result in a meaningful answer. A meaningful answer is
+always preferable to an error.
+
+### How Keeping Track of the Extra Dimensions in the Shape is Useful
+
+### When Can Size 0 Arrays Still be Meaningful?
+
+Many mathematical functions make perfect sense when applied to empty sets. The
+most common examples of this are addition and multiplication. The addition of
+*nothing* is 0, whereas the product of *nothing* is 1.
+
+There are a few ways to see this, depending on how sophisticated you are
+mathematically (the most sophsiticated has to do with [category
+theory](https://www.johndcook.com/blog/2015/04/14/empty-sum-product/), which I
+won't get into here).
+
+One simple way to see the fact that the empty sum is 0 (and similarly product
+1) is that you can always add 0 to any sum:
+
+$$
+x + y = x + y + 0 = x + y + 0 + 0 = \ldots.
+$$
+
+So one can treat the sum of just one term $x$ as the same as $x + 0$:
+
+$$
+x = x + 0
+$$
+
+and if we remove all the terms, i.e., the empty sum, we are left with just $0$.
+
+Another reason why the empty sum is $0$ is that this is the only definition
+that this definition agrees with the idea that a sum over a set should not
+depend on how that set is split up. For example,
+
+$$
+\sum_{x\in\{1, 2, 3, 4\}}x = \sum_{x\in\{1, 2\}}x + \sum_{x\in\{3, 4\}}x = \sum_{x\in\{1, 3\}}x +
+\sum_{x\in\{2, 4\}}x = \ldots
+$$
+
+(this is more or less a fancy way of saying that addition should be
+commutative and associative).
+
+But if we agree with that, we should also allow sums over singleton sets
+
+$$
+\sum_{x\in\{1, 2, 3, 4\}}x = \sum_{x\in\{1\}}x + \sum_{x\in\{2, 3, 4\}}x,
+$$
+
+and sums over empty sets
+
+$$
+\sum_{x\in\{1, 2, 3, 4\}}x = \sum_{x\in\varnothing}x + \sum_{x\in\{1, 2, 3, 4\}}x.
+$$
+
+The only way that works (i.e., gives the same answer $1 + 2 + 3 + 4 = 10$) is
+if we allow the sum over a single element set to be
+that element, and the sum over the empty set to be $0$ (and the exact same
+argument shows why $\prod_{x\in\varnothing}x$ must be $1$).
+
+Again, there are even more sophsiticated arguments why this must be the case,
+but the point is that it is a well established fact that the empty sum and
+empty product should be 0 and 1, respectively, and that if you adopt these
+conventions, things will "work out" nicely in mathematical formulae.
+
+NumPy adopts these conventions, wherever appropriate. For example:
+
+```py
+>>> np.sum(np.empty((0,)))
+0.0
+>>> np.prod(np.empty((0,)))
+1.0
+```
+
+`sum` and `prod` are simple examples, but this applies more generally to a
+larger class of functions. For example:
+
+```
+>>> np.any(np.empty((0,), dtype=bool))
+False
+>>> np.all(np.empty((0,), dtype=bool))
+True
+```
+
+And of course, those are just reduction functions. Functions that apply
+elementwise have an obvious application to a size 0 array. They "apply" to
+every element of the array, i.e., they just return back another size 0 array
+of the same shape
+
+```py
+>>> np.sin(np.empty((0, 2, 4)))
+array([], shape=(0, 2, 4), dtype=float64)
+```
+
+And as demonstrated above, for multiargument operators, like `+`, the same
+thing happens, they "apply" elementwise across the nothing, i.e., return an
+array with the same size 0 shape. Except here broadcasting applies:
+
+```py
+>>> a = np.empty((0, 2, 4))
+>>> b = np.empty((1, 2, 4))
+>>> a + b
+array([], shape=(0, 2, 4), dtype=float64)
+```
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
