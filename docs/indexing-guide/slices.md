@@ -530,51 +530,121 @@ indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of a list is indexed by 0, the second by 1, and so on.
 Rather than thinking about that, consider the spaces between the elements:
 
+<style>
+  table {
+    border-collapse: collapse;
+  }
+
+  td {
+    border: none;
+    padding: 0.5em;
+    text-align: center;
+    position: relative;
+    width: 1em;
+    height: 0.5em;
+  }
+
+  .red-vertical-bar:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    border-left: 2px solid #EE0000;
+  }
+
+  .blue-vertical-bar:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    border-left: 2px solid #5E5EFF;
+  }
+
+  td:first-child {
+    border-left: none;
+  }
+
+  td:last-child:before {
+    border-right: none;
+  }
+</style>
+
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r r r r r r r r r r r r r r r r r r}
-a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
-    &
-    & \color{#EE0000}{|}
-    &
-    & \color{#EE0000}{|}
-    &
-    & \color{#EE0000}{|}
-    &
-    & \color{#5E5EFF}{|}
-    &
-    & \color{#5E5EFF}{|}
-    &
-    & \color{#5E5EFF}{|}
-    &
-    & \color{#EE0000}{|}
-    &
-    & \color{#EE0000}{|}\\
-\color{#EE0000}{\text{index}}
-    &
-    & \color{#EE0000}{0}
-    &
-    & \color{#EE0000}{1}
-    &
-    & \color{#EE0000}{2}
-    &
-    & \color{#5E5EFF}{3}
-    &
-    & \color{#5E5EFF}{4}
-    &
-    & \color{#5E5EFF}{5}
-    &
-    & \color{#EE0000}{6}
-    &
-    & \color{#EE0000}{7}\\
-\end{array}\\
-\end{aligned}
-$$
+
+<div>
+  <table>
+    <tr>
+      <td><pre>a =</pre></td>
+      <td><pre>[</pre></td>
+      <td></td>
+      <td><pre>'a',</pre></td>
+      <td></td>
+      <td><pre>'b',</pre></td>
+      <td></td>
+      <td><pre>'c',</pre></td>
+      <td></td>
+      <td><pre>'d',</pre></td>
+      <td></td>
+      <td><pre>'e',</pre></td>
+      <td></td>
+      <td><pre>'f',</pre></td>
+      <td></td>
+      <td><pre>'g'</pre></td>
+      <td></td>
+      <td><pre>]</pre></td>
+    </tr>
+    <tr>
+      <th style="color:#EE0000;"></th>
+      <td></td>
+      <td class="red-vertical-bar"></td>
+      <td></td>
+      <td class="red-vertical-bar"></td>
+      <td></td>
+      <td class="red-vertical-bar"></td>
+      <td></td>
+      <td class="blue-vertical-bar"></td>
+      <td></td>
+      <td class="blue-vertical-bar"></td>
+      <td></td>
+      <td class="blue-vertical-bar"></td>
+      <td></td>
+      <td class="red-vertical-bar"></td>
+      <td></td>
+      <td class="red-vertical-bar"></td>
+    </tr>
+    <tr>
+      <th style="color:#EE0000;">index</th>
+      <td></td>
+      <td style="color:#EE0000;">0</td>
+      <td></td>
+      <td style="color:#EE0000;">1</td>
+      <td></td>
+      <td style="color:#EE0000;">2</td>
+      <td></td>
+      <td style="color:#5E5EFF;">3</td>
+      <td></td>
+      <td style="color:#5E5EFF;">4</td>
+      <td></td>
+      <td style="color:#5E5EFF;">5</td>
+      <td></td>
+      <td style="color:#EE0000;">6</td>
+      <td></td>
+      <td style="color:#EE0000;">7</td>
+    </tr>
+  </table>
+</div>
 <i>(not a great way of thinking about 0-based indexing)</i>
 </div>
+
 
 Using this way of thinking, the first element of `a` is to the left of
 the "1-divider". An integer index `i` produces the element to the right of the
