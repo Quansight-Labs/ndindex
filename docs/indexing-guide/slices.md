@@ -567,6 +567,7 @@ Rather than thinking about that, consider the spaces between the elements:
     position: relative;
     width: 1em;
     height: 0.5em;
+    white-space: nowrap;
   }
 
   .vertical-bar-red:before {
@@ -632,7 +633,7 @@ Rather than thinking about that, consider the spaces between the elements:
       <td></td>
       <td class="vertical-bar-red"></td>
       <td></td>
-      <td class="vertical-bar-blue"></td>
+      <td class="vertical-bar-red"></td>
       <td></td>
       <td class="vertical-bar-red"></td>
       <td></td>
@@ -757,152 +758,92 @@ reasons why this way of thinking creates more confusion than it removes.
   it as stepping backwards from index `5` to index `3`, but not including
   index `3`.
 
+  <style>
+  .circle-red {
+      display: inline-block;
+      width: 0.8em;
+      height: 0.8em;
+      line-height: 0.8em;
+      border-radius: 50%;
+      text-align: center;
+      border: 1px solid #EE0000;
+  }
+  .circle-blue {
+      display: inline-block;
+      width: 0.8em;
+      height: 0.8em;
+      line-height: 0.8em;
+      border-radius: 50%;
+      text-align: center;
+      border: 1px solid #5E5EFF;
+  }
+  .circle-none {
+      display: inline-block;
+      width: 0.8em;
+      height: 0.8em;
+      line-height: 0.8em;
+      border-radius: 50%;
+      text-align: center;
+  }
+
+  </style>
+
   <div style="text-align:center">
   <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
-  $$
-  \require{enclose}
-  \begin{aligned}
-  \begin{array}{r r c c c c c c c c c c c c l}
-  a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-  \color{#EE0000}{\text{index}}
-      & \color{#EE0000}{0\phantom{,}}
-      &
-      & \color{#EE0000}{1\phantom{,}}
-      &
-      & \color{#EE0000}{2\phantom{,}}
-      &
-      & \color{#EE0000}{\enclose{circle}{3}}
-      &
-      & \color{#5E5EFF}{\enclose{circle}{4}}
-      &
-      & \color{#5E5EFF}{\enclose{circle}{5}}
-      &
-      & \color{#EE0000}{6\phantom{,}}\\
-      &
-      & \phantom{\leftarrow}
-      &
-      & \phantom{\leftarrow}
-      &
-      & \phantom{\leftarrow}
-      & \color{#EE0000}{-1}
-      & \leftarrow
-      & \color{#5E5EFF}{-1}
-      & \leftarrow
-      & \color{#5E5EFF}{\text{start}}
-  \end{array}
-  \end{aligned}
-  $$
+  <table>
+      <tr>
+        <td><code>a</code></td>
+        <td><code>=</code></td>
+        <td><code>['a'</code>,</td>
+        <td></td>
+        <td><code>'b'</code>,</td>
+        <td></td>
+        <td><code>'c'</code>,</td>
+        <td></td>
+        <td><code>'d'</code>,</td>
+        <td></td>
+        <td><code>'e'</code>,</td>
+        <td></td>
+        <td><code>'f'</code>,</td>
+        <td></td>
+        <td><code>'g']</code></td>
+      </tr>
+      <tr>
+        <td class="circle-none" style="color: #EE0000">index</td>
+        <td></td>
+        <td class="circle-none" style="color: #EE0000">0</td>
+        <td></td>
+        <td class="circle-none" style="color: #EE0000">1</td>
+        <td></td>
+        <td class="circle-none" style="color: #EE0000">2</td>
+        <td></td>
+        <td class="circle-red" style="color: #EE0000">3</td>
+        <td></td>
+        <td class="circle-blue" style="color: #5E5EFF">4</td>
+        <td></td>
+        <td class="circle-blue" style="color: #5E5EFF">5</td>
+        <td></td>
+        <td class="circle-none" style="color: #EE0000">6</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="color: #EE0000">-1</td>
+        <td>$$\longleftarrow$$</td>
+        <td style="color: #5E5EFF">-1</td>
+        <td>$$\longleftarrow$$</td>
+        <td style="color: #5E5EFF">start</td>
+        <td></td>
+        <td></td>
+      </tr>
+  </table>
   </div>
-
-<style>
-.circle-red {
-    display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
-    line-height: 0.8em;
-    border-radius: 50%;
-    text-align: center;
-    border: 1px solid #EE0000;
-}
-.circle-blue {
-    display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
-    line-height: 0.8em;
-    border-radius: 50%;
-    text-align: center;
-    border: 1px solid #5E5EFF;
-}
-.circle-none {
-    display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
-    line-height: 0.8em;
-    border-radius: 50%;
-    text-align: center;
-}
-
-.arrow:before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-  height: 30px;
-  border-left: 2px solid black;
-}
-
-.arrow:after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  height: 30px;
-  border-left: 2px solid black;
-}
-</style>
-
-<table>
-    <tr>
-      <td>a =</td>
-      <td>[</td>
-      <td><code>'a'</code>,</td>
-      <td></td>
-      <td><code>'b'</code>,</td>
-      <td></td>
-      <td><code>'c'</code>,</td>
-      <td></td>
-      <td><code>'d'</code>,</td>
-      <td></td>
-      <td><code>'e'</code>,</td>
-      <td></td>
-      <td><code>'f'</code>,</td>
-      <td></td>
-      <td><code>'g'</code></td>
-      <td>]</td>
-    </tr>
-    <tr>
-      <td class="circle-none" style="color: #EE0000">index</td>
-      <td></td>
-      <td class="circle-none" style="color: #EE0000">0</td>
-      <td></td>
-      <td class="circle-none" style="color: #EE0000">1</td>
-      <td></td>
-      <td class="circle-none" style="color: #EE0000">2</td>
-      <td></td>
-      <td class="circle-red" style="color: #EE0000">3</td>
-      <td></td>
-      <td class="circle-blue" style="color: #5E5EFF">4</td>
-      <td></td>
-      <td class="circle-blue" style="color: #5E5EFF">5</td>
-      <td></td>
-      <td class="circle-none" style="color: #EE0000">6</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td style="color: #EE0000">-1</td>
-      <td>&larr;</td>
-      <td style="color: #5E5EFF">-1</td>
-    <td>
-      <div style="width: 100%; position: relative;">
-        <div style="width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 10px solid black; position: absolute; right: 0;"></div>
-      </div>
-    </td>
-      <td style="color: #5E5EFF">start</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-</table>
 
 - The rule does work for negative `start` and `stop`, but only if you think
   about it correctly. The correct way to think about it is to reverse the
