@@ -785,7 +785,38 @@ reasons why this way of thinking creates more confusion than it removes.
       border-radius: 50%;
       text-align: center;
   }
-
+  .horizontal-bar {
+    content: '';
+    display: block;
+    position: absolute;
+    transform: translateX(-8px);
+    width: 100%;
+    border-bottom: 2px solid black;
+  }
+  .horizontal-bar::before {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-bottom-right-radius: 8px;
+    border: 1.5px solid black;
+    border-top: 0;
+    border-left: 0;
+    display: inline-block;
+    transform: translateX(-1em) translateY(-5px);
+  }
+  .horizontal-bar::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-top-right-radius: 8px;
+    border: 1.5px solid black;
+    border-bottom: 0;
+    border-left: 0;
+    display: inline-block;
+    transform: translateX(-1em) translateY(0.5px);
+  }
   </style>
 
   <div style="text-align:center">
@@ -835,7 +866,7 @@ reasons why this way of thinking creates more confusion than it removes.
         <td></td>
         <td></td>
         <td style="color: #EE0000">-1</td>
-        <td>$$\longleftarrow$$</td>
+        <td><div class="horizontal-bar"></div></td>
         <td style="color: #5E5EFF">-1</td>
         <td>$$\longleftarrow$$</td>
         <td style="color: #5E5EFF">start</td>
