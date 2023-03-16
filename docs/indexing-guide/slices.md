@@ -791,7 +791,7 @@ reasons why this way of thinking creates more confusion than it removes.
     position: absolute;
     transform: translateX(-8px);
     width: 100%;
-    border-bottom: 2px solid black;
+    border-bottom: 1.5px solid black;
   }
   .horizontal-bar::before {
     content: '';
@@ -799,7 +799,7 @@ reasons why this way of thinking creates more confusion than it removes.
     width: 5px;
     height: 5px;
     border-bottom-right-radius: 8px;
-    border: 1.5px solid black;
+    border: 1px solid black;
     border-top: 0;
     border-left: 0;
     display: inline-block;
@@ -811,7 +811,7 @@ reasons why this way of thinking creates more confusion than it removes.
     width: 5px;
     height: 5px;
     border-top-right-radius: 8px;
-    border: 1.5px solid black;
+    border: 1px solid black;
     border-bottom: 0;
     border-left: 0;
     display: inline-block;
