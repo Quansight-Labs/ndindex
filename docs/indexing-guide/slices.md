@@ -63,9 +63,10 @@ integers.[^non-integer-footnote]
     syntatically allowed by Python, but the built-in types (`list`, `tuple`,
     `str`) and NumPy arrays do not allow them. There are other libraries that
     make use of this feature. For instance, the Pandas
-    [`loc`](pandas:pandas.DataFrame.loc) attribute allows slicing with strings
-    corresponding to labels. The semantics of such extensions to slicing may
-    not necessarily corresponding to the semantics outlined in this guide.
+    {external+pandas:attr}`~pandas.DataFrame.loc` attribute allows
+    slicing with strings corresponding to labels. The semantics of such
+    extensions to slicing may not necessarily corresponding to the semantics
+    outlined in this guide.
 
 The three arguments to a slice are traditionally called `start`, `stop`, and
 `step`:
@@ -2339,13 +2340,13 @@ changes I would make to improve the semantics would be
 
    - Half-open semantics are generally undesirable to apply to extensions to
      slicing on non-integer labels. For example, the pandas
-     [`loc`](pandas:pandas.DataFrame.loc) attribute allows slicing string labels
-     (like `df.loc['a':'f']`), but this syntax always includes both ends. This is
-     because when you slice on labels, you probably aren't thinking about which
-     label comes before or after the one you want, and you might not even know.
-     But this same reasoning also applies to integers. You're probably thinking
-     about the index that you want to slice up to, not the one before or after
-     it.
+     {external+pandas:attr}`~pandas.DataFrame.loc` attribute allows slicing
+     string labels (like `df.loc['a':'f']`), but this syntax always includes
+     both ends. This is because when you slice on labels, you probably aren't
+     thinking about which label comes before or after the one you want, and
+     you might not even know. But this same reasoning also applies to
+     integers. You're probably thinking about the index that you want to slice
+     up to, not the one before or after it.
 
      Furthermore, if label slicing used half-open semantics, to slice to the end
      of the sequence, you'd have to use an [omitted](omitted) `end`, instead of

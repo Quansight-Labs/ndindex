@@ -716,8 +716,8 @@ broadcasting, the shapes `(1, 2, 4)` and `(0, 2, 4)` agree in every dimension
 except for the first one, which is equal to `1` for one of the arrays. Thus,
 that size `1` dimension broadcasts to the size in the other dimension, namely,
 `0`. So the result is a shape `(0, 2, 4)` array. We can also see directly
-using [`np.broadcast_shapes()`](numpy:numpy.broadcast_shapes) function that this
-is the result of broadcasting these two shapes:
+using {external+numpy:func}`numpy.broadcast_shapes` function that this is the
+result of broadcasting these two shapes:
 
 ```py
 >>> np.broadcast_shapes((1, 2, 4), (0, 2, 4))

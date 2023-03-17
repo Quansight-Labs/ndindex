@@ -1205,12 +1205,12 @@ A common use-case for integer array indexing is sampling. For example, to
 sample $k$ elements from a 1-D array of size $n$ with replacement, we can
 simply construct an a random integer index in the range $[0, n)$ with $k$
 elements (see the
-[`np.random.Generator.integers()`](numpy:numpy.random.Generator.integers)
+{external+numpy:meth}`numpy.random.Generator.integers`
 documentation):[^random-integers-footnote]
 
 [^random-integers-footnote]: Note that `np.random` also supports this
     operation directly with
-    [`np.random.Generator.choice`](numpy:numpy.random.Generator.choice).
+    {external+numpy:meth}`numpy.random.Generator.choice`.
 
 ```
 >>> k = 10
@@ -1222,13 +1222,11 @@ array([100, 100, 103, 101, 102, 102, 102, 100, 101, 100])
 ```
 
 Another common option is to permute an array. An array can be randomly
-permuted with
-[`np.random.Generator.permutation`](numpy:numpy.random.Generator.permutation).
-But what if we want to permute two arrays with the same permutation? We can
-compute a permutation index and apply it to both arrays. For a 1-D array `a` of
-size $n$, a permutation index
-is just a permutation of the index `np.arange(k)`, which itself is the
-identity permutation on `a`:
+permuted with {external+numpy:meth}`numpy.random.Generator.permutation`. But
+what if we want to permute two arrays with the same permutation? We can
+compute a permutation index and apply it to both arrays. For a 1-D array `a`
+of size $n$, a permutation index is just a permutation of the index
+`np.arange(k)`, which itself is the identity permutation on `a`:
 
 ```py
 >>> a = np.array([100, 101, 102, 103]) # as above
@@ -1411,7 +1409,7 @@ Now a few advanced notes about integer array indexing:
   The main benefit of this is that you can use `...` at the beginning of an
   index to select the last axes of an array with the integer array indices, or
   some number of `:`s to select some axes in the middle. This lets you do with
-  indexing what you can also do with the [`numpy.take()`](numpy:numpy.take)
+  indexing what you can also do with the {external+numpy:func}`numpy.take`
   function.
 
   To be sure, the slices can be any slice, and you can also include newaxes.
@@ -1457,9 +1455,9 @@ Now a few advanced notes about integer array indexing:
 
 Given the above, you should be able to do the following exercise: how might
 you randomly permute a 2-D array, using
-[`np.random.Generator.permutation`](numpy:numpy.random.Generator.permutation)
-and indexing, in such a way that each axis is permuted independently. This
-might correspond to multiplying the array by random [permutation
+{external+numpy:meth}`numpy.random.Generator.permutation` and indexing, in
+such a way that each axis is permuted independently. This might correspond to
+multiplying the array by random [permutation
 matrices](https://en.wikipedia.org/wiki/Permutation_matrix) on the left and
 right, like $P_1AP_2$. (Hint, one of the [basic indices](basic-indices)
 discussed above may be useful here)
@@ -1494,8 +1492,7 @@ array([[ 0,  1,  2,  3],
 ```
 
 We can generate permutations for the two axes using
-[`np.random.Generator.permutation`](numpy:numpy.random.Generator.permutation)
-as above:
+{external+numpy:meth}`numpy.random.Generator.permutation` as above:
 
 ```py
 >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
@@ -1592,8 +1589,8 @@ From this we can see a few things:
   a higher dimensional shape, or for the shape of the result to be related to
   the shape of `a`. The shape of `a[idx]` when `idx` is a boolean array is
   `(n,)` where `n` is the number of `True` elements in `idx` (i.e.,
-  [`np.count_nonzero(idx)`](numpy:numpy.count_nonzero)). `n` is always between
-  `0` and `a.size`, inclusive.
+  {external+numpy:func}`np.count_nonzero(idx) <numpy.count_nonzero>`. `n` is
+  always between `0` and `a.size`, inclusive.
 
 - The selected elements are "in order". Namely, they are in C order. That is,
   C order iterates the array `a` so that the last axis varies the fastest, like
@@ -1823,8 +1820,9 @@ The semantics of boolean array indices are described as
   The actual order of a boolean mask is usually not that important. However,
   this fact has one important implication. It turns out that a boolean array
   index is the same as if you replaced the array with the result of
-  [`np.nonzero(idx)`](numpy:numpy.nonzero) (unpacking the tuple), using the
-  rules for [integer array indices](integer-array-indices) outlined above.
+  {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking the
+  tuple), using the rules for [integer array indices](integer-array-indices)
+  outlined above.
 
   ```py
   >>> np.nonzero(idx)
@@ -1868,7 +1866,7 @@ The semantics of boolean array indices are described as
   The ndindex method
   [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
   [`expand()`](ndindex.Tuple.expand)) will convert boolean array indices into
-  integer array indices via [`np.nonzero`](numpy:numpy.nonzero) and broadcast
+  integer array indices via {external+numpy:func}`numpy.nonzero` and broadcast
   array indices together into a canonical form.
 
 
