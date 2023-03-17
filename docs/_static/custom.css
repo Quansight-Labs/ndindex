@@ -37,6 +37,17 @@
     --color-sidebar-arrow-current: var(--color-sidebar-link-text--top-level);
 }
 
+.sidebar-tree .sidebar-extra {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 100%;
+    line-height: var(--sidebar-item-line-height);
+    overflow-wrap: anywhere;
+    padding: var(--sidebar-item-spacing-vertical) var(--sidebar-item-spacing-horizontal);
+    width: 100%;
+    font-weight: bold !important
+}
+
 /* The furo theme uses only-light and only-dark for light/dark-mode only
    images, but they use display:block, so define
    only-light-inline/only-dark-inline to use display:inline. */

@@ -87,6 +87,19 @@ html_theme = 'furo'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+templates_path = ['_templates']
+
+html_sidebars = {
+    "**": [
+        "sidebar/scroll-start.html",
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/navigation.html",
+        "sidebar/github.html",
+        "sidebar/scroll-end.html",
+    ],
+}
+
 # These are defined in _static/custom.css
 light_blue = "var(--color-brand-light-blue)"
 green = "var(--color-brand-green)"
