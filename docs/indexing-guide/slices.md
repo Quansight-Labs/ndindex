@@ -778,15 +778,16 @@ reasons why this way of thinking creates more confusion than it removes.
     width: 100%;
     border-bottom: 1.5px solid black;
   }
-  .left-arrow {
+  .left-arrow,
+  .right-arrow {
     content: '';
     display: block;
     position: absolute;
-    transform: translateX(-8px);
     width: 100%;
     border-bottom: 1.5px solid black;
   }
-  .left-arrow::before {
+  .left-arrow::before,
+  .right-arrow::before {
     content: '';
     position: absolute;
     width: 5px;
@@ -798,7 +799,8 @@ reasons why this way of thinking creates more confusion than it removes.
     display: inline-block;
     transform: translateX(-1em) translateY(-5px);
   }
-  .left-arrow::after {
+  .left-arrow::after,
+  .right-arrow::after {
     content: '';
     position: absolute;
     width: 5px;
@@ -809,6 +811,12 @@ reasons why this way of thinking creates more confusion than it removes.
     border-left: 0;
     display: inline-block;
     transform: translateX(-1em) translateY(0.5px);
+  }
+  .left-arrow {
+    transform: translateX(-8px);
+  }
+  .right-arrow {
+    transform: translateX(-8px) scaleX(-1);
   }
   </style>
 
