@@ -783,7 +783,7 @@ reasons why this way of thinking creates more confusion than it removes.
     content: '';
     display: block;
     position: absolute;
-    width: 100%;
+    width: 32px;
     border-bottom: 1.5px solid black;
   }
   .left-arrow::before,
@@ -797,7 +797,7 @@ reasons why this way of thinking creates more confusion than it removes.
     border-top: 0;
     border-left: 0;
     display: inline-block;
-    transform: translateX(-1em) translateY(-5px);
+    transform: translateX(-16px) translateY(-5px);
   }
   .left-arrow::after,
   .right-arrow::after {
@@ -810,7 +810,7 @@ reasons why this way of thinking creates more confusion than it removes.
     border-bottom: 0;
     border-left: 0;
     display: inline-block;
-    transform: translateX(-1em) translateY(0.5px);
+    transform: translateX(-16px) translateY(0.5px);
   }
   .left-arrow {
     transform: translateX(-8px);
