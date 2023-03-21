@@ -234,6 +234,15 @@ indexing](integer-indices) (although one should be careful that even though
 
 For example:
 
+<style>
+.slice-diagram {
+    text-align: center;
+    margin: auto;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+</style>
+
 <div style="text-align:center">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
 $$
@@ -251,31 +260,6 @@ a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \math
 \end{array}
 \end{aligned}
 $$
-</div>
-
-<div style="text-align:center">
-  <table>
-    <tr>
-      <th>a =</th>
-      <td>'a',</td>
-      <td>'b',</td>
-      <td>'c',</td>
-      <td>'d',</td>
-      <td>'e',</td>
-      <td>'f',</td>
-      <td>'g'</td>
-    </tr>
-    <tr>
-      <th style="color:#EE0000;">index</th>
-      <td style="color:#EE0000;">0</td>
-      <td style="color:#EE0000;">1</td>
-      <td style="color:#EE0000;">2</td>
-      <td style="color:#5E5EFF;">3</td>
-      <td style="color:#5E5EFF;">4</td>
-      <td style="color:#EE0000;">5</td>
-      <td style="color:#EE0000;">6</td>
-    </tr>
-  </table>
 </div>
 
 ```py
@@ -604,7 +588,7 @@ Rather than thinking about that, consider the spaces between the elements:
   }
 </style>
 
-<div style="text-align:center">
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
 
 <div>
@@ -794,7 +778,15 @@ reasons why this way of thinking creates more confusion than it removes.
     width: 100%;
     border-bottom: 1.5px solid black;
   }
-  .horizontal-bar::before {
+  .left-arrow {
+    content: '';
+    display: block;
+    position: absolute;
+    transform: translateX(-8px);
+    width: 100%;
+    border-bottom: 1.5px solid black;
+  }
+  .left-arrow::before {
     content: '';
     position: absolute;
     width: 5px;
@@ -806,7 +798,7 @@ reasons why this way of thinking creates more confusion than it removes.
     display: inline-block;
     transform: translateX(-1em) translateY(-5px);
   }
-  .horizontal-bar::after {
+  .left-arrow::after {
     content: '';
     position: absolute;
     width: 5px;
@@ -820,7 +812,7 @@ reasons why this way of thinking creates more confusion than it removes.
   }
   </style>
 
-  <div style="text-align:center">
+  <div class="slice-diagram">
   <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
   <table>
       <tr>
@@ -867,9 +859,9 @@ reasons why this way of thinking creates more confusion than it removes.
         <td></td>
         <td></td>
         <td style="color: #EE0000">-1</td>
-        <td><div class="horizontal-bar"></div></td>
+        <td><div class="left-arrow"></div></td>
         <td style="color: #5E5EFF">-1</td>
-        <td>$$\longleftarrow$$</td>
+        <td><div class="left-arrow"></div></td>
         <td style="color: #5E5EFF">start</td>
         <td></td>
         <td></td>
@@ -1720,32 +1712,78 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
 ['g', 'd']
 ```
 
-<div style="text-align:center">
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[6:0:-3] == ['g', 'd']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r r c c c c c c l}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{\enclose{circle}{0}\phantom{,}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#5E5EFF}{\enclose{circle}{3}}
-    & \color{#EE0000}{4\phantom{,}}
-    & \color{#EE0000}{5\phantom{,}}
-    & \color{#5E5EFF}{\enclose{circle}{6}}\\
-    & \color{#EE0000}{-3}\phantom{\mathtt{\textsf{'},}}
-    & \leftarrow
-    &
-    & \color{#5E5EFF}{-3}\phantom{\mathtt{\textsf{'},}}
-    & \leftarrow
-    &
-    & \color{#5E5EFF}{\text{start}}\\
-    &  \color{#EE0000}{(\leq \text{stop})}
-\end{array}
-\end{aligned}
-$$
+<table>
+  <tr>
+    <td><code>a</code></td>
+    <td><code>=</code></td>
+    <td><code>['a'</code>,</td>
+    <td></td>
+    <td><code>'b'</code>,</td>
+    <td></td>
+    <td><code>'c'</code>,</td>
+    <td></td>
+    <td><code>'d'</code>,</td>
+    <td></td>
+    <td><code>'e'</code>,</td>
+    <td></td>
+    <td><code>'f'</code>,</td>
+    <td></td>
+    <td><code>'g']</code></td>
+  </tr>
+  <tr>
+    <td class="circle-none" style="color: #EE0000">index</td>
+    <td></td>
+    <td class="circle-red" style="color: #EE0000">0</td>
+    <td></td>
+    <td class="circle-none" style="color: #EE0000">1</td>
+    <td></td>
+    <td class="circle-none" style="color: #EE0000">2</td>
+    <td></td>
+    <td class="circle-blue" style="color: #5E5EFF">3</td>
+    <td></td>
+    <td class="circle-none" style="color: #EE0000">4</td>
+    <td></td>
+    <td class="circle-none" style="color: #EE0000">5</td>
+    <td></td>
+    <td class="circle-blue" style="color: #5E5EFF">6</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td style="color: #EE0000">-3</td>
+    <td><div class="left-arrow"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td style="color: #5E5EFF">-3</td>
+    <td><div class="left-arrow"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td><div class="horizontal-bar"></div></td>
+    <td style="color: #5E5EFF">start</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td style="line-height: 0em; color: #EE0000">(&le; stop)</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
 </div>
 
 The `step` can never be equal to 0. This unconditionally produces an error:
