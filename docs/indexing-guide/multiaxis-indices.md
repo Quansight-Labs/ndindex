@@ -1892,6 +1892,13 @@ The semantics of boolean array indices are described as
   This behavior may seem like an odd corner case, but it can come up in
   practice. TODO
 
+  For one thing, it means that assiging to a masked index does the right thing
+  if the mask expression happens to not actually contain the array.
+
+  ```py
+  TODO
+  ```
+
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
