@@ -778,45 +778,22 @@ reasons why this way of thinking creates more confusion than it removes.
     width: 100%;
     border-bottom: 1.5px solid black;
   }
-  .left-arrow,
-  .right-arrow {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 32px;
-    border-bottom: 1.5px solid black;
+  .left-arrow-cell {
+    background-image: url('../_static/arrow.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center; /* shift the background image 10px to the right */
   }
-  .left-arrow::before,
-  .right-arrow::before {
+  .right-arrow-cell::before {
     content: '';
     position: absolute;
-    width: 5px;
-    height: 5px;
-    border-bottom-right-radius: 8px;
-    border: 1px solid black;
-    border-top: 0;
-    border-left: 0;
-    display: inline-block;
-    transform: translateX(-16px) translateY(-5px);
-  }
-  .left-arrow::after,
-  .right-arrow::after {
-    content: '';
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-top-right-radius: 8px;
-    border: 1px solid black;
-    border-bottom: 0;
-    border-left: 0;
-    display: inline-block;
-    transform: translateX(-16px) translateY(0.5px);
-  }
-  .left-arrow {
-    transform: translateX(-8px);
-  }
-  .right-arrow {
-    transform: translateX(-8px) scaleX(-1);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../_static/arrow.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center; /* shift the background image 10px to the right */
+    transform: scaleX(-1);
   }
   </style>
 
@@ -850,9 +827,11 @@ reasons why this way of thinking creates more confusion than it removes.
         <td class="circle-none" style="color: #EE0000">2</td>
         <td></td>
         <td class="circle-red" style="color: #EE0000">3</td>
-        <td style="font-size: smaller; transform: translateY(-12px)">-1<div class="left-arrow"></div></td>
+        <td class="left-arrow-cell"><div style="font-size: smaller; transform:
+  translateY(-12px)">-1</div></td>
         <td class="circle-blue" style="color: #5E5EFF">4</td>
-        <td style="font-size: smaller; transform: translateY(-12px)">-1<div class="left-arrow"></div></td>
+        <td class="left-arrow-cell"><div style="font-size: smaller; transform:
+  translateY(-12px)">-1</div></td>
         <td class="circle-blue" style="color: #5E5EFF">5</td>
         <td></td>
         <td class="circle-none" style="color: #EE0000">6</td>
@@ -1761,25 +1740,9 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td></td>
     <td></td>
     <td style="line-height: 0em; color: #EE0000">&le; stop</td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="left-arrow"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)">-3<div class="horizontal-bar"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
+    <td colspan="5" class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-10px)">-3</div></td>
     <td></td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="left-arrow"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)">-3<div class="horizontal-bar"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
-    <td style="font-size: smaller; transform: translateY(-10px)"><div
-    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
+    <td colspan="5" class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-10px)">-3</div></td>
     <td style="color: #5E5EFF">start</td>
   </tr>
 </table>

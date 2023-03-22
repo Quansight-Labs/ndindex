@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Based on https://commons.wikimedia.org/wiki/File:U%2B2192.svg -->
+<svg
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:cc="http://creativecommons.org/ns#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+  xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+  width="1054"
+  height="14.33">
+  <metadata
+     id="metadata5724">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+<g transform="matrix(-1, 0, 0, 1, 1054, -764.01857)">
+<path d="M 1053.63455,771.63163 C 1050.59872,772.74111 1048.22736,774.53943 1046.5205,777.02659 L 1045.22205,777.02659 C 1045.80725,775.28315 1046.7887,773.63722 1048.16642,772.08883 L 0,772.08883 L 0,770.2966 L 1048.16642,770.2966 C 1046.7887,768.74822 1045.80725,767.0962 1045.22205,765.34054 L 1046.5205,765.34054 C 1048.22736,767.82772 1050.59872,769.62605 1053.63455,770.73551 L 1053.63455,771.63163 z"></path>
+</g>
+</svg>
