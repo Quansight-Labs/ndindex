@@ -850,14 +850,14 @@ reasons why this way of thinking creates more confusion than it removes.
         <td class="circle-none" style="color: #EE0000">2</td>
         <td></td>
         <td class="circle-red" style="color: #EE0000">3</td>
-        <td></td>
+        <td style="font-size: smaller; transform: translateY(-12px)">-1<div class="left-arrow"></div></td>
         <td class="circle-blue" style="color: #5E5EFF">4</td>
-        <td></td>
+        <td style="font-size: smaller; transform: translateY(-12px)">-1<div class="left-arrow"></div></td>
         <td class="circle-blue" style="color: #5E5EFF">5</td>
         <td></td>
         <td class="circle-none" style="color: #EE0000">6</td>
       </tr>
-      <tr>
+      <tr style="transform: translateY(-12px)">
         <td></td>
         <td></td>
         <td></td>
@@ -866,10 +866,10 @@ reasons why this way of thinking creates more confusion than it removes.
         <td></td>
         <td></td>
         <td></td>
-        <td style="color: #EE0000">-1</td>
-        <td><div class="left-arrow"></div></td>
-        <td style="color: #5E5EFF">-1</td>
-        <td><div class="left-arrow"></div></td>
+        <td style="color: #EE0000">stop</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td style="color: #5E5EFF">start</td>
         <td></td>
         <td></td>
@@ -1760,36 +1760,27 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
   <tr>
     <td></td>
     <td></td>
-    <td style="color: #EE0000">-3</td>
-    <td><div class="left-arrow"></div></td>
-    <td><div class="horizontal-bar"></div></td>
-    <td><div class="horizontal-bar"></div></td>
-    <td><div class="horizontal-bar"></div></td>
-    <td><div class="horizontal-bar"></div></td>
-    <td style="color: #5E5EFF">-3</td>
-    <td><div class="left-arrow"></div></td>
-    <td><div class="horizontal-bar"></div></td>
-    <td><div class="horizontal-bar"></div></td>
-    <td><div class="horizontal-bar"></div></td>
-    <td><div class="horizontal-bar"></div></td>
+    <td style="line-height: 0em; color: #EE0000">&le; stop</td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="left-arrow"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)">-3<div class="horizontal-bar"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
+    <td></td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="left-arrow"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)">-3<div class="horizontal-bar"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
+    <td style="font-size: smaller; transform: translateY(-10px)"><div
+    style="visibility: hidden">-3</div><div class="horizontal-bar"></div></td>
     <td style="color: #5E5EFF">start</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td style="line-height: 0em; color: #EE0000">(&le; stop)</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
   </tr>
 </table>
 </div>
