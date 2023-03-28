@@ -237,7 +237,9 @@ For example:
 <style>
 .slice-diagram {
     text-align: center;
-    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     padding-left: 2em;
     padding-right: 2em;
 }
@@ -550,8 +552,9 @@ Rather than thinking about that, consider the spaces between the elements:
     padding: 0.5em;
     text-align: center;
     position: relative;
-    width: 1em;
-    height: 0.5em;
+    width: 0.8em;
+    height: 0.8em;
+    line-height: 0.8em;
     white-space: nowrap;
   }
 
@@ -762,14 +765,6 @@ reasons why this way of thinking creates more confusion than it removes.
       text-align: center;
       border: 1px solid #5E5EFF;
   }
-  .circle-none {
-      display: inline-block;
-      width: 0.8em;
-      height: 0.8em;
-      line-height: 0.8em;
-      border-radius: 50%;
-      text-align: center;
-  }
   .horizontal-bar {
     content: '';
     display: block;
@@ -818,25 +813,25 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><code>'g']</code></td>
       </tr>
       <tr>
-        <td class="circle-none" style="color: #EE0000">index</td>
+        <td style="color: #EE0000">index</td>
         <td></td>
-        <td class="circle-none" style="color: #EE0000">0</td>
+        <td style="color: #EE0000">0</td>
         <td></td>
-        <td class="circle-none" style="color: #EE0000">1</td>
+        <td style="color: #EE0000">1</td>
         <td></td>
-        <td class="circle-none" style="color: #EE0000">2</td>
+        <td style="color: #EE0000">2</td>
         <td></td>
         <td class="circle-red" style="color: #EE0000">3</td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
-  translateY(-12px)">-1</div></td>
+  translateY(-12px) translateX(3px)">-1</div></td>
         <td class="circle-blue" style="color: #5E5EFF">4</td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
-  translateY(-12px)">-1</div></td>
+  translateY(-12px) translateX(3px)">-1</div></td>
         <td class="circle-blue" style="color: #5E5EFF">5</td>
         <td></td>
-        <td class="circle-none" style="color: #EE0000">6</td>
+        <td style="color: #EE0000">6</td>
       </tr>
-      <tr style="transform: translateY(-12px)">
+      <tr>
         <td></td>
         <td></td>
         <td></td>
@@ -1720,19 +1715,19 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td><code>'g']</code></td>
   </tr>
   <tr>
-    <td class="circle-none" style="color: #EE0000">index</td>
+    <td  style="color: #EE0000">index</td>
     <td></td>
     <td class="circle-red" style="color: #EE0000">0</td>
     <td></td>
-    <td class="circle-none" style="color: #EE0000">1</td>
+    <td  style="color: #EE0000">1</td>
     <td></td>
-    <td class="circle-none" style="color: #EE0000">2</td>
+    <td  style="color: #EE0000">2</td>
     <td></td>
     <td class="circle-blue" style="color: #5E5EFF">3</td>
     <td></td>
-    <td class="circle-none" style="color: #EE0000">4</td>
+    <td  style="color: #EE0000">4</td>
     <td></td>
-    <td class="circle-none" style="color: #EE0000">5</td>
+    <td  style="color: #EE0000">5</td>
     <td></td>
     <td class="circle-blue" style="color: #5E5EFF">6</td>
   </tr>
