@@ -149,3 +149,8 @@ h4, h5, h6 {
 html {
     scroll-behavior: auto;
 }
+
+/* Hide the annoying "back to top" button */
+.back-to-top {
+    display: none;
+}
