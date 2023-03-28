@@ -796,21 +796,21 @@ reasons why this way of thinking creates more confusion than it removes.
   <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
   <table>
       <tr>
-        <td><code>a</code></td>
-        <td><code>=</code></td>
-        <td><code>['a'</code>,</td>
+        <td><pre>a</pre></td>
+        <td><pre>=</pre></td>
+        <td><pre>['a',</pre></td>
         <td></td>
-        <td><code>'b'</code>,</td>
+        <td><pre> 'b',</pre></td>
         <td></td>
-        <td><code>'c'</code>,</td>
+        <td><pre> 'c',</pre></td>
         <td></td>
-        <td><code>'d'</code>,</td>
+        <td><pre> 'd',</pre></td>
         <td></td>
-        <td><code>'e'</code>,</td>
+        <td><pre> 'e',</pre></td>
         <td></td>
-        <td><code>'f'</code>,</td>
+        <td><pre> 'f',</pre></td>
         <td></td>
-        <td><code>'g']</code></td>
+        <td><pre> 'g']</pre></td>
       </tr>
       <tr>
         <td style="color: #EE0000">index</td>
@@ -1698,21 +1698,21 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
 <code style="font-size: 16pt;">a[6:0:-3] == ['g', 'd']</code>
 <table>
   <tr>
-    <td><code>a</code></td>
-    <td><code>=</code></td>
-    <td><code>['a'</code>,</td>
+    <td><pre>a</pre></td>
+    <td><pre>=</pre></td>
+    <td><pre>['a',</pre></td>
     <td></td>
-    <td><code>'b'</code>,</td>
+    <td><pre> 'b',</pre></td>
     <td></td>
-    <td><code>'c'</code>,</td>
+    <td><pre> 'c',</pre></td>
     <td></td>
-    <td><code>'d'</code>,</td>
+    <td><pre> 'd',</pre></td>
     <td></td>
-    <td><code>'e'</code>,</td>
+    <td><pre> 'e',</pre></td>
     <td></td>
-    <td><code>'f'</code>,</td>
+    <td><pre> 'f',</pre></td>
     <td></td>
-    <td><code>'g']</code></td>
+    <td><pre>'g']</pre></td>
   </tr>
   <tr>
     <td  style="color: #EE0000">index</td>
