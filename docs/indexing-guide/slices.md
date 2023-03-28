@@ -127,10 +127,21 @@ For a slice `a[start:stop:step]`:
 Throughout this guide, we will use as an example the same prototype list as we
 used in the [integer indexing section](prototype-example):
 
-$$
-a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
-\mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
-$$
+<div class="slice-diagram">
+  <table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td><pre>'b',</pre></td>
+      <td><pre>'c',</pre></td>
+      <td><pre>'d',</pre></td>
+      <td><pre>'e',</pre></td>
+      <td><pre>'f',</pre></td>
+      <td><pre>'g']</pre></td>
+    </tr>
+  </table>
+</div>
 
 The list `a` has 7 elements.
 
@@ -245,23 +256,32 @@ For example:
 }
 </style>
 
-<div style="text-align:center">
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
-$$
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#5E5EFF}{3\phantom{,}}
-    & \color{#5E5EFF}{4\phantom{,}}
-    & \color{#EE0000}{5\phantom{,}}
-    & \color{#EE0000}{6\phantom{,}}\\
-\end{array}
-\end{aligned}
-$$
+  <table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td><pre> 'b',</pre></td>
+      <td><pre> 'c',</pre></td>
+      <td><pre> 'd',</pre></td>
+      <td><pre> 'e',</pre></td>
+      <td><pre> 'f',</pre></td>
+      <td><pre> 'g']</pre></td>
+    </tr>
+    <tr>
+      <th style="color:#EE0000;">index</th>
+      <td></td>
+      <td style="color:#EE0000;">0</td>
+      <td style="color:#EE0000;">1</td>
+      <td style="color:#EE0000;">2</td>
+      <td style="color:#5E5EFF;">3</td>
+      <td style="color:#5E5EFF;">4</td>
+      <td style="color:#EE0000;">5</td>
+      <td style="color:#EE0000;">6</td>
+    </tr>
+  </table>
 </div>
 
 ```py
@@ -288,24 +308,32 @@ Slices behave like half-open intervals. What this means is that
 For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
 ([0-based](0-based)).
 
-<div style="text-align:center">
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#5E5EFF}{\enclose{circle}{3}}
-    & \color{#5E5EFF}{\enclose{circle}{4}}
-    & \color{#EE0000}{\enclose{circle}{5}}
-    & \color{#EE0000}{6\phantom{,}}\\
-\end{array}
-\end{aligned}
-$$
+  <table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td><pre> 'b',</pre></td>
+      <td><pre> 'c',</pre></td>
+      <td><pre> 'd',</pre></td>
+      <td><pre> 'e',</pre></td>
+      <td><pre> 'f',</pre></td>
+      <td><pre> 'g']</pre></td>
+    </tr>
+    <tr>
+      <th style="color:#EE0000;">index</th>
+      <td></td>
+      <td style="color:#EE0000;">0</td>
+      <td style="color:#EE0000;">1</td>
+      <td style="color:#EE0000;">2</td>
+      <td><div class="circle-blue" style="color:#5E5EFF;">3</div></td>
+      <td><div class="circle-blue" style="color:#5E5EFF;">4</div></td>
+      <td><div class="circle-red" style="color:#EE0000;">5</div></td>
+      <td style="color:#EE0000;">6</td>
+    </tr>
+  </table>
 </div>
 
 ```py
