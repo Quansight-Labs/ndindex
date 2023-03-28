@@ -747,23 +747,20 @@ reasons why this way of thinking creates more confusion than it removes.
   index `3`.
 
   <style>
-  .circle-red {
-      display: inline-block;
-      width: 0.8em;
-      height: 0.8em;
-      line-height: 0.8em;
-      border-radius: 50%;
-      text-align: center;
-      border: 1px solid #EE0000;
-  }
+  .circle-red,
   .circle-blue {
       display: inline-block;
-      width: 0.8em;
-      height: 0.8em;
-      line-height: 0.8em;
+      width: 25px;
+      height: 25px;
+      line-height: 25px;
       border-radius: 50%;
       text-align: center;
-      border: 1px solid #5E5EFF;
+  }
+  .circle-red {
+        border: 1px solid #EE0000;
+  }
+  .circle-blue {
+        border: 1px solid #5E5EFF;
   }
   .horizontal-bar {
     content: '';
@@ -821,13 +818,13 @@ reasons why this way of thinking creates more confusion than it removes.
         <td></td>
         <td style="color: #EE0000">2</td>
         <td></td>
-        <td class="circle-red" style="color: #EE0000">3</td>
+        <td><div class="circle-red" style="color: #EE0000">3</div></td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
   translateY(-12px) translateX(3px)">-1</div></td>
-        <td class="circle-blue" style="color: #5E5EFF">4</td>
+        <td><div class="circle-blue" style="color: #5E5EFF">4</div></td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
   translateY(-12px) translateX(3px)">-1</div></td>
-        <td class="circle-blue" style="color: #5E5EFF">5</td>
+        <td><div class="circle-blue" style="color: #5E5EFF">5</div></td>
         <td></td>
         <td style="color: #EE0000">6</td>
       </tr>
@@ -1717,19 +1714,19 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
   <tr>
     <td  style="color: #EE0000">index</td>
     <td></td>
-    <td class="circle-red" style="color: #EE0000">0</td>
+    <td><div class="circle-red" style="color: #EE0000">0</div></td>
     <td></td>
     <td  style="color: #EE0000">1</td>
     <td></td>
     <td  style="color: #EE0000">2</td>
     <td></td>
-    <td class="circle-blue" style="color: #5E5EFF">3</td>
+    <td><div class="circle-blue" style="color: #5E5EFF">3</div></td>
     <td></td>
     <td  style="color: #EE0000">4</td>
     <td></td>
     <td  style="color: #EE0000">5</td>
     <td></td>
-    <td class="circle-blue" style="color: #5E5EFF">6</td>
+    <td><div class="circle-blue" style="color: #5E5EFF">6</div></td>
   </tr>
   <tr>
     <td></td>
