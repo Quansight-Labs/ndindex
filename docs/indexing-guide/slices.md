@@ -1712,19 +1712,19 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td><pre>'g']</pre></td>
   </tr>
   <tr>
-    <td  style="color: #EE0000">index</td>
+    <td style="color: #EE0000">index</td>
     <td></td>
     <td><div class="circle-red" style="color: #EE0000">0</div></td>
     <td></td>
-    <td  style="color: #EE0000">1</td>
+    <td style="color: #EE0000">1</td>
     <td></td>
-    <td  style="color: #EE0000">2</td>
+    <td style="color: #EE0000">2</td>
     <td></td>
     <td><div class="circle-blue" style="color: #5E5EFF">3</div></td>
     <td></td>
-    <td  style="color: #EE0000">4</td>
+    <td style="color: #EE0000">4</td>
     <td></td>
-    <td  style="color: #EE0000">5</td>
+    <td style="color: #EE0000">5</td>
     <td></td>
     <td><div class="circle-blue" style="color: #5E5EFF">6</div></td>
   </tr>
