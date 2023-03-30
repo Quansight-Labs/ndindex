@@ -8,7 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..integerarray import IntegerArray
 from ..tuple import Tuple
-from .helpers import ndindices, short_shapes, assert_equal
+from .helpers import ndindices, short_shapes, assert_equal, warnings_are_errors
 
 @example((slice(0, 8), slice(0, 9), slice(0, 10)),
          ([2, 5, 6, 7], slice(1, 9, 1), slice(5, 10, 1)),
@@ -50,6 +50,7 @@ from .helpers import ndindices, short_shapes, assert_equal
 @example(0, (slice(None, 0, None), Ellipsis), 1)
 @example(0, (slice(1, 2),), 1)
 @given(ndindices, ndindices, one_of(integers(0, 100), short_shapes))
+@warnings_are_errors
 def test_as_subindex_hypothesis(idx1, idx2, shape):
     if isinstance(shape, int):
         a = arange(shape)
