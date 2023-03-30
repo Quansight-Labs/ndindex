@@ -251,6 +251,8 @@ For example:
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
     padding-left: 2em;
     padding-right: 2em;
 }
@@ -453,39 +455,81 @@ interval $(\text{stop}, \text{start}]$ (except reversed).
 For example, say way believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
 
-<!-- TODO: improve this -->
-<div style="text-align:center;" >
-<code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-<div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
-$$
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#5E5EFF}{3\phantom{,}}
-    & \color{#5E5EFF}{4\phantom{,}}
-    & \color{#EE0000}{5\phantom{,}}
-    & \color{#EE0000}{6\phantom{,}}\\
-\color{#EE0000}{\text{WRONG}}&
-    &
-    &
-    & [\phantom{3,}
-    &
-    & )
-    & \\
-\end{array}\\
-\small{\text{(reversed)}}\hspace{3.5em}
-\end{aligned}
-$$
+<style>
+.centered-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: white;
+  padding: 0 10px;
+  z-index: 1;
+}
+
+.horizontal-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1.5px solid black;
+  margin-left: 10px;
+  margin-right: 10px;
+  z-index: 0;
+}
+</style>
+
+<div class="slice-diagram">
+  <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
+  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
+  <table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td><pre> 'b',</pre></td>
+      <td><pre> 'c',</pre></td>
+      <td><pre> 'd',</pre></td>
+      <td><pre> 'e',</pre></td>
+      <td><pre> 'f',</pre></td>
+      <td><pre> 'g']</pre></td>
+    </tr>
+    <tr>
+      <th style="color:#EE0000;">index</th>
+      <td></td>
+      <td style="color:#EE0000;">0</td>
+      <td style="color:#EE0000;">1</td>
+      <td style="color:#EE0000;">2</td>
+      <td style="background-color: >
+        <div style="position: relative;">
+          <span class="math notranslate nohighlight" style="position: absolute; display: flex; height: 100%; top: 0; align-items: center;">\([\)</span>
+          <span style="color:#5E5EFF;">3</span
+        </div>
+      </td>
+      <td style="color:#5E5EFF;">4</td>
+      <td>
+        <div style="position: relative;">
+          <span style="color:#EE0000;">5</span>
+          <span class="math notranslate nohighlight" style="position: absolute; display: flex; height: 100%; align-items: center; top: 0; right: 0;">\()\)</span>
+        </div>
+      </td>
+      <td style="color:#EE0000;">6</td>
+    </tr>
+    <tr>
+      <th style="color:#EE0000;">WRONG</th>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td colspan="3"><div class="centered-text">(reversed)</div><div class="horizontal-line"></div></td>
+      <td></td>
+    </tr>
+  </table>
 </div>
+
 
 We might assume we would get
 
 ```py
->> a[5:3:-1]
+>>> a[5:3:-1] # doctest:+SKIP
 ['e', 'd'] # WRONG
 ```
 
@@ -789,14 +833,6 @@ reasons why this way of thinking creates more confusion than it removes.
   }
   .circle-blue {
         border: 1px solid #5E5EFF;
-  }
-  .horizontal-bar {
-    content: '';
-    display: block;
-    position: absolute;
-    transform: translateX(-8px);
-    width: 100%;
-    border-bottom: 1.5px solid black;
   }
   .left-arrow-cell {
     background-image: url('../_static/arrow.svg');
