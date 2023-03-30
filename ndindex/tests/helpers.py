@@ -1,7 +1,8 @@
 import sys
 from itertools import chain
-from functools import reduce
+from functools import reduce, wraps
 from operator import mul
+import warnings
 
 from numpy import intp, bool_, array, broadcast_shapes
 import numpy.testing
@@ -181,6 +182,15 @@ def assert_equal(actual, desired, err_msg='', verbose=True):
     assert actual.shape == desired.shape, err_msg or f"{actual.shape} != {desired.shape}"
     assert actual.dtype == desired.dtype, err_msg or f"{actual.dtype} != {desired.dtype}"
 
+def warnings_are_errors(f):
+    @wraps(f)
+    def inner(*args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            return f(*args, **kwargs)
+    return inner
+
+@warnings_are_errors
 def check_same(a, idx, raw_func=lambda a, idx: a[idx],
                ndindex_func=lambda a, index: a[index.raw],
                same_exception=True, assert_equal=assert_equal):
