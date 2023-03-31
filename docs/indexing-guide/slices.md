@@ -579,7 +579,7 @@ $$
 ##### Wrong Rule 2: "A slice works like `range()`."
 
 There are many similarities between the behaviors of slices and the behavior
-of `range()`. However, they do not behave the same. A slice
+of `range()`. However, they are not exactly the same. A slice
 `a[start:stop:step]` only acts like `range(start, stop, step)` if `start` and
 `stop` are **nonnegative**. If either of them are negative, the slice wraps
 around and slices from the end of the list (see {ref}`negative-indices`
