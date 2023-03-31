@@ -552,25 +552,47 @@ Actually, what we really get is
 This is because the slice `5:3:-1` starts at index `5` and steps backwards to
 index `3`, but not including `3` (see [](negative-steps) below).
 
-<div style="text-align:center">
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
 <div style="font-size: 16pt;color:#5E5EFF;">(CORRECT)</div>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r r r r r r r r}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{\textsf{'},}}
-    & \color{#EE0000}{1\phantom{\textsf{'},}}
-    & \color{#EE0000}{2\phantom{\textsf{'},}}
-    & \color{#EE0000}{\enclose{circle}{3}\phantom{,}}
-    & \leftarrow\color{#5E5EFF}{\enclose{circle}{4}\phantom{,}}
-    & \leftarrow\color{#5E5EFF}{\enclose{circle}{5}\phantom{,}}
-    & \color{#EE0000}{6\phantom{\textsf{'},}}\\
-\end{array}
-\end{aligned}
-$$
+<table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td></td>
+      <td><pre> 'b',</pre></td>
+      <td></td>
+      <td><pre> 'c',</pre></td>
+      <td></td>
+      <td><pre> 'd',</pre></td>
+      <td></td>
+      <td><pre> 'e',</pre></td>
+      <td></td>
+      <td><pre> 'f',</pre></td>
+      <td></td>
+      <td><pre> 'g']</pre></td>
+    </tr>
+    <tr>
+      <th style="color: #EE0000">index</th>
+      <td></td>
+      <td style="color: #EE0000">0</td>
+      <td></td>
+      <td style="color: #EE0000">1</td>
+      <td></td>
+      <td style="color: #EE0000">2</td>
+      <td></td>
+      <td><div class="circle-red" style="color: #EE0000">3</div></td>
+      <td class="left-arrow-cell"><div style="font-size: smaller; transform:
+translateY(-12px) translateX(3px)">-1</div></td>
+      <td><div class="circle-blue" style="color: #5E5EFF">4</div></td>
+      <td class="left-arrow-cell"><div style="font-size: smaller; transform:
+translateY(-12px) translateX(3px)">-1</div></td>
+      <td><div class="circle-blue" style="color: #5E5EFF">5</div></td>
+      <td></td>
+      <td style="color: #EE0000">6</td>
+    </tr>
+</table>
 </div>
 
 (wrong-rule-2)=
