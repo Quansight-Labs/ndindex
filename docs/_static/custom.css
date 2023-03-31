@@ -151,6 +151,6 @@ html {
 }
 
 /* Hide the annoying "back to top" button */
-.back-to-top {
+.show-back-to-top .back-to-top {
     display: none;
 }
