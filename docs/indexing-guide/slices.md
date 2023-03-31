@@ -514,12 +514,23 @@ $[3, 5)$ but in reverse order.
       <td style="color:#EE0000;">6</td>
     </tr>
     <tr>
-      <th style="color:#EE0000;">WRONG</th>
+      <th></th>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
       <td colspan="3"><div class="centered-text">(reversed)</div><div class="horizontal-line"></div></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th></th>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td style="color:#EE0000;">WRONG</td>
+      <td></td>
       <td></td>
     </tr>
   </table>
