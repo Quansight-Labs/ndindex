@@ -528,9 +528,7 @@ $[3, 5)$ but in reverse order.
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
-      <td style="color:#EE0000;">WRONG</td>
-      <td></td>
+      <td colspan="3" style="color:#EE0000;"><div class="centered-text"><b>THIS IS WRONG!</b></div></td>
       <td></td>
     </tr>
   </table>
@@ -885,7 +883,7 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><pre> 'g']</pre></td>
       </tr>
       <tr>
-        <td style="color: #EE0000">index</td>
+        <th style="color: #EE0000">index</th>
         <td></td>
         <td style="color: #EE0000">0</td>
         <td></td>
