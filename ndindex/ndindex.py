@@ -4,6 +4,7 @@ import itertools
 import numbers
 import operator
 import functools
+from collections import defaultdict
 
 newaxis = None
 
@@ -696,20 +697,29 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
 
     `skip_axes` should be a tuple of axes to skip. It can use negative
     integers, e.g., `skip_axes=(-1,)` will skip the last axis. The order of
-    the axes in `skip_axes` does not matter, but it should not contain
-    duplicate axes. The axes in `skip_axes` refer to the final broadcasted
-    shape of `shapes`. For example, `iter_indices((3,), (1, 2, 3),
-    skip_axes=(0,))` will skip the first axis, and only applies to the second
-    shape, since the first shape corresponds to axis `2` of the final
-    broadcasted shape `(1, 2, 3)`. Note that the skipped axes do not
-    themselves need to be broadcast compatible.
+    the axes in `skip_axes` does not matter. The axes in `skip_axes` refer to
+    the shapes *before* broadcasting (if you want to refer to the axes after
+    broadcasting, either broadcast the shapes and arrays first, or refer to
+    the axes using negative integers). For example, `iter_indices((10, 2),
+    (20, 1, 2), skip_axes=(0,))` will skip the size `10` axis of `(10, 2)` and
+    the size `20` axis of `(20, 1, 2)`. The result is two sets of indices, one
+    for each element of the non-skipped dimensions:
+
+    >>> from ndindex import iter_indices
+    >>> for idx1, idx2 in iter_indices((10, 2), (20, 1, 2), skip_axes=(0,)):
+    ...     print(idx1, idx2)
+    Tuple(slice(None, None, None), 0) Tuple(slice(None, None, None), 0, 0)
+    Tuple(slice(None, None, None), 1) Tuple(slice(None, None, None), 0, 1)
+
+    The skipped axes do not themselves need to be broadcast compatible, but
+    the shapes with all the skipped axes removed should be broadcast
+    compatible.
 
     For example, suppose `a` is an array with shape `(3, 2, 4, 4)`, which we
     wish to think of as a `(3, 2)` stack of 4 x 4 matrices. We can generate an
     iterator for each matrix in the "stack" with `iter_indices((3, 2, 4, 4),
     skip_axes=(-1, -2))`:
 
-    >>> from ndindex import iter_indices
     >>> for idx in iter_indices((3, 2, 4, 4), skip_axes=(-1, -2)):
     ...     print(idx)
     (Tuple(0, 0, slice(None, None, None), slice(None, None, None)),)
@@ -719,9 +729,11 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     (Tuple(2, 0, slice(None, None, None), slice(None, None, None)),)
     (Tuple(2, 1, slice(None, None, None), slice(None, None, None)),)
 
-    Note that the iterates of `iter_indices` are always a tuple, even if only
-    a single shape is provided (one could instead use `for idx, in
-    iter_indices(...)` above).
+    .. note::
+
+       The iterates of `iter_indices` are always a tuple, even if only a
+       single shape is provided (one could instead use `for idx, in
+       iter_indices(...)` above).
 
     As another example, say `a` is shape `(1, 3)` and `b` is shape `(2, 1)`,
     and we want to generate indices for every value of the broadcasted
@@ -771,37 +783,50 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
 
     shapes = [asshape(shape) for shape in shapes]
     ndim = len(max(shapes, key=len))
+    min_ndim = len(min(shapes, key=len))
 
     if isinstance(skip_axes, int):
         skip_axes = (skip_axes,)
-    _skip_axes = []
-    for a in skip_axes:
-        try:
-            a = ndindex(a).reduce(ndim).args[0]
-        except IndexError:
-            raise AxisError(a, ndim)
-        if a in _skip_axes:
-            raise ValueError("skip_axes should not contain duplicate axes")
-        _skip_axes.append(a)
 
-    _shapes = [(1,)*(ndim - len(shape)) + shape for shape in shapes]
-    _shapes = [tuple(1 if i in _skip_axes else shape[i] for i in range(ndim))
-               for shape in _shapes]
+    n = len(skip_axes)
+
+    if len(set(skip_axes)) != n:
+        raise ValueError("skip_axes should not contain duplicate axes")
+
+    _skip_axes = defaultdict(list)
+    for shape in shapes:
+        for a in skip_axes:
+            try:
+                a = ndindex(a).reduce(len(shape)).raw
+            except IndexError:
+                raise AxisError(a, min_ndim)
+            _skip_axes[shape].append(a)
+        _skip_axes[shape].sort()
+
+    _shapes = [remove_indices(shape, skip_axes) for shape in shapes]
+    # _shapes = [(1,)*(ndim - len(shape)) + shape for shape in shapes]
+    # _shapes = [tuple(1 if i in _skip_axes else shape[i] for i in range(ndim))
+    #            for shape in _shapes]
     iters = [[] for i in range(len(shapes))]
     broadcasted_shape = broadcast_shapes(*_shapes)
+    _broadcasted_shape = unremove_indices(broadcasted_shape, skip_axes, ndim)
 
     for i in range(-1, -ndim-1, -1):
         for it, shape, _shape in zip(iters, shapes, _shapes):
             if -i > len(shape):
+                # for every dimension prepended by broadcasting, repeat the
+                # indices that many times
                 for j in range(len(it)):
-                    if broadcasted_shape[i] not in [0, 1]:
-                        it[j] = ncycles(it[j], broadcasted_shape[i])
+                    if broadcasted_shape[i+n] not in [0, 1]:
+                        it[j] = ncycles(it[j], broadcasted_shape[i+n])
                     break
-            elif ndim + i in _skip_axes:
+            elif len(shape) + i in _skip_axes[shape]:
                 it.insert(0, [slice(None)])
             else:
-                if broadcasted_shape[i] != 1 and shape[i] == 1:
-                    it.insert(0, ncycles(range(shape[i]), broadcasted_shape[i]))
+                if _broadcasted_shape[i] is None:
+                    pass
+                elif _broadcasted_shape[i] != 1 and shape[i] == 1:
+                    it.insert(0, ncycles(range(shape[i]), _broadcasted_shape[i]))
                 else:
                     it.insert(0, range(shape[i]))
 
@@ -812,6 +837,29 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)
+
+def remove_indices(x, idxes):
+    """
+    Return `x` with the indices `idxes` removed.
+    """
+    dim = len(x)
+    _idxes = sorted({i if i >= 0 else i + dim for i in idxes})
+    _idxes = [i - a for i, a in zip(_idxes, range(len(_idxes)))]
+    _x = list(x)
+    for i in _idxes:
+        _x.pop(i)
+    return tuple(_x)
+
+def unremove_indices(x, idxes, n, val=None):
+    """
+    Insert `val` in `x` so that it appears at `idxes`, assuming the original
+    list had size `n` (reverse of `remove_indices`)
+    """
+    x = list(x)
+    _idxes = sorted({i if i >= 0 else i + n for i in idxes})
+    for i in _idxes:
+        x.insert(i, val)
+    return tuple(x)
 
 class ncycles:
     """

@@ -3,14 +3,15 @@ import warnings
 
 import numpy as np
 
-from hypothesis import given, example, settings
+from hypothesis import assume, given, example, settings
 from hypothesis.strategies import (one_of, integers, tuples as
-                                   hypothesis_tuples, just)
+                                   hypothesis_tuples, just, lists, shared)
 
 from pytest import raises
 
 from ..ndindex import (ndindex, asshape, iter_indices, ncycles,
-                       BroadcastError, AxisError, broadcast_shapes)
+                       BroadcastError, AxisError, broadcast_shapes,
+                       remove_indices, unremove_indices)
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
@@ -353,3 +354,34 @@ def test_broadcast_shapes(broadcastable_shapes):
         assert broadcast_shapes(*shapes) == broadcasted_shape
     else:
         raises(BroadcastError, lambda: broadcast_shapes(*shapes))
+
+remove_indices_n = shared(integers(0, 100))
+
+@given(remove_indices_n,
+       remove_indices_n.flatmap(lambda n: lists(integers(-n, n), unique=True)))
+def test_remove_indices(n, idxes):
+    if idxes:
+        assume(max(idxes) < n)
+        assume(min(idxes) >= -n)
+    a = tuple(range(n))
+    b = remove_indices(a, idxes)
+
+    A = list(a)
+    for i in idxes:
+        A[i] = None
+
+    assert set(A) - set(b) == ({None} if idxes else set())
+    assert set(b) - set(A) == set()
+
+    # Check the order is correct
+    j = 0
+    for i in range(n):
+        val = A[i]
+        if val == None:
+            assert val not in b
+        else:
+            assert b[j] == val
+            j += 1
+
+    # Test that unremove_indices is the inverse
+    assert unremove_indices(b, idxes, n) == tuple(A)
