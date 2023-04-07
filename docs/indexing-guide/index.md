@@ -79,9 +79,9 @@ same semantics as NumPy. Finally, note that some other Python array libraries
 subset of the full NumPy semantics outlined here.
 
 Semantically, an index `x` picks some subset of the elements of `a`. An index
-`a[x]` always either returns a new array with the same dtype as `a`, and
-indeed, some subset of the same elements that were in `a`, or it raises
-`IndexError`. The key rule that applies to all types of indices is this:
+`a[x]` always either returns a new array with some subset of the elements of
+`a`, or it raises `IndexError`. The most important rule for indexing, which
+applies to all types of indices, is this:
 
 > **Indices do not in any way depend on the *values* of the elements they
   select. They only depend on their *position* in the array `a`.**
@@ -134,7 +134,7 @@ So the following are always true about any index:
 - An index on an array always produces a new array with the same dtype (unless
   it raises `IndexError`).
 
-- Each element of the new array correspond to some element of the original
+- Each element of the new array corresponds to some element of the original
   array.
 
 - These elements are chosen by their position in the original array only.
