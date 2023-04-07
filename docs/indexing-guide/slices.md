@@ -868,7 +868,15 @@ reasons why this way of thinking creates more confusion than it removes.
   .left-arrow-cell {
     background-image: url('../_static/arrow.svg');
     background-repeat: no-repeat;
-    background-position: 0px center; /* shift the background image 10px to the right */
+    background-position: 0px center;
+  }
+  .left-arrow-curved-cell {
+    background-image: url('../_static/arrow-short-curved.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    height: 80px;
+    vertical-align: middle;
+    transform: translate(9px, 0px);
   }
   .right-arrow-cell::before {
     content: '';
@@ -879,7 +887,7 @@ reasons why this way of thinking creates more confusion than it removes.
     height: 100%;
     background-image: url('../_static/arrow.svg');
     background-repeat: no-repeat;
-    background-position: 0px center; /* shift the background image 10px to the right */
+    background-position: 0px center;
     transform: scaleX(-1);
   }
   </style>
@@ -1826,11 +1834,11 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
   <tr>
     <td></td>
     <td></td>
-    <td style="line-height: 0em; color: #EE0000">&le; stop</td>
-    <td colspan="5" class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-10px)">-3</div></td>
+    <td style="line-height: 0em; vertical-align: top; color: #EE0000">&le; stop</td>
+    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, -18px)">-3</div></td>
     <td></td>
-    <td colspan="5" class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-10px)">-3</div></td>
-    <td style="color: #5E5EFF">start</td>
+    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, -18px)">-3</div></td>
+    <td style="vertical-align: top; color: #5E5EFF">start</td>
   </tr>
 </table>
 </div>
