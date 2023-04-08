@@ -107,7 +107,9 @@ def test_ndindex_invalid():
     with warnings.catch_warnings(record=True) as r:
         # Make sure no warnings are emitted from ndindex()
         warnings.simplefilter("error")
-        raises(IndexError, lambda: ndindex([1, []]))
+        # Newer numpy versions raise ValueError with this index (although
+        # perhaps they shouldn't)
+        raises((IndexError, ValueError), lambda: ndindex([1, []]))
     assert not r
 
 def test_ndindex_ellipsis():
