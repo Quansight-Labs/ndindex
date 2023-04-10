@@ -16,6 +16,7 @@ from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
                                     mbs, BroadcastableShapes)
 
 from ..ndindex import ndindex
+from ..iterators import remove_indices, unremove_indices
 
 # Hypothesis strategies for generating indices. Note that some of these
 # strategies are nominally already defined in hypothesis, but we redefine them
@@ -114,11 +115,11 @@ def _mutually_broadcastable_shapes(draw):
 mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
 @composite
-def _skip_axes(draw):
+def _skip_axes_st(draw):
     shapes, result_shape = draw(mutually_broadcastable_shapes)
-    n = len(result_shape)
+    N = len(min(shapes, key=len, default=()))
     axes = draw(one_of(none(),
-                      lists(integers(-n, max(0, n-1)), max_size=n)))
+                      lists(integers(-N, max(0, N-1)), unique=True)))
     if isinstance(axes, list):
         axes = tuple(axes)
         # Sometimes return an integer
@@ -126,7 +127,7 @@ def _skip_axes(draw):
             return axes[0]
     return axes
 
-skip_axes = shared(_skip_axes())
+skip_axes_st = shared(_skip_axes_st())
 
 @composite
 def mutually_broadcastable_shapes_with_skipped_axes(draw):
@@ -136,36 +137,41 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
 
     The result_shape will be None in the position of skip_axes.
     """
-    skip_axes_ = draw(skip_axes)
+    skip_axes_ = draw(skip_axes_st)
     shapes, result_shape = draw(mutually_broadcastable_shapes)
-    ndim = len(result_shape)
     if skip_axes_ is None:
         return shapes, result_shape
     if isinstance(skip_axes_, int):
         skip_axes_ = (skip_axes_,)
 
-    _shapes = []
+    # Randomize the shape values in the skipped axes
+    shapes_ = []
     for shape in shapes:
-        _shape = list(shape)
-        for i in skip_axes_:
-            # skip axes index the broadcasted shape, so are only valid on the
-            # individual shapes in negative form. TODO: Add this as a keyword
-            # to reduce().
-            neg_i = ndindex(i).reduce(ndim).raw - ndim
-            assert ndindex(i).reduce(ndim) == ndindex(neg_i).reduce(ndim)
-            if ndindex(neg_i).isvalid(len(shape)) and draw(booleans()):
-                _shape[neg_i] = draw(integers(0))
+        n = len(shape) + len(skip_axes_)
+        _shape = unremove_indices(shape, skip_axes_, n)
+        # sanity check
+        assert remove_indices(_shape, skip_axes_) == shape, (_shape, skip_axes_, shape)
+        # Allow negative skip axes to sometimes be duplicated by positive
+        # ones (e.g., _shape = [0, None, 1], skip_axes = [1, -2]
+        for i in range(n):
+            _shape2 = unremove_indices(shape, skip_axes_, n-i)
+            if remove_indices(_shape2, skip_axes_) == shape and draw(booleans()):
+                _shape = _shape2
 
-        _shapes.append(tuple(_shape))
+        # Replace None values with random values
+        for j in range(len(shape)):
+            if shape[j] is None:
+                shape[j] = draw(integers(0))
+        shapes_.append(tuple(_shape))
+    # sanity check
+        assert remove_indices(_shape, skip_axes_) == tuple(shape), (_shape, skip_axes_, shape)
 
-    _result_shape = list(result_shape)
-    for i in skip_axes_:
-        _result_shape[i] = None
-    _result_shape = tuple(_result_shape)
+    result_shape_ = unremove_indices(result_shape, skip_axes_, len(result_shape) + len(skip_axes_))
+    assert remove_indices(result_shape_, skip_axes_) == result_shape
 
-    for shape in _shapes:
+    for shape in shapes_:
         assume(prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
-    return BroadcastableShapes(_shapes, _result_shape)
+    return BroadcastableShapes(shapes_, result_shape_)
 
 
 # We need to make sure shapes for boolean arrays are generated in a way that

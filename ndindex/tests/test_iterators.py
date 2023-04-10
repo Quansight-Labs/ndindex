@@ -14,13 +14,13 @@ from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import (assert_equal, prod,
                       mutually_broadcastable_shapes_with_skipped_axes,
-                      skip_axes, mutually_broadcastable_shapes, tuples,
+                      skip_axes_st, mutually_broadcastable_shapes, tuples,
                       shapes)
 
 @example([((1, 1), (1, 1)), (None, 1)], (0, 0))
 @example([((), (0,)), (None,)], (0,))
 @example([((1, 2), (2, 1)), (2, None)], 1)
-@given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes)
+@given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
 def test_iter_indices(broadcastable_shapes, _skip_axes):
     # broadcasted_shape will contain None on the skip_axes, as those axes
     # might not be broadcast compatible
@@ -241,3 +241,15 @@ def test_remove_indices(n, idxes):
 
     # Test that unremove_indices is the inverse
     assert unremove_indices(b, idxes, n) == tuple(A)
+
+# Meta-test for the hypothesis strategy
+@given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
+def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
+                                                         skip_axes):
+    shapes, broadcasted_shape = broadcastable_shapes
+    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else () if skip_axes is None else skip_axes
+
+    _shapes = [remove_indices(shape, _skip_axes) for shape in shapes]
+    _broadcasted_shapes = remove_indices(broadcasted_shape, _skip_axes)
+
+    assert broadcast_shapes(*_shapes) == _broadcasted_shapes
