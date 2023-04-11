@@ -117,13 +117,20 @@ mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 @composite
 def _skip_axes_st(draw):
     shapes, result_shape = draw(mutually_broadcastable_shapes)
-    N = len(min(shapes, key=len, default=()))
-    axes = draw(one_of(none(),
-                      lists(integers(-N, max(0, N-1)), unique=True)))
+    if result_shape == ():
+        return ()
+    negative = draw(booleans(), label='skip_axes < 0')
+    N = len(min(shapes, key=len))
+    if N == 0:
+        return ()
+    if negative:
+        axes = draw(one_of(none(), lists(integers(-N, -1), unique=True)))
+    else:
+        axes = draw(one_of(none(), lists(integers(0, N-1), unique=True)))
     if isinstance(axes, list):
         axes = tuple(axes)
         # Sometimes return an integer
-        if len(axes) == 1 and draw(booleans()): # pragma: no cover
+        if len(axes) == 1 and draw(booleans(), label='skip_axes integer'): # pragma: no cover
             return axes[0]
     return axes
 
@@ -147,26 +154,18 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
     # Randomize the shape values in the skipped axes
     shapes_ = []
     for shape in shapes:
-        n = len(shape) + len(skip_axes_)
-        _shape = unremove_indices(shape, skip_axes_, n)
+        _shape = unremove_indices(shape, skip_axes_)
         # sanity check
         assert remove_indices(_shape, skip_axes_) == shape, (_shape, skip_axes_, shape)
-        # Allow negative skip axes to sometimes be duplicated by positive
-        # ones (e.g., _shape = [0, None, 1], skip_axes = [1, -2]
-        for i in range(n):
-            _shape2 = unremove_indices(shape, skip_axes_, n-i)
-            if remove_indices(_shape2, skip_axes_) == shape and draw(booleans()):
-                _shape = _shape2
 
         # Replace None values with random values
         for j in range(len(shape)):
             if shape[j] is None:
                 shape[j] = draw(integers(0))
         shapes_.append(tuple(_shape))
-    # sanity check
-        assert remove_indices(_shape, skip_axes_) == tuple(shape), (_shape, skip_axes_, shape)
 
-    result_shape_ = unremove_indices(result_shape, skip_axes_, len(result_shape) + len(skip_axes_))
+    result_shape_ = unremove_indices(result_shape, skip_axes_)
+    # sanity check
     assert remove_indices(result_shape_, skip_axes_) == result_shape
 
     for shape in shapes_:

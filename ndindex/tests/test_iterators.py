@@ -240,8 +240,10 @@ def test_remove_indices(n, idxes):
             j += 1
 
     # Test that unremove_indices is the inverse
-    assert unremove_indices(b, idxes, n) == tuple(A)
-
+    if all(i >= 0 for i in idxes) or all(i < 0 for i in idxes):
+        assert unremove_indices(b, idxes) == tuple(A)
+    else:
+        raises(NotImplementedError, lambda: unremove_indices(b, idxes))
 # Meta-test for the hypothesis strategy
 @given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
 def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,

@@ -101,14 +101,16 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     indices.
 
     `skip_axes` should be a tuple of axes to skip. It can use negative
-    integers, e.g., `skip_axes=(-1,)` will skip the last axis. The order of
-    the axes in `skip_axes` does not matter. The axes in `skip_axes` refer to
-    the shapes *before* broadcasting (if you want to refer to the axes after
-    broadcasting, either broadcast the shapes and arrays first, or refer to
-    the axes using negative integers). For example, `iter_indices((10, 2),
-    (20, 1, 2), skip_axes=(0,))` will skip the size `10` axis of `(10, 2)` and
-    the size `20` axis of `(20, 1, 2)`. The result is two sets of indices, one
-    for each element of the non-skipped dimensions:
+    integers, e.g., `skip_axes=(-1,)` will skip the last axis (but note that
+    mixing negative and nonnegative skip axes is currently not supported). The
+    order of the axes in `skip_axes` does not matter. The axes in `skip_axes`
+    refer to the shapes *before* broadcasting (if you want to refer to the
+    axes after broadcasting, either broadcast the shapes and arrays first, or
+    refer to the axes using negative integers). For example,
+    `iter_indices((10, 2), (20, 1, 2), skip_axes=(0,))` will skip the size
+    `10` axis of `(10, 2)` and the size `20` axis of `(20, 1, 2)`. The result
+    is two sets of indices, one for each element of the non-skipped
+    dimensions:
 
     >>> from ndindex import iter_indices
     >>> for idx1, idx2 in iter_indices((10, 2), (20, 1, 2), skip_axes=(0,)):
@@ -182,7 +184,28 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     Tuple(1, 2)
 
     """
+    if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
+        # Mixing positive and negative skip_axes is too difficult to deal with
+        # (see the comment in unremove_indices). It's a bit of an unusual
+        # thing to support, at least in the general case, because a positive
+        # and negative index can index the same element, but only for shapes
+        # that are a specific size. So while, in principle something like
+        # iter_indices((2, 10, 20, 4), (2, 30, 4), skip_axes=(1, -2)) could
+        # make sense, it's a bit odd to do so. Of course, there's no reason we
+        # couldn't support cases like that, but they complicate the
+        # implementation and, especially, complicate the test generation in
+        # the hypothesis strategies. Given that I'm not completely sure how to
+        # implement it correctly, and I don't actually need support for it,
+        # I'm leaving it as not implemented for now.
+        raise NotImplementedError("Mixing both negative and nonnegative idxes is not yet supported")
+
+    n = len(skip_axes)
+    if len(set(skip_axes)) != n:
+        raise ValueError("skip_axes should not contain duplicate axes")
+
     if not shapes:
+        if skip_axes:
+            raise AxisError(skip_axes[0], 0)
         yield ()
         return
 
@@ -193,10 +216,6 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     if isinstance(skip_axes, int):
         skip_axes = (skip_axes,)
 
-    n = len(skip_axes)
-
-    if len(set(skip_axes)) != n:
-        raise ValueError("skip_axes should not contain duplicate axes")
 
     _skip_axes = defaultdict(list)
     for shape in shapes:
@@ -214,7 +233,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     #            for shape in _shapes]
     iters = [[] for i in range(len(shapes))]
     broadcasted_shape = broadcast_shapes(*_shapes)
-    _broadcasted_shape = unremove_indices(broadcasted_shape, skip_axes, ndim)
+    _broadcasted_shape = unremove_indices(broadcasted_shape, skip_axes)
 
     for i in range(-1, -ndim-1, -1):
         for it, shape, _shape in zip(iters, shapes, _shapes):
@@ -255,12 +274,30 @@ def remove_indices(x, idxes):
         _x.pop(i)
     return tuple(_x)
 
-def unremove_indices(x, idxes, n, val=None):
+def unremove_indices(x, idxes, *, val=None):
     """
-    Insert `val` in `x` so that it appears at `idxes`, assuming the original
-    list had size `n` (reverse of `remove_indices`)
+    Insert `val` in `x` so that it appears at `idxes`.
+
+    Note that idxes must be either all negative or all nonnegative
     """
+    if any(i >= 0 for i in idxes) and any(i < 0 for i in idxes):
+        # A mix of positive and negative indices provides a fundamental
+        # problem. Sometimes, the result is not unique: for example, x = [0];
+        # idxes = [1, -1] could be satisfied by both [0, None] or [0, None,
+        # None], depending on whether each index refers to a separate None or
+        # not (note that both cases are supported by remove_indices(), because
+        # there it is unambiguous). But even worse, in some cases, there may
+        # be no way to satisfy the given requirement. For example, given x =
+        # [0, 1, 2, 3]; idxes = [3, -3], there is no way to insert None into x
+        # so that remove_indices(res, idxes) == x. To see this, simply observe
+        # that there is no size list x such that remove_indices(x, [3, -3])
+        # returns a tuple of size 4:
+        #
+        # >>> [len(remove_indices(list(range(n)), [3, -3])) for n in range(4, 10)]
+        # [2, 3, 5, 5, 6, 7]
+        raise NotImplementedError("Mixing both negative and nonnegative idxes is not yet supported")
     x = list(x)
+    n = len(idxes) + len(x)
     _idxes = sorted({i if i >= 0 else i + n for i in idxes})
     for i in _idxes:
         x.insert(i, val)
