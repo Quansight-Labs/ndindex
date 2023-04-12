@@ -221,10 +221,78 @@ def test_broadcast_shapes(broadcastable_shapes):
     else:
         raises(BroadcastError, lambda: broadcast_shapes(*shapes))
 
+
+@given(lists(shapes, max_size=32))
+def test_broadcast_shapes_errors(shapes):
+    error = True
+    try:
+        broadcast_shapes(*shapes)
+    except BroadcastError as exc:
+        e = exc
+    else:
+        error = False
+
+    # The ndindex and numpy errors won't match in general, because
+    # ndindex.broadcast_shapes gives an error with the first two shapes that
+    # aren't broadcast compatible, but numpy doesn't always, due to different
+    # implementation algorithms (e.g., the message from
+    # np.broadcast_shapes((0,), (0, 2), (2, 0)) mentions the last two shapes
+    # whereas ndindex.broadcast_shapes mentions the first two).
+
+    # Instead, just confirm that the error message is correct as stated, and
+    # check against the numpy error message when just broadcasting the two
+    # reportedly bad shapes.
+
+    if not error:
+        try:
+            np.broadcast_shapes(*shapes)
+        except:
+            raise RuntimeError("ndindex.broadcast_shapes raised but np.broadcast_shapes did not")
+        return
+
+    assert shapes[e.arg1] == e.shape1
+    assert shapes[e.arg2] == e.shape2
+
+    try:
+        np.broadcast_shapes(e.shape1, e.shape2)
+    except ValueError as np_exc:
+        # Check that they do in fact not broadcast, and the error messages are
+        # the same modulo the different arg positions.
+        assert str(BroadcastError(0, e.shape1, 1, e.shape2)) == str(np_exc)
+    else:
+        raise RuntimeError("ndindex.broadcast_shapes raised but np.broadcast_shapes did not")
+
 @given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
 def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
     assert broadcast_shapes(*shapes, skip_axes=skip_axes) == broadcasted_shape
+
+@given(mutually_broadcastable_shapes, lists(integers(-20, 20), max_size=20))
+def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
+    shapes, broadcasted_shape = broadcastable_shapes
+    if any(i < 0 for i in skip_axes) and any(i >= 0 for i in skip_axes):
+        raises(NotImplementedError, lambda: broadcast_shapes(*shapes, skip_axes=skip_axes))
+        return
+
+    try:
+        if not shapes and skip_axes:
+            raise IndexError
+        for shape in shapes:
+            for i in skip_axes:
+                shape[i]
+    except IndexError:
+        error = True
+    else:
+        error = False
+
+    try:
+        broadcast_shapes(*shapes, skip_axes=skip_axes)
+    except IndexError:
+        if not error:
+            raise RuntimeError("broadcast_shapes raised but should not have")
+    else:
+        if error:
+            raise RuntimeError("broadcast_shapes did not raise but should have")
 
 remove_indices_n = shared(integers(0, 100))
 

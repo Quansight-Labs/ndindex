@@ -5,6 +5,7 @@ from collections import defaultdict
 from .ndindex import asshape, ndindex
 
 # TODO: Use this in other places in the code that check broadcast compatibility.
+
 class BroadcastError(ValueError):
     """
     Exception raised by :func:`iter_indices()` when the input shapes are not
@@ -13,6 +14,17 @@ class BroadcastError(ValueError):
     This is used instead of the NumPy exception of the same name so that
     `iter_indices` does not need to depend on NumPy.
     """
+    __slots__ = ("arg1", "shape1", "arg2", "shape2")
+
+    def __init__(self, arg1, shape1, arg2, shape2):
+        self.arg1 = arg1
+        self.shape1 = shape1
+        self.arg2 = arg2
+        self.shape2 = shape2
+
+    def __str__(self):
+        arg1, shape1, arg2, shape2 = self.args
+        return f"shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg {arg1} with shape {shape1} and arg {arg2} with shape {shape2}."
 
 class AxisError(ValueError, IndexError):
     """
@@ -37,10 +49,28 @@ def broadcast_shapes(*shapes, skip_axes=()):
     Broadcast the input shapes `shapes` to a single shape.
 
     This is the same as :py:func:`np.broadcast_shapes()
-    <numpy.broadcast_shapes>`. It is included as a separate helper function
-    because `np.broadcast_shapes()` is on available in NumPy 1.20 or newer, and
-    so that ndindex functions that use this function can do without requiring
-    NumPy to be installed.
+    <numpy.broadcast_shapes>`, except is also supports skipping axes in the
+    shape with `skip_axes`.
+
+    If the shapes are not broadcast compatible (excluding `skip_axes`),
+    `BroadcastError` is raised.
+
+    >>> from ndindex import broadcast_shapes
+    >>> broadcast_shapes((2, 3), (3,), (4, 2, 1))
+    (4, 2, 3)
+    >>> broadcast_shapes((2, 3), (5,), (4, 2, 1))
+    Traceback (most recent call last):
+    ...
+    ndindex.iterators.BroadcastError: shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (2, 3) and arg 1 with shape (5,).
+
+    Axes in `skip_axes` apply to each shape *before* being broadcasted. Each
+    shape will be broadcasted together with these axes removed. The dimensions
+    in skip_axes do not need to be equal or broadcast compatible with one
+    another. The final broadcasted shape will have `None` in each `skip_axes`
+    location, and the broadcasted remaining `shapes` axes elsewhere.
+
+    >>> broadcast_shapes((10, 3, 2), (20, 2), skip_axes=(0,))
+    (None, 3, 2)
 
     """
     if isinstance(skip_axes, int):
@@ -50,55 +80,42 @@ def broadcast_shapes(*shapes, skip_axes=()):
         # See the comments in remove_indices and iter_indices
         raise NotImplementedError("Mixing both negative and nonnegative skip_axes is not yet supported")
 
-    def _broadcast_shapes(shape1, shape2):
-        """Broadcasts `shape1` and `shape2`"""
-        N1 = len(shape1)
-        N2 = len(shape2)
-        skip_axes1 = [ndindex(i).reduce(N1).raw - N1 for i in skip_axes]
-        skip_axes2 = [ndindex(i).reduce(N2).raw - N2 for i in skip_axes]
-        N = max(N1, N2)
-        shape = [None for _ in range(N)]
-        i = N - 1
-        while i >= 0:
-            n1 = N1 - N + i
-            if i in skip_axes1:
-                d1 = None
-            elif n1 >= 0:
-                d1 = shape1[n1]
-            else:
-                d1 = 1
-            n2 = N2 - N + i
-            if i in skip_axes2:
-                d2 = None
-            elif n2 >= 0:
-                d2 = shape2[n2]
-            else:
-                d2 = 1
+    if not shapes:
+        if skip_axes:
+            # Raise IndexError
+            ndindex(skip_axes[0]).reduce(0)
+        return ()
 
-            if d1 == None or d2 == None:
-                shape[i] = None
-            elif d1 == 1:
-                shape[i] = d2
-            elif d2 == 1:
-                shape[i] = d1
-            elif d1 == d2:
-                shape[i] = d1
-            else:
-                # TODO: Build an error message that matches NumPy
-                raise BroadcastError("shape mismatch: objects cannot be broadcast to a single shape.")
+    dims = [len(shape) for shape in shapes]
+    shape_skip_axes = [[ndindex(i).reduce(n).raw - n for i in skip_axes] for n in dims]
+    N = max(dims)
+    broadcasted_skip_axes = [ndindex(i).reduce(N).raw - N for i in skip_axes]
 
-            i = i - 1
+    broadcasted_shape = [None]*N
 
-        return tuple(shape)
+    for i in range(-1, -N-1, -1):
+        broadcasted_side = 1
+        arg = None
+        for j in range(len(shapes)):
+            shape = shapes[j]
+            if dims[j] < -i:
+                continue
+            shape_side = shape[i]
+            if i in shape_skip_axes[j]:
+                continue
+            elif shape_side == 1:
+                continue
+            elif broadcasted_side == 1:
+                broadcasted_side = shape_side
+                arg = j
+            elif shape_side != broadcasted_side:
+                raise BroadcastError(arg, shapes[arg], j, shapes[j])
+        if i in broadcasted_skip_axes:
+            broadcasted_shape[i] = None
+        else:
+            broadcasted_shape[i] = broadcasted_side
 
-    if len(shapes) == 1:
-        shape = shapes[0]
-        N = len(shape)
-        # Check that skip_axes are valid
-        [ndindex(i).reduce(N).raw - N for i in skip_axes]
-        return shape
-
-    return functools.reduce(_broadcast_shapes, shapes, ())
+    return tuple(broadcasted_shape)
 
 def iter_indices(*shapes, skip_axes=(), _debug=False):
     """
