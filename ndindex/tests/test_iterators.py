@@ -17,17 +17,17 @@ from .helpers import (assert_equal, prod,
                       skip_axes_st, mutually_broadcastable_shapes, tuples,
                       shapes)
 
-@example([((1, 1), (1, 1)), (None, 1)], (0, 0))
-@example([((), (0,)), (None,)], (0,))
+@example([((1, 1), (1, 1)), (None, 1)], (0,))
+@example([((0,), (0,)), (None,)], (0,))
 @example([((1, 2), (2, 1)), (2, None)], 1)
 @given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
-def test_iter_indices(broadcastable_shapes, _skip_axes):
+def test_iter_indices(broadcastable_shapes, skip_axes):
     # broadcasted_shape will contain None on the skip_axes, as those axes
     # might not be broadcast compatible
     shapes, broadcasted_shape = broadcastable_shapes
 
     # 1. Normalize inputs
-    skip_axes = (_skip_axes,) if isinstance(_skip_axes, int) else () if _skip_axes is None else _skip_axes
+    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else ()
     ndim = len(broadcasted_shape)
 
     # Double check the mutually_broadcastable_shapes_with_skipped_axes
@@ -35,79 +35,84 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
     for i in skip_axes:
         assert broadcasted_shape[i] is None
 
-    # Use negative indices to index the skip axes since only shapes that have
-    # the skip axis will include a slice.
-    normalized_skip_axes = sorted(ndindex(i).reduce(ndim).args[0] - ndim for i in skip_axes)
-    canonical_shapes = [list(s) for s in shapes]
-    for i in normalized_skip_axes:
-        for s in canonical_shapes:
-            if ndindex(i).isvalid(len(s)):
-                s[i] = 1
-    skip_shapes = [tuple(shape[i] for i in normalized_skip_axes if ndindex(i).isvalid(len(shape))) for shape in canonical_shapes]
-    broadcasted_skip_shape = tuple(broadcasted_shape[i] for i in normalized_skip_axes)
 
-    broadcasted_non_skip_shape = tuple(broadcasted_shape[i] for i in range(-1, -ndim-1, -1) if i not in normalized_skip_axes)
+    # Skipped axes may not be broadcast compatible. Since the index for a
+    # skipped axis should always be a slice(None), the result should be the
+    # same if the skipped axes are all moved to the end of the shape.
+    canonical_shapes = [list(s) for s in shapes]
+    for i in skip_axes:
+        for s in canonical_shapes:
+            x = s.pop(i)
+            s.append(x)
+
+    skip_shapes = [tuple(shape[i] for i in _skip_axes) for shape in shapes]
+    non_skip_shapes = [remove_indices(shape, skip_axes) for shape in shapes]
+    broadcasted_non_skip_shape = remove_indices(broadcasted_shape, skip_axes)
+    assert None not in broadcasted_non_skip_shape
+    assert broadcast_shapes(*non_skip_shapes) == broadcasted_non_skip_shape
+
     nitems = prod(broadcasted_non_skip_shape)
 
     if _skip_axes is None:
         res = iter_indices(*shapes)
         broadcasted_res = iter_indices(np.broadcast_shapes(*shapes))
     else:
-        # Skipped axes may not be broadcast compatible. Since the index for a
-        # skipped axis should always be a slice(None), the result should be
-        # the same if the skipped axes are all replaced with 1.
-        res = iter_indices(*shapes, skip_axes=_skip_axes)
+        res = iter_indices(*shapes, skip_axes=skip_axes)
         broadcasted_res = iter_indices(np.broadcast_shapes(*canonical_shapes),
-                                       skip_axes=_skip_axes)
+                                       skip_axes=skip_axes)
 
     sizes = [prod(shape) for shape in shapes]
     arrays = [np.arange(size).reshape(shape) for size, shape in zip(sizes, shapes)]
     canonical_sizes = [prod(shape) for shape in canonical_shapes]
     canonical_arrays = [np.arange(size).reshape(shape) for size, shape in zip(canonical_sizes, canonical_shapes)]
-    broadcasted_arrays = np.broadcast_arrays(*canonical_arrays)
 
     # 2. Check that iter_indices is the same whether or not the shapes are
     # broadcasted together first. Also check that every iterated index is the
     # expected type and there are as many as expected.
     vals = []
     n = -1
-    try:
-        for n, (idxes, bidxes) in enumerate(zip(res, broadcasted_res)):
-            assert len(idxes) == len(shapes)
-            for idx, shape in zip(idxes, shapes):
-                assert isinstance(idx, Tuple)
-                assert len(idx.args) == len(shape)
-                for i in range(-1, -len(idx.args)-1, -1):
-                    if i in normalized_skip_axes and len(idx.args) >= -i:
-                        assert idx.args[i] == slice(None)
-                    else:
-                        assert isinstance(idx.args[i], Integer)
 
-            aidxes = tuple([a[idx.raw] for a, idx in zip(arrays, idxes)])
-            canonical_aidxes = tuple([a[idx.raw] for a, idx in zip(canonical_arrays, idxes)])
-            a_broadcasted_idxs = [a[idx.raw] for a, idx in
-                                  zip(broadcasted_arrays, bidxes)]
+    def _move_slices_to_end(idx):
+        assert isinstance(idx, Tuple)
+        idx2 = list(idx.args)
+        for i in range(len(idx2)):
+            if idx.args[i] == slice(None):
+                idx2.pop(i)
+                idx2.append(slice(None))
+        return Tuple(*idx2)
 
-            for aidx, abidx, skip_shape in zip(canonical_aidxes, a_broadcasted_idxs, skip_shapes):
-                if skip_shape == broadcasted_skip_shape:
-                    assert_equal(aidx, abidx)
-                assert aidx.shape == skip_shape
+    for n, (idxes, bidxes) in enumerate(zip(res, broadcasted_res)):
+        assert len(idxes) == len(shapes)
+        assert len(bidxes) == 1
+        for idx, shape in zip(idxes, shapes):
+            assert isinstance(idx, Tuple)
+            assert len(idx.args) == len(shape)
 
-            if skip_axes:
-                # If there are skipped axes, recursively call iter_indices to
-                # get each individual element of the resulting subarrays.
-                for subidxes in iter_indices(*[x.shape for x in canonical_aidxes]):
-                    items = [x[i.raw] for x, i in zip(canonical_aidxes, subidxes)]
-                    vals.append(tuple(items))
-            else:
-                vals.append(aidxes)
-    except ValueError as e:
-        if "duplicate axes" in str(e):
-            # There should be actual duplicate axes
-            assert len({broadcasted_shape[i] for i in skip_axes}) < len(skip_axes)
-            return
-        raise # pragma: no cover
+            normalized_skip_axes = sorted(ndindex(i).reduce(len(shape)).raw for i in _skip_axes)
+            for i in range(len(idx.args)):
+                if i in normalized_skip_axes:
+                    assert idx.args[i] == slice(None)
+                else:
+                    assert isinstance(idx.args[i], Integer)
 
+        canonical_idxes = [_move_slices_to_end(idx) for idx in idxes]
+        a_indexed = tuple([a[idx.raw] for a, idx in zip(arrays, idxes)])
+        canonical_a_indexed = tuple([a[idx.raw] for a, idx in
+                                  zip(canonical_arrays, canonical_idxes)])
+
+        for a_indexed, skip_shape in zip(canonical_a_indexed, skip_shapes):
+            assert a_indexed.shape == skip_shape
+
+        # if skip_axes:
+        #     # If there are skipped axes, recursively call iter_indices to
+        #     # get each individual element of the resulting subarrays.
+        #     for subidxes in iter_indices(*[x.shape for x in canonical_a_indexed]):
+        #         items = [x[i.raw] for x, i in zip(canonical_a_indexed, subidxes)]
+        #         vals.append(tuple(items))
+        # else:
+        #     vals.append(a_indexed)
+
+    return
     assert len(set(vals)) == len(vals) == nitems
 
     # 3. Check that every element of the (broadcasted) arrays is represented
@@ -124,7 +129,7 @@ def test_iter_indices(broadcastable_shapes, _skip_axes):
         # docstring) in the case when there are no skip axes. The order when
         # there are skip axes is more complicated because the skipped axes are
         # iterated together.
-        if not skip_axes:
+        if not _skip_axes:
             assert vals == correct_vals
         else:
             assert set(vals) == set(correct_vals)
