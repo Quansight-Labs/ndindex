@@ -200,7 +200,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
         # the hypothesis strategies. Given that I'm not completely sure how to
         # implement it correctly, and I don't actually need support for it,
         # I'm leaving it as not implemented for now.
-        raise NotImplementedError("Mixing both negative and nonnegative idxes is not yet supported")
+        raise NotImplementedError("Mixing both negative and nonnegative skip_axes is not yet supported")
 
     n = len(skip_axes)
     if len(set(skip_axes)) != n:
