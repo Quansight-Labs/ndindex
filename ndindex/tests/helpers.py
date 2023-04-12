@@ -153,14 +153,14 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
     # Randomize the shape values in the skipped axes
     shapes_ = []
     for shape in shapes:
-        _shape = unremove_indices(shape, skip_axes_)
+        _shape = list(unremove_indices(shape, skip_axes_))
         # sanity check
         assert remove_indices(_shape, skip_axes_) == shape, (_shape, skip_axes_, shape)
 
         # Replace None values with random values
-        for j in range(len(shape)):
-            if shape[j] is None:
-                shape[j] = draw(integers(0))
+        for j in range(len(_shape)):
+            if _shape[j] is None:
+                _shape[j] = draw(integers(0))
         shapes_.append(tuple(_shape))
 
     result_shape_ = unremove_indices(result_shape, skip_axes_)
