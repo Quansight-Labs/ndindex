@@ -184,6 +184,9 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     Tuple(1, 2)
 
     """
+    if isinstance(skip_axes, int):
+        skip_axes = (skip_axes,)
+
     if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
         # Mixing positive and negative skip_axes is too difficult to deal with
         # (see the comment in unremove_indices). It's a bit of an unusual
