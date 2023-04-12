@@ -156,7 +156,6 @@ def test_iter_indices_errors():
     else:
         raise RuntimeError("iter_indices did not raise BroadcastError") # pragma: no cover
 
-    raises(NotImplementedError, lambda: list(iter_indices((1, 2), skip_axes=(0, -1))))
     # TODO: Check that the message is the same one used by NumPy
     # try:
     #     np.broadcast_shapes((2, 3), (3, 2))
@@ -166,6 +165,11 @@ def test_iter_indices_errors():
     #     raise RuntimeError("np.broadcast_shapes() did not raise AxisError") # pragma: no cover
     #
     # assert msg1 == msg2
+
+    raises(NotImplementedError, lambda: list(iter_indices((1, 2), skip_axes=(0, -1))))
+
+    with raises(ValueError, match=r"duplicate axes"):
+        list(iter_indices((1, 2), skip_axes=(0, 1, 0)))
 
 @example(1, 1, 1)
 @given(integers(0, 100), integers(0, 100), integers(0, 100))
