@@ -124,14 +124,13 @@ def _skip_axes_st(draw):
     if N == 0:
         return ()
     if negative:
-        axes = draw(one_of(none(), lists(integers(-N, -1), unique=True)))
+        axes = draw(one_of(lists(integers(-N, -1), unique=True)))
     else:
-        axes = draw(one_of(none(), lists(integers(0, N-1), unique=True)))
-    if isinstance(axes, list):
-        axes = tuple(axes)
-        # Sometimes return an integer
-        if len(axes) == 1 and draw(booleans(), label='skip_axes integer'): # pragma: no cover
-            return axes[0]
+        axes = draw(one_of(lists(integers(0, N-1), unique=True)))
+    axes = tuple(axes)
+    # Sometimes return an integer
+    if len(axes) == 1 and draw(booleans(), label='skip_axes integer'): # pragma: no cover
+        return axes[0]
     return axes
 
 skip_axes_st = shared(_skip_axes_st())

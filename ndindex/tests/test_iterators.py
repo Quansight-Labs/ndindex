@@ -251,9 +251,15 @@ def test_remove_indices(n, idxes):
 def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
                                                          skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
-    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else () if skip_axes is None else skip_axes
+    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else ()
 
-    _shapes = [remove_indices(shape, _skip_axes) for shape in shapes]
-    _broadcasted_shapes = remove_indices(broadcasted_shape, _skip_axes)
+    for shape in shapes:
+        assert None not in shape
+    for i in _skip_axes:
+        assert broadcasted_shape[i] is None
 
-    assert broadcast_shapes(*_shapes) == _broadcasted_shapes
+    _shapes = [remove_indices(shape, skip_axes) for shape in shapes]
+    _broadcasted_shape = remove_indices(broadcasted_shape, skip_axes)
+
+    assert None not in _broadcasted_shape
+    assert broadcast_shapes(*_shapes) == _broadcasted_shape
