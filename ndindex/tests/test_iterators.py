@@ -156,6 +156,7 @@ def test_iter_indices_errors():
     else:
         raise RuntimeError("iter_indices did not raise BroadcastError") # pragma: no cover
 
+    raises(NotImplementedError, lambda: list(iter_indices((1, 2), skip_axes=(0, -1))))
     # TODO: Check that the message is the same one used by NumPy
     # try:
     #     np.broadcast_shapes((2, 3), (3, 2))
@@ -244,6 +245,7 @@ def test_remove_indices(n, idxes):
         assert unremove_indices(b, idxes) == tuple(A)
     else:
         raises(NotImplementedError, lambda: unremove_indices(b, idxes))
+
 # Meta-test for the hypothesis strategy
 @given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
 def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
