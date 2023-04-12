@@ -216,6 +216,11 @@ def test_broadcast_shapes(broadcastable_shapes):
     else:
         raises(BroadcastError, lambda: broadcast_shapes(*shapes))
 
+@given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
+def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):
+    shapes, broadcasted_shape = broadcastable_shapes
+    assert broadcast_shapes(*shapes, skip_axes=skip_axes) == broadcasted_shape
+
 remove_indices_n = shared(integers(0, 100))
 
 @given(remove_indices_n,

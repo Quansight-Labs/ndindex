@@ -32,7 +32,7 @@ class AxisError(ValueError, IndexError):
     def __str__(self):
         return f"axis {self.axis} is out of bounds for array of dimension {self.ndim}"
 
-def broadcast_shapes(*shapes):
+def broadcast_shapes(*shapes, skip_axes=()):
     """
     Broadcast the input shapes `shapes` to a single shape.
 
@@ -43,27 +43,41 @@ def broadcast_shapes(*shapes):
     NumPy to be installed.
 
     """
+    if isinstance(skip_axes, int):
+        skip_axes = (skip_axes,)
+
+    if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
+        # See the comments in remove_indices and iter_indices
+        raise NotImplementedError("Mixing both negative and nonnegative skip_axes is not yet supported")
 
     def _broadcast_shapes(shape1, shape2):
         """Broadcasts `shape1` and `shape2`"""
         N1 = len(shape1)
         N2 = len(shape2)
+        skip_axes1 = [ndindex(i).reduce(N1).raw - N1 for i in skip_axes]
+        skip_axes2 = [ndindex(i).reduce(N2).raw - N2 for i in skip_axes]
         N = max(N1, N2)
         shape = [None for _ in range(N)]
         i = N - 1
         while i >= 0:
             n1 = N1 - N + i
-            if n1 >= 0:
+            if i in skip_axes1:
+                d1 = None
+            elif n1 >= 0:
                 d1 = shape1[n1]
             else:
                 d1 = 1
             n2 = N2 - N + i
-            if n2 >= 0:
+            if i in skip_axes2:
+                d2 = None
+            elif n2 >= 0:
                 d2 = shape2[n2]
             else:
                 d2 = 1
 
-            if d1 == 1:
+            if d1 == None or d2 == None:
+                shape[i] = None
+            elif d1 == 1:
                 shape[i] = d2
             elif d2 == 1:
                 shape[i] = d1
@@ -76,6 +90,13 @@ def broadcast_shapes(*shapes):
             i = i - 1
 
         return tuple(shape)
+
+    if len(shapes) == 1:
+        shape = shapes[0]
+        N = len(shape)
+        # Check that skip_axes are valid
+        [ndindex(i).reduce(N).raw - N for i in skip_axes]
+        return shape
 
     return functools.reduce(_broadcast_shapes, shapes, ())
 
