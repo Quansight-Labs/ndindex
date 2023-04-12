@@ -269,6 +269,8 @@ def remove_indices(x, idxes):
     """
     Return `x` with the indices `idxes` removed.
     """
+    if isinstance(idxes, int):
+        idxes = (idxes,)
     dim = len(x)
     _idxes = sorted({i if i >= 0 else i + dim for i in idxes})
     _idxes = [i - a for i, a in zip(_idxes, range(len(_idxes)))]
