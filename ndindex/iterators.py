@@ -267,32 +267,28 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
             _skip_axes[shape].append(a)
         _skip_axes[shape].sort()
 
-    _shapes = [remove_indices(shape, skip_axes) for shape in shapes]
-    # _shapes = [(1,)*(ndim - len(shape)) + shape for shape in shapes]
-    # _shapes = [tuple(1 if i in _skip_axes else shape[i] for i in range(ndim))
-    #            for shape in _shapes]
     iters = [[] for i in range(len(shapes))]
-    broadcasted_shape = broadcast_shapes(*_shapes)
-    _broadcasted_shape = unremove_indices(broadcasted_shape, skip_axes)
+    broadcasted_shape = broadcast_shapes(*shapes, skip_axes=skip_axes)
+    non_skip_broadcasted_shape = remove_indices(broadcasted_shape, skip_axes)
 
     for i in range(-1, -ndim-1, -1):
-        for it, shape, _shape in zip(iters, shapes, _shapes):
+        for it, shape in zip(iters, shapes):
             if -i > len(shape):
                 # for every dimension prepended by broadcasting, repeat the
                 # indices that many times
                 for j in range(len(it)):
-                    if broadcasted_shape[i+n] not in [0, 1]:
-                        it[j] = ncycles(it[j], broadcasted_shape[i+n])
+                    if non_skip_broadcasted_shape[i+n] not in [0, 1]:
+                        it[j] = ncycles(it[j], non_skip_broadcasted_shape[i+n])
                     break
             elif len(shape) + i in _skip_axes[shape]:
                 it.insert(0, [slice(None)])
             else:
-                if _broadcasted_shape[i] is None:
+                if broadcasted_shape[i] is None:
                     pass
-                elif _broadcasted_shape[i] == 0:
+                elif broadcasted_shape[i] == 0:
                     return
-                elif _broadcasted_shape[i] != 1 and shape[i] == 1:
-                    it.insert(0, ncycles(range(shape[i]), _broadcasted_shape[i]))
+                elif broadcasted_shape[i] != 1 and shape[i] == 1:
+                    it.insert(0, ncycles(range(shape[i]), broadcasted_shape[i]))
                 else:
                     it.insert(0, range(shape[i]))
 
