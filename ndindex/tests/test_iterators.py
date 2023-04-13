@@ -27,23 +27,28 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
 
     # 1. Normalize inputs
-    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else ()
+    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
     ndim = len(broadcasted_shape)
 
     # Double check the mutually_broadcastable_shapes_with_skipped_axes
     # strategy
-    for i in skip_axes:
+    for i in _skip_axes:
         assert broadcasted_shape[i] is None
-
 
     # Skipped axes may not be broadcast compatible. Since the index for a
     # skipped axis should always be a slice(None), the result should be the
     # same if the skipped axes are all moved to the end of the shape.
-    canonical_shapes = [list(s) for s in shapes]
-    for i in skip_axes:
-        for s in canonical_shapes:
-            x = s.pop(i)
-            s.append(x)
+    canonical_shapes = []
+    for s in shapes:
+        c = remove_indices(s, _skip_axes)
+        c = c + tuple(s[i] for i in _skip_axes)
+        canonical_shapes.append(c)
+    canonical_skip_axes = list(range(-1, -len(_skip_axes) - 1, -1))
+    broadcasted_canonical_shape = list(broadcast_shapes(*canonical_shapes,
+                                                        skip_axes=canonical_skip_axes))
+    for i in range(len(broadcasted_canonical_shape)):
+        if broadcasted_canonical_shape[i] is None:
+            broadcasted_canonical_shape[i] = 1
 
     skip_shapes = [tuple(shape[i] for i in _skip_axes) for shape in shapes]
     non_skip_shapes = [remove_indices(shape, skip_axes) for shape in shapes]
@@ -53,13 +58,13 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
 
     nitems = prod(broadcasted_non_skip_shape)
 
-    if _skip_axes is None:
+    if _skip_axes == ():
         res = iter_indices(*shapes)
-        broadcasted_res = iter_indices(np.broadcast_shapes(*shapes))
+        broadcasted_res = iter_indices(broadcast_shapes(*shapes))
     else:
         res = iter_indices(*shapes, skip_axes=skip_axes)
-        broadcasted_res = iter_indices(np.broadcast_shapes(*canonical_shapes),
-                                       skip_axes=skip_axes)
+        broadcasted_res = iter_indices(broadcasted_canonical_shape,
+                                       skip_axes=canonical_skip_axes)
 
     sizes = [prod(shape) for shape in shapes]
     arrays = [np.arange(size).reshape(shape) for size, shape in zip(sizes, shapes)]
@@ -75,10 +80,9 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     def _move_slices_to_end(idx):
         assert isinstance(idx, Tuple)
         idx2 = list(idx.args)
-        for i in range(len(idx2)):
-            if idx.args[i] == slice(None):
-                idx2.pop(i)
-                idx2.append(slice(None))
+        slices = [i for i in range(len(idx2)) if idx2[i] == slice(None)]
+        idx2 = remove_indices(idx2, slices)
+        idx2 = idx2 + (slice(None),)*len(slices)
         return Tuple(*idx2)
 
     for n, (idxes, bidxes) in enumerate(zip(res, broadcasted_res)):
