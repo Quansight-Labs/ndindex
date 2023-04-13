@@ -289,6 +289,8 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
             else:
                 if _broadcasted_shape[i] is None:
                     pass
+                elif _broadcasted_shape[i] == 0:
+                    return
                 elif _broadcasted_shape[i] != 1 and shape[i] == 1:
                     it.insert(0, ncycles(range(shape[i]), _broadcasted_shape[i]))
                 else:
