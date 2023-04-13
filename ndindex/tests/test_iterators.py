@@ -116,6 +116,10 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
         # else:
         #     vals.append(a_indexed)
 
+    # assert both iterators have the same length
+    raises(StopIteration, lambda: next(res))
+    raises(StopIteration, lambda: next(broadcasted_res))
+
     return
     assert len(set(vals)) == len(vals) == nitems
 
