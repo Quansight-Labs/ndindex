@@ -300,6 +300,31 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)
 
+def associated_axis(shape, broadcasted_shape, i, skip_axes):
+    """
+    Return the associated index into broadcast_shape corresponding to
+    shape[i] given skip_axes.
+
+    """
+    n = len(shape)
+    N = len(broadcasted_shape)
+    skip_axes = sorted(skip_axes)
+    if i >= 0:
+        raise NotImplementedError
+    if not skip_axes:
+        return i
+    if skip_axes[0] < 0:
+        return i
+    elif skip_axes[0] >= 0:
+        k = m = 0
+        for j in range(len(skip_axes)):
+            s = skip_axes[j]
+            if s <= i + n:
+                k = s
+            if s <= i + N:
+                m = s
+        return i + n + m - k
+
 def remove_indices(x, idxes):
     """
     Return `x` with the indices `idxes` removed.

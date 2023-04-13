@@ -9,7 +9,7 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..iterators import (iter_indices, ncycles, BroadcastError,
                             AxisError, broadcast_shapes, remove_indices,
-                            unremove_indices)
+                            unremove_indices, associated_axis)
 from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import (assert_equal, prod,
@@ -353,3 +353,30 @@ def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
 
     assert None not in _broadcasted_shape
     assert broadcast_shapes(*_shapes) == _broadcasted_shape
+
+associated_axis_broadcastable_shapes = \
+    mutually_broadcastable_shapes_with_skipped_axes()\
+    .filter(lambda i: i[0])\
+    .filter(lambda i: i[0][0])
+
+@given(associated_axis_broadcastable_shapes,
+       associated_axis_broadcastable_shapes.flatmap(lambda i: integers(-len(i[0][0]), -1)),
+       skip_axes_st)
+def test_associated_axis(broadcastable_shapes, i, skip_axes):
+    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
+
+    shapes, broadcasted_shape = broadcastable_shapes
+    ndim = len(broadcasted_shape)
+
+    normalized_skip_axes = [ndindex(i).reduce(ndim) for i in _skip_axes]
+
+    shape = shapes[0]
+    val = shape[i]
+    assume(val != 1)
+
+    idx = associated_axis(shape, broadcasted_shape, i, _skip_axes)
+    bval = broadcasted_shape[idx]
+    if bval is None:
+        assert ndindex(idx).reduce(ndim) in normalized_skip_axes
+    else:
+        assert bval == val
