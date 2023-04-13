@@ -120,6 +120,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     raises(StopIteration, lambda: next(res))
     raises(StopIteration, lambda: next(broadcasted_res))
 
+    assert n == nitems - 1
     return
     assert len(set(vals)) == len(vals) == nitems
 
@@ -142,7 +143,6 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
         else:
             assert set(vals) == set(correct_vals)
 
-    assert n == nitems - 1
 
 def test_iter_indices_errors():
     try:
