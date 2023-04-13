@@ -1,5 +1,4 @@
 import itertools
-import functools
 from collections import defaultdict
 
 from .ndindex import asshape, ndindex
