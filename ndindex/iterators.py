@@ -308,22 +308,27 @@ def associated_axis(shape, broadcasted_shape, i, skip_axes):
     """
     n = len(shape)
     N = len(broadcasted_shape)
-    skip_axes = sorted(skip_axes)
+    skip_axes = sorted(skip_axes, reverse=True)
     if i >= 0:
         raise NotImplementedError
     if not skip_axes:
         return i
+    # We assume skip_axes are either all negative or all nonnegative
     if skip_axes[0] < 0:
         return i
     elif skip_axes[0] >= 0:
+        posi = ndindex(i).reduce(n).raw
+        if posi in skip_axes:
+            return posi
         k = m = 0
-        for j in range(len(skip_axes)):
-            s = skip_axes[j]
-            if s <= i + n:
-                k = s
-            if s <= i + N:
-                m = s
-        return i + n + m - k
+        for s in skip_axes:
+            s_s = s - n
+            b_s = s - N
+            if s_s > i:
+                k += 1
+            if b_s > i + k:
+                m += 1
+        return i + k - m
 
 def remove_indices(x, idxes):
     """

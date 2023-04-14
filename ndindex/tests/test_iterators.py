@@ -355,9 +355,9 @@ def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
     assert broadcast_shapes(*_shapes) == _broadcasted_shape
 
 associated_axis_broadcastable_shapes = \
-    mutually_broadcastable_shapes_with_skipped_axes()\
-    .filter(lambda i: i[0])\
-    .filter(lambda i: i[0][0])
+    shared(mutually_broadcastable_shapes_with_skipped_axes()\
+           .filter(lambda i: i[0])\
+           .filter(lambda i: i[0][0]))
 
 @given(associated_axis_broadcastable_shapes,
        associated_axis_broadcastable_shapes.flatmap(lambda i: integers(-len(i[0][0]), -1)),
