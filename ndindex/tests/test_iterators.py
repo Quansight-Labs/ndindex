@@ -104,10 +104,10 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
         canonical_a_indexed = tuple([a[idx.raw] for a, idx in
                                   zip(canonical_arrays, canonical_idxes)])
 
-        for a_indexed, skip_shape in zip(canonical_a_indexed, skip_shapes):
-            assert a_indexed.shape == skip_shape
+        for c_indexed, skip_shape in zip(canonical_a_indexed, skip_shapes):
+            assert c_indexed.shape == skip_shape
 
-        if skip_axes:
+        if _skip_axes:
             # If there are skipped axes, recursively call iter_indices to
             # get each individual element of the resulting subarrays.
             for subidxes in iter_indices(*[x.shape for x in canonical_a_indexed]):
@@ -121,7 +121,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     raises(StopIteration, lambda: next(broadcasted_res))
 
     assert n == nitems - 1
-    # assert len(set(vals)) == len(vals) == nitems
+    assert len(set(vals)) == len(vals) == nitems
     return
 
     # 3. Check that every element of the (broadcasted) arrays is represented
