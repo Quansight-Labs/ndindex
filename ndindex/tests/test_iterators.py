@@ -166,15 +166,14 @@ def test_iter_indices_errors():
     else:
         raise RuntimeError("iter_indices did not raise BroadcastError") # pragma: no cover
 
-    # TODO: Check that the message is the same one used by NumPy
-    # try:
-    #     np.broadcast_shapes((2, 3), (3, 2))
-    # except np.Error as e:
-    #     msg2 = str(e)
-    # else:
-    #     raise RuntimeError("np.broadcast_shapes() did not raise AxisError") # pragma: no cover
-    #
-    # assert msg1 == msg2
+    try:
+        np.broadcast_shapes((2, 3), (3, 2))
+    except ValueError as e:
+        msg2 = str(e)
+    else:
+        raise RuntimeError("np.broadcast_shapes() did not raise ValueError") # pragma: no cover
+
+    assert msg1 == msg2
 
     raises(NotImplementedError, lambda: list(iter_indices((1, 2), skip_axes=(0, -1))))
 
