@@ -118,9 +118,9 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     raises(StopIteration, lambda: next(res))
     raises(StopIteration, lambda: next(broadcasted_res))
 
+    # Check that the correct number of items are iterated
     assert n == nitems - 1
     assert len(set(vals)) == len(vals) == nitems
-    return
 
     # 3. Check that every element of the (broadcasted) arrays is represented
     # by an iterated index.
@@ -130,7 +130,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     if not arrays:
         assert vals == [()]
     else:
-        correct_vals = [tuple(i) for i in np.stack(broadcasted_arrays, axis=-1).reshape((nitems, len(arrays)))]
+        correct_vals = [tuple(i) for i in np.stack(np.broadcast_arrays(*canonical_arrays), axis=-1).reshape((nitems, len(arrays)))]
         # Also test that the indices are produced in a lexicographic order
         # (even though this isn't strictly guaranteed by the iter_indices
         # docstring) in the case when there are no skip axes. The order when
@@ -140,7 +140,6 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             assert vals == correct_vals
         else:
             assert set(vals) == set(correct_vals)
-
 
 def test_iter_indices_errors():
     try:
