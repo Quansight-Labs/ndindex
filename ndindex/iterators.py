@@ -88,17 +88,18 @@ def broadcast_shapes(*shapes, skip_axes=()):
     dims = [len(shape) for shape in shapes]
     shape_skip_axes = [[ndindex(i).reduce(n).raw - n for i in skip_axes] for n in dims]
     N = max(dims)
-    broadcasted_skip_axes = [ndindex(i).reduce(N).raw - N for i in skip_axes]
+    broadcasted_skip_axes = [ndindex(i).reduce(N) for i in skip_axes]
 
-    broadcasted_shape = [None]*N
+    broadcasted_shape = [None if i in broadcasted_skip_axes else 1 for i in range(N)]
 
     for i in range(-1, -N-1, -1):
-        broadcasted_side = 1
         arg = None
         for j in range(len(shapes)):
-            shape = shapes[j]
             if dims[j] < -i:
                 continue
+            shape = shapes[j]
+            idx = associated_axis(shape, broadcasted_shape, i, skip_axes)
+            broadcasted_side = broadcasted_shape[idx]
             shape_side = shape[i]
             if i in shape_skip_axes[j]:
                 continue
@@ -109,10 +110,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
                 arg = j
             elif shape_side != broadcasted_side:
                 raise BroadcastError(arg, shapes[arg], j, shapes[j])
-        if i in broadcasted_skip_axes:
-            broadcasted_shape[i] = None
-        else:
-            broadcasted_shape[i] = broadcasted_side
+            broadcasted_shape[idx] = broadcasted_side
 
     return tuple(broadcasted_shape)
 
@@ -283,12 +281,14 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
             elif len(shape) + i in _skip_axes[shape]:
                 it.insert(0, [slice(None)])
             else:
-                if broadcasted_shape[i] is None:
+                idx = associated_axis(shape, broadcasted_shape, i, skip_axes)
+                val = broadcasted_shape[idx]
+                if val is None:
                     pass
-                elif broadcasted_shape[i] == 0:
+                elif val == 0:
                     return
-                elif broadcasted_shape[i] != 1 and shape[i] == 1:
-                    it.insert(0, ncycles(range(shape[i]), broadcasted_shape[i]))
+                elif val != 1 and shape[i] == 1:
+                    it.insert(0, ncycles(range(shape[i]), val))
                 else:
                     it.insert(0, range(shape[i]))
 
