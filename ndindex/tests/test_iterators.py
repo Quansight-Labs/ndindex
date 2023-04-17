@@ -12,8 +12,7 @@ from ..iterators import (iter_indices, ncycles, BroadcastError,
                             unremove_indices, associated_axis)
 from ..integer import Integer
 from ..tuple import Tuple
-from .helpers import (assert_equal, prod,
-                      mutually_broadcastable_shapes_with_skipped_axes,
+from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
                       skip_axes_st, mutually_broadcastable_shapes, tuples,
                       shapes)
 
@@ -28,7 +27,6 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
 
     # 1. Normalize inputs
     _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
-    ndim = len(broadcasted_shape)
 
     # Double check the mutually_broadcastable_shapes_with_skipped_axes
     # strategy
