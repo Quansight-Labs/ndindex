@@ -24,6 +24,9 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     # broadcasted_shape will contain None on the skip_axes, as those axes
     # might not be broadcast compatible
     shapes, broadcasted_shape = broadcastable_shapes
+    # We need no more than 31 dimensions so that the np.stack call below
+    # doesn't fail.
+    assume(len(broadcasted_shape) < 32)
 
     # 1. Normalize inputs
     _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
