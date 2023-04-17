@@ -371,12 +371,17 @@ def test_associated_axis(broadcastable_shapes, i, skip_axes):
     normalized_skip_axes = [ndindex(i).reduce(ndim) for i in _skip_axes]
 
     shape = shapes[0]
+    n = len(shape)
     val = shape[i]
     assume(val != 1)
 
     idx = associated_axis(shape, broadcasted_shape, i, _skip_axes)
     bval = broadcasted_shape[idx]
     if bval is None:
-        assert ndindex(idx).reduce(ndim) in normalized_skip_axes
+        if _skip_axes[0] >= 0:
+            assert ndindex(i).reduce(n) == ndindex(idx).reduce(ndim) in normalized_skip_axes
+        else:
+            assert ndindex(i).reduce(n).raw - n == \
+                ndindex(idx).reduce(ndim).raw - ndim in _skip_axes
     else:
         assert bval == val

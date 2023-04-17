@@ -326,7 +326,7 @@ def associated_axis(shape, broadcasted_shape, i, skip_axes):
             b_s = s - N
             if s_s > i:
                 k += 1
-            if b_s > i + k:
+            if b_s > i:
                 m += 1
         return i + k - m
 
