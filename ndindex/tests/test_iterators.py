@@ -41,7 +41,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     canonical_shapes = []
     for s in shapes:
         c = remove_indices(s, _skip_axes)
-        c = c + tuple(s[i] for i in _skip_axes)
+        c = c + tuple(1 for i in _skip_axes)
         canonical_shapes.append(c)
     canonical_skip_axes = list(range(-1, -len(_skip_axes) - 1, -1))
     broadcasted_canonical_shape = list(broadcast_shapes(*canonical_shapes,
@@ -50,7 +50,7 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
         if broadcasted_canonical_shape[i] is None:
             broadcasted_canonical_shape[i] = 1
 
-    skip_shapes = [tuple(shape[i] for i in _skip_axes) for shape in shapes]
+    skip_shapes = [tuple(1 for i in _skip_axes) for shape in shapes]
     non_skip_shapes = [remove_indices(shape, skip_axes) for shape in shapes]
     broadcasted_non_skip_shape = remove_indices(broadcasted_shape, skip_axes)
     assert None not in broadcasted_non_skip_shape
@@ -107,22 +107,22 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
         for a_indexed, skip_shape in zip(canonical_a_indexed, skip_shapes):
             assert a_indexed.shape == skip_shape
 
-        # if skip_axes:
-        #     # If there are skipped axes, recursively call iter_indices to
-        #     # get each individual element of the resulting subarrays.
-        #     for subidxes in iter_indices(*[x.shape for x in canonical_a_indexed]):
-        #         items = [x[i.raw] for x, i in zip(canonical_a_indexed, subidxes)]
-        #         vals.append(tuple(items))
-        # else:
-        #     vals.append(a_indexed)
+        if skip_axes:
+            # If there are skipped axes, recursively call iter_indices to
+            # get each individual element of the resulting subarrays.
+            for subidxes in iter_indices(*[x.shape for x in canonical_a_indexed]):
+                items = [x[i.raw] for x, i in zip(canonical_a_indexed, subidxes)]
+                vals.append(tuple(items))
+        else:
+            vals.append(a_indexed)
 
     # assert both iterators have the same length
     raises(StopIteration, lambda: next(res))
     raises(StopIteration, lambda: next(broadcasted_res))
 
     assert n == nitems - 1
+    # assert len(set(vals)) == len(vals) == nitems
     return
-    assert len(set(vals)) == len(vals) == nitems
 
     # 3. Check that every element of the (broadcasted) arrays is represented
     # by an iterated index.
