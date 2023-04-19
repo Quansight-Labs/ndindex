@@ -92,8 +92,8 @@ def broadcast_shapes(*shapes, skip_axes=()):
 
     broadcasted_shape = [None if i in broadcasted_skip_axes else 1 for i in range(N)]
 
+    arg = None
     for i in range(-1, -N-1, -1):
-        arg = None
         for j in range(len(shapes)):
             if dims[j] < -i:
                 continue
