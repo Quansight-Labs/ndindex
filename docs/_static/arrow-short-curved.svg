@@ -2,12 +2,12 @@
 <!-- Based on https://commons.wikimedia.org/wiki/File:U%2B2192.svg -->
 
 <svg
-   width="191"
-   height="47"
-   version="1.1"
-   id="svg3555"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
    sodipodi:docname="arrow-short-curved.svg"
-   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   id="svg3555"
+   version="1.1"
+   height="47"
+   width="191"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -32,15 +32,17 @@
      inkscape:snap-smooth-nodes="false"
      inkscape:snap-intersection-paths="false"
      inkscape:object-paths="true"
-     inkscape:zoom="14.230947"
-     inkscape:cx="20.79974"
-     inkscape:cy="14.897111"
-     inkscape:window-width="1271"
-     inkscape:window-height="754"
+     inkscape:zoom="4.5156423"
+     inkscape:cx="91.570584"
+     inkscape:cy="1.6608933"
+     inkscape:window-width="1536"
+     inkscape:window-height="907"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg3555" />
+     inkscape:current-layer="svg3555"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5724">
     <rdf:RDF>
@@ -53,10 +55,11 @@
     </rdf:RDF>
   </metadata>
   <path
-     d="M 1.9670282,3.7465082 C 3.3291633,6.677685 3.7343638,9.626094 3.1826084,12.591714 l 0.9181428,0.918143 C 4.9197506,11.86326 5.3896089,10.005421 5.5102908,7.9363492 L 5.83358,7.61306 6.7775888,6.6690512 C 8.8466539,6.5483764 10.708798,6.0742118 12.364036,5.2465716 L 11.445894,4.3284288 C 8.4802595,4.8801984 5.5318434,4.475005 2.6006807,3.1128557 L 1.9670282,3.7465082"
-     id="arrow-head" />
+     d="m 0.8403006,14.930942 c 2.2381554,2.331925 3.5765507,4.99012 4.015159,7.974572 l 1.1660439,0.57124 C 6.2629854,21.653644 6.1057255,19.743775 5.549692,17.747165 5.6914242,17.483858 5.8255938,17.217008 5.9558046,16.948226 6.0860155,16.679444 6.2122674,16.40873 6.3381642,16.137693 8.256588,15.353319 9.864745,14.301537 11.162655,12.982359 l -1.166044,-0.57124 c -2.6270153,1.482643 -5.547718,2.054338 -8.7620719,1.715083 l -0.3942385,0.80474"
+     id="arrow-head"
+     sodipodi:nodetypes="ccccsccccc" />
   <path
-     style="fill:none;stroke:#000000;stroke-width:1.792;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="M 189.89234,7.2015686 A 130,130 0 0 1 97.968449,45.277687 130,130 0 0 1 6.0445677,7.2015677"
+     style="fill:none;stroke:#000000;stroke-width:1.2581;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 190.0811,16.914227 A 130.26695,63.944771 0 0 1 97.968449,35.643217 130.26695,63.944771 0 0 1 5.8558046,16.914226"
      id="arrow-tail" />
 </svg>

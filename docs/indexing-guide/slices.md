@@ -876,7 +876,7 @@ reasons why this way of thinking creates more confusion than it removes.
     background-position: 0px center;
     height: 80px;
     vertical-align: middle;
-    transform: translate(9px, 0px);
+    transform: translate(5px, -41px);
   }
   .right-arrow-cell::before {
     content: '';
@@ -1835,9 +1835,9 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td></td>
     <td></td>
     <td style="line-height: 0em; vertical-align: top; color: #EE0000">&le; stop</td>
-    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, -18px)">-3</div></td>
+    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, 24px)">-3</div></td>
     <td></td>
-    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, -18px)">-3</div></td>
+    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, 24px)">-3</div></td>
     <td style="vertical-align: top; color: #5E5EFF">start</td>
   </tr>
 </table>
