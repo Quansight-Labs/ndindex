@@ -281,6 +281,8 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
         raises(NotImplementedError, lambda: broadcast_shapes(*shapes, skip_axes=skip_axes))
         return
 
+    # Test that broadcast_shapes raises IndexError when skip_axes are out of
+    # bounds
     try:
         if not shapes and skip_axes:
             raise IndexError
@@ -288,18 +290,32 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
             for i in skip_axes:
                 shape[i]
     except IndexError:
-        error = True
+        indexerror = True
     else:
-        error = False
+        indexerror = False
 
+    broadcasterror = False
     try:
         broadcast_shapes(*shapes, skip_axes=skip_axes)
     except IndexError:
-        if not error:
-            raise RuntimeError("broadcast_shapes raised but should not have")
+        if not indexerror:
+            raise RuntimeError("broadcast_shapes raised IndexError but should not have")
+    except BroadcastError:
+        broadcasterror = True
     else:
-        if error:
-            raise RuntimeError("broadcast_shapes did not raise but should have")
+        if indexerror:
+            raise RuntimeError("broadcast_shapes did not raise IndexError but should have")
+
+    if not indexerror:
+        broadcastable = [remove_indices(shape, skip_axes) for shape in shapes]
+        try:
+            np.broadcast_shapes(*broadcastable)
+        except ValueError:
+            if not broadcasterror:
+                raise RuntimeError("broadcast_shapes did not raise BroadcastError but should have")
+        else:
+            if broadcasterror:
+                raise RuntimeError("broadcast_shapes raised BroadcastError but should not have")
 
 remove_indices_n = shared(integers(0, 100))
 
