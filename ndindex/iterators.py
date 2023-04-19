@@ -317,18 +317,19 @@ def associated_axis(shape, broadcasted_shape, i, skip_axes):
     if skip_axes[0] < 0:
         return i
     elif skip_axes[0] >= 0:
-        posi = ndindex(i).reduce(n).raw
-        if posi in skip_axes:
-            return posi
-        k = m = 0
+        invmapping = [None]*N
         for s in skip_axes:
-            s_s = s - n
-            b_s = s - N
-            if s_s > i:
-                k += 1
-            if b_s > i:
-                m += 1
-        return i + k - m
+            invmapping[s] = s
+
+        for j in range(-1, i-1, -1):
+            if j + n in skip_axes:
+                k = j + n #- N
+                continue
+            for k in range(-1, -N-1, -1):
+                if invmapping[k] is None:
+                    invmapping[k] = j
+                    break
+        return k
 
 def remove_indices(x, idxes):
     """
