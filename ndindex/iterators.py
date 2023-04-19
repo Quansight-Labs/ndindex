@@ -3,8 +3,6 @@ from collections import defaultdict
 
 from .ndindex import asshape, ndindex
 
-# TODO: Use this in other places in the code that check broadcast compatibility.
-
 class BroadcastError(ValueError):
     """
     Exception raised by :func:`iter_indices()` when the input shapes are not
