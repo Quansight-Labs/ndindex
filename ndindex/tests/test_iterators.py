@@ -353,15 +353,12 @@ def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
     assert None not in _broadcasted_shape
     assert broadcast_shapes(*_shapes) == _broadcasted_shape
 
-associated_axis_broadcastable_shapes = \
-    shared(mutually_broadcastable_shapes_with_skipped_axes()\
-           .filter(lambda i: i[0])\
-           .filter(lambda i: i[0][0]))
-
-@given(associated_axis_broadcastable_shapes,
-       associated_axis_broadcastable_shapes.flatmap(lambda i: integers(-len(i[0][0]), -1)),
-       skip_axes_st)
-def test_associated_axis(broadcastable_shapes, i, skip_axes):
+@example([[(0, 10, 2, 3, 10, 4), (1, 10, 1, 0, 10, 2, 3, 4)],
+          (1, None, 1, 0, None, 2, 3, 4)], (1, 4))
+@example([[(2, 0, 3, 4)], (2, None, 3, 4)], (1,))
+@example([[(0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0)], (0, None, None, 0, 0, 0)], (1, 2))
+@given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
+def test_associated_axis(broadcastable_shapes, skip_axes):
     _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
 
     shapes, broadcasted_shape = broadcastable_shapes
@@ -369,18 +366,18 @@ def test_associated_axis(broadcastable_shapes, i, skip_axes):
 
     normalized_skip_axes = [ndindex(i).reduce(ndim) for i in _skip_axes]
 
-    shape = shapes[0]
-    n = len(shape)
-    val = shape[i]
-    assume(val != 1)
+    for shape in shapes:
+        n = len(shape)
+        for i in range(-len(shape), 0):
+            val = shape[i]
 
-    idx = associated_axis(shape, broadcasted_shape, i, _skip_axes)
-    bval = broadcasted_shape[idx]
-    if bval is None:
-        if _skip_axes[0] >= 0:
-            assert ndindex(i).reduce(n) == ndindex(idx).reduce(ndim) in normalized_skip_axes
-        else:
-            assert ndindex(i).reduce(n).raw - n == \
-                ndindex(idx).reduce(ndim).raw - ndim in _skip_axes
-    else:
-        assert bval == val
+            idx = associated_axis(shape, broadcasted_shape, i, _skip_axes)
+            bval = broadcasted_shape[idx]
+            if bval is None:
+                if _skip_axes[0] >= 0:
+                    assert ndindex(i).reduce(n) == ndindex(idx).reduce(ndim) in normalized_skip_axes
+                else:
+                    assert ndindex(i).reduce(n).raw - n == \
+                        ndindex(idx).reduce(ndim).raw - ndim in _skip_axes
+            else:
+                assert val == 1 or bval == val
