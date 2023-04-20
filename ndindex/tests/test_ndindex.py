@@ -144,11 +144,14 @@ def test_asshape():
     assert type(asshape(np.int64(2))[0]) == int
     assert asshape((1, 2)) == (1, 2)
     assert asshape([1, 2]) == (1, 2)
-    assert asshape((1, 2), allowint=False) == (1, 2)
-    assert asshape([1, 2], allowint=False) == (1, 2)
+    assert asshape((1, 2), allow_int=False) == (1, 2)
+    assert asshape([1, 2], allow_int=False) == (1, 2)
     assert asshape((np.int64(1), np.int64(2))) == (1, 2)
     assert type(asshape((np.int64(1), np.int64(2)))[0]) == int
     assert type(asshape((np.int64(1), np.int64(2)))[1]) == int
+    assert asshape((-1, -2), allow_negative=True) == (-1, -2)
+    assert asshape(-2, allow_negative=True) == (-2,)
+
 
     raises(TypeError, lambda: asshape(1.0))
     raises(TypeError, lambda: asshape((1.0,)))
@@ -162,5 +165,7 @@ def test_asshape():
     raises(TypeError, lambda: asshape({1, 2}))
     raises(TypeError, lambda: asshape({1: 2}))
     raises(TypeError, lambda: asshape('1'))
-    raises(TypeError, lambda: asshape(1, allowint=False))
-    raises(TypeError, lambda: asshape(np.int64(1), allowint=False))
+    raises(TypeError, lambda: asshape(1, allow_int=False))
+    raises(TypeError, lambda: asshape(-1, allow_int=False))
+    raises(TypeError, lambda: asshape(-1, allow_negative=True, allow_int=False))
+    raises(TypeError, lambda: asshape(np.int64(1), allow_int=False))

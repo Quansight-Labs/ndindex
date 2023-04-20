@@ -596,17 +596,18 @@ class NDIndex(ImmutableObject):
         """
         return self
 
-def asshape(shape, axis=None, allowint=True):
+def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
     """
     Cast `shape` as a valid NumPy shape.
 
-    The input can be an integer `n`, which is equivalent to `(n,)`, or a tuple
-    of integers.
+    The input can be an integer `n` (if `allow_int=True`), which is equivalent
+    to `(n,)`, or a tuple of integers.
 
     If the `axis` argument is provided, an `IndexError` is raised if it is out
     of bounds for the shape.
 
-    The resulting shape is always a tuple of nonnegative integers.
+    The resulting shape is always a tuple of nonnegative integers. If
+    `allow_negative=True`, negative integers are also allowed.
 
     All ndindex functions that take a shape input should use::
 
@@ -624,13 +625,13 @@ def asshape(shape, axis=None, allowint=True):
                         "did you mean to use the built-in tuple type?")
 
     if isinstance(shape, numbers.Number):
-        if allowint:
+        if allow_int:
             shape = (operator_index(shape),)
         else:
             raise TypeError(f"expected sequence of integers, not {type(shape).__name__}")
 
     if not isinstance(shape, Sequence) or isinstance(shape, str):
-        raise TypeError("expected sequence of integers" + allowint*" or a single integer" + ", not " + type(shape).__name__)
+        raise TypeError("expected sequence of integers" + allow_int*" or a single integer" + ", not " + type(shape).__name__)
     l = len(shape)
 
     newshape = []
@@ -644,7 +645,7 @@ def asshape(shape, axis=None, allowint=True):
 
         newshape.append(operator_index(shape[i]))
 
-        if val < 0:
+        if not allow_negative and val < 0:
             raise ValueError("unknown (negative) dimensions are not supported")
 
     if axis is not None:
