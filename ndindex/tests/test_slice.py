@@ -8,7 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..slice import Slice
 from ..integer import Integer
 from ..ellipsis import ellipsis
-from ..ndindex import asshape
+from ..shapetools import asshape
 from .helpers import check_same, slices, prod, shapes, iterslice, assert_equal
 
 def test_slice_args():

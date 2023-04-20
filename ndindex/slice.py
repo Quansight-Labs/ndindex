@@ -1,5 +1,6 @@
-from .ndindex import NDIndex, asshape, operator_index
+from .ndindex import NDIndex, operator_index
 from .subindex_helpers import subindex_slice
+from .shapetools import asshape
 
 class default:
     """
@@ -469,6 +470,13 @@ class Slice(NDIndex):
                 # prefer a nonnegative stop. Otherwise, stop will be -size - 1.
                 stop = start % -step - 1
         return self.__class__(start, stop, step)
+
+    def isvalid(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        # All slices are valid as long as there is at least one dimension
+        return bool(shape)
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class

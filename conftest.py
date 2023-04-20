@@ -13,6 +13,7 @@ import numpy
 if LooseVersion(numpy.__version__) < LooseVersion('1.20'):
     raise RuntimeError("NumPy 1.20 (development version) or greater is required to run the ndindex tests")
 
+# Show the NumPy version in the pytest header
 def pytest_report_header(config):
     return f"project deps: numpy-{numpy.__version__}"
 

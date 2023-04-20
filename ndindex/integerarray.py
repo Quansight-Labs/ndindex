@@ -1,5 +1,5 @@
 from .array import ArrayIndex
-from .ndindex import asshape
+from .shapetools import asshape
 from .subindex_helpers import subindex_slice
 
 class IntegerArray(ArrayIndex):
@@ -51,6 +51,12 @@ class IntegerArray(ArrayIndex):
         from numpy import intp
         return intp
 
+    def _raise_indexerror(self, shape, axis=0):
+        size = shape[axis]
+        out_of_bounds = (self.array >= size) | ((-size > self.array) & (self.array < 0))
+        if out_of_bounds.any():
+            raise IndexError(f"index {self.array[out_of_bounds].flat[0]} is out of bounds for axis {axis} with size {size}")
+
     def reduce(self, shape=None, axis=0):
         """
         Reduce an `IntegerArray` index on an array of shape `shape`.
@@ -89,12 +95,10 @@ class IntegerArray(ArrayIndex):
 
         shape = asshape(shape, axis=axis)
 
+        self._raise_indexerror(shape, axis)
+
         size = shape[axis]
         new_array = self.array.copy()
-        out_of_bounds = (new_array >= size) | ((-size > new_array) & (new_array < 0))
-        if out_of_bounds.any():
-            raise IndexError(f"index {new_array[out_of_bounds].flat[0]} is out of bounds for axis {axis} with size {size}")
-
         new_array[new_array < 0] += size
         return IntegerArray(new_array)
 
@@ -102,8 +106,7 @@ class IntegerArray(ArrayIndex):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        # reduce will raise IndexError if it should be raised
-        self.reduce(shape)
+        self._raise_indexerror(shape)
         return self.shape + shape[1:]
 
     def isempty(self, shape=None):

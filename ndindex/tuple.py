@@ -1,7 +1,8 @@
 import sys
 
-from .ndindex import NDIndex, ndindex, asshape
+from .ndindex import NDIndex, ndindex
 from .subindex_helpers import subindex_slice
+from .shapetools import asshape, broadcast_shapes, BroadcastError
 
 class Tuple(NDIndex):
     """
@@ -92,15 +93,12 @@ class Tuple(NDIndex):
             if has_boolean_scalar:
                 raise NotImplementedError("Tuples mixing boolean scalars (True or False) with arrays are not yet supported.")
 
-            from numpy import broadcast
             try:
-                broadcast(*[i for i in arrays])
-            except ValueError as e:
-                assert str(e).startswith("shape mismatch: objects cannot be broadcast to a single shape"), e.args
-                # TODO: Newer versions of NumPy include where the mismatch is
-                # in the error message in a more informative way than this
-                # (but we can't use it directly because it talks about the
-                # "arg"s to broadcast()).
+                broadcast_shapes(*[i.shape for i in arrays])
+            except BroadcastError:
+                # This matches the NumPy error message. The BroadcastError has
+                # a better error message, but it will be shown in the chained
+                # traceback.
                 raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
 
         return tuple(newargs)
@@ -292,9 +290,9 @@ class Tuple(NDIndex):
                 # TODO: Avoid explicitly calling nonzero
                 arrays.extend(i.raw.nonzero())
         if arrays:
-            from numpy import broadcast, broadcast_to
+            from numpy import broadcast_to
 
-            broadcast_shape = broadcast(*arrays).shape
+            broadcast_shape = broadcast_shapes(*[a.shape for a in arrays])
         else:
             broadcast_shape = ()
 
@@ -428,9 +426,9 @@ class Tuple(NDIndex):
         if not arrays:
             return self
 
-        from numpy import array, broadcast, broadcast_to, intp
+        from numpy import array, broadcast_to, intp
 
-        broadcast_shape = broadcast(*arrays).shape
+        broadcast_shape = broadcast_shapes(*[a.shape for a in arrays])
 
         newargs = []
         for s in args:
@@ -487,9 +485,9 @@ class Tuple(NDIndex):
                 arrays.extend(i.raw.nonzero())
 
         if arrays:
-            from numpy import broadcast, broadcast_to, array, intp
+            from numpy import broadcast_to, array, intp
 
-            broadcast_shape = broadcast(*arrays).shape
+            broadcast_shape = broadcast_shapes(*[a.shape for a in arrays])
             # If the broadcast shape is empty, out of bounds indices in
             # non-empty arrays are ignored, e.g., ([], [10]) would broadcast to
             # ([], []), so the bounds for 10 are not checked. Thus, we must do
