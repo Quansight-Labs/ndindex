@@ -58,7 +58,7 @@ _short_shapes = tuples(integers(0, 10)).filter(
 
 
 @composite
-def _mutually_broadcastable_shapes(draw):
+def _mutually_broadcastable_shapes(draw, min_shapes=0, max_shapes=32, min_side=0):
     # mutually_broadcastable_shapes() with the default inputs doesn't generate
     # very interesting examples (see
     # https://github.com/HypothesisWorks/hypothesis/issues/3170). It's very
@@ -77,19 +77,19 @@ def _mutually_broadcastable_shapes(draw):
 
     input_shapes, result_shape = draw(
         mbs(
-            num_shapes=32,
+            num_shapes=max_shapes,
             base_shape=base_shape,
-            min_side=0,
+            min_side=min_side,
         ))
 
     # The hypothesis mutually_broadcastable_shapes doesn't allow num_shapes to
     # be a strategy. It's tempting to do something like num_shapes =
-    # draw(integers(1, 32)), but this shrinks poorly. See
+    # draw(integers(min_shapes, max_shapes)), but this shrinks poorly. See
     # https://github.com/HypothesisWorks/hypothesis/issues/3151. So instead of
-    # using a strategy to draw the number of shapes, we just generate 32
+    # using a strategy to draw the number of shapes, we just generate max_shapes
     # shapes and pick a subset of them.
-    final_input_shapes = draw(lists(sampled_from(input_shapes), min_size=0, max_size=32,
-                        unique_by=id,))
+    final_input_shapes = draw(lists(sampled_from(input_shapes),
+                                    min_size=min_shapes, max_size=max_shapes))
 
 
     # Note: result_shape is input_shapes broadcasted with base_shape, but
@@ -110,28 +110,39 @@ def _mutually_broadcastable_shapes(draw):
 mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
 @composite
-def _skip_axes_st(draw):
+def _skip_axes_st(draw,
+                  mutually_broadcastable_shapes=mutually_broadcastable_shapes,
+                  num_skip_axes=None):
     shapes, result_shape = draw(mutually_broadcastable_shapes)
     if result_shape == ():
+        assume(num_skip_axes is None)
         return ()
     negative = draw(booleans(), label='skip_axes < 0')
     N = len(min(shapes, key=len))
     if N == 0:
+        assume(num_skip_axes is None)
         return ()
-    if negative:
-        axes = draw(one_of(lists(integers(-N, -1), unique=True)))
+    if num_skip_axes is not None:
+        min_size = max_size = num_skip_axes
+        assume(len(s) >= num_skip_axes for s in shapes)
     else:
-        axes = draw(one_of(lists(integers(0, N-1), unique=True)))
+        min_size = 0
+        max_size = None
+    if negative:
+        axes = draw(lists(integers(-N, -1), min_size=min_size, max_size=max_size, unique=True))
+    else:
+        axes = draw(lists(integers(0, N-1), min_size=min_size, max_size=max_size, unique=True))
     axes = tuple(axes)
     # Sometimes return an integer
-    if len(axes) == 1 and draw(booleans(), label='skip_axes integer'): # pragma: no cover
+    if num_skip_axes is None and len(axes) == 1 and draw(booleans(), label='skip_axes integer'): # pragma: no cover
         return axes[0]
     return axes
 
 skip_axes_st = shared(_skip_axes_st())
 
 @composite
-def mutually_broadcastable_shapes_with_skipped_axes(draw):
+def mutually_broadcastable_shapes_with_skipped_axes(draw, skip_axes_st=skip_axes_st, mutually_broadcastable_shapes=mutually_broadcastable_shapes,
+skip_axes_values=integers(0)):
     """
     mutually_broadcastable_shapes except skip_axes() axes might not be
     broadcastable
@@ -153,7 +164,7 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
         # Replace None values with random values
         for j in range(len(_shape)):
             if _shape[j] is None:
-                _shape[j] = draw(integers(0))
+                _shape[j] = draw(skip_axes_values)
         shapes_.append(tuple(_shape))
 
     result_shape_ = unremove_indices(result_shape, skip_axes_)
@@ -164,6 +175,13 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
         assume(prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
     return BroadcastableShapes(shapes_, result_shape_)
 
+two_mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes(
+    min_shapes=2,
+    max_shapes=2,
+    min_side=1))
+one_skip_axes = shared(_skip_axes_st(
+    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
+    num_skip_axes=1))
 
 # We need to make sure shapes for boolean arrays are generated in a way that
 # makes them related to the test array shape. Otherwise, it will be very

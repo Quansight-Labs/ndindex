@@ -2,7 +2,9 @@ import numpy as np
 
 from hypothesis import assume, given, example
 from hypothesis.strategies import (one_of, integers, tuples as
-                                   hypothesis_tuples, just, lists, shared)
+                                   hypothesis_tuples, just, lists, shared,
+                                   composite, nothing)
+from hypothesis.extra.numpy import arrays
 
 from pytest import raises
 
@@ -14,7 +16,8 @@ from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
                       skip_axes_st, mutually_broadcastable_shapes, tuples,
-                      shapes)
+                      shapes, two_mutually_broadcastable_shapes,
+                      one_skip_axes, assert_equal)
 
 @example([((1, 1), (1, 1)), (None, 1)], (0,))
 @example([((0,), (0,)), (None,)], (0,))
@@ -143,6 +146,55 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             assert vals == correct_vals
         else:
             assert set(vals) == set(correct_vals)
+
+cross_shapes = mutually_broadcastable_shapes_with_skipped_axes(
+    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
+    skip_axes_st=one_skip_axes,
+    skip_axes_values=integers(3, 3))
+
+@composite
+def cross_arrays(draw):
+    broadcastable_shapes = draw(cross_shapes)
+    shapes, broadcasted_shape = broadcastable_shapes
+
+    # Sanity check
+    assert len(shapes) == 2
+    # We need to generate fairly random arrays. Otherwise, if they are too
+    # similar to each other, like two arange arrays would be, the cross
+    # product will be 0. We also disable the fill feature in arrays() for the
+    # same reason, as it would otherwise generate too many vectors that are
+    # colinear.
+    a = draw(arrays(dtype=int, shape=shapes[0], elements=integers(-100, 100), fill=nothing()))
+    b = draw(arrays(dtype=int, shape=shapes[1], elements=integers(-100, 100), fill=nothing()))
+
+    return a, b
+
+@given(cross_arrays(), cross_shapes, one_skip_axes)
+def test_iter_indices_cross(cross_arrays, broadcastable_shapes, skip_axes):
+    # Test iter_indices behavior against np.cross, which effectively skips the
+    # crossed axis. Note that we don't test against cross products of size 2
+    # because a 2 x 2 cross product just returns the z-axis (i.e., it doesn't
+    # actually skip an axis in the result shape), and also that behavior is
+    # going to be removed in NumPy 2.0.
+    a, b = cross_arrays
+    shapes, broadcasted_shape = broadcastable_shapes
+    skip_axis = skip_axes[0]
+
+    broadcasted_shape = list(broadcasted_shape)
+    # Remove None from the shape for iter_indices
+    broadcasted_shape[skip_axis] = 3
+    broadcasted_shape = tuple(broadcasted_shape)
+
+    res = np.cross(a, b, axisa=skip_axis, axisb=skip_axis, axisc=skip_axis)
+    assert res.shape == broadcasted_shape
+
+    for idx1, idx2, idx3 in iter_indices(*shapes, broadcasted_shape, skip_axes=skip_axes):
+        assert a[idx1.raw].shape == (3,)
+        assert b[idx2.raw].shape == (3,)
+        assert_equal(np.cross(
+            a[idx1.raw],
+            b[idx2.raw]),
+                     res[idx3.raw])
 
 def test_iter_indices_errors():
     try:
