@@ -1,6 +1,7 @@
 import sys
 from itertools import chain
 import warnings
+from functools import wraps
 
 from numpy import intp, bool_, array, broadcast_shapes
 import numpy.testing
