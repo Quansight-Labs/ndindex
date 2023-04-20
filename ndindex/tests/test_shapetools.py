@@ -7,9 +7,9 @@ from hypothesis.strategies import (one_of, integers, tuples as
 from pytest import raises
 
 from ..ndindex import ndindex
-from ..shapetools import (iter_indices, ncycles, BroadcastError,
-                            AxisError, broadcast_shapes, remove_indices,
-                            unremove_indices, associated_axis)
+from ..shapetools import (asshape, iter_indices, ncycles, BroadcastError,
+                          AxisError, broadcast_shapes, remove_indices,
+                          unremove_indices, associated_axis)
 from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
@@ -398,3 +398,35 @@ def test_associated_axis(broadcastable_shapes, skip_axes):
                         ndindex(idx).reduce(ndim).raw - ndim in _skip_axes
             else:
                 assert val == 1 or bval == val
+
+def test_asshape():
+    assert asshape(1) == (1,)
+    assert asshape(np.int64(2)) == (2,)
+    assert type(asshape(np.int64(2))[0]) == int
+    assert asshape((1, 2)) == (1, 2)
+    assert asshape([1, 2]) == (1, 2)
+    assert asshape((1, 2), allow_int=False) == (1, 2)
+    assert asshape([1, 2], allow_int=False) == (1, 2)
+    assert asshape((np.int64(1), np.int64(2))) == (1, 2)
+    assert type(asshape((np.int64(1), np.int64(2)))[0]) == int
+    assert type(asshape((np.int64(1), np.int64(2)))[1]) == int
+    assert asshape((-1, -2), allow_negative=True) == (-1, -2)
+    assert asshape(-2, allow_negative=True) == (-2,)
+
+
+    raises(TypeError, lambda: asshape(1.0))
+    raises(TypeError, lambda: asshape((1.0,)))
+    raises(ValueError, lambda: asshape(-1))
+    raises(ValueError, lambda: asshape((1, -1)))
+    raises(ValueError, lambda: asshape((1, None)))
+    raises(TypeError, lambda: asshape(...))
+    raises(TypeError, lambda: asshape(Integer(1)))
+    raises(TypeError, lambda: asshape(Tuple(1, 2)))
+    raises(TypeError, lambda: asshape((True,)))
+    raises(TypeError, lambda: asshape({1, 2}))
+    raises(TypeError, lambda: asshape({1: 2}))
+    raises(TypeError, lambda: asshape('1'))
+    raises(TypeError, lambda: asshape(1, allow_int=False))
+    raises(TypeError, lambda: asshape(-1, allow_int=False))
+    raises(TypeError, lambda: asshape(-1, allow_negative=True, allow_int=False))
+    raises(TypeError, lambda: asshape(np.int64(1), allow_int=False))

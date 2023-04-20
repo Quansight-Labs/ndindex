@@ -1,5 +1,5 @@
 from .array import ArrayIndex
-from .ndindex import asshape
+from .shapetools import asshape
 
 class BooleanArray(ArrayIndex):
     """

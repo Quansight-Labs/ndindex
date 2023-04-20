@@ -1,4 +1,5 @@
-from .ndindex import NDIndex, asshape
+from .ndindex import NDIndex
+from .shapetools import asshape
 
 class Newaxis(NDIndex):
     """

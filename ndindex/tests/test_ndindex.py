@@ -7,12 +7,11 @@ from hypothesis import given, example, settings
 
 from pytest import raises
 
-from ..ndindex import ndindex, asshape
+from ..ndindex import ndindex
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
-from ..tuple import Tuple
 from .helpers import ndindices, check_same, assert_equal
 
 
@@ -138,35 +137,3 @@ def test_repr_str(idx):
 
     # Str may not be re-creatable. Just test that it doesn't give an exception.
     str(index)
-
-def test_asshape():
-    assert asshape(1) == (1,)
-    assert asshape(np.int64(2)) == (2,)
-    assert type(asshape(np.int64(2))[0]) == int
-    assert asshape((1, 2)) == (1, 2)
-    assert asshape([1, 2]) == (1, 2)
-    assert asshape((1, 2), allow_int=False) == (1, 2)
-    assert asshape([1, 2], allow_int=False) == (1, 2)
-    assert asshape((np.int64(1), np.int64(2))) == (1, 2)
-    assert type(asshape((np.int64(1), np.int64(2)))[0]) == int
-    assert type(asshape((np.int64(1), np.int64(2)))[1]) == int
-    assert asshape((-1, -2), allow_negative=True) == (-1, -2)
-    assert asshape(-2, allow_negative=True) == (-2,)
-
-
-    raises(TypeError, lambda: asshape(1.0))
-    raises(TypeError, lambda: asshape((1.0,)))
-    raises(ValueError, lambda: asshape(-1))
-    raises(ValueError, lambda: asshape((1, -1)))
-    raises(ValueError, lambda: asshape((1, None)))
-    raises(TypeError, lambda: asshape(...))
-    raises(TypeError, lambda: asshape(Integer(1)))
-    raises(TypeError, lambda: asshape(Tuple(1, 2)))
-    raises(TypeError, lambda: asshape((True,)))
-    raises(TypeError, lambda: asshape({1, 2}))
-    raises(TypeError, lambda: asshape({1: 2}))
-    raises(TypeError, lambda: asshape('1'))
-    raises(TypeError, lambda: asshape(1, allow_int=False))
-    raises(TypeError, lambda: asshape(-1, allow_int=False))
-    raises(TypeError, lambda: asshape(-1, allow_negative=True, allow_int=False))
-    raises(TypeError, lambda: asshape(np.int64(1), allow_int=False))

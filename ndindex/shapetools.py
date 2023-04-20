@@ -1,7 +1,9 @@
+import numbers
 import itertools
 from collections import defaultdict
+from collections.abc import Sequence
 
-from .ndindex import asshape, ndindex
+from .ndindex import ndindex, operator_index
 
 class BroadcastError(ValueError):
     """
@@ -292,6 +294,67 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)
+
+#### Internal helpers
+
+
+def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
+    """
+    Cast `shape` as a valid NumPy shape.
+
+    The input can be an integer `n` (if `allow_int=True`), which is equivalent
+    to `(n,)`, or a tuple of integers.
+
+    If the `axis` argument is provided, an `IndexError` is raised if it is out
+    of bounds for the shape.
+
+    The resulting shape is always a tuple of nonnegative integers. If
+    `allow_negative=True`, negative integers are also allowed.
+
+    All ndindex functions that take a shape input should use::
+
+        shape = asshape(shape)
+
+    or::
+
+        shape = asshape(shape, axis=axis)
+
+    """
+    from .integer import Integer
+    from .tuple import Tuple
+    if isinstance(shape, (Tuple, Integer)):
+        raise TypeError("ndindex types are not meant to be used as a shape - "
+                        "did you mean to use the built-in tuple type?")
+
+    if isinstance(shape, numbers.Number):
+        if allow_int:
+            shape = (operator_index(shape),)
+        else:
+            raise TypeError(f"expected sequence of integers, not {type(shape).__name__}")
+
+    if not isinstance(shape, Sequence) or isinstance(shape, str):
+        raise TypeError("expected sequence of integers" + allow_int*" or a single integer" + ", not " + type(shape).__name__)
+    l = len(shape)
+
+    newshape = []
+    # numpy uses __getitem__ rather than __iter__ to index into shape, so we
+    # match that
+    for i in range(l):
+        # Raise TypeError if invalid
+        val = shape[i]
+        if val is None:
+            raise ValueError("unknonwn (None) dimensions are not supported")
+
+        newshape.append(operator_index(shape[i]))
+
+        if not allow_negative and val < 0:
+            raise ValueError("unknown (negative) dimensions are not supported")
+
+    if axis is not None:
+        if len(newshape) <= axis:
+            raise IndexError(f"too many indices for array: array is {len(shape)}-dimensional, but {axis + 1} were indexed")
+
+    return tuple(newshape)
 
 def associated_axis(shape, broadcasted_shape, i, skip_axes):
     """

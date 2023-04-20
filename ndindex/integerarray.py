@@ -1,5 +1,5 @@
 from .array import ArrayIndex
-from .ndindex import asshape
+from .shapetools import asshape
 from .subindex_helpers import subindex_slice
 
 class IntegerArray(ArrayIndex):

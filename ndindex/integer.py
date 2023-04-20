@@ -1,4 +1,5 @@
-from .ndindex import NDIndex, asshape, operator_index
+from .ndindex import NDIndex, operator_index
+from .shapetools import asshape
 
 class Integer(NDIndex):
     """

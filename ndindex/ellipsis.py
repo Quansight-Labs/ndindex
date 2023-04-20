@@ -1,5 +1,6 @@
-from .ndindex import NDIndex, asshape
+from .ndindex import NDIndex
 from .tuple import Tuple
+from .shapetools import asshape
 
 class ellipsis(NDIndex):
     """

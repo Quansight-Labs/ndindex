@@ -95,8 +95,8 @@ relied on as they may be removed or changed.
 
 .. autoclass:: ndindex.slice.default
 
-.. autofunction:: ndindex.ndindex.asshape
-
 .. autofunction:: ndindex.ndindex.operator_index
+
+.. autofunction:: ndindex.shapetools.asshape
 
 .. autofunction:: ndindex.shapetools.ncycles

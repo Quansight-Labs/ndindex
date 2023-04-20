@@ -1,8 +1,8 @@
 import sys
 
-from .ndindex import NDIndex, ndindex, asshape
+from .ndindex import NDIndex, ndindex
 from .subindex_helpers import subindex_slice
-from .shapetools import broadcast_shapes, BroadcastError
+from .shapetools import asshape, broadcast_shapes, BroadcastError
 
 class Tuple(NDIndex):
     """
