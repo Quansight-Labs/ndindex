@@ -100,3 +100,9 @@ relied on as they may be removed or changed.
 .. autofunction:: ndindex.shapetools.asshape
 
 .. autofunction:: ndindex.shapetools.ncycles
+
+.. autofunction:: ndindex.shapetools.associated_axis
+
+.. autofunction:: ndindex.shapetools.remove_indices
+
+.. autofunction:: ndindex.shapetools.unremove_indices

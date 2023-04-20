@@ -358,11 +358,12 @@ def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
 
 def associated_axis(shape, broadcasted_shape, i, skip_axes):
     """
-    Return the associated index into broadcast_shape corresponding to
-    shape[i] given skip_axes.
+    Return the associated index into `broadcast_shape` corresponding to
+    `shape[i]` given `skip_axes`.
 
     This function makes implicit assumptions about its input and is only
     designed for internal use.
+
     """
     n = len(shape)
     N = len(broadcasted_shape)
