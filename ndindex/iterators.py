@@ -277,9 +277,8 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
             else:
                 idx = associated_axis(shape, broadcasted_shape, i, skip_axes)
                 val = broadcasted_shape[idx]
-                if val is None:
-                    pass
-                elif val == 0:
+                assert val is not None
+                if val == 0:
                     return
                 elif val != 1 and shape[i] == 1:
                     it.insert(0, ncycles(range(shape[i]), val))
