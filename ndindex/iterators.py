@@ -303,6 +303,8 @@ def associated_axis(shape, broadcasted_shape, i, skip_axes):
     Return the associated index into broadcast_shape corresponding to
     shape[i] given skip_axes.
 
+    This function makes implicit assumptions about its input and is only
+    designed for internal use.
     """
     n = len(shape)
     N = len(broadcasted_shape)
@@ -332,6 +334,8 @@ def associated_axis(shape, broadcasted_shape, i, skip_axes):
 def remove_indices(x, idxes):
     """
     Return `x` with the indices `idxes` removed.
+
+    This function is only intended for internal usage.
     """
     if isinstance(idxes, int):
         idxes = (idxes,)
@@ -347,7 +351,9 @@ def unremove_indices(x, idxes, *, val=None):
     """
     Insert `val` in `x` so that it appears at `idxes`.
 
-    Note that idxes must be either all negative or all nonnegative
+    Note that idxes must be either all negative or all nonnegative.
+
+    This function is only intended for internal usage.
     """
     if any(i >= 0 for i in idxes) and any(i < 0 for i in idxes):
         # A mix of positive and negative indices provides a fundamental
@@ -380,6 +386,8 @@ class ncycles:
     <https://docs.python.org/3/library/itertools.html#itertools-recipes>`_,
     but improved to give a repr, and to denest when it can. This makes
     debugging :func:`~.iter_indices` easier.
+
+    This is only intended for internal usage.
 
     >>> from ndindex.iterators import ncycles
     >>> ncycles(range(3), 2)
