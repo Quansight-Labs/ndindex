@@ -372,6 +372,7 @@ def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
     assert None not in _broadcasted_shape
     assert broadcast_shapes(*_shapes) == _broadcasted_shape
 
+@example([[(2, 10, 3, 4), (10, 3, 4)], (2, None, 3, 4)], (-3,))
 @example([[(0, 10, 2, 3, 10, 4), (1, 10, 1, 0, 10, 2, 3, 4)],
           (1, None, 1, 0, None, 2, 3, 4)], (1, 4))
 @example([[(2, 0, 3, 4)], (2, None, 3, 4)], (1,))
