@@ -357,7 +357,7 @@ def test_remove_indices(n, idxes):
 # Meta-test for the hypothesis strategy
 @given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
 def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
-                                                         skip_axes):
+                                                         skip_axes): # pragma: no cover
     shapes, broadcasted_shape = broadcastable_shapes
     _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
 
