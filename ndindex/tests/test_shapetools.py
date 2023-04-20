@@ -264,7 +264,7 @@ def test_iter_indices_errors():
     try:
         list(iter_indices((10,), skip_axes=(2,)))
     except AxisError as e:
-        msg1 = str(e)
+        ndindex_msg = str(e)
     else:
         raise RuntimeError("iter_indices did not raise AxisError") # pragma: no cover
 
@@ -272,27 +272,30 @@ def test_iter_indices_errors():
     try:
         np.sum(np.arange(10), axis=2)
     except np.AxisError as e:
-        msg2 = str(e)
+        np_msg = str(e)
     else:
         raise RuntimeError("np.sum() did not raise AxisError") # pragma: no cover
 
-    assert msg1 == msg2
+    assert ndindex_msg == np_msg
 
     try:
         list(iter_indices((2, 3), (3, 2)))
     except BroadcastError as e:
-        msg1 = str(e)
+        ndindex_msg = str(e)
     else:
         raise RuntimeError("iter_indices did not raise BroadcastError") # pragma: no cover
 
     try:
         np.broadcast_shapes((2, 3), (3, 2))
     except ValueError as e:
-        msg2 = str(e)
+        np_msg = str(e)
     else:
         raise RuntimeError("np.broadcast_shapes() did not raise ValueError") # pragma: no cover
 
-    assert msg1 == msg2
+
+    if 'Mismatch' in str(np_msg):
+        # Older versions of NumPy do not have the more helpful error message
+        assert ndindex_msg == np_msg
 
     raises(NotImplementedError, lambda: list(iter_indices((1, 2), skip_axes=(0, -1))))
 
