@@ -99,4 +99,4 @@ relied on as they may be removed or changed.
 
 .. autofunction:: ndindex.ndindex.operator_index
 
-.. autofunction:: ndindex.iterators.ncycles
+.. autofunction:: ndindex.shapetools.ncycles

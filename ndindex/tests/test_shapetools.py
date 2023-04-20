@@ -7,7 +7,7 @@ from hypothesis.strategies import (one_of, integers, tuples as
 from pytest import raises
 
 from ..ndindex import ndindex
-from ..iterators import (iter_indices, ncycles, BroadcastError,
+from ..shapetools import (iter_indices, ncycles, BroadcastError,
                             AxisError, broadcast_shapes, remove_indices,
                             unremove_indices, associated_axis)
 from ..integer import Integer

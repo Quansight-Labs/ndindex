@@ -58,7 +58,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
     >>> broadcast_shapes((2, 3), (5,), (4, 2, 1))
     Traceback (most recent call last):
     ...
-    ndindex.iterators.BroadcastError: shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (2, 3) and arg 1 with shape (5,).
+    ndindex.shapetools.BroadcastError: shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (2, 3) and arg 1 with shape (5,).
 
     Axes in `skip_axes` apply to each shape *before* being broadcasted. Each
     shape will be broadcasted together with these axes removed. The dimensions
@@ -384,7 +384,7 @@ class ncycles:
 
     This is only intended for internal usage.
 
-    >>> from ndindex.iterators import ncycles
+    >>> from ndindex.shapetools import ncycles
     >>> ncycles(range(3), 2)
     ncycles(range(0, 3), 2)
     >>> list(_)

@@ -4,7 +4,7 @@ from .ndindex import ndindex
 
 __all__ += ['ndindex']
 
-from .iterators import broadcast_shapes, iter_indices, AxisError, BroadcastError
+from .shapetools import broadcast_shapes, iter_indices, AxisError, BroadcastError
 
 __all__ += ['broadcast_shapes', 'iter_indices', 'AxisError', 'BroadcastError']
 

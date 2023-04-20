@@ -2,7 +2,7 @@ import sys
 
 from .ndindex import NDIndex, ndindex, asshape
 from .subindex_helpers import subindex_slice
-from .iterators import broadcast_shapes, BroadcastError
+from .shapetools import broadcast_shapes, BroadcastError
 
 class Tuple(NDIndex):
     """

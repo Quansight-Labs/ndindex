@@ -16,7 +16,7 @@ from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
                                     mbs, BroadcastableShapes)
 
 from ..ndindex import ndindex
-from ..iterators import remove_indices, unremove_indices
+from ..shapetools import remove_indices, unremove_indices
 
 # Hypothesis strategies for generating indices. Note that some of these
 # strategies are nominally already defined in hypothesis, but we redefine them
