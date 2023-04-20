@@ -1,7 +1,5 @@
 import sys
 from itertools import chain
-from functools import reduce
-from operator import mul
 
 from numpy import intp, bool_, array, broadcast_shapes
 import numpy.testing
@@ -17,16 +15,13 @@ from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
 
 from ..ndindex import ndindex
 from ..shapetools import remove_indices, unremove_indices
+from .._crt import prod
 
 # Hypothesis strategies for generating indices. Note that some of these
 # strategies are nominally already defined in hypothesis, but we redefine them
 # here because the hypothesis definitions are too restrictive. For example,
 # hypothesis's slices strategy does not generate slices with negative indices.
 # Similarly, hypothesis.extra.numpy.basic_indices only generates tuples.
-
-# np.prod has overflow and math.prod is Python 3.8+ only
-def prod(seq):
-    return reduce(mul, seq, 1)
 
 nonnegative_ints = integers(0, 10)
 negative_ints = integers(-10, -1)
