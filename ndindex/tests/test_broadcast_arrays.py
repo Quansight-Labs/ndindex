@@ -9,7 +9,7 @@ from ..booleanarray import BooleanArray
 from ..integerarray import IntegerArray
 from ..integer import Integer
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, short_shapes
+from .helpers import ndindices, check_same, short_shapes, warnings_are_errors
 
 @example((..., False, False), 1)
 @example((True, False), 1)
@@ -21,6 +21,7 @@ from .helpers import ndindices, check_same, short_shapes
 @example(False, 1)
 @example([[True, False], [False, False]], (2, 2, 3))
 @given(ndindices, one_of(short_shapes, integers(0, 10)))
+@warnings_are_errors
 def test_broadcast_arrays_hypothesis(idx, shape):
     if isinstance(shape, int):
         a = arange(shape)
