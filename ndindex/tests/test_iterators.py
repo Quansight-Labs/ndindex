@@ -183,6 +183,10 @@ def test_iter_indices_errors():
     with raises(ValueError, match=r"duplicate axes"):
         list(iter_indices((1, 2), skip_axes=(0, 1, 0)))
 
+    raises(TypeError, lambda: list(iter_indices(1, 2)))
+    raises(TypeError, lambda: list(iter_indices(1, 2, (2, 2))))
+    raises(TypeError, lambda: list(iter_indices([(1, 2), (2, 2)])))
+
 @example(1, 1, 1)
 @given(integers(0, 100), integers(0, 100), integers(0, 100))
 def test_ncycles(i, n, m):
@@ -268,6 +272,10 @@ def test_broadcast_shapes_errors(shapes):
         assert str(BroadcastError(0, e.shape1, 1, e.shape2)) == str(np_exc)
     else:
         raise RuntimeError("ndindex.broadcast_shapes raised but np.broadcast_shapes did not")
+
+    raises(TypeError, lambda: broadcast_shapes(1, 2))
+    raises(TypeError, lambda: broadcast_shapes(1, 2, (2, 2)))
+    raises(TypeError, lambda: broadcast_shapes([(1, 2), (2, 2)]))
 
 @given(mutually_broadcastable_shapes_with_skipped_axes(), skip_axes_st)
 def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):

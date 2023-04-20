@@ -70,8 +70,8 @@ def broadcast_shapes(*shapes, skip_axes=()):
     (None, 3, 2)
 
     """
-    if isinstance(skip_axes, int):
-        skip_axes = (skip_axes,)
+    skip_axes = asshape(skip_axes, allow_negative=True)
+    shapes = [asshape(shape, allow_int=False) for shape in shapes]
 
     if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
         # See the comments in remove_indices and iter_indices
@@ -217,8 +217,8 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     Tuple(1, 2)
 
     """
-    if isinstance(skip_axes, int):
-        skip_axes = (skip_axes,)
+    skip_axes = asshape(skip_axes, allow_negative=True)
+    shapes = [asshape(shape, allow_int=False) for shape in shapes]
 
     if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
         # Mixing positive and negative skip_axes is too difficult to deal with
