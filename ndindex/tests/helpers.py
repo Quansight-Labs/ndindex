@@ -51,11 +51,54 @@ _short_shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
 
+# short_shapes should be used in place of shapes in any test function that
+# uses ndindices, boolean_arrays, or tuples
+short_shapes = shared(_short_shapes)
+
+_integer_arrays = arrays(intp, short_shapes)
+integer_scalars = arrays(intp, ()).map(lambda x: x[()])
+integer_arrays = one_of(integer_scalars, _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
+
+# We need to make sure shapes for boolean arrays are generated in a way that
+# makes them related to the test array shape. Otherwise, it will be very
+# difficult for the boolean array index to match along the test array, which
+# means we won't test any behavior other than IndexError.
+
+@composite
+def subsequences(draw, sequence):
+    seq = draw(sequence)
+    start = draw(integers(0, max(0, len(seq)-1)))
+    stop = draw(integers(start, len(seq)))
+    return seq[start:stop]
+
+_boolean_arrays = arrays(bool_, one_of(subsequences(short_shapes), short_shapes))
+boolean_scalars = arrays(bool_, ()).map(lambda x: x[()])
+boolean_arrays = one_of(boolean_scalars, _boolean_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
+
+def _doesnt_raise(idx):
+    try:
+        ndindex(idx)
+    except (IndexError, ValueError, NotImplementedError):
+        return False
+    return True
+
+Tuples = tuples(one_of(ellipses(), ints(), slices(), newaxes(),
+                       integer_arrays, boolean_arrays)).filter(_doesnt_raise)
+
+ndindices = one_of(
+    ints(),
+    slices(),
+    ellipses(),
+    newaxes(),
+    Tuples,
+    integer_arrays,
+    boolean_arrays,
+).filter(_doesnt_raise)
+
 # Note: We could use something like this:
 
 # mutually_broadcastable_shapes = shared(integers(1, 32).flatmap(lambda i: mbs(num_shapes=i).filter(
 #     lambda broadcastable_shapes: prod([i for i in broadcastable_shapes.result_shape if i]) < MAX_ARRAY_SIZE)))
-
 
 @composite
 def _mutually_broadcastable_shapes(draw, min_shapes=0, max_shapes=32, min_side=0):
@@ -182,50 +225,6 @@ two_mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes(
 one_skip_axes = shared(_skip_axes_st(
     mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
     num_skip_axes=1))
-
-# We need to make sure shapes for boolean arrays are generated in a way that
-# makes them related to the test array shape. Otherwise, it will be very
-# difficult for the boolean array index to match along the test array, which
-# means we won't test any behavior other than IndexError.
-
-# short_shapes should be used in place of shapes in any test function that
-# uses ndindices, boolean_arrays, or tuples
-short_shapes = shared(_short_shapes)
-
-_integer_arrays = arrays(intp, short_shapes)
-integer_scalars = arrays(intp, ()).map(lambda x: x[()])
-integer_arrays = one_of(integer_scalars, _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
-
-@composite
-def subsequences(draw, sequence):
-    seq = draw(sequence)
-    start = draw(integers(0, max(0, len(seq)-1)))
-    stop = draw(integers(start, len(seq)))
-    return seq[start:stop]
-
-_boolean_arrays = arrays(bool_, one_of(subsequences(short_shapes), short_shapes))
-boolean_scalars = arrays(bool_, ()).map(lambda x: x[()])
-boolean_arrays = one_of(boolean_scalars, _boolean_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
-
-def _doesnt_raise(idx):
-    try:
-        ndindex(idx)
-    except (IndexError, ValueError, NotImplementedError):
-        return False
-    return True
-
-Tuples = tuples(one_of(ellipses(), ints(), slices(), newaxes(),
-                       integer_arrays, boolean_arrays)).filter(_doesnt_raise)
-
-ndindices = one_of(
-    ints(),
-    slices(),
-    ellipses(),
-    newaxes(),
-    Tuples,
-    integer_arrays,
-    boolean_arrays,
-).filter(_doesnt_raise)
 
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """
