@@ -4,13 +4,14 @@
 
 ## Major Changes
 
-- **Breaking** the `skip_axes` argument {func}`~.iter_indices` function now
+- **Breaking:** the `skip_axes` argument {func}`~.iter_indices` function now
   applies the skipped axes *before* broadcasting, not after. This behavior is
   more generally useful and matches how functions with stacking work (e.g.,
   `np.cross` or `np.matmul`). The best way to get the old behavior is to
-  broadcast the arrays/shapes together first. `skip_axes` in `iter_indices`
-  must be either all negative or all nonnegative. A future version may add
-  support for specifying different skip axes for each shape.
+  broadcast the arrays/shapes together first. The `skip_axes` in
+  `iter_indices` must be either all negative or all nonnegative to avoid
+  ambiguity. A future version may add support for specifying different skip
+  axes for each shape.
 
 - {func}`~.iter_indices` no longer requires the skipped axes specified by
   `skip_axes` to be broadcast compatible.
@@ -22,7 +23,7 @@
   `skip_axes` which will be ignored when broadcasting.
 
 - New exceptions {class}`~.BroadcastError` and {class}`~.AxisError` which are
-  used by {func}`~.iter_indices()` and {func}`~.broadcast_shapes`.
+  used by {func}`~.iter_indices` and {func}`~.broadcast_shapes`.
 
 ## Minor Changes
 
@@ -45,7 +46,7 @@
 
 - Minor improvements to some documentation.
 
-- Fix a typo in the type confusion docs. (@ruancomelli)
+- Fix a typo in the [type confusion](type-confusion) docs. (@ruancomelli)
 
 ## Version 1.6 (2022-01-24)
 
