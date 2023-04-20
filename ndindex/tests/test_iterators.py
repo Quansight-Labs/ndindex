@@ -307,9 +307,12 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     except IndexError:
         if not error: # pragma: no cover
             raise RuntimeError("broadcast_shapes raised but should not have")
-    else:
-        if error: # pragma: no cover
-            raise RuntimeError("broadcast_shapes did not raise but should have")
+        return
+    except BroadcastError:
+        pass
+
+    if error: # pragma: no cover
+        raise RuntimeError("broadcast_shapes did not raise but should have")
 
 remove_indices_n = shared(integers(0, 100))
 
