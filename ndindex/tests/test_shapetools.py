@@ -270,7 +270,9 @@ def test_broadcast_shapes_errors(shapes):
     except ValueError as np_exc:
         # Check that they do in fact not broadcast, and the error messages are
         # the same modulo the different arg positions.
-        assert str(BroadcastError(0, e.shape1, 1, e.shape2)) == str(np_exc)
+        if 'Mismatch' in str(np_exc):
+            # Older versions of NumPy do not have the more helpful error message
+            assert str(BroadcastError(0, e.shape1, 1, e.shape2)) == str(np_exc)
     else: # pragma: no cover
         raise RuntimeError("ndindex.broadcast_shapes raised but np.broadcast_shapes did not")
 
