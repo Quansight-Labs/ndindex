@@ -16,8 +16,9 @@ from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
                       skip_axes_st, mutually_broadcastable_shapes, tuples,
-                      shapes, two_mutually_broadcastable_shapes,
-                      one_skip_axes, assert_equal)
+                      shapes, two_mutually_broadcastable_shapes_1,
+                      two_mutually_broadcastable_shapes_2, one_skip_axes,
+                      two_skip_axes, assert_equal)
 
 @example([((1, 1), (1, 1)), (None, 1)], (0,))
 @example([((0,), (0,)), (None,)], (0,))
@@ -148,12 +149,12 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             assert set(vals) == set(correct_vals)
 
 cross_shapes = mutually_broadcastable_shapes_with_skipped_axes(
-    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
+    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes_1,
     skip_axes_st=one_skip_axes,
     skip_axes_values=integers(3, 3))
 
 @composite
-def cross_arrays(draw):
+def cross_arrays_st(draw):
     broadcastable_shapes = draw(cross_shapes)
     shapes, broadcasted_shape = broadcastable_shapes
 
@@ -169,7 +170,7 @@ def cross_arrays(draw):
 
     return a, b
 
-@given(cross_arrays(), cross_shapes, one_skip_axes)
+@given(cross_arrays_st(), cross_shapes, one_skip_axes)
 def test_iter_indices_cross(cross_arrays, broadcastable_shapes, skip_axes):
     # Test iter_indices behavior against np.cross, which effectively skips the
     # crossed axis. Note that we don't test against cross products of size 2
@@ -195,6 +196,69 @@ def test_iter_indices_cross(cross_arrays, broadcastable_shapes, skip_axes):
             a[idx1.raw],
             b[idx2.raw]),
                      res[idx3.raw])
+
+
+@composite
+def _matmul_shapes(draw):
+    broadcastable_shapes = draw(mutually_broadcastable_shapes_with_skipped_axes(
+        mutually_broadcastable_shapes=two_mutually_broadcastable_shapes_2,
+        skip_axes_st=two_skip_axes,
+        skip_axes_values=just(None),
+    ))
+    shapes, broadcasted_shape = broadcastable_shapes
+    skip_axes = draw(two_skip_axes)
+    # (n, m) @ (m, k) -> (n, k)
+    n, m, k = draw(hypothesis_tuples(integers(0, 10), integers(0, 10),
+                                     integers(0, 10)))
+
+    shape1, shape2 = map(list, shapes)
+    ax1, ax2 = skip_axes
+    shape1[ax1] = n
+    shape1[ax2] = m
+    shape2[ax1] = m
+    shape2[ax2] = k
+    broadcasted_shape = list(broadcasted_shape)
+    broadcasted_shape[ax1] = n
+    broadcasted_shape[ax2] = k
+    return [tuple(shape1), tuple(shape2)], tuple(broadcasted_shape)
+
+matmul_shapes = shared(_matmul_shapes())
+
+@composite
+def matmul_arrays_st(draw):
+    broadcastable_shapes = draw(matmul_shapes)
+    shapes, broadcasted_shape = broadcastable_shapes
+
+    # Sanity check
+    assert len(shapes) == 2
+    a = draw(arrays(dtype=int, shape=shapes[0], elements=integers(-100, 100)))
+    b = draw(arrays(dtype=int, shape=shapes[1], elements=integers(-100, 100)))
+
+    return a, b
+
+@given(matmul_arrays_st(), matmul_shapes, two_skip_axes)
+def test_iter_indices_matmul(matmul_arrays, broadcastable_shapes, skip_axes):
+    # Test iter_indices behavior against np.matmul, which effectively skips the
+    # contracted axis (they aren't broadcasted together, even when they are
+    # broadcast compatible).
+    a, b = matmul_arrays
+    shapes, broadcasted_shape = broadcastable_shapes
+
+    ax1, ax2 = skip_axes
+    n, m, k = shapes[0][ax1], shapes[0][ax2], shapes[1][ax2]
+
+    res = np.matmul(a, b, axes=[skip_axes, skip_axes, skip_axes])
+    assert res.shape == broadcasted_shape
+
+    for idx1, idx2, idx3 in iter_indices(*shapes, broadcasted_shape, skip_axes=skip_axes):
+        assert a[idx1.raw].shape == (n, m) if ax1 <= ax2 else (m, n)
+        assert b[idx2.raw].shape == (m, k) if ax1 <= ax2 else (k, m)
+        if ax1 <= ax2:
+            sub_res = np.matmul(a[idx1.raw], b[idx2.raw])
+        else:
+            sub_res = np.matmul(a[idx1.raw], b[idx2.raw],
+                                axes=[(1, 0), (1, 0), (1, 0)])
+        assert_equal(sub_res, res[idx3.raw])
 
 def test_iter_indices_errors():
     try:

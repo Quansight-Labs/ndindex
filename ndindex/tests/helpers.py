@@ -46,14 +46,14 @@ shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < MAX_ARRAY_SIZE)
 
-_short_shapes = tuples(integers(0, 10)).filter(
+_short_shapes = lambda n: tuples(integers(0, 10), min_size=n).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
 
 # short_shapes should be used in place of shapes in any test function that
 # uses ndindices, boolean_arrays, or tuples
-short_shapes = shared(_short_shapes)
+short_shapes = shared(_short_shapes(0))
 
 _integer_arrays = arrays(intp, short_shapes)
 integer_scalars = arrays(intp, ()).map(lambda x: x[()])
@@ -101,7 +101,7 @@ ndindices = one_of(
 #     lambda broadcastable_shapes: prod([i for i in broadcastable_shapes.result_shape if i]) < MAX_ARRAY_SIZE)))
 
 @composite
-def _mutually_broadcastable_shapes(draw, min_shapes=0, max_shapes=32, min_side=0):
+def _mutually_broadcastable_shapes(draw, *, shapes=short_shapes, min_shapes=0, max_shapes=32, min_side=0):
     # mutually_broadcastable_shapes() with the default inputs doesn't generate
     # very interesting examples (see
     # https://github.com/HypothesisWorks/hypothesis/issues/3170). It's very
@@ -116,7 +116,7 @@ def _mutually_broadcastable_shapes(draw, min_shapes=0, max_shapes=32, min_side=0
     # like. But it generates enough "real" interesting shapes that both of
     # these workarounds are worth doing (plus I don't know if any other better
     # way of handling the situation).
-    base_shape = draw(short_shapes)
+    base_shape = draw(shapes)
 
     input_shapes, result_shape = draw(
         mbs(
@@ -162,15 +162,14 @@ def _skip_axes_st(draw,
         return ()
     negative = draw(booleans(), label='skip_axes < 0')
     N = len(min(shapes, key=len))
-    if N == 0:
-        assume(num_skip_axes is None)
-        return ()
     if num_skip_axes is not None:
         min_size = max_size = num_skip_axes
-        assume(len(s) >= num_skip_axes for s in shapes)
+        assume(N >= num_skip_axes)
     else:
         min_size = 0
         max_size = None
+    if N == 0:
+        return ()
     if negative:
         axes = draw(lists(integers(-N, -1), min_size=min_size, max_size=max_size, unique=True))
     else:
@@ -218,13 +217,22 @@ skip_axes_values=integers(0)):
         assume(prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
     return BroadcastableShapes(shapes_, result_shape_)
 
-two_mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes(
+two_mutually_broadcastable_shapes_1 = shared(_mutually_broadcastable_shapes(
+    shapes=_short_shapes(1),
     min_shapes=2,
     max_shapes=2,
     min_side=1))
 one_skip_axes = shared(_skip_axes_st(
-    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
+    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes_1,
     num_skip_axes=1))
+two_mutually_broadcastable_shapes_2 = shared(_mutually_broadcastable_shapes(
+    shapes=_short_shapes(2),
+    min_shapes=2,
+    max_shapes=2,
+    min_side=2))
+two_skip_axes = shared(_skip_axes_st(
+    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes_2,
+    num_skip_axes=2))
 
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """
