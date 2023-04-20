@@ -448,13 +448,40 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ndindex.Integer.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ndindex.Integer.newshape">
 <span class="sig-name descname"><span class="pre">newshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.newshape" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -468,6 +495,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -712,13 +743,40 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ndindex.Slice.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ndindex.Slice.newshape">
 <span class="sig-name descname"><span class="pre">newshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.newshape" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -732,6 +790,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -1023,13 +1085,40 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ndindex.ellipsis.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ellipsis.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ellipsis.newshape">
 <span class="sig-name descname"><span class="pre">newshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ellipsis.newshape" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -1043,6 +1132,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -1149,13 +1242,40 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ndindex.Newaxis.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Newaxis.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ndindex.Newaxis.newshape">
 <span class="sig-name descname"><span class="pre">newshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Newaxis.newshape" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -1169,6 +1289,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -1495,8 +1619,8 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -1510,6 +1634,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -1886,6 +2014,33 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.IntegerArray.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
+</div>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="ndindex.IntegerArray.ndim">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#ndindex.IntegerArray.ndim" title="Permalink to this definition">#</a></dt>
@@ -1908,8 +2063,8 @@ same as the number of dimensions of an array that is indexed by
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -1923,6 +2078,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -2322,6 +2481,33 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.BooleanArray.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
+</div>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="ndindex.BooleanArray.ndim">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#ndindex.BooleanArray.ndim" title="Permalink to this definition">#</a></dt>
@@ -2344,8 +2530,8 @@ same as the number of dimensions of an array that is indexed by
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -2359,6 +2545,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -2451,9 +2641,9 @@ the index objects.</p>
 <span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">iter_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.iter_indices" title="Permalink to this definition">#</a></dt>
 <dd><p>Iterate indices for every element of an arrays of shape <code class="code docutils literal notranslate"><span class="pre">shapes</span></code>.</p>
 <p>Each shape in <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> should be a shape tuple, which are broadcast
-compatible. Each iteration step will produce a tuple of indices, one for
-each shape, which would correspond to the same elements if the arrays of
-the given shapes were first broadcast together.</p>
+compatible along the non-skipped axes. Each iteration step will produce a
+tuple of indices, one for each shape, which would correspond to the same
+elements if the arrays of the given shapes were first broadcast together.</p>
 <p>This is a generalization of the NumPy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndindex()</span></code></a> function (which otherwise has no relation).
 <code class="code docutils literal notranslate"><span class="pre">np.ndindex()</span></code> only iterates indices for a single shape, whereas
 <code class="code docutils literal notranslate"><span class="pre">iter_indices()</span></code> supports generating indices for multiple broadcast
@@ -2464,19 +2654,31 @@ shapes using <code class="code docutils literal notranslate"><span class="pre">s
 The remaining axes will be indexed one element at a time with integer
 indices.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> should be a tuple of axes to skip. It can use negative
-integers, e.g., <code class="code docutils literal notranslate"><span class="pre">skip_axes=(-1,)</span></code> will skip the last axis. The order of
-the axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> does not matter, but it should not contain
-duplicate axes. The axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> refer to the final broadcasted
-shape of <code class="code docutils literal notranslate"><span class="pre">shapes</span></code>. For example, <code class="code docutils literal notranslate"><span class="pre">iter_indices((3,),</span> <span class="pre">(1,</span> <span class="pre">2,</span> <span class="pre">3),</span>
-<span class="pre">skip_axes=(0,))</span></code> will skip the first axis, and only applies to the second
-shape, since the first shape corresponds to axis <code class="code docutils literal notranslate"><span class="pre">2</span></code> of the final
-broadcasted shape <code class="code docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">2,</span> <span class="pre">3)</span></code></p>
+integers, e.g., <code class="code docutils literal notranslate"><span class="pre">skip_axes=(-1,)</span></code> will skip the last axis (but note that
+mixing negative and nonnegative skip axes is currently not supported). The
+order of the axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> does not matter. The axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>
+refer to the shapes <em>before</em> broadcasting (if you want to refer to the
+axes after broadcasting, either broadcast the shapes and arrays first, or
+refer to the axes using negative integers). For example,
+<code class="code docutils literal notranslate"><span class="pre">iter_indices((10,</span> <span class="pre">2),</span> <span class="pre">(20,</span> <span class="pre">1,</span> <span class="pre">2),</span> <span class="pre">skip_axes=(0,))</span></code> will skip the size
+<code class="code docutils literal notranslate"><span class="pre">10</span></code> axis of <code class="code docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">2)</span></code> and the size <code class="code docutils literal notranslate"><span class="pre">20</span></code> axis of <code class="code docutils literal notranslate"><span class="pre">(20,</span> <span class="pre">1,</span> <span class="pre">2)</span></code>. The result
+is two sets of indices, one for each element of the non-skipped
+dimensions:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span> <span class="ow">in</span> <span class="n">iter_indices</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,)):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)</span>
+<span class="go">Tuple(slice(None, None, None), 0) Tuple(slice(None, None, None), 0, 0)</span>
+<span class="go">Tuple(slice(None, None, None), 1) Tuple(slice(None, None, None), 0, 1)</span>
+</pre></div>
+</div>
+<p>The skipped axes do not themselves need to be broadcast compatible, but
+the shapes with all the skipped axes removed should be broadcast
+compatible.</p>
 <p>For example, suppose <code class="code docutils literal notranslate"><span class="pre">a</span></code> is an array with shape <code class="code docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2,</span> <span class="pre">4,</span> <span class="pre">4)</span></code>, which we
 wish to think of as a <code class="code docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2)</span></code> stack of 4 x 4 matrices. We can generate an
 iterator for each matrix in the “stack” with <code class="code docutils literal notranslate"><span class="pre">iter_indices((3,</span> <span class="pre">2,</span> <span class="pre">4,</span> <span class="pre">4),</span>
 <span class="pre">skip_axes=(-1,</span> <span class="pre">-2))</span></code>:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">iter_indices</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">iter_indices</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
 <span class="go">(Tuple(0, 0, slice(None, None, None), slice(None, None, None)),)</span>
 <span class="go">(Tuple(0, 1, slice(None, None, None), slice(None, None, None)),)</span>
@@ -2486,9 +2688,12 @@ iterator for each matrix in the “stack” with <code class="code docutils lite
 <span class="go">(Tuple(2, 1, slice(None, None, None), slice(None, None, None)),)</span>
 </pre></div>
 </div>
-<p>Note that the iterates of <code class="code docutils literal notranslate"><span class="pre">iter_indices</span></code> are always a tuple, even if only
-a single shape is provided (one could instead use <code class="code docutils literal notranslate"><span class="pre">for</span> <span class="pre">idx,</span> <span class="pre">in</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The iterates of <code class="code docutils literal notranslate"><span class="pre">iter_indices</span></code> are always a tuple, even if only a
+single shape is provided (one could instead use <code class="code docutils literal notranslate"><span class="pre">for</span> <span class="pre">idx,</span> <span class="pre">in</span>
 <span class="pre">iter_indices(...)</span></code> above).</p>
+</div>
 <p>As another example, say <code class="code docutils literal notranslate"><span class="pre">a</span></code> is shape <code class="code docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">3)</span></code> and <code class="code docutils literal notranslate"><span class="pre">b</span></code> is shape <code class="code docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">1)</span></code>,
 and we want to generate indices for every value of the broadcasted
 operation <code class="code docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code>. We can do this by using <code class="code docutils literal notranslate"><span class="pre">a[idx1.raw]</span> <span class="pre">+</span> <span class="pre">b[idx2.raw]</span></code> for every
@@ -2532,9 +2737,37 @@ useful here).</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="ndindex.broadcast_shapes">
+<span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">broadcast_shapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.broadcast_shapes" title="Permalink to this definition">#</a></dt>
+<dd><p>Broadcast the input shapes <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> to a single shape.</p>
+<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.24)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>, except is also supports skipping axes in the
+shape with <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>.</p>
+<p>If the shapes are not broadcast compatible (excluding <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>),
+<code class="code docutils literal notranslate"><span class="pre">BroadcastError</span></code> is raised.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">broadcast_shapes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">(4, 2, 3)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ndindex.shapetools.BroadcastError</span>: <span class="n">shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (2, 3) and arg 1 with shape (5,).</span>
+</pre></div>
+</div>
+<p>Axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> apply to each shape <em>before</em> being broadcasted. Each
+shape will be broadcasted together with these axes removed. The dimensions
+in skip_axes do not need to be equal or broadcast compatible with one
+another. The final broadcasted shape will have <code class="code docutils literal notranslate"><span class="pre">None</span></code> in each <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>
+location, and the broadcasted remaining <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> axes elsewhere.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
+<span class="go">(None, 3, 2)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py exception">
 <dt class="sig sig-object py" id="ndindex.BroadcastError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BroadcastError</span></span><a class="headerlink" href="#ndindex.BroadcastError" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BroadcastError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BroadcastError" title="Permalink to this definition">#</a></dt>
 <dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> when the input shapes are not
 broadcast compatible.</p>
 <p>This is used instead of the NumPy exception of the same name so that
@@ -3050,13 +3283,40 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ndindex.ndindex.NDIndex.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ndindex.NDIndex.newshape">
 <span class="sig-name descname"><span class="pre">newshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex.newshape" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the shape of <code class="code docutils literal notranslate"><span class="pre">a[idx.raw]</span></code>, assuming <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should be a tuple of ints, or an int, which is equivalent to a
 1-D shape.</p>
-<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be out of shape for an array of
-shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>Raises <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if <code class="code docutils literal notranslate"><span class="pre">self</span></code> would be invalid for an array of shape
+<code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -3070,6 +3330,10 @@ shape <code class="code docutils literal notranslate"><span class="pre">shape</s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">(7, 2)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid" title="ndindex.ndindex.NDIndex.isvalid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.isvalid</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -3148,6 +3412,33 @@ ndindex methods.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">BooleanArray</span><span class="p">([</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span><span class="o">.</span><span class="n">array</span>
 <span class="go">array([False, True])</span>
 </pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.array.ArrayIndex.isvalid">
+<span class="sig-name descname"><span class="pre">isvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.array.ArrayIndex.isvalid" title="Permalink to this definition">#</a></dt>
+<dd><p>Check whether a given index is valid on an array of a given shape.</p>
+<p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> if an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> can be indexed by <code class="code docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">False</span></code> if it would raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">4</span><span class="p">,))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">isvalid</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
+attempt to construct them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape" title="ndindex.ndindex.NDIndex.newshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.newshape</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -3231,25 +3522,6 @@ meaningful value but not the default.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ndindex.ndindex.asshape">
-<span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">asshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.asshape" title="Permalink to this definition">#</a></dt>
-<dd><p>Cast <code class="code docutils literal notranslate"><span class="pre">shape</span></code> as a valid NumPy shape.</p>
-<p>The input can be an integer <code class="code docutils literal notranslate"><span class="pre">n</span></code>, which is equivalent to <code class="code docutils literal notranslate"><span class="pre">(n,)</span></code>, or a tuple
-of integers.</p>
-<p>If the <code class="code docutils literal notranslate"><span class="pre">axis</span></code> argument is provided, an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> is raised if it is out
-of bounds for the shape.</p>
-<p>The resulting shape is always a tuple of nonnegative integers.</p>
-<p>All ndindex functions that take a shape input should use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">asshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>or:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">asshape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="ndindex.ndindex.operator_index">
 <span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">operator_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.operator_index" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert <code class="code docutils literal notranslate"><span class="pre">idx</span></code> into an integer index using <code class="code docutils literal notranslate"><span class="pre">__index__()</span></code> or raise
@@ -3279,13 +3551,34 @@ indices, booleans and <code class="code docutils literal notranslate"><span clas
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ndindex.ndindex.ncycles">
-<span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">ncycles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.ncycles" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ndindex.shapetools.asshape">
+<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">asshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_negative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.asshape" title="Permalink to this definition">#</a></dt>
+<dd><p>Cast <code class="code docutils literal notranslate"><span class="pre">shape</span></code> as a valid NumPy shape.</p>
+<p>The input can be an integer <code class="code docutils literal notranslate"><span class="pre">n</span></code> (if <code class="code docutils literal notranslate"><span class="pre">allow_int=True</span></code>), which is equivalent
+to <code class="code docutils literal notranslate"><span class="pre">(n,)</span></code>, or a tuple of integers.</p>
+<p>If the <code class="code docutils literal notranslate"><span class="pre">axis</span></code> argument is provided, an <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> is raised if it is out
+of bounds for the shape.</p>
+<p>The resulting shape is always a tuple of nonnegative integers. If
+<code class="code docutils literal notranslate"><span class="pre">allow_negative=True</span></code>, negative integers are also allowed.</p>
+<p>All ndindex functions that take a shape input should use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">asshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">asshape</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ndindex.shapetools.ncycles">
+<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">ncycles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.ncycles" title="Permalink to this definition">#</a></dt>
 <dd><p>Iterate <code class="code docutils literal notranslate"><span class="pre">iterable</span></code> repeated <code class="code docutils literal notranslate"><span class="pre">n</span></code> times.</p>
 <p>This is based on a recipe from the <a class="reference external" href="https://docs.python.org/3/library/itertools.html#itertools-recipes">Python itertools docs</a>,
 but improved to give a repr, and to denest when it can. This makes
 debugging <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> easier.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex.ndindex</span> <span class="kn">import</span> <span class="n">ncycles</span>
+<p>This is only intended for internal usage.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex.shapetools</span> <span class="kn">import</span> <span class="n">ncycles</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ncycles</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="go">ncycles(range(0, 3), 2)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
@@ -3297,13 +3590,27 @@ debugging <a class="reference internal" href="#ndindex.iter_indices" title="ndin
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ndindex.ndindex.broadcast_shapes">
-<span class="sig-prename descclassname"><span class="pre">ndindex.ndindex.</span></span><span class="sig-name descname"><span class="pre">broadcast_shapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.broadcast_shapes" title="Permalink to this definition">#</a></dt>
-<dd><p>Broadcast the input shapes <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> to a single shape.</p>
-<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.24)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>. It is included as a separate helper function
-because <code class="code docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code> is on available in NumPy 1.20 or newer, and
-so that ndindex functions that use this function can do without requiring
-NumPy to be installed.</p>
+<dt class="sig sig-object py" id="ndindex.shapetools.associated_axis">
+<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">associated_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">broadcasted_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.associated_axis" title="Permalink to this definition">#</a></dt>
+<dd><p>Return the associated index into <code class="code docutils literal notranslate"><span class="pre">broadcast_shape</span></code> corresponding to
+<code class="code docutils literal notranslate"><span class="pre">shape[i]</span></code> given <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>.</p>
+<p>This function makes implicit assumptions about its input and is only
+designed for internal use.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ndindex.shapetools.remove_indices">
+<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">remove_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idxes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.remove_indices" title="Permalink to this definition">#</a></dt>
+<dd><p>Return <code class="code docutils literal notranslate"><span class="pre">x</span></code> with the indices <code class="code docutils literal notranslate"><span class="pre">idxes</span></code> removed.</p>
+<p>This function is only intended for internal usage.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ndindex.shapetools.unremove_indices">
+<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">unremove_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idxes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.unremove_indices" title="Permalink to this definition">#</a></dt>
+<dd><p>Insert <code class="code docutils literal notranslate"><span class="pre">val</span></code> in <code class="code docutils literal notranslate"><span class="pre">x</span></code> so that it appears at <code class="code docutils literal notranslate"><span class="pre">idxes</span></code>.</p>
+<p>Note that idxes must be either all negative or all nonnegative.</p>
+<p>This function is only intended for internal usage.</p>
 </dd></dl>
 
 </section>
@@ -3383,6 +3690,7 @@ NumPy to be installed.</p>
 <li><a class="reference internal" href="#ndindex.Integer.__len__"><code class="docutils literal notranslate"><span class="pre">Integer.__len__()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Integer.as_subindex"><code class="docutils literal notranslate"><span class="pre">Integer.as_subindex()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Integer.isempty"><code class="docutils literal notranslate"><span class="pre">Integer.isempty()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.Integer.isvalid"><code class="docutils literal notranslate"><span class="pre">Integer.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Integer.newshape"><code class="docutils literal notranslate"><span class="pre">Integer.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Integer.raw"><code class="docutils literal notranslate"><span class="pre">Integer.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Integer.reduce"><code class="docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a></li>
@@ -3394,6 +3702,7 @@ NumPy to be installed.</p>
 <li><a class="reference internal" href="#ndindex.Slice.__len__"><code class="docutils literal notranslate"><span class="pre">Slice.__len__()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.as_subindex"><code class="docutils literal notranslate"><span class="pre">Slice.as_subindex()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.isempty"><code class="docutils literal notranslate"><span class="pre">Slice.isempty()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.Slice.isvalid"><code class="docutils literal notranslate"><span class="pre">Slice.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.newshape"><code class="docutils literal notranslate"><span class="pre">Slice.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.raw"><code class="docutils literal notranslate"><span class="pre">Slice.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.reduce"><code class="docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a></li>
@@ -3405,6 +3714,7 @@ NumPy to be installed.</p>
 <li><a class="reference internal" href="#ndindex.ellipsis"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></a><ul>
 <li><a class="reference internal" href="#ndindex.ellipsis.as_subindex"><code class="docutils literal notranslate"><span class="pre">ellipsis.as_subindex()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ellipsis.isempty"><code class="docutils literal notranslate"><span class="pre">ellipsis.isempty()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.ellipsis.isvalid"><code class="docutils literal notranslate"><span class="pre">ellipsis.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ellipsis.newshape"><code class="docutils literal notranslate"><span class="pre">ellipsis.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ellipsis.raw"><code class="docutils literal notranslate"><span class="pre">ellipsis.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ellipsis.reduce"><code class="docutils literal notranslate"><span class="pre">ellipsis.reduce()</span></code></a></li>
@@ -3412,6 +3722,7 @@ NumPy to be installed.</p>
 </li>
 <li><a class="reference internal" href="#ndindex.Newaxis"><code class="docutils literal notranslate"><span class="pre">Newaxis</span></code></a><ul>
 <li><a class="reference internal" href="#ndindex.Newaxis.isempty"><code class="docutils literal notranslate"><span class="pre">Newaxis.isempty()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.Newaxis.isvalid"><code class="docutils literal notranslate"><span class="pre">Newaxis.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Newaxis.newshape"><code class="docutils literal notranslate"><span class="pre">Newaxis.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Newaxis.raw"><code class="docutils literal notranslate"><span class="pre">Newaxis.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Newaxis.reduce"><code class="docutils literal notranslate"><span class="pre">Newaxis.reduce()</span></code></a></li>
@@ -3437,6 +3748,7 @@ NumPy to be installed.</p>
 <li><a class="reference internal" href="#ndindex.IntegerArray.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">IntegerArray.broadcast_arrays()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.expand"><code class="docutils literal notranslate"><span class="pre">IntegerArray.expand()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.isempty"><code class="docutils literal notranslate"><span class="pre">IntegerArray.isempty()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.IntegerArray.isvalid"><code class="docutils literal notranslate"><span class="pre">IntegerArray.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.ndim"><code class="docutils literal notranslate"><span class="pre">IntegerArray.ndim</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.newshape"><code class="docutils literal notranslate"><span class="pre">IntegerArray.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.raw"><code class="docutils literal notranslate"><span class="pre">IntegerArray.raw</span></code></a></li>
@@ -3454,6 +3766,7 @@ NumPy to be installed.</p>
 <li><a class="reference internal" href="#ndindex.BooleanArray.count_nonzero"><code class="docutils literal notranslate"><span class="pre">BooleanArray.count_nonzero</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.expand"><code class="docutils literal notranslate"><span class="pre">BooleanArray.expand()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.isempty"><code class="docutils literal notranslate"><span class="pre">BooleanArray.isempty()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.BooleanArray.isvalid"><code class="docutils literal notranslate"><span class="pre">BooleanArray.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.ndim"><code class="docutils literal notranslate"><span class="pre">BooleanArray.ndim</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.newshape"><code class="docutils literal notranslate"><span class="pre">BooleanArray.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.raw"><code class="docutils literal notranslate"><span class="pre">BooleanArray.raw</span></code></a></li>
@@ -3466,6 +3779,7 @@ NumPy to be installed.</p>
 </li>
 <li><a class="reference internal" href="#index-helpers">Index Helpers</a><ul>
 <li><a class="reference internal" href="#ndindex.iter_indices"><code class="docutils literal notranslate"><span class="pre">iter_indices()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.broadcast_shapes"><code class="docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BroadcastError"><code class="docutils literal notranslate"><span class="pre">BroadcastError</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.AxisError"><code class="docutils literal notranslate"><span class="pre">AxisError</span></code></a></li>
 </ul>
@@ -3492,6 +3806,7 @@ NumPy to be installed.</p>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.broadcast_arrays"><code class="docutils literal notranslate"><span class="pre">NDIndex.broadcast_arrays()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.expand"><code class="docutils literal notranslate"><span class="pre">NDIndex.expand()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.isempty"><code class="docutils literal notranslate"><span class="pre">NDIndex.isempty()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.ndindex.NDIndex.isvalid"><code class="docutils literal notranslate"><span class="pre">NDIndex.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape"><code class="docutils literal notranslate"><span class="pre">NDIndex.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.raw"><code class="docutils literal notranslate"><span class="pre">NDIndex.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce"><code class="docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a></li>
@@ -3500,6 +3815,7 @@ NumPy to be installed.</p>
 <li><a class="reference internal" href="#ndindex.array.ArrayIndex"><code class="docutils literal notranslate"><span class="pre">ArrayIndex</span></code></a><ul>
 <li><a class="reference internal" href="#ndindex.array.ArrayIndex.dtype"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.dtype</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.array.ArrayIndex.array"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.array</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.array.ArrayIndex.isvalid"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.isvalid()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.array.ArrayIndex.ndim"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.ndim</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.array.ArrayIndex.raw"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.array.ArrayIndex.shape"><code class="docutils literal notranslate"><span class="pre">ArrayIndex.shape</span></code></a></li>
@@ -3507,10 +3823,12 @@ NumPy to be installed.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#ndindex.slice.default"><code class="docutils literal notranslate"><span class="pre">default</span></code></a></li>
-<li><a class="reference internal" href="#ndindex.ndindex.asshape"><code class="docutils literal notranslate"><span class="pre">asshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.operator_index"><code class="docutils literal notranslate"><span class="pre">operator_index()</span></code></a></li>
-<li><a class="reference internal" href="#ndindex.ndindex.ncycles"><code class="docutils literal notranslate"><span class="pre">ncycles()</span></code></a></li>
-<li><a class="reference internal" href="#ndindex.ndindex.broadcast_shapes"><code class="docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.shapetools.asshape"><code class="docutils literal notranslate"><span class="pre">asshape()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.shapetools.ncycles"><code class="docutils literal notranslate"><span class="pre">ncycles()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.shapetools.associated_axis"><code class="docutils literal notranslate"><span class="pre">associated_axis()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.shapetools.remove_indices"><code class="docutils literal notranslate"><span class="pre">remove_indices()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.shapetools.unremove_indices"><code class="docutils literal notranslate"><span class="pre">unremove_indices()</span></code></a></li>
 </ul>
 </li>
 </ul>
