@@ -16,7 +16,8 @@
 - {func}`~.iter_indices` no longer requires the skipped axes specified by
   `skip_axes` to be broadcast compatible.
 
-- New method {meth}`~.isvalid` to check if an index is valid on a given shape.
+- New method {meth}`~ndindex.ndindex.NDIndex.isvalid` to check if an index is valid on
+  a given shape.
 
 - New function {func}`~.broadcast_shapes` which is the same as
   `np.broadcast_shapes()` except it also allows specifying a set of
