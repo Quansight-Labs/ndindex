@@ -2,6 +2,7 @@ import sys
 import inspect
 import numbers
 import operator
+from collections.abc import Sequence
 
 newaxis = None
 
@@ -595,7 +596,7 @@ class NDIndex(ImmutableObject):
         """
         return self
 
-def asshape(shape, axis=None):
+def asshape(shape, axis=None, allowint=True):
     """
     Cast `shape` as a valid NumPy shape.
 
@@ -623,21 +624,27 @@ def asshape(shape, axis=None):
                         "did you mean to use the built-in tuple type?")
 
     if isinstance(shape, numbers.Number):
-        shape = (operator_index(shape),)
+        if allowint:
+            shape = (operator_index(shape),)
+        else:
+            raise TypeError(f"expected sequence of integers, not {type(shape).__name__}")
 
-    try:
-        l = len(shape)
-    except TypeError:
-        raise TypeError("expected sequence object with len >= 0 or a single integer")
+    if not isinstance(shape, Sequence) or isinstance(shape, str):
+        raise TypeError("expected sequence of integers" + allowint*" or a single integer" + ", not " + type(shape).__name__)
+    l = len(shape)
 
     newshape = []
     # numpy uses __getitem__ rather than __iter__ to index into shape, so we
     # match that
     for i in range(l):
         # Raise TypeError if invalid
+        val = shape[i]
+        if val is None:
+            raise ValueError("unknonwn (None) dimensions are not supported")
+
         newshape.append(operator_index(shape[i]))
 
-        if shape[i] < 0:
+        if val < 0:
             raise ValueError("unknown (negative) dimensions are not supported")
 
     if axis is not None:
