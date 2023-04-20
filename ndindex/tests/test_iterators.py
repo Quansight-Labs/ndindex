@@ -257,7 +257,7 @@ def test_broadcast_shapes_errors(shapes):
     if not error:
         try:
             np.broadcast_shapes(*shapes)
-        except:
+        except: # pragma: no cover
             raise RuntimeError("ndindex.broadcast_shapes raised but np.broadcast_shapes did not")
         return
 
@@ -270,7 +270,7 @@ def test_broadcast_shapes_errors(shapes):
         # Check that they do in fact not broadcast, and the error messages are
         # the same modulo the different arg positions.
         assert str(BroadcastError(0, e.shape1, 1, e.shape2)) == str(np_exc)
-    else:
+    else: # pragma: no cover
         raise RuntimeError("ndindex.broadcast_shapes raised but np.broadcast_shapes did not")
 
     raises(TypeError, lambda: broadcast_shapes(1, 2))
@@ -306,12 +306,12 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     try:
         broadcast_shapes(*shapes, skip_axes=skip_axes)
     except IndexError:
-        if not indexerror:
+        if not indexerror: # pragma: no cover
             raise RuntimeError("broadcast_shapes raised IndexError but should not have")
     except BroadcastError:
         broadcasterror = True
     else:
-        if indexerror:
+        if indexerror: # pragma: no cover
             raise RuntimeError("broadcast_shapes did not raise IndexError but should have")
 
     if not indexerror:
@@ -319,10 +319,10 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
         try:
             np.broadcast_shapes(*broadcastable)
         except ValueError:
-            if not broadcasterror:
+            if not broadcasterror: # pragma: no cover
                 raise RuntimeError("broadcast_shapes did not raise BroadcastError but should have")
         else:
-            if broadcasterror:
+            if broadcasterror: # pragma: no cover
                 raise RuntimeError("broadcast_shapes raised BroadcastError but should not have")
 
 remove_indices_n = shared(integers(0, 100))
