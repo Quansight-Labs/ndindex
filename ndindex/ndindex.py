@@ -307,13 +307,17 @@ class NDIndex(ImmutableObject):
         >>> ndindex(3).isvalid((2,))
         False
 
-        Some indices can never be valid and will raise a `TypeError` if you
-        attempt to construct them.
+        Note that some indices can never be valid and will raise a
+        `IndexError` or `TypeError` if you attempt to construct them.
 
         >>> ndindex((..., 0, ...))
         Traceback (most recent call last):
           ...
         IndexError: an index can only have a single ellipsis ('...')
+        >>> ndindex(slice(True))
+        Traceback (most recent call last):
+          ...
+        TypeError: 'bool' object cannot be interpreted as an integer
 
         See Also
         ========
