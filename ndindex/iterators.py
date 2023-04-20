@@ -249,10 +249,6 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     ndim = len(max(shapes, key=len))
     min_ndim = len(min(shapes, key=len))
 
-    if isinstance(skip_axes, int):
-        skip_axes = (skip_axes,)
-
-
     _skip_axes = defaultdict(list)
     for shape in shapes:
         for a in skip_axes:
