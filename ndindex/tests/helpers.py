@@ -145,8 +145,6 @@ def mutually_broadcastable_shapes_with_skipped_axes(draw):
     """
     skip_axes_ = draw(skip_axes_st)
     shapes, result_shape = draw(mutually_broadcastable_shapes)
-    if skip_axes_ is None:
-        return shapes, result_shape
     if isinstance(skip_axes_, int):
         skip_axes_ = (skip_axes_,)
 
