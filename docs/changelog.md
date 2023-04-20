@@ -1,6 +1,6 @@
 # ndindex Changelog
 
-## Version 1.7 (2023-??-??)
+## Version 1.7 (2023-04-20)
 
 ## Major Changes
 
