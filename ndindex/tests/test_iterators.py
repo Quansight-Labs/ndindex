@@ -183,6 +183,7 @@ def test_iter_indices_errors():
     with raises(ValueError, match=r"duplicate axes"):
         list(iter_indices((1, 2), skip_axes=(0, 1, 0)))
 
+    raises(AxisError, lambda: list(iter_indices(skip_axes=(0,))))
     raises(TypeError, lambda: list(iter_indices(1, 2)))
     raises(TypeError, lambda: list(iter_indices(1, 2, (2, 2))))
     raises(TypeError, lambda: list(iter_indices([(1, 2), (2, 2)])))
