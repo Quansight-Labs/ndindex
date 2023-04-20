@@ -9,9 +9,6 @@ class BroadcastError(ValueError):
     """
     Exception raised by :func:`iter_indices()` when the input shapes are not
     broadcast compatible.
-
-    This is used instead of the NumPy exception of the same name so that
-    `iter_indices` does not need to depend on NumPy.
     """
     __slots__ = ("arg1", "shape1", "arg2", "shape2")
 
