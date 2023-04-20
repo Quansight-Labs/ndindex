@@ -285,6 +285,7 @@ def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):
 
 @example([[(0, 1)], (0, 1)], (2,))
 @example([[(0, 1)], (0, 1)], (0, -1))
+@example([[(0, 1, 0, 0, 0), (2, 0, 0, 0)], (0, 2, 0, 0, 0)], [1])
 @given(mutually_broadcastable_shapes, lists(integers(-20, 20), max_size=20))
 def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
@@ -310,6 +311,8 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
             raise RuntimeError("broadcast_shapes raised but should not have")
         return
     except BroadcastError:
+        # Broadcastable shapes can become unbroadcastable after skipping axes
+        # (see the @example above).
         pass
 
     if error: # pragma: no cover
