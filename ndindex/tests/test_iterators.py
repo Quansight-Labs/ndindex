@@ -282,6 +282,8 @@ def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
     assert broadcast_shapes(*shapes, skip_axes=skip_axes) == broadcasted_shape
 
+@example([[(0, 1)], (0, 1)], (2,))
+@example([[(0, 1)], (0, 1)], (0, -1))
 @given(mutually_broadcastable_shapes, lists(integers(-20, 20), max_size=20))
 def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
