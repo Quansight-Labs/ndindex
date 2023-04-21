@@ -6,7 +6,6 @@ The ndindex API consists of classes representing the different types of index
 objects (integers, slices, etc.), as well as some helper functions for dealing
 with indices.
 
-
 ndindex
 =======
 
@@ -60,6 +59,8 @@ the index objects.
 
 .. autofunction:: ndindex.iter_indices
 
+.. autofunction:: ndindex.broadcast_shapes
+
 .. autoexception:: ndindex.BroadcastError
 
 .. autoexception:: ndindex.AxisError
@@ -93,10 +94,14 @@ relied on as they may be removed or changed.
 
 .. autoclass:: ndindex.slice.default
 
-.. autofunction:: ndindex.ndindex.asshape
-
 .. autofunction:: ndindex.ndindex.operator_index
 
-.. autofunction:: ndindex.ndindex.ncycles
+.. autofunction:: ndindex.shapetools.asshape
 
-.. autofunction:: ndindex.ndindex.broadcast_shapes
+.. autofunction:: ndindex.shapetools.ncycles
+
+.. autofunction:: ndindex.shapetools.associated_axis
+
+.. autofunction:: ndindex.shapetools.remove_indices
+
+.. autofunction:: ndindex.shapetools.unremove_indices

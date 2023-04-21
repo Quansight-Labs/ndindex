@@ -61,3 +61,4 @@ jobs:
         with:
           folder: docs/_build/html
           ssh-key: ${{ secrets.DEPLOY_KEY }}
+          clean-exclude: benchmarks/

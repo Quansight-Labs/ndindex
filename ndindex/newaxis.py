@@ -1,4 +1,5 @@
-from .ndindex import NDIndex, asshape
+from .ndindex import NDIndex
+from .shapetools import asshape
 
 class Newaxis(NDIndex):
     """
@@ -68,6 +69,10 @@ class Newaxis(NDIndex):
         if shape is not None:
             shape = asshape(shape)
         return self
+
+    def isvalid(self, shape):
+        shape = asshape(shape)
+        return True
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class

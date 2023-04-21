@@ -25,7 +25,8 @@ def run_tests():
 
 @activity
 def build_docs():
-    with run_in_conda_env(['python=3.10', 'sphinx', 'myst-parser', 'numpy']):
+    with run_in_conda_env(['python=3.10', 'sphinx', 'myst-parser', 'numpy',
+                           'sphinx-copybutton', 'furo']):
         cd docs
         make html
         cd ..

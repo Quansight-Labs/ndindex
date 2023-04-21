@@ -1,8 +1,12 @@
 __all__ = []
 
-from .ndindex import ndindex, iter_indices, AxisError, BroadcastError
+from .ndindex import ndindex
 
-__all__ += ['ndindex', 'iter_indices', 'AxisError', 'BroadcastError']
+__all__ += ['ndindex']
+
+from .shapetools import broadcast_shapes, iter_indices, AxisError, BroadcastError
+
+__all__ += ['broadcast_shapes', 'iter_indices', 'AxisError', 'BroadcastError']
 
 from .slice import Slice
 
