@@ -21,16 +21,16 @@ Some general types to help avoid type confusion:
   can use the `slice` built-in object to create slices. `slice(a, b, c)` is
   the same as `a:b:c`.
 
-  **Right:**
-
-  ```py
-  idx.as_subindex((1,))
-  ```
-
   **Wrong:**
 
   ```
   idx.as_subindex(Tuple(Integer(1))) # More verbose than necessary
+  ```
+
+  **Right:**
+
+  ```py
+  idx.as_subindex((1,))
   ```
 
 - **Keep all index objects as ndindex types until performing actual
@@ -45,7 +45,7 @@ Some general types to help avoid type confusion:
   this:
 
   - Raw types (such as `int`, `slice`, `tuple`, `array`, and so on), do not
-    have any of the same methods as ndindex, so your code may fail
+    have any of the same methods as ndindex, so your code may fail.
 
   - Some raw types, such as slices, arrays, and tuples containing slices or
     arrays, are not hashable, so if you try to use them as a dictionary key,
@@ -111,6 +111,10 @@ Some general types to help avoid type confusion:
         ...
     ```
 
+    Additionally, all ndindex types are immutable, including types
+    representing NumPy arrays, so it is impossible to accidentally mutate an
+    ndindex array index object.
+
 - **Use `.raw` to convert an ndindex object to an indexable type.** With the
   exception of `Integer`, it is impossible for custom types to define
   themselves as indices to NumPy arrays, so it is necessary to use
@@ -163,20 +167,22 @@ Some general types to help avoid type confusion:
 
 - **Try to use ndindex methods to manipulate indices.** The whole reason
   ndindex exists is that writing formulas for manipulating indices is hard,
-  and it's easy to get the corner cases wrong. If you find yourself
-  manipulating index args directly in complex ways, it's a sign you should
-  probably be using a higher level abstraction. If what you are trying to do
-  doesn't exist yet, [open an
-  issue](https://github.com/Quansight-labs/ndindex/issues) so we can implement it.
+  and it's easy to get the corner cases wrong. ndindex is [rigorously
+  tested](testing) so you can be highly confident of its correctness. If you
+  find yourself manipulating index args directly in complex ways, it's a sign
+  you should probably be using a higher level abstraction. If what you are
+  trying to do doesn't exist yet, [open an
+  issue](https://github.com/Quansight-labs/ndindex/issues) so we can implement
+  it.
 
 Additionally, some advice for specific types:
 
 ## Integer
 
 - **{class}`~.Integer` should not be thought of as an int type.** It
-  represents integers **as indices**. It is not usable in contexts where
-  integers are usable. For example, arithmetic will not work on it. If you
-  need to manipulate the integer index as an integer, use `idx.raw`.
+  represents integers **as indices**. It is not usable in other contexts where
+  ints are usable. For example, arithmetic will not work on it. If you need to
+  manipulate the `Integer` index as an `int`, use `idx.raw`.
 
   **Right:**
 
