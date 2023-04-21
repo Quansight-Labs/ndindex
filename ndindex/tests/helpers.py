@@ -147,7 +147,7 @@ def _mutually_broadcastable_shapes(draw, *, shapes=short_shapes, min_shapes=0, m
     # is already somewhat limited by the mutually_broadcastable_shapes
     # defaults, and pretty unlikely, but we filter again here just to be safe.
     if not prod([i for i in final_result_shape if i]) < SHORT_MAX_ARRAY_SIZE: # pragma: no cover
-        note(f"Filtering {result_shape}")
+        note(f"Filtering the shape {result_shape} (too many elements)")
         assume(False)
 
     return BroadcastableShapes(final_input_shapes, final_result_shape)
@@ -216,7 +216,9 @@ skip_axes_values=integers(0)):
     assert remove_indices(result_shape_, skip_axes_) == result_shape
 
     for shape in shapes_:
-        assume(prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
+        if prod([i for i in shape if i]) >= SHORT_MAX_ARRAY_SIZE:
+            note(f"Filtering the shape {shape} (too many elements)")
+            assume(False)
     return BroadcastableShapes(shapes_, result_shape_)
 
 two_mutually_broadcastable_shapes_1 = shared(_mutually_broadcastable_shapes(
