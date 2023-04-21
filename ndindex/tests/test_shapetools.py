@@ -404,6 +404,7 @@ def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
     assert broadcast_shapes(*shapes, skip_axes=skip_axes) == broadcasted_shape
 
+@example([[], ()], (0,))
 @example([[(0, 1)], (0, 1)], (2,))
 @example([[(0, 1)], (0, 1)], (0, -1))
 @example([[(0, 1, 0, 0, 0), (2, 0, 0, 0)], (0, 2, 0, 0, 0)], [1])
