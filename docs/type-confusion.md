@@ -1,3 +1,4 @@
+(type-confusion)=
 Type Confusion
 ==============
 

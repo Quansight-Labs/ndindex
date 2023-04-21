@@ -325,18 +325,21 @@ input arrays `a` and ndindex objects `idx`.
 
 There are two primary types of tests that we employ to verify this:
 
-- Exhaustive tests. These test every possible value in some range. For
+- **Exhaustive tests**. These test every possible value in some range. For
   example, slice tests test all possible `start`, `stop`, and `step` values in
-  the range [-10, 10], as well as `None`, on `numpy.arange(n)` for `n` in the
-  range [0, 10]. This is the best type of test, because it checks every
+  the range $[-10, 10]$, as well as `None`, on `numpy.arange(n)` for `n` in
+  the range $[0, 10]$. This is the best type of test, because it checks every
   possible case. Unfortunately, it is often impossible to do full exhaustive
-  testing due to combinatorial explosion.
+  testing due to combinatorial explosion. For example, it would be impossible
+  to exhaustively test tuple indices, even with a severely restricted search
+  space, and the situation is even worse with integer array indices.
 
-- Hypothesis tests.
+- **Hypothesis tests**.
   [Hypothesis](https://hypothesis.readthedocs.io/en/latest/index.html) is a
   library that can intelligently check a combinatorial search space of inputs.
   This requires writing hypothesis strategies that can generate all the
-  relevant types of indices (see [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py)).
+  relevant types of indices (see
+  [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py)).
   All tests have hypothesis tests, even if they are also tested exhaustively.
 
 Why bother with Hypothesis if the same thing is already tested exhaustively?
@@ -386,7 +389,7 @@ Jupyter.
 :titlesonly:
 :hidden:
 
-api.md
+api/index.md
 indexing-guide/index.md
 type-confusion.md
 changelog.md
