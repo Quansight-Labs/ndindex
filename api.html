@@ -460,12 +460,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -755,12 +759,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -1097,12 +1105,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -1254,12 +1266,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -2027,12 +2043,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -2494,12 +2514,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -2770,8 +2794,6 @@ location, and the broadcasted remaining <code class="code docutils literal notra
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BroadcastError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BroadcastError" title="Permalink to this definition">#</a></dt>
 <dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> when the input shapes are not
 broadcast compatible.</p>
-<p>This is used instead of the NumPy exception of the same name so that
-<code class="code docutils literal notranslate"><span class="pre">iter_indices</span></code> does not need to depend on NumPy.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -3295,12 +3317,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -3428,12 +3454,16 @@ and <code class="code docutils literal notranslate"><span class="pre">False</spa
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>Some indices can never be valid and will raise a <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you
-attempt to construct them.</p>
+<p>Note that some indices can never be valid and will raise a
+<code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> if you attempt to construct them.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">IndexError</span>: <span class="n">an index can only have a single ellipsis (&#39;...&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;bool&#39; object cannot be interpreted as an integer</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
