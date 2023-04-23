@@ -4,7 +4,7 @@ from hypothesis import given
 from hypothesis.strategies import one_of, integers
 
 from ..ndindex import ndindex
-from .helpers import check_same, prod, shapes, newaxes
+from .helpers import check_same, prod, shapes, newaxes, reduce_kwargs
 
 def test_newaxis_exhaustive():
     for n in range(10):
@@ -24,10 +24,10 @@ def test_newaxis_reduce_exhaustive():
         check_same(a, newaxis, ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
 
 
-@given(newaxes(), shapes)
-def test_newaxis_reduce_hypothesis(idx, shape):
+@given(newaxes(), shapes, reduce_kwargs)
+def test_newaxis_reduce_hypothesis(idx, shape, kwargs):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
+    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw])
 
 
 def test_newaxis_reduce_no_shape_exhaustive():
@@ -35,10 +35,10 @@ def test_newaxis_reduce_no_shape_exhaustive():
         a = arange(n)
         check_same(a, newaxis, ndindex_func=lambda a, x: a[x.reduce().raw])
 
-@given(newaxes(), shapes)
-def test_newaxis_reduce_no_shape_hypothesis(idx, shape):
+@given(newaxes(), shapes, reduce_kwargs)
+def test_newaxis_reduce_no_shape_hypothesis(idx, shape, kwargs):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce().raw])
+    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw])
 
 @given(newaxes(), one_of(shapes, integers(0, 10)))
 def test_newaxis_isempty_hypothesis(idx, shape):

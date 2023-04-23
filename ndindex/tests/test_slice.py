@@ -9,7 +9,7 @@ from ..slice import Slice
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..shapetools import asshape
-from .helpers import check_same, slices, prod, shapes, iterslice, assert_equal
+from .helpers import check_same, slices, prod, shapes, iterslice, assert_equal, reduce_kwargs
 
 def test_slice_args():
     # Test the behavior when not all three arguments are given
@@ -144,8 +144,8 @@ def test_slice_reduce_no_shape_exhaustive():
             slices[B] = reduced
 
 
-@given(slices(), one_of(integers(0, 100), shapes))
-def test_slice_reduce_no_shape_hypothesis(s, shape):
+@given(slices(), one_of(integers(0, 100), shapes), reduce_kwargs)
+def test_slice_reduce_no_shape_hypothesis(s, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -158,10 +158,10 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
+    check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw])
 
     # Check the conditions stated by the Slice.reduce() docstring
-    reduced = S.reduce()
+    reduced = S.reduce(**kwargs)
     assert reduced.start != None
     if S.start != None and S.start >= 0:
         assert reduced.start >= 0
@@ -171,7 +171,7 @@ def test_slice_reduce_no_shape_hypothesis(s, shape):
     if reduced.stop is None:
         assert S.stop is None
     # Idempotency
-    assert reduced.reduce() == reduced, S
+    assert reduced.reduce(**kwargs) == reduced, S
 
 def test_slice_reduce_exhaustive():
     for n in range(30):
@@ -232,11 +232,11 @@ def test_slice_reduce_exhaustive():
             assert reduced.reduce() == reduced, S
             assert reduced.reduce((n,)) == reduced, S
 
-@example(slice(None, None, -1), 2)
-@example(slice(-10, 11, 3), 10)
-@example(slice(-1, 3, -3), 10)
-@given(slices(), one_of(integers(0, 100), shapes))
-def test_slice_reduce_hypothesis(s, shape):
+@example(slice(None, None, -1), 2, {})
+@example(slice(-10, 11, 3), 10, {})
+@example(slice(-1, 3, -3), 10, {})
+@given(slices(), one_of(integers(0, 100), shapes), reduce_kwargs)
+def test_slice_reduce_hypothesis(s, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -250,11 +250,11 @@ def test_slice_reduce_hypothesis(s, shape):
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
+    check_same(a, S.raw, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw])
 
     # Check the conditions stated by the Slice.reduce() docstring
     try:
-        reduced = S.reduce(shape)
+        reduced = S.reduce(shape, **kwargs)
     except IndexError:
         # shape == ()
         return
@@ -294,8 +294,8 @@ def test_slice_reduce_hypothesis(s, shape):
         assert reduced == Slice(reduced.start, reduced.start+1, 1)
 
     # Idempotency
-    assert reduced.reduce() == reduced, S
-    assert reduced.reduce(shape) == reduced, S
+    assert reduced.reduce(**kwargs) == reduced, S
+    assert reduced.reduce(shape, **kwargs) == reduced, S
 
 def test_slice_newshape_exhaustive():
     def raw_func(a, idx):

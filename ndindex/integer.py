@@ -62,12 +62,15 @@ class Integer(NDIndex):
             size = shape[axis]
             raise IndexError(f"index {self.raw} is out of bounds for axis {axis} with size {size}")
 
-    def reduce(self, shape=None, axis=0):
+    def reduce(self, shape=None, *, axis=0, negative_int=False):
         """
         Reduce an Integer index on an array of shape `shape`.
 
         The result will either be `IndexError` if the index is invalid for the
         given shape, or an Integer index where the value is nonnegative.
+
+        If `negative_int` is `True` and a `shape` is provided, then the result
+        will be an Integer index where the value is negative.
 
         >>> from ndindex import Integer
         >>> idx = Integer(-5)
@@ -96,9 +99,12 @@ class Integer(NDIndex):
         shape = asshape(shape, axis=axis)
         self._raise_indexerror(shape, axis)
 
-        if self.raw < 0:
+        if self.raw < 0 and not negative_int:
             size = shape[axis]
             return self.__class__(size + self.raw)
+        elif self.raw >= 0 and negative_int:
+            size = shape[axis]
+            return self.__class__(self.raw - size)
 
         return self
 

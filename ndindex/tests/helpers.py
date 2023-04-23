@@ -238,6 +238,8 @@ two_skip_axes = shared(_skip_axes_st(
     mutually_broadcastable_shapes=two_mutually_broadcastable_shapes_2,
     num_skip_axes=2))
 
+reduce_kwargs = sampled_from([{}, {'negative_int': False}, {'negative_int': True}])
+
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """
     Same as numpy.testing.assert_equal except it also requires the shapes and

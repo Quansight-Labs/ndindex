@@ -111,7 +111,7 @@ class BooleanArray(ArrayIndex):
 
                 raise IndexError(f"boolean index did not match indexed array along dimension {i}; dimension is {shape[i]} but corresponding boolean dimension is {self.shape[i-axis]}")
 
-    def reduce(self, shape=None, axis=0):
+    def reduce(self, shape=None, *, axis=0, negative_int=False):
         """
         Reduce a `BooleanArray` index on an array of shape `shape`.
 
