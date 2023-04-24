@@ -523,6 +523,7 @@ def test_associated_axis(broadcastable_shapes, skip_axes):
             else:
                 assert val == 1 or bval == val
 
+# TODO: add a hypothesis test for asshape
 def test_asshape():
     assert asshape(1) == (1,)
     assert asshape(np.int64(2)) == (2,)
