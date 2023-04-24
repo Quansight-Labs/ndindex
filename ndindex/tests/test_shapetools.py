@@ -611,10 +611,10 @@ def test_canonical_skip_axes(shapes, skip_axes):
             assert str(bad_shape) in str(e)
             assert bad_skip_axes in _skip_axes
             assert bad_shape in shapes
-            indexed = [s[i] for s, i in zip(shapes, bad_skip_axes)]
-            assert len(indexed) != len(indexed)
+            indexed = [bad_shape[i] for i in bad_skip_axes]
+            assert len(indexed) != len(set(indexed))
             return
-        else:
+        else: # pragma: no cover
             raise
 
     assert isinstance(res, list)
