@@ -475,3 +475,54 @@ class ncycles:
 
     def __iter__(self):
         return itertools.chain.from_iterable(itertools.repeat(tuple(self.iterable), self.n))
+
+def canonical_skip_axes(shapes, skip_axes):
+    """
+    Return a canonical form of `skip_axes` corresponding to `shapes`.
+
+    A canonical form of `skip_axes` is a list of tuples of integers, one for
+    each shape in `shapes`, which are a unique set of axes for each
+    corresponding shape.
+
+    If `skip_axes` is an integer, this is basically `[(skip_axes,) for s
+    in shapes]`. If `skip_axes is a tuple, it is like `[skip_axes for s in
+    shapes]`.
+
+    The `skip_axes` must always refer to unique axes in each shape.
+
+    The returned `skip_axes` will always be negative integers.
+
+    This function is only intended for internal usage.
+
+    """
+    if isinstance(skip_axes, Sequence):
+        if skip_axes and all(isinstance(i, Sequence) for i in skip_axes):
+            if not all(isinstance(skip_axis, Sequence) for skip_axis in
+                       skip_axes):
+                raise TypeError("skip_axes must all be tuples of integers")
+            if len(skip_axes) != len(shapes):
+                raise ValueError(f"Expected {len(shapes)} skip_axes")
+            return [canonical_skip_axes([shape], skip_axis)[0] for shape, skip_axis in zip(shapes, skip_axes)]
+        else:
+            try:
+                [operator_index(i) for i in skip_axes]
+            except TypeError:
+                raise TypeError("skip_axes must be an integer, a tuple of integers, or a list of tuples of integers")
+
+    skip_axes = asshape(skip_axes, allow_negative=True)
+
+    # From here, skip_axes is a single tuple of integers
+
+    if not shapes and skip_axes:
+        raise ValueError(f"Expected {len(shapes)} skip_axes")
+
+    new_skip_axes = []
+    for shape in shapes:
+        s = tuple(ndindex(i).reduce(len(shape), negative_int=True, axiserror=True).raw for i in skip_axes)
+        if len(s) != len(set(s)):
+            err = ValueError(f"skip_axes {skip_axes} are not unique for shape {shape}")
+            # For testing
+            err.skip_axes = skip_axes
+            err.shape = shape
+        new_skip_axes.append(s)
+    return new_skip_axes
