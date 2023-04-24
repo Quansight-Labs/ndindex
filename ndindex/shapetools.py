@@ -497,9 +497,6 @@ def canonical_skip_axes(shapes, skip_axes):
     """
     if isinstance(skip_axes, Sequence):
         if skip_axes and all(isinstance(i, Sequence) for i in skip_axes):
-            if not all(isinstance(skip_axis, Sequence) for skip_axis in
-                       skip_axes):
-                raise TypeError("skip_axes must all be tuples of integers")
             if len(skip_axes) != len(shapes):
                 raise ValueError(f"Expected {len(shapes)} skip_axes")
             return [canonical_skip_axes([shape], skip_axis)[0] for shape, skip_axis in zip(shapes, skip_axes)]
@@ -524,5 +521,6 @@ def canonical_skip_axes(shapes, skip_axes):
             # For testing
             err.skip_axes = skip_axes
             err.shape = shape
+            raise err
         new_skip_axes.append(s)
     return new_skip_axes
