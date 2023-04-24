@@ -555,6 +555,12 @@ def test_asshape():
     raises(TypeError, lambda: asshape(-1, allow_negative=True, allow_int=False))
     raises(TypeError, lambda: asshape(np.int64(1), allow_int=False))
 
+
+@example([(0, 1)], 0)
+@example([(2, 3), (2, 3, 4)], [(3,), (0,)])
+@example([(0, 1)], 0)
+@example([(2, 3)], (0, -2))
+@example([(2, 4), (2, 3, 4)], [(0,), (-3,)])
 @given(lists(tuples(integers(0))),
        one_of(integers(), tuples(integers()), lists(tuples(integers()))))
 def test_canonical_skip_axes(shapes, skip_axes):
