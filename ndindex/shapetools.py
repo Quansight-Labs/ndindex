@@ -34,6 +34,9 @@ class AxisError(ValueError, IndexError):
     __slots__ = ("axis", "ndim")
 
     def __init__(self, axis, ndim):
+        # NumPy allows axis=-1 for 0-d arrays
+        if (ndim < 0 or -ndim <= axis < ndim) and not (ndim == 0 and axis == -1):
+            raise ValueError(f"Invalid AxisError ({axis}, {ndim})")
         self.axis = axis
         self.ndim = ndim
 

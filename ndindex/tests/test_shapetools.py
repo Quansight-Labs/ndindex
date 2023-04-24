@@ -553,3 +553,32 @@ def test_asshape():
     raises(TypeError, lambda: asshape(-1, allow_int=False))
     raises(TypeError, lambda: asshape(-1, allow_negative=True, allow_int=False))
     raises(TypeError, lambda: asshape(np.int64(1), allow_int=False))
+
+@given(integers(), integers())
+def test_axiserror(axis, ndim):
+    if ndim == 0 and axis in [0, -1]:
+        # NumPy allows axis=0 or -1 for 0-d arrays
+        AxisError(axis, ndim)
+        return
+
+    try:
+        if ndim >= 0:
+            range(ndim)[axis]
+    except IndexError:
+        e = AxisError(axis, ndim)
+    else:
+        raises(ValueError, lambda: AxisError(axis, ndim))
+        return
+
+    try:
+        raise e
+    except AxisError as e2:
+        assert e2.args == (axis, ndim)
+        if ndim <= 32 and -1000 < axis < 1000:
+            a = np.empty((0,)*ndim)
+            try:
+                np.sum(a, axis=axis)
+            except np.AxisError as e3:
+                assert str(e2) == str(e3)
+            else:
+                raise RuntimeError("numpy didn't raise AxisError") # pragma: no cover
