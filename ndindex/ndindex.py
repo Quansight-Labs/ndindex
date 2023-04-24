@@ -255,7 +255,7 @@ class NDIndex(ImmutableObject):
         # as hash(self.args)
         return hash(self.raw)
 
-    def reduce(self, shape=None):
+    def reduce(self, shape=None, *, negative_int=False):
         """
         Simplify an index given that it will be applied to an array of a given shape.
 

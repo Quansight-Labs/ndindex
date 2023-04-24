@@ -83,7 +83,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
         return ()
 
     dims = [len(shape) for shape in shapes]
-    shape_skip_axes = [[ndindex(i).reduce(n).raw - n for i in skip_axes] for n in dims]
+    shape_skip_axes = [[ndindex(i).reduce(n, negative_int=True) for i in skip_axes] for n in dims]
     N = max(dims)
     broadcasted_skip_axes = [ndindex(i).reduce(N) for i in skip_axes]
 

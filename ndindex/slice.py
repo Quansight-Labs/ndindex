@@ -200,7 +200,7 @@ class Slice(NDIndex):
 
         return len(range(start, stop, step))
 
-    def reduce(self, shape=None, axis=0):
+    def reduce(self, shape=None, *, axis=0, negative_int=False):
         """
         `Slice.reduce` returns a slice that is canonicalized for an array of the
         given shape, or for any shape if `shape` is `None` (the default).

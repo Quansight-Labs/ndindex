@@ -517,8 +517,8 @@ def test_associated_axis(broadcastable_shapes, skip_axes):
                 if _skip_axes[0] >= 0:
                     assert ndindex(i).reduce(n) == ndindex(idx).reduce(ndim) in normalized_skip_axes
                 else:
-                    assert ndindex(i).reduce(n).raw - n == \
-                        ndindex(idx).reduce(ndim).raw - ndim in _skip_axes
+                    assert ndindex(i).reduce(n, negative_int=True) == \
+                        ndindex(idx).reduce(ndim, negative_int=True) in _skip_axes
             else:
                 assert val == 1 or bval == val
 

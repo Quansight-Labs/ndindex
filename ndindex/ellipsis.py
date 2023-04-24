@@ -46,7 +46,7 @@ class ellipsis(NDIndex):
     def _typecheck(self):
         return ()
 
-    def reduce(self, shape=None):
+    def reduce(self, shape=None, *, negative_int=False):
         """
         Reduce an ellipsis index
 
