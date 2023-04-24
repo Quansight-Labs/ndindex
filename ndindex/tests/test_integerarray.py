@@ -57,6 +57,7 @@ def test_integerarray_reduce_no_shape_unchanged(idx):
     if index.ndim != 0:
         assert index.reduce() == index
 
+@example(array(2), (4,), {'negative_int': True})
 @example(array([2, 0]), (1, 0), {})
 @example(array(0), 1, {})
 @example(array([], dtype=intp), 0, {})

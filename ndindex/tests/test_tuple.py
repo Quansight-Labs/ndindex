@@ -104,6 +104,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape, kwargs):
     # Idempotency
     assert reduced.reduce(**kwargs) == reduced
 
+@example((1, -1, [1, -1]), (3, 3, 3), {'negative_int': True})
 @example((..., None), (), {})
 @example((..., empty((0, 0), dtype=bool)), (0, 0), {})
 @example((empty((0, 0), dtype=bool), 0), (0, 0, 1), {})
