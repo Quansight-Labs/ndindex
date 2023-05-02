@@ -10,13 +10,12 @@ from pytest import fail
 
 from hypothesis import assume, note
 from hypothesis.strategies import (integers, none, one_of, lists, just,
-                                   builds, shared, composite, sampled_from,
-                                   booleans)
+                                   builds, shared, composite, sampled_from)
 from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
-                                    mbs, BroadcastableShapes)
+                                    mbs, BroadcastableShapes, valid_tuple_axes)
 
 from ..ndindex import ndindex
-from ..shapetools import remove_indices, unremove_indices
+from ..shapetools import remove_indices
 from .._crt import prod
 
 # Hypothesis strategies for generating indices. Note that some of these
@@ -154,89 +153,170 @@ def _mutually_broadcastable_shapes(draw, *, shapes=short_shapes, min_shapes=0, m
 
 mutually_broadcastable_shapes = shared(_mutually_broadcastable_shapes())
 
-@composite
-def _skip_axes_st(draw,
-                  mutually_broadcastable_shapes=mutually_broadcastable_shapes,
-                  num_skip_axes=None):
-    shapes, result_shape = draw(mutually_broadcastable_shapes)
-    if result_shape == ():
-        assume(num_skip_axes is None)
-        return ()
-    negative = draw(booleans(), label='skip_axes < 0')
-    N = len(min(shapes, key=len))
-    if num_skip_axes is not None:
-        min_size = max_size = num_skip_axes
-        assume(N >= num_skip_axes)
-    else:
-        min_size = 0
-        max_size = None
-    if N == 0:
-        return ()
-    if negative:
-        axes = draw(lists(integers(-N, -1), min_size=min_size, max_size=max_size, unique=True))
-    else:
-        axes = draw(lists(integers(0, N-1), min_size=min_size, max_size=max_size, unique=True))
-    axes = tuple(axes)
-    # Sometimes return an integer
-    if num_skip_axes is None and len(axes) == 1 and draw(booleans(), label='skip_axes integer'): # pragma: no cover
-        return axes[0]
-    return axes
+def _fill_shape(draw,
+                *,
+                result_shape,
+                skip_axes,
+                skip_axes_values):
+    max_n = max([i + 1 if i >= 0 else -i for i in skip_axes], default=0)
+    assume(max_n <= len(skip_axes) + len(result_shape))
+    dim = draw(integers(min_value=max_n, max_value=len(skip_axes) + len(result_shape)))
+    new_shape = ['placeholder']*dim
+    for i in skip_axes:
+        assume(new_shape[i] is not None) # skip_axes must be unique
+        new_shape[i] = None
+    j = -1
+    for i in range(-1, -dim - 1, -1):
+        if new_shape[i] is None:
+            new_shape[i] = draw(skip_axes_values)
+        else:
+            new_shape[i] = draw(sampled_from([result_shape[j], 1]))
+            j -= 1
+    while new_shape and new_shape[0] == 'placeholder':
+        # Can happen if positive and negative skip_axes refer to the same
+        # entry
+        new_shape.pop(0)
 
-skip_axes_st = shared(_skip_axes_st())
+    # This will happen if the skip axes are too large
+    assume('placeholder' not in new_shape)
+
+    if prod([i for i in new_shape if i]) >= SHORT_MAX_ARRAY_SIZE:
+        note(f"Filtering the shape {new_shape} (too many elements)")
+        assume(False)
+
+    return tuple(new_shape)
+
+
+def _fill_result_shape(draw,
+                *,
+                result_shape,
+                skip_axes):
+    dim = len(result_shape) + len(skip_axes)
+    assume(all(-dim <= i < dim for i in skip_axes))
+    new_shape = ['placeholder']*dim
+    for i in skip_axes:
+        assume(new_shape[i] is not None) # skip_axes must be unique
+        new_shape[i] = None
+    j = -1
+    for i in range(-1, -dim - 1, -1):
+        if new_shape[i] is not None:
+            new_shape[i] = result_shape[j]
+            j -= 1
+    while new_shape[:1] == ['placeholder']:
+        # Can happen if positive and negative skip_axes refer to the same
+        # entry
+        new_shape.pop(0)
+
+    # This will happen if the skip axes are too large
+    assume('placeholder' not in new_shape)
+
+    if prod([i for i in new_shape if i]) >= SHORT_MAX_ARRAY_SIZE:
+        note(f"Filtering the shape {new_shape} (too many elements)")
+        assume(False)
+
+    return tuple(new_shape)
+
+skip_axes_with_broadcasted_shape_type = shared(sampled_from([int, tuple, list]))
 
 @composite
-def mutually_broadcastable_shapes_with_skipped_axes(draw, skip_axes_st=skip_axes_st, mutually_broadcastable_shapes=mutually_broadcastable_shapes,
-skip_axes_values=integers(0)):
+def _mbs_and_skip_axes(
+        draw,
+        shapes=short_shapes,
+        min_shapes=0,
+        max_shapes=32,
+        skip_axes_type_st=skip_axes_with_broadcasted_shape_type,
+        skip_axes_values=integers(0, 20),
+        num_skip_axes=None,
+):
     """
     mutually_broadcastable_shapes except skip_axes() axes might not be
     broadcastable
 
     The result_shape will be None in the position of skip_axes.
     """
-    skip_axes_ = draw(skip_axes_st)
-    shapes, result_shape = draw(mutually_broadcastable_shapes)
-    if isinstance(skip_axes_, int):
-        skip_axes_ = (skip_axes_,)
+    skip_axes_type = draw(skip_axes_type_st)
+    _result_shape = draw(shapes)
+    if _result_shape == ():
+        assume(num_skip_axes is None)
 
-    # Randomize the shape values in the skipped axes
-    shapes_ = []
-    for shape in shapes:
-        _shape = list(unremove_indices(shape, skip_axes_))
-        # sanity check
-        assert remove_indices(_shape, skip_axes_) == shape, (_shape, skip_axes_, shape)
+    ndim = len(_result_shape)
+    num_shapes = draw(integers(min_value=min_shapes, max_value=max_shapes))
+    if not ndim:
+        return BroadcastableShapes([()]*num_shapes, ()), ()
 
-        # Replace None values with random values
-        for j in range(len(_shape)):
-            if _shape[j] is None:
-                _shape[j] = draw(skip_axes_values)
-        shapes_.append(tuple(_shape))
+    if num_skip_axes is not None:
+        min_skip_axes = max_skip_axes = num_skip_axes
+    else:
+        min_skip_axes = 0
+        max_skip_axes = None
 
-    result_shape_ = unremove_indices(result_shape, skip_axes_)
-    # sanity check
-    assert remove_indices(result_shape_, skip_axes_) == result_shape
+    # int and single tuple cases must be limited to N to ensure that they are
+    # correct for all shapes
+    if skip_axes_type == int:
+        skip_axes = draw(valid_tuple_axes(ndim, min_size=1, max_size=1))[0]
+        _skip_axes = [(skip_axes,)]*(num_shapes+1)
+    elif skip_axes_type == tuple:
+        skip_axes = draw(tuples(integers(-ndim, ndim-1), min_size=min_skip_axes,
+                               max_size=max_skip_axes, unique=True))
+        _skip_axes = [skip_axes]*(num_shapes+1)
+    elif skip_axes_type == list:
+        skip_axes = []
+        for i in range(num_shapes):
+            skip_axes.append(draw(tuples(integers(-ndim, ndim+1), min_size=min_skip_axes,
+                                         max_size=max_skip_axes, unique=True)))
+        skip_axes.append(draw(lists(integers(-2*ndim, 2*ndim+1),
+                                   min_size=min_skip_axes,
+                                   max_size=max_skip_axes, unique=True)))
+        _skip_axes = skip_axes
 
-    for shape in shapes_:
-        if prod([i for i in shape if i]) >= SHORT_MAX_ARRAY_SIZE:
-            note(f"Filtering the shape {shape} (too many elements)")
-            assume(False)
-    return BroadcastableShapes(shapes_, result_shape_)
+    shapes = []
+    for i in range(num_shapes):
+        shapes.append(_fill_shape(draw, result_shape=_result_shape, skip_axes=_skip_axes[i],
+                                  skip_axes_values=skip_axes_values))
 
-two_mutually_broadcastable_shapes_1 = shared(_mutually_broadcastable_shapes(
+    non_skip_shapes = [remove_indices(shape, sk) for shape, sk in
+                            zip(shapes, _skip_axes)]
+    # Broadcasting the result _fill_shape may produce a shape different from
+    # _result_shape because it might not have filled all dimensions, or it
+    # might have chosen 1 for a dimension every time. Ideally we would just be
+    # using shapes from mutually_broadcastable_shapes, but I don't know how to
+    # reverse inject skip axes into shapes in general (see the comment in
+    # unremove_indices). So for now, we just use the actual broadcast of the
+    # non-skip shapes. Note that we use np.broadcast_shapes here instead of
+    # ndindex.broadcast_shapes because test_broadcast_shapes itself uses this
+    # strategy.
+    broadcasted_shape = broadcast_shapes(*non_skip_shapes)
+    if _skip_axes:
+        _result_skip_axes = _skip_axes[-1]
+        result_shape = _fill_result_shape(draw, result_shape=broadcasted_shape,
+                                   skip_axes=_result_skip_axes)
+        assert remove_indices(result_shape, _result_skip_axes) == broadcasted_shape, (result_shape, _result_skip_axes, broadcasted_shape)
+    else:
+        result_shape = broadcasted_shape
+
+    return BroadcastableShapes(shapes, result_shape), skip_axes
+
+mbs_and_skip_axes = shared(_mbs_and_skip_axes())
+
+mutually_broadcastable_shapes_with_skipped_axes = mbs_and_skip_axes.map(
+    lambda i: i[0])
+skip_axes_st = mbs_and_skip_axes.map(lambda i: i[1])
+
+
+one_mbs_and_skip_axes = shared(_mbs_and_skip_axes(
     shapes=_short_shapes(1),
     min_shapes=2,
-    max_shapes=2,
-    min_side=1))
-one_skip_axes = shared(_skip_axes_st(
-    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes_1,
-    num_skip_axes=1))
-two_mutually_broadcastable_shapes_2 = shared(_mutually_broadcastable_shapes(
+    max_shapes=2))
+one_mutually_broadcastable_shapes = one_mbs_and_skip_axes.map(
+    lambda i: i[0])
+one_skip_axes = one_mbs_and_skip_axes.map(lambda i: i[1])
+two_mbs_and_skip_axes = shared(_mbs_and_skip_axes(
     shapes=_short_shapes(2),
     min_shapes=2,
-    max_shapes=2,
-    min_side=2))
-two_skip_axes = shared(_skip_axes_st(
-    mutually_broadcastable_shapes=two_mutually_broadcastable_shapes_2,
-    num_skip_axes=2))
+    max_shapes=2))
+two_mutually_broadcastable_shapes = two_mbs_and_skip_axes.map(
+    lambda i: i[0])
+two_skip_axes = two_mbs_and_skip_axes.map(lambda i: i[1])
 
 reduce_kwargs = sampled_from([{}, {'negative_int': False}, {'negative_int': True}])
 
