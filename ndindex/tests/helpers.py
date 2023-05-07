@@ -186,36 +186,6 @@ def _fill_shape(draw,
 
     return tuple(new_shape)
 
-
-def _fill_result_shape(draw,
-                *,
-                result_shape,
-                skip_axes):
-    dim = len(result_shape) + len(skip_axes)
-    assume(all(-dim <= i < dim for i in skip_axes))
-    new_shape = ['placeholder']*dim
-    for i in skip_axes:
-        assume(new_shape[i] is not None) # skip_axes must be unique
-        new_shape[i] = None
-    j = -1
-    for i in range(-1, -dim - 1, -1):
-        if new_shape[i] is not None:
-            new_shape[i] = result_shape[j]
-            j -= 1
-    while new_shape[:1] == ['placeholder']:
-        # Can happen if positive and negative skip_axes refer to the same
-        # entry
-        new_shape.pop(0)
-
-    # This will happen if the skip axes are too large
-    assume('placeholder' not in new_shape)
-
-    if prod([i for i in new_shape if i]) >= SHORT_MAX_ARRAY_SIZE:
-        note(f"Filtering the shape {new_shape} (too many elements)")
-        assume(False)
-
-    return tuple(new_shape)
-
 skip_axes_with_broadcasted_shape_type = shared(sampled_from([int, tuple, list]))
 
 @composite
@@ -241,6 +211,9 @@ def _mbs_and_skip_axes(
 
     ndim = len(_result_shape)
     num_shapes = draw(integers(min_value=min_shapes, max_value=max_shapes))
+    if not num_shapes:
+        assume(num_skip_axes is None)
+        num_skip_axes = 0
     if not ndim:
         return BroadcastableShapes([()]*num_shapes, ()), ()
 
@@ -253,20 +226,18 @@ def _mbs_and_skip_axes(
     # int and single tuple cases must be limited to N to ensure that they are
     # correct for all shapes
     if skip_axes_type == int:
+        assume(num_skip_axes in [None, 1])
         skip_axes = draw(valid_tuple_axes(ndim, min_size=1, max_size=1))[0]
-        _skip_axes = [(skip_axes,)]*(num_shapes+1)
+        _skip_axes = [(skip_axes,)]*num_shapes
     elif skip_axes_type == tuple:
         skip_axes = draw(tuples(integers(-ndim, ndim-1), min_size=min_skip_axes,
                                max_size=max_skip_axes, unique=True))
-        _skip_axes = [skip_axes]*(num_shapes+1)
+        _skip_axes = [skip_axes]*num_shapes
     elif skip_axes_type == list:
         skip_axes = []
         for i in range(num_shapes):
             skip_axes.append(draw(tuples(integers(-ndim, ndim+1), min_size=min_skip_axes,
                                          max_size=max_skip_axes, unique=True)))
-        skip_axes.append(draw(lists(integers(-2*ndim, 2*ndim+1),
-                                   min_size=min_skip_axes,
-                                   max_size=max_skip_axes, unique=True)))
         _skip_axes = skip_axes
 
     shapes = []
@@ -286,15 +257,8 @@ def _mbs_and_skip_axes(
     # ndindex.broadcast_shapes because test_broadcast_shapes itself uses this
     # strategy.
     broadcasted_shape = broadcast_shapes(*non_skip_shapes)
-    if _skip_axes:
-        _result_skip_axes = _skip_axes[-1]
-        result_shape = _fill_result_shape(draw, result_shape=broadcasted_shape,
-                                   skip_axes=_result_skip_axes)
-        assert remove_indices(result_shape, _result_skip_axes) == broadcasted_shape, (result_shape, _result_skip_axes, broadcasted_shape)
-    else:
-        result_shape = broadcasted_shape
 
-    return BroadcastableShapes(shapes, result_shape), skip_axes
+    return BroadcastableShapes(shapes, broadcasted_shape), skip_axes
 
 mbs_and_skip_axes = shared(_mbs_and_skip_axes())
 

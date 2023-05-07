@@ -18,8 +18,7 @@ from ..tuple import Tuple
 from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
                       skip_axes_st, mutually_broadcastable_shapes, tuples,
                       shapes, two_mutually_broadcastable_shapes,
-                      two_mutually_broadcastable_shapes, one_skip_axes,
-                      two_skip_axes, assert_equal)
+                      one_skip_axes, two_skip_axes, assert_equal)
 
 @example([((1, 1), (1, 1)), (None, 1)], (0,))
 @example([((0,), (0,)), (None,)], (0,))
@@ -409,37 +408,31 @@ def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):
 @example([[(0, 1)], (0, 1)], (2,))
 @example([[(0, 1)], (0, 1)], (0, -1))
 @example([[(0, 1, 0, 0, 0), (2, 0, 0, 0)], (0, 2, 0, 0, 0)], [1])
-@given(mutually_broadcastable_shapes, lists(integers(-20, 20), max_size=20))
+@given(mutually_broadcastable_shapes,
+       one_of(
+           integers(-20, 20),
+           tuples(integers(-20, 20), max_size=20),
+           lists(tuples(integers(-20, 20), max_size=20), max_size=32)))
 def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
-    # if any(i < 0 for i in skip_axes) and any(i >= 0 for i in skip_axes):
-    #     raises(NotImplementedError, lambda: broadcast_shapes(*shapes, skip_axes=skip_axes))
-    #     return
 
+    # All errors should come from canonical_skip_axes, which is tested
+    # separately below.
     try:
-        if not shapes and skip_axes:
-            raise IndexError
-        for shape in shapes:
-            for i in skip_axes:
-                shape[i]
-    except IndexError:
-        error = True
-    else:
-        error = False
+        canonical_skip_axes(shapes, skip_axes)
+    except (TypeError, ValueError, IndexError) as e:
+        raises(type(e), lambda: broadcast_shapes(*shapes,
+                                                   skip_axes=skip_axes))
+        return
 
     try:
         broadcast_shapes(*shapes, skip_axes=skip_axes)
     except IndexError:
-        if not error: # pragma: no cover
-            raise RuntimeError("broadcast_shapes raised but should not have")
-        return
+        raise RuntimeError("broadcast_shapes raised but should not have")
     except BroadcastError:
         # Broadcastable shapes can become unbroadcastable after skipping axes
         # (see the @example above).
         pass
-
-    if error: # pragma: no cover
-        raise RuntimeError("broadcast_shapes did not raise but should have")
 
 remove_indices_n = shared(integers(0, 100))
 

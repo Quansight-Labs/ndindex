@@ -65,52 +65,41 @@ def broadcast_shapes(*shapes, skip_axes=()):
     Axes in `skip_axes` apply to each shape *before* being broadcasted. Each
     shape will be broadcasted together with these axes removed. The dimensions
     in skip_axes do not need to be equal or broadcast compatible with one
-    another. The final broadcasted shape will have `None` in each `skip_axes`
-    location, and the broadcasted remaining `shapes` axes elsewhere.
+    another. The final broadcasted shape be the result of broadcasting all the
+    non-skip axes.
 
     >>> broadcast_shapes((10, 3, 2), (20, 2), skip_axes=(0,))
-    (None, 3, 2)
+    (3, 2)
 
     """
-    skip_axes = asshape(skip_axes, allow_negative=True)
     shapes = [asshape(shape, allow_int=False) for shape in shapes]
-
-    if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
-        # See the comments in remove_indices and iter_indices
-        raise NotImplementedError("Mixing both negative and nonnegative skip_axes is not yet supported")
+    skip_axes = canonical_skip_axes(shapes, skip_axes)
 
     if not shapes:
-        if skip_axes:
-            # Raise IndexError
-            ndindex(skip_axes[0]).reduce(0)
         return ()
 
-    dims = [len(shape) for shape in shapes]
-    shape_skip_axes = [[ndindex(i).reduce(n, negative_int=True) for i in skip_axes] for n in dims]
+    non_skip_shapes = [remove_indices(shape, skip_axis) for shape, skip_axis in zip(shapes, skip_axes)]
+    dims = [len(shape) for shape in non_skip_shapes]
     N = max(dims)
-    broadcasted_skip_axes = [ndindex(i).reduce(N) for i in skip_axes]
 
-    broadcasted_shape = [None if i in broadcasted_skip_axes else 1 for i in range(N)]
+    broadcasted_shape = [1]*N
 
     arg = None
     for i in range(-1, -N-1, -1):
         for j in range(len(shapes)):
             if dims[j] < -i:
                 continue
-            shape = shapes[j]
-            idx = associated_axis(shape, broadcasted_shape, i, skip_axes)
-            broadcasted_side = broadcasted_shape[idx]
+            shape = non_skip_shapes[j]
+            broadcasted_side = broadcasted_shape[i]
             shape_side = shape[i]
-            if i in shape_skip_axes[j]:
-                continue
-            elif shape_side == 1:
+            if shape_side == 1:
                 continue
             elif broadcasted_side == 1:
                 broadcasted_side = shape_side
                 arg = j
             elif shape_side != broadcasted_side:
                 raise BroadcastError(arg, shapes[arg], j, shapes[j])
-            broadcasted_shape[idx] = broadcasted_side
+            broadcasted_shape[i] = broadcasted_side
 
     return tuple(broadcasted_shape)
 
@@ -415,8 +404,8 @@ def unremove_indices(x, idxes, *, val=None):
     This function is only intended for internal usage.
     """
     if any(i >= 0 for i in idxes) and any(i < 0 for i in idxes):
-        # A mix of positive and negative indices provides a fundamental
-        # problem. Sometimes, the result is not unique: for example, x = [0];
+        # A mix of positive and negative indices presents a fundamental
+        # problem: sometimes the result is not unique. For example, x = [0];
         # idxes = [1, -1] could be satisfied by both [0, None] or [0, None,
         # None], depending on whether each index refers to a separate None or
         # not (note that both cases are supported by remove_indices(), because
@@ -495,6 +484,7 @@ def canonical_skip_axes(shapes, skip_axes):
     This function is only intended for internal usage.
 
     """
+    # Note: we assume asshape has already been called on the shapes in shapes
     if isinstance(skip_axes, Sequence):
         if skip_axes and all(isinstance(i, Sequence) for i in skip_axes):
             if len(skip_axes) != len(shapes):
@@ -511,7 +501,7 @@ def canonical_skip_axes(shapes, skip_axes):
     # From here, skip_axes is a single tuple of integers
 
     if not shapes and skip_axes:
-        raise ValueError(f"Expected {len(shapes)} skip_axes")
+        raise ValueError("skip_axes must be empty if there are no shapes")
 
     new_skip_axes = []
     for shape in shapes:
