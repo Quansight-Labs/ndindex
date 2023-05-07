@@ -473,20 +473,17 @@ def test_remove_indices(n, idxes):
 def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
                                                          skip_axes): # pragma: no cover
     shapes, broadcasted_shape = broadcastable_shapes
-    _skip_axes = canonical_skip_axes(shapes + [broadcasted_shape], skip_axes)
+    _skip_axes = canonical_skip_axes(shapes, skip_axes)
 
-    assert len(_skip_axes) == len(shapes) + 1
+    assert len(_skip_axes) == len(shapes)
 
     for shape in shapes:
         assert None not in shape
-    for i in _skip_axes[-1]:
-        assert broadcasted_shape[i] is None
+    assert None not in broadcasted_shape
 
     _shapes = [remove_indices(shape, sk) for shape, sk in zip(shapes, _skip_axes)]
-    _broadcasted_shape = remove_indices(broadcasted_shape, _skip_axes[-1])
 
-    assert None not in _broadcasted_shape
-    assert broadcast_shapes(*_shapes) == _broadcasted_shape
+    assert broadcast_shapes(*_shapes) == broadcasted_shape
 
 @example([[(2, 10, 3, 4), (10, 3, 4)], (2, None, 3, 4)], (-3,))
 @example([[(0, 10, 2, 3, 10, 4), (1, 10, 1, 0, 10, 2, 3, 4)],
