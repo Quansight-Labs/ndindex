@@ -12,7 +12,7 @@ from ..ndindex import ndindex
 from ..shapetools import (asshape, iter_indices, ncycles, BroadcastError,
                           AxisError, broadcast_shapes, remove_indices,
                           unremove_indices, associated_axis,
-                          canonical_skip_axes)
+                          normalize_skip_axes)
 from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
@@ -419,7 +419,7 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     # All errors should come from canonical_skip_axes, which is tested
     # separately below.
     try:
-        canonical_skip_axes(shapes, skip_axes)
+        normalize_skip_axes(shapes, skip_axes)
     except (TypeError, ValueError, IndexError) as e:
         raises(type(e), lambda: broadcast_shapes(*shapes,
                                                    skip_axes=skip_axes))
@@ -473,7 +473,7 @@ def test_remove_indices(n, idxes):
 def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
                                                          skip_axes): # pragma: no cover
     shapes, broadcasted_shape = broadcastable_shapes
-    _skip_axes = canonical_skip_axes(shapes, skip_axes)
+    _skip_axes = normalize_skip_axes(shapes, skip_axes)
 
     assert len(_skip_axes) == len(shapes)
 
@@ -556,41 +556,41 @@ def test_asshape():
 @example([(2, 4), (2, 3, 4)], [(0,), (-3,)])
 @given(lists(tuples(integers(0))),
        one_of(integers(), tuples(integers()), lists(tuples(integers()))))
-def test_canonical_skip_axes(shapes, skip_axes):
+def test_normalize_skip_axes(shapes, skip_axes):
     if not shapes:
         if skip_axes in [(), []]:
-            assert canonical_skip_axes(shapes, skip_axes) == []
+            assert normalize_skip_axes(shapes, skip_axes) == []
         else:
-            raises(ValueError, lambda: canonical_skip_axes(shapes, skip_axes))
+            raises(ValueError, lambda: normalize_skip_axes(shapes, skip_axes))
         return
 
     min_dim = min(len(shape) for shape in shapes)
 
     if isinstance(skip_axes, int):
         if not (-min_dim <= skip_axes < min_dim):
-            raises(AxisError, lambda: canonical_skip_axes(shapes, skip_axes))
+            raises(AxisError, lambda: normalize_skip_axes(shapes, skip_axes))
             return
         _skip_axes = [(skip_axes,)]*len(shapes)
         skip_len = 1
     elif isinstance(skip_axes, tuple):
         if not all(-min_dim <= s < min_dim for s in skip_axes):
-            raises(AxisError, lambda: canonical_skip_axes(shapes, skip_axes))
+            raises(AxisError, lambda: normalize_skip_axes(shapes, skip_axes))
             return
         _skip_axes = [skip_axes]*len(shapes)
         skip_len = len(skip_axes)
     elif not skip_axes:
         # empty list will be interpreted as a single skip_axes tuple
-        assert canonical_skip_axes(shapes, skip_axes) == [()]*len(shapes)
+        assert normalize_skip_axes(shapes, skip_axes) == [()]*len(shapes)
         return
     else:
         if len(shapes) != len(skip_axes):
-            raises(ValueError, lambda: canonical_skip_axes(shapes, skip_axes))
+            raises(ValueError, lambda: normalize_skip_axes(shapes, skip_axes))
             return
         _skip_axes = skip_axes
         skip_len = len(skip_axes[0])
 
     try:
-        res = canonical_skip_axes(shapes, skip_axes)
+        res = normalize_skip_axes(shapes, skip_axes)
     except AxisError as e:
         axis, ndim = e.args
         assert any(axis in s for s in _skip_axes)
@@ -623,11 +623,11 @@ def test_canonical_skip_axes(shapes, skip_axes):
     # TODO: Assert the order is maintained (doesn't actually matter for now
     # but could for future applications)
 
-def test_canonical_skip_axes_errors():
-    raises(TypeError, lambda: canonical_skip_axes([(1,)], {0: 1}))
-    raises(TypeError, lambda: canonical_skip_axes([(1,)], {0}))
-    raises(TypeError, lambda: canonical_skip_axes([(1,)], [(0,), 0]))
-    raises(TypeError, lambda: canonical_skip_axes([(1,)], [0, (0,)]))
+def test_normalize_skip_axes_errors():
+    raises(TypeError, lambda: normalize_skip_axes([(1,)], {0: 1}))
+    raises(TypeError, lambda: normalize_skip_axes([(1,)], {0}))
+    raises(TypeError, lambda: normalize_skip_axes([(1,)], [(0,), 0]))
+    raises(TypeError, lambda: normalize_skip_axes([(1,)], [0, (0,)]))
 
 @given(integers(), integers())
 def test_axiserror(axis, ndim):

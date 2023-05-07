@@ -73,7 +73,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
 
     """
     shapes = [asshape(shape, allow_int=False) for shape in shapes]
-    skip_axes = canonical_skip_axes(shapes, skip_axes)
+    skip_axes = normalize_skip_axes(shapes, skip_axes)
 
     if not shapes:
         return ()
@@ -465,7 +465,7 @@ class ncycles:
     def __iter__(self):
         return itertools.chain.from_iterable(itertools.repeat(tuple(self.iterable), self.n))
 
-def canonical_skip_axes(shapes, skip_axes):
+def normalize_skip_axes(shapes, skip_axes):
     """
     Return a canonical form of `skip_axes` corresponding to `shapes`.
 
@@ -489,7 +489,7 @@ def canonical_skip_axes(shapes, skip_axes):
         if skip_axes and all(isinstance(i, Sequence) for i in skip_axes):
             if len(skip_axes) != len(shapes):
                 raise ValueError(f"Expected {len(shapes)} skip_axes")
-            return [canonical_skip_axes([shape], skip_axis)[0] for shape, skip_axis in zip(shapes, skip_axes)]
+            return [normalize_skip_axes([shape], skip_axis)[0] for shape, skip_axis in zip(shapes, skip_axes)]
         else:
             try:
                 [operator_index(i) for i in skip_axes]
