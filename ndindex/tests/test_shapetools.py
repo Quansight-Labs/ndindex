@@ -617,7 +617,9 @@ def test_normalize_skip_axes(shapes, skip_axes):
     assert len(res) == len(shapes)
     for shape, new_skip_axes in zip(shapes, res):
         assert len(new_skip_axes) == len(set(new_skip_axes)) == skip_len
+        assert new_skip_axes == tuple(sorted(new_skip_axes))
         for i in new_skip_axes:
+            assert i < 0
             assert ndindex(i).reduce(len(shape), negative_int=True) == i
 
     # TODO: Assert the order is maintained (doesn't actually matter for now

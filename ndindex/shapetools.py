@@ -479,7 +479,8 @@ def normalize_skip_axes(shapes, skip_axes):
 
     The `skip_axes` must always refer to unique axes in each shape.
 
-    The returned `skip_axes` will always be negative integers.
+    The returned `skip_axes` will always be negative integers and will be
+    sorted.
 
     This function is only intended for internal usage.
 
@@ -505,7 +506,7 @@ def normalize_skip_axes(shapes, skip_axes):
 
     new_skip_axes = []
     for shape in shapes:
-        s = tuple(ndindex(i).reduce(len(shape), negative_int=True, axiserror=True).raw for i in skip_axes)
+        s = tuple(sorted(ndindex(i).reduce(len(shape), negative_int=True, axiserror=True).raw for i in skip_axes))
         if len(s) != len(set(s)):
             err = ValueError(f"skip_axes {skip_axes} are not unique for shape {shape}")
             # For testing
