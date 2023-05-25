@@ -234,11 +234,11 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                         it[j] = ncycles(it[j], val)
                     break
             elif i in sk:
-                if len(shape) == ndim and len(sk) == len(shape) and val:
+                if len(shape) == ndim and len(sk) == len(shape) and i == -1:
                     # The whole shape is skipped. This normally would be
                     # cycled by the previous block but in this case it isn't
                     # because the shape already has ndim dimensions.
-                    it.insert(0, ncycles([slice(None)], val))
+                    it.insert(0, ncycles([slice(None)], prod(broadcasted_shape)))
                 else:
                     it.insert(0, [slice(None)])
             else:
