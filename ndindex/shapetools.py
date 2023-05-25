@@ -331,13 +331,14 @@ def associated_axis(i, broadcasted_shape, skip_axes):
     if i >= 0:
         raise NotImplementedError
     # We assume skip_axes are all negative and sorted
+    j = i
     for sk in skip_axes:
         if sk >= i:
-            i += 1
+            j += 1
         else:
             break
-    if ndindex(i).isvalid(len(broadcasted_shape)):
-        return broadcasted_shape[i]
+    if ndindex(j).isvalid(len(broadcasted_shape)):
+        return broadcasted_shape[j]
     return None
 
 def remove_indices(x, idxes):
