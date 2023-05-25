@@ -20,9 +20,9 @@ from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
                       shapes, two_mutually_broadcastable_shapes,
                       one_skip_axes, two_skip_axes, assert_equal)
 
-@example([((1, 1), (1, 1)), (None, 1)], (0,))
-@example([((0,), (0,)), (None,)], (0,))
-@example([((1, 2), (2, 1)), (2, None)], 1)
+@example([[(1, 1), (1, 1)], (1,)], (0,))
+@example([[(0,), (0,)], ()], (0,))
+@example([[(1, 2), (2, 1)], (2,)], 1)
 @given(mutually_broadcastable_shapes_with_skipped_axes, skip_axes_st)
 def test_iter_indices(broadcastable_shapes, skip_axes):
     # broadcasted_shape will contain None on the skip_axes, as those axes
@@ -33,93 +33,75 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     assume(len(broadcasted_shape) < 32)
 
     # 1. Normalize inputs
-    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
-
-    # Double check the mutually_broadcastable_shapes_with_skipped_axes
-    # strategy
-    for i in _skip_axes:
-        assert broadcasted_shape[i] is None
+    _skip_axes = normalize_skip_axes(shapes, skip_axes)
+    _skip_axes_kwarg_default = [()]*len(shapes)
 
     # Skipped axes may not be broadcast compatible. Since the index for a
     # skipped axis should always be a slice(None), the result should be the
     # same if the skipped axes are all moved to the end of the shape.
     canonical_shapes = []
-    for s in shapes:
-        c = remove_indices(s, _skip_axes)
-        c = c + tuple(1 for i in _skip_axes)
+    for s, sk in zip(shapes, _skip_axes):
+        c = remove_indices(s, sk)
         canonical_shapes.append(c)
-    canonical_skip_axes = list(range(-1, -len(_skip_axes) - 1, -1))
-    broadcasted_canonical_shape = list(broadcast_shapes(*canonical_shapes,
-                                                        skip_axes=canonical_skip_axes))
-    for i in range(len(broadcasted_canonical_shape)):
-        if broadcasted_canonical_shape[i] is None:
-            broadcasted_canonical_shape[i] = 1
 
-    skip_shapes = [tuple(1 for i in _skip_axes) for shape in shapes]
-    non_skip_shapes = [remove_indices(shape, skip_axes) for shape in shapes]
-    broadcasted_non_skip_shape = remove_indices(broadcasted_shape, skip_axes)
-    assert None not in broadcasted_non_skip_shape
-    assert broadcast_shapes(*non_skip_shapes) == broadcasted_non_skip_shape
+    non_skip_shapes = [remove_indices(shape, sk) for shape, sk in zip(shapes, _skip_axes)]
+    assert np.broadcast_shapes(*non_skip_shapes) == broadcasted_shape
 
-    nitems = prod(broadcasted_non_skip_shape)
+    nitems = prod(broadcasted_shape)
 
-    if _skip_axes == ():
+    if skip_axes == (): # kwarg default
         res = iter_indices(*shapes)
-        broadcasted_res = iter_indices(broadcast_shapes(*shapes))
     else:
         res = iter_indices(*shapes, skip_axes=skip_axes)
-        broadcasted_res = iter_indices(broadcasted_canonical_shape,
-                                       skip_axes=canonical_skip_axes)
+    broadcasted_res = iter_indices(broadcasted_shape)
 
     sizes = [prod(shape) for shape in shapes]
     arrays = [np.arange(size).reshape(shape) for size, shape in zip(sizes, shapes)]
     canonical_sizes = [prod(shape) for shape in canonical_shapes]
     canonical_arrays = [np.arange(size).reshape(shape) for size, shape in zip(canonical_sizes, canonical_shapes)]
+    canonical_broadcasted_array = np.arange(nitems).reshape(broadcasted_shape)
 
     # 2. Check that iter_indices is the same whether or not the shapes are
     # broadcasted together first. Also check that every iterated index is the
     # expected type and there are as many as expected.
     vals = []
+    bvals = []
     n = -1
 
-    def _move_slices_to_end(idx):
+    def _remove_slices(idx):
         assert isinstance(idx, Tuple)
-        idx2 = list(idx.args)
-        slices = [i for i in range(len(idx2)) if idx2[i] == slice(None)]
-        idx2 = remove_indices(idx2, slices)
-        idx2 = idx2 + (slice(None),)*len(slices)
+        idx2 = [i for i in idx.args if i != slice(None)]
         return Tuple(*idx2)
 
     for n, (idxes, bidxes) in enumerate(zip(res, broadcasted_res)):
         assert len(idxes) == len(shapes)
         assert len(bidxes) == 1
-        for idx, shape in zip(idxes, shapes):
+        for idx, shape, sk in zip(idxes, shapes, _skip_axes):
             assert isinstance(idx, Tuple)
             assert len(idx.args) == len(shape)
 
-            normalized_skip_axes = sorted(ndindex(i).reduce(len(shape)).raw for i in _skip_axes)
-            for i in range(len(idx.args)):
-                if i in normalized_skip_axes:
+            for i in range(-1, -len(idx.args) - 1, -1):
+                if i in sk:
                     assert idx.args[i] == slice(None)
                 else:
                     assert isinstance(idx.args[i], Integer)
 
-        canonical_idxes = [_move_slices_to_end(idx) for idx in idxes]
+        canonical_idxes = [_remove_slices(idx) for idx in idxes]
         a_indexed = tuple([a[idx.raw] for a, idx in zip(arrays, idxes)])
         canonical_a_indexed = tuple([a[idx.raw] for a, idx in
                                   zip(canonical_arrays, canonical_idxes)])
+        canonical_b_indexed = canonical_broadcasted_array[bidxes[0].raw]
 
-        for c_indexed, skip_shape in zip(canonical_a_indexed, skip_shapes):
-            assert c_indexed.shape == skip_shape
+        for c_indexed in canonical_a_indexed:
+            assert c_indexed.shape == ()
+        assert canonical_b_indexed.shape == ()
 
-        if _skip_axes:
-            # If there are skipped axes, recursively call iter_indices to
-            # get each individual element of the resulting subarrays.
-            for subidxes in iter_indices(*[x.shape for x in canonical_a_indexed]):
-                items = [x[i.raw] for x, i in zip(canonical_a_indexed, subidxes)]
-                vals.append(tuple(items))
+        if _skip_axes != _skip_axes_kwarg_default:
+            vals.append(tuple(canonical_a_indexed))
         else:
             vals.append(a_indexed)
+
+        bvals.append(canonical_b_indexed)
 
     # assert both iterators have the same length
     raises(StopIteration, lambda: next(res))
@@ -137,16 +119,17 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
     if not arrays:
         assert vals == [()]
     else:
-        correct_vals = [tuple(i) for i in np.stack(np.broadcast_arrays(*canonical_arrays), axis=-1).reshape((nitems, len(arrays)))]
+        correct_vals = list(zip(*[x.flat for x in np.broadcast_arrays(*canonical_arrays)]))
         # Also test that the indices are produced in a lexicographic order
         # (even though this isn't strictly guaranteed by the iter_indices
         # docstring) in the case when there are no skip axes. The order when
         # there are skip axes is more complicated because the skipped axes are
         # iterated together.
-        if not _skip_axes:
+        if _skip_axes == _skip_axes_kwarg_default:
             assert vals == correct_vals
         else:
             assert set(vals) == set(correct_vals)
+        assert bvals == list(canonical_broadcasted_array.flat)
 
 # cross_shapes = mutually_broadcastable_shapes_with_skipped_axes(
 #     mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
