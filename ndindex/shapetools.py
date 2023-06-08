@@ -331,6 +331,8 @@ def associated_axis(broadcasted_shape, i, skip_axes):
     skip_axes = sorted(skip_axes, reverse=True)
     if i >= 0:
         raise NotImplementedError
+    if i in skip_axes:
+        return None
     # We assume skip_axes are all negative and sorted
     j = i
     for sk in skip_axes:
