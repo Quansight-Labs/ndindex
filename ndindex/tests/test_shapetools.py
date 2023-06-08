@@ -468,35 +468,26 @@ def test_mutually_broadcastable_shapes_with_skipped_axes(broadcastable_shapes,
 
     assert broadcast_shapes(*_shapes) == broadcasted_shape
 
-@example([[(2, 10, 3, 4), (10, 3, 4)], (2, None, 3, 4)], (-3,))
+@example([[(2, 10, 3, 4), (10, 3, 4)], (2, 3, 4)], (-3,))
 @example([[(0, 10, 2, 3, 10, 4), (1, 10, 1, 0, 10, 2, 3, 4)],
-          (1, None, 1, 0, None, 2, 3, 4)], (1, 4))
-@example([[(2, 0, 3, 4)], (2, None, 3, 4)], (1,))
-@example([[(0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0)], (0, None, None, 0, 0, 0)], (1, 2))
+          (1, 1, 0, 2, 3, 4)], (1, 4))
+@example([[(2, 0, 3, 4)], (2, 3, 4)], (1,))
+@example([[(0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0)], (0, 0, 0, 0)], (1, 2))
 @given(mutually_broadcastable_shapes_with_skipped_axes, skip_axes_st)
 def test_associated_axis(broadcastable_shapes, skip_axes):
-    _skip_axes = (skip_axes,) if isinstance(skip_axes, int) else skip_axes
-
     shapes, broadcasted_shape = broadcastable_shapes
-    ndim = len(broadcasted_shape)
+    _skip_axes = normalize_skip_axes(shapes, skip_axes)
 
-    normalized_skip_axes = [ndindex(i).reduce(ndim) for i in _skip_axes]
-
-    for shape in shapes:
+    for shape, sk in zip(shapes, _skip_axes):
         n = len(shape)
         for i in range(-len(shape), 0):
             val = shape[i]
 
-            idx = associated_axis(shape, broadcasted_shape, i, _skip_axes)
-            bval = broadcasted_shape[idx]
+            bval = associated_axis(broadcasted_shape, i, sk)
             if bval is None:
-                if _skip_axes[0] >= 0:
-                    assert ndindex(i).reduce(n) == ndindex(idx).reduce(ndim) in normalized_skip_axes
-                else:
-                    assert ndindex(i).reduce(n, negative_int=True) == \
-                        ndindex(idx).reduce(ndim, negative_int=True) in _skip_axes
+                assert ndindex(i).reduce(n, negative_int=True) in sk, (shape, i)
             else:
-                assert val == 1 or bval == val
+                assert val == 1 or bval == val, (shape, i)
 
 # TODO: add a hypothesis test for asshape
 def test_asshape():
