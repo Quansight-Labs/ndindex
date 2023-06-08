@@ -320,8 +320,9 @@ def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
 
 def associated_axis(broadcasted_shape, i, skip_axes):
     """
-    Return the associated index into `broadcast_shape` corresponding to
-    `shape[i]` given `skip_axes`.
+    Return the associated element of `broadcasted_shape` corresponding to
+    `shape[i]` given `skip_axes`. If there is not such element (i.e., it's out
+    of bounds), returns None.
 
     This function makes implicit assumptions about its input and is only
     designed for internal use.
