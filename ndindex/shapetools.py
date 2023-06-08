@@ -225,7 +225,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
 
     for i in range(-1, -ndim-1, -1):
         for it, shape, sk in zip(iters, shapes, skip_axes):
-            val = associated_axis(i, broadcasted_shape, sk)
+            val = associated_axis(broadcasted_shape, i, sk)
             if -i > len(shape):
                 # for every dimension prepended by broadcasting, repeat the
                 # indices that many times
@@ -318,7 +318,7 @@ def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
 
     return tuple(newshape)
 
-def associated_axis(i, broadcasted_shape, skip_axes):
+def associated_axis(broadcasted_shape, i, skip_axes):
     """
     Return the associated index into `broadcast_shape` corresponding to
     `shape[i]` given `skip_axes`.
