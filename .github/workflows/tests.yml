@@ -18,7 +18,9 @@ jobs:
           set -e
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           python -m pip install pyflakes pytest pytest-doctestplus numpy hypothesis pytest-cov pytest-flakes packaging
-
+          if [[ ${{ matrix.python-version }} == "3.12-dev" ]]; then
+             pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
+          fi;
       - name: Run Tests
         run: |
           set -x
