@@ -779,53 +779,73 @@ reasons why this way of thinking creates more confusion than it removes.
   Consider again the slice `a[5:3:-1]`. Looking at the above figure, we might
   imagine it to give the same incorrect subarray that we imagined before.
 
-  <div style="text-align:center">
+  <div class="slice-diagram">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
   <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
-  $$
-  \require{enclose}
-  \begin{aligned}
-  \begin{array}{c}
-  \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}\\
-  \color{#EE0000}{\text{index}}
-      &
-      & \color{#EE0000}{0}
-      &
-      & \color{#EE0000}{1}
-      &
-      & \color{#EE0000}{2}
-      &
-      & \color{#5E5EFF}{3}
-      &
-      & \color{#5E5EFF}{4}
-      &
-      & \color{#5E5EFF}{5}
-      &
-      & \color{#EE0000}{6}
-      &
-      & \color{#EE0000}{7}\\
-  \end{array}\\
-  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
-  \end{array}
-  \end{aligned}
-  $$
+
+  <div>
+    <table>
+      <tr>
+        <td><pre>a =</pre></td>
+        <td><pre>[</pre></td>
+        <td></td>
+        <td><pre>'a',</pre></td>
+        <td></td>
+        <td><pre>'b',</pre></td>
+        <td></td>
+        <td><pre>'c',</pre></td>
+        <td></td>
+        <td><pre>'d',</pre></td>
+        <td></td>
+        <td><pre>'e',</pre></td>
+        <td></td>
+        <td><pre>'f',</pre></td>
+        <td></td>
+        <td><pre>'g'</pre></td>
+        <td></td>
+        <td><pre>]</pre></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;"></th>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;">index</th>
+        <td></td>
+        <td style="color:#EE0000;">0</td>
+        <td></td>
+        <td style="color:#EE0000;">1</td>
+        <td></td>
+        <td style="color:#EE0000;">2</td>
+        <td></td>
+        <td style="color:#5E5EFF;">3</td>
+        <td></td>
+        <td style="color:#5E5EFF;">4</td>
+        <td></td>
+        <td style="color:#5E5EFF;">5</td>
+        <td></td>
+        <td style="color:#EE0000;">6</td>
+        <td></td>
+        <td style="color:#EE0000;">7</td>
+      </tr>
+    </table>
+  </div>
+  <div style="color:#EE0000"><b>THIS IS WRONG!</b></div>
   </div>
 
   As before, we might assume we would get
@@ -955,52 +975,71 @@ reasons why this way of thinking creates more confusion than it removes.
   about it correctly. The correct way to think about it is to reverse the
   dividers:
 
-  <div style="text-align:center" >
+  <div class="slice-diagram">
   <code style="font-size: 16pt;">a[-4:-2] == ['d', 'e']</code>
-  $$
-  \require{enclose}
-  \begin{aligned}
-  \begin{array}{c}
-  \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}\\
-  \color{#EE0000}{\text{index}}
-      &
-      & \color{#EE0000}{-7}
-      &
-      & \color{#EE0000}{-6}
-      &
-      & \color{#EE0000}{-5}
-      &
-      & \color{#5E5EFF}{-4}
-      &
-      & \color{#5E5EFF}{-3}
-      &
-      & \color{#5E5EFF}{-2}
-      &
-      & \color{#EE0000}{-1}
-      &
-      & \color{#EE0000}{0}\\
-  \end{array}\\
-  \small{\text{(not a great way of thinking about negative indices)}}
-  \end{array}
-  \end{aligned}
-  $$
+  <div>
+    <table>
+      <tr>
+        <td><pre>a =</pre></td>
+        <td><pre>[</pre></td>
+        <td></td>
+        <td><pre>'a',</pre></td>
+        <td></td>
+        <td><pre>'b',</pre></td>
+        <td></td>
+        <td><pre>'c',</pre></td>
+        <td></td>
+        <td><pre>'d',</pre></td>
+        <td></td>
+        <td><pre>'e',</pre></td>
+        <td></td>
+        <td><pre>'f',</pre></td>
+        <td></td>
+        <td><pre>'g'</pre></td>
+        <td></td>
+        <td><pre>]</pre></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;"></th>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;">index</th>
+        <td></td>
+        <td style="color:#EE0000;">-7</td>
+        <td></td>
+        <td style="color:#EE0000;">-6</td>
+        <td></td>
+        <td style="color:#EE0000;">-5</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-4</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-3</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-2</td>
+        <td></td>
+        <td style="color:#EE0000;">-1</td>
+        <td></td>
+        <td style="color:#EE0000;">0</td>
+      </tr>
+    </table>
+  </div>
+  <i>(not a great way of thinking about negative indices)</i>
   </div>
 
   For example, `a[-4:-2]` will give `['d', 'e']`
@@ -1014,55 +1053,74 @@ reasons why this way of thinking creates more confusion than it removes.
   thinking about negative indices (the way we are recommending) is that the
   end starts at -1. So you might mistakenly imagine something like this:
 
-  <div style="text-align:center" >
+
+  <div class="slice-diagram">
   <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
   <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
-  $$
-  \require{enclose}
-  \begin{aligned}
-  \begin{array}{c}
-  \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#EE0000}{|}\\
-  \color{#EE0000}{\text{index}}
-      &
-      & \color{#EE0000}{-8}
-      &
-      & \color{#EE0000}{-7}
-      &
-      & \color{#EE0000}{-6}
-      &
-      & \color{#EE0000}{-5}
-      &
-      & \color{#5E5EFF}{-4}
-      &
-      & \color{#5E5EFF}{-3}
-      &
-      & \color{#5E5EFF}{-2}
-      &
-      & \color{#EE0000}{-1}\\
-  \end{array}\\
-  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
-  \end{array}
-  \end{aligned}
-  $$
+  <div>
+    <table>
+      <tr>
+        <td><pre>a =</pre></td>
+        <td><pre>[</pre></td>
+        <td></td>
+        <td><pre>'a',</pre></td>
+        <td></td>
+        <td><pre>'b',</pre></td>
+        <td></td>
+        <td><pre>'c',</pre></td>
+        <td></td>
+        <td><pre>'d',</pre></td>
+        <td></td>
+        <td><pre>'e',</pre></td>
+        <td></td>
+        <td><pre>'f',</pre></td>
+        <td></td>
+        <td><pre>'g'</pre></td>
+        <td></td>
+        <td><pre>]</pre></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;"></th>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;">index</th>
+        <td></td>
+        <td style="color:#EE0000;">-8</td>
+        <td></td>
+        <td style="color:#EE0000;">-7</td>
+        <td></td>
+        <td style="color:#EE0000;">-6</td>
+        <td></td>
+        <td style="color:#EE0000;">-5</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-4</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-3</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-2</td>
+        <td></td>
+        <td style="color:#EE0000;">-1</td>
+      </tr>
+    </table>
   </div>
-
+  <div style="color:#EE0000"><b>THIS IS WRONG!</b></div>
+  </div>
 
   But things are even worse than that. If we combine negative `start` and
   `stop` and negative `step`, things get even more confusing. Consider the
@@ -1076,102 +1134,140 @@ reasons why this way of thinking creates more confusion than it removes.
   To get this with the "spacers" idea, we have to use the above "wrong"
   diagram:
 
-  <div style="text-align:center" >
+  <div class="slice-diagram">
   <code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
   <div style="font-size: 16pt;color:#5E5EFF;">NOW RIGHT!</div>
-  $$
-  \require{enclose}
-  \begin{aligned}
-  \begin{array}{c}
-  \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#EE0000}{|}\\
-  \color{#EE0000}{\text{index}}
-      &
-      & \color{#EE0000}{-8}
-      &
-      & \color{#EE0000}{-7}
-      &
-      & \color{#EE0000}{-6}
-      &
-      & \color{#EE0000}{-5}
-      &
-      & \color{#5E5EFF}{-4}
-      &
-      & \color{#5E5EFF}{-3}
-      &
-      & \color{#5E5EFF}{-2}
-      &
-      & \color{#EE0000}{-1}\\
-  \end{array}\\
-  \small{\text{(not a great way of thinking about negative indices)}}
-  \end{array}
-  \end{aligned}
-  $$
+  <div>
+    <table>
+      <tr>
+        <td><pre>a =</pre></td>
+        <td><pre>[</pre></td>
+        <td></td>
+        <td><pre>'a',</pre></td>
+        <td></td>
+        <td><pre>'b',</pre></td>
+        <td></td>
+        <td><pre>'c',</pre></td>
+        <td></td>
+        <td><pre>'d',</pre></td>
+        <td></td>
+        <td><pre>'e',</pre></td>
+        <td></td>
+        <td><pre>'f',</pre></td>
+        <td></td>
+        <td><pre>'g'</pre></td>
+        <td></td>
+        <td><pre>]</pre></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;"></th>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;">index</th>
+        <td></td>
+        <td style="color:#EE0000;">-8</td>
+        <td></td>
+        <td style="color:#EE0000;">-7</td>
+        <td></td>
+        <td style="color:#EE0000;">-6</td>
+        <td></td>
+        <td style="color:#EE0000;">-5</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-4</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-3</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-2</td>
+        <td></td>
+        <td style="color:#EE0000;">-1</td>
+      </tr>
+    </table>
+  </div>
+  <i>(not a great way of thinking about negative indices)</i>
   </div>
 
-  <div style="text-align:center" >
+  <div class="slice-diagram">
   <code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
   <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
-  $$
-  \require{enclose}
-  \begin{aligned}
-  \begin{array}{c}
-  \begin{array}{r r r r r r r r r r r r r r r r r r}
-    a = & [&\phantom{|}&\mathtt{\textsf{'}a\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}b\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}c\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}d\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}e\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}f\textsf{'}}, &\phantom{|}& \mathtt{\textsf{'}g\textsf{'}}&\phantom{|}&]&\\
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#5E5EFF}{|}
-      &
-      & \color{#EE0000}{|}
-      &
-      & \color{#EE0000}{|}\\
-  \color{#EE0000}{\text{index}}
-      &
-      & \color{#EE0000}{-7}
-      &
-      & \color{#EE0000}{-6}
-      &
-      & \color{#EE0000}{-5}
-      &
-      & \color{#5E5EFF}{-4}
-      &
-      & \color{#5E5EFF}{-3}
-      &
-      & \color{#5E5EFF}{-2}
-      &
-      & \color{#EE0000}{-1}
-      &
-      & \color{#EE0000}{0}\\
-  \end{array}\\
-  \small{\color{#EE0000}{\textbf{THIS IS WRONG!}}}
-  \end{array}
-  \end{aligned}
-  $$
+  <div>
+    <table>
+      <tr>
+        <td><pre>a =</pre></td>
+        <td><pre>[</pre></td>
+        <td></td>
+        <td><pre>'a',</pre></td>
+        <td></td>
+        <td><pre>'b',</pre></td>
+        <td></td>
+        <td><pre>'c',</pre></td>
+        <td></td>
+        <td><pre>'d',</pre></td>
+        <td></td>
+        <td><pre>'e',</pre></td>
+        <td></td>
+        <td><pre>'f',</pre></td>
+        <td></td>
+        <td><pre>'g'</pre></td>
+        <td></td>
+        <td><pre>]</pre></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;"></th>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-blue"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+        <td></td>
+        <td class="vertical-bar-red"></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;">index</th>
+        <td></td>
+        <td style="color:#EE0000;">-7</td>
+        <td></td>
+        <td style="color:#EE0000;">-6</td>
+        <td></td>
+        <td style="color:#EE0000;">-5</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-4</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-3</td>
+        <td></td>
+        <td style="color:#5E5EFF;">-2</td>
+        <td></td>
+        <td style="color:#EE0000;">-1</td>
+        <td></td>
+        <td style="color:#EE0000;">0</td>
+      </tr>
+    </table>
+  </div>
+  <div style="color:#EE0000"><b>THIS IS WRONG!</b></div>
   </div>
 
   In other words, the "right" way to think of spacers with negative `start`
