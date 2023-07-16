@@ -18,7 +18,9 @@ def check_cython():
         from Cython.Build import cythonize
         sys.argv = argv_org[:1] + ["build_ext"]
         setuptools.setup(name="foo", version="1.0.0",
-                         ext_modules=cythonize(["ndindex/__init__.py"]))
+                         ext_modules=cythonize(
+                             ["ndindex/__init__.py"],
+                             language_level="3"))
     except:
         return False
     finally:
@@ -37,7 +39,8 @@ else:
 
 if use_cython:
     from Cython.Build import cythonize
-    ext_modules = cythonize(["ndindex/*.py"])
+    ext_modules = cythonize(["ndindex/*.py"],
+                            language_level="3")
 else:
     ext_modules = []
 
@@ -67,7 +70,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
 )
 
 print("CYTHONIZE_NDINDEX: %r" % CYTHONIZE_NDINDEX)

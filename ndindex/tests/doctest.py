@@ -3,12 +3,6 @@ Custom script to run the doctests
 
 This runs the doctests but ignores trailing ``` in Markdown documents.
 
-This also adds the flag SKIP37 to allow skipping doctests in Python 3.7.
-
->>> import sys
->>> sys.version_info[1] > 7 # doctest: +SKIP37
-True
-
 Running this separately from pytest also allows us to not include the doctests
 in the coverage. It also allows us to force a separate namespace for each
 docstring's doctest, which the pytest doctest integration does not allow.
@@ -28,11 +22,7 @@ import glob
 import os
 from contextlib import contextmanager
 from doctest import (DocTestRunner, DocFileSuite, DocTestSuite,
-                     NORMALIZE_WHITESPACE, register_optionflag, SKIP)
-
-SKIP37 = register_optionflag("SKIP37")
-
-PY37 = sys.version_info[:2] == (3, 7)
+                     NORMALIZE_WHITESPACE)
 
 @contextmanager
 def patch_doctest():
@@ -45,8 +35,6 @@ def patch_doctest():
 
     def run(self, test, **kwargs):
         for example in test.examples:
-            if PY37 and SKIP37 in example.options:
-                example.options[SKIP] = True
             # Remove ```
             example.want = example.want.replace('```\n', '')
             example.exc_msg = example.exc_msg and example.exc_msg.replace('```\n', '')

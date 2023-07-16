@@ -76,9 +76,11 @@ class Slice(NDIndex):
         return args
 
     def __hash__(self):
-        # We can't use the default hash(self.raw) because slices are not
-        # hashable
-        return hash(self.args)
+        # Slices are only hashable in Python 3.12+
+        try:
+            return hash(self.raw)
+        except TypeError:
+            return hash(self.args)
 
     @property
     def raw(self):
