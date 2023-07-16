@@ -187,7 +187,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     >>> b
     array([[100],
            [110]])
-    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)): # doctest: +SKIP37
+    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)):
     ...     print(f"{idx1 = }; {idx2 = }; {(a[idx1.raw], b[idx2.raw]) = }")
     idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (0, 100)
     idx1 = Tuple(0, 1); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (1, 100)
@@ -285,9 +285,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                     it.insert(0, range(shape[i]))
 
     if _debug: # pragma: no cover
-        print(iters)
-        # Use this instead when we drop Python 3.7 support
-        # print(f"{iters = }")
+        print(f"{iters = }")
     for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)
