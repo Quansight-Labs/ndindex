@@ -897,14 +897,7 @@ reasons why this way of thinking creates more confusion than it removes.
     background-image: url('../_static/arrow.svg');
     background-repeat: no-repeat;
     background-position: 0px center;
-  }
-  .left-arrow-curved-cell {
-    background-image: url('../_static/arrow-short-curved.svg');
-    background-repeat: no-repeat;
-    background-position: 0px center;
-    height: 80px;
-    vertical-align: middle;
-    transform: translate(5px, -41px);
+    background-size: contain;
   }
   .right-arrow-cell::before {
     content: '';
@@ -916,7 +909,34 @@ reasons why this way of thinking creates more confusion than it removes.
     background-image: url('../_static/arrow.svg');
     background-repeat: no-repeat;
     background-position: 0px center;
+    background-size: contain;
     transform: scaleX(-1);
+  }
+  .left-arrow-curved-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: url('../_static/arrow-short-curved.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: contain;
+    transform: translate(0px, -41px);
+  }
+  .right-arrow-curved-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: url('../_static/arrow-short-curved.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: contain;
+    transform: translate(0px, -41px) scaleX(-1);
   }
   </style>
 
@@ -1699,31 +1719,61 @@ still [clip](clipping) to the beginning or end of the list. And (see below)
 
 Let us consider an example where the step size is `3`.
 
-<div style="text-align:center">
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[0:6:3] == ['a', 'd']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r c c c c c c l}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#5E5EFF}{\enclose{circle}{0}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#5E5EFF}{\enclose{circle}{3}}
-    & \color{#EE0000}{4\phantom{,}}
-    & \color{#EE0000}{5\phantom{,}}
-    & \color{#EE0000}{\enclose{circle}{6}}\\
-    & \color{#5E5EFF}{\text{start}}
-    &
-    & \rightarrow
-    & \color{#5E5EFF}{+3}
-    &
-    & \rightarrow
-    & \color{#EE0000}{+3\ (\geq \text{stop})}
-\end{array}
-\end{aligned}
-$$
+<table>
+  <tr>
+    <td><pre>a</pre></td>
+    <td><pre>=</pre></td>
+    <td><pre>['a',</pre></td>
+    <td></td>
+    <td><pre> 'b',</pre></td>
+    <td></td>
+    <td><pre> 'c',</pre></td>
+    <td></td>
+    <td><pre> 'd',</pre></td>
+    <td></td>
+    <td><pre> 'e',</pre></td>
+    <td></td>
+    <td><pre> 'f',</pre></td>
+    <td></td>
+    <td><pre>'g']</pre></td>
+  </tr>
+  <tr>
+    <th style="color: #EE0000">index</th>
+    <td></td>
+    <td><div class="circle-blue" style="color: #5E5EFF">0</div></td>
+    <td></td>
+    <td style="color: #EE0000">1</td>
+    <td></td>
+    <td style="color: #EE0000">2</td>
+    <td></td>
+    <td><div class="circle-blue" style="color: #5E5EFF">3</div></td>
+    <td></td>
+    <td style="color: #EE0000">4</td>
+    <td></td>
+    <td style="color: #EE0000">5</td>
+    <td></td>
+    <td><div class="circle-red" style="color: #EE0000">6</div></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td style="vertical-align: top; color: #5E5EFF">start</td>
+    <td colspan="5" class="right-arrow-curved-cell"></td>
+    <td></td>
+    <td colspan="5" class="right-arrow-curved-cell"></td>
+    <td style="line-height: 0em; vertical-align: top; color: #EE0000">&ge; stop</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">+3</td>
+    <td></td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">+3</td>
+    <td></td>
+</table>
 </div>
 
 ```py
@@ -1746,33 +1796,70 @@ Indeed, we can note that resulting indices `0`, `3` of the above slice
 a multiple of 3. If we instead choose a start index that is $1 \pmod{3}$ then
 all the indices would also be $1 \pmod{3}$.
 
-<div style="text-align:center">
+
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[1:6:3] == ['b', 'e']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r c c c c c c c l}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    & \color{#5E5EFF}{\enclose{circle}{1}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#EE0000}{3\phantom{,}}
-    & \color{#5E5EFF}{\enclose{circle}{4}}
-    & \color{#EE0000}{5\phantom{,}}
-    & \color{#EE0000}{\underline{6}\phantom{,}}
-    & \color{#EE0000}{\enclose{circle}{\phantom{7}}}\\
-    &
-    & \color{#5E5EFF}{\text{start}}
-    &
-    & \rightarrow
-    & \color{#5E5EFF}{+3}
-    &
-    & \rightarrow
-    & \color{#EE0000}{+3\ (\geq \text{stop})}
-\end{array}
-\end{aligned}
-$$
+<table>
+  <tr>
+    <td><pre>a</pre></td>
+    <td><pre>=</pre></td>
+    <td><pre>['a',</pre></td>
+    <td></td>
+    <td><pre> 'b',</pre></td>
+    <td></td>
+    <td><pre> 'c',</pre></td>
+    <td></td>
+    <td><pre> 'd',</pre></td>
+    <td></td>
+    <td><pre> 'e',</pre></td>
+    <td></td>
+    <td><pre> 'f',</pre></td>
+    <td></td>
+    <td><pre>'g']</pre></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th style="color: #EE0000">index</th>
+    <td></td>
+    <td style="color: #EE0000">0</td>
+    <td></td>
+    <td><div class="circle-blue" style="color: #5E5EFF">1</div></td>
+    <td></td>
+    <td style="color: #EE0000">2</td>
+    <td></td>
+    <td style="color: #EE0000">3</td>
+    <td></td>
+    <td><div class="circle-blue" style="color: #5E5EFF">4</div></td>
+    <td></td>
+    <td style="color: #EE0000">5</td>
+    <td></td>
+    <td style="color: #EE0000">6</td>
+    <td></td>
+    <td><div class="circle-red" style="color: #EE0000"></div></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td style="vertical-align: top; color: #5E5EFF">start</td>
+    <td colspan="5" class="right-arrow-curved-cell"></td>
+    <td></td>
+    <td colspan="5" class="right-arrow-curved-cell"></td>
+    <td style="line-height: 0em; vertical-align: top; color: #EE0000">&ge; stop</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">+3</td>
+    <td></td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">+3</td>
+    <td></td>
+  </tr>
+</table>
 </div>
 
 ```py
@@ -1953,11 +2040,19 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td></td>
     <td></td>
     <td style="line-height: 0em; vertical-align: top; color: #EE0000">&le; stop</td>
-    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, 24px)">-3</div></td>
+    <td colspan="5" class="left-arrow-curved-cell"></td>
     <td></td>
-    <td colspan="5" class="left-arrow-curved-cell"><div style="transform: translate(-6px, 24px)">-3</div></td>
+    <td colspan="5" class="left-arrow-curved-cell"></td>
     <td style="vertical-align: top; color: #5E5EFF">start</td>
   </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">-3</td>
+    <td></td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">-3</td>
+    <td></td>
 </table>
 </div>
 
