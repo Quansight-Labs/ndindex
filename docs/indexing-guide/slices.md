@@ -1933,7 +1933,7 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td><pre>'g']</pre></td>
   </tr>
   <tr>
-    <td style="color: #EE0000">index</td>
+    <th style="color: #EE0000">index</th>
     <td></td>
     <td><div class="circle-red" style="color: #EE0000">0</div></td>
     <td></td>
