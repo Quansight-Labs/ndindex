@@ -1418,10 +1418,10 @@ slice is empty, the same as if `stop <= start` when both are nonnegative.
 []
 ```
 
-Similar to integer indices, negative indices `-i` in slices can always be
-replaced by adding `len(a)` to `-i` until it is in the range $[0,
-\operatorname{len}(a))$ (replacing `len(a)` with the size of the given axis
-for NumPy arrays), so they are primarily a syntactic convenience.
+Similar to [integer indices](integer-indices), negative indices `-i` in slices
+can always be replaced by adding `len(a)` to `-i` (replacing `len(a)` with the
+size of the given axis for NumPy arrays), so they are primarily a syntactic
+convenience.
 
 The negative indexing behavior is convenient, but it can also lead to subtle
 bugs, due to the fundamental discontinuity it produces. This is especially
