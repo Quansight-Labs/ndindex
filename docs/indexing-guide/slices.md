@@ -897,7 +897,6 @@ reasons why this way of thinking creates more confusion than it removes.
     background-image: url('../_static/arrow.svg');
     background-repeat: no-repeat;
     background-position: 0px center;
-    background-size: contain;
   }
   .right-arrow-cell::before {
     content: '';
@@ -909,7 +908,6 @@ reasons why this way of thinking creates more confusion than it removes.
     background-image: url('../_static/arrow.svg');
     background-repeat: no-repeat;
     background-position: 0px center;
-    background-size: contain;
     transform: scaleX(-1);
   }
   .left-arrow-curved-cell::before {
