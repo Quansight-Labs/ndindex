@@ -253,6 +253,7 @@ For example:
     flex-wrap: wrap;
     flex-direction: column;
     align-content: center;
+    align-items: center;
     padding-left: 2em;
     padding-right: 2em;
 }
@@ -312,30 +313,32 @@ For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
 
 <div class="slice-diagram">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
-  <table>
-    <tr>
-      <td><pre>a</pre></td>
-      <td><pre>=</pre></td>
-      <td><pre>['a',</pre></td>
-      <td><pre> 'b',</pre></td>
-      <td><pre> 'c',</pre></td>
-      <td><pre> 'd',</pre></td>
-      <td><pre> 'e',</pre></td>
-      <td><pre> 'f',</pre></td>
-      <td><pre> 'g']</pre></td>
-    </tr>
-    <tr>
-      <th style="color:#EE0000;">index</th>
-      <td></td>
-      <td style="color:#EE0000;">0</td>
-      <td style="color:#EE0000;">1</td>
-      <td style="color:#EE0000;">2</td>
-      <td><div class="circle-blue" style="color:#5E5EFF;">3</div></td>
-      <td><div class="circle-blue" style="color:#5E5EFF;">4</div></td>
-      <td><div class="circle-red" style="color:#EE0000;">5</div></td>
-      <td style="color:#EE0000;">6</td>
-    </tr>
-  </table>
+  <div>
+    <table>
+      <tr>
+        <td><pre>a</pre></td>
+        <td><pre>=</pre></td>
+        <td><pre>['a',</pre></td>
+        <td><pre> 'b',</pre></td>
+        <td><pre> 'c',</pre></td>
+        <td><pre> 'd',</pre></td>
+        <td><pre> 'e',</pre></td>
+        <td><pre> 'f',</pre></td>
+        <td><pre> 'g']</pre></td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;">index</th>
+        <td></td>
+        <td style="color:#EE0000;">0</td>
+        <td style="color:#EE0000;">1</td>
+        <td style="color:#EE0000;">2</td>
+        <td><div class="circle-blue" style="color:#5E5EFF;">3</div></td>
+        <td><div class="circle-blue" style="color:#5E5EFF;">4</div></td>
+        <td><div class="circle-red" style="color:#EE0000;">5</div></td>
+        <td style="color:#EE0000;">6</td>
+      </tr>
+    </table>
+  </div>
 </div>
 
 ```py
@@ -648,6 +651,11 @@ Rather than thinking about that, consider the spaces between the elements:
 <style>
   table {
     border-collapse: collapse;
+  }
+
+  th {
+    white-space: nowrap;
+    text-align: right;
   }
 
   td {
@@ -1346,32 +1354,46 @@ still not included](half-open), values less than `-len(a)` still
 Note that positive and negative indices can be mixed. The following slices of
 `a` all produce `['d', 'e']`:
 
-<div style="text-align:center">
-<div style="font-size: 16pt;"><code>a[3:5] == a[-4:-2] == a[3:-2] == a[-4:5]
-== ['d', 'e']</code></div>
-$$
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{nonnegative index}}
-    & \color{#EE0000}{0\phantom{,}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{\enclose{circle}{2}\phantom{,}}
-    & \color{#5E5EFF}{3\phantom{,}}
-    & \color{#5E5EFF}{4\phantom{,}}
-    & \color{#EE0000}{\enclose{circle}{5}\phantom{,}}
-    & \color{#EE0000}{6\phantom{,}}\\
-\color{#EE0000}{\text{negative index}}
-    & \color{#EE0000}{-7\phantom{,}}
-    & \color{#EE0000}{-6\phantom{,}}
-    & \color{#EE0000}{\enclose{circle}{-5}\phantom{,}}
-    & \color{#5E5EFF}{-4\phantom{,}}
-    & \color{#5E5EFF}{-3\phantom{,}}
-    & \color{#EE0000}{\enclose{circle}{-2}\phantom{,}}
-    & \color{#EE0000}{-1\phantom{,}}\\
-\end{array}
-\end{aligned}
-$$
+<div class="slice-diagram" style="padding-left: 1em; padding-right: 1em;">
+<div style="font-size: 16pt;"><code>a[3:5] == a[-4:-2] == a[3:-2] == a[-4:5] == ['d', 'e']</code></div>
+  <div>
+    <table>
+      <tr>
+        <td><pre>a</pre></td>
+        <td><pre>=</pre></td>
+        <td><pre>['a',</pre></td>
+        <td><pre> 'b',</pre></td>
+        <td><pre> 'c',</pre></td>
+        <td><pre> 'd',</pre></td>
+        <td><pre> 'e',</pre></td>
+        <td><pre> 'f',</pre></td>
+        <td><pre> 'g']</pre></td>
+      </tr>
+      <tr>
+        <th
+        style="color:#EE0000;">nonnegative index</th>
+        <td></td>
+        <td style="color:#EE0000;">0</td>
+        <td style="color:#EE0000;">1</td>
+        <td style="color:#EE0000;">2</td>
+        <td><div class="circle-blue" style="color:#5E5EFF;">3</div></td>
+        <td><div class="circle-blue" style="color:#5E5EFF;">4</div></td>
+        <td><div class="circle-red" style="color:#EE0000;">5</div></td>
+        <td style="color:#EE0000;">6</td>
+      </tr>
+      <tr>
+        <th style="color:#EE0000;">negative index</th>
+        <td></td>
+        <td style="color:#EE0000;">-7</td>
+        <td style="color:#EE0000;">-6</td>
+        <td style="color:#EE0000;">-5</td>
+        <td><div class="circle-blue" style="color:#5E5EFF;">-4</div></td>
+        <td><div class="circle-blue" style="color:#5E5EFF;">-3</div></td>
+        <td><div class="circle-red" style="color:#EE0000;">-2</div></td>
+        <td style="color:#EE0000;">-1</td>
+      </tr>
+    </table>
+  </div>
 </div>
 
 ```py
