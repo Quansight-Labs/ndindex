@@ -218,29 +218,38 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
         return
 
     shapes = [asshape(shape) for shape in shapes]
-    ndim = len(max(shapes, key=len))
+    S = len(shapes)
 
-    iters = [[] for i in range(len(shapes))]
+    iters = [[] for i in range(S)]
     broadcasted_shape = broadcast_shapes(*shapes, skip_axes=skip_axes)
 
-    for i in range(-1, -ndim-1, -1):
-        for it, shape, sk in zip(iters, shapes, skip_axes):
-            val = associated_axis(broadcasted_shape, i, sk)
+    idxes = [-1]*S
+
+    while any(i is not None for i in idxes):
+        for s, it, shape, sk in zip(range(S), iters, shapes, skip_axes):
+            i = idxes[s]
+            if i is None:
+                continue
             if -i > len(shape):
-                # for every dimension prepended by broadcasting, repeat the
-                # indices that many times
-                for j in range(len(it)):
-                    if val not in [None, 0, 1]:
-                        it[j] = ncycles(it[j], val)
-                    break
-            elif i in sk:
-                if len(shape) == ndim and len(sk) == len(shape) and i == -1:
-                    # The whole shape is skipped. This normally would be
-                    # cycled by the previous block but in this case it isn't
-                    # because the shape already has ndim dimensions.
-                    it.insert(0, ncycles([slice(None)], prod(broadcasted_shape)))
+                if not shape:
+                    pass
+                elif len(shape) == len(sk):
+                    # The whole shape is skipped. Just repeat the most recent slice
+                    it[0] = ncycles(it[0], prod(broadcasted_shape))
                 else:
-                    it.insert(0, [slice(None)])
+                    # Find the first non-skipped axis and repeat by however
+                    # many implicit axes are left in the broadcasted shape
+                    for j in range(-len(shape), 0):
+                        if j not in sk:
+                            break
+                    it[j] = ncycles(it[j], prod(broadcasted_shape[:len(sk)-len(shape)+len(broadcasted_shape)]))
+
+                idxes[s] = None
+                continue
+
+            val = associated_axis(broadcasted_shape, i, sk)
+            if i in sk:
+                it.insert(0, [slice(None)])
             else:
                 if val == 0:
                     return
@@ -248,6 +257,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                     it.insert(0, ncycles(range(shape[i]), val))
                 else:
                     it.insert(0, range(shape[i]))
+            idxes[s] -= 1
 
     if _debug: # pragma: no cover
         print(iters)
