@@ -243,12 +243,11 @@ def test_iter_indices_errors():
         # Older versions of NumPy do not have the more helpful error message
         assert ndindex_msg == np_msg
 
-    raises(NotImplementedError, lambda: list(iter_indices((1, 2), skip_axes=(0, -1))))
-
-    with raises(ValueError, match=r"duplicate axes"):
+    with raises(ValueError, match=r"not unique"):
         list(iter_indices((1, 2), skip_axes=(0, 1, 0)))
 
-    raises(AxisError, lambda: list(iter_indices(skip_axes=(0,))))
+    raises(AxisError, lambda: list(iter_indices((0,), skip_axes=(3,))))
+    raises(ValueError, lambda: list(iter_indices(skip_axes=(0,))))
     raises(TypeError, lambda: list(iter_indices(1, 2)))
     raises(TypeError, lambda: list(iter_indices(1, 2, (2, 2))))
     raises(TypeError, lambda: list(iter_indices([(1, 2), (2, 2)])))
