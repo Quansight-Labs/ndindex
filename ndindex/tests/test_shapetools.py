@@ -3,8 +3,7 @@ import numpy as np
 from hypothesis import assume, given, example
 from hypothesis.strategies import (one_of, integers, tuples as
                                    hypothesis_tuples, just, lists, shared,
-                                   composite, nothing)
-from hypothesis.extra.numpy import arrays
+                                   )
 
 from pytest import raises
 
@@ -17,8 +16,9 @@ from ..integer import Integer
 from ..tuple import Tuple
 from .helpers import (prod, mutually_broadcastable_shapes_with_skipped_axes,
                       skip_axes_st, mutually_broadcastable_shapes, tuples,
-                      shapes, two_mutually_broadcastable_shapes,
-                      one_skip_axes, two_skip_axes, assert_equal)
+                      shapes, assert_equal, cross_shapes, cross_skip_axes,
+                      cross_arrays_st, matmul_shapes, matmul_skip_axes,
+                      matmul_arrays_st)
 
 @example([[(1, 1), (1, 1)], (1,)], (0,))
 @example([[(0,), (0,)], ()], (0,))
@@ -131,30 +131,8 @@ def test_iter_indices(broadcastable_shapes, skip_axes):
             assert set(vals) == set(correct_vals)
         assert bvals == list(canonical_broadcasted_array.flat)
 
-# cross_shapes = mutually_broadcastable_shapes_with_skipped_axes(
-#     mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
-#     skip_axes_st=one_skip_axes,
-#     skip_axes_values=integers(3, 3))
-
-@composite
-def cross_arrays_st(draw):
-    broadcastable_shapes = draw(cross_shapes)
-    shapes, broadcasted_shape = broadcastable_shapes
-
-    # Sanity check
-    assert len(shapes) == 2
-    # We need to generate fairly random arrays. Otherwise, if they are too
-    # similar to each other, like two arange arrays would be, the cross
-    # product will be 0. We also disable the fill feature in arrays() for the
-    # same reason, as it would otherwise generate too many vectors that are
-    # colinear.
-    a = draw(arrays(dtype=int, shape=shapes[0], elements=integers(-100, 100), fill=nothing()))
-    b = draw(arrays(dtype=int, shape=shapes[1], elements=integers(-100, 100), fill=nothing()))
-
-    return a, b
-
-# @given(cross_arrays_st(), cross_shapes, one_skip_axes)
-def test_iter_indices_cross(cross_arrays, broadcastable_shapes, skip_axes):
+@given(cross_arrays_st(), cross_shapes, cross_skip_axes)
+def test_iter_indices_cross(cross_arrays, broadcastable_shapes, _skip_axes):
     # Test iter_indices behavior against np.cross, which effectively skips the
     # crossed axis. Note that we don't test against cross products of size 2
     # because a 2 x 2 cross product just returns the z-axis (i.e., it doesn't
@@ -162,17 +140,17 @@ def test_iter_indices_cross(cross_arrays, broadcastable_shapes, skip_axes):
     # going to be removed in NumPy 2.0.
     a, b = cross_arrays
     shapes, broadcasted_shape = broadcastable_shapes
-    skip_axis = skip_axes[0]
 
-    broadcasted_shape = list(broadcasted_shape)
-    # Remove None from the shape for iter_indices
-    broadcasted_shape[skip_axis] = 3
-    broadcasted_shape = tuple(broadcasted_shape)
+    # Sanity check
+    skip_axes = normalize_skip_axes([*shapes, broadcasted_shape], _skip_axes)
+    for sh, sk in zip([*shapes, broadcasted_shape], skip_axes):
+        assert len(sk) == 1
+        assert sh[sk[0]] == 3
 
-    res = np.cross(a, b, axisa=skip_axis, axisb=skip_axis, axisc=skip_axis)
+    res = np.cross(a, b, axisa=skip_axes[0][0], axisb=skip_axes[1][0], axisc=skip_axes[2][0])
     assert res.shape == broadcasted_shape
 
-    for idx1, idx2, idx3 in iter_indices(*shapes, broadcasted_shape, skip_axes=skip_axes):
+    for idx1, idx2, idx3 in iter_indices(*shapes, broadcasted_shape, skip_axes=_skip_axes):
         assert a[idx1.raw].shape == (3,)
         assert b[idx2.raw].shape == (3,)
         assert_equal(np.cross(
@@ -180,46 +158,7 @@ def test_iter_indices_cross(cross_arrays, broadcastable_shapes, skip_axes):
             b[idx2.raw]),
                      res[idx3.raw])
 
-
-@composite
-def _matmul_shapes(draw):
-    broadcastable_shapes = draw(mutually_broadcastable_shapes_with_skipped_axes(
-        mutually_broadcastable_shapes=two_mutually_broadcastable_shapes,
-        skip_axes_st=two_skip_axes,
-        skip_axes_values=just(None),
-    ))
-    shapes, broadcasted_shape = broadcastable_shapes
-    skip_axes = draw(two_skip_axes)
-    # (n, m) @ (m, k) -> (n, k)
-    n, m, k = draw(hypothesis_tuples(integers(0, 10), integers(0, 10),
-                                     integers(0, 10)))
-
-    shape1, shape2 = map(list, shapes)
-    ax1, ax2 = skip_axes
-    shape1[ax1] = n
-    shape1[ax2] = m
-    shape2[ax1] = m
-    shape2[ax2] = k
-    broadcasted_shape = list(broadcasted_shape)
-    broadcasted_shape[ax1] = n
-    broadcasted_shape[ax2] = k
-    return [tuple(shape1), tuple(shape2)], tuple(broadcasted_shape)
-
-matmul_shapes = shared(_matmul_shapes())
-
-@composite
-def matmul_arrays_st(draw):
-    broadcastable_shapes = draw(matmul_shapes)
-    shapes, broadcasted_shape = broadcastable_shapes
-
-    # Sanity check
-    assert len(shapes) == 2
-    a = draw(arrays(dtype=int, shape=shapes[0], elements=integers(-100, 100)))
-    b = draw(arrays(dtype=int, shape=shapes[1], elements=integers(-100, 100)))
-
-    return a, b
-
-@given(matmul_arrays_st(), matmul_shapes, two_skip_axes)
+@given(matmul_arrays_st(), matmul_shapes, matmul_skip_axes)
 def test_iter_indices_matmul(matmul_arrays, broadcastable_shapes, skip_axes):
     # Test iter_indices behavior against np.matmul, which effectively skips the
     # contracted axis (they aren't broadcasted together, even when they are
@@ -227,20 +166,44 @@ def test_iter_indices_matmul(matmul_arrays, broadcastable_shapes, skip_axes):
     a, b = matmul_arrays
     shapes, broadcasted_shape = broadcastable_shapes
 
-    ax1, ax2 = skip_axes
-    n, m, k = shapes[0][ax1], shapes[0][ax2], shapes[1][ax2]
+    # Note, we don't use normalize_skip_axes here because it sorts the skip
+    # axes
 
-    res = np.matmul(a, b, axes=[skip_axes, skip_axes, skip_axes])
+    ax1, ax2 = skip_axes[0]
+    ax3 = skip_axes[1][1]
+    n, m, k = shapes[0][ax1], shapes[0][ax2], shapes[1][ax3]
+
+    # Sanity check
+    sk0, sk1, sk2 = skip_axes
+    shape1, shape2 = shapes
+    assert a.shape == shape1
+    assert b.shape == shape2
+    assert shape1[sk0[0]] == n
+    assert shape1[sk0[1]] == m
+    assert shape2[sk1[0]] == m
+    assert shape2[sk1[1]] == k
+    assert broadcasted_shape[sk2[0]] == n
+    assert broadcasted_shape[sk2[1]] == k
+
+    res = np.matmul(a, b, axes=skip_axes)
     assert res.shape == broadcasted_shape
 
+    is_ordered = lambda sk, shape: (Integer(sk[0]).reduce(len(shape)).raw <= Integer(sk[1]).reduce(len(shape)).raw)
+    orders = [
+        is_ordered(sk0, shapes[0]),
+        is_ordered(sk1, shapes[1]),
+        is_ordered(sk2, broadcasted_shape),
+    ]
+
     for idx1, idx2, idx3 in iter_indices(*shapes, broadcasted_shape, skip_axes=skip_axes):
-        assert a[idx1.raw].shape == (n, m) if ax1 <= ax2 else (m, n)
-        assert b[idx2.raw].shape == (m, k) if ax1 <= ax2 else (k, m)
-        if ax1 <= ax2:
-            sub_res = np.matmul(a[idx1.raw], b[idx2.raw])
-        else:
-            sub_res = np.matmul(a[idx1.raw], b[idx2.raw],
-                                axes=[(1, 0), (1, 0), (1, 0)])
+        assert a[idx1.raw].shape == (n, m) if orders[0] else (m, n)
+        assert b[idx2.raw].shape == (m, k) if orders[1] else (k, m)
+        sub_res_axes = [
+            (0, 1) if orders[0] else (1, 0),
+            (0, 1) if orders[1] else (1, 0),
+            (0, 1) if orders[2] else (1, 0),
+        ]
+        sub_res = np.matmul(a[idx1.raw], b[idx2.raw], axes=sub_res_axes)
         assert_equal(sub_res, res[idx3.raw])
 
 def test_iter_indices_errors():
@@ -399,7 +362,7 @@ def test_broadcast_shapes_skip_axes(broadcastable_shapes, skip_axes):
 def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     shapes, broadcasted_shape = broadcastable_shapes
 
-    # All errors should come from canonical_skip_axes, which is tested
+    # All errors should come from normalize_skip_axes, which is tested
     # separately below.
     try:
         normalize_skip_axes(shapes, skip_axes)

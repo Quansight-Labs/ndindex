@@ -10,12 +10,13 @@ from pytest import fail
 
 from hypothesis import assume, note
 from hypothesis.strategies import (integers, none, one_of, lists, just,
-                                   builds, shared, composite, sampled_from)
+                                   builds, shared, composite, sampled_from,
+                                   nothing, tuples as hypothesis_tuples)
 from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
                                     mbs, BroadcastableShapes, valid_tuple_axes)
 
 from ..ndindex import ndindex
-from ..shapetools import remove_indices
+from ..shapetools import remove_indices, unremove_indices
 from .._crt import prod
 
 # Hypothesis strategies for generating indices. Note that some of these
@@ -266,21 +267,108 @@ mutually_broadcastable_shapes_with_skipped_axes = mbs_and_skip_axes.map(
     lambda i: i[0])
 skip_axes_st = mbs_and_skip_axes.map(lambda i: i[1])
 
+@composite
+def _cross_shapes_and_skip_axes(draw):
+    (shapes, _broadcasted_shape), skip_axes = draw(_mbs_and_skip_axes(
+        shapes=_short_shapes(2),
+        min_shapes=2,
+        max_shapes=2,
+        num_skip_axes=1,
+        # TODO: Test other skip axes types
+        skip_axes_type_st=just(list),
+        skip_axes_values=just(3),
+    ))
 
-one_mbs_and_skip_axes = shared(_mbs_and_skip_axes(
-    shapes=_short_shapes(1),
-    min_shapes=2,
-    max_shapes=2))
-one_mutually_broadcastable_shapes = one_mbs_and_skip_axes.map(
-    lambda i: i[0])
-one_skip_axes = one_mbs_and_skip_axes.map(lambda i: i[1])
-two_mbs_and_skip_axes = shared(_mbs_and_skip_axes(
-    shapes=_short_shapes(2),
-    min_shapes=2,
-    max_shapes=2))
-two_mutually_broadcastable_shapes = two_mbs_and_skip_axes.map(
-    lambda i: i[0])
-two_skip_axes = two_mbs_and_skip_axes.map(lambda i: i[1])
+    broadcasted_skip_axis = draw(integers(-len(_broadcasted_shape)-1, len(_broadcasted_shape)))
+    broadcasted_shape = unremove_indices(_broadcasted_shape,
+                                         [broadcasted_skip_axis], val=3)
+    skip_axes.append((broadcasted_skip_axis,))
+
+    return BroadcastableShapes(shapes, broadcasted_shape), skip_axes
+
+cross_shapes_and_skip_axes = shared(_cross_shapes_and_skip_axes())
+cross_shapes = cross_shapes_and_skip_axes.map(lambda i: i[0])
+cross_skip_axes = cross_shapes_and_skip_axes.map(lambda i: i[1])
+
+@composite
+def cross_arrays_st(draw):
+    broadcastable_shapes = draw(cross_shapes)
+    shapes, broadcasted_shape = broadcastable_shapes
+
+    # Sanity check
+    assert len(shapes) == 2
+    # We need to generate fairly random arrays. Otherwise, if they are too
+    # similar to each other, like two arange arrays would be, the cross
+    # product will be 0. We also disable the fill feature in arrays() for the
+    # same reason, as it would otherwise generate too many vectors that are
+    # colinear.
+    a = draw(arrays(dtype=int, shape=shapes[0], elements=integers(-100, 100), fill=nothing()))
+    b = draw(arrays(dtype=int, shape=shapes[1], elements=integers(-100, 100), fill=nothing()))
+
+    return a, b
+
+@composite
+def _matmul_shapes_and_skip_axes(draw):
+    (shapes, _broadcasted_shape), skip_axes = draw(_mbs_and_skip_axes(
+        shapes=_short_shapes(2),
+        min_shapes=2,
+        max_shapes=2,
+        num_skip_axes=2,
+        # TODO: Test other skip axes types
+        skip_axes_type_st=just(list),
+        skip_axes_values=just(None),
+    ))
+
+    broadcasted_skip_axes = draw(hypothesis_tuples(*[
+        integers(-len(_broadcasted_shape)-1, len(_broadcasted_shape))
+    ]*2))
+
+    try:
+        broadcasted_shape = unremove_indices(_broadcasted_shape,
+                                             broadcasted_skip_axes)
+    except NotImplementedError:
+        # TODO: unremove_indices only works with both positive or both negative
+        assume(False)
+    # Make sure the indices are unique
+    assume(len(set(broadcasted_skip_axes)) == len(broadcasted_skip_axes))
+
+    skip_axes.append(broadcasted_skip_axes)
+
+    # (n, m) @ (m, k) -> (n, k)
+    n, m, k = draw(hypothesis_tuples(integers(0, 10), integers(0, 10),
+                                     integers(0, 10)))
+    shape1, shape2 = map(list, shapes)
+    ax1, ax2 = skip_axes[0]
+    shape1[ax1] = n
+    shape1[ax2] = m
+    ax1, ax2 = skip_axes[1]
+    shape2[ax1] = m
+    shape2[ax2] = k
+    broadcasted_shape = list(broadcasted_shape)
+    ax1, ax2 = skip_axes[2]
+    broadcasted_shape[ax1] = n
+    broadcasted_shape[ax2] = k
+
+    shapes = (tuple(shape1), tuple(shape2))
+    broadcasted_shape = tuple(broadcasted_shape)
+
+    return BroadcastableShapes(shapes, broadcasted_shape), skip_axes
+
+matmul_shapes_and_skip_axes = shared(_matmul_shapes_and_skip_axes())
+matmul_shapes = matmul_shapes_and_skip_axes.map(lambda i: i[0])
+matmul_skip_axes = matmul_shapes_and_skip_axes.map(lambda i: i[1])
+
+@composite
+def matmul_arrays_st(draw):
+    broadcastable_shapes = draw(matmul_shapes)
+    shapes, broadcasted_shape = broadcastable_shapes
+
+    # Sanity check
+    assert len(shapes) == 2
+    a = draw(arrays(dtype=int, shape=shapes[0], elements=integers(-100, 100)))
+    b = draw(arrays(dtype=int, shape=shapes[1], elements=integers(-100, 100)))
+
+    return a, b
 
 reduce_kwargs = sampled_from([{}, {'negative_int': False}, {'negative_int': True}])
 
