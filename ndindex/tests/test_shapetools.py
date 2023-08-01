@@ -373,7 +373,7 @@ def test_broadcast_shapes_skip_axes_errors(broadcastable_shapes, skip_axes):
     try:
         broadcast_shapes(*shapes, skip_axes=skip_axes)
     except IndexError:
-        raise RuntimeError("broadcast_shapes raised but should not have")
+        raise RuntimeError("broadcast_shapes raised but should not have") # pragma: no cover
     except BroadcastError:
         # Broadcastable shapes can become unbroadcastable after skipping axes
         # (see the @example above).
@@ -389,6 +389,8 @@ def test_remove_indices(n, idxes):
         assume(min(idxes) >= -n)
     a = tuple(range(n))
     b = remove_indices(a, idxes)
+    if len(idxes) == 1:
+        assert remove_indices(a, idxes[0]) == b
 
     A = list(a)
     for i in idxes:
@@ -450,6 +452,11 @@ def test_associated_axis(broadcastable_shapes, skip_axes):
                 assert ndindex(i).reduce(n, negative_int=True) in sk, (shape, i)
             else:
                 assert val == 1 or bval == val, (shape, i)
+
+
+    sk = max(_skip_axes, key=len, default=())
+    for i in range(-len(broadcasted_shape)-len(sk)-10, -len(broadcasted_shape)-len(sk)):
+        assert associated_axis(broadcasted_shape, i, sk) is None
 
 # TODO: add a hypothesis test for asshape
 def test_asshape():

@@ -173,7 +173,7 @@ def _fill_shape(draw,
         else:
             new_shape[i] = draw(sampled_from([result_shape[j], 1]))
             j -= 1
-    while new_shape and new_shape[0] == 'placeholder':
+    while new_shape and new_shape[0] == 'placeholder': # pragma: no cover
         # Can happen if positive and negative skip_axes refer to the same
         # entry
         new_shape.pop(0)

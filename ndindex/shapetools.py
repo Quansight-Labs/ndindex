@@ -212,8 +212,6 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     shapes = [asshape(shape, allow_int=False) for shape in shapes]
 
     if not shapes:
-        if skip_axes:
-            raise AxisError(skip_axes[0], 0)
         yield ()
         return
 
