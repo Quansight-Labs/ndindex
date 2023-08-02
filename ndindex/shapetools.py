@@ -7,8 +7,10 @@ from .ndindex import ndindex, operator_index
 
 class BroadcastError(ValueError):
     """
-    Exception raised by :func:`iter_indices()` when the input shapes are not
-    broadcast compatible.
+    Exception raised by :func:`iter_indices()` and
+    :func:`broadcast_shapes()` when the input shapes are not broadcast
+    compatible.
+
     """
     __slots__ = ("arg1", "shape1", "arg2", "shape2")
 
@@ -24,8 +26,8 @@ class BroadcastError(ValueError):
 
 class AxisError(ValueError, IndexError):
     """
-    Exception raised by :func:`iter_indices()` when the `skip_axes` argument
-    is out of bounds.
+    Exception raised by :func:`iter_indices()` and
+    :func:`broadcast_shapes()` when the `skip_axes` argument is out-of-bounds.
 
     This is used instead of the NumPy exception of the same name so that
     `iter_indices` does not need to depend on NumPy.
@@ -52,7 +54,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
     shape with `skip_axes`.
 
     If the shapes are not broadcast compatible (excluding `skip_axes`),
-    `BroadcastError` is raised.
+    :class:`BroadcastError` is raised.
 
     >>> from ndindex import broadcast_shapes
     >>> broadcast_shapes((2, 3), (3,), (4, 2, 1))
@@ -445,7 +447,7 @@ def normalize_skip_axes(shapes, skip_axes):
     corresponding shape.
 
     If `skip_axes` is an integer, this is basically `[(skip_axes,) for s
-    in shapes]`. If `skip_axes is a tuple, it is like `[skip_axes for s in
+    in shapes]`. If `skip_axes` is a tuple, it is like `[skip_axes for s in
     shapes]`.
 
     The `skip_axes` must always refer to unique axes in each shape.
