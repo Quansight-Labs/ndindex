@@ -2,16 +2,16 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Type Confusion" href="type-confusion.html" /><link rel="prev" title="API Reference" href="api.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.05.20 -->
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.1.1 and Furo 2023.07.26 -->
         <title>Slices - ndindex documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=e6660623a769aa55fea372102b9bf3151b292993" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6777a0dc" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1475cf01" />
     
     
 
@@ -2065,25 +2065,25 @@ slicing <a class="reference internal" href="#rules"><span class="std std-ref">ru
 end of the document. -->
 <hr class="footnotes docutils" />
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="dict-footnote" role="note">
+<aside class="footnote brackets" id="dict-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
 <p>If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a <code class="docutils literal notranslate"><span class="pre">dict</span></code>. Despite using similar
 syntax, <code class="docutils literal notranslate"><span class="pre">dict</span></code>s do not allow slicing.</p>
 </aside>
-<aside class="footnote brackets" id="numpy-definition-footnote" role="note">
+<aside class="footnote brackets" id="numpy-definition-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
 <p>This formulation actually isn’t particularly
 helpful for formulating higher level slice formulas such as the ones used by
 ndindex either.</p>
 </aside>
-<aside class="footnote brackets" id="fencepost-jeff-burbak-footnote" role="note">
+<aside class="footnote brackets" id="fencepost-jeff-burbak-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">3</a><span class="fn-bracket">]</span></span>
 <p>Image credit <a class="reference external" href="https://unsplash.com/photos/lPO0VzF_4s8">Jeff Burak via
 Unsplash</a>. The image is of
 Chautauqua Park in Boulder, Colorado.</p>
 </aside>
-<aside class="footnote brackets" id="omitted-none-footnote" role="note">
+<aside class="footnote brackets" id="omitted-none-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">4</a><span class="fn-bracket">]</span></span>
 <p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">step</span></code> may also be <code class="docutils literal notranslate"><span class="pre">None</span></code>, which
 is syntactically equivalent to them being omitted. That is to say, <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is
@@ -2093,7 +2093,7 @@ slice. This is only relevant for code that consumes slices, such as a
 <code class="docutils literal notranslate"><span class="pre">a[::]</span></code> is <code class="docutils literal notranslate"><span class="pre">slice(None,</span> <span class="pre">None,</span> <span class="pre">None)</span></code>. <a class="reference internal" href="api.html#slice-api"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code></span></a> also uses
 <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate omitted entries in the same way.</p>
 </aside>
-<aside class="footnote brackets" id="source-footnote" role="note">
+<aside class="footnote brackets" id="source-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">5</a><span class="fn-bracket">]</span></span>
 <p>To be sure, I make no claims that the source of any
 function in ndindex cannot be simplified. In writing ndindex, I have primarily
@@ -2101,14 +2101,14 @@ focused on making the logic correct, and less on making it elegant. I welcome
 any pull requests that simplifies the logic of a function. The extensive
 <a class="reference internal" href="index.html#testing"><span class="std std-ref">testing</span></a> should ensure that any rewritten function remains correct.</p>
 </aside>
-<aside class="footnote brackets" id="python-history-footnote" role="note">
+<aside class="footnote brackets" id="python-history-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">6</a><span class="fn-bracket">]</span></span>
 <p>In fact, the original reason that Python uses
 0-based indexing is that Guido preferred the half-open semantics, which only
 work out well when combined with 0-based indexing
 (<a class="reference external" href="https://web.archive.org/web/20190321101606/https://plus.google.com/115212051037621986145/posts/YTUxbXYZyfi">reference</a>).</p>
 </aside>
-<aside class="footnote brackets" id="fencepost-footnote" role="note">
+<aside class="footnote brackets" id="fencepost-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">7</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://betterexplained.com/articles/learning-how-to-count-avoiding-the-fencepost-problem/">This blog
 post</a>
@@ -2212,12 +2212,12 @@ difference between measurement and enumeration that I touched on earlier.</p>
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/scripts/furo.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
