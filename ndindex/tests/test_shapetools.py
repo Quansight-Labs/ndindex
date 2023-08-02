@@ -492,6 +492,7 @@ def test_asshape():
     raises(TypeError, lambda: asshape(np.int64(1), allow_int=False))
     raises(IndexError, lambda: asshape((2, 3), 3))
 
+@example([()], [])
 @example([(0, 1)], 0)
 @example([(2, 3), (2, 3, 4)], [(3,), (0,)])
 @example([(0, 1)], 0)
