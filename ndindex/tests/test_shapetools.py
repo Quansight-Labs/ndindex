@@ -575,6 +575,7 @@ def test_normalize_skip_axes_errors():
     raises(TypeError, lambda: normalize_skip_axes([(1,)], [(0,), 0]))
     raises(TypeError, lambda: normalize_skip_axes([(1,)], [0, (0,)]))
 
+@example(10, 100)
 @given(integers(), integers())
 def test_axiserror(axis, ndim):
     if ndim == 0 and axis in [0, -1]:
