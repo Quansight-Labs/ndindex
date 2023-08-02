@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arange, array, intp, empty
+from numpy import arange, array, intp, empty, all as np_all
 
 from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
@@ -104,6 +104,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape, kwargs):
     # Idempotency
     assert reduced.reduce(**kwargs) == reduced
 
+@example((..., empty((1, 0), dtype=intp)), (1, 0), {})
 @example((1, -1, [1, -1]), (3, 3, 3), {'negative_int': True})
 @example((..., None), (), {})
 @example((..., empty((0, 0), dtype=bool)), (0, 0), {})
@@ -155,9 +156,9 @@ def test_tuple_reduce_hypothesis(t, shape, kwargs):
                     assert arg.raw >= 0
             elif isinstance(arg, IntegerArray):
                 if negative_int:
-                    assert all(arg.raw < 0)
+                    assert np_all(arg.raw < 0)
                 else:
-                    assert all(arg.raw >= 0)
+                    assert np_all(arg.raw >= 0)
 
 def test_tuple_reduce_explicit():
     # Some aspects of Tuple.reduce are hard to test as properties, so include
