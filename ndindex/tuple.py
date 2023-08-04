@@ -247,7 +247,7 @@ class Tuple(NDIndex):
         >>> a[..., 1]
         array(1)
         >>> a[1]
-        1
+        np.int64(1)
 
         See https://github.com/Quansight-Labs/ndindex/issues/22.
 
