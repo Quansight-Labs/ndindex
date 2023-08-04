@@ -28,6 +28,7 @@ jobs:
           set -e
 
           coverage --help
+          coverage debug sys
 
           python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
           # The coverage requirement check is done by the coverage report line below
