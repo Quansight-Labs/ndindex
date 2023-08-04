@@ -22,7 +22,14 @@ import glob
 import os
 from contextlib import contextmanager
 from doctest import (DocTestRunner, DocFileSuite, DocTestSuite,
-                     NORMALIZE_WHITESPACE)
+                     NORMALIZE_WHITESPACE, register_optionflag)
+
+SKIP38 = register_optionflag("SKIP38")
+PY38 = sys.version_info[1] == 8
+if PY38:
+    SKIP_THIS_VERSION = SKIP38
+else:
+    SKIP_THIS_VERSION = 0
 
 @contextmanager
 def patch_doctest():
@@ -34,11 +41,17 @@ def patch_doctest():
     orig_run = DocTestRunner.run
 
     def run(self, test, **kwargs):
+        filtered_examples = []
+
         for example in test.examples:
+            if SKIP_THIS_VERSION not in example.options:
+                filtered_examples.append(example)
+
             # Remove ```
             example.want = example.want.replace('```\n', '')
             example.exc_msg = example.exc_msg and example.exc_msg.replace('```\n', '')
 
+        test.examples = filtered_examples
         return orig_run(self, test, **kwargs)
 
     try:
