@@ -17,11 +17,7 @@ jobs:
           set -x
           set -e
           python -m pip install pyflakes pytest pytest-doctestplus hypothesis pytest-cov pytest-flakes packaging
-          if [[ ${{ matrix.python-version }} == "3.12-dev" ]]; then
-             python -m pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
-          else
-             python -m pip install numpy
-          fi;
+          python -m pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
       - name: Run Tests
         run: |
           set -x
