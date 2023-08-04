@@ -79,7 +79,7 @@ class Slice(NDIndex):
         # Slices are only hashable in Python 3.12+
         try:
             return hash(self.raw)
-        except TypeError:
+        except TypeError: # pragma: no cover
             return hash(self.args)
 
     @property
