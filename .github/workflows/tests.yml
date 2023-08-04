@@ -29,7 +29,7 @@ jobs:
 
           python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
           # The coverage requirement check is done by the coverage report line below
-          # PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
+          PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
           pytest $PYTEST_FLAGS
           ./run_doctests
           # Make sure it installs
@@ -37,9 +37,9 @@ jobs:
           # Coverage. This also sets the failing status if the
           # coverage is not 100%. Travis sometimes cuts off the last command, which is
           # why we print stuff at the end.
-          # if ! coverage report -m; then
-          #     echo "Coverage failed";
-          #     false;
-          # else
-          #     echo "Coverage passed";
-          # fi;
+          if ! coverage report -m; then
+              echo "Coverage failed";
+              false;
+          else
+              echo "Coverage passed";
+          fi;
