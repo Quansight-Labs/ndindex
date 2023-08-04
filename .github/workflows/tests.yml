@@ -27,6 +27,8 @@ jobs:
           set -x
           set -e
 
+          coverage --help
+
           python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
           # The coverage requirement check is done by the coverage report line below
           PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
