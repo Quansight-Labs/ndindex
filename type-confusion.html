@@ -5,9 +5,9 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ndindex Changelog" href="changelog.html" /><link rel="prev" title="Slices" href="slices.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.1.1 and Furo 2023.07.26 -->
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.2.2 and Furo 2023.08.17 -->
         <title>Type Confusion - ndindex documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6777a0dc" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=16cf08d2" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -272,7 +272,7 @@
         </div>
         <article role="main">
           <section id="type-confusion">
-<h1>Type Confusion<a class="headerlink" href="#type-confusion" title="Permalink to this heading">#</a></h1>
+<h1>Type Confusion<a class="headerlink" href="#type-confusion" title="Link to this heading">#</a></h1>
 <p>When using the ndindex API, it is important to avoid type confusion. Many
 types that are used as indices for arrays also have semantic meaning outside
 of indexing. For example, tuples and arrays mean one thing when they are
@@ -414,7 +414,7 @@ issue</a> so we can implement it.</p></li>
 </ul>
 <p>Additionally, some advice for specific types:</p>
 <section id="integer">
-<h2>Integer<a class="headerlink" href="#integer" title="Permalink to this heading">#</a></h2>
+<h2>Integer<a class="headerlink" href="#integer" title="Link to this heading">#</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It
 represents integers <strong>as indices</strong>. It is not usable in contexts where
@@ -442,7 +442,7 @@ docstring).</p></li>
 </ul>
 </section>
 <section id="tuple">
-<span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Permalink to this heading">#</a></h2>
+<span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Link to this heading">#</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular,
 things like <code class="docutils literal notranslate"><span class="pre">idx[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">len(idx)</span></code> will not work if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>. If
@@ -477,7 +477,7 @@ want the ndindex type, or <code class="docutils literal notranslate"><span class
 </ul>
 </section>
 <section id="ellipsis">
-<span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Permalink to this heading">#</a></h2>
+<span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Link to this heading">#</a></h2>
 <ul>
 <li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
 Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex(...)</span></code></strong>. As noted above, all ndindex
@@ -549,7 +549,7 @@ allow <code class="docutils literal notranslate"><span class="pre">==</span></co
 </ul>
 </section>
 <section id="newaxis">
-<h2>Newaxis<a class="headerlink" href="#newaxis" title="Permalink to this heading">#</a></h2>
+<h2>Newaxis<a class="headerlink" href="#newaxis" title="Link to this heading">#</a></h2>
 <p>The advice for <code class="docutils literal notranslate"><span class="pre">Newaxis</span></code> is almost identical to the advice for
 <a class="reference internal" href="#type-confusion-ellipsis"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></span></a>. Note that <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> is just an alias
 for <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
@@ -619,7 +619,7 @@ NumPy arrays).</p>
 </ul>
 </section>
 <section id="integerarray-and-booleanarray">
-<h2>IntegerArray and BooleanArray<a class="headerlink" href="#integerarray-and-booleanarray" title="Permalink to this heading">#</a></h2>
+<h2>IntegerArray and BooleanArray<a class="headerlink" href="#integerarray-and-booleanarray" title="Link to this heading">#</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought
 of as arrays.</strong> They do not have the methods that <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> would
@@ -740,9 +740,9 @@ array do not affect the ndindex objects.</p>
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
