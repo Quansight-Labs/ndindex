@@ -5,7 +5,7 @@ from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
-from .helpers import boolean_arrays, short_shapes, check_same, assert_equal
+from .helpers import boolean_arrays, short_shapes, check_same, assert_equal, reduce_kwargs
 
 from ..booleanarray import BooleanArray
 
@@ -38,8 +38,8 @@ def test_booleanarray_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
-@given(boolean_arrays, one_of(short_shapes, integers(0, 10)))
-def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
+@given(boolean_arrays, one_of(short_shapes, integers(0, 10)), reduce_kwargs)
+def test_booleanarray_reduce_no_shape_hypothesis(idx, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -47,12 +47,12 @@ def test_booleanarray_reduce_no_shape_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw])
 
-@example(full((1, 9), True), (3, 3))
-@example(full((1, 9), False), (3, 3))
-@given(boolean_arrays, one_of(short_shapes, integers(0, 10)))
-def test_booleanarray_reduce_hypothesis(idx, shape):
+@example(full((1, 9), True), (3, 3), {})
+@example(full((1, 9), False), (3, 3), {})
+@given(boolean_arrays, one_of(short_shapes, integers(0, 10)), reduce_kwargs)
+def test_booleanarray_reduce_hypothesis(idx, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -60,10 +60,10 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
 
     index = BooleanArray(idx)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw])
 
     try:
-        reduced = index.reduce(shape)
+        reduced = index.reduce(shape, **kwargs)
     except IndexError:
         pass
     else:
@@ -72,8 +72,8 @@ def test_booleanarray_reduce_hypothesis(idx, shape):
         assert reduced == index
 
         # Idempotency
-        assert reduced.reduce() == reduced
-        assert reduced.reduce(shape) == reduced
+        assert reduced.reduce(**kwargs) == reduced
+        assert reduced.reduce(shape, **kwargs) == reduced
 
 @given(boolean_arrays, one_of(short_shapes, integers(0, 10)))
 def test_booleanarray_isempty_hypothesis(idx, shape):

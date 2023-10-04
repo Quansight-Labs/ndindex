@@ -57,7 +57,7 @@ class IntegerArray(ArrayIndex):
         if out_of_bounds.any():
             raise IndexError(f"index {self.array[out_of_bounds].flat[0]} is out of bounds for axis {axis} with size {size}")
 
-    def reduce(self, shape=None, axis=0):
+    def reduce(self, shape=None, *, axis=0, negative_int=False):
         """
         Reduce an `IntegerArray` index on an array of shape `shape`.
 
@@ -65,6 +65,10 @@ class IntegerArray(ArrayIndex):
         given shape, an `IntegerArray` index where the values are all
         nonnegative, or, if `self` is a scalar array index (`self.shape ==
         ()`), an `Integer` whose value is nonnegative.
+
+        If `negative_int` is `True` and a `shape` is provided, the result will
+        be an `IntegerArray` with negative entries instead of positive
+        entries.
 
         >>> from ndindex import IntegerArray
         >>> idx = IntegerArray([-5, 2])
@@ -74,6 +78,8 @@ class IntegerArray(ArrayIndex):
         IndexError: index -5 is out of bounds for axis 0 with size 3
         >>> idx.reduce((9,))
         IntegerArray([4, 2])
+        >>> idx.reduce((9,), negative_int=True)
+        IntegerArray([-5, -7])
 
         See Also
         ========
@@ -88,7 +94,7 @@ class IntegerArray(ArrayIndex):
 
         """
         if self.shape == ():
-            return Integer(self.array).reduce(shape, axis=axis)
+            return Integer(self.array).reduce(shape, axis=axis, negative_int=negative_int)
 
         if shape is None:
             return self
@@ -99,7 +105,10 @@ class IntegerArray(ArrayIndex):
 
         size = shape[axis]
         new_array = self.array.copy()
-        new_array[new_array < 0] += size
+        if negative_int:
+            new_array[new_array >= 0] -= size
+        else:
+            new_array[new_array < 0] += size
         return IntegerArray(new_array)
 
     def newshape(self, shape):

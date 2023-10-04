@@ -83,7 +83,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
         return ()
 
     dims = [len(shape) for shape in shapes]
-    shape_skip_axes = [[ndindex(i).reduce(n).raw - n for i in skip_axes] for n in dims]
+    shape_skip_axes = [[ndindex(i).reduce(n, negative_int=True) for i in skip_axes] for n in dims]
     N = max(dims)
     broadcasted_skip_axes = [ndindex(i).reduce(N) for i in skip_axes]
 
@@ -187,14 +187,14 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     >>> b
     array([[100],
            [110]])
-    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)): # doctest: +SKIP37
-    ...     print(f"{idx1 = }; {idx2 = }; {(a[idx1.raw], b[idx2.raw]) = }")
-    idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (0, 100)
-    idx1 = Tuple(0, 1); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (1, 100)
-    idx1 = Tuple(0, 2); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (2, 100)
-    idx1 = Tuple(0, 0); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (0, 110)
-    idx1 = Tuple(0, 1); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (1, 110)
-    idx1 = Tuple(0, 2); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (2, 110)
+    >>> for idx1, idx2 in iter_indices((1, 3), (2, 1)):
+    ...     print(f"{idx1 = }; {idx2 = }; {(a[idx1.raw], b[idx2.raw]) = }") # doctest: +SKIP38
+    idx1 = Tuple(0, 0); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (np.int64(0), np.int64(100))
+    idx1 = Tuple(0, 1); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (np.int64(1), np.int64(100))
+    idx1 = Tuple(0, 2); idx2 = Tuple(0, 0); (a[idx1.raw], b[idx2.raw]) = (np.int64(2), np.int64(100))
+    idx1 = Tuple(0, 0); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (np.int64(0), np.int64(110))
+    idx1 = Tuple(0, 1); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (np.int64(1), np.int64(110))
+    idx1 = Tuple(0, 2); idx2 = Tuple(1, 0); (a[idx1.raw], b[idx2.raw]) = (np.int64(2), np.int64(110))
     >>> a + b
     array([[100, 101, 102],
            [110, 111, 112]])
@@ -285,9 +285,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
                     it.insert(0, range(shape[i]))
 
     if _debug: # pragma: no cover
-        print(iters)
-        # Use this instead when we drop Python 3.7 support
-        # print(f"{iters = }")
+        print(f"{iters = }")
     for idxes in itertools.zip_longest(*[itertools.product(*i) for i in
                                          iters], fillvalue=()):
         yield tuple(ndindex(idx) for idx in idxes)

@@ -76,9 +76,11 @@ class Slice(NDIndex):
         return args
 
     def __hash__(self):
-        # We can't use the default hash(self.raw) because slices are not
-        # hashable
-        return hash(self.args)
+        # Slices are only hashable in Python 3.12+
+        try:
+            return hash(self.raw)
+        except TypeError: # pragma: no cover
+            return hash(self.args)
 
     @property
     def raw(self):
@@ -200,7 +202,7 @@ class Slice(NDIndex):
 
         return len(range(start, stop, step))
 
-    def reduce(self, shape=None, axis=0):
+    def reduce(self, shape=None, *, axis=0, negative_int=False):
         """
         `Slice.reduce` returns a slice that is canonicalized for an array of the
         given shape, or for any shape if `shape` is `None` (the default).

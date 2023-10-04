@@ -5,6 +5,9 @@ from numpy import arange
 
 from .helpers import ndindices, shapes, MAX_ARRAY_SIZE, check_same, prod
 
+@example(..., (1, 2, 3))
+@example(slice(0, 1), ())
+@example(slice(0, 1), (1,))
 @example((0, 1), (2, 2))
 @example((0,), ())
 @example([[1]], (0, 0, 1))

@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arange, array, intp, empty
+from numpy import arange, array, intp, empty, all as np_all
 
 from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
@@ -10,7 +10,8 @@ from pytest import raises
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import check_same, Tuples, prod, short_shapes, iterslice
+from ..integerarray import IntegerArray
+from .helpers import check_same, Tuples, prod, short_shapes, iterslice, reduce_kwargs
 
 def test_tuple_constructor():
     # Test things in the Tuple constructor that are not tested by the other
@@ -81,10 +82,10 @@ def test_ellipsis_index(t, shape):
 
     check_same(a, t, ndindex_func=ndindex_func)
 
-@example((True, 0, False), 1)
-@example((..., None), ())
-@given(Tuples, one_of(short_shapes, integers(0, 10)))
-def test_tuple_reduce_no_shape_hypothesis(t, shape):
+@example((True, 0, False), 1, {})
+@example((..., None), (), {})
+@given(Tuples, one_of(short_shapes, integers(0, 10)), reduce_kwargs)
+def test_tuple_reduce_no_shape_hypothesis(t, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -92,31 +93,33 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce().raw],
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw],
                same_exception=False)
 
-    reduced = index.reduce()
+    reduced = index.reduce(**kwargs)
     if isinstance(reduced, Tuple):
         assert len(reduced.args) != 1
         assert reduced == () or reduced.args[-1] != ...
 
     # Idempotency
-    assert reduced.reduce() == reduced
+    assert reduced.reduce(**kwargs) == reduced
 
-@example((..., None), ())
-@example((..., empty((0, 0), dtype=bool)), (0, 0))
-@example((empty((0, 0), dtype=bool), 0), (0, 0, 1))
-@example((array([], dtype=intp), 0), (0, 0))
-@example((array([], dtype=intp), array(0)), (0, 0))
-@example((array([], dtype=intp), [0]), (0, 0))
-@example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7))
-@example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7))
-@example((0, ..., slice(None)), (2, 3, 4, 5, 6, 7))
-@example((slice(None, None, -1),), (2,))
-@example((..., slice(None, None, -1),), (2, 3, 4))
-@example((..., False, slice(None)), 0)
-@given(Tuples, one_of(short_shapes, integers(0, 10)))
-def test_tuple_reduce_hypothesis(t, shape):
+@example((..., empty((1, 0), dtype=intp)), (1, 0), {})
+@example((1, -1, [1, -1]), (3, 3, 3), {'negative_int': True})
+@example((..., None), (), {})
+@example((..., empty((0, 0), dtype=bool)), (0, 0), {})
+@example((empty((0, 0), dtype=bool), 0), (0, 0, 1), {})
+@example((array([], dtype=intp), 0), (0, 0), {})
+@example((array([], dtype=intp), array(0)), (0, 0), {})
+@example((array([], dtype=intp), [0]), (0, 0), {})
+@example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7), {})
+@example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7), {})
+@example((0, ..., slice(None)), (2, 3, 4, 5, 6, 7), {})
+@example((slice(None, None, -1),), (2,), {})
+@example((..., slice(None, None, -1),), (2, 3, 4), {})
+@example((..., False, slice(None)), 0, {})
+@given(Tuples, one_of(short_shapes, integers(0, 10)), reduce_kwargs)
+def test_tuple_reduce_hypothesis(t, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -124,11 +127,13 @@ def test_tuple_reduce_hypothesis(t, shape):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw],
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw],
                same_exception=False)
 
+    negative_int = kwargs.get('negative_int', False)
+
     try:
-        reduced = index.reduce(shape)
+        reduced = index.reduce(shape, **kwargs)
     except IndexError:
         pass
     else:
@@ -138,10 +143,22 @@ def test_tuple_reduce_hypothesis(t, shape):
         # TODO: Check the other properties from the Tuple.reduce docstring.
 
         # Idempotency
-        assert reduced.reduce() == reduced
+        assert reduced.reduce(**kwargs) == reduced
         # This is currently not implemented, for example, (..., False, :)
         # takes two steps to remove the redundant slice.
         # assert reduced.reduce(shape) == reduced
+
+        for arg in reduced.args:
+            if isinstance(arg, Integer):
+                if negative_int:
+                    assert arg.raw < 0
+                else:
+                    assert arg.raw >= 0
+            elif isinstance(arg, IntegerArray):
+                if negative_int:
+                    assert np_all(arg.raw < 0)
+                else:
+                    assert np_all(arg.raw >= 0)
 
 def test_tuple_reduce_explicit():
     # Some aspects of Tuple.reduce are hard to test as properties, so include

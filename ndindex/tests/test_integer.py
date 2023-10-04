@@ -7,7 +7,7 @@ from hypothesis.strategies import integers, one_of
 
 from ..integer import Integer
 from ..slice import Slice
-from .helpers import check_same, ints, prod, shapes, iterslice, assert_equal
+from .helpers import check_same, ints, prod, shapes, iterslice, assert_equal, reduce_kwargs
 
 def test_integer_args():
     zero = Integer(0)
@@ -46,51 +46,66 @@ def test_integer_len_hypothesis(i):
     idx = Integer(i)
     assert len(idx) == 1
 
-
 def test_integer_reduce_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
-        check_same(a, i, ndindex_func=lambda a, x: a[x.reduce((10,)).raw])
+        for kwargs in [{'negative_int': False}, {'negative_int': True}, {}]:
+            check_same(a, i, ndindex_func=lambda a, x: a[x.reduce((10,), **kwargs).raw])
 
-        try:
-            reduced = Integer(i).reduce(10)
-        except IndexError:
-            pass
-        else:
-            assert reduced.raw >= 0
+            negative_int = kwargs.get('negative_int', False)
 
-            # Idempotency
-            assert reduced.reduce() == reduced
-            assert reduced.reduce(10) == reduced
+            try:
+                reduced = Integer(i).reduce(10, **kwargs)
+            except IndexError:
+                pass
+            else:
+                if negative_int:
+                    assert reduced.raw < 0
+                else:
+                    assert reduced.raw >= 0
 
-@given(ints(), shapes)
-def test_integer_reduce_hypothesis(i, shape):
+                # Idempotency
+                assert reduced.reduce(**kwargs) == reduced
+                assert reduced.reduce(10, **kwargs) == reduced
+
+@given(ints(), shapes, reduce_kwargs)
+def test_integer_reduce_hypothesis(i, shape, kwargs):
     a = arange(prod(shape)).reshape(shape)
     # The axis argument is tested implicitly in the Tuple.reduce test. It is
     # difficult to test here because we would have to pass in a Tuple to
     # check_same.
-    check_same(a, i, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
+    check_same(a, i, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw])
+
+    negative_int = kwargs.get('negative_int', False)
 
     try:
-        reduced = Integer(i).reduce(shape)
+        reduced = Integer(i).reduce(shape, **kwargs)
     except IndexError:
         pass
     else:
-        assert reduced.raw >= 0
+        if negative_int:
+            assert reduced.raw < 0
+        else:
+            assert reduced.raw >= 0
 
         # Idempotency
-        assert reduced.reduce() == reduced
-        assert reduced.reduce(shape) == reduced
+        assert reduced.reduce(**kwargs) == reduced
+        assert reduced.reduce(shape, **kwargs) == reduced
 
 def test_integer_reduce_no_shape_exhaustive():
     a = arange(10)
     for i in range(-12, 12):
         check_same(a, i, ndindex_func=lambda a, x: a[x.reduce().raw])
 
-@given(ints(), shapes)
-def test_integer_reduce_no_shape_hypothesis(i, shape):
+@given(ints(), shapes, reduce_kwargs)
+def test_integer_reduce_no_shape_hypothesis(i, shape, kwargs):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, i, ndindex_func=lambda a, x: a[x.reduce().raw])
+    check_same(a, i, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw])
+
+@given(ints())
+def test_integer_reduce_no_shape_unchanged(i):
+    idx = Integer(i)
+    assert idx.reduce() == idx.reduce(negative_int=False) == idx.reduce(negative_int=True) == i
 
 def test_integer_newshape_exhaustive():
     shape = 5

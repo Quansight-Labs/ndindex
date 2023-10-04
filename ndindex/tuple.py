@@ -181,7 +181,7 @@ class Tuple(NDIndex):
     def raw(self):
         return tuple(i.raw for i in self.args)
 
-    def reduce(self, shape=None):
+    def reduce(self, shape=None, *, negative_int=False):
         r"""
         Reduce a Tuple index on an array of shape `shape`
 
@@ -246,8 +246,8 @@ class Tuple(NDIndex):
         Integer(1)
         >>> a[..., 1]
         array(1)
-        >>> a[1]
-        1
+        >>> a[1] # doctest: +SKIP38
+        np.int64(1)
 
         See https://github.com/Quansight-Labs/ndindex/issues/22.
 
@@ -278,7 +278,7 @@ class Tuple(NDIndex):
                     seen_boolean_scalar = True
                 else:
                     _args.append(s)
-            return type(self)(*_args).reduce(shape)
+            return type(self)(*_args).reduce(shape, negative_int=negative_int)
 
         arrays = []
         for i in args:
@@ -340,7 +340,7 @@ class Tuple(NDIndex):
             elif isinstance(s, BooleanArray):
                 begin_offset += s.ndim - 1
             axis = ellipsis_i - i - begin_offset
-            reduced = s.reduce(shape, axis=axis)
+            reduced = s.reduce(shape, axis=axis, negative_int=negative_int)
             if (removable
                 and isinstance(reduced, Slice)
                 and reduced == Slice(0, shape[axis], 1)):
@@ -350,7 +350,7 @@ class Tuple(NDIndex):
                 preargs.insert(0, reduced)
 
         if shape is None:
-            endargs = [s.reduce() for s in args[ellipsis_i+1:]]
+            endargs = [s.reduce(negative_int=negative_int) for s in args[ellipsis_i+1:]]
         else:
             endargs = []
             end_offset = 0
@@ -363,7 +363,7 @@ class Tuple(NDIndex):
                 if not (isinstance(s, IntegerArray) and (0 in broadcast_shape or
                                                          False in args)):
                     # Array bounds are not checked when the broadcast shape is empty
-                    s = s.reduce(shape, axis=axis)
+                    s = s.reduce(shape, axis=axis, negative_int=negative_int)
                 endargs.insert(0, s)
 
         if shape is not None:
