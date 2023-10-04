@@ -704,6 +704,13 @@ Rather than thinking about that, consider the spaces between the elements:
   td:last-child:before {
     border-right: none;
   }
+
+  .overflow-content {
+      white-space: nowrap;
+      overflow: visible;
+      width: 100%;
+      max-width: 0px;
+  }
 </style>
 
 <div class="slice-diagram">
@@ -2116,164 +2123,238 @@ Simply writing down the rule in this way makes it sound more confusing than it
 really it. Simply put, omitting the `start` or `stop` of a slice will make it
 slice "as much as possible" instead.
 
-<div style="text-align:center">
-<code style="font-size: 16pt;">a[:3] == a[:3:1] == ['a', 'b', 'c']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r r c c c c c c c c c c c c l}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#5E5EFF}{\enclose{circle}{0}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{1}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{2}}
-    &
-    & \color{#EE0000}{\enclose{circle}{3}}
-    &
-    & \color{#EE0000}{4\phantom{,}}
-    &
-    & \color{#EE0000}{5\phantom{,}}
-    &
-    & \color{#EE0000}{6\phantom{,}}\\
-    \color{#5E5EFF}{\text{start}}
-    & \color{#5E5EFF}{\text{(beginning)}}
-    & \rightarrow
-    & \color{#5E5EFF}{+1}
-    & \rightarrow
-    & \color{#5E5EFF}{+1}
-    & \rightarrow
-    & \color{#EE0000}{\text{stop}}
-    &
-    & \phantom{\rightarrow}
-    &
-    & \phantom{\rightarrow}
-    &
-    & \phantom{\rightarrow}
-\end{array}
-\end{aligned}
-$$
+<div class="slice-diagram">
+    <code style="font-size: 16pt;">a[:3] == a[:3:1] == ['a', 'b', 'c']</code>
+    <table>
+        <tr>
+            <td><pre>a</pre></td>
+            <td><pre>=</pre></td>
+            <td><pre>['a',</pre></td>
+            <td></td>
+            <td><pre> 'b',</pre></td>
+            <td></td>
+            <td><pre> 'c',</pre></td>
+            <td></td>
+            <td><pre> 'd',</pre></td>
+            <td></td>
+            <td><pre> 'e',</pre></td>
+            <td></td>
+            <td><pre> 'f',</pre></td>
+            <td></td>
+            <td><pre> 'g']</pre></td>
+        </tr>
+        <tr>
+            <th style="color: #EE0000">index</th>
+            <td></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">0</div></td>
+            <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">1</div></td>
+            <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">2</div></td>
+            <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
+            <td style="color: #EE0000"><div class="circle-red">3</div></td>
+            <td></td>
+            <td style="color: #EE0000">4</td>
+            <td></td>
+            <td style="color: #EE0000">5</td>
+            <td></td>
+            <td style="color: #EE0000">6</td>
+        </tr>
+        <tr>
+            <th></th>
+            <td></td>
+            <td style="color: #5E5EFF;">
+                <div class="overflow-content">start (beginning)</div>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="color: #EE0000;">stop</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </div>
 
-<div style="text-align:center">
-<code style="font-size: 16pt;">a[3:] == a[3::1] == ['d', 'e', 'f', 'g']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r r c c c c c c c c c c c c l}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    &
-    & \color{#EE0000}{1\phantom{,}}
-    &
-    & \color{#EE0000}{2\phantom{,}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{3}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{4}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{5}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\rightarrow}
-    &
-    & \phantom{\rightarrow}
-    &
-    & \phantom{\rightarrow}
-    & \color{#5E5EFF}{\text{start}}
-    & \rightarrow
-    & \color{#5E5EFF}{+1}
-    & \rightarrow
-    & \color{#5E5EFF}{+1}
-    & \rightarrow
-    & \color{#5E5EFF}{\text{stop}}
-    & \color{#5E5EFF}{\text{(end)}}
-\end{array}
-\end{aligned}
-$$
+<div class="slice-diagram">
+    <code style="font-size: 16pt;">a[3:] == a[3::1] == ['d', 'e', 'f', 'g']</code>
+    <table>
+        <tr>
+            <td><pre>a</pre></td>
+            <td><pre>=</pre></td>
+            <td><pre>['a',</pre></td>
+            <td></td>
+            <td><pre> 'b',</pre></td>
+            <td></td>
+            <td><pre> 'c',</pre></td>
+            <td></td>
+            <td><pre> 'd',</pre></td>
+            <td></td>
+            <td><pre> 'e',</pre></td>
+            <td></td>
+            <td><pre> 'f',</pre></td>
+            <td></td>
+            <td><pre> 'g']</pre></td>
+        </tr>
+        <tr>
+            <th style="color: #EE0000">index</th>
+            <td></td>
+            <td style="color: #EE0000">0</td>
+            <td></td>
+            <td style="color: #EE0000">1</td>
+            <td></td>
+            <td style="color: #EE0000">2</td>
+            <td></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">3</div></td>
+            <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">4</div></td>
+            <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">5</div></td>
+            <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">6</div></td>
+        </tr>
+        <tr>
+            <th></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="color: #5E5EFF;">start</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="color: #5E5EFF;">
+                <div class="overflow-content">stop (end)</div>
+            </td>
+        </tr>
+    </table>
 </div>
 
-<div style="text-align:center">
-<code style="font-size: 16pt;">a[:3:-1] == ['g', 'f', 'e']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r r c c c c c c c c c c c c l}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    &
-    & \color{#EE0000}{1\phantom{,}}
-    &
-    & \color{#EE0000}{2\phantom{,}}
-    &
-    & \color{#EE0000}{\enclose{circle}{3}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{4}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{5}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{6}\phantom{,}}\\
-    &
-    & \phantom{\leftarrow}
-    &
-    & \phantom{\leftarrow}
-    &
-    & \phantom{\leftarrow}
-    & \color{#EE0000}{\text{stop}}
-    & \leftarrow
-    & \color{#5E5EFF}{-1}
-    & \leftarrow
-    & \color{#5E5EFF}{-1}
-    & \leftarrow
-    & \color{#5E5EFF}{\text{start}}
-    & \color{#5E5EFF}{\text{(end)}}
-\end{array}
-\end{aligned}
-$$
+<div class="slice-diagram">
+    <code style="font-size: 16pt;">a[:3:-1] == ['g', 'f', 'e']</code>
+    <table>
+        <tr>
+            <td><pre>a</pre></td>
+            <td><pre>=</pre></td>
+            <td><pre>['a',</pre></td>
+            <td></td>
+            <td><pre> 'b',</pre></td>
+            <td></td>
+            <td><pre> 'c',</pre></td>
+            <td></td>
+            <td><pre> 'd',</pre></td>
+            <td></td>
+            <td><pre> 'e',</pre></td>
+            <td></td>
+            <td><pre> 'f',</pre></td>
+            <td></td>
+            <td><pre> 'g']</pre></td>
+        </tr>
+        <tr>
+            <th style="color: #EE0000">index</th>
+            <td></td>
+            <td style="color: #EE0000">0</td>
+            <td></td>
+            <td style="color: #EE0000">1</td>
+            <td></td>
+            <td style="color: #EE0000">2</td>
+            <td></td>
+            <td style="color: #EE0000"><div class="circle-red">3</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">4</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">5</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">6</div></td>
+        </tr>
+        <tr>
+            <th></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="color: #EE0000;">stop</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="color: #5E5EFF;">
+                <div class="overflow-content">start (end)</div>
+            </td>
+        </tr>
+    </table>
 </div>
 
-<div style="text-align:center">
-<code style="font-size: 16pt;">a[3::-1] == ['d', 'c', 'b', 'a']</code>
-$$
-\require{enclose}
-\begin{aligned}
-\begin{array}{r r c c c c c c c c c c c c l}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, && \mathtt{\textsf{'}b\textsf{'}}, && \mathtt{\textsf{'}c\textsf{'}}, && \mathtt{\textsf{'}d\textsf{'}}, && \mathtt{\textsf{'}e\textsf{'}}, && \mathtt{\textsf{'}f\textsf{'}}, && \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#5E5EFF}{\enclose{circle}{0}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{1}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{2}}
-    &
-    & \color{#5E5EFF}{\enclose{circle}{3}}
-    &
-    & \color{#EE0000}{4\phantom{,}}
-    &
-    & \color{#EE0000}{5\phantom{,}}
-    &
-    & \color{#EE0000}{6\phantom{,}}\\
-    \color{#5E5EFF}{\text{stop}}
-    & \color{#5E5EFF}{\text{(beginning)}}
-    & \leftarrow
-    & \color{#5E5EFF}{-1}
-    & \leftarrow
-    & \color{#5E5EFF}{-1}
-    & \leftarrow
-    & \color{#5E5EFF}{\text{start}}
-    &
-    & \phantom{\leftarrow}
-    &
-    & \phantom{\leftarrow}
-    &
-    & \phantom{\leftarrow}
-\end{array}
-\end{aligned}
-$$
+<div class="slice-diagram">
+    <code style="font-size: 16pt;">a[3::-1] == ['d', 'c', 'b', 'a']</code>
+    <table>
+        <tr>
+            <td><pre>a</pre></td>
+            <td><pre>=</pre></td>
+            <td><pre>['a',</pre></td>
+            <td></td>
+            <td><pre> 'b',</pre></td>
+            <td></td>
+            <td><pre> 'c',</pre></td>
+            <td></td>
+            <td><pre> 'd',</pre></td>
+            <td></td>
+            <td><pre> 'e',</pre></td>
+            <td></td>
+            <td><pre> 'f',</pre></td>
+            <td></td>
+            <td><pre> 'g']</pre></td>
+        </tr>
+        <tr>
+            <th style="color: #EE0000">index</th>
+            <td></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">0</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">2</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td style="color: #5E5EFF"><div class="circle-blue">3</div></td>
+            <td></td>
+            <td style="color: #EE0000">4</td>
+            <td></td>
+            <td style="color: #EE0000">5</td>
+            <td></td>
+            <td style="color: #EE0000">6</td>
+        </tr>
+        <tr>
+            <th></th>
+            <td></td>
+            <td style="color: #5E5EFF;">
+                <div class="overflow-content">stop (beginning)</div>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="color: #5E5EFF;">start</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </div>
 
 ```py
