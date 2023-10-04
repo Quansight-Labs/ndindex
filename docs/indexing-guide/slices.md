@@ -257,6 +257,9 @@ For example:
     padding-left: 2em;
     padding-right: 2em;
 }
+.slice-diagram>code {
+    padding-bottom: 10px;
+}
 </style>
 
 <div class="slice-diagram">
