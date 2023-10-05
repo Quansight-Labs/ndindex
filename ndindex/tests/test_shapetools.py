@@ -1,7 +1,7 @@
 import numpy as np
 try:
     from numpy import AxisError as np_AxisError
-except ImportError:
+except ImportError: # pragma: no cover
     from numpy.exceptions import AxisError as np_AxisError
 
 from hypothesis import assume, given, example
