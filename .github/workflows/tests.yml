@@ -24,7 +24,7 @@ jobs:
           elif [[ ${{ matrix.numpy-version }} == 'dev' ]]; then
               python -m pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
           else
-              python -m pip install --upgrade numpy==$NUMPY_VERSION
+              python -m pip install --upgrade numpy==${{ matrix.numpy-version }}.*
           fi
       - name: Run Tests
         run: |
