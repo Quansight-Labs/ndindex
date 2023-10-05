@@ -876,7 +876,7 @@ reasons why this way of thinking creates more confusion than it removes.
   As before, we might assume we would get
 
   ```py
-  >> a[5:3:-1]
+  >>> a[5:3:-1] # doctest: +SKIP
   ['e', 'd'] # WRONG
   ```
 
