@@ -467,7 +467,7 @@ $[3, 5)$ but in reverse order.
   position: absolute;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
-  background-color: white;
+  background-color: var(--color-background-primary);
   padding: 0 10px;
   z-index: 1;
 }
@@ -477,7 +477,7 @@ $[3, 5)$ but in reverse order.
   top: 50%;
   left: 0;
   right: 0;
-  border-top: 1.5px solid black;
+  border-top: 1.5px solid var(--color-foreground-primary);
   margin-left: 10px;
   margin-right: 10px;
   z-index: 0;
