@@ -1892,7 +1892,7 @@ The semantics of boolean array indices are described as
   This behavior may seem like an odd corner case, but it can come up in
   practice. TODO
 
-  For one thing, it means that assiging to a masked index does the right thing
+  For one thing, it means that assigning to a masked index does the right thing
   if the mask expression happens to not actually contain the array.
 
   ```py
