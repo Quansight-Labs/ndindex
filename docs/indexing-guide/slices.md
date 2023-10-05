@@ -904,10 +904,19 @@ reasons why this way of thinking creates more confusion than it removes.
   .circle-blue {
         border: 1px solid #5E5EFF;
   }
-  .left-arrow-cell {
+  .left-arrow-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('../_static/arrow.svg');
     background-repeat: no-repeat;
     background-position: 0px center;
+  }
+  [data-theme="dark"] .left-arrow-cell::before {
+      filter: invert(1);
   }
   .right-arrow-cell::before {
     content: '';
@@ -920,6 +929,9 @@ reasons why this way of thinking creates more confusion than it removes.
     background-repeat: no-repeat;
     background-position: 0px center;
     transform: scaleX(-1);
+  }
+  [data-theme="dark"] .right-arrow-cell::before {
+      filter: invert(1);
   }
   .left-arrow-curved-cell::before {
     content: '';
@@ -934,6 +946,9 @@ reasons why this way of thinking creates more confusion than it removes.
     background-size: contain;
     transform: translate(0px, -41px);
   }
+  [data-theme="dark"] .left-arrow-curved-cell::before {
+      filter: invert(1);
+  }
   .right-arrow-curved-cell::before {
     content: '';
     position: absolute;
@@ -946,6 +961,9 @@ reasons why this way of thinking creates more confusion than it removes.
     background-position: 0px center;
     background-size: contain;
     transform: translate(0px, -41px) scaleX(-1);
+  }
+  [data-theme="dark"] .right-arrow-curved-cell::before {
+      filter: invert(1);
   }
   </style>
 
