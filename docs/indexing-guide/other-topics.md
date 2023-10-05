@@ -621,6 +621,8 @@ so that operations are done on contiguous memory when possible.
 (size-0-arrays)=
 ## Size 0 Arrays
 
+<!-- TODO: Rewrite or delete this section -->
+
 Something that sometimes confuses people when they first run across it is the
 fact that it is possible to create NumPy arrays with 0 elements in them. Such
 an array will have `0` in its shape. You can construct such an array directly
