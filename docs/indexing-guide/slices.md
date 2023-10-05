@@ -256,6 +256,12 @@ For example:
     align-items: center;
     padding-left: 2em;
     padding-right: 2em;
+    --color-slice-diagram-selected: #3030FF;
+    --color-slice-diagram-not-selected: #EE0000;
+}
+[data-theme="dark"] .slice-diagram {
+    --color-slice-diagram-selected: #8888FF;
+    --color-slice-diagram-not-selected: #FF5E5E;
 }
 .slice-diagram>code {
     padding-top: 10px;
@@ -278,15 +284,15 @@ For example:
       <td><pre> 'g']</pre></td>
     </tr>
     <tr>
-      <th style="color:#EE0000;">index</th>
+      <th style="color:var(--color-slice-diagram-not-selected);">index</th>
       <td></td>
-      <td style="color:#EE0000;">0</td>
-      <td style="color:#EE0000;">1</td>
-      <td style="color:#EE0000;">2</td>
-      <td style="color:#5E5EFF;">3</td>
-      <td style="color:#5E5EFF;">4</td>
-      <td style="color:#EE0000;">5</td>
-      <td style="color:#EE0000;">6</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">0</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">1</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">2</td>
+      <td style="color:var(--color-slice-diagram-selected);">3</td>
+      <td style="color:var(--color-slice-diagram-selected);">4</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">5</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">6</td>
     </tr>
   </table>
 </div>
@@ -331,15 +337,15 @@ For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
         <td><pre> 'g']</pre></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;">index</th>
+        <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:#EE0000;">0</td>
-        <td style="color:#EE0000;">1</td>
-        <td style="color:#EE0000;">2</td>
-        <td><div class="circle-blue" style="color:#5E5EFF;">3</div></td>
-        <td><div class="circle-blue" style="color:#5E5EFF;">4</div></td>
-        <td><div class="circle-red" style="color:#EE0000;">5</div></td>
-        <td style="color:#EE0000;">6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">0</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">2</td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">3</div></td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">4</div></td>
+        <td><div class="circle-red" style="color:var(--color-slice-diagram-not-selected);">5</div></td>
+        <td style="color:var(--color-slice-diagram-not-selected);">6</td>
       </tr>
     </table>
   </div>
@@ -486,7 +492,7 @@ $[3, 5)$ but in reverse order.
 
 <div class="slice-diagram">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
+  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <table>
     <tr>
       <td><pre>a</pre></td>
@@ -500,25 +506,25 @@ $[3, 5)$ but in reverse order.
       <td><pre> 'g']</pre></td>
     </tr>
     <tr>
-      <th style="color:#EE0000;">index</th>
+      <th style="color:var(--color-slice-diagram-not-selected);">index</th>
       <td></td>
-      <td style="color:#EE0000;">0</td>
-      <td style="color:#EE0000;">1</td>
-      <td style="color:#EE0000;">2</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">0</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">1</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">2</td>
       <td style="background-color: >
         <div style="position: relative;">
           <span class="math notranslate nohighlight" style="position: absolute; display: flex; height: 100%; top: 0; align-items: center;">\([\)</span>
-          <span style="color:#5E5EFF;">3</span
+          <span style="color:var(--color-slice-diagram-selected);">3</span
         </div>
       </td>
-      <td style="color:#5E5EFF;">4</td>
+      <td style="color:var(--color-slice-diagram-selected);">4</td>
       <td>
         <div style="position: relative;">
-          <span style="color:#EE0000;">5</span>
+          <span style="color:var(--color-slice-diagram-not-selected);">5</span>
           <span class="math notranslate nohighlight" style="position: absolute; display: flex; height: 100%; align-items: center; top: 0; right: 0;">\()\)</span>
         </div>
       </td>
-      <td style="color:#EE0000;">6</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">6</td>
     </tr>
     <tr>
       <th></th>
@@ -535,7 +541,7 @@ $[3, 5)$ but in reverse order.
       <td></td>
       <td></td>
       <td></td>
-      <td colspan="3" style="color:#EE0000;"><div class="centered-text"><b>THIS IS WRONG!</b></div></td>
+      <td colspan="3" style="color:var(--color-slice-diagram-not-selected);"><div class="centered-text"><b>THIS IS WRONG!</b></div></td>
       <td></td>
     </tr>
   </table>
@@ -561,7 +567,7 @@ index `3`, but not including `3` (see [](negative-steps) below).
 
 <div class="slice-diagram">
 <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
-<div style="font-size: 16pt;color:#5E5EFF;">(CORRECT)</div>
+<div style="font-size: 16pt;color:var(--color-slice-diagram-selected);">(CORRECT)</div>
 <table>
     <tr>
       <td><pre>a</pre></td>
@@ -581,23 +587,23 @@ index `3`, but not including `3` (see [](negative-steps) below).
       <td><pre> 'g']</pre></td>
     </tr>
     <tr>
-      <th style="color: #EE0000">index</th>
+      <th style="color: var(--color-slice-diagram-not-selected)">index</th>
       <td></td>
-      <td style="color: #EE0000">0</td>
+      <td style="color: var(--color-slice-diagram-not-selected)">0</td>
       <td></td>
-      <td style="color: #EE0000">1</td>
+      <td style="color: var(--color-slice-diagram-not-selected)">1</td>
       <td></td>
-      <td style="color: #EE0000">2</td>
+      <td style="color: var(--color-slice-diagram-not-selected)">2</td>
       <td></td>
-      <td><div class="circle-red" style="color: #EE0000">3</div></td>
+      <td><div class="circle-red" style="color: var(--color-slice-diagram-not-selected)">3</div></td>
       <td class="left-arrow-cell"><div style="font-size: smaller; transform:
 translateY(-12px) translateX(3px)">-1</div></td>
-      <td><div class="circle-blue" style="color: #5E5EFF">4</div></td>
+      <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">4</div></td>
       <td class="left-arrow-cell"><div style="font-size: smaller; transform:
 translateY(-12px) translateX(3px)">-1</div></td>
-      <td><div class="circle-blue" style="color: #5E5EFF">5</div></td>
+      <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">5</div></td>
       <td></td>
-      <td style="color: #EE0000">6</td>
+      <td style="color: var(--color-slice-diagram-not-selected)">6</td>
     </tr>
 </table>
 </div>
@@ -682,7 +688,7 @@ Rather than thinking about that, consider the spaces between the elements:
     left: 50%;
     transform: translateX(-50%);
     width: 0;
-    border-left: 2px solid #EE0000;
+    border-left: 2px solid var(--color-slice-diagram-not-selected);
   }
 
   .vertical-bar-blue:before {
@@ -694,7 +700,7 @@ Rather than thinking about that, consider the spaces between the elements:
     left: 50%;
     transform: translateX(-50%);
     width: 0;
-    border-left: 2px solid #5E5EFF;
+    border-left: 2px solid var(--color-slice-diagram-selected);
   }
 
   td:first-child {
@@ -739,7 +745,7 @@ Rather than thinking about that, consider the spaces between the elements:
       <td><pre>]</pre></td>
     </tr>
     <tr>
-      <th style="color:#EE0000;"></th>
+      <th style="color:var(--color-slice-diagram-not-selected);"></th>
       <td></td>
       <td class="vertical-bar-red"></td>
       <td></td>
@@ -758,23 +764,23 @@ Rather than thinking about that, consider the spaces between the elements:
       <td class="vertical-bar-red"></td>
     </tr>
     <tr>
-      <th style="color:#EE0000;">index</th>
+      <th style="color:var(--color-slice-diagram-not-selected);">index</th>
       <td></td>
-      <td style="color:#EE0000;">0</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">0</td>
       <td></td>
-      <td style="color:#EE0000;">1</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">1</td>
       <td></td>
-      <td style="color:#EE0000;">2</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">2</td>
       <td></td>
-      <td style="color:#5E5EFF;">3</td>
+      <td style="color:var(--color-slice-diagram-selected);">3</td>
       <td></td>
-      <td style="color:#5E5EFF;">4</td>
+      <td style="color:var(--color-slice-diagram-selected);">4</td>
       <td></td>
-      <td style="color:#5E5EFF;">5</td>
+      <td style="color:var(--color-slice-diagram-selected);">5</td>
       <td></td>
-      <td style="color:#EE0000;">6</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">6</td>
       <td></td>
-      <td style="color:#EE0000;">7</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">7</td>
     </tr>
   </table>
 </div>
@@ -800,7 +806,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
+  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
 
   <div>
     <table>
@@ -825,7 +831,7 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><pre>]</pre></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;"></th>
+        <th style="color:var(--color-slice-diagram-not-selected);"></th>
         <td></td>
         <td class="vertical-bar-red"></td>
         <td></td>
@@ -844,27 +850,27 @@ reasons why this way of thinking creates more confusion than it removes.
         <td class="vertical-bar-red"></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;">index</th>
+        <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:#EE0000;">0</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">0</td>
         <td></td>
-        <td style="color:#EE0000;">1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">1</td>
         <td></td>
-        <td style="color:#EE0000;">2</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">2</td>
         <td></td>
-        <td style="color:#5E5EFF;">3</td>
+        <td style="color:var(--color-slice-diagram-selected);">3</td>
         <td></td>
-        <td style="color:#5E5EFF;">4</td>
+        <td style="color:var(--color-slice-diagram-selected);">4</td>
         <td></td>
-        <td style="color:#5E5EFF;">5</td>
+        <td style="color:var(--color-slice-diagram-selected);">5</td>
         <td></td>
-        <td style="color:#EE0000;">6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">6</td>
         <td></td>
-        <td style="color:#EE0000;">7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">7</td>
       </tr>
     </table>
   </div>
-  <div style="color:#EE0000"><b>THIS IS WRONG!</b></div>
+  <div style="color:var(--color-slice-diagram-not-selected)"><b>THIS IS WRONG!</b></div>
   </div>
 
   As before, we might assume we would get
@@ -899,10 +905,10 @@ reasons why this way of thinking creates more confusion than it removes.
       text-align: center;
   }
   .circle-red {
-        border: 1px solid #EE0000;
+        border: 1px solid var(--color-slice-diagram-not-selected);
   }
   .circle-blue {
-        border: 1px solid #5E5EFF;
+        border: 1px solid var(--color-slice-diagram-selected);
   }
   .left-arrow-cell::before {
     content: '';
@@ -988,23 +994,23 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><pre> 'g']</pre></td>
       </tr>
       <tr>
-        <th style="color: #EE0000">index</th>
+        <th style="color: var(--color-slice-diagram-not-selected)">index</th>
         <td></td>
-        <td style="color: #EE0000">0</td>
+        <td style="color: var(--color-slice-diagram-not-selected)">0</td>
         <td></td>
-        <td style="color: #EE0000">1</td>
+        <td style="color: var(--color-slice-diagram-not-selected)">1</td>
         <td></td>
-        <td style="color: #EE0000">2</td>
+        <td style="color: var(--color-slice-diagram-not-selected)">2</td>
         <td></td>
-        <td><div class="circle-red" style="color: #EE0000">3</div></td>
+        <td><div class="circle-red" style="color: var(--color-slice-diagram-not-selected)">3</div></td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
   translateY(-12px) translateX(3px)">-1</div></td>
-        <td><div class="circle-blue" style="color: #5E5EFF">4</div></td>
+        <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">4</div></td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
   translateY(-12px) translateX(3px)">-1</div></td>
-        <td><div class="circle-blue" style="color: #5E5EFF">5</div></td>
+        <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">5</div></td>
         <td></td>
-        <td style="color: #EE0000">6</td>
+        <td style="color: var(--color-slice-diagram-not-selected)">6</td>
       </tr>
       <tr>
         <td></td>
@@ -1015,11 +1021,11 @@ reasons why this way of thinking creates more confusion than it removes.
         <td></td>
         <td></td>
         <td></td>
-        <td style="color: #EE0000">stop</td>
+        <td style="color: var(--color-slice-diagram-not-selected)">stop</td>
         <td></td>
         <td></td>
         <td></td>
-        <td style="color: #5E5EFF">start</td>
+        <td style="color: var(--color-slice-diagram-selected)">start</td>
         <td></td>
         <td></td>
       </tr>
@@ -1055,7 +1061,7 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><pre>]</pre></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;"></th>
+        <th style="color:var(--color-slice-diagram-not-selected);"></th>
         <td></td>
         <td class="vertical-bar-red"></td>
         <td></td>
@@ -1074,23 +1080,23 @@ reasons why this way of thinking creates more confusion than it removes.
         <td class="vertical-bar-red"></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;">index</th>
+        <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:#EE0000;">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
         <td></td>
-        <td style="color:#EE0000;">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
         <td></td>
-        <td style="color:#EE0000;">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
         <td></td>
-        <td style="color:#5E5EFF;">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">-4</td>
         <td></td>
-        <td style="color:#5E5EFF;">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">-3</td>
         <td></td>
-        <td style="color:#5E5EFF;">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">-2</td>
         <td></td>
-        <td style="color:#EE0000;">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
         <td></td>
-        <td style="color:#EE0000;">0</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">0</td>
       </tr>
     </table>
   </div>
@@ -1111,7 +1117,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
-  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
+  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <div>
     <table>
       <tr>
@@ -1135,7 +1141,7 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><pre>]</pre></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;"></th>
+        <th style="color:var(--color-slice-diagram-not-selected);"></th>
         <td></td>
         <td class="vertical-bar-red"></td>
         <td></td>
@@ -1154,27 +1160,27 @@ reasons why this way of thinking creates more confusion than it removes.
         <td class="vertical-bar-red"></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;">index</th>
+        <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:#EE0000;">-8</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-8</td>
         <td></td>
-        <td style="color:#EE0000;">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
         <td></td>
-        <td style="color:#EE0000;">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
         <td></td>
-        <td style="color:#EE0000;">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
         <td></td>
-        <td style="color:#5E5EFF;">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">-4</td>
         <td></td>
-        <td style="color:#5E5EFF;">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">-3</td>
         <td></td>
-        <td style="color:#5E5EFF;">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">-2</td>
         <td></td>
-        <td style="color:#EE0000;">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
       </tr>
     </table>
   </div>
-  <div style="color:#EE0000"><b>THIS IS WRONG!</b></div>
+  <div style="color:var(--color-slice-diagram-not-selected)"><b>THIS IS WRONG!</b></div>
   </div>
 
   But things are even worse than that. If we combine negative `start` and
@@ -1191,7 +1197,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
-  <div style="font-size: 16pt;color:#5E5EFF;">NOW RIGHT!</div>
+  <div style="font-size: 16pt;color:var(--color-slice-diagram-selected);">NOW RIGHT!</div>
   <div>
     <table>
       <tr>
@@ -1215,7 +1221,7 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><pre>]</pre></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;"></th>
+        <th style="color:var(--color-slice-diagram-not-selected);"></th>
         <td></td>
         <td class="vertical-bar-red"></td>
         <td></td>
@@ -1234,23 +1240,23 @@ reasons why this way of thinking creates more confusion than it removes.
         <td class="vertical-bar-red"></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;">index</th>
+        <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:#EE0000;">-8</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-8</td>
         <td></td>
-        <td style="color:#EE0000;">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
         <td></td>
-        <td style="color:#EE0000;">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
         <td></td>
-        <td style="color:#EE0000;">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
         <td></td>
-        <td style="color:#5E5EFF;">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">-4</td>
         <td></td>
-        <td style="color:#5E5EFF;">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">-3</td>
         <td></td>
-        <td style="color:#5E5EFF;">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">-2</td>
         <td></td>
-        <td style="color:#EE0000;">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
       </tr>
     </table>
   </div>
@@ -1259,7 +1265,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:#EE0000;">(WRONG)</div>
+  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <div>
     <table>
       <tr>
@@ -1283,7 +1289,7 @@ reasons why this way of thinking creates more confusion than it removes.
         <td><pre>]</pre></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;"></th>
+        <th style="color:var(--color-slice-diagram-not-selected);"></th>
         <td></td>
         <td class="vertical-bar-red"></td>
         <td></td>
@@ -1302,27 +1308,27 @@ reasons why this way of thinking creates more confusion than it removes.
         <td class="vertical-bar-red"></td>
       </tr>
       <tr>
-        <th style="color:#EE0000;">index</th>
+        <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:#EE0000;">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
         <td></td>
-        <td style="color:#EE0000;">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
         <td></td>
-        <td style="color:#EE0000;">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
         <td></td>
-        <td style="color:#5E5EFF;">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">-4</td>
         <td></td>
-        <td style="color:#5E5EFF;">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">-3</td>
         <td></td>
-        <td style="color:#5E5EFF;">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">-2</td>
         <td></td>
-        <td style="color:#EE0000;">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
         <td></td>
-        <td style="color:#EE0000;">0</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">0</td>
       </tr>
     </table>
   </div>
-  <div style="color:#EE0000"><b>THIS IS WRONG!</b></div>
+  <div style="color:var(--color-slice-diagram-not-selected)"><b>THIS IS WRONG!</b></div>
   </div>
 
   In other words, the "right" way to think of spacers with negative `start`
@@ -1418,26 +1424,26 @@ Note that positive and negative indices can be mixed. The following slices of
       </tr>
       <tr>
         <th
-        style="color:#EE0000;">nonnegative index</th>
+        style="color:var(--color-slice-diagram-not-selected);">nonnegative index</th>
         <td></td>
-        <td style="color:#EE0000;">0</td>
-        <td style="color:#EE0000;">1</td>
-        <td style="color:#EE0000;">2</td>
-        <td><div class="circle-blue" style="color:#5E5EFF;">3</div></td>
-        <td><div class="circle-blue" style="color:#5E5EFF;">4</div></td>
-        <td><div class="circle-red" style="color:#EE0000;">5</div></td>
-        <td style="color:#EE0000;">6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">0</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">2</td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">3</div></td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">4</div></td>
+        <td><div class="circle-red" style="color:var(--color-slice-diagram-not-selected);">5</div></td>
+        <td style="color:var(--color-slice-diagram-not-selected);">6</td>
       </tr>
       <tr>
-        <th style="color:#EE0000;">negative index</th>
+        <th style="color:var(--color-slice-diagram-not-selected);">negative index</th>
         <td></td>
-        <td style="color:#EE0000;">-7</td>
-        <td style="color:#EE0000;">-6</td>
-        <td style="color:#EE0000;">-5</td>
-        <td><div class="circle-blue" style="color:#5E5EFF;">-4</div></td>
-        <td><div class="circle-blue" style="color:#5E5EFF;">-3</div></td>
-        <td><div class="circle-red" style="color:#EE0000;">-2</div></td>
-        <td style="color:#EE0000;">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">-4</div></td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">-3</div></td>
+        <td><div class="circle-red" style="color:var(--color-slice-diagram-not-selected);">-2</div></td>
+        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
       </tr>
     </table>
   </div>
@@ -1767,30 +1773,30 @@ Let us consider an example where the step size is `3`.
     <td><pre>'g']</pre></td>
   </tr>
   <tr>
-    <th style="color: #EE0000">index</th>
+    <th style="color: var(--color-slice-diagram-not-selected)">index</th>
     <td></td>
-    <td><div class="circle-blue" style="color: #5E5EFF">0</div></td>
+    <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">0</div></td>
     <td></td>
-    <td style="color: #EE0000">1</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">1</td>
     <td></td>
-    <td style="color: #EE0000">2</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">2</td>
     <td></td>
-    <td><div class="circle-blue" style="color: #5E5EFF">3</div></td>
+    <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">3</div></td>
     <td></td>
-    <td style="color: #EE0000">4</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">4</td>
     <td></td>
-    <td style="color: #EE0000">5</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">5</td>
     <td></td>
-    <td><div class="circle-red" style="color: #EE0000">6</div></td>
+    <td><div class="circle-red" style="color: var(--color-slice-diagram-not-selected)">6</div></td>
   </tr>
   <tr>
     <td></td>
     <td></td>
-    <td style="vertical-align: top; color: #5E5EFF">start</td>
+    <td style="vertical-align: top; color: var(--color-slice-diagram-selected)">start</td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
     <td></td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
-    <td style="line-height: 0em; vertical-align: top; color: #EE0000">&ge; stop</td>
+    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-not-selected)">&ge; stop</td>
   </tr>
   <tr>
     <td></td>
@@ -1846,34 +1852,34 @@ all the indices would also be $1 \pmod{3}$.
     <td></td>
   </tr>
   <tr>
-    <th style="color: #EE0000">index</th>
+    <th style="color: var(--color-slice-diagram-not-selected)">index</th>
     <td></td>
-    <td style="color: #EE0000">0</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">0</td>
     <td></td>
-    <td><div class="circle-blue" style="color: #5E5EFF">1</div></td>
+    <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">1</div></td>
     <td></td>
-    <td style="color: #EE0000">2</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">2</td>
     <td></td>
-    <td style="color: #EE0000">3</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">3</td>
     <td></td>
-    <td><div class="circle-blue" style="color: #5E5EFF">4</div></td>
+    <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">4</div></td>
     <td></td>
-    <td style="color: #EE0000">5</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">5</td>
     <td></td>
-    <td style="color: #EE0000">6</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">6</td>
     <td></td>
-    <td><div class="circle-red" style="color: #EE0000"></div></td>
+    <td><div class="circle-red" style="color: var(--color-slice-diagram-not-selected)"></div></td>
   </tr>
   <tr>
     <td></td>
     <td></td>
     <td></td>
     <td></td>
-    <td style="vertical-align: top; color: #5E5EFF">start</td>
+    <td style="vertical-align: top; color: var(--color-slice-diagram-selected)">start</td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
     <td></td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
-    <td style="line-height: 0em; vertical-align: top; color: #EE0000">&ge; stop</td>
+    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-not-selected)">&ge; stop</td>
   </tr>
   <tr>
     <td></td>
@@ -2047,30 +2053,30 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td><pre>'g']</pre></td>
   </tr>
   <tr>
-    <th style="color: #EE0000">index</th>
+    <th style="color: var(--color-slice-diagram-not-selected)">index</th>
     <td></td>
-    <td><div class="circle-red" style="color: #EE0000">0</div></td>
+    <td><div class="circle-red" style="color: var(--color-slice-diagram-not-selected)">0</div></td>
     <td></td>
-    <td style="color: #EE0000">1</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">1</td>
     <td></td>
-    <td style="color: #EE0000">2</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">2</td>
     <td></td>
-    <td><div class="circle-blue" style="color: #5E5EFF">3</div></td>
+    <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">3</div></td>
     <td></td>
-    <td style="color: #EE0000">4</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">4</td>
     <td></td>
-    <td style="color: #EE0000">5</td>
+    <td style="color: var(--color-slice-diagram-not-selected)">5</td>
     <td></td>
-    <td><div class="circle-blue" style="color: #5E5EFF">6</div></td>
+    <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">6</div></td>
   </tr>
   <tr>
     <td></td>
     <td></td>
-    <td style="line-height: 0em; vertical-align: top; color: #EE0000">&le; stop</td>
+    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-not-selected)">&le; stop</td>
     <td colspan="5" class="left-arrow-curved-cell"></td>
     <td></td>
     <td colspan="5" class="left-arrow-curved-cell"></td>
-    <td style="vertical-align: top; color: #5E5EFF">start</td>
+    <td style="vertical-align: top; color: var(--color-slice-diagram-selected)">start</td>
   </tr>
   <tr>
     <td></td>
@@ -2162,26 +2168,26 @@ slice "as much as possible" instead.
             <td><pre> 'g']</pre></td>
         </tr>
         <tr>
-            <th style="color: #EE0000">index</th>
+            <th style="color: var(--color-slice-diagram-not-selected)">index</th>
             <td></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">0</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">0</div></td>
             <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">1</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">1</div></td>
             <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">2</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">2</div></td>
             <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
-            <td style="color: #EE0000"><div class="circle-red">3</div></td>
+            <td style="color: var(--color-slice-diagram-not-selected)"><div class="circle-red">3</div></td>
             <td></td>
-            <td style="color: #EE0000">4</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">4</td>
             <td></td>
-            <td style="color: #EE0000">5</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">5</td>
             <td></td>
-            <td style="color: #EE0000">6</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">6</td>
         </tr>
         <tr>
             <th></th>
             <td></td>
-            <td style="color: #5E5EFF;">
+            <td style="color: var(--color-slice-diagram-selected);">
                 <div class="overflow-content">start (beginning)</div>
             </td>
             <td></td>
@@ -2189,7 +2195,7 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: #EE0000;">stop</td>
+            <td style="color: var(--color-slice-diagram-not-selected);">stop</td>
             <td></td>
             <td></td>
             <td></td>
@@ -2220,21 +2226,21 @@ slice "as much as possible" instead.
             <td><pre> 'g']</pre></td>
         </tr>
         <tr>
-            <th style="color: #EE0000">index</th>
+            <th style="color: var(--color-slice-diagram-not-selected)">index</th>
             <td></td>
-            <td style="color: #EE0000">0</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">0</td>
             <td></td>
-            <td style="color: #EE0000">1</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">1</td>
             <td></td>
-            <td style="color: #EE0000">2</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">2</td>
             <td></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">3</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">3</div></td>
             <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">4</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">4</div></td>
             <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">5</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">5</div></td>
             <td class="right-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(-3px)">+1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">6</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">6</div></td>
         </tr>
         <tr>
             <th></th>
@@ -2245,13 +2251,13 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: #5E5EFF;">start</td>
+            <td style="color: var(--color-slice-diagram-selected);">start</td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: #5E5EFF;">
+            <td style="color: var(--color-slice-diagram-selected);">
                 <div class="overflow-content">stop (end)</div>
             </td>
         </tr>
@@ -2279,21 +2285,21 @@ slice "as much as possible" instead.
             <td><pre> 'g']</pre></td>
         </tr>
         <tr>
-            <th style="color: #EE0000">index</th>
+            <th style="color: var(--color-slice-diagram-not-selected)">index</th>
             <td></td>
-            <td style="color: #EE0000">0</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">0</td>
             <td></td>
-            <td style="color: #EE0000">1</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">1</td>
             <td></td>
-            <td style="color: #EE0000">2</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">2</td>
             <td></td>
-            <td style="color: #EE0000"><div class="circle-red">3</div></td>
+            <td style="color: var(--color-slice-diagram-not-selected)"><div class="circle-red">3</div></td>
             <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">4</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">4</div></td>
             <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">5</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">5</div></td>
             <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">6</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">6</div></td>
         </tr>
         <tr>
             <th></th>
@@ -2304,13 +2310,13 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: #EE0000;">stop</td>
+            <td style="color: var(--color-slice-diagram-not-selected);">stop</td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: #5E5EFF;">
+            <td style="color: var(--color-slice-diagram-selected);">
                 <div class="overflow-content">start (end)</div>
             </td>
         </tr>
@@ -2338,26 +2344,26 @@ slice "as much as possible" instead.
             <td><pre> 'g']</pre></td>
         </tr>
         <tr>
-            <th style="color: #EE0000">index</th>
+            <th style="color: var(--color-slice-diagram-not-selected)">index</th>
             <td></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">0</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">0</div></td>
             <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">1</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">1</div></td>
             <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">2</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">2</div></td>
             <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
-            <td style="color: #5E5EFF"><div class="circle-blue">3</div></td>
+            <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">3</div></td>
             <td></td>
-            <td style="color: #EE0000">4</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">4</td>
             <td></td>
-            <td style="color: #EE0000">5</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">5</td>
             <td></td>
-            <td style="color: #EE0000">6</td>
+            <td style="color: var(--color-slice-diagram-not-selected)">6</td>
         </tr>
         <tr>
             <th></th>
             <td></td>
-            <td style="color: #5E5EFF;">
+            <td style="color: var(--color-slice-diagram-selected);">
                 <div class="overflow-content">stop (beginning)</div>
             </td>
             <td></td>
@@ -2365,7 +2371,7 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: #5E5EFF;">start</td>
+            <td style="color: var(--color-slice-diagram-selected);">start</td>
             <td></td>
             <td></td>
             <td></td>
