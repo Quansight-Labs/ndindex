@@ -539,7 +539,10 @@ Thus, when it comes to indexing, all axes, even "trivial" axes, matter. It's
 sometimes a good idea to maintain the same number of dimensions in an array
 throughout a computation, even if one of them sometimes has size 1, simply
 because it means that you can index the array
-uniformly.[^size-1-dimension-footnote]
+uniformly.[^size-1-dimension-footnote] And this doens't apply just to
+indexing. Many NumPy functions reduce the number of dimensions of the output
+(for example, {external+numpy:func}`numpy.sum`), but they have a `keepdims`
+argument to leave the result as dimension 1 instead.
 
 [^size-1-dimension-footnote]: In this example, if we knew that we were always
     going to select exactly one element (say, the second one) from the first
@@ -547,16 +550,6 @@ uniformly.[^size-1-dimension-footnote]
     [](integer-indices) and [](newaxis-indices)). The advantage of this is
     that we would get an error if the first dimension of `a` doesn't actually
     have `2` elements, whereas `a[1:2]` would just silently give an [size 0 array](size-0-arrays).
-
-This also equally applies to slices that produce size 0 arrays, i.e., they
-select no elements, like
-
-```py
->>> a[3:2].shape
-(0, 2, 4)
-```
-
-See [](size-0-arrays) for a more in-depth discussion of this.
 
 There are two final facts about tuple indices that should be noted before we
 move on to the other basic index types. First, as we noticed above, **if a
