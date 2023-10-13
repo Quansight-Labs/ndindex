@@ -1864,7 +1864,26 @@ The semantics of boolean array indices are described as
 
 
 - A 0-dimensional boolean index (i.e., just the scalar `True` or `False`) is a
-  little special.
+  little special. The `np.nonzero` rule stated above does not actually apply.
+  That's because `np.nonzero` has odd behavior for 0-D arrays. `np.nonzero(a)` usually
+  returns a tuple with as many arrays as dimensions of `a`:
+
+  ```py
+  >>> np.nonzero(np.array([True, False]))
+  (array([0]),)
+  >>> np.nonzero(np.array([[True, False]]))
+  (array([0]), array([0]))
+  ```
+
+  But for a 0-D array, `np.nonzero(a)` doesn't return an empty tuple, but
+  rather the same thing as `np.nonzero(np.array([a]))`:
+
+  ```py
+  >>> np.nonzero(np.array(False))
+  (array([], dtype=int64),)
+  >>> np.nonzero(np.array(True))
+  (array([0]),)
+  ```
 
   However, the key point, that a boolean array index removes and flattens
   `idx.ndim` dimensions from `a` is still True. Here, `idx.ndim` is `0`,
@@ -1880,6 +1899,20 @@ The semantics of boolean array indices are described as
   (1, 3, 4)
   >>> a[False].shape
   (0, 3, 4)
+  ```
+
+  This breaks with what `a[np.nonzero(True)]` would give:[^nonzero-scalar-footnote]
+
+
+  [^nonzero-scalar-footnote]: But note that this also wouldn't work if
+      `np.nonzero(True)` returned the empty tuple `()`. In fact, there's no
+      generic index that `np.nonzero()` could return that would be equivalent
+      to the actual indexing behavior of a boolean scalar, especially for
+      `False`.
+
+  ```py
+  >>> a[np.nonzero(True)]
+  array([[0, 1, 2, 3]])
   ```
 
   This behavior may seem like an odd corner case, but it can come up in
