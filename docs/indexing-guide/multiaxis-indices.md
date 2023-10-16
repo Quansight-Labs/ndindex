@@ -1540,6 +1540,8 @@ array([[ 5,  4,  6,  7],
 Can you see why this works?
 ````
 
+TODO: Discuss ambiguity assigning to an integer array index.
+
 (boolean-array-indices)=
 ### Boolean Arrays
 
@@ -1571,9 +1573,9 @@ those elements are and `False` everywhere else.
 
 ```py
 >>> idx = np.array([
-... [False,  True, False],
-... [ True,  True, False],
-... [False, False, False]])
+...     [False,  True, False],
+...     [ True,  True, False],
+...     [False, False, False]])
 >>> a[idx]
 array([1, 3, 4])
 ```
@@ -1587,23 +1589,24 @@ From this we can see a few things:
   a higher dimensional shape, or for the shape of the result to be related to
   the shape of `a`. The shape of `a[idx]` when `idx` is a boolean array is
   `(n,)` where `n` is the number of `True` elements in `idx` (i.e.,
-  {external+numpy:func}`np.count_nonzero(idx) <numpy.count_nonzero>`. `n` is
+  {external+numpy:func}`np.count_nonzero(idx) <numpy.count_nonzero>`). `n` is
   always between `0` and `a.size`, inclusive.
 
-- The selected elements are "in order". Namely, they are in C order. That is,
-  C order iterates the array `a` so that the last axis varies the fastest, like
-  `(0, 0, 0)`, `(0, 0, 1)`, `(0, 0, 2)`, `(0, 1, 0)`, etc. This is also the
-  order that the elements of `a` are printed in, and corresponds to the order
-  they are selected in. Note, C ordering is always used, even when the
-  underlying memory is not C ordered (see [](c-vs-fortran-ordering) below).
+- The selected elements are "in order". Namely, they are in C order. C order
+  iterates the array `a` so that the last axis varies the fastest, like `(0,
+  0, 0)`, `(0, 0, 1)`, `(0, 0, 2)`, `(0, 1, 0)`, etc. This is also the order
+  that the elements of `a` are printed in, and corresponds to the order they
+  are selected in. Note, C ordering is always used, even when the underlying
+  memory is not C ordered (see [](c-vs-fortran-ordering) for more details on C
+  array order).
 
 Usually these details are not important. That is because an array indexed by a
 boolean array is usually only used indirectly, such as the left-hand side of
 an assignment.
 
 A typical use-case of boolean indexing is to create a boolean mask using the
-array itself with some operators that return boolean arrays, like relational
-operators, such as `==`, `>`, `!=`, and so on, logical operators, such as `&`
+array itself with some operators that return boolean arrays, such as relational
+operators like as `==`, `>`, `!=`, and so on, logical operators like `&`
 (and), `|` (or), `~` (not), and `^` (xor), and certain functions like `isnan`,
 or `isinf`.
 
@@ -1611,6 +1614,9 @@ For example, take an example array of the integers from -10 to 10
 
 ```py
 >>> a = np.arange(-10, 11)
+>>> a
+array([-10,  -9,  -8,  -7,  -6,  -5,  -4,  -3,  -2,  -1,   0,   1,   2,
+         3,   4,   5,   6,   7,   8,   9,  10])
 ```
 
 Say we want to pick the elements of `a` that are both positive and odd. The
@@ -1621,7 +1627,8 @@ mask `a % 2 == 1` represents which elements are odd. So our mask would be
 >>> mask = (a > 0) & (a % 2 == 1)
 ```
 
-(Note the careful use of parentheses. Masks must use the logical operators so
+(Note the careful use of parentheses to match the [Python operator
+precedence](). Masks must use the logical operators `&`, `|`, and `~` so
 that they can be arrays. They cannot use the Python keywords `and`, `or`, and
 `not`, which only operate on single Python booleans, not arrays.)
 
@@ -1649,7 +1656,12 @@ array([1, 3, 5, 7, 9])
 ```
 
 Suppose we wanted to set these elements of `a` to `-100` (i.e., to "mask" them
-out). This can be easily done with an indexing assignment:
+out). This can be easily done with an indexing assignment[^indexing-assignment-footnote]:
+
+[^indexing-assignment-footnote]: All the indexing rules discussed in this
+    guide apply when the indexed array is on the left-hand side of an `=`
+    assignment. The elements of the array that are selected by the index are
+    assigned in-place to the array or number on the right-hand side.
 
 ```
 >>> a[(a > 0) & (a % 2 == 1)] = -100
@@ -1683,16 +1695,15 @@ then assigned to, mutating only those elements of `a`.
 It's important to not be fooled by this way of constructing a mask. Even
 though the *expression* `(a > 0) & (a % 2 == 1)` depends on `a`, the resulting
 array itself does not---it is just an array of booleans. **Boolean array
-indexing `a[mask]`, as with [all other types of indexing](what-is-an-index),
+indexing, `a[mask]`, as with [all other types of indexing](what-is-an-index),
 does not depend on the values of the array `a`, only in the positions of its
 elements.**
 
-The expression depending on `a` but the array itself not might seem like an
-overly subtle distinction. But it matters once you realize that a mask created
-with one array can be used on another array, so long as it has the same shape.
-It's common to have multiple arrays representing different data about the same
-set of points. You may wish to select a subset of one array based on the value
-of the corresponding point in another array.
+This point might feel overly pedantic, but it matters once you realize that a
+mask created with one array can be used on another array, so long as it has
+the same shape. It's common to have multiple arrays representing different
+data about the same set of points. You may wish to select a subset of one
+array based on the value of the corresponding point in another array.
 
 For example, suppose we wanted to plot some function, like $4x\sin(x) -
 \frac{x^2}{4} - 2x$ on $[-10,10]$. We can set `x = np.linspace(-10, 10)` and
@@ -1714,7 +1725,7 @@ both. -->
    <matplotlib.collections.PathCollection object at ...>
 
 If we want to show only those x values that are positive, we could easily do
-this by modifying the ``linspace`` call that created ``x``, but what if we
+this by modifying the ``linspace`` call that created ``x``. But what if we
 want to show only those y values that are positive? The only way to do this is
 to select them using a mask:
 
@@ -1729,31 +1740,29 @@ to select them using a mask:
 
 Here we are using the mask `y > 0` to select the corresponding values from
 both the `x` *and* `y` arrays. Since the same mask is used on both arrays, the
-values corresponding to this mask in both arrays will be selected, even though
-for `x[y > 0]`, the mask itself is not strictly created *from* `x`, it still
-makes sense as a mask for the array `x`. Note that this mask selects selects a
-nontrivial subset of `x`. We are effectively using the mask created from `y`
-to invert the function.
+values corresponding to this mask in both arrays will be selected. With `x[y >
+0]`, even though the mask itself is not strictly created *from* `x`, it still
+makes sense as a mask for the array `x`.  In this case, this mask selects a
+nontrivial subset of `x`.
 
-This sort of thing comes up all the time, for example, in image processing, an
-image, in for instance, [scikit-image](https://scikit-image.org/), is
-represented as an array of pixel values. Masks can be used to select subset of
-the image, and may be constructed based on the pixel values (e.g., all red
-pixels), or based on a geometric shape independent of the pixel values (e.g.,
-a
-[circle](https://scikit-image.org/docs/stable/auto_examples/numpy_operations/plot_camera_numpy.html).
-In machine learning, cross-validation if `group` is an array with group
-numbers and `X` is an array of features with repeated measurements per group,
-one can select the features for a single group, e.g., to do cross-validation
-like `X[group == 0]`. See
-https://twitter.com/asmeurer/status/1596273431657385984 for some more
+Using a boolean array mask created from a different array is very common. For
+example, in [scikit-image](https://scikit-image.org/) an image is represented
+as an array of pixel values. Masks can be used to select subset of the image,
+and may be constructed based on the pixel values (e.g., all red pixels), or
+based on a geometric shape independent of the pixel values (e.g., a
+[circle](https://scikit-image.org/docs/stable/auto_examples/numpy_operations/plot_camera_numpy.html)).
+In machine learning, if `group` is an array with group numbers and `X` is an
+array of features with repeated measurements per group, one can select the
+features for a single group to do cross-validation like `X[group ==
+0]`. See https://twitter.com/asmeurer/status/1596273431657385984 for some more
 examples.
 
-The semantics of boolean array indices are described as
+Now for the detailed semantics of boolean array indices:
 
-- A boolean array index will remove as many dimensions as the index has, and
-  replace them with a single flat dimension which is the size of the number of
-  `True` elements in the index.
+- **A boolean array index will remove as many dimensions as the index has, and
+  replace them with a single flat dimension, which has the size of the number
+  of `True` elements in the index.** The shape of the boolean array index must
+  match the dimensions that are being replaced.
 
   For example:
 
@@ -1779,22 +1788,20 @@ The semantics of boolean array indices are described as
   ```py
   >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
   >>> a = rng.integers(0, 2, (3, 4))
-  >>> a[a==0].shape # The shape here depends on the number of elements of a equal to 0
+  >>> a[a==0].shape # Could be any size from 0 to 12
   (7,)
   ```
 
   However, even if the number of elements of an indexed array is not knowable
-  until runtime, the number of dimensions *is* knowable. That's because a
+  until runtime, the _number_ of dimensions is knowable. That's because a
   boolean mask acts as a flattening operation. The number of dimensions of the
   boolean array index are all removed from the indexed array and replaced with
-  a single dimension (whose *size*, to be sure, cannot be known unless you
-  know how many `True` elements there are in the index). The shape of the index
-  must match the dimensions that are being replaced.
+  a single dimension (the *size* of this dimension, to be sure, cannot be
+  known unless you know how many `True` elements there are in the index).
 
-- The actual order of the elements selected by a boolean array index `idx`
-  corresponds to the elements being iterated in C-order (see
-  [](c-vs-fortran-ordering)). This is true regardless of the underlying order
-  of either array. For example:
+- **The order of the elements selected by a boolean array index `idx`
+  corresponds to the elements being iterated in C-order** (see
+  [](c-vs-fortran-ordering)). For example:
 
   ```py
   >>> a = np.arange(12).reshape((3, 4))
@@ -1815,12 +1822,14 @@ The semantics of boolean array indices are described as
   order that NumPy prints them in, from left to right (ignoring the brackets
   and commas).
 
-  The actual order of a boolean mask is usually not that important. However,
-  this fact has one important implication. It turns out that a boolean array
-  index is the same as if you replaced the array with the result of
+- The actual order of a boolean mask is usually not that important. However,
+  this fact has one important implication. **A boolean array index is the same
+  as if you replaced `idx` with the result of
   {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking the
-  tuple), using the rules for [integer array indices](integer-array-indices)
-  outlined above.
+  tuple)**, using the rules for [integer array indices](integer-array-indices)
+  outlined above (although this rule *doesn't* apply to 0-dimensional
+  boolean indices, see the next bullet point).
+
 
   ```py
   >>> np.nonzero(idx)
@@ -1834,7 +1843,7 @@ The semantics of boolean array indices are described as
   dimension of `idx`. These indices each have `7` elements, one for each
   `True` element of `idx`, and they select (in C-order), the corresponding
   elements. Another way to think of this is that `idx[np.nonzero(idx)]` will
-  always return an array of `np.count_nonzero(idx)` `True`s, because
+  always return an array of (`np.count_nonzero(idx)`) `True`s, because
   `np.nonzero(idx)` is exactly the integer array indices that select the
   `True` elements of `idx`:
 
@@ -1843,11 +1852,11 @@ The semantics of boolean array indices are described as
   array([ True,  True,  True,  True,  True,  True,  True])
   ```
 
-  What that means is that all the rules that are outlined above about [integer
-  array indices](integer-array-indices), e.g., how they broadcast or combine
-  together with slices, all also apply to boolean array indices after this
-  transformation. This also specifies how boolean array indices and integer
-  array indices combine together.
+  What this all means is that all the rules that are outlined above about
+  [integer array indices](integer-array-indices), e.g., how they broadcast or
+  combine together with slices, all also apply to boolean array indices after
+  this transformation. This also specifies how boolean array indices and
+  integer array indices combine together.
 
   Effectively, a boolean array index can be combined with other boolean array
   indices or integer or integer array indices by first converting the boolean
@@ -1855,11 +1864,8 @@ The semantics of boolean array indices are described as
   that select each `True` element of the index, then broadcasting them all to
   a common shape.
 
-  What this means is that it is possible to use a boolean mask to select only
-  a subset of the dimensions of `a`: TODO
-
-  Note that none of the things stated in this bullet apply to 0-dimensional
-  boolean indices (see the next bullet).
+  The particular thing to note here is that it is possible to use a boolean
+  mask to select only a subset of the dimensions of `a`: TODO
 
   The ndindex method
   [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
