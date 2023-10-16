@@ -1214,6 +1214,8 @@ documentation):[^random-integers-footnote]
 array([100, 100, 103, 101, 102, 102, 102, 100, 101, 100])
 ```
 
+(permutation-example)=
+
 Another common option is to permute an array. An array can be randomly
 permuted with {external+numpy:meth}`numpy.random.Generator.permutation`. But
 what if we want to permute two arrays with the same permutation? We can
@@ -1410,19 +1412,20 @@ Now a few advanced notes about integer array indexing:
   one, but they are mostly allowed for semantic completeness.
 
 - Finally, if the [slice](slices-docs), [ellipsis](ellipsis-indices), or
-  [newaxis](newaxis-indices) indices are *in between* the
-  [integer](integer-indices) or array indices, then something more strange
-  happens. The two index types still operate "independently", but instead of
-  the resulting array having the dimensions corresponding to the location of
-  the indices, like in the previous bullet (and, indeed, as indexing works in
-  every other instance), the shape corresponding to the (broadcasted) array
-  indices (including integer indices) is *prepended* to the shape
-  corresponding to the non-array indices. This is because there is inherent
-  ambiguity in where these dimensions should be placed in the final shape. An
-  example demonstrates this most clearly:
+  [newaxis](newaxis-indices) indices are *in between* the integer array
+  indices, then something more strange happens. The two index types still
+  operate "independently", but instead of the resulting array having the
+  dimensions corresponding to the location of the indices, like in the
+  previous bullet (and, indeed, as indexing works in every other instance),
+  the shape corresponding to the (broadcasted) array indices (including
+  integer indices) is *prepended* to the shape corresponding to the non-array
+  indices. This is because there is inherent ambiguity in where these
+  dimensions should be placed in the final shape.
+
+  An example demonstrates this most clearly:
 
   ```py
-  >>> a = np.arange(120).reshape((2, 3, 4, 5))
+  >>> a = np.empty((2, 3, 4, 5))
   >>> a.shape
   (2, 3, 4, 5)
   >>> idx = np.zeros((10, 20), dtype=int)
@@ -1432,15 +1435,16 @@ Now a few advanced notes about integer array indexing:
   (10, 20, 3, 4)
   ```
 
-  Here the integer array index shape, `(10, 20)` comes first in the result
-  array, the the shape corresponding to the "rest", `(3, 4)` comes last.
+  Here the (broadcasted) integer array index shape `(10, 20)` comes first in
+  the result array and shape corresponding to the rest of the index, `(3, 4)`,
+  comes last.
 
   If you find yourself running into this behavior, chances are you would be
   better off rewriting the indexing operation to be simpler. It's considered
   to be a design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and
   it's not one that any other Python array library has copied. ndindex will
-  raise an exception on indices like these, because I don't want to deal with
-  implementing this obscure logic.
+  raise a `NotImplementedError` exception on indices like these, because I
+  don't want to deal with implementing this obscure logic.
 
 [^advanced-indexing-design-flaw-footnote]: Travis Oliphant told me privately
     that "somebody should have slapped me with a wet fish" when he designed
@@ -1485,7 +1489,8 @@ array([[ 0,  1,  2,  3],
 ```
 
 We can generate permutations for the two axes using
-{external+numpy:meth}`numpy.random.Generator.permutation` as above:
+{external+numpy:meth}`numpy.random.Generator.permutation` as
+[above](permutation-example):
 
 ```py
 >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
