@@ -37,13 +37,13 @@ and use the exact same semantics as them for which elements they select.
   [`ndindex.Integer`](ndindex.integer.Integer).
 - [Slices](slices-docs), corresponding to [`ndindex.Slice`](ndindex.slice.Slice).
 
-### Basic multi-axis indices
+### Basic multidimensional indices
 
-These are the indices that operate on multiple axes at once. These indices
-will not work on the built-in Python sequence types like `list` and `str`;
-they are only defined for NumPy arrays. However, like the basic single-axis
-indices, these indices are "basic indices", meaning that they return a
-[view](views-vs-copies) of an array.
+These are the indices that operate on multiple dimensions at once. These
+indices will not work on the built-in Python sequence types like `list` and
+`str`; they are only defined for NumPy arrays. However, like the basic
+single-axis indices, these indices are "basic indices", meaning that they
+return a [view](views-vs-copies) of an array.
 
 - [Tuples](tuple-indices), corresponding to [`ndindex.Tuple`](ndindex.tuple.Tuple).
 - [Ellipses](ellipsis-indices), corresponding to
@@ -53,8 +53,8 @@ indices, these indices are "basic indices", meaning that they return a
 
 ### Advanced indices
 
-Advanced indices operate in general on multiple axes at once. However, unlike
-the basic indices, advanced indices in NumPy always return a
+Advanced indices operate in general on multiple dimensions at once. However,
+unlike the basic indices, advanced indices in NumPy always return a
 [copy](views-vs-copies) of the array.
 
 - [Integer arrays](integer-array-indices), corresponding to
@@ -164,6 +164,6 @@ as [integer indices](integer-indices), [slices](slices-docs), and
 :hidden:
 integer-indices.md
 slices.md
-multiaxis-indices.md
+multidimensional-indices.md
 other-topics.md
 ```

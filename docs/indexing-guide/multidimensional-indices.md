@@ -1,6 +1,4 @@
-# Multiaxis Indices
-
-<!-- TODO: "multiaxis" or "multidimensional"? -->
+# Multidimensional Indices
 
 Unlike [slices](slices-docs) and [integers](integer-indices), which work not
 only on NumPy arrays but also on built-in Python sequence types such as
@@ -125,11 +123,14 @@ season. Then you would have a list of lists of lists, and your indexing
 operations would look like `[[game[0] for game in season] for season in
 scores]`.
 
-In NumPy, these different levels of nesting are called *axes*. The number of
-axes---the level of nesting---is called the number of *dimensions*. Together,
-the lengths of these lists at each level is called the *shape* of the array
-(remember that the lists at each level have to have the same number of
-elements).
+In NumPy, these different levels of nesting are called *axes* or *dimensions*.
+The number of axes---the level of nesting---is called the
+*rank*[^rank-footnote] or *dimensionality* of the array. Together, the lengths
+of these lists at each level is called the *shape* of the array (remember that
+the lists at each level have to have the same number of elements).
+
+[^rank-footnote]: Not to be confused with [mathematical definitions of
+    rank](https://en.wikipedia.org/wiki/Rank_(linear_algebra)).
 
 A NumPy array of our scores (using the last representation) looks like this
 
@@ -168,10 +169,10 @@ and the number of people (the inner axis).
 (5, 2)
 ```
 
-This is the power of multiaxis indexing in NumPy arrays. If we have a list of
+This is the power of multidimensional indexing in NumPy arrays. If we have a list of
 lists of elements, or a list of lists of lists of elements, and so on, we can
 index things at any "nesting level" equally easily. There is a small,
-reasonable restriction, namely that each "level" (dimension) of lists (axis)
+reasonable restriction, namely that each "level" of lists (axis)
 must have the same number of elements. This restriction is reasonable because
 in the real world, data tends to be tabular, like bowling scores, meaning each
 axis will naturally have the same number of elements (and even if this weren't
@@ -190,17 +191,17 @@ representation. This, along with the powerful ecosystem of libraries like
 popular and essential tool.
 
 (basic-indices)=
-## Basic Multiaxis Indices
+## Basic Multidimensional Indices
 
 (tuple-indices)=
 ### Tuples
 
-The basic building block of multiaxis indexing is the `tuple` index. A tuple
-doesn't select elements on its own. Rather, it contains other indices, which
-themselves select elements. The general rule for tuples is that each element
-of a tuple index selects the corresponding elements for the corresponding axis
-of the array (this rule is modified a little bit in the presence of ellipses
-or newaxis, as we will see below).
+The basic building block of multidimensional indexing is the `tuple` index. A
+tuple doesn't select elements on its own. Rather, it contains other indices,
+which themselves select elements. The general rule for tuples is that each
+element of a tuple index selects the corresponding elements for the
+corresponding axis of the array (this rule is modified a little bit in the
+presence of ellipses or newaxis, as we will see below).
 
 For example, let's suppose we have the 3-dimensional array `a` with shape `(3,
 2, 4)`. For simplicity, we'll define `a` as a reshaped `arange`, so that each
@@ -744,8 +745,8 @@ The rules for an ellipsis are
 (newaxis-indices)=
 ### newaxis
 
-The final basic multiaxis index type is `newaxis`. `np.newaxis` is an alias
-for `None`. Both `np.newaxis` and `None` work exactly the same, however,
+The final basic multidimensional index type is `newaxis`. `np.newaxis` is an
+alias for `None`. Both `np.newaxis` and `None` work exactly the same, however,
 `np.newaxis` is often more explicit than `None`, which may look odd in an
 index, so it's generally preferred. However, you will often see `None` used
 directly instead of `np.newaxis`, so it's important to remember that they are
@@ -924,11 +925,11 @@ array([[ 0],
 `(3, 1)` column vector.
 
 But the most common usage is due to [broadcasting](broadcasting). The key idea
-of broadcasting is that size 1 axes are not directly useful, in the sense that
+of broadcasting is that size 1 dimensions are not directly useful, in the sense that
 they could be removed without actually changing anything about the underlying
 data in the array. So they are used as a signal that that dimension can be
 repeated in operations. `newaxis` is therefore useful for inserting these size
-1 axes in situations where you want to force your data to be repeated. For
+1 dimensions in situations where you want to force your data to be repeated. For
 example, suppose we have the two arrays
 
 ```py
@@ -995,7 +996,7 @@ array([[101, 201],
        [103, 203]])
 ```
 
-Remember, as we saw [before](single-axis-tuple), size 1 axes may seem
+Remember, as we saw [before](single-axis-tuple), size 1 dimensions may seem
 redundant, but they are not a bad thing. Not only do they allow indexing an
 array uniformly, they are also very important in the way they interact with
 NumPy's broadcasting rules.

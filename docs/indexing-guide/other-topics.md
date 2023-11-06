@@ -111,10 +111,10 @@ indices](advanced-indices) (i.e., [integer array
 indices](integer-array-indices) and [boolean array
 indices](boolean-array-indices)) in NumPy that is important to make note of in
 some situations. Namely, the basic indices will always create a **view** into
-an array[^view-scalar-footnote], whereas the advanced indices will always create a
-**copy** of the underlying array. [Tuple](tuple-indices) indices (i.e.,
-multiaxis indices) will create a view if they do not contain an advanced index
-and a copy otherwise.
+an array[^view-scalar-footnote], whereas the advanced indices will always
+create a **copy** of the underlying array. [Tuple](tuple-indices) indices
+(i.e., multidimensional indices) will create a view if they do not contain an
+advanced index and a copy if they do.
 
 
 [^view-scalar-footnote]: There is one exception to this rule, which is that an
@@ -242,8 +242,9 @@ True
 ```
 
 To contrast, an advanced index will always create a copy (even if it would be
-possible to represent it with a view). This includes any [tuple index](tuple-indices) (i.e.,
-multiaxis index) that contains at least one array index.
+possible to represent it with a view). This includes any [tuple
+index](tuple-indices) (i.e., multidimensional index) that contains at least
+one array index.
 
 ```py
 >>> a = np.arange(10)

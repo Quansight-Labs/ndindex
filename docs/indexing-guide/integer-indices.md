@@ -172,7 +172,7 @@ Python. A single character is just represented as a string of length 1.
 
 For NumPy arrays, an integer index always indexes a single axis of the array.
 By default, it indexes the first axis, unless it is part of a larger
-[multidimensional index](multiaxis-indices). The resulting array is always an
+[multidimensional index](multidimensional-indices). The resulting array is always an
 array with the dimensionality reduced by 1, namely, the axis being indexed is
 removed from the resulting shape. This is contrast with [slices](slices-docs), which always
 [maintain the dimension being sliced](subarray).
@@ -194,7 +194,7 @@ list-of-lists analogy. An integer index on the first axis `a[i]` picks the
 index `i` sub-list at the top level of sub-list nesting, and in general, an
 integer index `i` on axis `k` picks the sub-lists of index `i` at the `k`-th
 nesting level.[^nesting-level] See the [](what-is-an-array) section on the
-[](multiaxis-indices) page for more details on this analogy. For example, if
+[](multidimensional-indices) page for more details on this analogy. For example, if
 `l` is a nested list of lists
 
 [^nesting-level]: Thinking about the `k`-th level of nesting gets confusing
