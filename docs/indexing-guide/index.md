@@ -108,7 +108,7 @@ array([[1],
 
 Now take another array, `b`, with the exact same shape `(2, 3, 2)`, but
 completely different entries, say, strings. If we apply the same index `0,
-..., 1:` to be, it will choose the exact same corresponding elements.
+..., 1:` to `b`, it will choose the exact same corresponding elements.
 
 ```py
 >>> b = np.array([[['A', 'B'], ['C', 'D'], ['E', 'F']], [['G', 'H'], ['I', 'J'], ['K', 'L']]])
