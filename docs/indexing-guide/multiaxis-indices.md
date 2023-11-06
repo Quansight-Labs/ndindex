@@ -1755,8 +1755,7 @@ based on a geometric shape independent of the pixel values (e.g., a
 In machine learning, if `group` is an array with group numbers and `X` is an
 array of features with repeated measurements per group, one can select the
 features for a single group to do cross-validation like `X[group ==
-0]`. See https://twitter.com/asmeurer/status/1596273431657385984 for some more
-examples.
+0]`.
 
 Now for the detailed semantics of boolean array indices:
 
