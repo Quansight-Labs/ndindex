@@ -1383,6 +1383,46 @@ Now a few advanced notes about integer array indexing:
     None
     ```
 
+- As with all index types discussed in this guide, an integer array index can
+  be used on the left-hand side of an assignment. This can be useful as it
+  lets you surgically inject new elements into your array.
+
+  ```py
+  >>> a = np.array([100, 101, 102, 103]) # as above
+  >>> idx = np.array([0, 3])
+  >>> a[idx] = np.array([200, 203])
+  >>> a
+  array([200, 101, 102, 203])
+  ```
+
+  However, be careful, as there is inherent ambiguity here if your index array
+  contains duplicate elements. For example, here we are saying to set index
+  `0` to both `1` and `3`:
+
+  ```py
+  >>> a = np.array([100, 101, 102, 103]) # as above
+  >>> idx = np.array([0, 1, 0])
+  >>> a[idx] = np.array([1, 2, 3])
+  >>> a
+  array([  3,   2, 102, 103])
+  ```
+
+  The end result was `3`. This happened because `3` corresponded to the last
+  `0` in the index array, but importantly, this is just an implementation
+  detail. **NumPy makes no guarantees about the order in which index elements
+  are assigned to.**[^cupy-assignment-footnote] If you are using an integer
+  array as an assignment index, it's best to be careful to avoid duplicate
+  entries in the index (or at least ensure that duplicate entries are always
+  assigned the same value).
+
+  [^cupy-assignment-footnote]: For example, in [CuPy](https://cupy.dev/),
+    which implements the NumPy API on top of GPUs, [the behavior of this sort
+    of thing is
+    undefined](https://docs.cupy.dev/en/stable/reference/generated/cupy.ndarray.html#cupy.ndarray.__setitem__).
+    This is because CuPy parallelizes the assignment operation on the GPU, and
+    the element that gets assigned to the duplicate index "last" becomes
+    dependent on a race condition.
+
 - When one or more [slice](slices-docs), [ellipsis](ellipsis-indices), or
   [newaxis](newaxis-indices) indexes come before or after all the
   [integer](integer-indices) and integer array indices, the two sets of
@@ -1564,8 +1604,6 @@ array([[ 5,  4,  6,  7],
 
 Can you see why this works?
 ````
-
-TODO: Discuss ambiguity assigning to an integer array index.
 
 (boolean-array-indices)=
 ### Boolean Arrays
