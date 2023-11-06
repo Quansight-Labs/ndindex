@@ -574,13 +574,11 @@ True
 ```
 
 Operating on memory that is contiguous allows the CPU to place the entire
-memory in the cache at once, and as a result is more performant. Additionally,
-some operations on contiguous memory can be performed more efficiently using
-[SIMD]() operations. This won't be visible for our example `a` above, which is
-small enough to fix in cache entirely, but matters for larger arrays. Compare
-the time to sum along `a[0]` or `a[..., 0]` for C and Fortran ordered arrays
-for a 3-dimensional array with a million elements (using
-[IPython](https://ipython.org/)'s `%timeit`):
+memory in the cache at once, and as a result is more performant. This won't be
+visible for our example `a` above, which is small enough to fix in cache
+entirely, but matters for larger arrays. Compare the time to sum along `a[0]`
+or `a[..., 0]` for C and Fortran ordered arrays for a 3-dimensional array with
+a million elements (using [IPython](https://ipython.org/)'s `%timeit`):
 
 ```
 In [1]: import numpy as np
