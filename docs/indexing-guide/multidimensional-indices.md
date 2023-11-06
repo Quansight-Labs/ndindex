@@ -23,7 +23,7 @@ Say, these values correspond to your bowling scores.
 >>> scores = [70, 65, 71, 80, 73]
 ```
 
-From what we [learned before](slices-docs), we can now index this list with
+From [what we learned before](slices-docs), we can now index this list with
 integers or slices to get some subsets of it.
 
 ```py
@@ -126,8 +126,8 @@ scores]`.
 In NumPy, these different levels of nesting are called *axes* or *dimensions*.
 The number of axes---the level of nesting---is called the
 *rank*[^rank-footnote] or *dimensionality* of the array. Together, the lengths
-of these lists at each level is called the *shape* of the array (remember that
-the lists at each level have to have the same number of elements).
+of these lists at each level are called the *shape* of the array (remember
+that the lists at each level have to have the same number of elements).
 
 [^rank-footnote]: Not to be confused with [mathematical definitions of
     rank](https://en.wikipedia.org/wiki/Rank_(linear_algebra)).
@@ -170,7 +170,7 @@ and the number of people (the inner axis).
 ```
 
 This is the power of multidimensional indexing in NumPy arrays. If we have a list of
-lists of elements, or a list of lists of lists of elements, and so on, we can
+lists of numbers, or a list of lists of lists of numbers, and so on, we can
 index things at any "nesting level" equally easily. There is a small,
 reasonable restriction, namely that each "level" of lists (axis)
 must have the same number of elements. This restriction is reasonable because
@@ -183,21 +183,28 @@ The indexing semantics are only a small part of what makes NumPy arrays so
 powerful. They have many other advantages as well, which are unrelated to
 indexing. They operate on contiguous memory using native machine datatypes,
 which makes them very fast. They can be manipulated using array expressions
-with [broadcasting semantics](broadcasting). For example, you can easily add a
+with [broadcasting semantics](broadcasting); for example, you can easily add a
 handicap to the scores array with something like `scores + np.array([124,
 95])`, which would itself be a nightmare using the list of lists
 representation. This, along with the powerful ecosystem of libraries like
-`scipy`, `matplotlib`, and the scikits, are really what have made NumPy such a
-popular and essential tool.
+`scipy`, `matplotlib`, and thousands of others, are what have made NumPy such
+a popular and essential tool.
 
 (basic-indices)=
 ## Basic Multidimensional Indices
+
+First let's look at the basic multidimensional indices. These are the index
+types that, unlike [integers](integer-indices) and [slices](slices), only make
+sense for multidimensional arrays (and in particular, they will not work on
+built-in Python types like lists and strings). There are three types of basic
+multidimensional indices, [tuples](tuple-indices),
+[ellipses](ellipsis-indices), and [newaxis](newaxis-indices) (or `None`).
 
 (tuple-indices)=
 ### Tuples
 
 The basic building block of multidimensional indexing is the `tuple` index. A
-tuple doesn't select elements on its own. Rather, it contains other indices,
+tuple index doesn't select elements on its own. Rather, it contains other indices,
 which themselves select elements. The general rule for tuples is that each
 element of a tuple index selects the corresponding elements for the
 corresponding axis of the array (this rule is modified a little bit in the
@@ -1011,11 +1018,17 @@ in that they always return a copy (see [](views-vs-copies)). Advanced indices
 allow selecting arbitrary parts of an array, in ways that are impossible with
 the basic index types. Advanced indexing is also sometimes called "fancy
 indexing" or indexing by arrays, as the indices themselves in advanced
-indexing are arrays:  integer arrays and boolean arrays. Using an array that
-does not have an integer or boolean dtype as an index is an error (in this
-section, do not confuse the *array being indexed* with the *array that is the
-index*. The former can be anything and have any dtype. It is only the latter
-that is restricted to being integer or boolean).
+indexing are arrays:  [integer arrays](integer-array-indices) and [boolean
+arrays](boolean-array-indices).
+
+Using an array that does not have an integer
+or boolean dtype as an index is an error.
+
+```{note}
+In this section, do not confuse the *array being indexed* with the *array that
+is the index*. The former can be anything and have any dtype. It is only the
+latter that is restricted to being integer or boolean.
+```
 
 (integer-array-indices)=
 ### Integer Arrays
@@ -1037,7 +1050,7 @@ Let's suppose we wish to construct from this array, the 2-D array
  [ 103, 100, 102 ]]
 ```
 
-using **only indexing operations**.
+using only indexing operations.
 
 It should hopefully be clear that there's no way we could possibly construct
 this array as `a[idx]`, using only the index types we've seen so far. For one
@@ -1078,17 +1091,17 @@ array([[100, 102, 100],
        [103, 100, 102]])
 ```
 
-This is how integer array indices work. An integer array index can construct
+This is how integer array indices work. **An integer array index can construct
 *arbitrary* new arrays with elements from `a`, with the elements in any order
 and even repeated, simply by indexing where each element of the new array
-comes from.
+comes from.**
 
 Note that `a[idx]` above is not the same size as `a` at all. `a` has 4
 elements and is 1-dimensional, whereas `a[idx]` has 6 elements and is
 2-dimensional. `a[idx]` also contains some duplicate elements from `a`, and
-some elements which aren't selected at all. Indeed, we could take *any*
-integer array of any shape, and as long as the elements are between 0 and 3,
-`a[idx]` would create a new array with the same shape as `idx` with
+there are some elements which aren't selected at all. Indeed, we could take
+*any* integer array of any shape, and as long as the elements are between 0
+and 3, `a[idx]` would create a new array with the same shape as `idx` with
 corresponding elements selected from `a`.
 
 A useful way to think about integer array indexing is that it generalizes
@@ -1131,7 +1144,7 @@ It would appear that this limits the ability to arbitrarily shuffle elements
 of `a` using integer indexing. For instance, suppose we wanted to create the
 array `[105, 100]` from the above `a`. Based on the above examples, it might
 not seem possible. The elements `105` and `100` are not in the same row or
-column of `a`. However, this is doable, by providing multiple integer array
+column of `a`. However, this is doable by providing multiple integer array
 indices.
 
 When multiple integer array indices are provided, the elements of each index
@@ -1210,23 +1223,27 @@ documentation):[^random-integers-footnote]
 >>> k = 10
 >>> a = np.array([100, 101, 102, 103]) # as above
 >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
->>> idx = rng.integers(0, a.size, k) # rng.integers() automatically excludes the upper bound
+>>> idx = rng.integers(0, a.size, k) # rng.integers() excludes the upper bound
+>>> idx
+array([0, 0, 3, 1, 2, 2, 2, 0, 1, 0])
 >>> a[idx]
 array([100, 100, 103, 101, 102, 102, 102, 100, 101, 100])
 ```
 
 (permutation-example)=
 
-Another common option is to permute an array. An array can be randomly
-permuted with {external+numpy:meth}`numpy.random.Generator.permutation`. But
-what if we want to permute two arrays with the same permutation? We can
-compute a permutation index and apply it to both arrays. For a 1-D array `a`
-of size $n$, a permutation index is just a permutation of the index
-`np.arange(k)`, which itself is the identity permutation on `a`:
+Another common use-case of integer array indexing is to permute an array. An
+array can be randomly permuted with
+{external+numpy:meth}`numpy.random.Generator.permutation`. But what if we want
+to permute two arrays with the same permutation? We can compute a permutation
+index and apply it to both arrays. For a 1-D array `a` of size $n$, a
+permutation index is just a permutation of the index `np.arange(k)`, which
+itself is the [identity
+permutation](https://en.wikipedia.org/wiki/identity_permutation) on `a`:
 
 ```py
 >>> a = np.array([100, 101, 102, 103]) # as above
->>> b = np.array([200, 201, 202, 203])
+>>> b = np.array([200, 201, 202, 203]) # another array
 >>> identity = np.arange(a.size)
 >>> a[identity]
 array([100, 101, 102, 103])
@@ -1255,16 +1272,19 @@ Now a few advanced notes about integer array indexing:
   any negative indices, you can use the ndindex
   [`reduce()`](ndindex.IntegerArray.reduce) method with a shape.
 
-- You can use a list instead of an array to represent an array. However, be
-  careful, as versions of NumPy prior to
-  [1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
-  treated a single list as a tuple index rather than as an array, which has a
-  different meaning. Using a list is useful if you are writing an array index
-  by hand, but in all other cases, it is better to use an actual array
+- You can use a list instead of an array to represent an
+  array.[^lists-footnote]. Using a list is useful if you are writing an array
+  index by hand, but in all other cases, it is better to use an actual array
   instead. This will perform basic type checking (like that the shape and
   dtype are correct) when the index array is created rather than when the
   indexing happens. In most real-world use-cases, the index itself is
   constructed from some other array method.
+
+  [^lists-footnote]: Beware that [versions of NumPy prior to
+      1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
+      treated a single list as a [tuple index](tuple-indices) rather than as
+      an array.
+
 
   ```py
   >>> a = np.array([100, 101, 102, 103]) # as above
@@ -1275,12 +1295,10 @@ Now a few advanced notes about integer array indexing:
   array([100, 101, 103])
   ```
 
-  [`ndindex.ndindex()`](ndindex.ndindex) will always parse a list as an array.
-
-- Strictly speaking, the integer arrays only need to be able to broadcast
-  together to the same shape.  This is useful if the index array would
-  otherwise be repeated in a given dimension (see
-  [broadcasting](broadcasting)).
+- The integer arrays in an index need to either be the same shape or to be
+  able to [broadcast](broadcasting) together to the same shape. The
+  broadcasting behavior is useful if the index array would otherwise be
+  repeated in a given dimension.
 
   It also means that if you mix an integer array index with a single
   [integer](integer-indices) index, it is the same as if you replaced the
@@ -1344,9 +1362,8 @@ Now a few advanced notes about integer array indexing:
 
   The ndindex method
   [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
-  [`expand()`](ndindex.Tuple.expand)) will broadcast array indices together,
-  into a canonical form, since an index is always equivalent to one where the
-  arrays (and integers) are broadcased together.
+  [`expand()`](ndindex.Tuple.expand)) will broadcast array indices together
+  into a canonical form.
 
 [^integer-scalar-footnote]: In fact, if the integer array index itself has
     shape `()`, then the behavior is identical to simply using an `int` with
@@ -1367,13 +1384,12 @@ Now a few advanced notes about integer array indexing:
     ```
 
 - When one or more [slice](slices-docs), [ellipsis](ellipsis-indices), or
-  [newaxis](newaxis-indices) index comes before or after all the
-  [integer](integer-indices) (which remember are treated the same as 0-D
-  arrays) and array indices, the two sets of indices operate independently of
-  one another. The slices and ellipses select the corresponding axes and
-  newaxes add new axes to the corresponding locations, and the the integer
-  array indices select the elements on their respective axes, as described
-  above.
+  [newaxis](newaxis-indices) indexes come before or after all the
+  [integer](integer-indices) and integer array indices, the two sets of
+  indices operate independently of one another. The slices and ellipses select
+  the corresponding axes and newaxes add new axes to the corresponding
+  locations, and the the integer array indices select the elements on their
+  respective axes, as described above.
 
   For example, consider:
 
@@ -1445,11 +1461,16 @@ Now a few advanced notes about integer array indexing:
   to be a design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and
   it's not one that any other Python array library has copied. ndindex will
   raise a `NotImplementedError` exception on indices like these, because I
-  don't want to deal with implementing this obscure logic.
+  don't want to deal with implementing this obscure logic.[^ndindex-advanced-indexing-design-flaw-footnote]
 
-[^advanced-indexing-design-flaw-footnote]: Travis Oliphant told me privately
-    that "somebody should have slapped me with a wet fish" when he designed
-    this.
+[^advanced-indexing-design-flaw-footnote]: Travis Oliphant, the original
+    creator of NumPy, told me privately that "somebody should have slapped me
+    with a wet fish" when he designed this.
+
+[^ndindex-advanced-indexing-design-flaw-footnote]: I might accept a pull
+    request implementing it, but I'm not going to do it myself.
+
+#### Exercise
 
 Given the above, you should be able to do the following exercise: how might
 you randomly permute a 2-D array, using
@@ -1464,18 +1485,21 @@ For example, the array
 
 
 ```py
-array([[ 0,  1,  2,  3],
-       [ 4,  5,  6,  7],
-       [ 8,  9, 10, 11]])
+a = array([[ 0,  1,  2,  3],
+           [ 4,  5,  6,  7],
+           [ 8,  9, 10, 11]])
 ```
 
 Might be permuted to
 
 ```py
-array([[ 5,  4,  6,  7],
-       [ 1,  0,  2,  3],
-       [ 9,  8, 10, 11]])
+a_perm = array([[ 5,  4,  6,  7],
+                [ 1,  0,  2,  3],
+                [ 9,  8, 10, 11]])
 ```
+
+(note this isn't a full permutation of the array. For instance, the first row
+`[5, 4, 7, 6]` contains only elements from the second row of `a`)
 
 ````{dropdown} Click here to show the solution
 
@@ -1523,7 +1547,7 @@ array([[ 5,  4,  6,  7],
 ```
 
 You can check that this is a permutation of `a` where each axis is permuted
-independently.[^random-permuted-footnote]
+independently.
 
 As an extra bonus, here's how we can interpret this as a multiplication by
 permutation matrices, using the same indices (but of course, simply permuting
