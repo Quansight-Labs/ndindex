@@ -1628,9 +1628,10 @@ mask `a % 2 == 1` represents which elements are odd. So our mask would be
 ```
 
 (Note the careful use of parentheses to match the [Python operator
-precedence](). Masks must use the logical operators `&`, `|`, and `~` so
-that they can be arrays. They cannot use the Python keywords `and`, `or`, and
-`not`, which only operate on single Python booleans, not arrays.)
+precedence](https://docs.python.org/3/reference/expressions.html#operator-precedence).
+Masks must use the logical operators `&`, `|`, and `~` so that they can be
+arrays. They cannot use the Python keywords `and`, `or`, and `not`, which only
+operate on single Python booleans, not arrays.)
 
 The `mask` is just an array of booleans:
 
