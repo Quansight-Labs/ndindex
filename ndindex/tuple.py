@@ -1,4 +1,5 @@
 import sys
+import itertools
 
 from .ndindex import NDIndex, ndindex
 from .subindex_helpers import subindex_slice
@@ -740,6 +741,17 @@ class Tuple(NDIndex):
             return 0 in self.newshape(shape)
 
         return any(i.isempty() for i in self.args)
+
+    def selected_indices(self, shape):
+        shape = asshape(shape)
+        idx = self.expand(shape)
+        args = [i for i in idx.args if i not in [None, True]]
+        # boolean scalar
+        if False in args:
+            return
+        for i in itertools.product(*[arg.selected_indices(shape, axis=axis)
+                                     for axis, arg in enumerate(args)]):
+            yield Tuple(*i).reduce()
 
 # Imports at the bottom to avoid circular import issues
 from .array import ArrayIndex

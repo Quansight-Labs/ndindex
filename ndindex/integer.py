@@ -154,6 +154,13 @@ class Integer(NDIndex):
 
         return False
 
+    def selected_indices(self, shape, axis=None):
+        if axis is None:
+            yield from self.expand(shape).selected_indices(shape)
+        else:
+            shape = asshape(shape, axis=axis)
+            yield self
+
     def __eq__(self, other):
         if isinstance(other, Integer):
             return self.args == other.args
@@ -165,6 +172,7 @@ class Integer(NDIndex):
 
     def __hash__(self):
         return super().__hash__()
+
 
 # Imports at the bottom to avoid circular import issues
 from .ndindex import ndindex

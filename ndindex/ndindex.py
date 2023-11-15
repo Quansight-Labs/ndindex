@@ -598,6 +598,52 @@ class NDIndex(ImmutableObject):
         """
         return self
 
+    def selected_indices(self, shape):
+        """
+        Return an iterator over all indices that are selected by `self` on an
+        array of shape `shape`.
+
+        The result is a set of indices `i` such that `[a[i] for i in
+        idx.selected_indices(a.shape)]` is all the elements of `a[idx]`. The
+        indices are all iterated over in C (i.e., row major) order.
+
+        >>> from ndindex import Slice, Tuple
+        >>> idx = Slice(5, 10)
+        >>> list(idx.selected_indices(20))
+        [5, 6, 7, 8, 9]
+        >>> idx = Tuple(Slice(5, 10), Slice(0, 2))
+        >>> list(idx.selected_indices((20, 3)))
+        [(5, 0), (5, 1), (6, 0), (6, 1), (7, 0), (7, 1), (8, 0), (8, 1), (9, 0), (9, 1)]
+
+        To correspond these indices to the elements of `a[idx]`, you can use
+        `iter_indices(idx.newshape(shape))`, since both iterators iterate the
+        indices in C order.
+
+        >>> from ndindex import iter_indices
+        >>> idx = Tuple(Slice(3, 5), Slice(0, 2))
+        >>> shape = (5, 5)
+        >>> import numpy as np
+        >>> a = np.arange(25).reshape(shape)
+        >>> for a_idx, (new_idx,) in zip(
+        ...    idx.selected_indices(shape),
+        ...    iter_indices(idx.newshape(shape))):
+        ...        print(a_idx, new_idx, a[a_idx.raw], a[idx.raw][new_idx.raw])
+        Tuple(3, 0) Tuple(0, 0) 15 15
+        Tuple(3, 1) Tuple(0, 1) 16 16
+        Tuple(4, 0) Tuple(1, 0) 20 20
+        Tuple(4, 1) Tuple(1, 1) 21 21
+
+        See Also
+        ========
+
+        ndindex.iter_indices:
+            An iterator of indices to select every element for arrays of a given shape.
+        ndindex.ChunkSize.as_subchunks:
+            A high-level iterator that efficiently gives only those chunks
+            that intersect with a given index
+        """
+        return self.expand(shape).selected_indices(shape)
+
 def operator_index(idx):
     """
     Convert `idx` into an integer index using `__index__()` or raise
