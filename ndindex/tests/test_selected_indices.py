@@ -1,5 +1,3 @@
-from pytest import raises
-
 from numpy import arange
 
 from hypothesis import given

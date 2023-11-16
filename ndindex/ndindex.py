@@ -598,7 +598,7 @@ class NDIndex(ImmutableObject):
         """
         return self
 
-    def selected_indices(self, shape):
+    def selected_indices(self, shape, axis=0):
         """
         Return an iterator over all indices that are selected by `self` on an
         array of shape `shape`.
