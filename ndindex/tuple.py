@@ -746,6 +746,17 @@ class Tuple(NDIndex):
         shape = asshape(shape)
         idx = self.expand(shape)
 
+        def _zipped_array_indices(array_indices, shape, axis=0):
+            return zip(*[i.selected_indices(shape, axis=axis+j)
+                            for j, i in enumerate(array_indices)])
+
+        def _flatten(l):
+            for element in l:
+                if isinstance(element, tuple):
+                    yield from element
+                else:
+                    yield element
+
         # We need to zip all array indices into a single iterator.
         iterators = []
         array_indices = []
@@ -776,18 +787,7 @@ class Tuple(NDIndex):
                                                    shape, axis=axis))
 
         for i in itertools.product(*iterators):
-            yield Tuple(*flatten(i)).reduce()
-
-def flatten(l):
-    for element in l:
-        if isinstance(element, tuple):
-            yield from element
-        else:
-            yield element
-
-def _zipped_array_indices(array_indices, shape, axis=0):
-    return zip(*[i.selected_indices(shape, axis=axis+j)
-                    for j, i in enumerate(array_indices)])
+            yield Tuple(*_flatten(i)).reduce()
 
 # Imports at the bottom to avoid circular import issues
 from .array import ArrayIndex
