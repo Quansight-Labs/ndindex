@@ -233,6 +233,7 @@ href="https://quansight-labs.github.io/ndindex//">the main ndindex documentation
 
 redirects = {
     "slices": "indexing-guide/slices.html",
+    "api": "api/index.html",
 }
 
 
