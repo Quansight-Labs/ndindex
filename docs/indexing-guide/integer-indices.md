@@ -9,10 +9,21 @@ and `str`, as well as NumPy arrays.
 (prototype-example)=
 Let's use as an example this prototype list:
 
-$$
-a = [\mathtt{\textsf{'}a\textsf{'}},\ \mathtt{\textsf{'}b\textsf{'}},\ \mathtt{\textsf{'}c\textsf{'}},\
-\mathtt{\textsf{'}d\textsf{'}},\ \mathtt{\textsf{'}e\textsf{'}},\ \mathtt{\textsf{'}f\textsf{'}},\ \mathtt{\textsf{'}g\textsf{'}}]
-$$
+<div class="slice-diagram">
+  <table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td><pre>'b',</pre></td>
+      <td><pre>'c',</pre></td>
+      <td><pre>'d',</pre></td>
+      <td><pre>'e',</pre></td>
+      <td><pre>'f',</pre></td>
+      <td><pre>'g']</pre></td>
+    </tr>
+  </table>
+</div>
 
 The list `a` has 7 elements.
 
@@ -39,23 +50,32 @@ indices[^nonnegative]. For example, `a[3]` would pick the *fourth* element of
 [^nonnegative]: In this guide, "*nonnegative*" means $\geq 0$ and
     "*negative*" means $< 0$.
 
-<div style="text-align:center">
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[3] == 'd'</code>
-$$
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{0\phantom{,}}
-    & \color{#EE0000}{1\phantom{,}}
-    & \color{#EE0000}{2\phantom{,}}
-    & \color{#5E5EFF}3{\phantom{,}}
-    & \color{#EE0000}{4\phantom{,}}
-    & \color{#EE0000}{5\phantom{,}}
-    & \color{#EE0000}{6\phantom{,}}\\
-\end{array}
-\end{aligned}
-$$
+  <table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td><pre> 'b',</pre></td>
+      <td><pre> 'c',</pre></td>
+      <td><pre> 'd',</pre></td>
+      <td><pre> 'e',</pre></td>
+      <td><pre> 'f',</pre></td>
+      <td><pre> 'g']</pre></td>
+    </tr>
+    <tr>
+      <th style="color:var(--color-slice-diagram-not-selected);">index</th>
+      <td></td>
+      <td style="color:var(--color-slice-diagram-not-selected);">0</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">1</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">2</td>
+      <td style="color:var(--color-slice-diagram-selected);">3</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">4</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">5</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">6</td>
+    </tr>
+  </table>
 </div>
 
 ```py
@@ -70,28 +90,38 @@ practice, but doing so is essential to becoming an effective Python
 programmer, especially if you are planning to work with arrays.
 
 For *negative* integers, indices index from the end of the list. These indices
-are necessarily 1-based (or rather, −1-based), since `0` already refers to the
-first element of the list. `-1` chooses the last element, `-2` the
+are necessarily 1-based (or rather, &minus;1-based), since `0` already refers
+to the first element of the list. `-1` chooses the last element, `-2` the
 second-to-last, and so on. For example, `a[-3]` picks the *third-to-last*
 element of `a`, in this case, `'e'`:
 
-<div style="text-align:center">
+
+<div class="slice-diagram">
 <code style="font-size: 16pt;">a[-3] == 'e'</code>
-$$
-\begin{aligned}
-\begin{array}{r c c c c c c c}
-a = & [\mathtt{\textsf{'}a\textsf{'}}, & \mathtt{\textsf{'}b\textsf{'}}, & \mathtt{\textsf{'}c\textsf{'}}, & \mathtt{\textsf{'}d\textsf{'}}, & \mathtt{\textsf{'}e\textsf{'}}, & \mathtt{\textsf{'}f\textsf{'}}, & \mathtt{\textsf{'}g\textsf{'}}]\\
-\color{#EE0000}{\text{index}}
-    & \color{#EE0000}{-7\phantom{,}}
-    & \color{#EE0000}{-6\phantom{,}}
-    & \color{#EE0000}{-5\phantom{,}}
-    & \color{#EE0000}{-4\phantom{,}}
-    & \color{#5E5EFF}{-3\phantom{,}}
-    & \color{#EE0000}{-2\phantom{,}}
-    & \color{#EE0000}{-1\phantom{,}}\\
-\end{array}
-\end{aligned}
-$$
+  <table>
+    <tr>
+      <td><pre>a</pre></td>
+      <td><pre>=</pre></td>
+      <td><pre>['a',</pre></td>
+      <td><pre> 'b',</pre></td>
+      <td><pre> 'c',</pre></td>
+      <td><pre> 'd',</pre></td>
+      <td><pre> 'e',</pre></td>
+      <td><pre> 'f',</pre></td>
+      <td><pre> 'g']</pre></td>
+    </tr>
+    <tr>
+      <th style="color:var(--color-slice-diagram-not-selected);">index</th>
+      <td></td>
+      <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">&minus;5</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">&minus;4</td>
+      <td style="color:var(--color-slice-diagram-selected);">&minus;3</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">&minus;2</td>
+      <td style="color:var(--color-slice-diagram-not-selected);">&minus;1</td>
+    </tr>
+  </table>
 </div>
 
 ```py
