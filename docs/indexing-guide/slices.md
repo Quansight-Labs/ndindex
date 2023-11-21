@@ -551,10 +551,10 @@ index `3`, but not including `3` (see [](negative-steps) below).
       <td></td>
       <td><div class="circle-red" style="color: var(--color-slice-diagram-not-selected)">3</div></td>
       <td class="left-arrow-cell"><div style="font-size: smaller; transform:
-translateY(-12px) translateX(3px)">-1</div></td>
+translateY(-12px) translateX(3px)">&minus;1</div></td>
       <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">4</div></td>
       <td class="left-arrow-cell"><div style="font-size: smaller; transform:
-translateY(-12px) translateX(3px)">-1</div></td>
+translateY(-12px) translateX(3px)">&minus;1</div></td>
       <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">5</div></td>
       <td></td>
       <td style="color: var(--color-slice-diagram-not-selected)">6</td>
@@ -818,10 +818,10 @@ reasons why this way of thinking creates more confusion than it removes.
         <td></td>
         <td><div class="circle-red" style="color: var(--color-slice-diagram-not-selected)">3</div></td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
-  translateY(-12px) translateX(3px)">-1</div></td>
+  translateY(-12px) translateX(3px)">&minus;1</div></td>
         <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">4</div></td>
         <td class="left-arrow-cell"><div style="font-size: smaller; transform:
-  translateY(-12px) translateX(3px)">-1</div></td>
+  translateY(-12px) translateX(3px)">&minus;1</div></td>
         <td><div class="circle-blue" style="color: var(--color-slice-diagram-selected)">5</div></td>
         <td></td>
         <td style="color: var(--color-slice-diagram-not-selected)">6</td>
@@ -896,19 +896,19 @@ reasons why this way of thinking creates more confusion than it removes.
       <tr>
         <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;5</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;4</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;3</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;2</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;1</td>
         <td></td>
         <td style="color:var(--color-slice-diagram-not-selected);">0</td>
       </tr>
@@ -976,21 +976,21 @@ reasons why this way of thinking creates more confusion than it removes.
       <tr>
         <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-8</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;8</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;5</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;4</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;3</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;2</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;1</td>
       </tr>
     </table>
   </div>
@@ -1056,21 +1056,21 @@ reasons why this way of thinking creates more confusion than it removes.
       <tr>
         <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-8</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;8</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;5</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;4</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;3</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;2</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;1</td>
       </tr>
     </table>
   </div>
@@ -1124,19 +1124,19 @@ reasons why this way of thinking creates more confusion than it removes.
       <tr>
         <th style="color:var(--color-slice-diagram-not-selected);">index</th>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;5</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-4</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;4</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-3</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;3</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-selected);">-2</td>
+        <td style="color:var(--color-slice-diagram-selected);">&minus;2</td>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;1</td>
         <td></td>
         <td style="color:var(--color-slice-diagram-not-selected);">0</td>
       </tr>
@@ -1251,13 +1251,13 @@ Note that positive and negative indices can be mixed. The following slices of
       <tr>
         <th style="color:var(--color-slice-diagram-not-selected);">negative index</th>
         <td></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-7</td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-6</td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-5</td>
-        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">-4</div></td>
-        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">-3</div></td>
-        <td><div class="circle-red" style="color:var(--color-slice-diagram-not-selected);">-2</div></td>
-        <td style="color:var(--color-slice-diagram-not-selected);">-1</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;5</td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">&minus;4</div></td>
+        <td><div class="circle-blue" style="color:var(--color-slice-diagram-selected);">&minus;3</div></td>
+        <td><div class="circle-red" style="color:var(--color-slice-diagram-not-selected);">&minus;2</div></td>
+        <td style="color:var(--color-slice-diagram-not-selected);">&minus;1</td>
       </tr>
     </table>
   </div>
@@ -1838,7 +1838,7 @@ It is much more conceptually robust to think about the slice as starting at
 `start`, then moving across the list by `step` until reaching `stop`, which is
 not included.
 
-Negative steps can of course be less than -1 as well, with similar behavior to
+Negative steps can of course be less than &minus;1 as well, with similar behavior to
 steps greater than 1, again, keeping in mind that the `stop` is not included.
 
 ```py
@@ -1896,9 +1896,9 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
     <td></td>
     <td></td>
     <td></td>
-    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">-3</td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">&minus;3</td>
     <td></td>
-    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">-3</td>
+    <td colspan="5" style="padding-top: 0; transform: translateY(-0.7em)">&minus;3</td>
     <td></td>
 </table>
 </div>
@@ -2108,11 +2108,11 @@ slice "as much as possible" instead.
             <td style="color: var(--color-slice-diagram-not-selected)">2</td>
             <td></td>
             <td style="color: var(--color-slice-diagram-not-selected)"><div class="circle-red">3</div></td>
-            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">4</div></td>
-            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">5</div></td>
-            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">6</div></td>
         </tr>
         <tr>
@@ -2161,11 +2161,11 @@ slice "as much as possible" instead.
             <th style="color: var(--color-slice-diagram-not-selected)">index</th>
             <td></td>
             <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">0</div></td>
-            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">1</div></td>
-            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">2</div></td>
-            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">-1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td style="color: var(--color-slice-diagram-selected)"><div class="circle-blue">3</div></td>
             <td></td>
             <td style="color: var(--color-slice-diagram-not-selected)">4</td>
