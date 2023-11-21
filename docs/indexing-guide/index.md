@@ -67,16 +67,22 @@ unlike the basic indices, advanced indices in NumPy always return a
 
 Nominally, an index is any object that can go between the square brackets
 after an array. That is, if `a` is a NumPy array, then in `a[x]`, *`x`* is an
-*index* of `a`. This also applies to built-in sequence types in Python such as
-`list`, `tuple`, and `str`, but be careful to not confuse the same notation
-used on Python dictionaries. If `d` is a Python dictionary, it uses the same
-notation `d[x]`, but the meaning of `x` is completely different than what is
-being discussed in this document (and indeed, many index types will not even
-work if you try them on a dictionary). This document also does not apply to
-indexing Pandas DataFrame or Series objects, except insomuch as they reuse the
-same semantics as NumPy. Finally, note that some other Python array libraries
-(e.g., PyTorch or Jax) have similar indexing rules, but most only implement a
-subset of the full NumPy semantics outlined here.
+*index* of `a`.[^index-vs-slice-footnote] This also applies to built-in
+sequence types in Python such as `list`, `tuple`, and `str`, but be careful to
+not confuse the same notation used on Python dictionaries. If `d` is a Python
+dictionary, it uses the same notation `d[x]`, but the meaning of `x` is
+completely different than what is being discussed in this document (and
+indeed, many index types will not even work if you try them on a dictionary).
+This document also does not apply to indexing Pandas DataFrame or Series
+objects, except insomuch as they reuse the same semantics as NumPy. Finally,
+note that some other Python array libraries (e.g., PyTorch or Jax) have
+similar indexing rules, but most only implement a subset of the full NumPy
+semantics outlined here.
+
+[^index-vs-slice-footnote]: Some people call `x` a *slice* of `a`, but we
+    avoid this confusing nomenclature, using *slice* to refer only to the [slice index
+    type](slices-docs). The term "index" is used in the Python language itself
+    (e.g., in the built-in exception type `IndexError`).
 
 Semantically, an index `x` picks some subset of the elements of `a`. An index
 `a[x]` always either returns a new array with some subset of the elements of
