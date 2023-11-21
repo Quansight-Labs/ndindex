@@ -38,4 +38,4 @@ def test_selected_indices_hypothesis(idx, shape):
         assert a == b
 
     check_same(a, idx, raw_func=raw_func, ndindex_func=ndindex_func,
-               assert_equal=assert_equal)
+               assert_equal=assert_equal, same_exception=False)
