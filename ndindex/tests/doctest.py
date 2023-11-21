@@ -16,6 +16,8 @@ run as a standalone script. Do not attempt to import it.
 
 """
 
+import numpy
+
 import sys
 import unittest
 import glob
@@ -24,10 +26,10 @@ from contextlib import contextmanager
 from doctest import (DocTestRunner, DocFileSuite, DocTestSuite,
                      NORMALIZE_WHITESPACE, register_optionflag)
 
-SKIP38 = register_optionflag("SKIP38")
-PY38 = sys.version_info[1] == 8
-if PY38:
-    SKIP_THIS_VERSION = SKIP38
+SKIPNP1 = register_optionflag("SKIPNP1")
+NP1 = numpy.__version__.startswith('1')
+if NP1:
+    SKIP_THIS_VERSION = SKIPNP1
 else:
     SKIP_THIS_VERSION = 0
 

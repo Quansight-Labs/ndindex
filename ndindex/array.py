@@ -20,9 +20,13 @@ class ArrayIndex(NDIndex):
 
     def _typecheck(self, idx, shape=None, _copy=True):
         try:
-            from numpy import ndarray, asarray, integer, bool_, empty, intp, VisibleDeprecationWarning
+            from numpy import ndarray, asarray, integer, bool_, empty, intp
         except ImportError: # pragma: no cover
             raise ImportError("NumPy must be installed to create array indices")
+        try:
+            from numpy import VisibleDeprecationWarning
+        except ImportError: # pragma: no cover
+            from numpy.exceptions import VisibleDeprecationWarning
 
         if self.dtype is None:
             raise TypeError("Do not instantiate the superclass ArrayIndex directly")
