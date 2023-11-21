@@ -37,6 +37,186 @@
     --color-sidebar-arrow-current: var(--color-sidebar-link-text--top-level);
 }
 
+/* Slice diagram stuff from the indexing guide */
+
+.slice-diagram {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    padding-left: 2em;
+    padding-right: 2em;
+    --color-slice-diagram-selected: #3030FF;
+    --color-slice-diagram-not-selected: #EE0000;
+}
+[data-theme="dark"] .slice-diagram {
+    --color-slice-diagram-selected: #8888FF;
+    --color-slice-diagram-not-selected: #FF5E5E;
+}
+.slice-diagram>code {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.centered-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: var(--color-background-primary);
+    padding: 0 10px;
+    z-index: 1;
+}
+
+.horizontal-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1.5px solid var(--color-foreground-primary);
+    margin-left: 10px;
+    margin-right: 10px;
+    z-index: 0;
+}
+table {
+    border-collapse: collapse;
+}
+
+th {
+    white-space: nowrap;
+    text-align: right;
+}
+
+td {
+    border: none;
+    padding: 0.5em;
+    text-align: center;
+    position: relative;
+    width: 0.8em;
+    height: 0.8em;
+    line-height: 0.8em;
+    white-space: nowrap;
+}
+
+.vertical-bar-red:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    border-left: 2px solid var(--color-slice-diagram-not-selected);
+}
+
+.vertical-bar-blue:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    border-left: 2px solid var(--color-slice-diagram-selected);
+}
+
+td:first-child {
+    border-left: none;
+}
+
+td:last-child:before {
+    border-right: none;
+}
+
+.overflow-content {
+    white-space: nowrap;
+    overflow: visible;
+    width: 100%;
+    max-width: 0px;
+}
+
+.circle-red,
+.circle-blue {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 50%;
+    text-align: center;
+}
+.circle-red {
+    border: 1px solid var(--color-slice-diagram-not-selected);
+}
+.circle-blue {
+    border: 1px solid var(--color-slice-diagram-selected);
+}
+.left-arrow-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('./arrow.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+}
+[data-theme="dark"] .left-arrow-cell::before {
+    filter: invert(1);
+}
+.right-arrow-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('./arrow.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    transform: scaleX(-1);
+}
+[data-theme="dark"] .right-arrow-cell::before {
+    filter: invert(1);
+}
+.left-arrow-curved-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: url('./arrow-short-curved.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: contain;
+    transform: translate(0px, -41px);
+}
+[data-theme="dark"] .left-arrow-curved-cell::before {
+    filter: invert(1);
+}
+.right-arrow-curved-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: url('./arrow-short-curved.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: contain;
+    transform: translate(0px, -41px) scaleX(-1);
+}
+[data-theme="dark"] .right-arrow-curved-cell::before {
+    filter: invert(1);
+}
+
+/* Styling for the GitHub link in the sidebar */
 .sidebar-tree .sidebar-extra {
     box-sizing: border-box;
     display: inline-block;

@@ -245,30 +245,6 @@ indexing](integer-indices) (although one should be careful that even though
 
 For example:
 
-<style>
-.slice-diagram {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    padding-left: 2em;
-    padding-right: 2em;
-    --color-slice-diagram-selected: #3030FF;
-    --color-slice-diagram-not-selected: #EE0000;
-}
-[data-theme="dark"] .slice-diagram {
-    --color-slice-diagram-selected: #8888FF;
-    --color-slice-diagram-not-selected: #FF5E5E;
-}
-.slice-diagram>code {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-</style>
-
 <div class="slice-diagram">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
   <table>
@@ -468,28 +444,6 @@ interval $(\text{stop}, \text{start}]$ (except reversed).
 For example, say way believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
 
-<style>
-.centered-text {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  background-color: var(--color-background-primary);
-  padding: 0 10px;
-  z-index: 1;
-}
-
-.horizontal-line {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  border-top: 1.5px solid var(--color-foreground-primary);
-  margin-left: 10px;
-  margin-right: 10px;
-  z-index: 0;
-}
-</style>
-
 <div class="slice-diagram">
   <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
   <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
@@ -657,67 +611,6 @@ This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of a list is indexed by 0, the second by 1, and so on.
 Rather than thinking about that, consider the spaces between the elements:
-
-<style>
-  table {
-    border-collapse: collapse;
-  }
-
-  th {
-    white-space: nowrap;
-    text-align: right;
-  }
-
-  td {
-    border: none;
-    padding: 0.5em;
-    text-align: center;
-    position: relative;
-    width: 0.8em;
-    height: 0.8em;
-    line-height: 0.8em;
-    white-space: nowrap;
-  }
-
-  .vertical-bar-red:before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    border-left: 2px solid var(--color-slice-diagram-not-selected);
-  }
-
-  .vertical-bar-blue:before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    border-left: 2px solid var(--color-slice-diagram-selected);
-  }
-
-  td:first-child {
-    border-left: none;
-  }
-
-  td:last-child:before {
-    border-right: none;
-  }
-
-  .overflow-content {
-      white-space: nowrap;
-      overflow: visible;
-      width: 100%;
-      max-width: 0px;
-  }
-</style>
 
 <div class="slice-diagram">
 <code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
@@ -893,85 +786,6 @@ reasons why this way of thinking creates more confusion than it removes.
   as giving `['f', 'e']`. Contrast the same slice when simply thinking about
   it as stepping backwards from index `5` to index `3`, but not including
   index `3`.
-
-  <style>
-  .circle-red,
-  .circle-blue {
-      display: inline-block;
-      width: 25px;
-      height: 25px;
-      line-height: 25px;
-      border-radius: 50%;
-      text-align: center;
-  }
-  .circle-red {
-        border: 1px solid var(--color-slice-diagram-not-selected);
-  }
-  .circle-blue {
-        border: 1px solid var(--color-slice-diagram-selected);
-  }
-  .left-arrow-cell::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('../_static/arrow.svg');
-    background-repeat: no-repeat;
-    background-position: 0px center;
-  }
-  [data-theme="dark"] .left-arrow-cell::before {
-      filter: invert(1);
-  }
-  .right-arrow-cell::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('../_static/arrow.svg');
-    background-repeat: no-repeat;
-    background-position: 0px center;
-    transform: scaleX(-1);
-  }
-  [data-theme="dark"] .right-arrow-cell::before {
-      filter: invert(1);
-  }
-  .left-arrow-curved-cell::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background-image: url('../_static/arrow-short-curved.svg');
-    background-repeat: no-repeat;
-    background-position: 0px center;
-    background-size: contain;
-    transform: translate(0px, -41px);
-  }
-  [data-theme="dark"] .left-arrow-curved-cell::before {
-      filter: invert(1);
-  }
-  .right-arrow-curved-cell::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background-image: url('../_static/arrow-short-curved.svg');
-    background-repeat: no-repeat;
-    background-position: 0px center;
-    background-size: contain;
-    transform: translate(0px, -41px) scaleX(-1);
-  }
-  [data-theme="dark"] .right-arrow-curved-cell::before {
-      filter: invert(1);
-  }
-  </style>
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
