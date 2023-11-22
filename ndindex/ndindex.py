@@ -4,7 +4,7 @@ import operator
 
 newaxis = None
 
-class NdindexConstructor:
+class NDIndexConstructor:
     """
     Convert an object into an ndindex type using indexing.
 
