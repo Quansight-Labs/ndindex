@@ -80,16 +80,16 @@
     margin-right: 10px;
     z-index: 0;
 }
-table {
+.slice-diagram table {
     border-collapse: collapse;
 }
 
-th {
+.slice-diagram th {
     white-space: nowrap;
     text-align: right;
 }
 
-td {
+.slice-diagram td {
     border: none;
     padding: 0.5em;
     text-align: center;
@@ -123,11 +123,11 @@ td {
     border-left: 2px solid var(--color-slice-diagram-selected);
 }
 
-td:first-child {
+.slice-diagram td:first-child {
     border-left: none;
 }
 
-td:last-child:before {
+.slice-diagram td:last-child:before {
     border-right: none;
 }
 
