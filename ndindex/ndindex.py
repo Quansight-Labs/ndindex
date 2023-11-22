@@ -6,24 +6,27 @@ newaxis = None
 
 class NdindexConstructor:
     """
-    Convert an object into an ndindex type
+    Convert an object into an ndindex type using indexing.
 
     Invalid indices will raise `IndexError`.
 
     >>> from ndindex import ndindex
-    >>> ndindex(1)
+    >>> ndindex[1]
     Integer(1)
-    >>> ndindex(slice(0, 10))
-    Slice(0, 10, None)
-
-    You can also index the `ndindex` object directly. This is useful for
-    creating slices, as the `a:b` slice syntax is only valid in an index.
-
     >>> ndindex[0:10, :]
     Tuple(slice(0, 10, None), slice(None, None, None))
 
+    You can also create indices by calling `ndindex(idx)`. However, if you do
+    this, you cannot use the `a:b` slice syntax, as it is not syntatically valid.
+
+    >>> ndindex(slice(0, 10))
+    Slice(0, 10, None)
+
+    `ndindex[idx]` should generally be preferred. `ndindex(idx)` is provided
+    for backwards compatibility.
+
     """
-    def __call__(self, obj):
+    def __getitem__(self, obj):
         if isinstance(obj, NDIndex):
             return obj
 
@@ -83,8 +86,8 @@ class NdindexConstructor:
 
         raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
-    def __getitem__(self, idx):
-        return self(idx)
+    def __call__(self, obj):
+        return self[obj]
 
 ndindex = NdindexConstructor()
 
