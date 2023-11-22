@@ -6,9 +6,11 @@ newaxis = None
 
 class NDIndexConstructor:
     """
-    Convert an object into an ndindex type using indexing.
+    Convert an object into an ndindex type.
 
     Invalid indices will raise `IndexError`.
+
+    Indices are created by calling `ndindex` with getitem syntax:
 
     >>> from ndindex import ndindex
     >>> ndindex[1]
@@ -18,9 +20,9 @@ class NDIndexConstructor:
 
     You can also create indices by calling `ndindex(idx)`. However, if you do
     this, you cannot use the `a:b` slice syntax, as it is not syntactically
-    valid.
+    valid:
 
-    >>> ndindex(slice(0, 10))
+    >>> ndindex[0:10]
     Slice(0, 10, None)
     >>> ndindex(0:10)
     Traceback (most recent call last):
@@ -28,16 +30,18 @@ class NDIndexConstructor:
         ndindex(0:10)
                  ^
     SyntaxError: invalid syntax
+    >>> ndindex(slice(0, 10))
+    Slice(0, 10, None)
 
     Additionally, the `ndindex[idx]` syntax does not require parentheses when
-    creating a tuple index.
+    creating a tuple index:
 
     >>> ndindex[0, 1]
     Tuple(0, 1)
     >>> ndindex(0, 1)
     Traceback (most recent call last):
     ...
-    TypeError: NdindexConstructor.__call__() takes 2 positional arguments but 3 were given
+    TypeError: NDIndexConstructor.__call__() takes 2 positional arguments but 3 were given
     >>> ndindex((0, 1))
     Tuple(0, 1)
 
