@@ -27,7 +27,7 @@ def _test_dependency_ndindex(mod):
     ndindex(1)
     assert mod not in sys.modules
 
-    ndindex(slice(0, 1))
+    ndindex[0:1]
     assert mod not in sys.modules
 
     ndindex(ndindex(1))
@@ -36,7 +36,7 @@ def _test_dependency_ndindex(mod):
     ndindex(None)
     assert mod not in sys.modules
 
-    ndindex((1, slice(0, 1)))
+    ndindex[1, 0:1]
     assert mod not in sys.modules
 
     ndindex(...)

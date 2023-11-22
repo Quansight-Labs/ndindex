@@ -47,7 +47,7 @@ class BuiltinTypes:
         self.tuple = (slice(0, 4, 2), ..., 1)
 
     def time_ndindex_slice(self):
-        ndindex(slice(0, 4, 2))
+        ndindex[0:4:2]
 
     def time_ndindex_int(self):
         ndindex(1)
