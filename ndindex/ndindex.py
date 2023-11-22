@@ -108,7 +108,7 @@ class NDIndexConstructor:
     def __call__(self, obj):
         return self[obj]
 
-ndindex = NdindexConstructor()
+ndindex = NDIndexConstructor()
 
 class classproperty(object):
     def __init__(self, f):
