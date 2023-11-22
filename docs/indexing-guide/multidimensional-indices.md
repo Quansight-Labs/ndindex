@@ -1580,7 +1580,7 @@ can use [`newaxis`](newaxis-indices) to insert dimensions so that they are
 shape `(3, 1)` and `(1, 4)` so that they broadcast together to this shape.
 
 ```py
->>> a[idx0[:, None], idx1[None]]
+>>> a[idx0[:, np.newaxis], idx1[np.newaxis]]
 array([[ 5,  4,  6,  7],
        [ 1,  0,  2,  3],
        [ 9,  8, 10, 11]])
