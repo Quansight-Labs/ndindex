@@ -4,7 +4,7 @@ import operator
 
 newaxis = None
 
-def ndindex(obj):
+class NdindexConstructor:
     """
     Convert an object into an ndindex type
 
@@ -16,65 +16,77 @@ def ndindex(obj):
     >>> ndindex(slice(0, 10))
     Slice(0, 10, None)
 
+    You can also index the `ndindex` object directly. This is useful for
+    creating slices, as the `a:b` slice syntax is only valid in an index.
+
+    >>> ndindex[0:10, :]
+    Tuple(slice(0, 10, None), slice(None, None, None))
+
     """
-    if isinstance(obj, NDIndex):
-        return obj
+    def __call__(self, obj):
+        if isinstance(obj, NDIndex):
+            return obj
 
-    if 'numpy' in sys.modules:
-        from numpy import ndarray, bool_
-    else: # pragma: no cover
-        bool_ = bool
-        ndarray = ()
+        if 'numpy' in sys.modules:
+            from numpy import ndarray, bool_
+        else: # pragma: no cover
+            bool_ = bool
+            ndarray = ()
 
-    if isinstance(obj, (bool, bool_)):
-        from . import BooleanArray
-        return BooleanArray(obj)
-
-    if isinstance(obj, (list, ndarray)):
-        from . import IntegerArray, BooleanArray
-
-        try:
-            return IntegerArray(obj)
-        except TypeError:
-            pass
-        try:
+        if isinstance(obj, (bool, bool_)):
+            from . import BooleanArray
             return BooleanArray(obj)
+
+        if isinstance(obj, (list, ndarray)):
+            from . import IntegerArray, BooleanArray
+
+            try:
+                return IntegerArray(obj)
+            except TypeError:
+                pass
+            try:
+                return BooleanArray(obj)
+            except TypeError:
+                pass
+
+            # Match the NumPy exceptions
+            if isinstance(obj, ndarray):
+                raise IndexError("arrays used as indices must be of integer (or boolean) type")
+            else:
+                raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+
+        try:
+            from . import Integer
+            # If operator.index() works, use that
+            return Integer(obj)
         except TypeError:
             pass
 
-        # Match the NumPy exceptions
-        if isinstance(obj, ndarray):
-            raise IndexError("arrays used as indices must be of integer (or boolean) type")
-        else:
-            raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+        if isinstance(obj, slice):
+            from . import Slice
+            return Slice(obj)
 
-    try:
-        from . import Integer
-        # If operator.index() works, use that
-        return Integer(obj)
-    except TypeError:
-        pass
+        if isinstance(obj, tuple):
+            from . import Tuple
+            return Tuple(*obj)
 
-    if isinstance(obj, slice):
-        from . import Slice
-        return Slice(obj)
+        from . import ellipsis
 
-    if isinstance(obj, tuple):
-        from . import Tuple
-        return Tuple(*obj)
+        if obj == ellipsis:
+            raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
+        if obj is Ellipsis:
+            return ellipsis()
 
-    from . import ellipsis
+        if obj == newaxis:
+            from . import Newaxis
+            return Newaxis()
 
-    if obj == ellipsis:
-        raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
-    if obj is Ellipsis:
-        return ellipsis()
+        raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
-    if obj == newaxis:
-        from . import Newaxis
-        return Newaxis()
+    def __getitem__(self, idx):
+        return self(idx)
 
-    raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+ndindex = NdindexConstructor()
 
 class classproperty(object):
     def __init__(self, f):
