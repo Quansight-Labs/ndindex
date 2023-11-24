@@ -18,9 +18,9 @@ class NDIndexConstructor:
     >>> ndindex[0:10, :]
     Tuple(slice(0, 10, None), slice(None, None, None))
 
-    You can also create indices by calling `ndindex(idx)`. However, if you do
-    this, you cannot use the `a:b` slice syntax, as it is not syntactically
-    valid:
+    You can also create indices by calling `ndindex(idx)` like a function.
+    However, if you do this, you cannot use the `a:b` slice syntax, as it is
+    not syntactically valid:
 
     >>> ndindex[0:10]
     Slice(0, 10, None)
