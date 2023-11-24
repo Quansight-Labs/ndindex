@@ -8,7 +8,9 @@ class NDIndexConstructor:
     """
     Convert an object into an ndindex type.
 
-    Invalid indices will raise `IndexError`.
+    Invalid indices will raise `IndexError`, `TypeError`, or `ValueError`
+    (generally, the same error NumPy would raise if the index were used on an
+    array).
 
     Indices are created by calling `ndindex` with getitem syntax:
 
