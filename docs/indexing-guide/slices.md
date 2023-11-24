@@ -1947,7 +1947,14 @@ As to the semantic meaning of omitted entries, the easiest one is the `step`.
 > **If the `step` is omitted, it always defaults to `1`.**
 
 If the `step` is omitted the second colon can also be omitted. That is to say,
-the following are all completely equivalent:
+the following are all completely equivalent[^equivalent-slices-footnote]:
+
+[^equivalent-slices-footnote]: Strictly speaking `a[i:j:1]` creates `slice(i,
+    j, 1)` whereas `a[i:j:]` and `a[i:j:]` produce `slice(i, j, None)`. This
+    only matters if you are implementing `a.__getitem__`. The ndindex
+    [`Slice.reduce()`](ndindex.Slice.reduce) method can be used to
+    normalize slices do you don't have to worry about these kinds of
+    distinctions.
 
 ```py
 a[i:j:1]
