@@ -409,7 +409,7 @@ being sliced. This applies even if the size of the resulting axis is 0 or 1.
 > **The proper rule to remember for half-open semantics is "the `stop` is not
   included".**
 
-There are several alternative ways that one might think of slice semantics,
+There are several alternative ways that one might think of the half-open rule,
 but they are all wrong in subtle ways. To be sure, for each of these, one
 could "fix" the rule by adding some conditions, "it's this in the case where
 such and such is nonnegative and that when such and such is negative, and so
@@ -423,11 +423,11 @@ practice. You might as well think about slices using the [definition from the
 NumPy docs](numpy-definition).
 
 Rather, it is best to remember the simplest rule possible that is *always*
-correct. That rule is, "the `stop` is not included". This rule is extremely
+correct. That rule is "the `stop` is not included". This rule is extremely
 simple, and is always right, regardless of what the values of `start`, `stop`,
-or `step` are. The only exception is if `stop` is omitted. In this case, the
+or `step` are (the only exception is if `stop` is omitted, in which case, the
 rule obviously doesn't apply as-is, and so you can fallback to [the rule about
-omitted `start`/`stop`](omitted).
+omitted `start`/`stop`](omitted)).
 
 (wrong-rule-1)=
 ##### Wrong Rule 1: "A slice `a[start:stop]` slices the half-open interval $[\text{start}, \text{stop})$."
@@ -581,7 +581,7 @@ start and stop values for the range. For example:
 [3, 4]
 >>> list(range(3, -2)) # Empty, because -2 is less than 3
 []
->>> b[3:-2] # Indexes from 3 to the second to last (5)
+>>> b[3:-2] # Indexes from 3 to the second to last (5), but not including 5
 [3, 4]
 ```
 
@@ -600,9 +600,9 @@ range would be huge.
 range(999999998, 2, -15)
 ```
 
-So slices can be used to compute transformations on `range` objects. ndindex
-is designed to be able to compute transformations on slice objects themselves
-(and other types of NumPy array indices).
+So slices can be used to compute transformations on `range` objects, but
+`range` objects should not be used to compute things about slices. If you want
+to do that, use [ndindex](../index).
 
 (wrong-rule-3)=
 ##### Wrong Rule 3: "Slices index the spaces between the elements of the list."
@@ -1151,7 +1151,7 @@ reasons why this way of thinking creates more confusion than it removes.
   This is because the correct half-open rule is based on not including the
   `stop`. It *isn't* based on not including the larger end of the interval. If
   the `step` is positive, the `stop` will be larger, but if it is
-  [negative](negative-steps), the `start` will be larger.
+  [negative](negative-steps), the `stop` will be smaller.
 
 - The rule "works" for slices, but is harder to imagine for integer indices.
   In the divider way of thinking, an integer index `n` corresponds to the
@@ -1180,17 +1180,16 @@ reasons why this way of thinking creates more confusion than it removes.
   slices in this way is to think about lists as separated by fenceposts, and
   is only begging for problems. This will especially be the case if you still
   find yourself otherwise thinking about indices as pointing to list elements
-  themselves, rather than the divisions between them. And given the behavior
-  of negative slices and integer indices under this model, one can hardly
-  blame you for doing so (see the previous two bullet points).
+  themselves, rather than the divisions between them. And you will think of
+  them this way, because that's what they actually are.
 
 Rather than trying to think about dividers between elements, it's much simpler
 to just think about the elements themselves, but being counted starting at 0.
 To be sure, 0-based indexing also leads to off-by-one errors, since it is not
 the usually way humans are taught to count things, but this is nonetheless the
-best way to think about things, especially as you gain practice in counting
-that way. As long as you apply the rule "the `stop` is not included," you will
-get the correct results.
+better way to think about things, especially as you gain practice in counting
+starting at 0. As long as you apply the rule "the `stop` is not included," you
+will get the correct results.
 
 (wrong-rule-4)=
 ##### Wrong Rule 4: "The `stop` of a slice `a[start:stop]` is 1-based."
@@ -1198,10 +1197,10 @@ get the correct results.
 You might get clever and say `a[3:5]` indexes from the 3rd element with
 0-based indexing to the 5th element with 1-based indexing. Don't do this. It
 is confusing. Not only that, but the rule must necessarily be reversed for
-negative indices. `a[-5:-3]` indexes from the (−5)th element with −1-based
-indexing to the (−3)rd element with 0-based indexing (and of course, negative
-and nonnegative starts and stops can be mixed, like `a[3:-3]`). Don't get cute
-here. It isn't worth it.
+negative indices. `a[-5:-3]` indexes from the (&minus;5)th element with
+&minus;1-based indexing to the (&minus;3)rd element with 0-based indexing (and
+of course, negative and nonnegative starts and stops can be mixed, like
+`a[3:-3]`). Don't get cute here. It isn't worth it.
 
 (negative-indices)=
 ### Negative Indices
@@ -1226,6 +1225,7 @@ Note that positive and negative indices can be mixed. The following slices of
   <div>
     <table>
       <tr>
+      <th></th>
         <td><pre>a</pre></td>
         <td><pre>=</pre></td>
         <td><pre>['a',</pre></td>
@@ -1240,6 +1240,7 @@ Note that positive and negative indices can be mixed. The following slices of
         <th
         style="color:var(--color-slice-diagram-not-selected);">nonnegative index</th>
         <td></td>
+        <td></td>
         <td style="color:var(--color-slice-diagram-not-selected);">0</td>
         <td style="color:var(--color-slice-diagram-not-selected);">1</td>
         <td style="color:var(--color-slice-diagram-not-selected);">2</td>
@@ -1250,6 +1251,7 @@ Note that positive and negative indices can be mixed. The following slices of
       </tr>
       <tr>
         <th style="color:var(--color-slice-diagram-not-selected);">negative index</th>
+        <td></td>
         <td></td>
         <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
         <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
@@ -1336,11 +1338,11 @@ The `stop` slice value is out of bounds for `a`, but this just causes it to
 [clip](clipping) to the end, which is what we want.
 
 But `start` contains a subtraction, which causes it to become negative. Rather
-than clipping to the start, it indexes from the end of `a`, producing the
-slice `a[-1:7]`. This picks the elements from the last element (`'g'`) up to
-but not including the 7th element (0-based). Index `7` is out of bounds for
-`a`, so this picks all elements including and after `'g'`, which in this case
-is just `['g']`.
+than clipping to the start, it wraps around and indexes from the end of `a`,
+producing the slice `a[-1:7]`. This picks the elements from the last element
+(`'g'`) up to but not including the 7th element (0-based). Index `7` is out of
+bounds for `a`, so this picks all elements including and after `'g'`, which in
+this case is just `['g']`.
 
 Unfortunately, the "correct" fix here depends on the desired behavior for each
 individual slice. In some cases, the "slice from the end" behavior of negative
@@ -1349,7 +1351,7 @@ should add a value check or assertion. In others, you might want clipping, in
 which case you could modify the expression to always be nonnegative.
 
 In this example, we do want clipping. Instead of using `mid - n//2`, we could
-use `max(mid - n//2, 0)`:
+manually clip with `max(mid - n//2, 0)`:
 
 ```py
 >>> n = 4
@@ -1361,8 +1363,11 @@ use `max(mid - n//2, 0)`:
 ```
 
 Or we could replace the `start` with a value that is always negative. This
-avoids the discontinuity problem, but it requires thinking a bit about how to
-translate from 0-based indexing to −1-based indexing.
+avoids the discontinuity problem because too negative values will
+[clip](clipping) to the start of the array, just as they do for the `stop`.
+But this does require thinking a bit about how to translate from 0-based
+indexing to −1-based indexing. In this example, the `start` becomes `-n//2 -
+mid - 1`:
 
 ```py
 >>> n = 4
@@ -1373,15 +1378,17 @@ translate from 0-based indexing to −1-based indexing.
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
-Playing around in an interpreter and checking all corner cases is recommended
-here. For example, these two fixes are inequivalent for odd `n`. Which you
-would choose would depend on what behavior you want there.
+It's a good idea to play around in an interpreter and check all the corner
+cases.
+
+**Exercise:** Write a slice to index the middle `n` elements of `a` when `n`
+is odd, clipping to all of `a` if `n` is larger than `len(a)`.
 
 (clipping)=
 ### Clipping
 
 Slices can never give an out-of-bounds `IndexError`. This is different from
-[integer indices](integer-indices) which require the index to be in bounds.
+[integer indices](integer-indices), which require the index to be in bounds.
 Instead, slice values *clip* to the bounds of the array.
 
 The rule for clipping is this:
@@ -1433,8 +1440,8 @@ ndindex can help in calculations here:  `len(ndindex.Slice(...))` can be used
 to compute the *maximum* length of a slice. If the shape or length of the
 input is known, `len(ndindex.Slice(...).reduce(shape))` will compute the true
 length of the slice (see {meth}`ndindex.Slice.__len__` and
-{meth}`ndindex.Slice.reduce`). Of course, if you already have a NumPy array,
-you can just slice the array and check the
+{meth}`ndindex.Slice.reduce`). Of course, if you already have a list or a
+NumPy array, you can just slice it and check the
 shape.[^slicing-inexpensive-footnote]
 
 [^slicing-inexpensive-footnote]: Slicing a NumPy array always produces a [view
@@ -1442,9 +1449,10 @@ on the array](views-vs-copies), so it is a very inexpensive operation. Slicing
 a `list` does make a copy, but it's a shallow copy so it isn't particularly
 expensive either.
 
-Critically, the clipping behavior of slices means that you cannot rely on
-runtime checks for out-of-bounds slices. Simply put, there is no such thing as
-an "out-of-bounds slice".
+The clipping behavior of slices also means that you cannot rely on runtime
+checks for out-of-bounds slices. Simply put, there is no such thing as an
+"out-of-bounds slice". If you really want an bounds check, you have to do it
+manually.
 
 There's a cute trick you can sometimes use that takes advantage of this
 behavior. By using a slice that selects a single element instead of an integer
@@ -1486,8 +1494,8 @@ if sys.argv[1:2] == ['help']:
 Now if `sys.argv` has at least two elements, the slice `sys.argv[1:2]` will be
 the sublist consisting of just the second element. But if it has only one
 element, i.e., the script is just run as `python myscript.py` with no
-arguments, then `sys.argv[1:2]` will be an empty list. This will fail the `==`
-check without raising an exception.
+arguments, then `sys.argv[1:2]` will be an empty list `[]`. This will fail the
+`==` check without raising an exception.
 
 If instead we want to only support exactly `myscript.py help` with no further
 arguments, we could modify the check just slightly
@@ -1748,9 +1756,9 @@ using negative `start` values when using a `step`[^negative-steps-ndindex-footno
 nonnegative, then it *will* be true that the sliced indices will be equal to
 $\text{start} \pmod{\text{step}}$.
 
-[^negative-steps-ndindex-footnote]: If you do need to use a negative step,
-    [ndindex](ndindex.slice.Slice) can be used to help compute things to avoid
-    making mistakes.
+[^negative-steps-ndindex-footnote]: If you do need to use a negative start
+    with a step, [ndindex](ndindex.slice.Slice) can be used to help compute
+    things to avoid making mistakes.
 
 ```py
 >>> l = list(range(20))
