@@ -53,8 +53,8 @@ class Slice(NDIndex):
     `ndindex[slice]`, which allows using `a:b` slicing syntax:
 
     >>> from ndindex import ndindex
-    >>> ndindex[0: 10]
-    Slice(0, 10, None
+    >>> ndindex[0:10]
+    Slice(0, 10, None)
 
     """
     __slots__ = ()
