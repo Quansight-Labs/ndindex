@@ -40,7 +40,7 @@ class NDIndexConstructor:
 
     >>> ndindex[0, 1]
     Tuple(0, 1)
-    >>> ndindex(0, 1)
+    >>> ndindex(0, 1) # doctest:+IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
     TypeError: NDIndexConstructor.__call__() takes 2 positional arguments but 3 were given
