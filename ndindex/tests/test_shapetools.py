@@ -604,7 +604,7 @@ def test_axiserror(axis, ndim):
             a = np.empty((0,)*ndim)
             try:
                 np.sum(a, axis=axis)
-            except np.AxisError as e3:
+            except np_AxisError as e3:
                 assert str(e2) == str(e3)
             else:
                 raise RuntimeError("numpy didn't raise AxisError") # pragma: no cover
