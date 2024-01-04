@@ -1,4 +1,8 @@
 import numpy as np
+try:
+    from numpy import AxisError as np_AxisError
+except ImportError: # pragma: no cover
+    from numpy.exceptions import AxisError as np_AxisError
 
 from hypothesis import assume, given, example
 from hypothesis.strategies import (one_of, integers, tuples as
@@ -217,7 +221,7 @@ def test_iter_indices_errors():
     # Check that the message is the same one used by NumPy
     try:
         np.sum(np.arange(10), axis=2)
-    except np.AxisError as e:
+    except np_AxisError as e:
         np_msg = str(e)
     else:
         raise RuntimeError("np.sum() did not raise AxisError") # pragma: no cover

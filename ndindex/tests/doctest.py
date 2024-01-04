@@ -16,13 +16,22 @@ run as a standalone script. Do not attempt to import it.
 
 """
 
+import numpy
+
 import sys
 import unittest
 import glob
 import os
 from contextlib import contextmanager
 from doctest import (DocTestRunner, DocFileSuite, DocTestSuite,
-                     NORMALIZE_WHITESPACE)
+                     NORMALIZE_WHITESPACE, register_optionflag)
+
+SKIPNP1 = register_optionflag("SKIPNP1")
+NP1 = numpy.__version__.startswith('1')
+if NP1:
+    SKIP_THIS_VERSION = SKIPNP1
+else:
+    SKIP_THIS_VERSION = 0
 
 @contextmanager
 def patch_doctest():
@@ -34,11 +43,17 @@ def patch_doctest():
     orig_run = DocTestRunner.run
 
     def run(self, test, **kwargs):
+        filtered_examples = []
+
         for example in test.examples:
+            if SKIP_THIS_VERSION not in example.options:
+                filtered_examples.append(example)
+
             # Remove ```
             example.want = example.want.replace('```\n', '')
             example.exc_msg = example.exc_msg and example.exc_msg.replace('```\n', '')
 
+        test.examples = filtered_examples
         return orig_run(self, test, **kwargs)
 
     try:
