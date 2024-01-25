@@ -6,6 +6,11 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12-dev']
+        # https://numpy.org/neps/nep-0029-deprecation_policy.html
+        numpy-version: ['1.22', 'latest', 'dev']
+        exclude:
+          - python-version: '3.12-dev'
+            numpy-version: '1.22'
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
@@ -17,7 +22,13 @@ jobs:
           set -x
           set -e
           python -m pip install pyflakes pytest pytest-doctestplus hypothesis pytest-cov pytest-flakes packaging matplotlib
-          python -m pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
+          if [[ ${{ matrix.numpy-version }} == 'latest' ]]; then
+              python -m pip install --pre --upgrade numpy
+          elif [[ ${{ matrix.numpy-version }} == 'dev' ]]; then
+              python -m pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
+          else
+              python -m pip install --upgrade numpy==${{ matrix.numpy-version }}.*
+          fi
       - name: Run Tests
         run: |
           set -x

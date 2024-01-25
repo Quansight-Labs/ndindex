@@ -246,7 +246,7 @@ class Tuple(NDIndex):
         Integer(1)
         >>> a[..., 1]
         array(1)
-        >>> a[1] # doctest: +SKIP38
+        >>> a[1] # doctest: +SKIPNP1
         np.int64(1)
 
         See https://github.com/Quansight-Labs/ndindex/issues/22.
