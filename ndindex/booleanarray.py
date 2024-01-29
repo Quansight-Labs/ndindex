@@ -108,8 +108,7 @@ class BooleanArray(ArrayIndex):
 
         for i in range(axis, axis+self.ndim):
             if self.shape[i-axis] != 0 and shape[i] != self.shape[i-axis]:
-
-                raise IndexError(f"boolean index did not match indexed array along dimension {i}; dimension is {shape[i]} but corresponding boolean dimension is {self.shape[i-axis]}")
+                raise IndexError(f'boolean index did not match indexed array along axis {i}; size of axis is {shape[i]} but size of corresponding boolean axis is {self.shape[i-axis]}')
 
     def reduce(self, shape=None, *, axis=0, negative_int=False):
         """
