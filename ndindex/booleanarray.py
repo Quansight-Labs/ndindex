@@ -124,7 +124,7 @@ class BooleanArray(ArrayIndex):
         >>> idx.reduce((3,))
         Traceback (most recent call last):
         ...
-        IndexError: boolean index did not match indexed array along dimension 0; dimension is 3 but corresponding boolean dimension is 2
+        IndexError: boolean index did not match indexed array along axis 0; size of axis is 3 but size of corresponding boolean axis is 2
         >>> idx.reduce((2,))
         BooleanArray([True, False])
 
