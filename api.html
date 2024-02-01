@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Slices" href="slices.html" /><link rel="prev" title="ndindex" href="index.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
         <title>API Reference - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=16cf08d2" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
@@ -529,7 +529,7 @@ index, it is necessary to use <code class="code docutils literal notranslate"><s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ndindex.Integer.reduce">
-<span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.reduce" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axiserror</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.reduce" title="Link to this definition">#</a></dt>
 <dd><p>Reduce an Integer index on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p>The result will either be <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code> if the index is invalid for the
 given shape, or an Integer index where the value is nonnegative.</p>
@@ -2617,7 +2617,7 @@ are done for BooleanArray: if <code class="code docutils literal notranslate"><s
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">3</span><span class="p">,))</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="c">...</span>
-<span class="gr">IndexError</span>: <span class="n">boolean index did not match indexed array along dimension 0; dimension is 3 but corresponding boolean dimension is 2</span>
+<span class="gr">IndexError</span>: <span class="n">boolean index did not match indexed array along axis 0; size of axis is 3 but size of corresponding boolean axis is 2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">2</span><span class="p">,))</span>
 <span class="go">BooleanArray([True, False])</span>
 </pre></div>
@@ -2775,7 +2775,7 @@ useful here).</p>
 <p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>, except is also supports skipping axes in the
 shape with <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>.</p>
 <p>If the shapes are not broadcast compatible (excluding <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>),
-<code class="code docutils literal notranslate"><span class="pre">BroadcastError</span></code> is raised.</p>
+<a class="reference internal" href="#ndindex.BroadcastError" title="ndindex.BroadcastError"><code class="xref py py-class docutils literal notranslate"><span class="pre">BroadcastError</span></code></a> is raised.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">broadcast_shapes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="go">(4, 2, 3)</span>
@@ -2788,26 +2788,34 @@ shape with <code class="code docutils literal notranslate"><span class="pre">ski
 <p>Axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> apply to each shape <em>before</em> being broadcasted. Each
 shape will be broadcasted together with these axes removed. The dimensions
 in skip_axes do not need to be equal or broadcast compatible with one
-another. The final broadcasted shape will have <code class="code docutils literal notranslate"><span class="pre">None</span></code> in each <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>
-location, and the broadcasted remaining <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> axes elsewhere.</p>
+another. The final broadcasted shape be the result of broadcasting all the
+non-skip axes.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
-<span class="go">(None, 3, 2)</span>
+<span class="go">(3, 2)</span>
 </pre></div>
 </div>
 </dd></dl>
 
+</section>
+<section id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Link to this heading">#</a></h2>
+<p>These are some custom exceptions that are raised by a few functions in
+ndindex. Note that most functions in ndindex will raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>
+(if the index would be invalid), or <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code> or <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code> (if the input
+types or values are incorrect).</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="ndindex.BroadcastError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BroadcastError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BroadcastError" title="Link to this definition">#</a></dt>
-<dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> when the input shapes are not
-broadcast compatible.</p>
+<dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> and
+<a class="reference internal" href="#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> when the input shapes are not broadcast
+compatible.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="ndindex.AxisError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">AxisError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.AxisError" title="Link to this definition">#</a></dt>
-<dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> when the <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> argument
-is out of bounds.</p>
+<dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> and
+<a class="reference internal" href="#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> when the <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> argument is out-of-bounds.</p>
 <p>This is used instead of the NumPy exception of the same name so that
 <code class="code docutils literal notranslate"><span class="pre">iter_indices</span></code> does not need to depend on NumPy.</p>
 </dd></dl>
@@ -3628,9 +3636,10 @@ debugging <a class="reference internal" href="#ndindex.iter_indices" title="ndin
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.shapetools.associated_axis">
-<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">associated_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">broadcasted_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.associated_axis" title="Link to this definition">#</a></dt>
-<dd><p>Return the associated index into <code class="code docutils literal notranslate"><span class="pre">broadcast_shape</span></code> corresponding to
-<code class="code docutils literal notranslate"><span class="pre">shape[i]</span></code> given <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>.</p>
+<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">associated_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broadcasted_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.associated_axis" title="Link to this definition">#</a></dt>
+<dd><p>Return the associated element of <code class="code docutils literal notranslate"><span class="pre">broadcasted_shape</span></code> corresponding to
+<code class="code docutils literal notranslate"><span class="pre">shape[i]</span></code> given <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>. If there is not such element (i.e., it’s out
+of bounds), returns None.</p>
 <p>This function makes implicit assumptions about its input and is only
 designed for internal use.</p>
 </dd></dl>
@@ -3647,6 +3656,22 @@ designed for internal use.</p>
 <span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">unremove_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idxes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.unremove_indices" title="Link to this definition">#</a></dt>
 <dd><p>Insert <code class="code docutils literal notranslate"><span class="pre">val</span></code> in <code class="code docutils literal notranslate"><span class="pre">x</span></code> so that it appears at <code class="code docutils literal notranslate"><span class="pre">idxes</span></code>.</p>
 <p>Note that idxes must be either all negative or all nonnegative.</p>
+<p>This function is only intended for internal usage.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ndindex.shapetools.normalize_skip_axes">
+<span class="sig-prename descclassname"><span class="pre">ndindex.shapetools.</span></span><span class="sig-name descname"><span class="pre">normalize_skip_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.shapetools.normalize_skip_axes" title="Link to this definition">#</a></dt>
+<dd><p>Return a canonical form of <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> corresponding to <code class="code docutils literal notranslate"><span class="pre">shapes</span></code>.</p>
+<p>A canonical form of <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> is a list of tuples of integers, one for
+each shape in <code class="code docutils literal notranslate"><span class="pre">shapes</span></code>, which are a unique set of axes for each
+corresponding shape.</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> is an integer, this is basically <code class="code docutils literal notranslate"><span class="pre">[(skip_axes,)</span> <span class="pre">for</span> <span class="pre">s</span>
+<span class="pre">in</span> <span class="pre">shapes]</span></code>. If <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> is a tuple, it is like <code class="code docutils literal notranslate"><span class="pre">[skip_axes</span> <span class="pre">for</span> <span class="pre">s</span> <span class="pre">in</span>
+<span class="pre">shapes]</span></code>.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> must always refer to unique axes in each shape.</p>
+<p>The returned <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> will always be negative integers and will be
+sorted.</p>
 <p>This function is only intended for internal usage.</p>
 </dd></dl>
 
@@ -3817,6 +3842,9 @@ designed for internal use.</p>
 <li><a class="reference internal" href="#index-helpers">Index Helpers</a><ul>
 <li><a class="reference internal" href="#ndindex.iter_indices"><code class="docutils literal notranslate"><span class="pre">iter_indices()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.broadcast_shapes"><code class="docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a><ul>
 <li><a class="reference internal" href="#ndindex.BroadcastError"><code class="docutils literal notranslate"><span class="pre">BroadcastError</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.AxisError"><code class="docutils literal notranslate"><span class="pre">AxisError</span></code></a></li>
 </ul>
@@ -3866,6 +3894,7 @@ designed for internal use.</p>
 <li><a class="reference internal" href="#ndindex.shapetools.associated_axis"><code class="docutils literal notranslate"><span class="pre">associated_axis()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.shapetools.remove_indices"><code class="docutils literal notranslate"><span class="pre">remove_indices()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.shapetools.unremove_indices"><code class="docutils literal notranslate"><span class="pre">unremove_indices()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.shapetools.normalize_skip_axes"><code class="docutils literal notranslate"><span class="pre">normalize_skip_axes()</span></code></a></li>
 </ul>
 </li>
 </ul>
