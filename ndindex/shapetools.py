@@ -1,14 +1,16 @@
 import numbers
 import itertools
-from collections import defaultdict
 from collections.abc import Sequence
+from ._crt import prod
 
 from .ndindex import ndindex, operator_index
 
 class BroadcastError(ValueError):
     """
-    Exception raised by :func:`iter_indices()` when the input shapes are not
-    broadcast compatible.
+    Exception raised by :func:`iter_indices()` and
+    :func:`broadcast_shapes()` when the input shapes are not broadcast
+    compatible.
+
     """
     __slots__ = ("arg1", "shape1", "arg2", "shape2")
 
@@ -24,8 +26,8 @@ class BroadcastError(ValueError):
 
 class AxisError(ValueError, IndexError):
     """
-    Exception raised by :func:`iter_indices()` when the `skip_axes` argument
-    is out of bounds.
+    Exception raised by :func:`iter_indices()` and
+    :func:`broadcast_shapes()` when the `skip_axes` argument is out-of-bounds.
 
     This is used instead of the NumPy exception of the same name so that
     `iter_indices` does not need to depend on NumPy.
@@ -34,6 +36,9 @@ class AxisError(ValueError, IndexError):
     __slots__ = ("axis", "ndim")
 
     def __init__(self, axis, ndim):
+        # NumPy allows axis=-1 for 0-d arrays
+        if (ndim < 0 or -ndim <= axis < ndim) and not (ndim == 0 and axis == -1):
+            raise ValueError(f"Invalid AxisError ({axis}, {ndim})")
         self.axis = axis
         self.ndim = ndim
 
@@ -49,7 +54,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
     shape with `skip_axes`.
 
     If the shapes are not broadcast compatible (excluding `skip_axes`),
-    `BroadcastError` is raised.
+    :class:`BroadcastError` is raised.
 
     >>> from ndindex import broadcast_shapes
     >>> broadcast_shapes((2, 3), (3,), (4, 2, 1))
@@ -62,52 +67,41 @@ def broadcast_shapes(*shapes, skip_axes=()):
     Axes in `skip_axes` apply to each shape *before* being broadcasted. Each
     shape will be broadcasted together with these axes removed. The dimensions
     in skip_axes do not need to be equal or broadcast compatible with one
-    another. The final broadcasted shape will have `None` in each `skip_axes`
-    location, and the broadcasted remaining `shapes` axes elsewhere.
+    another. The final broadcasted shape be the result of broadcasting all the
+    non-skip axes.
 
     >>> broadcast_shapes((10, 3, 2), (20, 2), skip_axes=(0,))
-    (None, 3, 2)
+    (3, 2)
 
     """
-    skip_axes = asshape(skip_axes, allow_negative=True)
     shapes = [asshape(shape, allow_int=False) for shape in shapes]
-
-    if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
-        # See the comments in remove_indices and iter_indices
-        raise NotImplementedError("Mixing both negative and nonnegative skip_axes is not yet supported")
+    skip_axes = normalize_skip_axes(shapes, skip_axes)
 
     if not shapes:
-        if skip_axes:
-            # Raise IndexError
-            ndindex(skip_axes[0]).reduce(0)
         return ()
 
-    dims = [len(shape) for shape in shapes]
-    shape_skip_axes = [[ndindex(i).reduce(n, negative_int=True) for i in skip_axes] for n in dims]
+    non_skip_shapes = [remove_indices(shape, skip_axis) for shape, skip_axis in zip(shapes, skip_axes)]
+    dims = [len(shape) for shape in non_skip_shapes]
     N = max(dims)
-    broadcasted_skip_axes = [ndindex(i).reduce(N) for i in skip_axes]
 
-    broadcasted_shape = [None if i in broadcasted_skip_axes else 1 for i in range(N)]
+    broadcasted_shape = [1]*N
 
     arg = None
     for i in range(-1, -N-1, -1):
         for j in range(len(shapes)):
             if dims[j] < -i:
                 continue
-            shape = shapes[j]
-            idx = associated_axis(shape, broadcasted_shape, i, skip_axes)
-            broadcasted_side = broadcasted_shape[idx]
+            shape = non_skip_shapes[j]
+            broadcasted_side = broadcasted_shape[i]
             shape_side = shape[i]
-            if i in shape_skip_axes[j]:
-                continue
-            elif shape_side == 1:
+            if shape_side == 1:
                 continue
             elif broadcasted_side == 1:
                 broadcasted_side = shape_side
                 arg = j
             elif shape_side != broadcasted_side:
                 raise BroadcastError(arg, shapes[arg], j, shapes[j])
-            broadcasted_shape[idx] = broadcasted_side
+            broadcasted_shape[i] = broadcasted_side
 
     return tuple(broadcasted_shape)
 
@@ -216,73 +210,54 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     Tuple(1, 2)
 
     """
-    skip_axes = asshape(skip_axes, allow_negative=True)
+    skip_axes = normalize_skip_axes(shapes, skip_axes)
     shapes = [asshape(shape, allow_int=False) for shape in shapes]
 
-    if any(i >= 0 for i in skip_axes) and any(i < 0 for i in skip_axes):
-        # Mixing positive and negative skip_axes is too difficult to deal with
-        # (see the comment in unremove_indices). It's a bit of an unusual
-        # thing to support, at least in the general case, because a positive
-        # and negative index can index the same element, but only for shapes
-        # that are a specific size. So while, in principle something like
-        # iter_indices((2, 10, 20, 4), (2, 30, 4), skip_axes=(1, -2)) could
-        # make sense, it's a bit odd to do so. Of course, there's no reason we
-        # couldn't support cases like that, but they complicate the
-        # implementation and, especially, complicate the test generation in
-        # the hypothesis strategies. Given that I'm not completely sure how to
-        # implement it correctly, and I don't actually need support for it,
-        # I'm leaving it as not implemented for now.
-        raise NotImplementedError("Mixing both negative and nonnegative skip_axes is not yet supported")
-
-    n = len(skip_axes)
-    if len(set(skip_axes)) != n:
-        raise ValueError("skip_axes should not contain duplicate axes")
-
     if not shapes:
-        if skip_axes:
-            raise AxisError(skip_axes[0], 0)
         yield ()
         return
 
     shapes = [asshape(shape) for shape in shapes]
-    ndim = len(max(shapes, key=len))
-    min_ndim = len(min(shapes, key=len))
+    S = len(shapes)
 
-    _skip_axes = defaultdict(list)
-    for shape in shapes:
-        for a in skip_axes:
-            try:
-                a = ndindex(a).reduce(len(shape)).raw
-            except IndexError:
-                raise AxisError(a, min_ndim)
-            _skip_axes[shape].append(a)
-        _skip_axes[shape].sort()
-
-    iters = [[] for i in range(len(shapes))]
+    iters = [[] for i in range(S)]
     broadcasted_shape = broadcast_shapes(*shapes, skip_axes=skip_axes)
-    non_skip_broadcasted_shape = remove_indices(broadcasted_shape, skip_axes)
 
-    for i in range(-1, -ndim-1, -1):
-        for it, shape in zip(iters, shapes):
+    idxes = [-1]*S
+
+    while any(i is not None for i in idxes):
+        for s, it, shape, sk in zip(range(S), iters, shapes, skip_axes):
+            i = idxes[s]
+            if i is None:
+                continue
             if -i > len(shape):
-                # for every dimension prepended by broadcasting, repeat the
-                # indices that many times
-                for j in range(len(it)):
-                    if non_skip_broadcasted_shape[i+n] not in [0, 1]:
-                        it[j] = ncycles(it[j], non_skip_broadcasted_shape[i+n])
-                    break
-            elif len(shape) + i in _skip_axes[shape]:
+                if not shape:
+                    pass
+                elif len(shape) == len(sk):
+                    # The whole shape is skipped. Just repeat the most recent slice
+                    it[0] = ncycles(it[0], prod(broadcasted_shape))
+                else:
+                    # Find the first non-skipped axis and repeat by however
+                    # many implicit axes are left in the broadcasted shape
+                    for j in range(-len(shape), 0):
+                        if j not in sk:
+                            break
+                    it[j] = ncycles(it[j], prod(broadcasted_shape[:len(sk)-len(shape)+len(broadcasted_shape)]))
+
+                idxes[s] = None
+                continue
+
+            val = associated_axis(broadcasted_shape, i, sk)
+            if i in sk:
                 it.insert(0, [slice(None)])
             else:
-                idx = associated_axis(shape, broadcasted_shape, i, skip_axes)
-                val = broadcasted_shape[idx]
-                assert val is not None
                 if val == 0:
                     return
                 elif val != 1 and shape[i] == 1:
                     it.insert(0, ncycles(range(shape[i]), val))
                 else:
                     it.insert(0, range(shape[i]))
+            idxes[s] -= 1
 
     if _debug: # pragma: no cover
         print(f"{iters = }")
@@ -351,39 +326,31 @@ def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
 
     return tuple(newshape)
 
-def associated_axis(shape, broadcasted_shape, i, skip_axes):
+def associated_axis(broadcasted_shape, i, skip_axes):
     """
-    Return the associated index into `broadcast_shape` corresponding to
-    `shape[i]` given `skip_axes`.
+    Return the associated element of `broadcasted_shape` corresponding to
+    `shape[i]` given `skip_axes`. If there is not such element (i.e., it's out
+    of bounds), returns None.
 
     This function makes implicit assumptions about its input and is only
     designed for internal use.
 
     """
-    n = len(shape)
-    N = len(broadcasted_shape)
     skip_axes = sorted(skip_axes, reverse=True)
     if i >= 0:
         raise NotImplementedError
-    if not skip_axes:
-        return i
-    # We assume skip_axes are either all negative or all nonnegative
-    if skip_axes[0] < 0:
-        return i
-    elif skip_axes[0] >= 0:
-        invmapping = [None]*N
-        for s in skip_axes:
-            invmapping[s] = s
-
-        for j in range(-1, i-1, -1):
-            if j + n in skip_axes:
-                k = j + n #- N
-                continue
-            for k in range(-1, -N-1, -1):
-                if invmapping[k] is None:
-                    invmapping[k] = j
-                    break
-        return k
+    if i in skip_axes:
+        return None
+    # We assume skip_axes are all negative and sorted
+    j = i
+    for sk in skip_axes:
+        if sk >= i:
+            j += 1
+        else:
+            break
+    if ndindex(j).isvalid(len(broadcasted_shape)):
+        return broadcasted_shape[j]
+    return None
 
 def remove_indices(x, idxes):
     """
@@ -410,8 +377,8 @@ def unremove_indices(x, idxes, *, val=None):
     This function is only intended for internal usage.
     """
     if any(i >= 0 for i in idxes) and any(i < 0 for i in idxes):
-        # A mix of positive and negative indices provides a fundamental
-        # problem. Sometimes, the result is not unique: for example, x = [0];
+        # A mix of positive and negative indices presents a fundamental
+        # problem: sometimes the result is not unique. For example, x = [0];
         # idxes = [1, -1] could be satisfied by both [0, None] or [0, None,
         # None], depending on whether each index refers to a separate None or
         # not (note that both cases are supported by remove_indices(), because
@@ -470,3 +437,54 @@ class ncycles:
 
     def __iter__(self):
         return itertools.chain.from_iterable(itertools.repeat(tuple(self.iterable), self.n))
+
+def normalize_skip_axes(shapes, skip_axes):
+    """
+    Return a canonical form of `skip_axes` corresponding to `shapes`.
+
+    A canonical form of `skip_axes` is a list of tuples of integers, one for
+    each shape in `shapes`, which are a unique set of axes for each
+    corresponding shape.
+
+    If `skip_axes` is an integer, this is basically `[(skip_axes,) for s
+    in shapes]`. If `skip_axes` is a tuple, it is like `[skip_axes for s in
+    shapes]`.
+
+    The `skip_axes` must always refer to unique axes in each shape.
+
+    The returned `skip_axes` will always be negative integers and will be
+    sorted.
+
+    This function is only intended for internal usage.
+
+    """
+    # Note: we assume asshape has already been called on the shapes in shapes
+    if isinstance(skip_axes, Sequence):
+        if skip_axes and all(isinstance(i, Sequence) for i in skip_axes):
+            if len(skip_axes) != len(shapes):
+                raise ValueError(f"Expected {len(shapes)} skip_axes")
+            return [normalize_skip_axes([shape], skip_axis)[0] for shape, skip_axis in zip(shapes, skip_axes)]
+        else:
+            try:
+                [operator_index(i) for i in skip_axes]
+            except TypeError:
+                raise TypeError("skip_axes must be an integer, a tuple of integers, or a list of tuples of integers")
+
+    skip_axes = asshape(skip_axes, allow_negative=True)
+
+    # From here, skip_axes is a single tuple of integers
+
+    if not shapes and skip_axes:
+        raise ValueError("skip_axes must be empty if there are no shapes")
+
+    new_skip_axes = []
+    for shape in shapes:
+        s = tuple(sorted(ndindex(i).reduce(len(shape), negative_int=True, axiserror=True).raw for i in skip_axes))
+        if len(s) != len(set(s)):
+            err = ValueError(f"skip_axes {skip_axes} are not unique for shape {shape}")
+            # For testing
+            err.skip_axes = skip_axes
+            err.shape = shape
+            raise err
+        new_skip_axes.append(s)
+    return new_skip_axes
