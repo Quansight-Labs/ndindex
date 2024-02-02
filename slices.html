@@ -1778,7 +1778,7 @@ only makes it hard to remember how slices work, but it makes it <em>extremely</e
 hard to write slice arithmetic. The arithmetic is already hard enough due to
 the modular nature of <code class="docutils literal notranslate"><span class="pre">step</span></code>, but the discontinuous aspect of <code class="docutils literal notranslate"><span class="pre">start</span></code> and
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> increases this tenfold. If you are unconvinced of this, take a look at
-the <a class="reference external" href="https://github.com/Quansight-labs/ndindex/blob/master/ndindex/slice.py">source
+the <a class="reference external" href="https://github.com/Quansight-labs/ndindex/blob/main/ndindex/slice.py">source
 code</a> for
 <code class="docutils literal notranslate"><span class="pre">ndindex.Slice()</span></code>. You will see lots of nested <code class="docutils literal notranslate"><span class="pre">if</span></code> blocks.<a class="footnote-reference brackets" href="#source-footnote" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>
 This is because slices have <em>fundamentally</em> different definitions if the

@@ -277,7 +277,7 @@ There are two primary types of tests that we employ to verify this:
 - Hypothesis tests. Hypothesis is a library that can intelligently check a
   combinatorial search space of inputs. This requires writing hypothesis
   strategies that can generate all the relevant types of indices (see
-  [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py)).
+  [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/main/ndindex/tests/helpers.py)).
   For more information on hypothesis, see
   <https://hypothesis.readthedocs.io/en/latest/index.html>. All tests have
   hypothesis tests, even if they are also tested exhaustively.
@@ -307,7 +307,7 @@ Benchmarks for ndindex are published
 
 ## License
 
-[MIT License](https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE)
+[MIT License](https://github.com/Quansight-Labs/ndindex/blob/main/LICENSE)
 
 (acknowledgments)=
 ## Acknowledgments
