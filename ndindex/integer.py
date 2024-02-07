@@ -1,5 +1,5 @@
 from .ndindex import NDIndex, operator_index
-from .shapetools import asshape
+from .shapetools import AxisError, asshape
 
 class Integer(NDIndex):
     """
@@ -62,7 +62,7 @@ class Integer(NDIndex):
             size = shape[axis]
             raise IndexError(f"index {self.raw} is out of bounds for axis {axis} with size {size}")
 
-    def reduce(self, shape=None, *, axis=0, negative_int=False):
+    def reduce(self, shape=None, *, axis=0, negative_int=False, axiserror=False):
         """
         Reduce an Integer index on an array of shape `shape`.
 
@@ -96,7 +96,14 @@ class Integer(NDIndex):
         if shape is None:
             return self
 
+        if axiserror:
+            if not isinstance(shape, int): # pragma: no cover
+                raise TypeError("axiserror=True requires shape to be an integer")
+            if not self.isvalid(shape):
+                raise AxisError(self.raw, shape)
+
         shape = asshape(shape, axis=axis)
+
         self._raise_indexerror(shape, axis)
 
         if self.raw < 0 and not negative_int:

@@ -1,4 +1,6 @@
-from numpy import prod, arange, array, bool_, empty, full
+from numpy import prod, arange, array, bool_, empty, full, __version__ as np_version
+
+NP1 = np_version.startswith('1')
 
 from hypothesis import given, example
 from hypothesis.strategies import one_of, integers
@@ -60,7 +62,9 @@ def test_booleanarray_reduce_hypothesis(idx, shape, kwargs):
 
     index = BooleanArray(idx)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw])
+    same_exception = not NP1
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw],
+               same_exception=same_exception)
 
     try:
         reduced = index.reduce(shape, **kwargs)

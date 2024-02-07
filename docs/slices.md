@@ -1693,7 +1693,7 @@ hard to write slice arithmetic. The arithmetic is already hard enough due to
 the modular nature of `step`, but the discontinuous aspect of `start` and
 `stop` increases this tenfold. If you are unconvinced of this, take a look at
 the [source
-code](https://github.com/Quansight-labs/ndindex/blob/master/ndindex/slice.py) for
+code](https://github.com/Quansight-labs/ndindex/blob/main/ndindex/slice.py) for
 `ndindex.Slice()`. You will see lots of nested `if` blocks.[^source-footnote]
 This is because slices have *fundamentally* different definitions if the
 `start` or `stop` are `None`, negative, or nonnegative. Furthermore, `None` is
