@@ -610,10 +610,14 @@ class NDIndex(ImmutableObject):
         >>> from ndindex import Slice, Tuple
         >>> idx = Slice(5, 10)
         >>> list(idx.selected_indices(20))
-        [5, 6, 7, 8, 9]
+        [Integer(5), Integer(6), Integer(7), Integer(8), Integer(9)]
         >>> idx = Tuple(Slice(5, 10), Slice(0, 2))
         >>> list(idx.selected_indices((20, 3)))
-        [(5, 0), (5, 1), (6, 0), (6, 1), (7, 0), (7, 1), (8, 0), (8, 1), (9, 0), (9, 1)]
+        [Tuple(5, 0), Tuple(5, 1),
+         Tuple(6, 0), Tuple(6, 1),
+         Tuple(7, 0), Tuple(7, 1),
+         Tuple(8, 0), Tuple(8, 1),
+         Tuple(9, 0), Tuple(9, 1)]
 
         To correspond these indices to the elements of `a[idx]`, you can use
         `iter_indices(idx.newshape(shape))`, since both iterators iterate the
