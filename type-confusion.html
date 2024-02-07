@@ -324,8 +324,8 @@ they will fail. ndindex types are always hashable.</p>
 </div>
 <p><strong>Right</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)):</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)):</span> <span class="mi">1</span>
+    <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">ndindex</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">20</span><span class="p">]:</span> <span class="mi">1</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -340,7 +340,7 @@ happen until they are actually used as an index. For example, <code class="docut
 </div>
 <p><strong>Right</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Typo would be caught right away</span>
-<span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">))</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mf">2.</span><span class="p">]</span>
 <span class="c1"># OR</span>
 <span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
 </pre></div>
@@ -357,7 +357,8 @@ indices are exactly equal.</p>
 </pre></div>
 </div>
 <p><strong>Right</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ndindex</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="n">ndindex</span><span class="p">((</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])):</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note only one side of the == needs to be an ndindex type</span>
+<span class="k">if</span> <span class="n">ndindex</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
     <span class="o">...</span>
 </pre></div>
 </div>
@@ -449,13 +450,13 @@ things like <code class="docutils literal notranslate"><span class="pre">idx[0]<
 you need to access the specific term in a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, use <code class="docutils literal notranslate"><span class="pre">Tuple.args</span></code> if you
 want the ndindex type, or <code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code> if you want the raw type.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Gives int(0)</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Gives Integer(0)</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Produces an error</span>
 </pre></div>
 </div>
@@ -466,7 +467,7 @@ want the ndindex type, or <code class="docutils literal notranslate"><span class
 </pre></div>
 </div>
 <p><strong>Better:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
@@ -480,7 +481,7 @@ want the ndindex type, or <code class="docutils literal notranslate"><span class
 <span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Link to this heading">#</a></h2>
 <ul>
 <li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
-Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex(...)</span></code></strong>. As noted above, all ndindex
+Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex[...]</span></code></strong>. As noted above, all ndindex
 methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will automatically convert <code class="docutils literal notranslate"><span class="pre">...</span></code> into the ndindex type.</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
@@ -497,11 +498,11 @@ methods and <code class="docutils literal notranslate"><span class="pre">Tuple</
 more readable. The <code class="docutils literal notranslate"><span class="pre">...</span></code> syntax is allowed everywhere that <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> would
 work.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Less readable</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Less readable</span>
 </pre></div>
 </div>
 </li>
@@ -509,20 +510,20 @@ work.</p>
 unlike the built-in <code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> object. This is done for consistency in the
 internal ndindex class hierarchy.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Gives an error</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Gives an error</span>
 </pre></div>
 </div>
 <p>The below do not give errors, but it is easy to confuse them with the above.
 It is best to just use <code class="docutils literal notranslate"><span class="pre">...</span></code>, which is more concise and easier to read.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Easy to confuse, less readable</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ellipsis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Easy to confuse, less readable</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Easy to confuse, less readable</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">Ellipsis</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Easy to confuse, less readable</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -559,7 +560,7 @@ Instead, <strong>use <code class="docutils literal notranslate"><span class="pre
 <code class="docutils literal notranslate"><span class="pre">ndindex(None)</span></code></strong>. As noted above, all ndindex methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will
 automatically convert <code class="docutils literal notranslate"><span class="pre">None</span></code> into the ndindex type.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">)</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -573,20 +574,20 @@ automatically convert <code class="docutils literal notranslate"><span class="pr
 unlike the NumPy <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> object (i.e., <code class="docutils literal notranslate"><span class="pre">None</span></code>). This is done for
 consistency in the internal ndindex class hierarchy.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Gives an error</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Gives an error</span>
 </pre></div>
 </div>
 <p>The below does not give an error, but it is easy to confuse it with the
 above. It is best to just use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>, which is more concise
 and easier to read.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Easy to confuse</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">Newaxis</span><span class="p">(),</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Easy to confuse</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
 </pre></div>
 </div>
