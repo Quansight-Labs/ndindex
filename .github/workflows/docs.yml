@@ -22,7 +22,7 @@ jobs:
           conda config --add channels conda-forge
           conda update -q conda
           conda info -a
-          conda create -n test-environment python=${{ matrix.python-version }} pyflakes pytest pytest-doctestplus numpy hypothesis doctr sphinx myst-parser sphinx_rtd_theme pytest-cov pytest-flakes
+          conda create -n test-environment python=${{ matrix.python-version }} --file docs/requirements.txt
           conda init
 
       - name: Build Docs
@@ -51,3 +51,14 @@ jobs:
           conda activate test-environment
           cd docs
           make html
+
+      # Note, the gh-pages deployment requires setting up a SSH deploy key.
+      # See
+      # https://github.com/JamesIves/github-pages-deploy-action/tree/dev#using-an-ssh-deploy-key-
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          folder: docs/_build/html
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          clean-exclude: benchmarks/

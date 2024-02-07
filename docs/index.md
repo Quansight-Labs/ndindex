@@ -277,7 +277,7 @@ There are two primary types of tests that we employ to verify this:
 - Hypothesis tests. Hypothesis is a library that can intelligently check a
   combinatorial search space of inputs. This requires writing hypothesis
   strategies that can generate all the relevant types of indices (see
-  [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/master/ndindex/tests/helpers.py)).
+  [ndindex/tests/helpers.py](https://github.com/Quansight-Labs/ndindex/blob/main/ndindex/tests/helpers.py)).
   For more information on hypothesis, see
   <https://hypothesis.readthedocs.io/en/latest/index.html>. All tests have
   hypothesis tests, even if they are also tested exhaustively.
@@ -307,7 +307,7 @@ Benchmarks for ndindex are published
 
 ## License
 
-[MIT License](https://github.com/Quansight-Labs/ndindex/blob/master/LICENSE)
+[MIT License](https://github.com/Quansight-Labs/ndindex/blob/main/LICENSE)
 
 (acknowledgments)=
 ## Acknowledgments
@@ -319,15 +319,17 @@ Quansight on numerous open source projects, including Numba, Dask and Project
 Jupyter.
 
 <div style="text-align:center">
-<a href="https://labs.quansight.org/"><img src="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" alt="https://labs.quansight.org/"
-width="200"></a>
-<a href="https://www.deshaw.com"><img src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" alt="https://www.deshaw.com"
-width="200"></a>
+<a class="reference external image-reference" href="https://labs.quansight.org/"><img alt="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" class="only-light-inline" src="https://labs.quansight.org/images/QuansightLabs_logo_V2.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://labs.quansight.org/"><img alt="https://labs.quansight.org/images/QuansightLabs_logo_V2_white.png" class="only-dark-inline" src="https://labs.quansight.org/images/QuansightLabs_logo_V2_white.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://www.deshaw.com"><img alt="https://www.deshaw.com/" class="only-light-inline" src="https://www.deshaw.com/assets/logos/blue_logo_417x125.png" style="width: 200px;"></a>
+<a class="reference external image-reference" href="https://www.deshaw.com"><img alt="https://www.deshaw.com/" class="only-dark-inline" src="https://www.deshaw.com/assets/svg/embedded/logo-white.svg" style="width: 200px;"></a>
 </div>
 
 ## Table of Contents
 
 ```{toctree}
+:titlesonly:
+
 api.md
 slices.md
 type-confusion.md

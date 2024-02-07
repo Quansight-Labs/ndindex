@@ -1,12 +1,13 @@
 from collections.abc import Sequence
 from itertools import product
 
-from .ndindex import ImmutableObject, operator_index, asshape, ndindex
+from .ndindex import ImmutableObject, operator_index, ndindex
 from .tuple import Tuple
 from .slice import Slice
 from .integer import Integer
 from .integerarray import IntegerArray
 from .newaxis import Newaxis
+from .shapetools import asshape
 from .subindex_helpers import ceiling
 from ._crt import prod
 

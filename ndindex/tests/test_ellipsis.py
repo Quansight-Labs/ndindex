@@ -4,7 +4,7 @@ from hypothesis import given
 from hypothesis.strategies import one_of, integers
 
 from ..ndindex import ndindex
-from .helpers import check_same, prod, shapes, ellipses
+from .helpers import check_same, prod, shapes, ellipses, reduce_kwargs
 
 def test_ellipsis_exhaustive():
     for n in range(10):
@@ -21,20 +21,20 @@ def test_ellipsis_reduce_exhaustive():
         a = arange(n)
         check_same(a, ..., ndindex_func=lambda a, x: a[x.reduce((n,)).raw])
 
-@given(ellipses(), shapes)
-def test_ellipsis_reduce_hypothesis(idx, shape):
+@given(ellipses(), shapes, reduce_kwargs)
+def test_ellipsis_reduce_hypothesis(idx, shape, kwargs):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
+    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw])
 
 def test_ellipsis_reduce_no_shape_exhaustive():
     for n in range(10):
         a = arange(n)
         check_same(a, ..., ndindex_func=lambda a, x: a[x.reduce().raw])
 
-@given(ellipses(), shapes)
-def test_ellipsis_reduce_no_shape_hypothesis(idx, shape):
+@given(ellipses(), shapes, reduce_kwargs)
+def test_ellipsis_reduce_no_shape_hypothesis(idx, shape, kwargs):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce().raw])
+    check_same(a, idx, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw])
 
 @given(ellipses(), one_of(shapes, integers(0, 10)))
 def test_ellipsis_isempty_hypothesis(idx, shape):

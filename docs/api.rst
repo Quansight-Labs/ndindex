@@ -6,12 +6,8 @@ The ndindex API consists of classes representing the different types of index
 objects (integers, slices, etc.), as well as some helper functions for dealing
 with indices.
 
-
 ndindex
 =======
-
-ndindex
--------
 
 .. autofunction:: ndindex.ndindex
 
@@ -20,8 +16,6 @@ Index Types
 
 The following classes represent different types of indices.
 
-Integer
--------
 
 .. autoclass:: ndindex.Integer
    :members:
@@ -29,34 +23,18 @@ Integer
 
 .. _slice-api:
 
-Slice
------
-
 .. autoclass:: ndindex.Slice
    :members:
    :special-members:
 
-ellipsis
---------
-
 .. autoclass:: ndindex.ellipsis
    :members:
-
-
-Newaxis
--------
 
 .. autoclass:: ndindex.Newaxis
    :members:
 
-Tuple
------
-
 .. autoclass:: ndindex.Tuple
    :members:
-
-IntegerArray
-------------
 
 .. autoclass:: ndindex.IntegerArray
    :members:
@@ -65,9 +43,6 @@ IntegerArray
 
    .. autoattribute:: dtype
       :annotation:
-
-BooleanArray
-------------
 
 .. autoclass:: ndindex.BooleanArray
    :members:
@@ -83,18 +58,19 @@ Index Helpers
 The functions here are helpers for working with indices that aren't methods of
 the index objects.
 
-iter_indices
-------------
-
 .. autofunction:: ndindex.iter_indices
 
-BroadcastError
---------------
+.. autofunction:: ndindex.broadcast_shapes
+
+Exceptions
+==========
+
+These are some custom exceptions that are raised by a few functions in
+ndindex. Note that most functions in ndindex will raise `IndexError`
+(if the index would be invalid), or `TypeError` or `ValueError` (if the input
+types or values are incorrect).
 
 .. autoexception:: ndindex.BroadcastError
-
-AxisError
----------
 
 .. autoexception:: ndindex.AxisError
 
@@ -102,9 +78,6 @@ Chunking
 ========
 
 ndindex contains objects to represent chunking an array.
-
-ChunkSize
----------
 
 .. autoclass:: ndindex.ChunkSize
    :members:
@@ -115,20 +88,11 @@ Internal API
 These classes are only intended for internal use in ndindex. They shouldn't
 relied on as they may be removed or changed.
 
-ImmutableObject
----------------
-
 .. autoclass:: ndindex.ndindex.ImmutableObject
    :members:
 
-NDIndex
--------
-
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
-
-ArrayIndex
-----------
 
 .. autoclass:: ndindex.array.ArrayIndex
    :members:
@@ -137,27 +101,18 @@ ArrayIndex
    .. autoattribute:: dtype
       :annotation: Subclasses should redefine this
 
-default
--------
-
 .. autoclass:: ndindex.slice.default
-
-asshape
--------
-
-.. autofunction:: ndindex.ndindex.asshape
-
-operator_index
---------------
 
 .. autofunction:: ndindex.ndindex.operator_index
 
-ncycles
--------
+.. autofunction:: ndindex.shapetools.asshape
 
-.. autofunction:: ndindex.ndindex.ncycles
+.. autofunction:: ndindex.shapetools.ncycles
 
-broadcast_shapes
-----------------
+.. autofunction:: ndindex.shapetools.associated_axis
 
-.. autofunction:: ndindex.ndindex.broadcast_shapes
+.. autofunction:: ndindex.shapetools.remove_indices
+
+.. autofunction:: ndindex.shapetools.unremove_indices
+
+.. autofunction:: ndindex.shapetools.normalize_skip_axes

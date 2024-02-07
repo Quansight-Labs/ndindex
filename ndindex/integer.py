@@ -1,4 +1,5 @@
-from .ndindex import NDIndex, asshape, operator_index
+from .ndindex import NDIndex, operator_index
+from .shapetools import AxisError, asshape
 
 class Integer(NDIndex):
     """
@@ -48,12 +49,28 @@ class Integer(NDIndex):
         """
         return 1
 
-    def reduce(self, shape=None, axis=0):
+    def isvalid(self, shape, _axis=0):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+        if not shape:
+            return False
+        size = shape[_axis]
+        return -size <= self.raw < size
+
+    def _raise_indexerror(self, shape, axis=0):
+        if not self.isvalid(shape, axis):
+            size = shape[axis]
+            raise IndexError(f"index {self.raw} is out of bounds for axis {axis} with size {size}")
+
+    def reduce(self, shape=None, *, axis=0, negative_int=False, axiserror=False):
         """
         Reduce an Integer index on an array of shape `shape`.
 
         The result will either be `IndexError` if the index is invalid for the
         given shape, or an Integer index where the value is nonnegative.
+
+        If `negative_int` is `True` and a `shape` is provided, then the result
+        will be an Integer index where the value is negative.
 
         >>> from ndindex import Integer
         >>> idx = Integer(-5)
@@ -79,13 +96,22 @@ class Integer(NDIndex):
         if shape is None:
             return self
 
-        shape = asshape(shape, axis=axis)
-        size = shape[axis]
-        if self.raw >= size or -size > self.raw < 0:
-            raise IndexError(f"index {self.raw} is out of bounds for axis {axis} with size {size}")
+        if axiserror:
+            if not isinstance(shape, int): # pragma: no cover
+                raise TypeError("axiserror=True requires shape to be an integer")
+            if not self.isvalid(shape):
+                raise AxisError(self.raw, shape)
 
-        if self.raw < 0:
+        shape = asshape(shape, axis=axis)
+
+        self._raise_indexerror(shape, axis)
+
+        if self.raw < 0 and not negative_int:
+            size = shape[axis]
             return self.__class__(size + self.raw)
+        elif self.raw >= 0 and negative_int:
+            size = shape[axis]
+            return self.__class__(self.raw - size)
 
         return self
 
@@ -93,8 +119,7 @@ class Integer(NDIndex):
         # The docstring for this method is on the NDIndex base class
         shape = asshape(shape)
 
-        # reduce will raise IndexError if it should be raised
-        self.reduce(shape)
+        self._raise_indexerror(shape)
         return shape[1:]
 
     def as_subindex(self, index):

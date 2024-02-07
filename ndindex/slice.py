@@ -1,5 +1,6 @@
-from .ndindex import NDIndex, asshape, operator_index
+from .ndindex import NDIndex, operator_index
 from .subindex_helpers import subindex_slice
+from .shapetools import asshape
 
 class default:
     """
@@ -28,8 +29,8 @@ class Slice(NDIndex):
 
     `Slice.args` always has three arguments, and does not make any distinction
     between, for instance, `Slice(x, y)` and `Slice(x, y, None)`. This is
-    because Python itself does not make the distinction between x:y and x:y:
-    syntactically.
+    because Python itself does not make the distinction between `x:y` and
+    `x:y:` syntactically.
 
     See :ref:`slices-docs` for a description of the semantic meaning of slices
     on arrays.
@@ -75,9 +76,11 @@ class Slice(NDIndex):
         return args
 
     def __hash__(self):
-        # We can't use the default hash(self.raw) because slices are not
-        # hashable
-        return hash(self.args)
+        # Slices are only hashable in Python 3.12+
+        try:
+            return hash(self.raw)
+        except TypeError: # pragma: no cover
+            return hash(self.args)
 
     @property
     def raw(self):
@@ -199,7 +202,7 @@ class Slice(NDIndex):
 
         return len(range(start, stop, step))
 
-    def reduce(self, shape=None, axis=0):
+    def reduce(self, shape=None, *, axis=0, negative_int=False):
         """
         `Slice.reduce` returns a slice that is canonicalized for an array of the
         given shape, or for any shape if `shape` is `None` (the default).
@@ -469,6 +472,13 @@ class Slice(NDIndex):
                 # prefer a nonnegative stop. Otherwise, stop will be -size - 1.
                 stop = start % -step - 1
         return self.__class__(start, stop, step)
+
+    def isvalid(self, shape):
+        # The docstring for this method is on the NDIndex base class
+        shape = asshape(shape)
+
+        # All slices are valid as long as there is at least one dimension
+        return bool(shape)
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class

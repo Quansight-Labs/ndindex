@@ -1,5 +1,54 @@
 # ndindex Changelog
 
+## Version 1.7 (2023-04-20)
+
+## Major Changes
+
+- **Breaking:** the `skip_axes` argument {func}`~.iter_indices` function now
+  applies the skipped axes *before* broadcasting, not after. This behavior is
+  more generally useful and matches how functions with stacking work (e.g.,
+  `np.cross` or `np.matmul`). The best way to get the old behavior is to
+  broadcast the arrays/shapes together first. The `skip_axes` in
+  `iter_indices` must be either all negative or all nonnegative to avoid
+  ambiguity. A future version may add support for specifying different skip
+  axes for each shape.
+
+- {func}`~.iter_indices` no longer requires the skipped axes specified by
+  `skip_axes` to be broadcast compatible.
+
+- New method {meth}`~ndindex.ndindex.NDIndex.isvalid` to check if an index is valid on
+  a given shape.
+
+- New function {func}`~.broadcast_shapes` which is the same as
+  `np.broadcast_shapes()` except it also allows specifying a set of
+  `skip_axes` which will be ignored when broadcasting.
+
+- New exceptions {class}`~.BroadcastError` and {class}`~.AxisError` which are
+  used by {func}`~.iter_indices` and {func}`~.broadcast_shapes`.
+
+## Minor Changes
+
+- The documentation theme has been changed to
+  [Furo](https://pradyunsg.me/furo/), which has a more clean color scheme
+  based on the ndindex logo, better navigation and layout, mobile support, and
+  dark mode support.
+
+- Fix some test failures with the latest version of NumPy.
+
+- Fix some tests that didn't work properly when run against the sdist.
+
+- The sdist now includes relevant testing files.
+
+- Automatically deploy docs from CI again.
+
+- Add a documentation preview CI job.
+
+- Test Python 3.11 in CI.
+
+- Minor improvements to some documentation.
+
+- Fix a typo in the [type confusion](type-confusion) docs. (@ruancomelli)
+
 ## Version 1.6 (2022-01-24)
 
 ### Major Changes
@@ -12,7 +61,7 @@
   ndindex objects still match NumPy indexing semantics everywhere. Note that
   NumPy is still a hard requirement for all tests in the ndindex test suite.
 
-- Added a new function {any}`iter_indices` which is a generalization of the
+- Added a new function {func}`~.iter_indices` which is a generalization of the
   `np.ndindex()` function (which is otherwise unrelated) to allow multiple
   broadcast compatible shapes, and to allow skipping axes.
 
@@ -61,9 +110,9 @@
 ### Minor Changes
 
 - Added
-  [CODE_OF_CONDUCT.md](https://github.com/Quansight-Labs/ndindex/blob/master/CODE_OF_CONDUCT.md)
+  [CODE_OF_CONDUCT.md](https://github.com/Quansight-Labs/ndindex/blob/main/CODE_OF_CONDUCT.md)
   to the ndindex repository. ndindex follows the [Quansight Code of
-  Conduct](https://github.com/Quansight/.github/blob/master/CODE_OF_CONDUCT.md).
+  Conduct](https://github.com/Quansight/.github/blob/main/CODE_OF_CONDUCT.md).
 
 - Avoid precomputing all iterated values for slices with large steps in
   {any}`ChunkSize.as_subchunks()`.
@@ -202,7 +251,7 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
   the [type confusion](type-confusion-tuples) between `Tuple((1, 2))` and
   `Tuple(1, 2)` (only the latter form is correct).
 
-- Document the [`.args`](args) attribute.
+- Document the [`.args`](ndindex.ndindex.ImmutableObject.args) attribute.
 
 - New internal function {func}`~.operator_index`, which acts like
   `operator.index()` except it disallows boolean types. A consequence of this

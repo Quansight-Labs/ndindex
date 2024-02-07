@@ -1,5 +1,6 @@
-from .ndindex import NDIndex, asshape
+from .ndindex import NDIndex
 from .tuple import Tuple
+from .shapetools import asshape
 
 class ellipsis(NDIndex):
     """
@@ -45,7 +46,7 @@ class ellipsis(NDIndex):
     def _typecheck(self):
         return ()
 
-    def reduce(self, shape=None):
+    def reduce(self, shape=None, *, negative_int=False):
         """
         Reduce an ellipsis index
 
@@ -76,6 +77,10 @@ class ellipsis(NDIndex):
     @property
     def raw(self):
         return ...
+
+    def isvalid(self, shape):
+        shape = asshape(shape)
+        return True
 
     def newshape(self, shape):
         # The docstring for this method is on the NDIndex base class

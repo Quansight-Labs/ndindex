@@ -5,7 +5,7 @@ from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
-from .helpers import integer_arrays, short_shapes, check_same, assert_equal
+from .helpers import integer_arrays, short_shapes, check_same, assert_equal, reduce_kwargs
 
 from ..integer import Integer
 from ..integerarray import IntegerArray
@@ -39,8 +39,8 @@ def test_integerarray_hypothesis(idx, shape):
     a = arange(prod(shape)).reshape(shape)
     check_same(a, idx)
 
-@given(integer_arrays, one_of(short_shapes, integers(0, 10)))
-def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
+@given(integer_arrays, one_of(short_shapes, integers(0, 10)), reduce_kwargs)
+def test_integerarray_reduce_no_shape_hypothesis(idx, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -48,13 +48,23 @@ def test_integerarray_reduce_no_shape_hypothesis(idx, shape):
 
     index = IntegerArray(idx)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce().raw])
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw])
 
-@example(array([2, 0]), (1, 0))
-@example(array(0), 1)
-@example(array([], dtype=intp), 0)
-@given(integer_arrays, one_of(short_shapes, integers(0, 10)))
-def test_integerarray_reduce_hypothesis(idx, shape):
+@given(integer_arrays)
+def test_integerarray_reduce_no_shape_unchanged(idx):
+    index = IntegerArray(idx)
+    assert index.reduce() == index.reduce(negative_int=False) == index.reduce(negative_int=True)
+    if index.ndim != 0:
+        assert index.reduce() == index
+
+
+@example(array([2, -2]), (4,), {'negative_int': True})
+@example(array(2), (4,), {'negative_int': True})
+@example(array([2, 0]), (1, 0), {})
+@example(array(0), 1, {})
+@example(array([], dtype=intp), 0, {})
+@given(integer_arrays, one_of(short_shapes, integers(0, 10)), reduce_kwargs)
+def test_integerarray_reduce_hypothesis(idx, shape, kwargs):
     if isinstance(shape, int):
         a = arange(shape)
     else:
@@ -62,22 +72,30 @@ def test_integerarray_reduce_hypothesis(idx, shape):
 
     index = IntegerArray(idx)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape).raw])
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw])
+
+    negative_int = kwargs.get('negative_int', False)
 
     try:
-        reduced = index.reduce(shape)
+        reduced = index.reduce(shape, **kwargs)
     except IndexError:
         pass
     else:
         if isinstance(reduced, Integer):
-            assert reduced.raw >= 0
+            if negative_int:
+                assert reduced.raw < 0
+            else:
+                assert reduced.raw >= 0
         else:
             assert isinstance(reduced, IntegerArray)
-            assert (reduced.raw >= 0).all()
+            if negative_int:
+                assert (reduced.raw < 0).all()
+            else:
+                assert (reduced.raw >= 0).all()
 
         # Idempotency
-        assert reduced.reduce() == reduced
-        assert reduced.reduce(shape) == reduced
+        assert reduced.reduce(**kwargs) == reduced
+        assert reduced.reduce(shape, **kwargs) == reduced
 
 @example([], (1,))
 @example([0], (1, 0))

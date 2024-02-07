@@ -25,7 +25,8 @@ def run_tests():
 
 @activity
 def build_docs():
-    with run_in_conda_env(['python=3.10', 'sphinx', 'myst-parser', 'numpy']):
+    with run_in_conda_env(['python=3.10', 'sphinx', 'myst-parser', 'numpy',
+                           'sphinx-copybutton', 'furo']):
         cd docs
         make html
         cd ..
@@ -47,7 +48,7 @@ $ACTIVITIES = [
     'pypi',  # Sends the package to pypi
     'push_tag',  # Pushes the tag up to the $TAG_REMOTE
     'ghrelease',  # Creates a Github release entry for the new tag
-    'ghpages', # Update GitHub Pages
+    # 'ghpages', # Update GitHub Pages
 ]
 
 $PUSH_TAG_REMOTE = 'git@github.com:Quansight-Labs/ndindex.git'  # Repo to push tags to
