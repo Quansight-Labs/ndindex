@@ -50,7 +50,7 @@ def test_ChunkSize_args(chunk_size_tuple, idx):
 
     try:
         ndindex(idx)
-    except ValueError:
+    except ValueError: # pragma: no cover
         # Filter out invalid slices (TODO: do this in the strategy)
         assume(False)
 

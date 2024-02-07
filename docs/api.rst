@@ -62,6 +62,14 @@ the index objects.
 
 .. autofunction:: ndindex.broadcast_shapes
 
+Exceptions
+==========
+
+These are some custom exceptions that are raised by a few functions in
+ndindex. Note that most functions in ndindex will raise `IndexError`
+(if the index would be invalid), or `TypeError` or `ValueError` (if the input
+types or values are incorrect).
+
 .. autoexception:: ndindex.BroadcastError
 
 .. autoexception:: ndindex.AxisError
@@ -106,3 +114,5 @@ relied on as they may be removed or changed.
 .. autofunction:: ndindex.shapetools.remove_indices
 
 .. autofunction:: ndindex.shapetools.unremove_indices
+
+.. autofunction:: ndindex.shapetools.normalize_skip_axes

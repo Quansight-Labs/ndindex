@@ -1,0 +1,8 @@
+hypothesis
+numpy
+packaging
+pyflakes
+pytest
+pytest-cov
+pytest-doctestplus
+pytest-flakes
