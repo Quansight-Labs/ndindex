@@ -762,11 +762,11 @@ class Tuple(NDIndex):
         array_indices = []
         axis = 0
         for i in idx.args:
-            if i in [None, True]:
-                continue
             if i == False:
                 return
-            if isinstance(i, IntegerArray):
+            elif i == True:
+                pass
+            elif isinstance(i, IntegerArray):
                 array_indices.append(i)
             else:
                 # Tuples do not support array indices separated by slices,
@@ -780,8 +780,9 @@ class Tuple(NDIndex):
                                                            shape, axis=axis))
                     axis += len(array_indices)
                     array_indices.clear()
-                iterators.append(i.selected_indices(shape, axis=axis))
-                axis += 1
+                if i != None:
+                    iterators.append(i.selected_indices(shape, axis=axis))
+                    axis += 1
         if idx.args and isinstance(idx.args[-1], IntegerArray):
             iterators.append(_zipped_array_indices(array_indices,
                                                    shape, axis=axis))

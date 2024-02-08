@@ -8,6 +8,7 @@ from ..tuple import Tuple
 from ..integer import Integer
 from .helpers import ndindices, check_same, short_shapes, prod
 
+@example(([False], None), (1,))
 @example((False, slice(0, 10)), (5, 2))
 @example((None, True, 0), (5, 2))
 @example((slice(0, 10), [0, -1]), (5, 2))
