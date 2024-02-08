@@ -583,6 +583,56 @@ will be an Integer index where the value is negative.</p>
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.Integer.selected_indices">
+<span class="sig-name descname"><span class="pre">selected_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Integer.selected_indices" title="Link to this definition">#</a></dt>
+<dd><p>Return an iterator over all indices that are selected by <code class="code docutils literal notranslate"><span class="pre">self</span></code> on an
+array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>The result is a set of indices <code class="code docutils literal notranslate"><span class="pre">i</span></code> such that <code class="code docutils literal notranslate"><span class="pre">[a[i]</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span>
+<span class="pre">idx.selected_indices(a.shape)]</span></code> is all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. The
+indices are all iterated over in C (i.e., row major) order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="go">[Integer(5), Integer(6), Integer(7), Integer(8), Integer(9)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="go">[Tuple(5, 0), Tuple(5, 1),</span>
+<span class="go"> Tuple(6, 0), Tuple(6, 1),</span>
+<span class="go"> Tuple(7, 0), Tuple(7, 1),</span>
+<span class="go"> Tuple(8, 0), Tuple(8, 1),</span>
+<span class="go"> Tuple(9, 0), Tuple(9, 1)]</span>
+</pre></div>
+</div>
+<p>To correspond these indices to the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>, you can use
+<code class="code docutils literal notranslate"><span class="pre">iter_indices(idx.newshape(shape))</span></code>, since both iterators iterate the
+indices in C order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">a_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">new_idx</span><span class="p">,)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">iter_indices</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))):</span>
+<span class="gp">... </span>       <span class="nb">print</span><span class="p">(</span><span class="n">a_idx</span><span class="p">,</span> <span class="n">new_idx</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">a_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">new_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span>
+<span class="go">Tuple(3, 0) Tuple(0, 0) 15 15</span>
+<span class="go">Tuple(3, 1) Tuple(0, 1) 16 16</span>
+<span class="go">Tuple(4, 0) Tuple(1, 0) 20 20</span>
+<span class="go">Tuple(4, 1) Tuple(1, 1) 21 21</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.iter_indices</span></code></a></dt><dd><p>An iterator of indices to select every element for arrays of a given shape.</p>
+</dd>
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>A high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class" id="slice-api">
@@ -964,6 +1014,56 @@ for a single dimension.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tuple.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Integer.reduce</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ellipsis.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Newaxis.reduce" title="ndindex.Newaxis.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Newaxis.reduce</span></code></a>, <a class="reference internal" href="#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegerArray.reduce</span></code></a>, <a class="reference internal" href="#ndindex.BooleanArray.reduce" title="ndindex.BooleanArray.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BooleanArray.reduce</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.Slice.selected_indices">
+<span class="sig-name descname"><span class="pre">selected_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Slice.selected_indices" title="Link to this definition">#</a></dt>
+<dd><p>Return an iterator over all indices that are selected by <code class="code docutils literal notranslate"><span class="pre">self</span></code> on an
+array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>The result is a set of indices <code class="code docutils literal notranslate"><span class="pre">i</span></code> such that <code class="code docutils literal notranslate"><span class="pre">[a[i]</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span>
+<span class="pre">idx.selected_indices(a.shape)]</span></code> is all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. The
+indices are all iterated over in C (i.e., row major) order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="go">[Integer(5), Integer(6), Integer(7), Integer(8), Integer(9)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="go">[Tuple(5, 0), Tuple(5, 1),</span>
+<span class="go"> Tuple(6, 0), Tuple(6, 1),</span>
+<span class="go"> Tuple(7, 0), Tuple(7, 1),</span>
+<span class="go"> Tuple(8, 0), Tuple(8, 1),</span>
+<span class="go"> Tuple(9, 0), Tuple(9, 1)]</span>
+</pre></div>
+</div>
+<p>To correspond these indices to the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>, you can use
+<code class="code docutils literal notranslate"><span class="pre">iter_indices(idx.newshape(shape))</span></code>, since both iterators iterate the
+indices in C order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">a_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">new_idx</span><span class="p">,)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">iter_indices</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))):</span>
+<span class="gp">... </span>       <span class="nb">print</span><span class="p">(</span><span class="n">a_idx</span><span class="p">,</span> <span class="n">new_idx</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">a_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">new_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span>
+<span class="go">Tuple(3, 0) Tuple(0, 0) 15 15</span>
+<span class="go">Tuple(3, 1) Tuple(0, 1) 16 16</span>
+<span class="go">Tuple(4, 0) Tuple(1, 0) 20 20</span>
+<span class="go">Tuple(4, 1) Tuple(1, 1) 21 21</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.iter_indices</span></code></a></dt><dd><p>An iterator of indices to select every element for arrays of a given shape.</p>
+</dd>
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>A high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -1791,6 +1891,56 @@ instead of a scalar.</p>
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.Tuple.selected_indices">
+<span class="sig-name descname"><span class="pre">selected_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.Tuple.selected_indices" title="Link to this definition">#</a></dt>
+<dd><p>Return an iterator over all indices that are selected by <code class="code docutils literal notranslate"><span class="pre">self</span></code> on an
+array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>The result is a set of indices <code class="code docutils literal notranslate"><span class="pre">i</span></code> such that <code class="code docutils literal notranslate"><span class="pre">[a[i]</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span>
+<span class="pre">idx.selected_indices(a.shape)]</span></code> is all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. The
+indices are all iterated over in C (i.e., row major) order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="go">[Integer(5), Integer(6), Integer(7), Integer(8), Integer(9)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="go">[Tuple(5, 0), Tuple(5, 1),</span>
+<span class="go"> Tuple(6, 0), Tuple(6, 1),</span>
+<span class="go"> Tuple(7, 0), Tuple(7, 1),</span>
+<span class="go"> Tuple(8, 0), Tuple(8, 1),</span>
+<span class="go"> Tuple(9, 0), Tuple(9, 1)]</span>
+</pre></div>
+</div>
+<p>To correspond these indices to the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>, you can use
+<code class="code docutils literal notranslate"><span class="pre">iter_indices(idx.newshape(shape))</span></code>, since both iterators iterate the
+indices in C order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">a_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">new_idx</span><span class="p">,)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">iter_indices</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))):</span>
+<span class="gp">... </span>       <span class="nb">print</span><span class="p">(</span><span class="n">a_idx</span><span class="p">,</span> <span class="n">new_idx</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">a_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">new_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span>
+<span class="go">Tuple(3, 0) Tuple(0, 0) 15 15</span>
+<span class="go">Tuple(3, 1) Tuple(0, 1) 16 16</span>
+<span class="go">Tuple(4, 0) Tuple(1, 0) 20 20</span>
+<span class="go">Tuple(4, 1) Tuple(1, 1) 21 21</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.iter_indices</span></code></a></dt><dd><p>An iterator of indices to select every element for arrays of a given shape.</p>
+</dd>
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>A high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2193,6 +2343,56 @@ entries.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tuple.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Slice.reduce</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ellipsis.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Newaxis.reduce" title="ndindex.Newaxis.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Newaxis.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Integer.reduce</span></code></a>, <a class="reference internal" href="#ndindex.BooleanArray.reduce" title="ndindex.BooleanArray.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BooleanArray.reduce</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.IntegerArray.selected_indices">
+<span class="sig-name descname"><span class="pre">selected_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.IntegerArray.selected_indices" title="Link to this definition">#</a></dt>
+<dd><p>Return an iterator over all indices that are selected by <code class="code docutils literal notranslate"><span class="pre">self</span></code> on an
+array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>The result is a set of indices <code class="code docutils literal notranslate"><span class="pre">i</span></code> such that <code class="code docutils literal notranslate"><span class="pre">[a[i]</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span>
+<span class="pre">idx.selected_indices(a.shape)]</span></code> is all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. The
+indices are all iterated over in C (i.e., row major) order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="go">[Integer(5), Integer(6), Integer(7), Integer(8), Integer(9)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="go">[Tuple(5, 0), Tuple(5, 1),</span>
+<span class="go"> Tuple(6, 0), Tuple(6, 1),</span>
+<span class="go"> Tuple(7, 0), Tuple(7, 1),</span>
+<span class="go"> Tuple(8, 0), Tuple(8, 1),</span>
+<span class="go"> Tuple(9, 0), Tuple(9, 1)]</span>
+</pre></div>
+</div>
+<p>To correspond these indices to the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>, you can use
+<code class="code docutils literal notranslate"><span class="pre">iter_indices(idx.newshape(shape))</span></code>, since both iterators iterate the
+indices in C order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">a_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">new_idx</span><span class="p">,)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">iter_indices</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))):</span>
+<span class="gp">... </span>       <span class="nb">print</span><span class="p">(</span><span class="n">a_idx</span><span class="p">,</span> <span class="n">new_idx</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">a_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">new_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span>
+<span class="go">Tuple(3, 0) Tuple(0, 0) 15 15</span>
+<span class="go">Tuple(3, 1) Tuple(0, 1) 16 16</span>
+<span class="go">Tuple(4, 0) Tuple(1, 0) 20 20</span>
+<span class="go">Tuple(4, 1) Tuple(1, 1) 21 21</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.iter_indices</span></code></a></dt><dd><p>An iterator of indices to select every element for arrays of a given shape.</p>
+</dd>
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>A high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -2664,6 +2864,56 @@ are done for BooleanArray: if <code class="code docutils literal notranslate"><s
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDIndex.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Tuple.reduce" title="ndindex.Tuple.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tuple.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Slice.reduce</span></code></a>, <a class="reference internal" href="#ndindex.ellipsis.reduce" title="ndindex.ellipsis.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ellipsis.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Newaxis.reduce" title="ndindex.Newaxis.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Newaxis.reduce</span></code></a>, <a class="reference internal" href="#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Integer.reduce</span></code></a>, <a class="reference internal" href="#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegerArray.reduce</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.BooleanArray.selected_indices">
+<span class="sig-name descname"><span class="pre">selected_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.BooleanArray.selected_indices" title="Link to this definition">#</a></dt>
+<dd><p>Return an iterator over all indices that are selected by <code class="code docutils literal notranslate"><span class="pre">self</span></code> on an
+array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>The result is a set of indices <code class="code docutils literal notranslate"><span class="pre">i</span></code> such that <code class="code docutils literal notranslate"><span class="pre">[a[i]</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span>
+<span class="pre">idx.selected_indices(a.shape)]</span></code> is all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. The
+indices are all iterated over in C (i.e., row major) order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="go">[Integer(5), Integer(6), Integer(7), Integer(8), Integer(9)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="go">[Tuple(5, 0), Tuple(5, 1),</span>
+<span class="go"> Tuple(6, 0), Tuple(6, 1),</span>
+<span class="go"> Tuple(7, 0), Tuple(7, 1),</span>
+<span class="go"> Tuple(8, 0), Tuple(8, 1),</span>
+<span class="go"> Tuple(9, 0), Tuple(9, 1)]</span>
+</pre></div>
+</div>
+<p>To correspond these indices to the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>, you can use
+<code class="code docutils literal notranslate"><span class="pre">iter_indices(idx.newshape(shape))</span></code>, since both iterators iterate the
+indices in C order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">a_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">new_idx</span><span class="p">,)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">iter_indices</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))):</span>
+<span class="gp">... </span>       <span class="nb">print</span><span class="p">(</span><span class="n">a_idx</span><span class="p">,</span> <span class="n">new_idx</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">a_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">new_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span>
+<span class="go">Tuple(3, 0) Tuple(0, 0) 15 15</span>
+<span class="go">Tuple(3, 1) Tuple(0, 1) 16 16</span>
+<span class="go">Tuple(4, 0) Tuple(1, 0) 20 20</span>
+<span class="go">Tuple(4, 1) Tuple(1, 1) 21 21</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.iter_indices</span></code></a></dt><dd><p>An iterator of indices to select every element for arrays of a given shape.</p>
+</dd>
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>A high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
@@ -3466,6 +3716,56 @@ optional <code class="code docutils literal notranslate"><span class="pre">axis<
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ndindex.ndindex.NDIndex.selected_indices">
+<span class="sig-name descname"><span class="pre">selected_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ndindex.ndindex.NDIndex.selected_indices" title="Link to this definition">#</a></dt>
+<dd><p>Return an iterator over all indices that are selected by <code class="code docutils literal notranslate"><span class="pre">self</span></code> on an
+array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+<p>The result is a set of indices <code class="code docutils literal notranslate"><span class="pre">i</span></code> such that <code class="code docutils literal notranslate"><span class="pre">[a[i]</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span>
+<span class="pre">idx.selected_indices(a.shape)]</span></code> is all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. The
+indices are all iterated over in C (i.e., row major) order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="go">[Integer(5), Integer(6), Integer(7), Integer(8), Integer(9)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="go">[Tuple(5, 0), Tuple(5, 1),</span>
+<span class="go"> Tuple(6, 0), Tuple(6, 1),</span>
+<span class="go"> Tuple(7, 0), Tuple(7, 1),</span>
+<span class="go"> Tuple(8, 0), Tuple(8, 1),</span>
+<span class="go"> Tuple(9, 0), Tuple(9, 1)]</span>
+</pre></div>
+</div>
+<p>To correspond these indices to the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>, you can use
+<code class="code docutils literal notranslate"><span class="pre">iter_indices(idx.newshape(shape))</span></code>, since both iterators iterate the
+indices in C order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">a_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">new_idx</span><span class="p">,)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">idx</span><span class="o">.</span><span class="n">selected_indices</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">iter_indices</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">newshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))):</span>
+<span class="gp">... </span>       <span class="nb">print</span><span class="p">(</span><span class="n">a_idx</span><span class="p">,</span> <span class="n">new_idx</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">a_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">raw</span><span class="p">][</span><span class="n">new_idx</span><span class="o">.</span><span class="n">raw</span><span class="p">])</span>
+<span class="go">Tuple(3, 0) Tuple(0, 0) 15 15</span>
+<span class="go">Tuple(3, 1) Tuple(0, 1) 16 16</span>
+<span class="go">Tuple(4, 0) Tuple(1, 0) 20 20</span>
+<span class="go">Tuple(4, 1) Tuple(1, 1) 21 21</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.iter_indices</span></code></a></dt><dd><p>An iterator of indices to select every element for arrays of a given shape.</p>
+</dd>
+<dt><a class="reference internal" href="#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndindex.ChunkSize.as_subchunks</span></code></a></dt><dd><p>A high-level iterator that efficiently gives only those chunks that intersect with a given index</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -3795,6 +4095,7 @@ sorted.</p>
 <li><a class="reference internal" href="#ndindex.Integer.newshape"><code class="docutils literal notranslate"><span class="pre">Integer.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Integer.raw"><code class="docutils literal notranslate"><span class="pre">Integer.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Integer.reduce"><code class="docutils literal notranslate"><span class="pre">Integer.reduce()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.Integer.selected_indices"><code class="docutils literal notranslate"><span class="pre">Integer.selected_indices()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ndindex.Slice"><code class="docutils literal notranslate"><span class="pre">Slice</span></code></a><ul>
@@ -3807,6 +4108,7 @@ sorted.</p>
 <li><a class="reference internal" href="#ndindex.Slice.newshape"><code class="docutils literal notranslate"><span class="pre">Slice.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.raw"><code class="docutils literal notranslate"><span class="pre">Slice.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.reduce"><code class="docutils literal notranslate"><span class="pre">Slice.reduce()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.Slice.selected_indices"><code class="docutils literal notranslate"><span class="pre">Slice.selected_indices()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.start"><code class="docutils literal notranslate"><span class="pre">Slice.start</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.step"><code class="docutils literal notranslate"><span class="pre">Slice.step</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Slice.stop"><code class="docutils literal notranslate"><span class="pre">Slice.stop</span></code></a></li>
@@ -3839,6 +4141,7 @@ sorted.</p>
 <li><a class="reference internal" href="#ndindex.Tuple.newshape"><code class="docutils literal notranslate"><span class="pre">Tuple.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Tuple.raw"><code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.Tuple.reduce"><code class="docutils literal notranslate"><span class="pre">Tuple.reduce()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.Tuple.selected_indices"><code class="docutils literal notranslate"><span class="pre">Tuple.selected_indices()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ndindex.IntegerArray"><code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code></a><ul>
@@ -3854,6 +4157,7 @@ sorted.</p>
 <li><a class="reference internal" href="#ndindex.IntegerArray.newshape"><code class="docutils literal notranslate"><span class="pre">IntegerArray.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.raw"><code class="docutils literal notranslate"><span class="pre">IntegerArray.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.reduce"><code class="docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.IntegerArray.selected_indices"><code class="docutils literal notranslate"><span class="pre">IntegerArray.selected_indices()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.shape"><code class="docutils literal notranslate"><span class="pre">IntegerArray.shape</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.IntegerArray.size"><code class="docutils literal notranslate"><span class="pre">IntegerArray.size</span></code></a></li>
 </ul>
@@ -3872,6 +4176,7 @@ sorted.</p>
 <li><a class="reference internal" href="#ndindex.BooleanArray.newshape"><code class="docutils literal notranslate"><span class="pre">BooleanArray.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.raw"><code class="docutils literal notranslate"><span class="pre">BooleanArray.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.reduce"><code class="docutils literal notranslate"><span class="pre">BooleanArray.reduce()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.BooleanArray.selected_indices"><code class="docutils literal notranslate"><span class="pre">BooleanArray.selected_indices()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.shape"><code class="docutils literal notranslate"><span class="pre">BooleanArray.shape</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.BooleanArray.size"><code class="docutils literal notranslate"><span class="pre">BooleanArray.size</span></code></a></li>
 </ul>
@@ -3914,6 +4219,7 @@ sorted.</p>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.newshape"><code class="docutils literal notranslate"><span class="pre">NDIndex.newshape()</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.raw"><code class="docutils literal notranslate"><span class="pre">NDIndex.raw</span></code></a></li>
 <li><a class="reference internal" href="#ndindex.ndindex.NDIndex.reduce"><code class="docutils literal notranslate"><span class="pre">NDIndex.reduce()</span></code></a></li>
+<li><a class="reference internal" href="#ndindex.ndindex.NDIndex.selected_indices"><code class="docutils literal notranslate"><span class="pre">NDIndex.selected_indices()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ndindex.array.ArrayIndex"><code class="docutils literal notranslate"><span class="pre">ArrayIndex</span></code></a><ul>
