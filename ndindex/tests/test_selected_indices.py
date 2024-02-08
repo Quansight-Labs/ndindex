@@ -15,10 +15,7 @@ def test_selected_indices_hypothesis(idx, shape):
     else:
         a = arange(prod(shape)).reshape(shape)
 
-    try:
-        ndindex(idx)
-    except IndexError:
-        pass
+    ndindex(idx)
 
     def raw_func(a, idx):
         return list(a[idx].flat)
