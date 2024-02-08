@@ -4,77 +4,117 @@ import operator
 
 newaxis = None
 
-def ndindex(obj):
+class NDIndexConstructor:
     """
-    Convert an object into an ndindex type
+    Convert an object into an ndindex type.
 
-    Invalid indices will raise `IndexError`.
+    Invalid indices will raise `IndexError`, `TypeError`, or `ValueError`
+    (generally, the same error NumPy would raise if the index were used on an
+    array).
+
+    Indices are created by calling `ndindex` with getitem syntax:
 
     >>> from ndindex import ndindex
-    >>> ndindex(1)
+    >>> ndindex[1]
     Integer(1)
+    >>> ndindex[0:10, :]
+    Tuple(slice(0, 10, None), slice(None, None, None))
+
+    You can also create indices by calling `ndindex(idx)` like a function.
+    However, if you do this, you cannot use the `a:b` slice syntax, as it is
+    not syntactically valid:
+
+    >>> ndindex[0:10]
+    Slice(0, 10, None)
+    >>> ndindex(0:10)
+    Traceback (most recent call last):
+    ...
+        ndindex(0:10)
+                 ^
+    SyntaxError: invalid syntax
     >>> ndindex(slice(0, 10))
     Slice(0, 10, None)
 
+    Additionally, the `ndindex[idx]` syntax does not require parentheses when
+    creating a tuple index:
+
+    >>> ndindex[0, 1]
+    Tuple(0, 1)
+    >>> ndindex(0, 1) # doctest:+IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ...
+    TypeError: NDIndexConstructor.__call__() takes 2 positional arguments but 3 were given
+    >>> ndindex((0, 1))
+    Tuple(0, 1)
+
+    Therefore `ndindex[idx]` should generally be preferred when creating an
+    index from a tuple or slice literal.
+
     """
-    if isinstance(obj, NDIndex):
-        return obj
+    def __getitem__(self, obj):
+        if isinstance(obj, NDIndex):
+            return obj
 
-    if 'numpy' in sys.modules:
-        from numpy import ndarray, bool_
-    else: # pragma: no cover
-        bool_ = bool
-        ndarray = ()
+        if 'numpy' in sys.modules:
+            from numpy import ndarray, bool_
+        else: # pragma: no cover
+            bool_ = bool
+            ndarray = ()
 
-    if isinstance(obj, (bool, bool_)):
-        from . import BooleanArray
-        return BooleanArray(obj)
-
-    if isinstance(obj, (list, ndarray)):
-        from . import IntegerArray, BooleanArray
-
-        try:
-            return IntegerArray(obj)
-        except TypeError:
-            pass
-        try:
+        if isinstance(obj, (bool, bool_)):
+            from . import BooleanArray
             return BooleanArray(obj)
+
+        if isinstance(obj, (list, ndarray)):
+            from . import IntegerArray, BooleanArray
+
+            try:
+                return IntegerArray(obj)
+            except TypeError:
+                pass
+            try:
+                return BooleanArray(obj)
+            except TypeError:
+                pass
+
+            # Match the NumPy exceptions
+            if isinstance(obj, ndarray):
+                raise IndexError("arrays used as indices must be of integer (or boolean) type")
+            else:
+                raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+
+        try:
+            from . import Integer
+            # If operator.index() works, use that
+            return Integer(obj)
         except TypeError:
             pass
 
-        # Match the NumPy exceptions
-        if isinstance(obj, ndarray):
-            raise IndexError("arrays used as indices must be of integer (or boolean) type")
-        else:
-            raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+        if isinstance(obj, slice):
+            from . import Slice
+            return Slice(obj)
 
-    try:
-        from . import Integer
-        # If operator.index() works, use that
-        return Integer(obj)
-    except TypeError:
-        pass
+        if isinstance(obj, tuple):
+            from . import Tuple
+            return Tuple(*obj)
 
-    if isinstance(obj, slice):
-        from . import Slice
-        return Slice(obj)
+        from . import ellipsis
 
-    if isinstance(obj, tuple):
-        from . import Tuple
-        return Tuple(*obj)
+        if obj == ellipsis:
+            raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
+        if obj is Ellipsis:
+            return ellipsis()
 
-    from . import ellipsis
+        if obj == newaxis:
+            from . import Newaxis
+            return Newaxis()
 
-    if obj == ellipsis:
-        raise IndexError("Got ellipsis class. Did you mean to use the instance, ellipsis()?")
-    if obj is Ellipsis:
-        return ellipsis()
+        raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
 
-    if obj == newaxis:
-        from . import Newaxis
-        return Newaxis()
+    def __call__(self, obj):
+        return self[obj]
 
-    raise IndexError("only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices")
+ndindex = NDIndexConstructor()
 
 class classproperty(object):
     def __init__(self, f):

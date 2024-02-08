@@ -64,8 +64,8 @@ Some general types to help avoid type confusion:
 
     ```py
     indices = {
-        ndindex(slice(0, 10)): 0,
-        ndindex(slice(10, 20)): 1
+        ndindex[0:10]: 0,
+        ndindex[10:20]: 1
     }
     ```
 
@@ -85,7 +85,7 @@ Some general types to help avoid type confusion:
 
     ```py
     # Typo would be caught right away
-    idx = ndindex(slice(1, 2.))
+    idx = ndindex[1:2.]
     # OR
     idx = Slice(1, 2.)
     ```
@@ -106,7 +106,8 @@ Some general types to help avoid type confusion:
     **Right**
 
     ```py
-    if ndindex(idx) == ndindex((slice(0, 2), np.array([0, 0])):
+    # Note only one side of the == needs to be an ndindex type
+    if ndindex(idx) == (slice(0, 2), np.array([0, 0]):
         ...
     ```
 
@@ -211,7 +212,7 @@ Additionally, some advice for specific types:
   **Right:**
 
   ```py
-  idx = ndindex((0, slice(0, 1))
+  idx = ndindex[0, 0:1]
   idx.raw[0] # Gives int(0)
   idx.args[0] # Gives Integer(0)
   ```
@@ -219,7 +220,7 @@ Additionally, some advice for specific types:
   **Wrong:**
 
   ```py
-  idx = ndindex((0, slice(0, 1))
+  idx = ndindex[0, 0:1]
   idx[0] # Produces an error
   ```
 
@@ -233,7 +234,7 @@ Additionally, some advice for specific types:
 
    **Better:**
    ```py
-   ndindex((0, slice(0, 1)))
+   ndindex[0, 0:1]
    ```
 
    **Wrong:**
@@ -246,7 +247,7 @@ Additionally, some advice for specific types:
 ## ellipsis
 
 - You should almost never use the ndindex {class}`~.ellipsis` class directly.
-  Instead, **use `...` or `ndindex(...)`**. As noted above, all ndindex
+  Instead, **use `...` or `ndindex[...]`**. As noted above, all ndindex
   methods and `Tuple` will automatically convert `...` into the ndindex type.
 
   **Right:**
@@ -270,13 +271,13 @@ Additionally, some advice for specific types:
   **Right:**
 
   ```py
-  idx = ndindex((0, ..., 1))
+  idx = ndindex[0, ..., 1]
   ```
 
   **Wrong:**
 
   ```py
-  idx = ndindex((0, Ellipsis, 1)) # Less readable
+  idx = ndindex[0, Ellipsis, 1] # Less readable
   ```
 
 
@@ -287,25 +288,25 @@ Additionally, some advice for specific types:
   **Right:**
 
   ```py
-  idx = ndindex((0, ..., 1))
+  idx = ndindex[0, ..., 1]
   ```
 
   **Wrong:**
 
   ```py
-  idx = ndindex((0, ellipsis, 1)) # Gives an error
+  idx = ndindex[0, ellipsis, 1] # Gives an error
   ```
 
   The below do not give errors, but it is easy to confuse them with the above.
   It is best to just use `...`, which is more concise and easier to read.
 
   ```py
-  idx = ndindex((0, ellipsis(), 1)) # Easy to confuse, less readable
+  idx = ndindex[0, ellipsis(), 1] # Easy to confuse, less readable
   idx.reduce()
   ```
 
   ```py
-  idx = ndindex((0, Ellipsis, 1)) # Easy to confuse, less readable
+  idx = ndindex[0, Ellipsis, 1] # Easy to confuse, less readable
   idx.reduce()
   ```
 
@@ -347,7 +348,7 @@ for `None`.
   **Right:**
 
   ```py
-  idx = ndindex(np.newaxis)
+  idx = ndindex[np.newaxis]
   idx.reduce()
   ```
 
@@ -365,17 +366,17 @@ for `None`.
   **Right:**
 
   ```py
-  idx = ndindex((0, np.newaxis, 1))
+  idx = ndindex[0, np.newaxis, 1]
   ```
 
   ```py
-  idx = ndindex((0, None, 1))
+  idx = ndindex[0, None, 1]
   ```
 
   **Wrong:**
 
   ```py
-  idx = ndindex((0, Newaxis, 1)) # Gives an error
+  idx = ndindex[0, Newaxis, 1] # Gives an error
   ```
 
   The below does not give an error, but it is easy to confuse it with the
@@ -383,7 +384,7 @@ for `None`.
   and easier to read.
 
   ```py
-  idx = ndindex((0, Newaxis(), 1)) # Easy to confuse
+  idx = ndindex[0, Newaxis(), 1] # Easy to confuse
   idx.reduce()
   ```
 

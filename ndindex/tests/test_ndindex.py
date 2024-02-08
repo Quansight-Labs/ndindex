@@ -78,6 +78,8 @@ def test_eq_explicit():
 def test_ndindex(idx):
     index = ndindex(idx)
     assert index == idx
+    assert ndindex[idx] == index
+
     def test_raw_eq(idx, index):
         if isinstance(idx, np.ndarray):
             assert_equal(index.raw, idx)
