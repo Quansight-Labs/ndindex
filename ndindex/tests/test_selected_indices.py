@@ -1,6 +1,6 @@
 from numpy import arange
 
-from hypothesis import given
+from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
@@ -8,6 +8,12 @@ from ..tuple import Tuple
 from ..integer import Integer
 from .helpers import ndindices, check_same, short_shapes, prod
 
+@example((False, slice(0, 10)), (5, 2))
+@example((None, True, 0), (5, 2))
+@example((slice(0, 10), [0, -1]), (5, 2))
+@example(slice(0, 10), 5)
+@example([0, 1, 2], 3)
+@example(([0, 1, 2],), 3)
 @given(ndindices, one_of(short_shapes, integers(0, 10)))
 def test_selected_indices_hypothesis(idx, shape):
     if isinstance(shape, int):
