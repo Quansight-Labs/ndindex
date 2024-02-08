@@ -1,4 +1,4 @@
-from numpy import arange, prod, array, intp, empty
+from numpy import arange, array, intp, empty
 
 from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
@@ -9,7 +9,7 @@ from ..booleanarray import BooleanArray
 from ..integerarray import IntegerArray
 from ..integer import Integer
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, short_shapes
+from .helpers import ndindices, check_same, short_shapes, prod
 
 @example(True, (1,))
 @example((Ellipsis, array([[ True,  True]])), (1, 2))
