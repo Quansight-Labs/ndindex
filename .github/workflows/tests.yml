@@ -12,6 +12,8 @@ jobs:
           - python-version: '3.12-dev'
             numpy-version: '1.22'
       fail-fast: false
+    env:
+      COVERAGE_CORE: sysmon # Enable experimental faster sys.monitoring coverage for Python 3.12
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
