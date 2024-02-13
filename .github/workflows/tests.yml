@@ -31,7 +31,7 @@ jobs:
           fi
       # Enable experimental faster sys.monitoring coverage for Python 3.12
       - name: Set COVERAGE_CORE=sysmon
-        run: echo COVERAGE_CORE=sysmon" >> $GITHUB_ENV
+        run: echo "COVERAGE_CORE=sysmon" >> $GITHUB_ENV
         if: matrix.python-version == 3.12
       - name: Run Tests
         run: |
