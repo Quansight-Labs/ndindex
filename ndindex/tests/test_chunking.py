@@ -205,6 +205,7 @@ def test_num_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).num_subchunks(..., (1, 2, 3))))
 
 
+@example((2, 2), (0, False), (5, 5))
 @example((5,), [0, 7], (15,))
 @example((5,), [], (15,))
 @given(chunk_sizes(), ndindices, chunk_shapes)
