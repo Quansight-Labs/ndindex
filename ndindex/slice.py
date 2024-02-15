@@ -583,6 +583,14 @@ class Slice(NDIndex):
             return self.args == other.args
         return False
 
+    def selected_indices(self, shape, axis=None):
+        if axis is None:
+            yield from self.expand(shape).selected_indices(shape)
+        else:
+            shape = asshape(shape, axis=axis)
+            for i in range(shape[axis])[self.raw]:
+                yield Integer(i)
+
 # Imports at the bottom to avoid circular import issues
 from .ndindex import ndindex
 from .tuple import Tuple

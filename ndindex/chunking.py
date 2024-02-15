@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from itertools import product
+from itertools import chain, product
 
 from .ndindex import ImmutableObject, operator_index, ndindex
 from .tuple import Tuple
@@ -240,8 +240,29 @@ class ChunkSize(ImmutableObject, Sequence):
             if isinstance(i, Integer):
                 iters.append([i.raw//n])
             elif isinstance(i, IntegerArray):
-                from numpy import unique
-                iters.append(unique(i.array//n).flat)
+                # All arrays will be together after calling expand() (Tuple does not support arrays
+                # separated by non-integer indices). Collect them all together
+                # at once.
+                arrs = []
+                while True:
+                    try:
+                        if isinstance(i, IntegerArray):
+                            arrs.append(i.raw.flatten()//n)
+                        else:
+                            idx_args = chain([i], idx_args)
+                            self_ = chain([n], self_)
+                            break
+                        i = next(idx_args)
+                        n = next(self_)
+                    except StopIteration:
+                        break
+
+                import numpy as np
+                a = np.unique(np.stack(arrs), axis=-1)
+                def _array_iter(a):
+                    for i in range(a.shape[-1]):
+                        yield tuple(a[..., i].flat)
+                iters.append(_array_iter(a))
             elif isinstance(i, Slice) and i.step > 0:
                 def _slice_iter(s, n):
                     a, N, m = s.args
@@ -257,8 +278,16 @@ class ChunkSize(ImmutableObject, Sequence):
                 yield from _fallback()
                 return # pragma: no cover
 
+        def _flatten(l):
+            for element in l:
+                if isinstance(element, tuple):
+                    yield from element
+                else:
+                    yield element
+
         def _indices(iters):
-            for p in product(*iters):
+            for _p in product(*iters):
+                p = _flatten(_p)
                 # p = (0, 0, 0), (0, 0, 1), ...
                 yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
                           for n, chunk_size, i in zip(shape, self, p)])
@@ -318,8 +347,23 @@ class ChunkSize(ImmutableObject, Sequence):
             if isinstance(i, Integer):
                 continue
             elif isinstance(i, IntegerArray):
-                from numpy import unique
-                res *= unique(i.array//n).size
+                arrs = []
+                # see as_subchunks
+                while True:
+                    try:
+                        if isinstance(i, IntegerArray):
+                            arrs.append(i.raw.flatten()//n)
+                        else:
+                            idx_args = chain([i], idx_args)
+                            self_ = chain([n], self_)
+                            break
+                        i = next(idx_args)
+                        n = next(self_)
+                    except StopIteration:
+                        break
+
+                import numpy as np
+                res *= np.unique(np.stack(arrs), axis=-1).shape[-1]
             elif isinstance(i, Slice):
                 if i.step < 0:
                     raise NotImplementedError("num_subchunks() is not implemented for slices with negative step")

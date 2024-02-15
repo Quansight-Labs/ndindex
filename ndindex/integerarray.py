@@ -175,6 +175,14 @@ class IntegerArray(ArrayIndex):
 
         raise NotImplementedError("IntegerArray.as_subindex is only implemented for slices")
 
+    def selected_indices(self, shape, axis=None):
+        if axis is None:
+            yield from self.expand(shape).selected_indices(shape)
+        else:
+            shape = asshape(shape, axis=axis)
+            for i in self.array.flat:
+                yield Integer(i)
+
     def __eq__(self, other):
         from numpy import ndarray
 

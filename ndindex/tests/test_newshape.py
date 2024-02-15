@@ -1,6 +1,6 @@
 from pytest import raises
 
-from numpy import arange, prod, array, full
+from numpy import arange, array, full
 
 from hypothesis import given, example
 from hypothesis.strategies import integers, one_of
@@ -8,7 +8,7 @@ from hypothesis.strategies import integers, one_of
 from ..ndindex import ndindex
 from ..tuple import Tuple
 from ..integer import Integer
-from .helpers import ndindices, check_same, short_shapes
+from .helpers import ndindices, check_same, short_shapes, prod
 
 @example(..., 0)
 @example((True,), ())

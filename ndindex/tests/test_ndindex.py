@@ -15,6 +15,7 @@ from ..integerarray import IntegerArray
 from .helpers import ndindices, check_same, assert_equal
 
 
+@example(None)
 @example([1, 2])
 @given(ndindices)
 def test_eq(idx):
