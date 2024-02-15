@@ -483,7 +483,7 @@ def iterslice(start_range=(-10, 10),
                 yield (start, stop, step)
 
 
-chunk_shapes = shared(shapes)
+chunk_shapes = short_shapes
 
 @composite
 def chunk_sizes(draw, shapes=chunk_shapes):
