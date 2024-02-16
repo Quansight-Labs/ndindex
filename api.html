@@ -285,18 +285,18 @@ with indices.</p>
 <p>Invalid indices will raise <code class="code docutils literal notranslate"><span class="pre">IndexError</span></code>, <code class="code docutils literal notranslate"><span class="pre">TypeError</span></code>, or <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code>
 (generally, the same error NumPy would raise if the index were used on an
 array).</p>
-<p>Indices are created by calling <code class="code docutils literal notranslate"><span class="pre">ndindex</span></code> with getitem syntax:</p>
+<p>Indices are created by calling the <code class="code docutils literal notranslate"><span class="pre">ndindex</span></code> with raw index objects:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ndindex</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">Integer(1)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:]</span>
-<span class="go">Tuple(slice(0, 10, None), slice(None, None, None))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="go">Slice(0, 10, None)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">((</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
+<span class="go">Tuple(slice(0, 10, None), 0)</span>
 </pre></div>
 </div>
-<p>You can also create indices by calling <code class="code docutils literal notranslate"><span class="pre">ndindex(idx)</span></code> like a function.
-However, if you do this, you cannot use the <code class="code docutils literal notranslate"><span class="pre">a:b</span></code> slice syntax, as it is
-not syntactically valid:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+<p>Indices can also be created by calling <code class="code docutils literal notranslate"><span class="pre">ndindex</span></code> with getitem syntax.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">Integer(1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
 <span class="go">Slice(0, 10, None)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
@@ -304,11 +304,12 @@ not syntactically valid:</p>
 <span class="w">    </span><span class="n">ndindex</span><span class="p">(</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">)</span>
 <span class="w">             </span><span class="pm">^</span>
 <span class="gr">SyntaxError</span>: <span class="n">invalid syntax</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="go">Slice(0, 10, None)</span>
 </pre></div>
 </div>
-<p>Additionally, the <code class="code docutils literal notranslate"><span class="pre">ndindex[idx]</span></code> syntax does not require parentheses when
+<p>The <code class="code docutils literal notranslate"><span class="pre">ndindex[idx]</span></code> form should generally be preferred when creating an
+index from a tuple or slice literal, since <code class="code docutils literal notranslate"><span class="pre">ndindex(a:b)</span></code> is not
+syntactically valid and must be typed as <code class="code docutils literal notranslate"><span class="pre">ndindex(slice(a,</span> <span class="pre">b))</span></code>.
+Additionally, the <code class="code docutils literal notranslate"><span class="pre">ndindex[idx]</span></code> syntax does not require parentheses when
 creating a tuple index:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ndindex</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="go">Tuple(0, 1)</span>
@@ -320,8 +321,6 @@ creating a tuple index:</p>
 <span class="go">Tuple(0, 1)</span>
 </pre></div>
 </div>
-<p>Therefore <code class="code docutils literal notranslate"><span class="pre">ndindex[idx]</span></code> should generally be preferred when creating an
-index from a tuple or slice literal.</p>
 </dd></dl>
 
 </section>
@@ -2973,16 +2972,19 @@ arrays then generating indices for the single broadcasted shape.</p>
 shapes using <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>. These axes will be fully sliced in each index.
 The remaining axes will be indexed one element at a time with integer
 indices.</p>
-<p><code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> should be a tuple of axes to skip. It can use negative
-integers, e.g., <code class="code docutils literal notranslate"><span class="pre">skip_axes=(-1,)</span></code> will skip the last axis (but note that
-mixing negative and nonnegative skip axes is currently not supported). The
-order of the axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> does not matter. The axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>
-refer to the shapes <em>before</em> broadcasting (if you want to refer to the
-axes after broadcasting, either broadcast the shapes and arrays first, or
-refer to the axes using negative integers). For example,
-<code class="code docutils literal notranslate"><span class="pre">iter_indices((10,</span> <span class="pre">2),</span> <span class="pre">(20,</span> <span class="pre">1,</span> <span class="pre">2),</span> <span class="pre">skip_axes=(0,))</span></code> will skip the size
-<code class="code docutils literal notranslate"><span class="pre">10</span></code> axis of <code class="code docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">2)</span></code> and the size <code class="code docutils literal notranslate"><span class="pre">20</span></code> axis of <code class="code docutils literal notranslate"><span class="pre">(20,</span> <span class="pre">1,</span> <span class="pre">2)</span></code>. The result
-is two sets of indices, one for each element of the non-skipped
+<p><code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> should be a tuple of axes to skip or a list of tuples of axes
+to skip. If it is a single tuple, it applies to all shapes. Otherwise,
+each tuple applies to each shape respectively. It can use negative
+integers, e.g., <code class="code docutils literal notranslate"><span class="pre">skip_axes=(-1,)</span></code> will skip the last axis. The order of
+the axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> does not matter. Mixing negative and nonnegative
+skip axes is supported, but the skip axes must refer to unique dimensions
+for each shape.</p>
+<p>The axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> refer to the shapes <em>before</em> broadcasting (if you
+want to refer to the axes after broadcasting, either broadcast the shapes
+and arrays first, or refer to the axes using negative integers). For
+example, <code class="code docutils literal notranslate"><span class="pre">iter_indices((10,</span> <span class="pre">2),</span> <span class="pre">(20,</span> <span class="pre">1,</span> <span class="pre">2),</span> <span class="pre">skip_axes=(0,))</span></code> will skip the
+size <code class="code docutils literal notranslate"><span class="pre">10</span></code> axis of <code class="code docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">2)</span></code> and the size <code class="code docutils literal notranslate"><span class="pre">20</span></code> axis of <code class="code docutils literal notranslate"><span class="pre">(20,</span> <span class="pre">1,</span> <span class="pre">2)</span></code>. The
+result is two sets of indices, one for each element of the non-skipped
 dimensions:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">iter_indices</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span> <span class="ow">in</span> <span class="n">iter_indices</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,)):</span>
@@ -3040,9 +3042,8 @@ operation <code class="code docutils literal notranslate"><span class="pre">a</s
 </pre></div>
 </div>
 <p>To include an index into the final broadcasted array, you can simply
-include the final broadcasted shape as one of the shapes (the NumPy
-function <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a> is
-useful here).</p>
+include the final broadcasted shape as one of the shapes (the function
+<a class="reference internal" href="#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> is useful here).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="go">(2, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">,</span> <span class="n">broadcasted_idx</span> <span class="ow">in</span> <span class="n">iter_indices</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
@@ -3063,6 +3064,10 @@ useful here).</p>
 <dd><p>Broadcast the input shapes <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> to a single shape.</p>
 <p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>, except is also supports skipping axes in the
 shape with <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> can be a tuple of integers which apply to all shapes, or a
+list of tuples of integers, one for each shape, which apply to each
+respective shape. The <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> argument works the same as in
+<a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a>. See its docstring for more details.</p>
 <p>If the shapes are not broadcast compatible (excluding <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>),
 <a class="reference internal" href="#ndindex.BroadcastError" title="ndindex.BroadcastError"><code class="xref py py-class docutils literal notranslate"><span class="pre">BroadcastError</span></code></a> is raised.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">broadcast_shapes</span>
@@ -3076,10 +3081,10 @@ shape with <code class="code docutils literal notranslate"><span class="pre">ski
 </div>
 <p>Axes in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> apply to each shape <em>before</em> being broadcasted. Each
 shape will be broadcasted together with these axes removed. The dimensions
-in skip_axes do not need to be equal or broadcast compatible with one
+in <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> do not need to be equal or broadcast compatible with one
 another. The final broadcasted shape be the result of broadcasting all the
 non-skip axes.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast_shapes</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">skip_axes</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)])</span>
 <span class="go">(3, 2)</span>
 </pre></div>
 </div>

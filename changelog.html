@@ -273,11 +273,59 @@
         <article role="main">
           <section id="ndindex-changelog">
 <h1>ndindex Changelog<a class="headerlink" href="#ndindex-changelog" title="Link to this heading">#</a></h1>
+<section id="version-1-8-2024-02-15">
+<h2>Version 1.8 (2024-02-15)<a class="headerlink" href="#version-1-8-2024-02-15" title="Link to this heading">#</a></h2>
+<section id="major-changes">
+<h3>Major Changes<a class="headerlink" href="#major-changes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Breaking</strong> <a class="reference internal" href="api.html#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> no longer returns <code class="docutils literal notranslate"><span class="pre">None</span></code> in the
+place of skipped axes. The result is now just the non-skipped axes
+broadcasted together.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">skip_axes</span></code> flag to <a class="reference internal" href="api.html#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> and
+<a class="reference internal" href="api.html#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> can now be a list of tuples, of skipped axes,
+which apply to each respective shape independently.</p></li>
+<li><p>Mixing negative and nonnegative <code class="docutils literal notranslate"><span class="pre">skip_axes</span></code> in <a class="reference internal" href="api.html#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> and
+<a class="reference internal" href="api.html#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> is now supported. The only restriction is that
+skip axes must refer to unique dimensions for each shape.</p></li>
+<li><p>New index method <a class="reference internal" href="api.html#ndindex.Tuple.selected_indices" title="ndindex.Tuple.selected_indices"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">selected_indices()</span></code></span></a>, which
+iterates indices corresponding to each element selected by the given index
+on an array of a given <code class="docutils literal notranslate"><span class="pre">shape</span></code>.</p></li>
+<li><p>ndindex indices can now be constructed by slicing the <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><code class="xref py py-func docutils literal notranslate"><span class="pre">ndindex()</span></code></a>
+constructor function, like <code class="docutils literal notranslate"><span class="pre">ndindex[0:10]</span></code>. This is generally preferred for
+indices with explicit slices, as this allows using the usual <code class="docutils literal notranslate"><span class="pre">:</span></code> slice
+syntax instead of requiring slices to be spelled out with the <code class="docutils literal notranslate"><span class="pre">slice</span></code>
+function.</p></li>
+<li><p>Add a <code class="docutils literal notranslate"><span class="pre">negative_int</span></code> flag to <a class="reference internal" href="api.html#ndindex.Integer.reduce" title="ndindex.Integer.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">reduce</span></code></span></a>, which makes it
+normalize integer indices to negative integers when a shape is provided.</p></li>
+<li><p><a class="reference internal" href="api.html#ndindex.Slice" title="ndindex.Slice"><code class="xref py py-class docutils literal notranslate"><span class="pre">Slice</span></code></a> objects now hash to the same hash value as their
+corresponding raw <code class="docutils literal notranslate"><span class="pre">slice</span></code> in Python 3.12, which now allows <a class="reference external" href="https://docs.python.org/3/whatsnew/3.12.html#other-language-changes">native <code class="docutils literal notranslate"><span class="pre">slice</span></code>
+objects to be
+hashed</a>.</p></li>
+<li><p>Fix an incorrect result from <a class="reference internal" href="api.html#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks()</span></code></a> and
+<a class="reference internal" href="api.html#ndindex.ChunkSize.num_subchunks" title="ndindex.ChunkSize.num_subchunks"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ChunkSize.num_subchunks()</span></code></a> when using multiple array indices or a
+boolean array index with multiple dimensions.</p></li>
+</ul>
+</section>
+<section id="minor-changes">
+<h3>Minor Changes<a class="headerlink" href="#minor-changes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Drop support for Python 3.7.</p></li>
+<li><p>Fully support the upcoming NumPy 2.0 release. This mostly only relevant for
+the ndindex test suite, although it does also mean that one ndindex error
+message has been updated to match updated wording from NumPy.</p></li>
+<li><p>Specify Cython language_level, which leads to shorter code and gets rid of a
+bunch of warnings. (&#64;keszybz)</p></li>
+<li><p>Rename the default git branch from <code class="docutils literal notranslate"><span class="pre">master</span></code> to <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>Minor Changes<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+</section>
+</section>
 <section id="version-1-7-2023-04-20">
 <h2>Version 1.7 (2023-04-20)<a class="headerlink" href="#version-1-7-2023-04-20" title="Link to this heading">#</a></h2>
-</section>
-<section id="major-changes">
-<h2>Major Changes<a class="headerlink" href="#major-changes" title="Link to this heading">#</a></h2>
+<section id="id2">
+<h3>Major Changes<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Breaking:</strong> the <code class="docutils literal notranslate"><span class="pre">skip_axes</span></code> argument <a class="reference internal" href="api.html#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> function now
 applies the skipped axes <em>before</em> broadcasting, not after. This behavior is
@@ -298,8 +346,9 @@ a given shape.</p></li>
 used by <a class="reference internal" href="api.html#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> and <a class="reference internal" href="api.html#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a>.</p></li>
 </ul>
 </section>
-<section id="minor-changes">
-<h2>Minor Changes<a class="headerlink" href="#minor-changes" title="Link to this heading">#</a></h2>
+</section>
+<section id="id3">
+<h2>Minor Changes<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>The documentation theme has been changed to
 <a class="reference external" href="https://pradyunsg.me/furo/">Furo</a>, which has a more clean color scheme
@@ -317,8 +366,8 @@ dark mode support.</p></li>
 </section>
 <section id="version-1-6-2022-01-24">
 <h2>Version 1.6 (2022-01-24)<a class="headerlink" href="#version-1-6-2022-01-24" title="Link to this heading">#</a></h2>
-<section id="id1">
-<h3>Major Changes<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<section id="id4">
+<h3>Major Changes<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>SymPy is no longer a dependency of ndindex.</p></li>
 <li><p>NumPy is now an optional dependency of ndindex. It is only required when
@@ -338,8 +387,8 @@ instructions</span></a>). This improves the general performance of
 ndindex.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h3>Minor Changes<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<section id="id5">
+<h3>Minor Changes<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Fix an issue with the <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> constructor with broadcast incompatible
 arrays with the latest version of NumPy.</p></li>
@@ -356,8 +405,8 @@ arrays with the latest version of NumPy.</p></li>
 </section>
 <section id="version-1-5-2-2021-04-06">
 <h2>Version 1.5.2 (2021-04-06)<a class="headerlink" href="#version-1-5-2-2021-04-06" title="Link to this heading">#</a></h2>
-<section id="id3">
-<h3>Major Changes<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<section id="id6">
+<h3>Major Changes<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>ndindex now has a logo: <img alt="ndindex logo" src="_images/ndindex_logo_white_bg.svg" />
 Thanks to <a class="reference external" href="mailto:ifumarel&#37;&#52;&#48;quansight&#46;com">Irina Fumarel</a> for the logo design.</p></li>
@@ -367,8 +416,8 @@ method. This in particular improves the performance for array indices.</p></li>
 way of computing <code class="docutils literal notranslate"><span class="pre">len(list(chunk_size.as_subindex(idx,</span> <span class="pre">shape)))</span></code>.</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>Minor Changes<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<section id="id7">
+<h3>Minor Changes<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Added
 <a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/main/CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a>
@@ -386,8 +435,8 @@ functions and adding <code class="docutils literal notranslate"><span class="pre
 </section>
 <section id="version-1-5-1-2021-02-03">
 <h2>Version 1.5.1 (2021-02-03)<a class="headerlink" href="#version-1-5-1-2021-02-03" title="Link to this heading">#</a></h2>
-<section id="id5">
-<h3>Major Changes<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<section id="id8">
+<h3>Major Changes<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The <a class="reference internal" href="api.html#ndindex.ChunkSize.as_subchunks" title="ndindex.ChunkSize.as_subchunks"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">ChunkSize.as_subchunks</span></code></span></a> method now only
 iterates the chunk indices. Previously it iterated <code class="docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">index.as_subindex(c))</span></code>. But the subindex can always be computed manually
@@ -406,8 +455,8 @@ can be viewed at <a class="reference external" href="https://quansight-labs.gith
 </section>
 <section id="version-1-5-2020-12-23">
 <h2>Version 1.5 (2020-12-23)<a class="headerlink" href="#version-1-5-2020-12-23" title="Link to this heading">#</a></h2>
-<section id="id6">
-<h3>Major Changes<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<section id="id9">
+<h3>Major Changes<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>ndindex has been moved to the
 <a class="reference external" href="https://github.com/quansight-labs">Quansight-Labs</a> organization on Github.
@@ -426,8 +475,8 @@ true after canonicalization.</p></li>
 and manipulate indices over chunks.</p></li>
 </ul>
 </section>
-<section id="id7">
-<h3>Minor Changes<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<section id="id10">
+<h3>Minor Changes<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Various performance improvements.</p></li>
 <li><p>Make <code class="docutils literal notranslate"><span class="pre">hash(idx)</span> <span class="pre">==</span> <span class="pre">hash(idx.raw)</span></code> whenever <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code> is hashable.</p></li>
@@ -438,8 +487,8 @@ and manipulate indices over chunks.</p></li>
 </section>
 <section id="version-1-4-2020-09-14">
 <h2>Version 1.4 (2020-09-14)<a class="headerlink" href="#version-1-4-2020-09-14" title="Link to this heading">#</a></h2>
-<section id="id8">
-<h3>Major Changes<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<section id="id11">
+<h3>Major Changes<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>New object <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> to represent <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> (i.e., <code class="docutils literal notranslate"><span class="pre">None</span></code>).</p></li>
 <li><p>New object <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> to represent boolean array indices (i.e.,
@@ -492,8 +541,8 @@ built-in/NumPy types that they wrap, and outlines some pitfalls and best
 practices to avoid them when using ndindex.</p></li>
 </ul>
 </section>
-<section id="id9">
-<h3>Minor Changes<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<section id="id12">
+<h3>Minor Changes<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>There is now only one docstring for <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.expand" title="ndindex.ndindex.NDIndex.expand"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">expand()</span></code></span></a>, on the
 <code class="docutils literal notranslate"><span class="pre">NDindex</span></code> base class.</p></li>
@@ -514,8 +563,8 @@ as the integer indices <code class="docutils literal notranslate"><span class="p
 </section>
 <section id="version-1-3-1-2020-07-22">
 <h2>Version 1.3.1 (2020-07-22)<a class="headerlink" href="#version-1-3-1-2020-07-22" title="Link to this heading">#</a></h2>
-<section id="id10">
-<h3>Major Changes<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<section id="id13">
+<h3>Major Changes<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">as_subindex</span></code> now supports more input types. In particular, <code class="docutils literal notranslate"><span class="pre">Integer</span></code> is now
 supported better.</p></li>
@@ -525,8 +574,8 @@ answer is either impossible or requires an index type that is not yet
 implemented in ndindex.</p></li>
 </ul>
 </section>
-<section id="id11">
-<h3>Minor Changes<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<section id="id14">
+<h3>Minor Changes<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">as_subindex</span></code> correctly gives <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> for Tuples with
 ellipses.</p></li>
@@ -545,8 +594,8 @@ NumPy integer types now work properly.</p></li>
 </section>
 <section id="version-1-3-2020-06-29">
 <h2>Version 1.3 (2020-06-29)<a class="headerlink" href="#version-1-3-2020-06-29" title="Link to this heading">#</a></h2>
-<section id="id12">
-<h3>Major Changes<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<section id="id15">
+<h3>Major Changes<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>New method <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.expand" title="ndindex.ndindex.NDIndex.expand"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">expand</span></code></span></a>, which always returns a Tuple which is
 as explicit as possible.</p></li>
@@ -566,8 +615,8 @@ also be called with a shape like <code class="docutils literal notranslate"><spa
 documentation.</p></li>
 </ul>
 </section>
-<section id="id13">
-<h3>Minor Changes<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<section id="id16">
+<h3>Minor Changes<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Made <code class="docutils literal notranslate"><span class="pre">Slice.reduce()</span></code> give a canonical empty slice in some more cases.</p></li>
 <li><p>Move the documentation from recommonmark to Myst.</p></li>
@@ -586,15 +635,15 @@ doctest to run in a fresh interpreter.</p></li>
 </section>
 <section id="version-1-2-2020-05-01">
 <h2>Version 1.2 (2020-05-01)<a class="headerlink" href="#version-1-2-2020-05-01" title="Link to this heading">#</a></h2>
-<section id="id14">
-<h3>Major Changes<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<section id="id17">
+<h3>Major Changes<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">ellipsis</span></code> to represent ellipsis indices (<code class="docutils literal notranslate"><span class="pre">...</span></code>). See
 <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a>.</p></li>
 </ul>
 </section>
-<section id="id15">
-<h3>Minor Changes<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<section id="id18">
+<h3>Minor Changes<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Make <code class="docutils literal notranslate"><span class="pre">str(Tuple)</span></code> more readable.</p></li>
 <li><p>Fix a bug in <code class="docutils literal notranslate"><span class="pre">==</span></code> when comparing against non-ndindex types.</p></li>
@@ -607,8 +656,8 @@ doctest to run in a fresh interpreter.</p></li>
 </section>
 <section id="version-1-1-2020-04-23">
 <h2>Version 1.1 (2020-04-23)<a class="headerlink" href="#version-1-1-2020-04-23" title="Link to this heading">#</a></h2>
-<section id="id16">
-<h3>Major Changes<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<section id="id19">
+<h3>Major Changes<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>ndindex objects no longer automatically canonicalize on instantiation. To
 canonicalize an index, call <code class="docutils literal notranslate"><span class="pre">idx.reduce()</span></code> with no arguments. This will put
@@ -617,8 +666,8 @@ IndexErrors). <code class="docutils literal notranslate"><span class="pre">idx.r
 index given that it will index an array of shape <code class="docutils literal notranslate"><span class="pre">shape</span></code>.</p></li>
 </ul>
 </section>
-<section id="id17">
-<h3>Minor Changes<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<section id="id20">
+<h3>Minor Changes<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Added internal classes to the Sphinx documentation.</p></li>
 <li><p>Fixed incorrect <code class="docutils literal notranslate"><span class="pre">Slice.stop</span></code> and <code class="docutils literal notranslate"><span class="pre">Slice.step</span></code>.</p></li>
@@ -628,8 +677,8 @@ index given that it will index an array of shape <code class="docutils literal n
 </section>
 <section id="version-1-0-2020-04-08">
 <h2>Version 1.0 (2020-04-08)<a class="headerlink" href="#version-1-0-2020-04-08" title="Link to this heading">#</a></h2>
-<section id="id18">
-<h3>Major Changes<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
+<section id="id21">
+<h3>Major Changes<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Initial ndindex release</p></li>
 <li><p>Includes support for <code class="docutils literal notranslate"><span class="pre">Slice</span></code>, <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code></p></li>
@@ -703,55 +752,63 @@ and <code class="docutils literal notranslate"><span class="pre">reduce</span></
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">ndindex Changelog</a><ul>
-<li><a class="reference internal" href="#version-1-7-2023-04-20">Version 1.7 (2023-04-20)</a></li>
+<li><a class="reference internal" href="#version-1-8-2024-02-15">Version 1.8 (2024-02-15)</a><ul>
 <li><a class="reference internal" href="#major-changes">Major Changes</a></li>
 <li><a class="reference internal" href="#minor-changes">Minor Changes</a></li>
+<li><a class="reference internal" href="#id1">Minor Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-7-2023-04-20">Version 1.7 (2023-04-20)</a><ul>
+<li><a class="reference internal" href="#id2">Major Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id3">Minor Changes</a></li>
 <li><a class="reference internal" href="#version-1-6-2022-01-24">Version 1.6 (2022-01-24)</a><ul>
-<li><a class="reference internal" href="#id1">Major Changes</a></li>
-<li><a class="reference internal" href="#id2">Minor Changes</a></li>
+<li><a class="reference internal" href="#id4">Major Changes</a></li>
+<li><a class="reference internal" href="#id5">Minor Changes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-5-2-2021-04-06">Version 1.5.2 (2021-04-06)</a><ul>
-<li><a class="reference internal" href="#id3">Major Changes</a></li>
-<li><a class="reference internal" href="#id4">Minor Changes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
-<li><a class="reference internal" href="#id5">Major Changes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
 <li><a class="reference internal" href="#id6">Major Changes</a></li>
 <li><a class="reference internal" href="#id7">Minor Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li><a class="reference internal" href="#version-1-5-1-2021-02-03">Version 1.5.1 (2021-02-03)</a><ul>
 <li><a class="reference internal" href="#id8">Major Changes</a></li>
-<li><a class="reference internal" href="#id9">Minor Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-5-2020-12-23">Version 1.5 (2020-12-23)</a><ul>
+<li><a class="reference internal" href="#id9">Major Changes</a></li>
+<li><a class="reference internal" href="#id10">Minor Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-4-2020-09-14">Version 1.4 (2020-09-14)</a><ul>
+<li><a class="reference internal" href="#id11">Major Changes</a></li>
+<li><a class="reference internal" href="#id12">Minor Changes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-3-1-2020-07-22">Version 1.3.1 (2020-07-22)</a><ul>
-<li><a class="reference internal" href="#id10">Major Changes</a></li>
-<li><a class="reference internal" href="#id11">Minor Changes</a></li>
+<li><a class="reference internal" href="#id13">Major Changes</a></li>
+<li><a class="reference internal" href="#id14">Minor Changes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-3-2020-06-29">Version 1.3 (2020-06-29)</a><ul>
-<li><a class="reference internal" href="#id12">Major Changes</a></li>
-<li><a class="reference internal" href="#id13">Minor Changes</a></li>
+<li><a class="reference internal" href="#id15">Major Changes</a></li>
+<li><a class="reference internal" href="#id16">Minor Changes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-2-2020-05-01">Version 1.2 (2020-05-01)</a><ul>
-<li><a class="reference internal" href="#id14">Major Changes</a></li>
-<li><a class="reference internal" href="#id15">Minor Changes</a></li>
+<li><a class="reference internal" href="#id17">Major Changes</a></li>
+<li><a class="reference internal" href="#id18">Minor Changes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-1-2020-04-23">Version 1.1 (2020-04-23)</a><ul>
-<li><a class="reference internal" href="#id16">Major Changes</a></li>
-<li><a class="reference internal" href="#id17">Minor Changes</a></li>
+<li><a class="reference internal" href="#id19">Major Changes</a></li>
+<li><a class="reference internal" href="#id20">Minor Changes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-0-2020-04-08">Version 1.0 (2020-04-08)</a><ul>
-<li><a class="reference internal" href="#id18">Major Changes</a></li>
+<li><a class="reference internal" href="#id21">Major Changes</a></li>
 </ul>
 </li>
 </ul>
