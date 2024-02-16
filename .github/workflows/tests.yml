@@ -21,7 +21,7 @@ jobs:
         run: |
           set -x
           set -e
-          python -m pip install pyflakes pytest pytest-doctestplus hypothesis pytest-cov pytest-flakes packaging
+          python -m pip install -r requirements-dev.txt
           if [[ ${{ matrix.numpy-version }} == 'latest' ]]; then
               python -m pip install --pre --upgrade numpy
           elif [[ ${{ matrix.numpy-version }} == 'dev' ]]; then
