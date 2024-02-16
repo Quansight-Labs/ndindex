@@ -1,8 +1,62 @@
 # ndindex Changelog
 
+## Version 1.8 (2024-02-15)
+
+### Major Changes
+
+- **Breaking** {func}`~.broadcast_shapes` no longer returns `None` in the
+  place of skipped axes. The result is now just the non-skipped axes
+  broadcasted together.
+
+- The `skip_axes` flag to {func}`~.iter_indices` and
+  {func}`~.broadcast_shapes` can now be a list of tuples, of skipped axes,
+  which apply to each respective shape independently.
+
+- Mixing negative and nonnegative `skip_axes` in {func}`~.iter_indices` and
+  {func}`~.broadcast_shapes` is now supported. The only restriction is that
+  skip axes must refer to unique dimensions for each shape.
+
+- New index method [`selected_indices()`](Tuple.selected_indices), which
+  iterates indices corresponding to each element selected by the given index
+  on an array of a given `shape`.
+
+- ndindex indices can now be constructed by slicing the {func}`~.ndindex`
+  constructor function, like `ndindex[0:10]`. This is generally preferred for
+  indices with explicit slices, as this allows using the usual `:` slice
+  syntax instead of requiring slices to be spelled out with the `slice`
+  function.
+
+- Add a `negative_int` flag to [`reduce`](Integer.reduce), which makes it
+  normalize integer indices to negative integers when a shape is provided.
+
+- {class}`~.Slice` objects now hash to the same hash value as their
+  corresponding raw `slice` in Python 3.12, which now allows [native `slice`
+  objects to be
+  hashed](https://docs.python.org/3/whatsnew/3.12.html#other-language-changes).
+
+- Fix an incorrect result from {any}`ChunkSize.as_subchunks()` and
+  {any}`ChunkSize.num_subchunks()` when using multiple array indices or a
+  boolean array index with multiple dimensions.
+
+### Minor Changes
+
+- Drop support for Python 3.7.
+
+- Fully support the upcoming NumPy 2.0 release. This mostly only relevant for
+  the ndindex test suite, although it does also mean that one ndindex error
+  message has been updated to match updated wording from NumPy.
+
+- Specify Cython language_level, which leads to shorter code and gets rid of a
+  bunch of warnings. (@keszybz)
+
+- Rename the default git branch from `master` to `main`.
+
+
+### Minor Changes
+
 ## Version 1.7 (2023-04-20)
 
-## Major Changes
+### Major Changes
 
 - **Breaking:** the `skip_axes` argument {func}`~.iter_indices` function now
   applies the skipped axes *before* broadcasting, not after. This behavior is

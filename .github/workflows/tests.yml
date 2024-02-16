@@ -44,7 +44,7 @@ jobs:
           pytest $PYTEST_FLAGS
           ./run_doctests
           # Make sure it installs
-          python setup.py install
+          pip install .
           # Coverage. This also sets the failing status if the
           # coverage is not 100%. Travis sometimes cuts off the last command, which is
           # why we print stuff at the end.

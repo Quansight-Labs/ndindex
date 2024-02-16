@@ -6,3 +6,4 @@ sphinx
 sphinx-copybutton
 sphinx-reredirects
 sphinx-design
+sphinx-autobuild

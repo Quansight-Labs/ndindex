@@ -12,18 +12,18 @@ class NDIndexConstructor:
     (generally, the same error NumPy would raise if the index were used on an
     array).
 
-    Indices are created by calling `ndindex` with getitem syntax:
+    Indices are created by calling the `ndindex` with raw index objects:
 
     >>> from ndindex import ndindex
+    >>> ndindex(slice(0, 10))
+    Slice(0, 10, None)
+    >>> ndindex((slice(0, 10), 0))
+    Tuple(slice(0, 10, None), 0)
+
+    Indices can also be created by calling `ndindex` with getitem syntax.
+
     >>> ndindex[1]
     Integer(1)
-    >>> ndindex[0:10, :]
-    Tuple(slice(0, 10, None), slice(None, None, None))
-
-    You can also create indices by calling `ndindex(idx)` like a function.
-    However, if you do this, you cannot use the `a:b` slice syntax, as it is
-    not syntactically valid:
-
     >>> ndindex[0:10]
     Slice(0, 10, None)
     >>> ndindex(0:10)
@@ -32,9 +32,10 @@ class NDIndexConstructor:
         ndindex(0:10)
                  ^
     SyntaxError: invalid syntax
-    >>> ndindex(slice(0, 10))
-    Slice(0, 10, None)
 
+    The `ndindex[idx]` form should generally be preferred when creating an
+    index from a tuple or slice literal, since `ndindex(a:b)` is not
+    syntactically valid and must be typed as `ndindex(slice(a, b))`.
     Additionally, the `ndindex[idx]` syntax does not require parentheses when
     creating a tuple index:
 
@@ -46,9 +47,6 @@ class NDIndexConstructor:
     TypeError: NDIndexConstructor.__call__() takes 2 positional arguments but 3 were given
     >>> ndindex((0, 1))
     Tuple(0, 1)
-
-    Therefore `ndindex[idx]` should generally be preferred when creating an
-    index from a tuple or slice literal.
 
     """
     def __getitem__(self, obj):
