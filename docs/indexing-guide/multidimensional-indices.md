@@ -1957,7 +1957,7 @@ Now for the detailed semantics of boolean array indices:
   So how does this relate to using a boolean array index to select only a
   subset of the array dimensions. Well we might want to use a boolean index to
   only select along the inner "subarray" dimensions, and pretend like the
-  outer "batching" dimensions are our "array".
+  outer "batching" dimensions are our "array". TODO
 
   The ndindex method
   [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
