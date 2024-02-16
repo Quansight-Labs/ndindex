@@ -51,6 +51,7 @@ def test_booleanarray_reduce_no_shape_hypothesis(idx, shape, kwargs):
 
     check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw])
 
+@example(full((1, 9), True), 3, {})
 @example(full((1, 9), True), (3, 3), {})
 @example(full((1, 9), False), (3, 3), {})
 @given(boolean_arrays, one_of(short_shapes, integers(0, 10)), reduce_kwargs)

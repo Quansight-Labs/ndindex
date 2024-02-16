@@ -53,6 +53,11 @@ def broadcast_shapes(*shapes, skip_axes=()):
     <numpy.broadcast_shapes>`, except is also supports skipping axes in the
     shape with `skip_axes`.
 
+    `skip_axes` can be a tuple of integers which apply to all shapes, or a
+    list of tuples of integers, one for each shape, which apply to each
+    respective shape. The `skip_axes` argument works the same as in
+    :func:`iter_indices`. See its docstring for more details.
+
     If the shapes are not broadcast compatible (excluding `skip_axes`),
     :class:`BroadcastError` is raised.
 
@@ -66,11 +71,11 @@ def broadcast_shapes(*shapes, skip_axes=()):
 
     Axes in `skip_axes` apply to each shape *before* being broadcasted. Each
     shape will be broadcasted together with these axes removed. The dimensions
-    in skip_axes do not need to be equal or broadcast compatible with one
+    in `skip_axes` do not need to be equal or broadcast compatible with one
     another. The final broadcasted shape be the result of broadcasting all the
     non-skip axes.
 
-    >>> broadcast_shapes((10, 3, 2), (20, 2), skip_axes=(0,))
+    >>> broadcast_shapes((10, 3, 2), (2, 20), skip_axes=[(0,), (1,)])
     (3, 2)
 
     """
@@ -126,16 +131,20 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     The remaining axes will be indexed one element at a time with integer
     indices.
 
-    `skip_axes` should be a tuple of axes to skip. It can use negative
-    integers, e.g., `skip_axes=(-1,)` will skip the last axis (but note that
-    mixing negative and nonnegative skip axes is currently not supported). The
-    order of the axes in `skip_axes` does not matter. The axes in `skip_axes`
-    refer to the shapes *before* broadcasting (if you want to refer to the
-    axes after broadcasting, either broadcast the shapes and arrays first, or
-    refer to the axes using negative integers). For example,
-    `iter_indices((10, 2), (20, 1, 2), skip_axes=(0,))` will skip the size
-    `10` axis of `(10, 2)` and the size `20` axis of `(20, 1, 2)`. The result
-    is two sets of indices, one for each element of the non-skipped
+    `skip_axes` should be a tuple of axes to skip or a list of tuples of axes
+    to skip. If it is a single tuple, it applies to all shapes. Otherwise,
+    each tuple applies to each shape respectively. It can use negative
+    integers, e.g., `skip_axes=(-1,)` will skip the last axis. The order of
+    the axes in `skip_axes` does not matter. Mixing negative and nonnegative
+    skip axes is supported, but the skip axes must refer to unique dimensions
+    for each shape.
+
+    The axes in `skip_axes` refer to the shapes *before* broadcasting (if you
+    want to refer to the axes after broadcasting, either broadcast the shapes
+    and arrays first, or refer to the axes using negative integers). For
+    example, `iter_indices((10, 2), (20, 1, 2), skip_axes=(0,))` will skip the
+    size `10` axis of `(10, 2)` and the size `20` axis of `(20, 1, 2)`. The
+    result is two sets of indices, one for each element of the non-skipped
     dimensions:
 
     >>> from ndindex import iter_indices
@@ -194,9 +203,8 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
            [110, 111, 112]])
 
     To include an index into the final broadcasted array, you can simply
-    include the final broadcasted shape as one of the shapes (the NumPy
-    function :func:`np.broadcast_shapes() <numpy:numpy.broadcast_shapes>` is
-    useful here).
+    include the final broadcasted shape as one of the shapes (the function
+    :func:`broadcast_shapes` is useful here).
 
     >>> np.broadcast_shapes((1, 3), (2, 1))
     (2, 3)
