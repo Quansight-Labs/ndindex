@@ -24,4 +24,5 @@ API Reference Index
    index-types.rst
    shapetools.rst
    chunking.rst
+   exceptions.rst
    internal.rst
