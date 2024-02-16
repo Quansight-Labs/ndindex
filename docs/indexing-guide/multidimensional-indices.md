@@ -1930,6 +1930,35 @@ Now for the detailed semantics of boolean array indices:
   The particular thing to note here is that it is possible to use a boolean
   mask to select only a subset of the dimensions of `a`: TODO
 
+  This is not nearly as common as masking the entire array `a`, but it can
+  happen. Remember that we can always think of an array as an "array of
+  subarrays". For instance, suppose we have a video with 1920 x 1080 pixels
+  and 500 frames. This might be represented as an array of shape `(500, 1080,
+  1920, 3)`[^skvideo-footnote], where the final dimension 3 represents the 3
+  RGB color values of a pixel. We can think of this array as 500 `(1080, 1920,
+  3)` "frames". Or as 500 x 1080 x 1920 "pixels". Or we could slice along a
+  different dimension and think of it as 3 `(500, 1080, 1920)` video
+  "channels", one for each primary color.
+
+  [^skvideo-footnote]: This is how the
+  [skikit-video](https://www.scikit-video.org/) package represents videos as
+  NumPy arrays. Note that the height and width dimensions are reversed from
+  the usual way of writing the.
+
+  In each case, we imagine that our array is really an array (or a stack or
+  batch) of subarrays, where some of our dimensions are the "stacking"
+  dimensions and some of them are the array dimensions. This way of thinking
+  is also common when doing linear algebra on arrays. The last two dimensions
+  (typically) are considered matrices, and the leading dimensions are batch
+  dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5 x 4
+  matrices. NumPy functions like the `@` matmul operator will automatically
+  operate on the last two dimensions of an array.
+
+  So how does this relate to using a boolean array index to select only a
+  subset of the array dimensions. Well we might want to use a boolean index to
+  only select along the inner "subarray" dimensions, and pretend like the
+  outer "batching" dimensions are our "array".
+
   The ndindex method
   [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
   [`expand()`](ndindex.Tuple.expand)) will convert boolean array indices into
@@ -1989,15 +2018,123 @@ Now for the detailed semantics of boolean array indices:
   array([[0, 1, 2, 3]])
   ```
 
-  This behavior may seem like an odd corner case, but it can come up in
-  practice. TODO
+  This behavior may seem like an odd corner case. You might wonder why NumPy
+  supports using a scalar boolean as an index, especially since it has
+  slightly different semantics than higher dimensional booleans.
 
-  For one thing, it means that assigning to a masked index does the right thing
-  if the mask expression happens to not actually contain the array.
+  The main reason scalar booleans are supported is that they are a natural
+  generalization as 0-D boolean array indices. While the `np.nonzero()` rule
+  does not hold, the more general rule about removing and flatting `idx.ndim`
+  dimensions does.
+
+  Consider the most common case of using a boolean index: masking the entire
+  array. This typically looke something like `a[some_boolean_expression_on_a]
+  = mask_value`. For example:
 
   ```py
-  TODO
+  >>> a = np.asarray([[0, 1], [1, 0]])
+  >>> a[a == 0] = -1
+  >>> a
+  array([[-1,  1],
+         [ 1, -1]])
   ```
+
+  Here, we set all the `0` elements of `a` to `-1`. We do this by creating the
+  boolean mask `a == 0`, which is a boolean expression created from `a`.
+  Our mask might be a lot more complicated in general, but it still is usually
+  the case that our mask is constructed from `a`, and thus has the exact same
+  shape as `a`. Therefore, `a[mask]` is a 1 dimensional array with
+  `np.count_nonzero(mask)` elements. In this example, this doesn't actually
+  matter because we are using the mask as the left-hand side of an assignment.
+  As long as the right-hand side is broadcast compatible with `a[mask]`, it
+  will be fine. In this case, it is because it is a scalar, which is always
+  broadcast compatible with everything, but more generally we could mask the
+  right-hand side with the exact same mask index to ensure it is exactly the
+  same shape as the left-hand side.
+
+  In particular, note that `a[a == 0] = -1` works no matter what the shape or
+  dimensionality of `a` is, and no matter how many `0` entries it has. Above
+  it had 2 dimensions and two `0`s, but it would also work if it were
+  1-dimensional:
+
+  ```py
+  >>> a = np.asarray([0, 1, 0, 1])
+  >>> a[a == 0] = -1
+  >>> a
+  array([-1,  1, -1,  1])
+  ```
+
+  Or if it had no actual `0`s:[^0-d-mask-footnote]
+
+  [^0-d-mask-footnote]: In this example, `a == 0` is `array([False, False,
+      False])`, and `a[a == 0]` is an empty array of shape `(0,)`. The reason
+      this works is that the right-hand side of the assignment is a scalar,
+      i.e., NumPy casts it to an array of shape `()`. The shape `()`
+      broadcasts with the shape `(0,)` to the shape `(0,)`, and so this is
+      what gets assigned, i.e., "nothing" (of shape `(0,)`) gets assigned to
+      "nothing" (of matching shape `(0,)`).
+
+  ```py
+  >>> a = np.asarray([1, 1, 2])
+  >>> a[a == 0] = -1
+  >>> a
+  array([1, 1, 2])
+  ```
+
+  But even if `a` is a 0-D array, i.e., a single scalar value, we would expect
+  this sort of thing to still work, since, as we said, `a[a == 0] = -1` should
+  work for *any* array.
+
+  ```py
+  >>> a = np.asarray(0)
+  >>> a.shape
+  ()
+  >>> a[a == 0] = -1
+  >>> a
+  array(-1)
+  ```
+
+  Consider what happened here. `a == 0` is the a 0-D array `array(True)`.
+  `a[True]` is a 1-D array containing the single True value corresponding to
+  the mask, i.e., `array([0])`.
+
+  ```py
+  >>> a = np.asarray(0)
+  >>> a[a == 0]
+  array([0])
+  ```
+
+  This then gets assigned the value `-1`, which as a scalar, gets broadcasted
+  to the entire array, thereby replacing this single `0` value with `-1`.
+
+  If our scalar was not `0`, so that `a == 0` is `array(False)`, then `a[a ==
+  0]` would be a 1-D array containing no values, i.e., a shape `(0,)` array:
+
+  ```py
+  >>> a = np.asarray(1)
+  >>> a[a == 0]
+  array([], dtype=int64)
+  >>> a[a == 0].shape
+  (0,)
+  ```
+
+  In this case, `a[a == 0] = -1` would assign `-1` to all the values in `a[a
+  == 0]`, which would be no values, so `a` would remain unchanged:
+
+  ```py
+  >>> a[a == 0] = -1
+  >>> a
+  array(1)
+  ```
+
+  The underlying logic works out so that `a[a == 0] = -1` always does what
+  you'd expect: every `0` value in `a` is replaced with `-1` **regardless** of
+  the shape of `a`.
+
+  Scalar boolean indices can also be extra confusing if they are mixed with
+  other indices, but this is again just a special case of mixing boolean array
+  masks with other indices. Firstly, note that this is not nearly as common as
+  masking the entire array, as described above.
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
