@@ -29,6 +29,9 @@ jobs:
           else
               python -m pip install --upgrade numpy==${{ matrix.numpy-version }}.*
           fi
+      - name: Run Doctests
+        run: |
+          ./run_doctests
       # Enable experimental faster sys.monitoring coverage for Python 3.12
       - name: Set COVERAGE_CORE=sysmon
         run: echo "COVERAGE_CORE=sysmon" >> $GITHUB_ENV
@@ -42,7 +45,6 @@ jobs:
           # The coverage requirement check is done by the coverage report line below
           PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
           pytest $PYTEST_FLAGS
-          ./run_doctests
           # Make sure it installs
           python setup.py install
           # Coverage. This also sets the failing status if the
