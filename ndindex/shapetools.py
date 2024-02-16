@@ -12,8 +12,6 @@ class BroadcastError(ValueError):
     compatible.
 
     """
-    __slots__ = ("arg1", "shape1", "arg2", "shape2")
-
     def __init__(self, arg1, shape1, arg2, shape2):
         self.arg1 = arg1
         self.shape1 = shape1
@@ -33,8 +31,6 @@ class AxisError(ValueError, IndexError):
     `iter_indices` does not need to depend on NumPy.
 
     """
-    __slots__ = ("axis", "ndim")
-
     def __init__(self, axis, ndim):
         # NumPy allows axis=-1 for 0-d arrays
         if (ndim < 0 or -ndim <= axis < ndim) and not (ndim == 0 and axis == -1):
