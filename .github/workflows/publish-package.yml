@@ -69,7 +69,7 @@ jobs:
 
   publish:
     name: Publish Python distribution to (Test)PyPI
-    if: github.event_name != 'pull_request' && github.repository == 'data-apis/ndindex'
+    if: github.event_name != 'pull_request' && github.repository == 'Quansight-Labs/ndindex'
     needs: build
     runs-on: ubuntu-latest
     # Mandatory for publishing with a trusted publisher
