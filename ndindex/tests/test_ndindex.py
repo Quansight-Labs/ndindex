@@ -15,6 +15,7 @@ from ..integerarray import IntegerArray
 from .helpers import ndindices, check_same, assert_equal
 
 
+@example(None)
 @example([1, 2])
 @given(ndindices)
 def test_eq(idx):
@@ -78,6 +79,8 @@ def test_eq_explicit():
 def test_ndindex(idx):
     index = ndindex(idx)
     assert index == idx
+    assert ndindex[idx] == index
+
     def test_raw_eq(idx, index):
         if isinstance(idx, np.ndarray):
             assert_equal(index.raw, idx)

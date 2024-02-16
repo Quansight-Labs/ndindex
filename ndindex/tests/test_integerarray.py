@@ -1,11 +1,12 @@
-from numpy import prod, arange, array, int8, intp, empty
+from numpy import arange, array, int8, intp, empty
 
 from hypothesis import given, example
 from hypothesis.strategies import one_of, integers
 
 from pytest import raises
 
-from .helpers import integer_arrays, short_shapes, check_same, assert_equal, reduce_kwargs
+from .helpers import (integer_arrays, short_shapes, check_same, assert_equal,
+                      reduce_kwargs, prod)
 
 from ..integer import Integer
 from ..integerarray import IntegerArray

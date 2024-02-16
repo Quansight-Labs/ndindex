@@ -49,6 +49,13 @@ class Slice(NDIndex):
     >>> s.raw
     slice(None, 10, None)
 
+    For most use-cases, it's more convenient to create Slice objects using
+    `ndindex[slice]`, which allows using `a:b` slicing syntax:
+
+    >>> from ndindex import ndindex
+    >>> ndindex[0:10]
+    Slice(0, 10, None)
+
     """
     __slots__ = ()
 
@@ -576,6 +583,14 @@ class Slice(NDIndex):
         elif isinstance(other, Slice):
             return self.args == other.args
         return False
+
+    def selected_indices(self, shape, axis=None):
+        if axis is None:
+            yield from self.expand(shape).selected_indices(shape)
+        else:
+            shape = asshape(shape, axis=axis)
+            for i in range(shape[axis])[self.raw]:
+                yield Integer(i)
 
 # Imports at the bottom to avoid circular import issues
 from .ndindex import ndindex

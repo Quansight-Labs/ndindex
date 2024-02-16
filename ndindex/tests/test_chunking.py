@@ -50,7 +50,7 @@ def test_ChunkSize_args(chunk_size_tuple, idx):
 
     try:
         ndindex(idx)
-    except ValueError:
+    except ValueError: # pragma: no cover
         # Filter out invalid slices (TODO: do this in the strategy)
         assume(False)
 
@@ -104,6 +104,8 @@ def test_indices(chunk_size, shape):
     elements = [i for x in subarrays for i in x.flatten()]
     assert sorted(elements) == list(range(size))
 
+@example(chunk_size=(1, 1), idx=[[False, True], [True, True]],
+         shape=(2, 2))
 @example(chunk_size=(1,), idx=slice(None, None, -1), shape=(2,))
 @example((1,), True, (1,))
 @example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))
@@ -172,6 +174,8 @@ def test_as_subchunks(chunk_size, idx, shape):
 def test_as_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
+@example(chunk_size=(1, 1), idx=[[False, True], [True, True]],
+         shape=(2, 2))
 @example(chunk_size=(1,), idx=None, shape=(1,))
 @example((1,), True, (1,))
 @example(chunk_size=(1, 1), idx=slice(1, None, 2), shape=(4, 1))

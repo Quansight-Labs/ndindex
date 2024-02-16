@@ -1,4 +1,5 @@
 import sys
+import itertools
 
 from .ndindex import NDIndex, ndindex
 from .subindex_helpers import subindex_slice
@@ -740,6 +741,54 @@ class Tuple(NDIndex):
             return 0 in self.newshape(shape)
 
         return any(i.isempty() for i in self.args)
+
+    def selected_indices(self, shape):
+        shape = asshape(shape)
+        idx = self.expand(shape)
+
+        def _zipped_array_indices(array_indices, shape, axis=0):
+            return zip(*[i.selected_indices(shape, axis=axis+j)
+                            for j, i in enumerate(array_indices)])
+
+        def _flatten(l):
+            for element in l:
+                if isinstance(element, tuple):
+                    yield from element
+                else:
+                    yield element
+
+        # We need to zip all array indices into a single iterator.
+        iterators = []
+        array_indices = []
+        axis = 0
+        for i in idx.args:
+            if i == False:
+                return
+            elif i == True:
+                pass
+            elif isinstance(i, IntegerArray):
+                array_indices.append(i)
+            else:
+                # Tuples do not support array indices separated by slices,
+                # newaxes, or ellipses. Furthermore, if there are (non-scalar
+                # boolean) array indices, any Integer and BooleanArray indices
+                # are converted to IntegerArray. So we can assume all array
+                # indices are together in a single block, and this is the end
+                # of it.
+                if array_indices:
+                    iterators.append(_zipped_array_indices(array_indices,
+                                                           shape, axis=axis))
+                    axis += len(array_indices)
+                    array_indices.clear()
+                if i != None:
+                    iterators.append(i.selected_indices(shape, axis=axis))
+                    axis += 1
+        if idx.args and isinstance(idx.args[-1], IntegerArray):
+            iterators.append(_zipped_array_indices(array_indices,
+                                                   shape, axis=axis))
+
+        for i in itertools.product(*iterators):
+            yield Tuple(*_flatten(i)).reduce()
 
 # Imports at the bottom to avoid circular import issues
 from .array import ArrayIndex

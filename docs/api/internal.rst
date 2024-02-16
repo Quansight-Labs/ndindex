@@ -45,3 +45,5 @@ Other Internal Functions
 .. autofunction:: ndindex.shapetools.remove_indices
 
 .. autofunction:: ndindex.shapetools.unremove_indices
+
+.. autofunction:: ndindex.shapetools.normalize_skip_axes

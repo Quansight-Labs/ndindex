@@ -7,7 +7,3 @@ array shapes.
 .. autofunction:: ndindex.iter_indices
 
 .. autofunction:: ndindex.broadcast_shapes
-
-.. autoexception:: ndindex.BroadcastError
-
-.. autoexception:: ndindex.AxisError

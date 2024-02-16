@@ -110,9 +110,9 @@
 ### Minor Changes
 
 - Added
-  [CODE_OF_CONDUCT.md](https://github.com/Quansight-Labs/ndindex/blob/master/CODE_OF_CONDUCT.md)
+  [CODE_OF_CONDUCT.md](https://github.com/Quansight-Labs/ndindex/blob/main/CODE_OF_CONDUCT.md)
   to the ndindex repository. ndindex follows the [Quansight Code of
-  Conduct](https://github.com/Quansight/.github/blob/master/CODE_OF_CONDUCT.md).
+  Conduct](https://github.com/Quansight/.github/blob/main/CODE_OF_CONDUCT.md).
 
 - Avoid precomputing all iterated values for slices with large steps in
   {any}`ChunkSize.as_subchunks()`.
