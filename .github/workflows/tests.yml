@@ -32,6 +32,12 @@ jobs:
       - name: Run Doctests
         run: |
           ./run_doctests
+      - name: Test Installation
+        run: |
+          python -m pip install .
+      - name: Run Slotscheck
+        run: |
+          python -m slotscheck ndindex
       # Enable experimental faster sys.monitoring coverage for Python 3.12
       - name: Set COVERAGE_CORE=sysmon
         run: echo "COVERAGE_CORE=sysmon" >> $GITHUB_ENV
@@ -45,8 +51,6 @@ jobs:
           # The coverage requirement check is done by the coverage report line below
           PYTEST_FLAGS="$PYTEST_FLAGS -v --cov-fail-under=0";
           pytest $PYTEST_FLAGS
-          # Make sure it installs
-          python setup.py install
           # Coverage. This also sets the failing status if the
           # coverage is not 100%. Travis sometimes cuts off the last command, which is
           # why we print stuff at the end.
