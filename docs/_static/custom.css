@@ -167,6 +167,7 @@
 [data-theme="dark"] .left-arrow-cell::before {
     filter: invert(1);
 }
+
 .right-arrow-cell::before {
     content: '';
     position: absolute;
@@ -182,6 +183,7 @@
 [data-theme="dark"] .right-arrow-cell::before {
     filter: invert(1);
 }
+
 .left-arrow-curved-cell::before {
     content: '';
     position: absolute;
@@ -198,6 +200,7 @@
 [data-theme="dark"] .left-arrow-curved-cell::before {
     filter: invert(1);
 }
+
 .right-arrow-curved-cell::before {
     content: '';
     position: absolute;
