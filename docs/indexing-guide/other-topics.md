@@ -164,10 +164,12 @@ array([[[ 0,  0,  0,  0],
         [20, 21, 22, 23]]])
 ```
 
-Note that this behavior is exactly the opposed of Python lists. With Python
-lists, `a[:]` is a shorthand to copy `a`. But with NumPy, `a[:]` creates a
-view into `a` (to copy an array with NumPy, use `a.copy()`). Python lists do
-not have a notion of views.
+Mutating `b` also changed `a`, because both arrays point to the same memory.
+
+Note that this behavior is exactly the opposite of the way Python lists work.
+With Python lists, `a[:]` is a shorthand to copy `a`. But with NumPy, `a[:]`
+creates a view into `a` (to copy an array with NumPy, use `a.copy()`). Python
+lists do not have a notion of views.
 
 ```py
 >>> a = [1, 2, 3] # list
@@ -192,7 +194,8 @@ array([-1, 2, 3])
 array([0, 2, 3])
 ```
 
-Views aren't just for indexing. When you reshape an array, that will also create a view.
+Views aren't just for indexing. For instance you reshape an array, that will
+also create a view.
 
 ```py
 >>> a = np.arange(24)
@@ -220,10 +223,10 @@ Many other operations also create views, for example
 and
 [`a.view`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.view.html).[^view-functions-footnote]
 
-[^view-functions-footnote]: Some of these functions will sometimes return a copy because
-    returning a view is not possible, e.g., it might not be possible to always
-    represent a reshape as a [strides](strides) manipulation if the strides
-    are already non-contiguous.
+[^view-functions-footnote]: Some of these functions will sometimes return a
+    copy because returning a view is not possible. For example, it is not
+    always possible to represent a reshape as a [strides](strides)
+    manipulation if the strides are already non-contiguous.
 
 To check if an array is a view, check `a.base`. It will be `None` if it not a
 view and point to the base array otherwise. A view of a view will have the
@@ -303,17 +306,17 @@ Whether an array is a view or a copy matters for two reasons:
 (strides)=
 ## Strides
 
-The reason so many types of indexing into arrays is able to be a
+The reason so many types of indexing into arrays are able to be a
 [view](views-vs-copies) without a copy is that NumPy arrays aren't just a
 pointer to a blob of memory. They are a pointer along with something called
 **strides**. The strides tell NumPy how many bytes to skip in memory along
-each axis to get to the next element of the array. This along with the
-**memory offset** (the address in physical memory of the first byte of data),
-the **shape**, and the **itemsize** (the number of bytes each element takes
-up, which depends on the **dtype**), determines how the corresponding memory
-is organized into an array. For example, in the `reshape` example above, `a`
-is just a flat 1-dimensional array whose itemsize is 8 (an `int64` takes up 8
-bytes), so its strides is `(8,)`:
+each axis to get to the next element of the array along that dimension. This
+along with the **memory offset** (the address in physical memory of the first
+byte of data), the **shape**, and the **itemsize** (the number of bytes each
+element takes up, which depends on the **dtype**) exactly determines how the
+corresponding memory is organized into an array. For example, let's start with
+a flat 1-dimensional array with `24` elements whose itemsize is 8 (an `int64`
+takes up 8 bytes). Its strides is `(8,)`:
 
 ```py
 >>> a = np.arange(24)
@@ -325,12 +328,22 @@ bytes), so its strides is `(8,)`:
 (24,)
 ```
 
-`b` uses the exact same memory as `a` (which is just `0 1 2 ... 23`). Its
-itemsize is the same because it has the same dtype, but its strides and shape
-are different.
+Now let's create a view `b`, which is `a` reshaped to shape `(3, 2, 4)`. `b`
+uses the exact same memory as `a` (which is just `0 1 2 ... 23`). Its itemsize
+is the same because it has the same dtype, but its strides and shape are
+different.
 
 ```py
 >>> b = a.reshape((3, 2, 4))
+>>> b
+array([[[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7]],
+<BLANKLINE>
+       [[ 8,  9, 10, 11],
+        [12, 13, 14, 15]],
+<BLANKLINE>
+       [[16, 17, 18, 19],
+        [20, 21, 22, 23]]])
 >>> b.itemsize
 8
 >>> b.strides
@@ -339,13 +352,19 @@ are different.
 (3, 2, 4)
 ```
 
-This tells NumPy that along to get the next element in the first dimension, it
-needs to skip 64 bytes. That's because the first dimension contains 2\*4=8
-items each, corresponding to the number of elements in second and third
-dimensions, and each item is 8 bytes, so 8\*8=64. Similarly, to get the next
-element in the second dimension, it should skip 32 bytes.
+This tells NumPy that along to get the next element in the first dimension of
+`b`, it needs to skip 64 bytes. That's because the first dimension contains
+2\*4=8 items each, corresponding to the sizes of the second and third
+dimensions, and each item is 8 bytes, so 8\*8=64. For example, the next
+element in the first dimension after `0` (index `(0, 0, 0)`) is `8` (index
+`(1, 0, 0)`), which sits exactly 64 bytes after it in memory. Similarly, to
+get the next element in the second dimension, it should skip 32 bytes (4
+elements).
 
-The memory offset of an array can be accessed with `a.ctypes.data`:
+The memory offset of an array can be accessed with `a.ctypes.data`. This is
+the address in physical memory where the data (`0 1 2 ... 23`) lives. `a` and
+`b` have the same memory offset because they both start with the same first
+element:
 
 ```py
 >>> a.ctypes.data # doctest: +SKIP
@@ -362,7 +381,7 @@ move memory offset forward, and adjust the shape correspondingly.
 105553170825232
 >>> a[2:].shape
 (22,)
->>> a[2:].strides
+>>> a[2:].strides # the strides are the same
 (8,)
 ```
 
@@ -378,11 +397,11 @@ array, all it needs to do is adjust the shape. The memory offset is the same,
 because it still starts at the same place in memory.
 
 ```py
->>> a[:2].ctypes.data # doctest: +SKIP
+>>> a[:2].ctypes.data # the memory offset is the same # doctest: +SKIP
 105553170825216
 >>> a[:2].shape
 (2,)
->>> a[:2].strides
+>>> a[:2].strides # the strides are the same
 (8,)
 ```
 
@@ -394,7 +413,7 @@ offset will be again unchanged because it still starts at the first element of
 ```py
 >>> a[::2].strides
 (16,)
->>> a[::2].ctypes.data # doctest: +SKIP
+>>> a[::2].ctypes.data # the memory offset is the same # doctest: +SKIP
 105553170825216
 >>> a[::2].shape
 (12,)
@@ -427,12 +446,13 @@ newaxis (which just adds `0` to the strides):
 (0, 64, 32, 8)
 ```
 
-This is why basic indexing always produces a view, because it can always be
-represented as a manipulation of the strides (plus shape and offset).
+This is why [basic indexing](basic-indices) always produces a
+[view](views-vs-copies): because it can always be represented as a
+manipulation of the strides (plus shape and offset).
 
-Another important fact about strides is that broadcasting can be achieved by
-manipulating the strides, namely by using a `0` stride to repeate the same
-data along a given axis.
+Another important fact about strides is that [broadcasting](broadcasing) can
+be achieved by manipulating the strides, namely by using a `0` stride to
+repeat the same data along a given axis.
 
 ```py
 >>> c = a.reshape((1, 12, 2))
@@ -458,7 +478,8 @@ repeated elements literally refer to the same memory.
 This shows why [broadcasting](broadcasting) is so powerful: it can be done
 without any actual copy of the data. When you perform an operation on two
 arrays, the broadcasting is implicit, but even explicitly creating a
-broadcasted array is cheap, because all it does is create a view.
+broadcasted array is cheap, because all it does is create a view with
+different strides.
 
 Note that you can manually create a view with any strides you want using
 [stride
