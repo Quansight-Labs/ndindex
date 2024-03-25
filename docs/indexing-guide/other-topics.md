@@ -450,7 +450,7 @@ This is why [basic indexing](basic-indices) always produces a
 [view](views-vs-copies): because it can always be represented as a
 manipulation of the strides (plus shape and offset).
 
-Another important fact about strides is that [broadcasting](broadcasing) can
+Another important fact about strides is that [broadcasting](broadcasting) can
 be achieved by manipulating the strides, namely by using a `0` stride to
 repeat the same data along a given axis.
 
