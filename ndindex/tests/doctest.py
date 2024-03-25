@@ -25,6 +25,7 @@ import os
 from contextlib import contextmanager
 from doctest import (DocTestRunner, DocFileSuite, DocTestSuite,
                      NORMALIZE_WHITESPACE, ELLIPSIS, register_optionflag)
+import doctest
 
 SKIPNP1 = register_optionflag("SKIPNP1")
 NP1 = numpy.__version__.startswith('1')
@@ -41,6 +42,7 @@ def patch_doctest():
     The doctester must be patched
     """
     orig_run = DocTestRunner.run
+    orig_indent = doctest._indent
 
     def run(self, test, **kwargs):
         filtered_examples = []
@@ -56,11 +58,18 @@ def patch_doctest():
         test.examples = filtered_examples
         return orig_run(self, test, **kwargs)
 
+    # Doctest indents the output, which is annoying for copy-paste, so disable
+    # it.
+    def _indent(s, **kwargs):
+        return s
+
     try:
         DocTestRunner.run = run
+        doctest._indent = _indent
         yield
     finally:
         DocTestRunner.run = orig_run
+        doctest._indent = orig_indent
 
 DOCS = os.path.realpath(os.path.join(__file__, os.path.pardir, os.path.pardir,
                                      os.pardir, 'docs'))
@@ -79,10 +88,10 @@ def load_tests(loader, tests, ignore):
                                 module_relative=False))
     return tests
 
-def doctest():
+def run_doctests():
     with patch_doctest():
         return unittest.main(module='ndindex.tests.doctest', exit=False).result
 
 if __name__ == '__main__':
     # TODO: Allow specifying which doctests to run at the command line
-    doctest()
+    run_doctests()
