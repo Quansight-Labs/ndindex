@@ -489,12 +489,9 @@ indexing, `reshape`, `broadcast_to`, and `transpose`, but it's possible to use
 strides to represent some things which are not so easy to do with just these
 functions, for example, [sliding
 windows](https://numpy.org/doc/stable/reference/generated/numpy.lib.stride_tricks.sliding_window_view.html)
-and [convolutions](https://stackoverflow.com/a/43087507/161801). [This medium
-article by Raimi
-Karim](https://towardsdatascience.com/advanced-numpy-master-stride-tricks-with-25-illustrated-exercises-923a9393ab20)
-demonstrates many examples of the sorts of things you can do with stride
-tricks. However, if you do use stride tricks, be careful of the caveats (see
-the [notes section of the `as_strided`
+and [convolutions](https://stackoverflow.com/a/43087507/161801). However, if
+you do use stride tricks, be careful of the caveats (see the [notes section of
+the `as_strided`
 docs](https://numpy.org/doc/stable/reference/generated/numpy.lib.stride_tricks.as_strided.html)).
 
 (c-vs-fortran-ordering)=
