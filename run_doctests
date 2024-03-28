@@ -2,5 +2,5 @@
 import sys
 
 import ndindex.tests.doctest
-tests = ndindex.tests.doctest.doctest()
+tests = ndindex.tests.doctest.run_doctests()
 sys.exit(bool(tests.errors or tests.failures))
