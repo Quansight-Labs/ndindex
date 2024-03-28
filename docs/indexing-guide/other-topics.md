@@ -700,10 +700,6 @@ The key point to understand with size 0 arrays is that
 > when a dimension has size `0` is the same as the behavior when the dimension
 > has any other size.**
 
-Only size `1` is special-cased, and there, only when it applies to
-[broadcasting](broadcasting). **When it comes to indexing, all dimension sizes
-follow exactly the same rules.**
-
 In other words, these extra dimensions still function they way they would if
 the array didn't have 0 elements. For example, with `a` as the shape `(0, 2,
 4)` array as above:
@@ -736,8 +732,15 @@ Traceback (most recent call last):
 IndexError: index 0 is out of bounds for axis 0 with size 0
 ```
 
-Let's look at what happens if we try to add two different arrays to `a`, one
-with shape `(1, 2, 3)` and one with shape `(1, 2, 4)`:
+This is true of indexing, but it's also true of most other NumPy functions and
+operations, that they follow the same rules regardless of whether a dimension
+is size 0. Equivalently, one could say that these functions are generalized to
+the case when the dimension is size 0.
+
+For [broadcasting](broadcasting), `0` is not special. Only size `1` is
+special-cased. For example, let's look at what happens if we try to add two
+different arrays to `a`, one with shape `(1, 2, 3)` and one with shape `(1, 2,
+4)`:
 
 ```py
 >>> b = np.ones((1, 2, 3))
@@ -779,21 +782,56 @@ broadcast `(1, 2, 4)` with any `(x, 2, 4)` shape:
 (10, 2, 4)
 ```
 
-Now that we understand this, there are two pieces to the puzzle to
-understanding why size 0 arrays exist in NumPy, and why they keep track of
-seemingly superfluous dimensions:
+It's also true of most mathematical functions. For example, elementwise
+functions "apply" to every element of the array, i.e., they just return back
+another size 0 array of the same shape
 
-1. How such arrays can naturally come about.
-2. How keeping track of the extra dimensions in the shape is useful.
+```py
+>>> np.sin(np.empty((0, 2, 4)))
+array([], shape=(0, 2, 4), dtype=float64)
+```
 
-### How Size 0 Arrays Can Naturally Come About
+Reduction functions like [`sum`](https://en.wikipedia.org/wiki/Empty_sum),
+[`prod`](https://en.wikipedia.org/wiki/Empty_product), [`any`, and
+`all`](https://en.wikipedia.org/wiki/Vacuous_truth) have mathematical
+conventions for application over the empty set:
 
-As noted above, there are two primary ways you might naturally come across a
-size 0 array (aside from creating one manually using an array constructor like
-`np.empty()`), an [out-of-bounds slice](empty-slice) or a [boolean
-mask](boolean-array-indices) that is all `False`. In both cases, the point is
-that **a size 0 array is the result of an edge case of a general index
-formula**.
+```py
+>>> np.sum(np.empty((0,)))
+0.0
+>>> np.prod(np.empty((0,)))
+1.0
+>>> np.any(np.empty((0,), dtype=bool))
+False
+>>> np.all(np.empty((0,), dtype=bool))
+True
+```
+
+And many manipulation functions just apply some operation along certain
+dimensions of the shape, and don't really care that one of those dimensions
+might be zero.
+
+```py
+>>> a = np.empty((0, 2, 1))
+>>> np.concatenate((a, a), axis=1)
+array([], shape=(0, 4, 1), dtype=float64)
+>>> np.squeeze(a)
+array([], shape=(0, 2), dtype=float64)
+>>> np.moveaxis(a, 0, 2)
+array([], shape=(2, 1, 0), dtype=float64)
+```
+
+Furthermore, a composition of operations that make sense for size 0
+arrays, will also make sense for a size 0 dimension. So a larger operation
+can have a meaningful result as well. For example, TODO
+
+Supporting size 0 arrays isn't just about being as general as possible. They
+very often come about naturally. As noted above, there are two primary ways
+you might naturally come across a size 0 array (aside from creating one
+manually using an array constructor like `np.empty()`), an [out-of-bounds
+slice](empty-slice) or a [boolean mask](boolean-array-indices) that is all
+`False`. In both cases, the point is that **a size 0 array is the result of an
+edge case of a general index formula**.
 
 For example, suppose we want to write a function to trim the first `k` elements from a
 (1-D) array. This is simple with [slicing](slices-docs):
@@ -844,53 +882,6 @@ Again, if we mask off some part of an array, and nothing actually matches,
 there are two choices: an error or a size 0 array. NumPy gives a size 0 array,
 because it can often result in a meaningful answer. A meaningful answer is
 always preferable to an error.
-
-### How Keeping Track of the Extra Dimensions in the Shape is Useful
-
-### When Can Size 0 Arrays Still be Meaningful?
-
-Many mathematical functions make perfect sense when applied to empty sets. For
-example, the [empty sum](https://en.wikipedia.org/wiki/Empty_sum) is 0 and the
-[empty product](https://en.wikipedia.org/wiki/Empty_product) is 1. NumPy
-adopts these conventions, wherever appropriate. For example:
-
-```py
->>> np.sum(np.empty((0,)))
-0.0
->>> np.prod(np.empty((0,)))
-1.0
-```
-
-`sum` and `prod` are simple examples, but this applies more generally to a
-larger class of functions. For example:
-
-```py
->>> np.any(np.empty((0,), dtype=bool))
-False
->>> np.all(np.empty((0,), dtype=bool))
-True
-```
-
-And of course, those are just reduction functions. Functions that apply
-elementwise have an obvious application to a size 0 array. They "apply" to
-every element of the array, i.e., they just return back another size 0 array
-of the same shape
-
-```py
->>> np.sin(np.empty((0, 2, 4)))
-array([], shape=(0, 2, 4), dtype=float64)
-```
-
-And as demonstrated above, for multiargument operators, like `+`, the same
-thing happens, they "apply" elementwise across the nothing, i.e., return an
-array with the same size 0 shape. Except here broadcasting applies:
-
-```py
->>> a = np.empty((0, 2, 4))
->>> b = np.empty((1, 2, 4))
->>> a + b
-array([], shape=(0, 2, 4), dtype=float64)
-```
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
