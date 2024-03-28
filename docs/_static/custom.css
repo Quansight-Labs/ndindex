@@ -336,3 +336,10 @@ html {
 .show-back-to-top .back-to-top {
     display: none;
 }
+
+/* Highlight footnotes when they are linked to */
+.footnote:target {
+    background-color: var(--color-highlight-on-target);
+    padding: 5px;
+    border-radius: 5px;
+}
