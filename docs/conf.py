@@ -135,6 +135,7 @@ theme_colors_common = {
 
     "code-font-size": "var(--font-size--small)",
 
+    "color-highlight-on-target": "var(--color-highlighted-background)",
     }
 html_theme_options = {
     'light_logo': 'ndindex_logo_white_bg.svg',
