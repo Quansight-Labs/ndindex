@@ -536,9 +536,9 @@ array([[0, 1, 2],
        [3, 4, 5],
        [6, 7, 8]])
 >>> idx = np.array([
-... [False,  True, False],
-... [ True,  True, False],
-... [False, False, False]])
+...     [False,  True, False],
+...     [ True,  True, False],
+...     [False, False, False]])
 >>> a[idx]
 array([1, 3, 4])
 >>> a_f = np.asarray(a, order='F')
@@ -556,7 +556,7 @@ array([1, 3, 4])
 array([1, 3, 4])
 ```
 
-````{admonition} Aside
+~~~~{admonition} Aside
 If you read the previous section on [strides](strides), you probably guessed
 that the difference between C-ordered and Fortran-ordered arrays is a
 difference of...strides!
@@ -570,7 +570,7 @@ difference of...strides!
 
 In a C-ordered array the strides decrease and in a Fortran-ordered array they
 increase, because a smaller stride corresponds to "faster varying".
-````
+~~~~
 
 **What ordering *does* affect is the performance of certain operations.** In
 particular, the ordering affects whether it is more optimal to index along the
@@ -625,7 +625,7 @@ Fortran ordering) is about 3x faster.
 NumPy indexing semantics tend to favor thinking about arrays using the C
 order, as one does not need to use an ellipsis to select contiguous
 subarrays. C ordering also matches the [list-of-lists
-intuition](what-is-an-array) intuition of an array, since an array like
+intuition](what-is-an-array) of an array, since an array like
 `[[0, 1], [2, 3]]` is stored in memory as literally `0, 1, 2, 3` with C
 ordering.
 
@@ -677,7 +677,7 @@ array([], shape=(0, 2, 4), dtype=float64)
 It might make sense that NumPy can represent an array with no elements,
 similar to a built-in Python `list` with no elements, `[]`. But the
 particularly confusing thing about these arrays is that they have a specified
-shape, despite having no elements.
+shape with nonzero dimensions, despite having no elements.
 
 For example, the above array has shape `(0, 2, 4)`. The extra `(2, 4)` in the
 array shape would appear to do nothing. The number of elements in the array is
@@ -712,14 +712,38 @@ the array didn't have 0 elements. For example, with `a` as the shape `(0, 2,
 >>> a = np.empty((0, 2, 4))
 ```
 
-Let's look at what happens if we try to add two differnt arrays of ones to
-`a`, one with shape `(1, 2, 3)` and one with shape `(1, 2, 4)`:
+For example, we can index the second, size `2`, dimension with an [integer
+index](integer-indices) `0` or `1`, but not `2`:
+
+```py
+>>> a[:, 0]
+array([], shape=(0, 4), dtype=float64)
+>>> a[:, 1]
+array([], shape=(0, 4), dtype=float64)
+>>> a[:, 2]
+Traceback (most recent call last):
+  ...
+IndexError: index 2 is out of bounds for axis 1 with size 2
+```
+
+We cannot index the first dimension with any integer index, because the index
+`i` would need to satisfy `0 <= i < 0`
+
+```py
+>>> a[0]
+Traceback (most recent call last):
+  ...
+IndexError: index 0 is out of bounds for axis 0 with size 0
+```
+
+Let's look at what happens if we try to add two different arrays to `a`, one
+with shape `(1, 2, 3)` and one with shape `(1, 2, 4)`:
 
 ```py
 >>> b = np.ones((1, 2, 3))
 >>> a + b
 Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
+  ...
 ValueError: operands could not be broadcast together with shapes (0,2,4) (1,2,3)
 >>> c = np.ones((1, 2, 4))
 >>> a + c
