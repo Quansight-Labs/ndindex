@@ -826,11 +826,10 @@ sense for a user to specify a `k` that is larger than `a`. For example, if our
 `a` corresponds to time steps, and we are only interested in what happens
 after time step `11`, we can use `trim(a, 11)` (i.e., `a[11:]`). If `a`
 doesn't actually go [up to 11](https://en.wikipedia.org/wiki/Up_to_eleven), we
-still aren't interested in any of its elements, by definition. In that case,
-we have two choices: either return an error, or return a shape `(0,)` array.
-As we'll see below, returning a shape `(0,)` is often fine. Depending on what
-we do with the result, it will proceed through in a way that makes
-mathematical sense.
+still aren't interested in any of its elements. In that case, we have two
+choices: either return an error, or return a shape `(0,)` array. As we'll see
+below, returning a shape `(0,)` is often fine. Depending on what we do with
+the result, it will proceed through in a way that makes mathematical sense.
 
 It's perhaps even easier to understand how this can happen with a [boolean
 mask](boolean-array-indices). If a mask doesn't match any elements of the
@@ -850,65 +849,10 @@ always preferable to an error.
 
 ### When Can Size 0 Arrays Still be Meaningful?
 
-Many mathematical functions make perfect sense when applied to empty sets. The
-most common examples of this are addition and multiplication. The addition of
-*nothing* is 0, whereas the product of *nothing* is 1.
-
-There are a few ways to see this, depending on how sophisticated you are
-mathematically (the most sophsiticated has to do with [category
-theory](https://www.johndcook.com/blog/2015/04/14/empty-sum-product/), which I
-won't get into here).
-
-One simple way to see the fact that the empty sum is 0 (and similarly product
-1) is that you can always add 0 to any sum:
-
-$$
-x + y = x + y + 0 = x + y + 0 + 0 = \ldots.
-$$
-
-So one can treat the sum of just one term $x$ as the same as $x + 0$:
-
-$$
-x = x + 0
-$$
-
-and if we remove all the terms, i.e., the empty sum, we are left with just $0$.
-
-Another reason why the empty sum is $0$ is that this is the only definition
-that this definition agrees with the idea that a sum over a set should not
-depend on how that set is split up. For example,
-
-$$
-\sum_{x\in\{1, 2, 3, 4\}}x = \sum_{x\in\{1, 2\}}x + \sum_{x\in\{3, 4\}}x = \sum_{x\in\{1, 3\}}x +
-\sum_{x\in\{2, 4\}}x = \ldots
-$$
-
-(this is more or less a fancy way of saying that addition should be
-commutative and associative).
-
-But if we agree with that, we should also allow sums over singleton sets
-
-$$
-\sum_{x\in\{1, 2, 3, 4\}}x = \sum_{x\in\{1\}}x + \sum_{x\in\{2, 3, 4\}}x,
-$$
-
-and sums over empty sets
-
-$$
-\sum_{x\in\{1, 2, 3, 4\}}x = \sum_{x\in\varnothing}x + \sum_{x\in\{1, 2, 3, 4\}}x.
-$$
-
-The only way that works (i.e., gives the same answer $1 + 2 + 3 + 4 = 10$) is
-if we allow the sum over a single element set to be
-that element, and the sum over the empty set to be $0$ (and the exact same
-argument shows why $\prod_{x\in\varnothing}x$ must be $1$).
-
-Again, there are even more sophsiticated arguments why this must be the case,
-but the point is that it is a well established fact that the empty sum and
-empty product should be 0 and 1, respectively, and that if you adopt these
-conventions, things will "work out" nicely in mathematical formulae.
-
-NumPy adopts these conventions, wherever appropriate. For example:
+Many mathematical functions make perfect sense when applied to empty sets. For
+example, the [empty sum](https://en.wikipedia.org/wiki/Empty_sum) is 0 and the
+[empty product](https://en.wikipedia.org/wiki/Empty_product) is 1. NumPy
+adopts these conventions, wherever appropriate. For example:
 
 ```py
 >>> np.sum(np.empty((0,)))
@@ -920,7 +864,7 @@ NumPy adopts these conventions, wherever appropriate. For example:
 `sum` and `prod` are simple examples, but this applies more generally to a
 larger class of functions. For example:
 
-```
+```py
 >>> np.any(np.empty((0,), dtype=bool))
 False
 >>> np.all(np.empty((0,), dtype=bool))
