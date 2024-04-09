@@ -1381,7 +1381,7 @@ mid - 1`:
 ```
 
 It's a good idea to play around in an interpreter and check all the corner
-cases.
+cases when dealing with situations like this.
 
 **Exercise:** Write a slice to index the middle `n` elements of `a` when `n`
 is odd, clipping to all of `a` if `n` is larger than `len(a)`.
@@ -1453,7 +1453,7 @@ expensive either.
 
 The clipping behavior of slices also means that you cannot rely on runtime
 checks for out-of-bounds slices. Simply put, there is no such thing as an
-"out-of-bounds slice". If you really want an bounds check, you have to do it
+"out-of-bounds slice". If you really want a bounds check, you have to do it
 manually.
 
 There's a cute trick you can sometimes use that takes advantage of this
@@ -1514,8 +1514,8 @@ would not.
 The point here is that we are embedding both the bounds check and the element
 check into the same conditional. That's because `==` on a container type (like
 a `list` or `str`) checks two things: if containers have the same length and
-the elements are the same. When we modify the code to compare containers,
-checking `if len(container) > 1` (or whatever) is unnecessary because it's
+the elements are the same. When we modified the code to compare lists instead
+of strings, the `if len(sys.argv) > 1` check became unnecessary because it's
 already built-in to the `==` comparison.
 
 This trick works especially well when working with strings. Unlike with lists,
