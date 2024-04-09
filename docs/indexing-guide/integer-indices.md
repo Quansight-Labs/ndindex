@@ -9,6 +9,7 @@ and `str`, as well as NumPy arrays.
 (prototype-example)=
 Let's use as an example this prototype list:
 
+<!-- TODO: Differentiate without color -->
 <div class="slice-diagram">
   <table>
     <tr>
@@ -30,19 +31,18 @@ The list `a` has 7 elements.
 The elements of `a` are strings, but the indices and slices on the list `a`
 will always use integers. Like [all other index types](what-is-an-index),
 **the result of an integer index is never based on the values of the elements,
-but rather their position of the elements in the list.**[^dict-footnote]
+but rather on their positions in the list.**[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a `dict`.
 
-An integer index picks a single element from the list `a`. For NumPy arrays,
-integer indices pick a subarray corresponding to a particular element from a
-given axis (and as a result, an integer index always reduces the
-dimensionality of an array by one).
+An integer index picks a single element from the list `a`.
+
+> **The key thing to remember about indexing in Python, both for integer and
+  slice indexing, is that it is 0-based.**
 
 (fourth-sentence)=
-**The key thing to remember about indexing in Python, both for integer and
-slice indexing, is that it is 0-based.** This means that the indices start
+ This means that the indices start
 counting at 0 (like "0, 1, 2, ..."). This is the case for all *nonnegative*
 indices[^nonnegative]. For example, `a[3]` would pick the *fourth* element of
 `a`, in this case, `'d'`:
@@ -178,7 +178,7 @@ Traceback (most recent call last):
 IndexError: index -3 is out of bounds for axis 0 with size 2
 ```
 
-Fortunately, NumPy arrays give a more helpful error message for `IndexError`
+Fortunately, NumPy arrays give more helpful error messages for `IndexError`
 than Python does for `list`.
 
 The second important fact about integer indexing is that it reduces the
@@ -187,7 +187,7 @@ means that an integer index returns an element of the list, which is in
 general a different type than `list` or `tuple`. For instance, above we saw
 that indexing `a` with an integer resulted in a `str`, because `a` is a list
 that contains strings. This is in contrast with [slices](slices-docs), which
-always [return a container type](subarray).
+always [return the same container type](subarray).
 
 The exception to this rule is when integer indexing a
 `str`, the result is also a `str`. This is because there is no `char` class in
@@ -219,21 +219,24 @@ removed from the resulting shape. This is contrast with [slices](slices-docs), w
 (2, 3)
 ```
 
-One way to think about integer indexing on a NumPy array is to think about the
-list-of-lists analogy. An integer index on the first axis `a[i]` picks the
-index `i` sub-list at the top level of sub-list nesting, and in general, an
-integer index `i` on axis `k` picks the sub-lists of index `i` at the `k`-th
-nesting level.[^nesting-level] See the [](what-is-an-array) section on the
-[](multidimensional-indices) page for more details on this analogy. For example, if
-`l` is a nested list of lists
+The resulting array is a subarray corresponding to the `i`-th position along
+the given axis, using the 0- and &minus;1-based rules discussed above.
 
-[^nesting-level]: Thinking about the `k`-th level of nesting gets confusing
-    once you start thinking about whether or not `k` is counted with 0-based
-    number, and which level counts as which considering that at the outermost
-    "level" there is always a single list. List-of-lists is a good analogy for
-    thinking about why one might want to use an nd-array in the first place,
-    but as you actually use NumPy arrays in practice, you'll find it's much
-    better to think about dimensions and axes, not "levels of nesting".
+One way to think about integer indexing on a NumPy array is to think about
+[the list-of-lists analogy](what-is-an-array). An integer index on the first
+axis `a[i]` picks the index `i` sub-list at the top level of sub-list nesting,
+and in general, an integer index `i` on axis `k` picks the sub-lists of index
+`i` at the `k`-th nesting level.[^nesting-level] For example, if `l` is a
+nested list of lists
+
+[^nesting-level]: Thinking about the `k`-th level of nesting can get
+    confusing. For instance, it's not clear whether `k` should be counted with
+    0-based or 1-based numbering, and which level counts as which considering
+    that at the outermost "level" there is always a single list. List-of-lists
+    is a good analogy for thinking about why one might want to use an nd-array
+    in the first place, but as you actually use NumPy arrays in practice,
+    you'll find it's much better to think about dimensions and axes directly,
+    not "levels of nesting".
 
 ```py
 >>> l = [[0, 1], [2, 3]]
