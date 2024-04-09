@@ -242,7 +242,7 @@ is completely invalid, e.g., `a[1.0:]` and `a[::0]` raise `TypeError` and
 For the slice `a[start:stop]`, with `start` and `stop` nonnegative integers,
 the indices `start` and `stop` are 0-based, just as with [integer
 indexing](integer-indices) (although one should be careful that even though
-`stop` is 0-based, [it is not included in the slice](half-open)).
+`stop` is 0-based, [it is not included in the slice](wrong-rule-4)).
 
 For example:
 
@@ -442,7 +442,7 @@ for negative `start` or `stop`. For example, with a `step` of `-1`,
 `stop`, but not including `stop`. Mathematically, this creates a half open
 interval $(\text{stop}, \text{start}]$ (except reversed).
 
-For example, say way believed that `a[5:3:-1]` sliced the half-open interval
+For example, say we believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
 
 <div class="slice-diagram">
@@ -1201,7 +1201,8 @@ is confusing. Not only that, but the rule must necessarily be reversed for
 negative indices. `a[-5:-3]` indexes from the (&minus;5)th element with
 &minus;1-based indexing to the (&minus;3)rd element with 0-based indexing (and
 of course, negative and nonnegative starts and stops can be mixed, like
-`a[3:-3]`). Don't get cute here. It isn't worth it.
+`a[3:-3]`). Don't get cute here. It isn't worth it. The `stop` *is* 0-based,
+it just isn't included.
 
 (negative-indices)=
 ### Negative Indices
