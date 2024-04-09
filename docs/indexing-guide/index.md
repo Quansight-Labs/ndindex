@@ -13,54 +13,6 @@ also tries to be as complete as possible and at least mention all the various
 corner cases. Some of these technical points can be glossed over if you are a
 beginner.
 
-```{note}
-For clarity, in this document, and throughout the ndindex documentation, the
-plural of *index* is *indices*. *Indexes* is always a verb. For example,
-
-> In `a[i, j]`, the *indices* are `i` and `j`. They represent a single tuple index
-`(i, j)`, which *indexes* the array `a`.
-```
-
-## Index Types
-
-There are 7 types of indices supported by NumPy, which correspond to the [7
-top-level ndindex types](index-types). These can be sorted into three
-categories:
-
-### Basic single-axis indices
-
-These are the indices that only work on a single axis of an array at a time.
-These indices also work for built-in sequence types such as `list` and `str`,
-and use the exact same semantics as them for which elements they select.
-
-- [Integer indices](integer-indices), corresponding to
-  [`ndindex.Integer`](ndindex.integer.Integer).
-- [Slices](slices-docs), corresponding to [`ndindex.Slice`](ndindex.slice.Slice).
-
-### Basic multidimensional indices
-
-These are the indices that operate on multiple dimensions at once. These
-indices will not work on the built-in Python sequence types like `list` and
-`str`; they are only defined for NumPy arrays. However, like the basic
-single-axis indices, these indices are "basic indices", meaning that they
-return a [view](views-vs-copies) of an array.
-
-- [Tuples](tuple-indices), corresponding to [`ndindex.Tuple`](ndindex.tuple.Tuple).
-- [Ellipses](ellipsis-indices), corresponding to
-  [`ndindex.ellipsis`](ndindex.ellipsis.ellipsis)
-- [Newaxes](newaxis-indices) (i.e., `None`), corresponding to
-  [`ndindex.Newaxis`](ndindex.newaxis.Newaxis).
-
-### Advanced indices
-
-Advanced indices operate in general on multiple dimensions at once. However,
-unlike the basic indices, advanced indices in NumPy always return a
-[copy](views-vs-copies) of the array.
-
-- [Integer arrays](integer-array-indices), corresponding to
-  [`ndindex.IntegerArray`](ndindex.integerarray.IntegerArray).
-- [Boolean arrays](boolean-array-indices), corresponding to
-  [`ndindex.BooleanArray`](ndindex.booleanarray.BooleanArray).
 
 (what-is-an-index)=
 ## What is an index?
@@ -84,13 +36,20 @@ semantics outlined here.
     type](slices-docs). The term "index" is used in the Python language itself
     (e.g., in the built-in exception type `IndexError`).
 
-Semantically, an index `x` picks some subset of the elements of `a`. An index
+Semantically, an index `x` picks, or *indexes*[^indexes-footnote], some subset of the elements of `a`. An index
 `a[x]` always either returns a new array with some subset of the elements of
 `a`, or it raises `IndexError`. The most important rule for indexing, which
 applies to all types of indices, is this:
 
+[^indexes-footnote]: For clarity, in this document, and throughout the ndindex
+    documentation, the plural of *index* is *indices*. *Indexes* is always a
+    verb. For example,
+
+    > In `a[i, j]`, the *indices* are `i` and `j`. They represent a single
+      tuple index `(i, j)`, which *indexes* the array `a`.
+
 > **Indices do not in any way depend on the *values* of the elements they
-  select. They only depend on their *position* in the array `a`.**
+  select. They only depend on their *positions* in the array `a`.**
 
 For example, suppose `a` is an array of integers of shape `(2, 3, 2)`:
 
@@ -101,7 +60,7 @@ For example, suppose `a` is an array of integers of shape `(2, 3, 2)`:
 (2, 3, 2)
 ```
 
-Let's take as an example, the index `0, ..., 1:`. We'll investigate how
+Let's take as an example the index `0, ..., 1:`. We'll investigate how
 exactly this index works later. For now, just notice that `a[0, ..., 1:]`
 returns a new array with some of the elements of `a`.
 
@@ -147,8 +106,8 @@ So the following are always true about any index:
   Their values are irrelevant.
 
 - As such, the same index applied to any other array with the same shape will
-  produce an array with the exact same resulting shape with corresponding
-  elements in the exact same corresponding places.
+  produce an array with the exact same resulting shape with elements in the
+  exact same corresponding places.
 
 To be sure, it is possible to *construct* indices that chose specific elements
 based on their values. A common example of this is masks (i.e., [boolean array
@@ -164,6 +123,52 @@ commonly desired indexing operations are represented by the basic indices such
 as [integer indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
 
+
+<!-- TODO: Keep this section? -->
+
+## Index Types
+
+There are 7 types of indices supported by NumPy, which correspond to the [7
+top-level ndindex types](index-types). These can be sorted into three
+categories:
+
+### Basic single-axis indices
+
+These are the indices that only work on a single axis of an array at a time.
+These are also the indices that work on built-in sequence types such as `list`
+and `str`. The semantics of these index types on `list` and `str` are exactly
+the same as on NumPy arrays, so even if you do not care about NumPy or array
+programming, this section of this document can be informative just as a
+general Python programmer.
+
+- [Integer indices](integer-indices), corresponding to
+  [`ndindex.Integer`](ndindex.integer.Integer).
+- [Slices](slices-docs), corresponding to [`ndindex.Slice`](ndindex.slice.Slice).
+
+### Basic multidimensional indices
+
+These are the indices that operate on multiple dimensions at once. These
+indices will not work on the built-in Python sequence types like `list` and
+`str`; they are only defined for NumPy arrays. However, like the basic
+single-axis indices, these indices are "basic indices", meaning that they
+return a [view](views-vs-copies) of an array.
+
+- [Tuples](tuple-indices), corresponding to [`ndindex.Tuple`](ndindex.tuple.Tuple).
+- [Ellipses](ellipsis-indices), corresponding to
+  [`ndindex.ellipsis`](ndindex.ellipsis.ellipsis)
+- [Newaxes](newaxis-indices) (i.e., `None`), corresponding to
+  [`ndindex.Newaxis`](ndindex.newaxis.Newaxis).
+
+### Advanced indices
+
+Advanced indices operate in general on multiple dimensions at once. However,
+unlike the basic indices, advanced indices in NumPy always return a
+[copy](views-vs-copies) of the array.
+
+- [Integer arrays](integer-array-indices), corresponding to
+  [`ndindex.IntegerArray`](ndindex.integerarray.IntegerArray).
+- [Boolean arrays](boolean-array-indices), corresponding to
+  [`ndindex.BooleanArray`](ndindex.booleanarray.BooleanArray).
 
 ```{toctree}
 :titlesonly:
