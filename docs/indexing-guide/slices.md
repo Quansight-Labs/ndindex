@@ -4,7 +4,7 @@ Slices
 
 Python's slice syntax is one of the more confusing parts of the language, even
 to experienced developers. This page carefully breaks down the rules for
-slicing, and examine just what it is that makes it so confusing.
+slicing, and examines just what it is that makes it so confusing.
 
 There are two primary aspects of slices that make them difficult to
 understand: confusing conventions, and discontinuous definitions. By confusing
@@ -226,10 +226,11 @@ For example
 ```
 
 One consequence of this is that, unlike integer indices, **slices will never
-raise `IndexError`, even if the slice is empty**.[^slice-error-footnote]
-Therefore you cannot rely on runtime errors to alert you to coding mistakes
-relating to slice bounds that are too large. A slice cannot be "out of
-bounds." See also the section on [clipping](clipping) below.
+raise `IndexError`, even if the slice is empty or extends past the bounds of
+the array**.[^slice-error-footnote] Therefore you cannot rely on runtime
+errors to alert you to coding mistakes relating to slice bounds that are too
+large. A slice cannot be "out of bounds." See also the section on
+[clipping](clipping) below.
 
 [^slice-error-footnote]: A slice might raise another exception, though, if it
 is completely invalid, e.g., `a[1.0:]` and `a[::0]` raise `TypeError` and
