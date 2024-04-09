@@ -123,52 +123,32 @@ commonly desired indexing operations are represented by the basic indices such
 as [integer indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
 
+## Sections in this Guide
 
-<!-- TODO: Keep this section? -->
+This guide is split into four sections.
 
-## Index Types
+The first two sections cover the basic single-axis index types: [integer
+indices](integer-indices.md), and [slices](slices.md). These are the indices
+that only work on a single axis of an array at a time. These are also the
+indices that work on built-in sequence types such as `list` and `str`. The
+semantics of these index types on `list` and `str` are exactly the same as on
+NumPy arrays, so even if you do not care about NumPy or array programming,
+these sections of this document can be informative just as a general Python
+programmer. Slices in particular are oft confused and the guide on slicing
+clarifies their exact rules and debunks some commonly spouted false beliefs
+about how they work.
 
-There are 7 types of indices supported by NumPy, which correspond to the [7
-top-level ndindex types](index-types). These can be sorted into three
-categories:
+The third section covers [multidimensional
+indices](multidimensional-indices.md). These indices will not work on the
+built-in Python sequence types like `list` and `str`; they are only defined
+for NumPy arrays.
 
-### Basic single-axis indices
+Finally, a page on [other topics relevant to indexing](other-topics.md) covers
+a set of miscellaneous topics about NumPy arrays that are useful for
+understanding how indexing works, such as broadcasting, views, strides, and
+ordering.
 
-These are the indices that only work on a single axis of an array at a time.
-These are also the indices that work on built-in sequence types such as `list`
-and `str`. The semantics of these index types on `list` and `str` are exactly
-the same as on NumPy arrays, so even if you do not care about NumPy or array
-programming, this section of this document can be informative just as a
-general Python programmer.
-
-- [Integer indices](integer-indices), corresponding to
-  [`ndindex.Integer`](ndindex.integer.Integer).
-- [Slices](slices-docs), corresponding to [`ndindex.Slice`](ndindex.slice.Slice).
-
-### Basic multidimensional indices
-
-These are the indices that operate on multiple dimensions at once. These
-indices will not work on the built-in Python sequence types like `list` and
-`str`; they are only defined for NumPy arrays. However, like the basic
-single-axis indices, these indices are "basic indices", meaning that they
-return a [view](views-vs-copies) of an array.
-
-- [Tuples](tuple-indices), corresponding to [`ndindex.Tuple`](ndindex.tuple.Tuple).
-- [Ellipses](ellipsis-indices), corresponding to
-  [`ndindex.ellipsis`](ndindex.ellipsis.ellipsis)
-- [Newaxes](newaxis-indices) (i.e., `None`), corresponding to
-  [`ndindex.Newaxis`](ndindex.newaxis.Newaxis).
-
-### Advanced indices
-
-Advanced indices operate in general on multiple dimensions at once. However,
-unlike the basic indices, advanced indices in NumPy always return a
-[copy](views-vs-copies) of the array.
-
-- [Integer arrays](integer-array-indices), corresponding to
-  [`ndindex.IntegerArray`](ndindex.integerarray.IntegerArray).
-- [Boolean arrays](boolean-array-indices), corresponding to
-  [`ndindex.BooleanArray`](ndindex.booleanarray.BooleanArray).
+## Footnotes
 
 ```{toctree}
 :titlesonly:
