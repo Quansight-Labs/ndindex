@@ -1428,7 +1428,7 @@ Now a few advanced notes about integer array indexing:
   [integer](integer-indices) and integer array indices, the two sets of
   indices operate independently of one another. The slices and ellipses select
   the corresponding axes and newaxes add new axes to the corresponding
-  locations, and the the integer array indices select the elements on their
+  locations, and the integer array indices select the elements on their
   respective axes, as described above.
 
   For example, consider:
@@ -1493,8 +1493,8 @@ Now a few advanced notes about integer array indexing:
   ```
 
   Here the (broadcasted) integer array index shape `(10, 20)` comes first in
-  the result array and shape corresponding to the rest of the index, `(3, 4)`,
-  comes last.
+  the result array and the shape corresponding to the rest of the index, `(3,
+  4)`, comes last.
 
   If you find yourself running into this behavior, chances are you would be
   better off rewriting the indexing operation to be simpler. It's considered

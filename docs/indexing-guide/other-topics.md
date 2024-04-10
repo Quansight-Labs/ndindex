@@ -495,7 +495,7 @@ the `as_strided`
 docs](https://numpy.org/doc/stable/reference/generated/numpy.lib.stride_tricks.as_strided.html)).
 
 (c-vs-fortran-ordering)=
-## C vs. Fortran ordering
+## C vs. Fortran Ordering
 
 NumPy has an internal distinction between C order and Fortran order. C ordered
 arrays are stored in memory so that the last axis varies the fastest. For
