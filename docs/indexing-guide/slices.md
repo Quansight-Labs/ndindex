@@ -433,7 +433,7 @@ omitted `start`/`stop`](omitted)).
 (wrong-rule-1)=
 ##### Wrong Rule 1: "A slice `a[start:stop]` slices the half-open interval $[\text{start}, \text{stop})$."
 
-(or equivalently, "a slice `a[start:stop]` picks the elements $i$ such that
+(or equivalently, "a slice `a[start:stop]` selects the elements $i$ such that
 $\text{start} <= i < \text{stop}$")
 
 This is *only* the case if the `step` is positive. It also isn't directly true
@@ -682,10 +682,10 @@ Rather than thinking about that, consider the spaces between the elements:
 </div>
 
 
-Using this way of thinking, the first element of `a` is to the left of
-the "1-divider". An integer index `i` produces the element to the right of the
-"`i`-divider", and a slice `a[i:j]` picks the elements between the `i` and `j`
-dividers.
+Using this way of thinking, the first element of `a` is to the left of the
+"1-divider". An integer index `i` produces the element to the right of the
+"`i`-divider", and a slice `a[i:j]` selects the elements between the `i` and
+`j` dividers.
 
 At first glance, this seems like a rather clever way to think about the
 half-open rule. For instance, between the `3` and `5` dividers is the subarray
@@ -1341,10 +1341,10 @@ The `stop` slice value is out of bounds for `a`, but this just causes it to
 
 But `start` contains a subtraction, which causes it to become negative. Rather
 than clipping to the start, it wraps around and indexes from the end of `a`,
-producing the slice `a[-1:7]`. This picks the elements from the last element
-(`'g'`) up to but not including the 7th element (0-based). Index `7` is out of
-bounds for `a`, so this picks all elements including and after `'g'`, which in
-this case is just `['g']`.
+producing the slice `a[-1:7]`. This selects the elements from the last
+element (`'g'`) up to but not including the 7th element (0-based). Index `7`
+is out of bounds for `a`, so this selects all elements including and after
+`'g'`, which in this case is just `['g']`.
 
 Unfortunately, the "correct" fix here depends on the desired behavior for each
 individual slice. In some cases, the "slice from the end" behavior of negative
@@ -1521,7 +1521,7 @@ already built-in to the `==` comparison.
 This trick works especially well when working with strings. Unlike with lists,
 both [integer ](integer-indices) and slice indices on a string result in
 another string, so changing the code logic to work in this way often only
-requires adding a `:` to the index so that it is a slice that picks a single
+requires adding a `:` to the index so that it is a slice that selects a single
 element instead of an integer index. For example, take a function like
 
 ```py
@@ -1558,7 +1558,7 @@ If a third integer is provided in a slice, like `i:j:k`, this third integer is
 the step size. If it is not provided, the step size defaults to `1`.
 
 Thus far, we have only considered slices with the default step size of 1. When
-the step is greater than 1, the slice picks every `step` element contained in
+the step is greater than 1, the slice selects every `step` element contained in
 the bounds of `start` and `stop`.
 
 > **The proper way to think about `step` is that the slice starts at `start`
@@ -2354,7 +2354,7 @@ changes I would make to improve the semantics would be
    Every human being is taught from an early age to count from 1. If you show
    someone the list "a, b, c", they will tell you that "a" is the 1st, "b" is
    the 2nd, and "c" is the 3rd. [Sentences](fourth-sentence) in this guide
-   like "`a[3]` would pick the fourth element of `a`" sound very off, even for
+   like "`a[3]` selects the fourth element of `a`" sound very off, even for
    those of us used to 0-based indexing. 0-based indexing requires a shift in
    thinking from the way that you have been taught to count from early
    childhood. Counting is a very fundamental thing for any human, but

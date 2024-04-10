@@ -379,7 +379,7 @@ array([[ 8,  9, 10, 11],
        [12, 13, 14, 15]])
 ```
 
-You might have noticed something about this. It is picking the second element
+You might have noticed something about this. It is selecting the second element
 of the first axis. But from what we said earlier, we can also do this just by
 using the basic index `1`, which will operate on the first axis:
 
@@ -428,7 +428,7 @@ array([[ 0,  4],
 
 `:` serves as a convenient way to "skip" axes. It is one of the most common
 types of indices that you will see in practice for this reason. However, it is
-important to remember that `:` is not special. It is just a slice, which picks
+important to remember that `:` is not special. It is just a slice, which selects
 every element of the corresponding axis. We could also replace `:` with `0:n`,
 where `n` is the size of the corresponding axis (see the [slices
 documentation](omitted)).
@@ -491,7 +491,7 @@ Here `b = a[:2]` has shape `(2, 2, 4)`
 (2, 2, 4)
 ```
 
-But suppose instead we used a slice that only picked one element from the
+But suppose instead we used a slice that only selected one element from the
 first axis
 
 ```py
@@ -1682,7 +1682,7 @@ array([-10,  -9,  -8,  -7,  -6,  -5,  -4,  -3,  -2,  -1,   0,   1,   2,
          3,   4,   5,   6,   7,   8,   9,  10])
 ```
 
-Say we want to pick the elements of `a` that are both positive and odd. The
+Say we want to select the elements of `a` that are both positive and odd. The
 boolean mask `a > 0` represents which elements are positive and the boolean
 mask `a % 2 == 1` represents which elements are odd. So our mask would be
 

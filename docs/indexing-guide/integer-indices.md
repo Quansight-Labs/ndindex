@@ -1,13 +1,13 @@
 # Integer Indices
 
-The simplest possible index type is an integer index, that is `a[i]` where `i`
+The simplest possible index type is an integer index, that is, `a[i]` where `i`
 is an integer like `0`, `3`, or `-2`.
 
 Integer indexing operates on the familiar Python data types `list`, `tuple`,
 and `str`, as well as NumPy arrays.
 
 (prototype-example)=
-Let's use as an example this prototype list:
+Let us consider the following prototype list as an example:
 
 <!-- TODO: Differentiate without color -->
 <div class="slice-diagram">
@@ -29,26 +29,21 @@ Let's use as an example this prototype list:
 The list `a` has 7 elements.
 
 The elements of `a` are strings, but the indices and slices on the list `a`
-will always use integers. Like [all other index types](what-is-an-index),
-**the result of an integer index is never based on the values of the elements,
-but rather on their positions in the list.**[^dict-footnote]
+will always use integers. As with [all other index types](what-is-an-index),
+**the result of an integer index is never based on the values of the elements;
+it is based instead on their positions in the list.**[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a `dict`.
 
-An integer index picks a single element from the list `a`.
+An integer index selects a single element from the list `a`.
 
 > **The key thing to remember about indexing in Python, both for integer and
   slice indexing, is that it is 0-based.**
 
 (fourth-sentence)=
- This means that the indices start
-counting at 0 (like "0, 1, 2, ..."). This is the case for all *nonnegative*
-indices[^nonnegative]. For example, `a[3]` would pick the *fourth* element of
-`a`, in this case, `'d'`:
-
-[^nonnegative]: In this guide, "*nonnegative*" means $\geq 0$ and
-    "*negative*" means $< 0$.
+This means that indices start at 0 ("0, 1, 2, ..."). For example,
+`a[3]` selects the *fourth* element of `a`, in this case, `'d'`:
 
 <div class="slice-diagram">
 <code style="font-size: 16pt;">a[3] == 'd'</code>
@@ -92,7 +87,7 @@ programmer, especially if you are planning to work with arrays.
 For *negative* integers, indices index from the end of the list. These indices
 are necessarily 1-based (or rather, &minus;1-based), since `0` already refers
 to the first element of the list. `-1` chooses the last element, `-2` the
-second-to-last, and so on. For example, `a[-3]` picks the *third-to-last*
+second-to-last, and so on. For example, `a[-3]` selects the *third-to-last*
 element of `a`, in this case, `'e'`:
 
 
@@ -130,7 +125,7 @@ element of `a`, in this case, `'e'`:
 ```
 
 An equivalent way to think about negative indices is that an index
-`a[-i]` picks `a[len(a) - i]`, that is, you can subtract the negative
+`a[-i]` selects `a[len(a) - i]`, that is, you can subtract the negative
 index off of the size of `a` (for a NumPy array, replace `len(a)`
 with the size of the axis being sliced). For example, `len(a)` is `7`, so
 `a[-3]` is the same as `a[7 - 3]`:
@@ -161,11 +156,11 @@ Traceback (most recent call last):
 IndexError: list index out of range
 ```
 
-For NumPy arrays, this applies to the size of the axis being indexed (not the
-total size of the array):
+For NumPy arrays, `i` is bounded by the size of the axis being indexed (not
+the total size of the array):
 
 
-```
+```py
 >>> import numpy as np
 >>> a = np.ones((2, 3)) # A has 6 elements but the first axis is size 2
 >>> a[2]
@@ -178,8 +173,8 @@ Traceback (most recent call last):
 IndexError: index -3 is out of bounds for axis 0 with size 2
 ```
 
-Fortunately, NumPy arrays give more helpful error messages for `IndexError`
-than Python does for `list`.
+Fortunately, NumPy arrays give more helpful `IndexError` error messages than
+Python lists do.
 
 The second important fact about integer indexing is that it reduces the
 dimensionality of the container being indexed. For a `list` or `tuple`, this
@@ -200,12 +195,15 @@ Python. A single character is just represented as a string of length 1.
 <class 'str'>
 ```
 
+<!-- TODO: Expand on the behavior for multidimensional arrays -->
+
 For NumPy arrays, an integer index always indexes a single axis of the array.
 By default, it indexes the first axis, unless it is part of a larger
-[multidimensional index](multidimensional-indices). The resulting array is always an
-array with the dimensionality reduced by 1, namely, the axis being indexed is
-removed from the resulting shape. This is contrast with [slices](slices-docs), which always
-[maintain the dimension being sliced](subarray).
+[multidimensional index](multidimensional-indices). The resulting array is
+always an array with the dimensionality reduced by 1, namely, the axis being
+indexed is removed from the resulting shape. This is in contrast with
+[slices](slices-docs), which always [maintain the dimension being
+sliced](subarray).
 
 ```py
 >>> a = np.ones((2, 3, 4))
@@ -222,19 +220,19 @@ removed from the resulting shape. This is contrast with [slices](slices-docs), w
 The resulting array is a subarray corresponding to the `i`-th position along
 the given axis, using the 0- and &minus;1-based rules discussed above.
 
-One way to think about integer indexing on a NumPy array is to think about
-[the list-of-lists analogy](what-is-an-array). An integer index on the first
-axis `a[i]` picks the index `i` sub-list at the top level of sub-list nesting,
-and in general, an integer index `i` on axis `k` picks the sub-lists of index
-`i` at the `k`-th nesting level.[^nesting-level] For example, if `l` is a
-nested list of lists
+A helpful analogy for understanding integer indexing on NumPy arrays is to
+consider it in terms of a [list of lists](what-is-an-array). An integer index
+on the first axis `a[i]` selects the `i`-th sub-list at the top level of
+sub-list nesting. And in general, an integer index `i` on axis `k` selects the
+`i`-th sub-lists at the `k`-th nesting level.[^nesting-level] For
+example, if `l` is a nested list of lists
 
 [^nesting-level]: Thinking about the `k`-th level of nesting can get
-    confusing. For instance, it's not clear whether `k` should be counted with
-    0-based or 1-based numbering, and which level counts as which considering
-    that at the outermost "level" there is always a single list. List-of-lists
+    confusing. For instance, it is unclear whether `k` should be counted with
+    0-based or 1-based numbering, or which level counts as which, considering
+    that at the outermost "level," there is always a single list. List-of-lists
     is a good analogy for thinking about why one might want to use an nd-array
-    in the first place, but as you actually use NumPy arrays in practice,
+    in the first place. But as you actually use NumPy arrays in practice,
     you'll find it's much better to think about dimensions and axes directly,
     not "levels of nesting".
 

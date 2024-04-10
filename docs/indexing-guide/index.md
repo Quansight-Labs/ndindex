@@ -3,8 +3,8 @@
 This section of the ndindex documentation discusses the semantics of NumPy
 indices. This really is more of a documentation of NumPy itself than of
 ndindex. However, understanding the underlying semantics of indices is
-critical making the best use of ndindex, as well as for making the best use of
-NumPy arrays themselves. Furthermore, the sections on [integer
+critical to making the best use of ndindex, as well as for making the best use
+of NumPy arrays themselves. Furthermore, the sections on [integer
 indices](integer-indices) and [slices](slices-docs) also apply to the built-in
 Python sequence types like `list` and `str`.
 
@@ -15,7 +15,7 @@ beginner.
 
 
 (what-is-an-index)=
-## What is an index?
+## What is an Index?
 
 Nominally, an index is any object that can go between the square brackets
 after an array. That is, if `a` is a NumPy array, then in `a[x]`, *`x`* is an
@@ -36,10 +36,11 @@ semantics outlined here.
     type](slices-docs). The term "index" is used in the Python language itself
     (e.g., in the built-in exception type `IndexError`).
 
-Semantically, an index `x` picks, or *indexes*[^indexes-footnote], some subset of the elements of `a`. An index
-`a[x]` always either returns a new array with some subset of the elements of
-`a`, or it raises `IndexError`. The most important rule for indexing, which
-applies to all types of indices, is this:
+Semantically, an index `x` selects, or *indexes*[^indexes-footnote], some
+subset of the elements of `a`. An index `a[x]` always either returns a new
+array with some subset of the elements of `a`, or it raises `IndexError`. The
+most important rule for indexing, which applies to all types of indices, is
+this:
 
 [^indexes-footnote]: For clarity, in this document, and throughout the ndindex
     documentation, the plural of *index* is *indices*. *Indexes* is always a
@@ -109,7 +110,7 @@ So the following are always true about any index:
   produce an array with the exact same resulting shape with elements in the
   exact same corresponding places.
 
-To be sure, it is possible to *construct* indices that chose specific elements
+To be sure, it is possible to *construct* indices that choose specific elements
 based on their values. A common example of this is masks (i.e., [boolean array
 indices](boolean-array-indices)), such as `a[a > 0]`, which selects all the
 elements of `a` that are greater than zero. However, the resulting index
@@ -123,7 +124,7 @@ commonly desired indexing operations are represented by the basic indices such
 as [integer indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
 
-## Sections in this Guide
+## Overview of this Guide
 
 This guide is split into four sections.
 
@@ -148,13 +149,14 @@ a set of miscellaneous topics about NumPy arrays that are useful for
 understanding how indexing works, such as broadcasting, views, strides, and
 ordering.
 
-## Footnotes
+## Table of Contents
 
 ```{toctree}
 :titlesonly:
-:hidden:
+
 integer-indices.md
 slices.md
 multidimensional-indices.md
 other-topics.md
 ```
+## Footnotes
