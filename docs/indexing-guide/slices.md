@@ -1311,8 +1311,8 @@ Something like the following would work
 ```
 
 From our [sanity check](sanity-check), `mid + n//2 - (mid - n//2)` does equal
-`n` if `n` is even (we could find a similar expression for `n` odd, but for
-now let us assume `n` is even for simplicify).
+`n` if `n` is even (we could find a similar expression for odd `n`, but for
+now let us assume `n` is even for simplicity).
 
 However, let's look at what happens when `n` is larger than the size of `a`:
 
@@ -1322,9 +1322,8 @@ However, let's look at what happens when `n` is larger than the size of `a`:
 ['g']
 ```
 
-This is mostly likely not what we would want. Depending on our use-case, we
-would most likely want either an error or the full list `['a', 'b', 'c', 'd',
-'e', 'f', 'g']`.
+The list `['g']` is not the "middle 8 elements of `a`". What we really wanted
+here was full list `['a', 'b', 'c', 'd', 'e', 'f', 'g']`.
 
 What happened here? Let's look at the slice values:
 
@@ -1339,11 +1338,9 @@ The `stop` slice value is out of bounds for `a`, but this just causes it to
 [clip](clipping) to the end, which is what we want.
 
 But `start` contains a subtraction, which causes it to become negative. Rather
-than clipping to the start, it wraps around and indexes from the end of `a`,
-producing the slice `a[-1:7]`. This selects the elements from the last
-element (`'g'`) up to but not including the 7th element (0-based). Index `7`
-is out of bounds for `a`, so this selects all elements including and after
-`'g'`, which in this case is just `['g']`.
+than clipping to the start, it wraps around and indexes from the end of `a`.
+So the resulting slice `a[-1:7]` selects everything from `'g'` to the end of
+the list, which in this case is just `['g']`.
 
 Unfortunately, the "correct" fix here depends on the desired behavior for each
 individual slice. In some cases, the "slice from the end" behavior of negative
@@ -1382,8 +1379,15 @@ mid - 1`:
 It's a good idea to play around in an interpreter and check all the corner
 cases when dealing with situations like this.
 
+And note that even this improved version can give unexpected results when `n`
+is negative, for the exact same reasons. So value checking that the inputs are
+in an expected range is not a bad idea.
+
 **Exercise:** Write a slice to index the middle `n` elements of `a` when `n`
 is odd, clipping to all of `a` if `n` is larger than `len(a)`.
+
+<!-- Solution: a[-n//2 - mid:mid + n//2 + 1]. Note that this also works when n -->
+<!-- is even, although unlike above, n=2 gives ['d', 'e'] instead of ['c', 'd'] -->
 
 (clipping)=
 ### Clipping
