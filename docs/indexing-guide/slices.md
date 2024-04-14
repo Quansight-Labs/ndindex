@@ -447,7 +447,6 @@ $[3, 5)$ but in reverse order.
 
 <div class="slice-diagram">
   <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <table>
     <tr>
       <td><pre>a</pre></td>
@@ -522,7 +521,6 @@ index `3`, but not including `3` (see [](negative-steps) below).
 
 <div class="slice-diagram">
 <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] == ['f', 'e']</code>
-<div style="font-size: 16pt;color:var(--color-slice-diagram-selected);">(CORRECT)</div>
 <table>
     <tr>
       <td><pre>a</pre></td>
@@ -700,7 +698,6 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
 
   <div>
     <table>
@@ -932,7 +929,6 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-4:-2</span>] "==" ['e', 'f']</code>
-  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <div>
     <table>
       <tr>
@@ -1012,7 +1008,6 @@ reasons why this way of thinking creates more confusion than it removes.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-2:-4:-1</span>] == ['f', 'e']</code>
-  <div style="font-size: 16pt;color:var(--color-slice-diagram-selected);">NOW RIGHT!</div>
   <div>
     <table>
       <tr>
@@ -1075,12 +1070,11 @@ reasons why this way of thinking creates more confusion than it removes.
       </tr>
     </table>
   </div>
-  <i>(not a great way of thinking about negative indices)</i>
+  <span style="color:var(--color-slice-diagram-selected);"><b>NOW RIGHT!</b></span>
   </div>
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-2:-4:-1</span>] "==" ['e', 'd']</code>
-  <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <div>
     <table>
       <tr>
