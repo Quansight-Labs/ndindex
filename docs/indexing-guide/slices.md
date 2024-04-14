@@ -1702,7 +1702,7 @@ all the indices would also be $1 \pmod{3}$.
     <td></td>
     <td></td>
     <td></td>
-    <td style="vertical-align: top; color: var(--color-slice-diagram-selected)">start</td>
+    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-selected)">start</td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
     <td></td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
@@ -2132,7 +2132,7 @@ slice "as much as possible" instead.
             <td><div class="circle-blue slice-diagram-selected">4</div></td>
             <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td><div class="circle-blue slice-diagram-selected">5</div></td>
-            <td><div class="left-arrow-cell" style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
+            <td class="left-arrow-cell"><div style="font-size: smaller; transform: translateY(-12px) translateX(3px)">&minus;1</div></td>
             <td><div class="circle-blue slice-diagram-selected">6</div></td>
         </tr>
         <tr>
