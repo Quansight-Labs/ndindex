@@ -247,7 +247,7 @@ indexing](integer-indices) (although one should be careful that even though
 For example:
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">3:5</span>] == ['d', 'e']</code>
   <table>
     <tr>
       <td><pre>a</pre></td>
@@ -299,7 +299,7 @@ For example, `a[3:5]` slices the indices `3` and `4`, but not `5`
 ([0-based](0-based)).
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">3:5</span>] == ['d', 'e']</code>
   <div>
     <table>
       <tr>
@@ -446,7 +446,7 @@ For example, say we believed that `a[5:3:-1]` sliced the half-open interval
 $[3, 5)$ but in reverse order.
 
 <div class="slice-diagram">
-  <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
+  <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] "==" ['e', 'd']</code>
   <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <table>
     <tr>
@@ -521,7 +521,7 @@ This is because the slice `5:3:-1` starts at index `5` and steps backwards to
 index `3`, but not including `3` (see [](negative-steps) below).
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] == ['f', 'e']</code>
 <div style="font-size: 16pt;color:var(--color-slice-diagram-selected);">(CORRECT)</div>
 <table>
     <tr>
@@ -614,7 +614,7 @@ the first element of a list is indexed by 0, the second by 1, and so on.
 Rather than thinking about that, consider the spaces between the elements:
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[3:5] == ['d', 'e']</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">3:5</span>] == ['d', 'e']</code>
 
 <div>
   <table>
@@ -699,7 +699,7 @@ reasons why this way of thinking creates more confusion than it removes.
   imagine it to give the same incorrect subarray that we imagined before.
 
   <div class="slice-diagram">
-  <code style="font-size: 16pt;">a[5:3:-1] "==" ['e', 'd']</code>
+  <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] "==" ['e', 'd']</code>
   <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
 
   <div>
@@ -789,7 +789,7 @@ reasons why this way of thinking creates more confusion than it removes.
   index `3`.
 
   <div class="slice-diagram">
-  <code style="font-size: 16pt;">a[5:3:-1] == ['f', 'e']</code>
+  <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] == ['f', 'e']</code>
   <table>
       <tr>
         <td><pre>a</pre></td>
@@ -852,7 +852,7 @@ reasons why this way of thinking creates more confusion than it removes.
   dividers:
 
   <div class="slice-diagram">
-  <code style="font-size: 16pt;">a[-4:-2] == ['d', 'e']</code>
+  <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-4:-2</span>] == ['d', 'e']</code>
   <div>
     <table>
       <tr>
@@ -931,7 +931,7 @@ reasons why this way of thinking creates more confusion than it removes.
 
 
   <div class="slice-diagram">
-  <code style="font-size: 16pt;">a[-4:-2] "==" ['e', 'f']</code>
+  <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-4:-2</span>] "==" ['e', 'f']</code>
   <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <div>
     <table>
@@ -1011,7 +1011,7 @@ reasons why this way of thinking creates more confusion than it removes.
   diagram:
 
   <div class="slice-diagram">
-  <code style="font-size: 16pt;">a[-2:-4:-1] == ['f', 'e']</code>
+  <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-2:-4:-1</span>] == ['f', 'e']</code>
   <div style="font-size: 16pt;color:var(--color-slice-diagram-selected);">NOW RIGHT!</div>
   <div>
     <table>
@@ -1079,7 +1079,7 @@ reasons why this way of thinking creates more confusion than it removes.
   </div>
 
   <div class="slice-diagram">
-  <code style="font-size: 16pt;">a[-2:-4:-1] "==" ['e', 'd']</code>
+  <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-2:-4:-1</span>] "==" ['e', 'd']</code>
   <div style="font-size: 16pt;color:var(--color-slice-diagram-not-selected);">(WRONG)</div>
   <div>
     <table>
@@ -1223,7 +1223,7 @@ Note that positive and negative indices can be mixed. The following slices of
 `a` all produce `['d', 'e']`:
 
 <div class="slice-diagram" style="padding-left: 1em; padding-right: 1em;">
-<div style="font-size: 16pt;"><code>a[3:5] == a[-4:-2] == a[3:-2] == a[-4:5] == ['d', 'e']</code></div>
+<div style="font-size: 16pt;"><code>a[<span class="slice-diagram-slice">3:5</span>] == a[<span class="slice-diagram-slice">-4:-2</span>] == a[<span class="slice-diagram-slice">3:-2</span>] == a[<span class="slice-diagram-slice">-4:5</span>] == ['d', 'e']</code></div>
   <div>
     <table>
       <tr>
@@ -1580,7 +1580,7 @@ still [clip](clipping) to the beginning or end of the list. And (see below)
 Let us consider an example where the step size is `3`.
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[0:6:3] == ['a', 'd']</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">0:6:3</span>] == ['a', 'd']</code>
 <table>
   <tr>
     <td><pre>a</pre></td>
@@ -1658,7 +1658,7 @@ all the indices would also be $1 \pmod{3}$.
 
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[1:6:3] == ['b', 'e']</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">1:6:3</span>] == ['b', 'e']</code>
 <table>
   <tr>
     <td><pre>a</pre></td>
@@ -1860,7 +1860,7 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
 ```
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[6:0:-3] == ['g', 'd']</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">6:0:-3</span>] == ['g', 'd']</code>
 <table>
   <tr>
     <td><pre>a</pre></td>
@@ -1982,7 +1982,7 @@ really it. Simply put, omitting the `start` or `stop` of a slice will make it
 slice "as much as possible" instead.
 
 <div class="slice-diagram">
-    <code style="font-size: 16pt;">a[:3] == a[:3:1] == ['a', 'b', 'c']</code>
+    <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">:3</span>] == a[<span class="slice-diagram-slice">:3:1</span>] == ['a', 'b', 'c']</code>
     <table>
         <tr>
             <td><pre>a</pre></td>
@@ -2040,7 +2040,7 @@ slice "as much as possible" instead.
 </div>
 
 <div class="slice-diagram">
-    <code style="font-size: 16pt;">a[3:] == a[3::1] == ['d', 'e', 'f', 'g']</code>
+    <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">3:</span>] == a[<span class="slice-diagram-slice">3::1</span>] == ['d', 'e', 'f', 'g']</code>
     <table>
         <tr>
             <td><pre>a</pre></td>
@@ -2099,7 +2099,7 @@ slice "as much as possible" instead.
 </div>
 
 <div class="slice-diagram">
-    <code style="font-size: 16pt;">a[:3:-1] == ['g', 'f', 'e']</code>
+    <code style="font-size: 16pt;">a[<span class="slice-diagram-slice"><span class="slice-diagram-slice">:3:-1</span></span>] == ['g', 'f', 'e']</code>
     <table>
         <tr>
             <td><pre>a</pre></td>
@@ -2158,7 +2158,7 @@ slice "as much as possible" instead.
 </div>
 
 <div class="slice-diagram">
-    <code style="font-size: 16pt;">a[3::-1] == ['d', 'c', 'b', 'a']</code>
+    <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">3::-1</span>] == ['d', 'c', 'b', 'a']</code>
     <table>
         <tr>
             <td><pre>a</pre></td>

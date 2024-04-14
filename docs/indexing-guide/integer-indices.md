@@ -45,7 +45,7 @@ This means that indices start at 0 ("0, 1, 2, ..."). For example,
 `a[3]` selects the *fourth* element of `a`, in this case, `'d'`:
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[3] == 'd'</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">3</span>] == 'd'</code>
   <table>
     <tr>
       <td><pre>a</pre></td>
@@ -91,7 +91,7 @@ element of `a`, in this case, `'e'`:
 
 
 <div class="slice-diagram">
-<code style="font-size: 16pt;">a[-3] == 'e'</code>
+<code style="font-size: 16pt;">a[<span class="slice-diagram-slice">-3</span>] == 'e'</code>
   <table>
     <tr>
       <td><pre>a</pre></td>
