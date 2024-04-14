@@ -9,7 +9,6 @@ and `str`, as well as NumPy arrays.
 (prototype-example)=
 Let us consider the following prototype list as an example:
 
-<!-- TODO: Differentiate without color -->
 <div class="slice-diagram">
   <table>
     <tr>
@@ -60,15 +59,15 @@ This means that indices start at 0 ("0, 1, 2, ..."). For example,
       <td><pre> 'g']</pre></td>
     </tr>
     <tr>
-      <th style="color:var(--color-slice-diagram-not-selected);">index</th>
+      <th>index</th>
       <td></td>
-      <td style="color:var(--color-slice-diagram-not-selected);">0</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">1</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">2</td>
-      <td style="color:var(--color-slice-diagram-selected);">3</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">4</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">5</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">6</td>
+      <td class="slice-diagram-not-selected">0</td>
+      <td class="slice-diagram-not-selected">1</td>
+      <td class="slice-diagram-not-selected">2</td>
+      <td class="slice-diagram-selected">3</td>
+      <td class="slice-diagram-not-selected">4</td>
+      <td class="slice-diagram-not-selected">5</td>
+      <td class="slice-diagram-not-selected">6</td>
     </tr>
   </table>
 </div>
@@ -106,15 +105,15 @@ element of `a`, in this case, `'e'`:
       <td><pre> 'g']</pre></td>
     </tr>
     <tr>
-      <th style="color:var(--color-slice-diagram-not-selected);">index</th>
+      <th>index</th>
       <td></td>
-      <td style="color:var(--color-slice-diagram-not-selected);">&minus;7</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">&minus;6</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">&minus;5</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">&minus;4</td>
-      <td style="color:var(--color-slice-diagram-selected);">&minus;3</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">&minus;2</td>
-      <td style="color:var(--color-slice-diagram-not-selected);">&minus;1</td>
+      <td class="slice-diagram-not-selected">&minus;7</td>
+      <td class="slice-diagram-not-selected">&minus;6</td>
+      <td class="slice-diagram-not-selected">&minus;5</td>
+      <td class="slice-diagram-not-selected">&minus;4</td>
+      <td class="slice-diagram-selected">&minus;3</td>
+      <td class="slice-diagram-not-selected">&minus;2</td>
+      <td class="slice-diagram-not-selected">&minus;1</td>
     </tr>
   </table>
 </div>

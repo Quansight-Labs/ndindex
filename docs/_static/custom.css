@@ -138,6 +138,13 @@
     max-width: 0px;
 }
 
+.slice-diagram-selected {
+    color: var(--color-slice-diagram-selected);
+    text-decoration: underline;
+}
+.slice-diagram-not-selected {
+    color: var(--color-slice-diagram-not-selected);
+}
 .circle-red,
 .circle-blue {
     display: inline-block;
