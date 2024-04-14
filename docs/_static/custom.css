@@ -150,6 +150,16 @@
 .slice-diagram-not-selected {
     color: var(--color-slice-diagram-not-selected);
 }
+.slice-diagram-index-label-selected {
+    line-height: 0em;
+    vertical-align: top;
+    color: var(--color-slice-diagram-selected);
+}
+.slice-diagram-index-label-not-selected {
+    line-height: 0em;
+    vertical-align: top;
+    color: var(--color-slice-diagram-not-selected);
+}
 .circle-red,
 .circle-blue {
     display: inline-block;

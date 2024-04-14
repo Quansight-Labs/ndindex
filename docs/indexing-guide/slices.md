@@ -836,11 +836,11 @@ reasons why this way of thinking creates more confusion than it removes.
         <td></td>
         <td></td>
         <td></td>
-        <td style="color: var(--color-slice-diagram-not-selected);">stop</td>
+        <td class="slice-diagram-index-label-not-selected">stop</td>
         <td></td>
         <td></td>
         <td></td>
-        <td style="color: var(--color-slice-diagram-selected);">start</td>
+        <td class="slice-diagram-index-label-selected">start</td>
         <td></td>
         <td></td>
       </tr>
@@ -1621,7 +1621,7 @@ Let us consider an example where the step size is `3`.
     <td colspan="5" class="right-arrow-curved-cell"></td>
     <td></td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
-    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-not-selected)">&ge; stop</td>
+    <td class="slice-diagram-index-label-not-selected">&ge; stop</td>
   </tr>
   <tr>
     <td></td>
@@ -1700,11 +1700,11 @@ all the indices would also be $1 \pmod{3}$.
     <td></td>
     <td></td>
     <td></td>
-    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-selected)">start</td>
+    <td class="slice-diagram-index-label-selected">start</td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
     <td></td>
     <td colspan="5" class="right-arrow-curved-cell"></td>
-    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-not-selected)">&ge; stop</td>
+    <td class="slice-diagram-index-label-not-selected">&ge; stop</td>
   </tr>
   <tr>
     <td></td>
@@ -1897,11 +1897,11 @@ steps greater than 1, again, keeping in mind that the `stop` is not included.
   <tr>
     <td></td>
     <td></td>
-    <td style="line-height: 0em; vertical-align: top; color: var(--color-slice-diagram-not-selected)">&le; stop</td>
+    <td class="slice-diagram-index-label-not-selected">&le; stop</td>
     <td colspan="5" class="left-arrow-curved-cell"></td>
     <td></td>
     <td colspan="5" class="left-arrow-curved-cell"></td>
-    <td style="line-height: 0em;vertical-align: top; color: var(--color-slice-diagram-selected)">start</td>
+    <td class="slice-diagram-index-label-selected">start</td>
   </tr>
   <tr>
     <td></td>
@@ -2019,7 +2019,7 @@ slice "as much as possible" instead.
         <tr>
             <th></th>
             <td></td>
-            <td style="color: var(--color-slice-diagram-selected);">
+            <td class="slice-diagram-index-label-selected">
                 <div class="overflow-content">start (beginning)</div>
             </td>
             <td></td>
@@ -2027,7 +2027,7 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: var(--color-slice-diagram-not-selected);">stop</td>
+            <td class="slice-diagram-index-label-not-selected">stop</td>
             <td></td>
             <td></td>
             <td></td>
@@ -2083,13 +2083,13 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: var(--color-slice-diagram-selected);">start</td>
+            <td class="slice-diagram-index-label-selected">start</td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: var(--color-slice-diagram-selected);">
+            <td class="slice-diagram-index-label-selected">
                 <div class="overflow-content">stop (end)</div>
             </td>
         </tr>
@@ -2142,13 +2142,13 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: var(--color-slice-diagram-not-selected);">stop</td>
+            <td class="slice-diagram-index-label-not-selected">stop</td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: var(--color-slice-diagram-selected);">
+            <td class="slice-diagram-index-label-selected">
                 <div class="overflow-content">start (end)</div>
             </td>
         </tr>
@@ -2195,7 +2195,7 @@ slice "as much as possible" instead.
         <tr>
             <th></th>
             <td></td>
-            <td style="color: var(--color-slice-diagram-selected);">
+            <td class="slice-diagram-index-label-selected">
                 <div class="overflow-content">stop (beginning)</div>
             </td>
             <td></td>
@@ -2203,7 +2203,7 @@ slice "as much as possible" instead.
             <td></td>
             <td></td>
             <td></td>
-            <td style="color: var(--color-slice-diagram-selected);">start</td>
+            <td class="slice-diagram-index-label-selected">start</td>
             <td></td>
             <td></td>
             <td></td>
