@@ -145,7 +145,7 @@
 }
 .slice-diagram-selected {
     color: var(--color-slice-diagram-selected);
-    text-decoration: underline;
+    /* text-decoration: underline; */
 }
 .slice-diagram-not-selected {
     color: var(--color-slice-diagram-not-selected);
