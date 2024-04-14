@@ -1439,31 +1439,28 @@ clipping behavior, you can never rely on the length of a slice being `stop -
 start` ([for `step = 1` and `start`, `stop` nonnegative](sanity-check)),
 unless you are sure that the length of the input is at least that. This is
 rather the *maximum* length of the slice. It could end up slicing something
-smaller.
+smaller.[^ndindex-calculations-footnote]
 
-ndindex can help in calculations here:  `len(ndindex.Slice(...))` can be used
-to compute the *maximum* length of a slice. If the shape or length of the
-input is known, `len(ndindex.Slice(...).reduce(shape))` will compute the true
-length of the slice (see {meth}`ndindex.Slice.__len__` and
-{meth}`ndindex.Slice.reduce`). Of course, if you already have a list or a
-NumPy array, you can just slice it and check the
-shape.[^slicing-inexpensive-footnote]
-
-[^slicing-inexpensive-footnote]: Slicing a NumPy array always produces a [view
-on the array](views-vs-copies), so it is a very inexpensive operation. Slicing
-a `list` does make a copy, but it's a shallow copy so it isn't particularly
-expensive either.
+[^ndindex-calculations-footnote]: ndindex can help in calculations here:
+{meth}`len(ndindex.Slice(...)) <ndindex.Slice.__len__>` can be used to compute
+the *maximum* length of a slice. If the shape or length of the input is known,
+{meth}`len(ndindex.Slice(...).reduce(shape)) <ndindex.Slice.reduce>` will
+compute the true length of the slice. Of course, if you already have a list or
+a NumPy array, you can just slice it and check the shape. Slicing a NumPy
+array always produces a [view on the array](views-vs-copies), so it is a very
+inexpensive operation. Slicing a `list` does make a copy, but it's a shallow
+copy so it isn't particularly expensive either.
 
 The clipping behavior of slices also means that you cannot rely on runtime
 checks for out-of-bounds slices. Simply put, there is no such thing as an
 "out-of-bounds slice". If you really want a bounds check, you have to do it
 manually.
 
-There's a cute trick you can sometimes use that takes advantage of this
-behavior. By using a slice that selects a single element instead of an integer
-index, you can avoid `IndexError` when the index is out-of-bounds. For
-example, suppose you want to want to implement a quick script with a
-rudimentary optional command line argument (without the hassle of
+There's a cute trick you can sometimes use that takes advantage of clipping.
+By using a slice that selects a single element instead of an integer index,
+you can avoid `IndexError` when the index is out-of-bounds. For example,
+suppose you want to want to implement a quick script with a rudimentary
+optional command line argument (without the hassle of
 [argparse](https://docs.python.org/3/library/argparse.html)). This can be done
 by manually parsing `sys.argv`, which is a list of the arguments of passed at
 the command line, including the filename. For example, `python script.py arg1
@@ -1503,7 +1500,7 @@ arguments, then `sys.argv[1:2]` will be an empty list `[]`. This will fail the
 `==` check without raising an exception.
 
 If instead we want to only support exactly `myscript.py help` with no further
-arguments, we could modify the check just slightly
+arguments, we could modify the check just slightly:
 
 ```py
 import sys
@@ -1523,9 +1520,10 @@ already built-in to the `==` comparison.
 
 This trick works especially well when working with strings. Unlike with lists,
 both [integer ](integer-indices) and slice indices on a string result in
-another string, so changing the code logic to work in this way often only
-requires adding a `:` to the index so that it is a slice that selects a single
-element instead of an integer index. For example, take a function like
+[another string](strings-integer-indexing), so changing the code logic to work
+in this way often only requires adding a `:` to the index so that it is a
+slice that selects a single element instead of an integer index. For example,
+consider a function like
 
 ```py
 # Wrong for a = ''
@@ -1799,7 +1797,7 @@ Unlike all the above examples, with a negative `step`, generally the `start`
 will be an index *after* the `stop` (otherwise the slice will be
 [empty](empty-slice)).
 
-It's worth pointing out that unlike all other slices we have seen so far, a
+It's worth pointing out that unlike every other slice we have seen so far, a
 negative `step` reverses the order that the elements are returned relative to
 the original list. In fact, one of the most common uses of a negative `step` is
 `a[::-1]`, which reverses the list:

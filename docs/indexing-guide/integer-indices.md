@@ -183,6 +183,7 @@ that indexing `a` with an integer resulted in a `str`, because `a` is a list
 that contains strings. This is in contrast with [slices](slices-docs), which
 always [return the same container type](subarray).
 
+(strings-integer-indexing)=
 The exception to this rule is when integer indexing a
 `str`, the result is also a `str`. This is because there is no `char` class in
 Python. A single character is just represented as a string of length 1.
