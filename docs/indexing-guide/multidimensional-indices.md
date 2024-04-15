@@ -1490,11 +1490,12 @@ Now a few advanced notes about integer array indexing:
   4)`, comes last.
 
   If you find yourself running into this behavior, chances are you would be
-  better off rewriting the indexing operation to be simpler. It's considered
-  to be a design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and
-  it's not one that any other Python array library has copied. ndindex will
-  raise a `NotImplementedError` exception on indices like these, because I
-  don't want to deal with implementing this obscure logic.[^ndindex-advanced-indexing-design-flaw-footnote]
+  better off rewriting the indexing operation to be simpler. It's considered a
+  design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and it's not
+  one that any other Python array library has copied. ndindex will raise a
+  `NotImplementedError` exception on indices like these, because I don't want
+  to deal with implementing this obscure
+  logic.[^ndindex-advanced-indexing-design-flaw-footnote]
 
 [^advanced-indexing-design-flaw-footnote]: Travis Oliphant, the original
     creator of NumPy, told me privately that "somebody should have slapped me
