@@ -54,7 +54,8 @@
     --color-slice-diagram-slice: var(--color-slice-diagram-selected);
 }
 [data-theme="dark"] .slice-diagram {
-    --color-slice-diagram-selected: #8888FF;
+    /* We could also use --color-brand-green here */
+    --color-slice-diagram-selected: var(--color-brand-light-blue);
     --color-slice-diagram-not-selected: #FF5E5E;
     --color-slice-diagram-slice: var(--color-slice-diagram-selected);
 }
