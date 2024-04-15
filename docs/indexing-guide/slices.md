@@ -2337,9 +2337,9 @@ changes I would make to improve the semantics would be
    controversial. For many people reading this, the notion that 0-based
    indexing is superior has been preached as irreproachable gospel. I
    encourage you to open your mind and try to unlearn what you have been
-   taught and take a fresh view of the matter (or don't. These are just my
+   taught and take a fresh view of the matter. (Or don't. These are just my
    opinions after all, and none of it changes the fact that Python is what it
-   is and isn't going to change).
+   is and isn't going to change.)
 
    0-based indexing certainly has its uses. In C, where an index is literally
    a syntactic macro for adding two pointers, 0-based indexing makes sense,
@@ -2387,29 +2387,27 @@ changes I would make to improve the semantics would be
    around you continues to count outside of programming contexts.
 
    When you teach a child how to count things, you teach them to enumerate the
-   items starting at 1 ("1, 2, 3, ..."). The number that is enumerated for the
-   final object is equal to the number of items (the final ordinal is equal to
-   the cardinal). This only works if you start at 1. If the child instead
-   starts at 0 ("0, 1, 2, ...") the final ordinal (the last number spoken
-   aloud) would not match the cardinal (the number of items). The distinction
-   between ordinals and cardinals is not something most people think about
-   often, because the convention of counting starting at 1 makes it so that
-   they are equal. But as programmers in a language that rejects this elegant
-   convention, we are forced to think about such philosophical distinctions
-   just to solve whatever problem we are trying to solve.
+   items starting at 1. For example, 🍎🍎🍎🍎 is "4 apples" because you count
+   them off, "1, 2, 3, 4". The number that is enumerated for the final object
+   is equal to the number of items (in technical terms, the final
+   [ordinal](https://en.wikipedia.org/wiki/Ordinal_number) is equal to the
+   [cardinal](https://en.wikipedia.org/wiki/Cardinal_number)). This only works
+   if you start at 1. If the child instead starts at 0 ("0, 1, 2, 3"), the
+   final ordinal (the last number spoken aloud) would not match the cardinal
+   (the number of items). The distinction between ordinals and cardinals is
+   not something most people think about often, because the convention of
+   counting starting at 1 makes it so that they are equal. But as programmers
+   in a language that rejects this elegant convention, we are forced to think
+   about such philosophical distinctions just to solve whatever problem we are
+   trying to solve.
 
    In most instances (outside of programming) where a reckoning starts at 0
    instead of 1, it is because it is measuring a distance. The distance from
-   your house to the nearest pub[^pub-footnote] may be "2 miles", but the
-   distance from your house to itself is "0 miles". On the other hand, when
-   counting or enumerating individual objects, counting always starts at 1.
-   The notion of a "zeroth" object doesn't make sense when counting say
-   apples, because you are counting the apples themselves, not some quantity
-   relating them. It doesn't make sense to start at 0 with an "un-apple"
-   because you are only counting apples, not non-apples.
-
-   [^pub-footnote]: See, "pub". Now you non-Americans can't get mad at me for
-   using ["feet"](fencepost) and "miles" in this guide.
+   your house to your friend's house may be "2 miles", but the distance from
+   your house to itself is "0 miles". On the other hand, when counting or
+   enumerating individual objects, counting always starts at 1. The notion of
+   a "zeroth" object doesn't make sense when counting, say, apples, because
+   you are counting the apples themselves, not some quantity relating them.
 
    So the question then becomes, should indexing work like a measurement of
    distance, which would naturally start at 0, or like an enumeration of
@@ -2458,7 +2456,7 @@ changes I would make to improve the semantics would be
    --> $a_0 + a_1x + a_2x^2 + \cdots$. Then we can represent the coefficients
    $a_0, a_1, a_2, \ldots$ in a list `[a0, a1, a2, ...]`. Since a polynomial
    naturally has a 0th coefficient, it makes sense to index the list starting
-   at 0 (and even then, one must still be careful about off-by-one errors,
+   at 0 (though even then, one must still be careful about off-by-one errors,
    e.g., a degree-$n$ polynomial has $n+1$ coefficients).
 
    If this seems like absurd idea, note that this is how Fortran works (see
