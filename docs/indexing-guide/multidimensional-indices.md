@@ -1082,8 +1082,8 @@ array([[100, 102, 100],
 
 This is how integer array indices work. **An integer array index can construct
 *arbitrary* new arrays with elements from `a`, with the elements in any order
-and even repeated, simply by indexing where each element of the new array
-comes from.**
+and even repeated, simply by enumerating the integer index positions where
+each element of the new array comes from.**
 
 Note that `a[idx]` above is not the same size as `a` at all. `a` has 4
 elements and is 1-dimensional, whereas `a[idx]` has 6 elements and is
@@ -1106,21 +1106,21 @@ example:
 
 ```
 >>> a = np.empty((3, 4))
->>> idx = np.zeros((2, 2), dtype=int)
+>>> idx = np.zeros((2, 2), dtype=int) # (3,) is replaced with (2, 2)
 >>> a[idx].shape
 (2, 2, 4)
->>> a[:, idx].shape # Index the second dimension
+>>> a[:, idx].shape # Index the second dimension. (4,) is replaced with (2, 2)
 (3, 2, 2)
 ```
 
-When the indexed array `a` has more than one dimension, an integer array index
-selects elements from a single axis.
+In particular, when the indexed array `a` has more than one dimension, an
+integer array index selects elements from a single axis.
 
 ```
 >>> a = np.array([[100, 101, 102],
 ...               [103, 104, 105]])
 >>> idx = np.array([0, 0, 1])
->>> a[idx]
+>>> a[idx] # Index the first dimension
 array([[100, 101, 102],
        [100, 101, 102],
        [103, 104, 105]])
@@ -1160,8 +1160,10 @@ So we write `1` in the first array and `2` in the second array. Similarly, the
 next element, `100` corresponds to index `(0, 0)`, so we write `0` in the
 first array and `0` in the second. In general, the first array contains the
 indices for the first axis, the second array contains the indices for the
-second axis, and so on. If we were to zip up our two index arrays, we would
-get the set of indices for each corresponding element, `(1, 2)` and `(0, 0)`.
+second axis, and so on. If we were to
+[zip](https://docs.python.org/3/library/functions.html#zip) up our two index
+arrays, we would get the set of indices for each corresponding element, `(1,
+2)` and `(0, 0)`.
 
 The resulting array has the same shape as our two index arrays. As before,
 this shape can be arbitrary. Suppose we wanted to create the array
@@ -1289,8 +1291,10 @@ Now a few advanced notes about integer array indexing:
   broadcasting behavior is useful if the index array would otherwise be
   repeated in a given dimension.
 
+  <!-- TODO: Make note of the outer indexing behavior this gives -->
+
   It also means that if you mix an integer array index with a single
-  [integer](integer-indices) index, it is the same as if you replaced the
+  [integer](integer-indices) index. it is the same as if you replaced the
   single integer index with an array of the same shape filled with that
   integer (because remember, a single integer index is the same thing as an
   integer array index of shape `()`).
