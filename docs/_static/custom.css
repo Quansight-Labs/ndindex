@@ -343,15 +343,6 @@ body {
     -moz-osx-font-smoothing: auto;
 }
 
-/* Make bold text a little bit bolder (mainly useful for dark mode) */
-b, strong {
-    /* The default is "bolder", which turns the default font weight 400 to*/
-    /* 700. See
-   https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#meaning_of_relative_weights
-   */
-    font-weight: 800;
-}
-
 /* Disable upcasing of headers 4+ (they are still distinguishable by*/
 /* font-weight and size) */
 h4, h5, h6 {
