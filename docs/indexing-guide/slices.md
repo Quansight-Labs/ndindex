@@ -782,8 +782,8 @@ reasons why this way of thinking creates more confusion than it removes.
   indices, this should give you serious pause. One can see from the above
   diagram that there is clearly no way to salvage this rule to see `a[5:3:-1]`
   as giving `['f', 'e']`. Contrast the same slice when simply thinking about
-  it as stepping backwards from index `5` to index `3`, but not including
-  index `3`.
+  it as [stepping backwards](negative-steps) from index `5` to index `3`, but
+  not including index `3`.
 
   <div class="slice-diagram">
   <code style="font-size: 16pt;">a[<span class="slice-diagram-slice">5:3:-1</span>] == ['f', 'e']</code>
@@ -1213,8 +1213,8 @@ slicing do not change when the `start` or `stop` is negative. [The `stop` is
 still not included](half-open), values less than `-len(a)` still
 [clip](clipping), and so on.
 
-Note that positive and negative indices can be mixed. The following slices of
-`a` all produce `['d', 'e']`:
+Positive and negative indices can be mixed. The following slices of `a` all
+produce `['d', 'e']`:
 
 <div class="slice-diagram" style="padding-left: 1em; padding-right: 1em;">
 <div style="font-size: 16pt;"><code>a[<span class="slice-diagram-slice">3:5</span>] == a[<span class="slice-diagram-slice">-4:-2</span>] == a[<span class="slice-diagram-slice">3:-2</span>] == a[<span class="slice-diagram-slice">-4:5</span>] == ['d', 'e']</code></div>
