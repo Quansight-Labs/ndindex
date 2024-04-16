@@ -102,6 +102,20 @@
     white-space: nowrap;
 }
 
+.underline-cell {
+    position: relative;
+}
+
+.underline-cell::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.3em; /* Position of the underline relative to the cell */
+    height: 2px; /* Thickness of the underline */
+    background-color: var(--color-slice-diagram-selected);
+}
+
 .vertical-bar-red:before {
     content: '';
     display: block;

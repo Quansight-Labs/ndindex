@@ -53,7 +53,7 @@ This means that indices start at 0 ("0, 1, 2, ..."). For example,
       <td><pre>['a',</pre></td>
       <td><pre> 'b',</pre></td>
       <td><pre> 'c',</pre></td>
-      <td><pre> 'd',</pre></td>
+      <td class="underline-cell"><pre> 'd',</pre></td>
       <td><pre> 'e',</pre></td>
       <td><pre> 'f',</pre></td>
       <td><pre> 'g']</pre></td>
@@ -100,7 +100,7 @@ element of `a`, in this case, `'e'`:
       <td><pre> 'b',</pre></td>
       <td><pre> 'c',</pre></td>
       <td><pre> 'd',</pre></td>
-      <td><pre> 'e',</pre></td>
+      <td class="underline-cell"><pre> 'e',</pre></td>
       <td><pre> 'f',</pre></td>
       <td><pre> 'g']</pre></td>
     </tr>
