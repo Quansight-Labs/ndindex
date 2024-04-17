@@ -1348,7 +1348,7 @@ Now a few advanced notes about integer array indexing:
   ```
 
   Here the `idx0` array specifies the indices along the first dimension, `1`
-  and `0`, and the `2` species to always choose index `2` along the second
+  and `0`, and the `2` specifies to always use index `2` along the second
   dimension. This is the same as using the array `[2, 2]` for the second
   dimension, since this is the scalar `2` broadcasted to the shape of `[1,
   0]`.

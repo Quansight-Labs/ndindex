@@ -85,7 +85,7 @@ programmer, especially if you are planning to work with arrays.
 
 For *negative* integers, indices index from the end of the list. These indices
 are necessarily 1-based (or rather, &minus;1-based), since `0` already refers
-to the first element of the list. `-1` chooses the last element, `-2` the
+to the first element of the list. `-1` selects the last element, `-2` the
 second-to-last, and so on. For example, `a[-3]` selects the *third-to-last*
 element of `a`, in this case, `'e'`:
 
@@ -234,7 +234,7 @@ example, if `l` is a nested list of lists
     is a good analogy for thinking about why one might want to use an nd-array
     in the first place. But as you actually use NumPy arrays in practice,
     you'll find it's much better to think about dimensions and axes directly,
-    not "levels of nesting".
+    not "levels of nesting."
 
 ```py
 >>> l = [[0, 1], [2, 3]]
