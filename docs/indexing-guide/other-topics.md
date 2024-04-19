@@ -8,7 +8,6 @@ important caveats to be aware of when doing indexing operations.
 (broadcasting)=
 ## Broadcasting
 
-
 Broadcasting is a powerful abstraction that applies to all operations in
 NumPy. It allows arrays with mismatched shapes to be combined together as if
 one or more of their dimensions were simply repeated the appropriate number of
@@ -514,20 +513,25 @@ a[0, 1, 0], a[1, 1, 0], ...`.[^c-order-footnote]
   which is supposed to be "row-" and "column-" major, but I do remember how
   indexing works in C, so just thinking about that requires no mnemonic.
 
-**The internal ordering of an array does not change any indexing semantics.**
+The most important thing to note about C and Fortran ordering for our purposes
+is that
+
+> **the internal ordering of an array does not change any indexing
+> semantics.**
+
 The same index will select the same elements on `a` regardless of whether it
-uses C or Fortran ordering internally.[^ordering-footnote]
+uses C or Fortran ordering internally.
 
-[^ordering-footnote]: More generally, the actual memory layout of an array has
-    no bearing on indexing semantics. Indexing operates on the logical
-    abstraction of the array as presented to the user, even if the true memory
-    doesn't look anything like that because the array is a
-    [view](views-vs-copies) or has some other layout due to [stride
-    tricks](strides).
+More generally, the actual memory layout of an array has no bearing on
+indexing semantics. Indexing operates on the logical abstraction of the array
+as presented to the user, even if the true memory doesn't look anything like
+that because the array is a [view](views-vs-copies) or has some other layout
+due to [stride tricks](strides).
 
-Note that this also applies to [boolean array indices](boolean-array-indices),
-even though they select elements in C order. A boolean mask always produces
-the elements in C order, even if the underlying arrays use Fortran ordering.
+In particular, this also applies to [boolean array
+indices](boolean-array-indices), even though they select elements in C order.
+A boolean mask always produces the elements in C order, even if the underlying
+arrays use Fortran ordering.
 
 ```py
 >>> a = np.arange(9).reshape((3, 3))
@@ -535,19 +539,19 @@ the elements in C order, even if the underlying arrays use Fortran ordering.
 array([[0, 1, 2],
        [3, 4, 5],
        [6, 7, 8]])
->>> idx = np.array([
-...     [False,  True, False],
-...     [ True,  True, False],
-...     [False, False, False]])
->>> a[idx]
-array([1, 3, 4])
 >>> a_f = np.asarray(a, order='F')
 >>> a_f # a_f looks the same as a, but the internal memory is ordered differently
 array([[0, 1, 2],
        [3, 4, 5],
        [6, 7, 8]])
+>>> idx = np.array([
+...     [False,  True, False],
+...     [ True,  True, False],
+...     [False, False, False]])
 >>> idx_f = np.asarray(idx, order='F')
->>> # These are all the same as a[idx]
+>>> # These are all the same
+>>> a[idx]
+array([1, 3, 4])
 >>> a_f[idx]
 array([1, 3, 4])
 >>> a[idx_f]
@@ -557,7 +561,7 @@ array([1, 3, 4])
 ```
 
 ~~~~{admonition} Aside
-If you read the previous section on [strides](strides), you probably guessed
+If you read the previous section on [strides](strides), you may have guessed
 that the difference between C-ordered and Fortran-ordered arrays is a
 difference of...strides!
 
