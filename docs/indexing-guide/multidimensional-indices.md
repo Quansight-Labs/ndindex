@@ -1,5 +1,7 @@
 # Multidimensional Indices
 
+TODO: Replace bullet points in this document with subsections.
+
 Unlike [slices](slices-docs) and [integers](integer-indices), which work not
 only on NumPy arrays but also on built-in Python sequence types such as
 `list`, `tuple`, and `str`, the remaining index types do not work at all on
@@ -1246,117 +1248,123 @@ array([103, 101, 100, 102])
 array([203, 201, 200, 202])
 ```
 
-Now a few advanced notes about integer array indexing:
+#### Advanced Notes
 
-- Indices in the integer array can also be negative. Negative indices work the
-  same as they do with [integer indices](integer-indices). Negative and
-  nonnegative indices can be mixed arbitrarily.
+##### Negative Indices
 
-  ```py
-  >>> a = np.array([100, 101, 102, 103]) # as above
-  >>> idx = np.array([0, 1, -1])
-  >>> a[idx]
-  array([100, 101, 103])
-  ```
+Indices in the integer array can also be negative. Negative indices work the
+same as they do with [integer indices](integer-indices). Negative and
+nonnegative indices can be mixed arbitrarily.
 
-  If you want to convert an index with negative indices to an index without
-  any negative indices, you can use the ndindex
-  [`reduce()`](ndindex.IntegerArray.reduce) method with a shape.
+```py
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> idx = np.array([0, 1, -1])
+>>> a[idx]
+array([100, 101, 103])
+```
 
-- You can use a list instead of an array to represent an
-  array.[^lists-footnote]. Using a list is useful if you are writing an array
-  index by hand, but in all other cases, it is better to use an actual array
-  instead. This will perform basic type checking (like that the shape and
-  dtype are correct) when the index array is created rather than when the
-  indexing happens. In most real-world use-cases, the index itself is
-  constructed from some other array method.
+If you want to convert an index with negative indices to an index without
+any negative indices, you can use the ndindex
+[`reduce()`](ndindex.IntegerArray.reduce) method with a shape.
 
-  [^lists-footnote]: Beware that [versions of NumPy prior to
-      1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
-      treated a single list as a [tuple index](tuple-indices) rather than as
-      an array.
+##### Python Lists
+
+You can use a list instead of an array to represent an
+array.[^lists-footnote]. Using a list is useful if you are writing an array
+index by hand, but in all other cases, it is better to use an actual array
+instead. This will perform basic type checking (like that the shape and
+dtype are correct) when the index array is created rather than when the
+indexing happens. In most real-world use-cases, the index itself is
+constructed from some other array method.
+
+[^lists-footnote]: Beware that [versions of NumPy prior to
+    1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
+    treated a single list as a [tuple index](tuple-indices) rather than as
+    an array.
 
 
-  ```py
-  >>> a = np.array([100, 101, 102, 103]) # as above
-  >>> a[[0, 1, -1]]
-  array([100, 101, 103])
-  >>> idx = np.array([0, 1, -1])
-  >>> a[idx] # this is the same
-  array([100, 101, 103])
-  ```
+```py
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> a[[0, 1, -1]]
+array([100, 101, 103])
+>>> idx = np.array([0, 1, -1])
+>>> a[idx] # this is the same
+array([100, 101, 103])
+```
 
-- The integer arrays in an index need to either be the same shape or to be
-  able to [broadcast](broadcasting) together to the same shape. The
-  broadcasting behavior is useful if the index array would otherwise be
-  repeated in a given dimension.
+##### Broadcasting
 
-  TODO: Make note of the outer indexing behavior this gives
+The integer arrays in an index need to either be the same shape or to be
+able to [broadcast](broadcasting) together to the same shape. The
+broadcasting behavior is useful if the index array would otherwise be
+repeated in a given dimension.
 
-  It also means that if you mix an integer array index with a single
-  [integer](integer-indices) index. it is the same as if you replaced the
-  single integer index with an array of the same shape filled with that
-  integer (because remember, a single integer index is the same thing as an
-  integer array index of shape `()`).
+TODO: Make note of the outer indexing behavior this gives
 
-  For example:
+It also means that if you mix an integer array index with a single
+[integer](integer-indices) index. it is the same as if you replaced the
+single integer index with an array of the same shape filled with that
+integer (because remember, a single integer index is the same thing as an
+integer array index of shape `()`).
 
-  ```py
-  >>> a = np.array([[100, 101, 102],  # as above
-  ...               [103, 104, 105]])
-  >>> idx0 = np.array([1, 0])
-  >>> idx0.shape
-  (2,)
-  >>> idx1 = np.array([[0], [1], [2]])
-  >>> idx1.shape
-  (3, 1)
-  >>> # idx0 and idx1 broadcast to shape (3, 2), which will
-  >>> # be the shape of a[idx0, idx1]
-  >>> a[idx0, idx1]
-  array([[103, 100],
-         [104, 101],
-         [105, 102]])
-  >>> a[idx0, idx1].shape
-  (3, 2)
-  >>> # This is the same as
-  >>> idx0_broadcasted = np.array([[1, 0], [1, 0], [1, 0]])
-  >>> idx1_broadcasted = np.array([[0, 0], [1, 1], [2, 2]])
-  >>> idx0_broadcasted.shape
-  (3, 2)
-  >>> idx1_broadcasted.shape
-  (3, 2)
-  >>> a[idx0_broadcasted, idx1_broadcasted]
-  array([[103, 100],
-         [104, 101],
-         [105, 102]])
-  ```
+For example:
 
-  And mixing an array and an integer index:
+```py
+>>> a = np.array([[100, 101, 102],  # as above
+...               [103, 104, 105]])
+>>> idx0 = np.array([1, 0])
+>>> idx0.shape
+(2,)
+>>> idx1 = np.array([[0], [1], [2]])
+>>> idx1.shape
+(3, 1)
+>>> # idx0 and idx1 broadcast to shape (3, 2), which will
+>>> # be the shape of a[idx0, idx1]
+>>> a[idx0, idx1]
+array([[103, 100],
+       [104, 101],
+       [105, 102]])
+>>> a[idx0, idx1].shape
+(3, 2)
+>>> # This is the same as
+>>> idx0_broadcasted = np.array([[1, 0], [1, 0], [1, 0]])
+>>> idx1_broadcasted = np.array([[0, 0], [1, 1], [2, 2]])
+>>> idx0_broadcasted.shape
+(3, 2)
+>>> idx1_broadcasted.shape
+(3, 2)
+>>> a[idx0_broadcasted, idx1_broadcasted]
+array([[103, 100],
+       [104, 101],
+       [105, 102]])
+```
 
-  ```
-  >>> a
-  array([[100, 101, 102],
-         [103, 104, 105]])
-  >>> idx0
-  array([1, 0])
-  >>> a[idx0, 2]
-  array([105, 102])
-  >>> # This is the same as
-  >>> idx1 = np.array([2, 2])
-  >>> a[idx0, idx1]
-  array([105, 102])
-  ```
+And mixing an array and an integer index:
 
-  Here the `idx0` array specifies the indices along the first dimension, `1`
-  and `0`, and the `2` specifies to always use index `2` along the second
-  dimension. This is the same as using the array `[2, 2]` for the second
-  dimension, since this is the scalar `2` broadcasted to the shape of `[1,
-  0]`.
+```
+>>> a
+array([[100, 101, 102],
+       [103, 104, 105]])
+>>> idx0
+array([1, 0])
+>>> a[idx0, 2]
+array([105, 102])
+>>> # This is the same as
+>>> idx1 = np.array([2, 2])
+>>> a[idx0, idx1]
+array([105, 102])
+```
 
-  The ndindex method
-  [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
-  [`expand()`](ndindex.Tuple.expand)) will broadcast array indices together
-  into a canonical form.
+Here the `idx0` array specifies the indices along the first dimension, `1`
+and `0`, and the `2` specifies to always use index `2` along the second
+dimension. This is the same as using the array `[2, 2]` for the second
+dimension, since this is the scalar `2` broadcasted to the shape of `[1,
+0]`.
+
+The ndindex method
+[`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
+[`expand()`](ndindex.Tuple.expand)) will broadcast array indices together
+into a canonical form.
 
 [^integer-scalar-footnote]: In fact, if the integer array index itself has
     shape `()`, then the behavior is identical to simply using an `int` with
@@ -1376,126 +1384,132 @@ Now a few advanced notes about integer array indexing:
     None
     ```
 
-- As with all index types discussed in this guide, an integer array index can
-  be used on the left-hand side of an assignment. This can be useful as it
-  lets you surgically inject new elements into your array.
+##### Assigning to an Integer Array Index
 
-  ```py
-  >>> a = np.array([100, 101, 102, 103]) # as above
-  >>> idx = np.array([0, 3])
-  >>> a[idx] = np.array([200, 203])
-  >>> a
-  array([200, 101, 102, 203])
-  ```
+As with all index types discussed in this guide, an integer array index can
+be used on the left-hand side of an assignment. This can be useful as it
+lets you surgically inject new elements into your array.
 
-  However, be careful, as there is inherent ambiguity here if your index array
-  contains duplicate elements. For example, here we are saying to set index
-  `0` to both `1` and `3`:
+```py
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> idx = np.array([0, 3])
+>>> a[idx] = np.array([200, 203])
+>>> a
+array([200, 101, 102, 203])
+```
 
-  ```py
-  >>> a = np.array([100, 101, 102, 103]) # as above
-  >>> idx = np.array([0, 1, 0])
-  >>> a[idx] = np.array([1, 2, 3])
-  >>> a
-  array([  3,   2, 102, 103])
-  ```
+However, be careful, as there is inherent ambiguity here if your index array
+contains duplicate elements. For example, here we are saying to set index
+`0` to both `1` and `3`:
 
-  The end result was `3`. This happened because `3` corresponded to the last
-  `0` in the index array, but importantly, this is just an implementation
-  detail. **NumPy makes no guarantees about the order in which index elements
-  are assigned to.**[^cupy-assignment-footnote] If you are using an integer
-  array as an assignment index, it's best to be careful to avoid duplicate
-  entries in the index (or at least ensure that duplicate entries are always
-  assigned the same value).
+```py
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> idx = np.array([0, 1, 0])
+>>> a[idx] = np.array([1, 2, 3])
+>>> a
+array([  3,   2, 102, 103])
+```
 
-  [^cupy-assignment-footnote]: For example, in [CuPy](https://cupy.dev/),
-    which implements the NumPy API on top of GPUs, [the behavior of this sort
-    of thing is
-    undefined](https://docs.cupy.dev/en/stable/reference/generated/cupy.ndarray.html#cupy.ndarray.__setitem__).
-    This is because CuPy parallelizes the assignment operation on the GPU, and
-    the element that gets assigned to the duplicate index "last" becomes
-    dependent on a race condition.
+The end result was `3`. This happened because `3` corresponded to the last
+`0` in the index array, but importantly, this is just an implementation
+detail. **NumPy makes no guarantees about the order in which index elements
+are assigned to.**[^cupy-assignment-footnote] If you are using an integer
+array as an assignment index, it's best to be careful to avoid duplicate
+entries in the index (or at least ensure that duplicate entries are always
+assigned the same value).
 
-- When one or more [slice](slices-docs), [ellipsis](ellipsis-indices), or
-  [newaxis](newaxis-indices) indexes come before or after all the
-  [integer](integer-indices) and integer array indices, the two sets of
-  indices operate independently of one another. The slices and ellipses select
-  the corresponding axes and newaxes add new axes to the corresponding
-  locations, and the integer array indices select the elements on their
-  respective axes, as described above.
+[^cupy-assignment-footnote]: For example, in [CuPy](https://cupy.dev/),
+  which implements the NumPy API on top of GPUs, [the behavior of this sort
+  of thing is
+  undefined](https://docs.cupy.dev/en/stable/reference/generated/cupy.ndarray.html#cupy.ndarray.__setitem__).
+  This is because CuPy parallelizes the assignment operation on the GPU, and
+  the element that gets assigned to the duplicate index "last" becomes
+  dependent on a race condition.
 
-  For example, consider:
+##### Combining Integer Arrays Indices with Basic Indices
 
-  ```py
-  >>> a = np.array([[[100, 101, 102],  # Like above, but with an extra dimension
-  ...                [103, 104, 105]]])
-  ```
+When one or more [slice](slices-docs), [ellipsis](ellipsis-indices), or
+[newaxis](newaxis-indices) indexes come before or after all the
+[integer](integer-indices) and integer array indices, the two sets of
+indices operate independently of one another. The slices and ellipses select
+the corresponding axes and newaxes add new axes to the corresponding
+locations, and the integer array indices select the elements on their
+respective axes, as described above.
 
-  This is the same `a` as in the above examples, except it has an extra size 1
-  dimension:
+For example, consider:
 
-  ```py
-  >>> a.shape
-  (1, 2, 3)
-  ```
+```py
+>>> a = np.array([[[100, 101, 102],  # Like above, but with an extra dimension
+...                [103, 104, 105]]])
+```
 
-  We can select this first dimension with a slice `:`, then use the exact same
-  index as in the example in the previous bullet:
+This is the same `a` as in the above examples, except it has an extra size 1
+dimension:
 
-  ```py
-  >>> idx0
-  array([1, 0])
-  >>> a[:, idx0, 2]
-  array([[105, 102]])
-  >>> a[:, idx0, 2].shape
-  (1, 2)
-  ```
+```py
+>>> a.shape
+(1, 2, 3)
+```
 
-  The main benefit of this is that you can use `...` at the beginning of an
-  index to select the last axes of an array with the integer array indices, or
-  some number of `:`s to select some axes in the middle. This lets you do with
-  indexing what you can also do with the {external+numpy:func}`numpy.take`
-  function.
+We can select this first dimension with a slice `:`, then use the exact same
+index as in the example in the previous bullet:
 
-  To be sure, the slices can be any slice, and you can also include newaxes.
-  This may potentially allow combining two sequential indexing operations into
-  one, but they are mostly allowed for semantic completeness.
+```py
+>>> idx0
+array([1, 0])
+>>> a[:, idx0, 2]
+array([[105, 102]])
+>>> a[:, idx0, 2].shape
+(1, 2)
+```
 
-- Finally, if the [slice](slices-docs), [ellipsis](ellipsis-indices), or
-  [newaxis](newaxis-indices) indices are *in between* the integer array
-  indices, then something more strange happens. The two index types still
-  operate "independently", but instead of the resulting array having the
-  dimensions corresponding to the location of the indices, like in the
-  previous bullet (and, indeed, as indexing works in every other instance),
-  the shape corresponding to the (broadcasted) array indices (including
-  integer indices) is *prepended* to the shape corresponding to the non-array
-  indices. This is because there is inherent ambiguity in where these
-  dimensions should be placed in the final shape.
+The main benefit of this is that you can use `...` at the beginning of an
+index to select the last axes of an array with the integer array indices, or
+some number of `:`s to select some axes in the middle. This lets you do with
+indexing what you can also do with the {external+numpy:func}`numpy.take`
+function.
 
-  An example demonstrates this most clearly:
+To be sure, the slices can be any slice, and you can also include newaxes.
+This may potentially allow combining two sequential indexing operations into
+one, but they are mostly allowed for semantic completeness.
 
-  ```py
-  >>> a = np.empty((2, 3, 4, 5))
-  >>> a.shape
-  (2, 3, 4, 5)
-  >>> idx = np.zeros((10, 20), dtype=int)
-  >>> idx.shape
-  (10, 20)
-  >>> a[idx, :, :, idx].shape
-  (10, 20, 3, 4)
-  ```
+##### Integer Array Indices Separated by Basic Indices
 
-  Here the (broadcasted) integer array index shape `(10, 20)` comes first in
-  the result array and the shape corresponding to the rest of the index, `(3,
-  4)`, comes last.
+Finally, if the [slice](slices-docs), [ellipsis](ellipsis-indices), or
+[newaxis](newaxis-indices) indices are *in between* the integer array
+indices, then something more strange happens. The two index types still
+operate "independently", but instead of the resulting array having the
+dimensions corresponding to the location of the indices, like in the
+previous bullet (and, indeed, as indexing works in every other instance),
+the shape corresponding to the (broadcasted) array indices (including
+integer indices) is *prepended* to the shape corresponding to the non-array
+indices. This is because there is inherent ambiguity in where these
+dimensions should be placed in the final shape.
 
-  If you find yourself running into this behavior, chances are you would be
-  better off rewriting the indexing operation to be simpler. It's considered a
-  design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and it's not
-  one that any other Python array library has copied. ndindex will raise a
-  `NotImplementedError` exception on indices like these, because I don't want
-  to deal with implementing this obscure
-  logic.[^ndindex-advanced-indexing-design-flaw-footnote]
+An example demonstrates this most clearly:
+
+```py
+>>> a = np.empty((2, 3, 4, 5))
+>>> a.shape
+(2, 3, 4, 5)
+>>> idx = np.zeros((10, 20), dtype=int)
+>>> idx.shape
+(10, 20)
+>>> a[idx, :, :, idx].shape
+(10, 20, 3, 4)
+```
+
+Here the (broadcasted) integer array index shape `(10, 20)` comes first in
+the result array and the shape corresponding to the rest of the index, `(3,
+4)`, comes last.
+
+If you find yourself running into this behavior, chances are you would be
+better off rewriting the indexing operation to be simpler. It's considered a
+design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and it's not
+one that any other Python array library has copied. ndindex will raise a
+`NotImplementedError` exception on indices like these, because I don't want
+to deal with implementing this obscure
+logic.[^ndindex-advanced-indexing-design-flaw-footnote]
 
 [^advanced-indexing-design-flaw-footnote]: Travis Oliphant, the original
     creator of NumPy, told me privately that "somebody should have slapped me
@@ -1810,337 +1824,352 @@ example, in machine learning, if `group` is an array with group numbers and
 select the features for a single group to do cross-validation like `X[group ==
 0]`.
 
-Now for the detailed semantics of boolean array indices:
+#### Advanced Notes
 
-- **A boolean array index will remove as many dimensions as the index has, and
-  replace them with a single flat dimension, which has the size of the number
-  of `True` elements in the index.** The shape of the boolean array index must
-  match the dimensions that are being replaced.
+##### Result Shape
 
-  For example:
+> **A boolean array index will remove as many dimensions as the index has, and
+> replace them with a single flat dimension, which has the size of the number
+> of `True` elements in the index.**
 
-  ```py
-  >>> a = np.arange(24).reshape((2, 3, 4))
-  >>> idx = np.array([[True, False, True],
-  ...                 [True, True, True]])
-  >>> a.shape
-  (2, 3, 4)
-  >>> idx.shape
-  (2, 3)
-  >>> np.count_nonzero(idx)
-  5
-  >>> a[idx].shape # The (2, 3) in a.shape is replaced with count_nonzero(idx)
-  (5, 4)
-  ```
+The shape of the boolean array index must
+match the dimensions that are being replaced.
 
-  This means that the final shape of an array indexed with a boolean mask
-  depends on the value of the mask, specifically, the number of `True` values
-  in it. It is easy to construct array expressions with boolean masks where
-  the size of the array is impossible to know until runtime. For example:
+For example:
 
-  ```py
-  >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
-  >>> a = rng.integers(0, 2, (3, 4))
-  >>> a[a==0].shape # Could be any size from 0 to 12
-  (7,)
-  ```
+```py
+>>> a = np.arange(24).reshape((2, 3, 4))
+>>> idx = np.array([[True, False, True],
+...                 [True, True, True]])
+>>> a.shape
+(2, 3, 4)
+>>> idx.shape
+(2, 3)
+>>> np.count_nonzero(idx)
+5
+>>> a[idx].shape # The (2, 3) in a.shape is replaced with count_nonzero(idx)
+(5, 4)
+```
 
-  However, even if the number of elements of an indexed array is not knowable
-  until runtime, the _number of dimensions_ is knowable. That's because a
-  boolean mask acts as a flattening operation. The number of dimensions of the
-  boolean array index are all removed from the indexed array and replaced with
-  a single dimension. Only the *size* of this dimension cannot be known unless
-  you know how many `True` elements there are in the index.
+This means that the final shape of an array indexed with a boolean mask
+depends on the value of the mask, specifically, the number of `True` values
+in it. It is easy to construct array expressions with boolean masks where
+the size of the array is impossible to know until runtime. For example:
 
-  This detail about boolean array indexing means that sometimes code that uses
-  boolean array indexing can be difficult to reason about statically, because
-  the array shapes are inherently unknowable until runtime and may depend on
-  data. Some array libraries that try to build computational graphs from array
-  expressions, such as [JAX](https://jax.readthedocs.io/en/latest/index.html)
-  or [Dask Array](https://docs.dask.org/en/stable/array.html), may have
-  limited or no boolean array indexing support for this reason.
+```py
+>>> rng = np.random.default_rng(11) # Seeded so this example reproduces
+>>> a = rng.integers(0, 2, (3, 4))
+>>> a[a==0].shape # Could be any size from 0 to 12
+(7,)
+```
+
+However, even if the number of elements of an indexed array is not knowable
+until runtime, the _number of dimensions_ is knowable. That's because a
+boolean mask acts as a flattening operation. The number of dimensions of the
+boolean array index are all removed from the indexed array and replaced with
+a single dimension. Only the *size* of this dimension cannot be known unless
+you know how many `True` elements there are in the index.
+
+This detail about boolean array indexing means that sometimes code that uses
+boolean array indexing can be difficult to reason about statically, because
+the array shapes are inherently unknowable until runtime and may depend on
+data. Some array libraries that try to build computational graphs from array
+expressions, such as [JAX](https://jax.readthedocs.io/en/latest/index.html)
+or [Dask Array](https://docs.dask.org/en/stable/array.html), may have
+limited or no boolean array indexing support for this reason.
 
 (boolean-array-c-order)=
-- **The order of the elements selected by a boolean array index `idx`
-  corresponds to the elements being iterated in C order.**
+##### Result Order
 
-  C order iterates the array `a` so that the last axis varies the fastest,
-  like `(0, 0, 0)`, `(0, 0, 1)`, `(0, 0, 2)`, `(0, 1, 0)`, etc.
+> **The order of the elements selected by a boolean array index `idx`
+> corresponds to the elements being iterated in C order.**
 
-  For example:
+C order iterates the array `a` so that the last axis varies the fastest,
+like `(0, 0, 0)`, `(0, 0, 1)`, `(0, 0, 2)`, `(0, 1, 0)`, etc.
 
-  ```py
-  >>> a = np.arange(12).reshape((3, 4))
-  >>> a
-  array([[ 0,  1,  2,  3],
-         [ 4,  5,  6,  7],
-         [ 8,  9, 10, 11]])
-  >>> idx = np.array([[ True, False,  True,  True],
-  ...                 [False,  True, False, False],
-  ...                 [ True,  True, False,  True]])
-  >>> a[idx]
-  array([ 0,  2,  3,  5,  8,  9, 11])
-  ```
+For example:
 
-  In this example, the elements of `a` are ordered `0 1 2 ...` in C order,
-  which why in the final indexed array `a[idx]`, they are still in sorted
-  order. C order also corresponds to reading the elements of the array in the
-  order that NumPy prints them in, from left to right (ignoring the brackets
-  and commas).
+```py
+>>> a = np.arange(12).reshape((3, 4))
+>>> a
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+>>> idx = np.array([[ True, False,  True,  True],
+...                 [False,  True, False, False],
+...                 [ True,  True, False,  True]])
+>>> a[idx]
+array([ 0,  2,  3,  5,  8,  9, 11])
+```
 
-  C ordering is always used, even when the underlying memory is not C ordered
-  (see [](c-vs-fortran-ordering) for more details on C array order).
+In this example, the elements of `a` are ordered `0 1 2 ...` in C order,
+which why in the final indexed array `a[idx]`, they are still in sorted
+order. C order also corresponds to reading the elements of the array in the
+order that NumPy prints them in, from left to right (ignoring the brackets
+and commas).
 
-- The actual order of a boolean mask is usually not that important. However,
-  this fact has one important implication. **A boolean array index is the same
-  as if you replaced `idx` with the result of
-  {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking the
-  tuple)**, using the rules for [integer array indices](integer-array-indices)
-  outlined above (although this rule *doesn't* apply to [0-dimensional
-  boolean indices](0-d-boolean-index)).
+C ordering is always used, even when the underlying memory is not C ordered
+(see [](c-vs-fortran-ordering) for more details on C array order).
+
+##### `nonzero` Equivalence
+
+The actual order of a boolean mask is usually not that important. However,
+this fact has one important implication. **A boolean array index is the same
+as if you replaced `idx` with the result of
+{external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking the
+tuple)**, using the rules for [integer array indices](integer-array-indices)
+outlined above (although note that this rule *doesn't* apply to
+[0-dimensional boolean indices](0-d-boolean-index)).
 
 
-  ```py
-  >>> np.nonzero(idx)
-  (array([0, 0, 0, 1, 2, 2, 2]), array([0, 2, 3, 1, 0, 1, 3]))
-  >>> idx0, idx1 = np.nonzero(idx)
-  >>> a[idx0, idx1] # this is the same as a[idx]
-  array([ 0,  2,  3,  5,  8,  9, 11])
-  ```
+```py
+>>> np.nonzero(idx)
+(array([0, 0, 0, 1, 2, 2, 2]), array([0, 2, 3, 1, 0, 1, 3]))
+>>> idx0, idx1 = np.nonzero(idx)
+>>> a[idx0, idx1] # this is the same as a[idx]
+array([ 0,  2,  3,  5,  8,  9, 11])
+```
 
-  Here `np.nonzero(idx)` returns two integer array indices, one for each
-  dimension of `idx`. These indices each have `7` elements, one for each
-  `True` element of `idx`, and they select (in C order), the corresponding
-  elements. Another way to think of this is that `idx[np.nonzero(idx)]` will
-  always return an array of (`np.count_nonzero(idx)`) `True`s, because
-  `np.nonzero(idx)` is exactly the integer array indices that select the
-  `True` elements of `idx`:
+Here `np.nonzero(idx)` returns two integer array indices, one for each
+dimension of `idx`. These indices each have `7` elements, one for each
+`True` element of `idx`, and they select (in C order), the corresponding
+elements. Another way to think of this is that `idx[np.nonzero(idx)]` will
+always return an array of `np.count_nonzero(idx)` `True`s, because
+`np.nonzero(idx)` is exactly the integer array indices that select the
+`True` elements of `idx`:
 
-  ```py
-  >>> idx[np.nonzero(idx)]
-  array([ True,  True,  True,  True,  True,  True,  True])
-  ```
+```py
+>>> idx[np.nonzero(idx)]
+array([ True,  True,  True,  True,  True,  True,  True])
+```
 
-  What this all means is that all the rules that are outlined above about
-  [integer array indices](integer-array-indices), e.g., how they broadcast or
-  combine together with slices, all also apply to boolean array indices after
-  this transformation. This also specifies how boolean array indices and
-  integer array indices combine together.
+What this all means is that all the rules that are outlined above about
+[integer array indices](integer-array-indices), e.g., how they broadcast or
+combine together with slices, all also apply to boolean array indices after
+this transformation. This also specifies how boolean array indices and
+integer array indices combine together.
 
-  Effectively, a boolean array index can be combined with other boolean array
-  indices or integer or integer array indices by first converting the boolean
-  index into integer indices (one for each dimension of the boolean index)
-  that select each `True` element of the index, then broadcasting them all to
-  a common shape.
+Effectively, a boolean array index can be combined with other boolean array
+indices or integer or integer array indices by first converting the boolean
+index into integer indices (one for each dimension of the boolean index)
+that select each `True` element of the index, then broadcasting them all to
+a common shape.
 
-  The particular thing to note here is that it is possible to use a boolean
-  mask to select only a subset of the dimensions of `a`: TODO
+The particular thing to note here is that it is possible to use a boolean
+mask to select only a subset of the dimensions of `a`: TODO
 
-  This is not nearly as common as masking the entire array `a`, but it can
-  happen. Remember that we can always think of an array as an "array of
-  subarrays". For instance, suppose we have a video with 1920 x 1080 pixels
-  and 500 frames. This might be represented as an array of shape `(500, 1080,
-  1920, 3)`[^skvideo-footnote], where the final dimension 3 represents the 3
-  RGB color values of a pixel. We can think of this array as 500 `(1080, 1920,
-  3)` "frames". Or as 500 x 1080 x 1920 "pixels". Or we could slice along a
-  different dimension and think of it as 3 `(500, 1080, 1920)` video
-  "channels", one for each primary color.
+This is not nearly as common as masking the entire array `a`, but it can
+happen. Remember that we can always think of an array as an "array of
+subarrays". For instance, suppose we have a video with 1920 x 1080 pixels
+and 500 frames. This might be represented as an array of shape `(500, 1080,
+1920, 3)`[^skvideo-footnote], where the final dimension 3 represents the 3
+RGB color values of a pixel. We can think of this array as 500 `(1080, 1920,
+3)` "frames". Or as 500 x 1080 x 1920 "pixels". Or we could slice along a
+different dimension and think of it as 3 `(500, 1080, 1920)` video
+"channels", one for each primary color.
 
-  [^skvideo-footnote]: This is how the
-  [skikit-video](https://www.scikit-video.org/) package represents videos as
-  NumPy arrays. Note that the height and width dimensions are reversed from
-  the usual way of writing the.
+[^skvideo-footnote]: This is how the
+[skikit-video](https://www.scikit-video.org/) package represents videos as
+NumPy arrays. Note that the height and width dimensions are reversed from
+the usual way of writing the.
 
-  In each case, we imagine that our array is really an array (or a stack or
-  batch) of subarrays, where some of our dimensions are the "stacking"
-  dimensions and some of them are the array dimensions. This way of thinking
-  is also common when doing linear algebra on arrays. The last two dimensions
-  (typically) are considered matrices, and the leading dimensions are batch
-  dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5 x 4
-  matrices. NumPy functions like the `@` matmul operator will automatically
-  operate on the last two dimensions of an array.
+In each case, we imagine that our array is really an array (or a stack or
+batch) of subarrays, where some of our dimensions are the "stacking"
+dimensions and some of them are the array dimensions. This way of thinking
+is also common when doing linear algebra on arrays. The last two dimensions
+(typically) are considered matrices, and the leading dimensions are batch
+dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5 x 4
+matrices. NumPy functions like the `@` matmul operator will automatically
+operate on the last two dimensions of an array.
 
-  So how does this relate to using a boolean array index to select only a
-  subset of the array dimensions. Well we might want to use a boolean index to
-  only select along the inner "subarray" dimensions, and pretend like the
-  outer "batching" dimensions are our "array". TODO
+So how does this relate to using a boolean array index to select only a
+subset of the array dimensions. Well we might want to use a boolean index to
+only select along the inner "subarray" dimensions, and pretend like the
+outer "batching" dimensions are our "array". TODO
 
-  The ndindex method
-  [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
-  [`expand()`](ndindex.Tuple.expand)) will convert boolean array indices into
-  integer array indices via {external+numpy:func}`numpy.nonzero` and broadcast
-  array indices together into a canonical form.
+The ndindex method
+[`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
+[`expand()`](ndindex.Tuple.expand)) will convert boolean array indices into
+integer array indices via {external+numpy:func}`numpy.nonzero` and broadcast
+array indices together into a canonical form.
 
 (0-d-boolean-index)=
-- A 0-dimensional boolean index (i.e., just the scalar `True` or `False`) is a
-  little special. The `np.nonzero` rule stated above does not actually apply.
-  That's because `np.nonzero` has odd behavior for 0-D arrays. `np.nonzero(a)` usually
-  returns a tuple with as many arrays as dimensions of `a`:
+##### Boolean Scalar Indices
 
-  ```py
-  >>> np.nonzero(np.array([True, False]))
-  (array([0]),)
-  >>> np.nonzero(np.array([[True, False]]))
-  (array([0]), array([0]))
-  ```
+A 0-dimensional boolean index (i.e., just the scalar `True` or `False`) is a
+little special. The `np.nonzero` rule stated above does not actually apply.
+That's because `np.nonzero` has odd behavior for 0-D arrays. `np.nonzero(a)` usually
+returns a tuple with as many arrays as dimensions of `a`:
 
-  But for a 0-D array, `np.nonzero(a)` doesn't return an empty tuple, but
-  rather the same thing as `np.nonzero(np.array([a]))`:
+```py
+>>> np.nonzero(np.array([True, False]))
+(array([0]),)
+>>> np.nonzero(np.array([[True, False]]))
+(array([0]), array([0]))
+```
 
-  ```py
-  >>> np.nonzero(np.array(False))
-  (array([], dtype=int64),)
-  >>> np.nonzero(np.array(True))
-  (array([0]),)
-  ```
+But for a 0-D array, `np.nonzero(a)` doesn't return an empty tuple, but
+rather the same thing as `np.nonzero(np.array([a]))`:
 
-  However, the key point, that a boolean array index removes and flattens
-  `idx.ndim` dimensions from `a` is still True. Here, `idx.ndim` is `0`,
-  because `array(True)` and `array(False)` have shape `()`. So what these
-  indices do is remove 0 dimensions and add a single dimension of length 1 for
-  True or 0 for False. Hence, if `a` has shape `(s1, ..., sn)`, then `a[True]`
-  has shape `(1, s1, ..., sn)`, and `a[False]` has shape `(0, s1, ..., sn)`.
+```py
+>>> np.nonzero(np.array(False))
+(array([], dtype=int64),)
+>>> np.nonzero(np.array(True))
+(array([0]),)
+```
 
-  ```py
-  >>> a.shape # as above
-  (3, 4)
-  >>> a[True].shape
-  (1, 3, 4)
-  >>> a[False].shape
-  (0, 3, 4)
-  ```
+However, the key point, that a boolean array index removes and flattens
+`idx.ndim` dimensions from `a` is still True. Here, `idx.ndim` is `0`,
+because `array(True)` and `array(False)` have shape `()`. So what these
+indices do is remove 0 dimensions and add a single dimension of length 1 for
+True or 0 for False. Hence, if `a` has shape `(s1, ..., sn)`, then `a[True]`
+has shape `(1, s1, ..., sn)`, and `a[False]` has shape `(0, s1, ..., sn)`.
 
-  This breaks with what `a[np.nonzero(True)]` would give:[^nonzero-scalar-footnote]
+```py
+>>> a.shape # as above
+(3, 4)
+>>> a[True].shape
+(1, 3, 4)
+>>> a[False].shape
+(0, 3, 4)
+```
+
+This breaks with what `a[np.nonzero(True)]` would give:[^nonzero-scalar-footnote]
 
 
-  [^nonzero-scalar-footnote]: But note that this also wouldn't work if
-      `np.nonzero(True)` returned the empty tuple `()`. In fact, there's no
-      generic index that `np.nonzero()` could return that would be equivalent
-      to the actual indexing behavior of a boolean scalar, especially for
-      `False`.
+[^nonzero-scalar-footnote]: But note that this also wouldn't work if
+    `np.nonzero(True)` returned the empty tuple `()`. In fact, there's no
+    generic index that `np.nonzero()` could return that would be equivalent
+    to the actual indexing behavior of a boolean scalar, especially for
+    `False`.
 
-  ```py
-  >>> a[np.nonzero(True)]
-  array([[0, 1, 2, 3]])
-  ```
+```py
+>>> a[np.nonzero(True)].shape
+(1, 4)
+>>> a[np.nonzero(False)].shape
+(0, 4)
+```
 
-  This behavior may seem like an odd corner case. You might wonder why NumPy
-  supports using a scalar boolean as an index, especially since it has
-  slightly different semantics than higher dimensional booleans.
+The scalar boolean behavior may seem like an odd corner case. You might wonder
+why NumPy supports using a `True` or `False` as an index, especially since it
+has slightly different semantics than higher dimensional boolean arrays.
 
-  The main reason scalar booleans are supported is that they are a natural
-  generalization as 0-D boolean array indices. While the `np.nonzero()` rule
-  does not hold, the more general rule about removing and flatting `idx.ndim`
-  dimensions does.
+The main reason scalar booleans are supported is that they are a natural
+generalization of n-D boolean array indices. While the `np.nonzero()` rule
+does not hold for them, the more general rule about removing and flatting
+`idx.ndim` dimensions does.
 
-  Consider the most common case of using a boolean index: masking the entire
-  array. This typically looke something like `a[some_boolean_expression_on_a]
-  = mask_value`. For example:
+Consider the most common case of using a boolean index: masking some subset of
+the entire array. This typically looks something like
+`a[some_boolean_expression_on_a] = mask_value`. For example:
 
-  ```py
-  >>> a = np.asarray([[0, 1], [1, 0]])
-  >>> a[a == 0] = -1
-  >>> a
-  array([[-1,  1],
-         [ 1, -1]])
-  ```
+```py
+>>> a = np.asarray([[0, 1], [1, 0]])
+>>> a[a == 0] = -1
+>>> a
+array([[-1,  1],
+       [ 1, -1]])
+```
 
-  Here, we set all the `0` elements of `a` to `-1`. We do this by creating the
-  boolean mask `a == 0`, which is a boolean expression created from `a`.
-  Our mask might be a lot more complicated in general, but it still is usually
-  the case that our mask is constructed from `a`, and thus has the exact same
-  shape as `a`. Therefore, `a[mask]` is a 1 dimensional array with
-  `np.count_nonzero(mask)` elements. In this example, this doesn't actually
-  matter because we are using the mask as the left-hand side of an assignment.
-  As long as the right-hand side is broadcast compatible with `a[mask]`, it
-  will be fine. In this case, it is because it is a scalar, which is always
-  broadcast compatible with everything, but more generally we could mask the
-  right-hand side with the exact same mask index to ensure it is exactly the
-  same shape as the left-hand side.
+Here, we set all the `0` elements of `a` to `-1`. We do this by creating the
+boolean mask `a == 0`, which is a boolean expression created from `a`. Our
+mask might be a lot more complicated in general, but it still is usually the
+case that our mask is constructed from `a`, and thus has the exact same shape
+as `a`. Therefore, `a[mask]` is a 1 dimensional array with
+`np.count_nonzero(mask)` elements. In this example, this doesn't actually
+matter because we are using the mask as the left-hand side of an assignment.
+As long as the right-hand side is broadcast compatible with `a[mask]`, it will
+be fine. In this case, it works because `-1` is a scalar, which is always
+broadcast compatible with everything, but more generally we could index the
+right-hand side with the exact same mask index to ensure it is exactly the
+same shape as the left-hand side.
 
-  In particular, note that `a[a == 0] = -1` works no matter what the shape or
-  dimensionality of `a` is, and no matter how many `0` entries it has. Above
-  it had 2 dimensions and two `0`s, but it would also work if it were
-  1-dimensional:
+In particular, note that `a[a == 0] = -1` works no matter what the shape or
+dimensionality of `a` is, and no matter how many `0` entries it has. Above
+it had 2 dimensions and two `0`s, but it would also work if it were
+1-dimensional:
 
-  ```py
-  >>> a = np.asarray([0, 1, 0, 1])
-  >>> a[a == 0] = -1
-  >>> a
-  array([-1,  1, -1,  1])
-  ```
+```py
+>>> a = np.asarray([0, 1, 0, 1])
+>>> a[a == 0] = -1
+>>> a
+array([-1,  1, -1,  1])
+```
 
-  Or if it had no actual `0`s:[^0-d-mask-footnote]
+Or if it had no actual `0`s:[^0-d-mask-footnote]
 
-  [^0-d-mask-footnote]: In this example, `a == 0` is `array([False, False,
-      False])`, and `a[a == 0]` is an empty array of shape `(0,)`. The reason
-      this works is that the right-hand side of the assignment is a scalar,
-      i.e., NumPy casts it to an array of shape `()`. The shape `()`
-      broadcasts with the shape `(0,)` to the shape `(0,)`, and so this is
-      what gets assigned, i.e., "nothing" (of shape `(0,)`) gets assigned to
-      "nothing" (of matching shape `(0,)`).
+[^0-d-mask-footnote]: In this example, `a == 0` is `array([False, False,
+    False])`, and `a[a == 0]` is an empty array of shape `(0,)`. The reason
+    this works is that the right-hand side of the assignment is a scalar,
+    i.e., NumPy casts it to an array of shape `()`. The shape `()` broadcasts
+    with the shape `(0,)` to the shape `(0,)`, and so this is what gets
+    assigned, i.e., "nothing" (of shape `(0,)`) gets assigned to "nothing" (of
+    matching shape `(0,)`). This is one reason why [broadcasting
+    rules](broadcasting) apply even to dimensions of [size 0](size-0-arrays).
 
-  ```py
-  >>> a = np.asarray([1, 1, 2])
-  >>> a[a == 0] = -1
-  >>> a
-  array([1, 1, 2])
-  ```
+```py
+>>> a = np.asarray([1, 1, 2])
+>>> a[a == 0] = -1
+>>> a
+array([1, 1, 2])
+```
 
-  But even if `a` is a 0-D array, i.e., a single scalar value, we would expect
-  this sort of thing to still work, since, as we said, `a[a == 0] = -1` should
-  work for *any* array.
+But even if `a` is a 0-D array, i.e., a single scalar value, we would expect
+this sort of thing to still work, since, as we said, `a[a == 0] = -1` should
+work for *any* array. And indeed, it does:
 
-  ```py
-  >>> a = np.asarray(0)
-  >>> a.shape
-  ()
-  >>> a[a == 0] = -1
-  >>> a
-  array(-1)
-  ```
+```py
+>>> a = np.asarray(0)
+>>> a.shape
+()
+>>> a[a == 0] = -1
+>>> a
+array(-1)
+```
 
-  Consider what happened here. `a == 0` is the a 0-D array `array(True)`.
-  `a[True]` is a 1-D array containing the single True value corresponding to
-  the mask, i.e., `array([0])`.
+Consider what happened here. `a == 0` is the a 0-D array `array(True)`.
+`a[True]` is a 1-D array containing the single True value corresponding to
+the mask, i.e., `array([0])`.
 
-  ```py
-  >>> a = np.asarray(0)
-  >>> a[a == 0]
-  array([0])
-  ```
+```py
+>>> a = np.asarray(0)
+>>> a[a == 0]
+array([0])
+```
 
-  This then gets assigned the value `-1`, which as a scalar, gets broadcasted
-  to the entire array, thereby replacing this single `0` value with `-1`.
+This then gets assigned the value `-1`, which as a scalar, gets broadcasted
+to the entire array, thereby replacing this single `0` value with `-1`. The
+`0` in the masked array corresponds to the same `0` in memory as `a`, so the
+assignment mutates it to `-1`.
 
-  If our scalar was not `0`, so that `a == 0` is `array(False)`, then `a[a ==
-  0]` would be a 1-D array containing no values, i.e., a shape `(0,)` array:
+If our 0-D `a` was not `0`, then `a == 0` would be `array(False)`. Then `a[a ==
+0]` would be a 1-D array containing no values, i.e., a shape `(0,)` array:
 
-  ```py
-  >>> a = np.asarray(1)
-  >>> a[a == 0]
-  array([], dtype=int64)
-  >>> a[a == 0].shape
-  (0,)
-  ```
+```py
+>>> a = np.asarray(1)
+>>> a[a == 0]
+array([], dtype=int64)
+>>> a[a == 0].shape
+(0,)
+```
 
-  In this case, `a[a == 0] = -1` would assign `-1` to all the values in `a[a
-  == 0]`, which would be no values, so `a` would remain unchanged:
+In this case, `a[a == 0] = -1` would assign `-1` to all the values in `a[a
+== 0]`, which would be no values, so `a` would remain unchanged:
 
-  ```py
-  >>> a[a == 0] = -1
-  >>> a
-  array(1)
-  ```
+```py
+>>> a[a == 0] = -1
+>>> a
+array(1)
+```
 
-  The underlying logic works out so that `a[a == 0] = -1` always does what
-  you'd expect: every `0` value in `a` is replaced with `-1` **regardless** of
-  the shape of `a`.
+The point is that the underlying logic works out so that `a[a == 0] = -1`
+always does what you'd expect: every `0` value in `a` is replaced with `-1`
+**regardless** of the shape of `a`.
 
-  Scalar boolean indices can also be extra confusing if they are mixed with
-  other indices, but this is again just a special case of mixing boolean array
-  masks with other indices. Firstly, note that this is not nearly as common as
-  masking the entire array, as described above.
+Scalar boolean indices can also be extra confusing if they are mixed with
+other indices, but this is again just a special case of mixing boolean array
+masks with other indices. Firstly, note that this is not nearly as common as
+masking the entire array, as described above.
 
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
