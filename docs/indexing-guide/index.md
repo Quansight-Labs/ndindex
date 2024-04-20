@@ -97,26 +97,18 @@ same:
 
 So the following are always true about any index:
 
-- An index on an array always produces a new array with the same dtype (unless
-  it raises `IndexError`).
+- **An index on an array always produces a new array with the same dtype (unless
+  it raises `IndexError`).**
 
-- Each element of the new array corresponds to some element of the original
-  array.
+- **Each element of the new array corresponds to some element of the original
+  array.**
 
-- These elements are chosen by their position in the original array only.
-  Their values are irrelevant.
+- **These elements are chosen by their position in the original array only.
+  Their values are irrelevant.**
 
-- As such, the same index applied to any other array with the same shape will
+- **As such, the same index applied to any other array with the same shape will
   produce an array with the exact same resulting shape with elements in the
-  exact same corresponding places.
-
-To be sure, it is possible to *construct* indices that choose specific elements
-based on their values. A common example of this is masks (i.e., [boolean array
-indices](boolean-array-indices)), such as `a[a > 0]`, which selects all the
-elements of `a` that are greater than zero. However, the resulting index
-*itself* does not depend on values. `a > 0` is simply an array of booleans. It
-could be reused for any other array with the same shape as `a`, and it would
-select elements from the exact same positions.
+  exact same corresponding places.**
 
 The full range of valid indices allow generating more or less arbitrary new
 arrays whose elements come from the indexed array `a`. In practice, the most
@@ -124,7 +116,7 @@ commonly desired indexing operations are represented by the basic indices such
 as [integer indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
 
-## Overview of this Guide
+## Table of Contents
 
 This guide is split into four sections.
 
@@ -146,10 +138,9 @@ for NumPy arrays.
 
 Finally, a page on [other topics relevant to indexing](other-topics.md) covers
 a set of miscellaneous topics about NumPy arrays that are useful for
-understanding how indexing works, such as broadcasting, views, strides, and
-ordering.
-
-## Table of Contents
+understanding how indexing works, such as [broadcasting](broadcasting),
+[views](views-vs-copies), [strides](strides), and
+[ordering](c-vs-fortran-ordering).
 
 ```{toctree}
 :titlesonly:

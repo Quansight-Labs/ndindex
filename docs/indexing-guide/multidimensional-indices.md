@@ -1642,7 +1642,7 @@ array([[0, 1, 2],
        [6, 7, 8]])
 ```
 
-Suppose want to select the elements `1`, `3`, and `4`. To do so, we create a
+Suppose we want to select the elements `1`, `3`, and `4`. To do so, we create a
 boolean array of the same shape as `a` which is `True` in the positions where
 those elements are and `False` everywhere else.
 
@@ -1673,11 +1673,11 @@ an assignment.
 
 A typical use-case of boolean indexing is to create a boolean mask using the
 array itself with some operators that return boolean arrays, such as
-relational operators like as `==`, `>`, `!=`, and so on, logical operators
-like `&` (and), `|` (or), `~` (not), and `^` (xor), and certain functions like
-`isnan()` or `isinf()`.
+relational operators like `<`, `<=`, `==`, `>`, `>=`, and `!=`; logical
+operators like `&` (and), `|` (or), `~` (not), and `^` (xor); and boolean
+functions like `isnan()` or `isinf()`.
 
-For example, take an example array of the integers from -10 to 10
+Consider an array of the integers from -10 to 10:
 
 ```py
 >>> a = np.arange(-10, 11)
@@ -1687,8 +1687,8 @@ array([-10,  -9,  -8,  -7,  -6,  -5,  -4,  -3,  -2,  -1,   0,   1,   2,
 ```
 
 Say we want to select the elements of `a` that are both positive and odd. The
-boolean mask `a > 0` represents which elements are positive and the boolean
-mask `a % 2 == 1` represents which elements are odd. So our mask would be
+boolean array `a > 0` represents which elements are positive and the boolean
+array `a % 2 == 1` represents which elements are odd. So our mask would be
 
 ```py
 >>> mask = (a > 0) & (a % 2 == 1)
@@ -1700,7 +1700,7 @@ Masks must use the logical operators `&`, `|`, and `~` so that they can be
 arrays. They cannot use the Python keywords `and`, `or`, and `not` because
 they don't work on arrays.
 
-The `mask` is just an array of booleans:
+Our `mask` is just an array of booleans:
 
 ```py
 >>> mask
@@ -1738,8 +1738,8 @@ array([ -10,   -9,   -8,   -7,   -6,   -5,   -4,   -3,   -2,   -1,    0,
        -100,    2, -100,    4, -100,    6, -100,    8, -100,   10])
 ```
 
-One common use-case of this is to mask out `nan` entries with a finite number,
-like `0`:
+One common use-case of this sort of thing is to mask out `nan` entries with a
+finite number, like `0`:
 
 ```
 >>> a = np.linspace(-5, 5, 10)
@@ -1767,9 +1767,9 @@ indexing, as with [all other types of indexing](what-is-an-index),
 does not depend on the values of the array, only in the positions of its
 elements.**
 
-This point might feel overly pedantic, but it matters once you realize that a
-mask created with one array can be used on another array, so long as it has
-the same shape. It's common to have multiple arrays representing different
+This distinction might feel overly pedantic, but it matters once you realize
+that a mask created with one array can be used on another array, so long as it
+has the same shape. It's common to have multiple arrays representing different
 data about the same set of points. You may wish to select a subset of one
 array based on the value of the corresponding point in another array.
 
@@ -1949,7 +1949,27 @@ What this all means is that all the rules that are outlined above about
 [integer array indices](integer-array-indices), e.g., how they broadcast or
 combine together with slices, all also apply to boolean array indices after
 this transformation. This also specifies how boolean array indices and
-integer array indices combine together.
+integer array indices combine
+together.[^combining-integer-and-boolean-indices-footnote]
+
+[^combining-integer-and-boolean-indices-footnote]: Combining an integer array
+    and boolean array index together is not common, as the shape of the
+    integer array index would have to be broadcast compatible with the number
+    of `True` elements in the boolean array.
+
+    ```py
+    >>> a = np.arange(10).reshape((2, 5))
+    >>> a[np.array([0, 1, 0]), np.array([True, False, True, True, False])]
+    array([0, 7, 3])
+    >>> a[np.array([0, 1, 0]), np.array([True, False, True, True, True])]
+    Traceback (most recent call last):
+    ...
+    IndexError: shape mismatch: indexing arrays could not be broadcast together with shapes (3,) (4,)
+    ```
+
+    It's not impossible it could come up in practice, but like many of the
+    advanced indexing semantics, it's mostly supported for the sake of
+    completeness.
 
 Effectively, a boolean array index can be combined with other boolean array
 indices or integer or integer array indices by first converting the boolean
@@ -1985,7 +2005,7 @@ matrices. NumPy functions like the `@` matmul operator will automatically
 operate on the last two dimensions of an array.
 
 So how does this relate to using a boolean array index to select only a
-subset of the array dimensions. Well we might want to use a boolean index to
+subset of the array dimensions? Well we might want to use a boolean index to
 only select along the inner "subarray" dimensions, and pretend like the
 outer "batching" dimensions are our "array". TODO
 
@@ -2166,7 +2186,7 @@ array(1)
 
 The point is that the underlying logic works out so that `a[a == 0] = -1`
 always does what you'd expect: every `0` value in `a` is replaced with `-1`
-**regardless** of the shape of `a`.
+*regardless* of the shape of `a`.
 
 <!-- TODO: Write something about mixing scalar booleans with other boolean -->
 <!-- array indices -->
