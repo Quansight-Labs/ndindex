@@ -133,7 +133,9 @@ of these lists at each level are called the *shape* of the array (remember
 that the lists at each level have to have the same number of elements).
 
 [^rank-footnote]: Not to be confused with [mathematical definitions of
-    rank](https://en.wikipedia.org/wiki/Rank_(linear_algebra)).
+    rank](https://en.wikipedia.org/wiki/Rank_(linear_algebra)). Because of
+    this ambiguity, the term "dimensionality" or "number of dimensions" is
+    generally preferred to "rank", and is what we use in this guide.
 
 A NumPy array of our scores (using the last representation) looks like this
 
