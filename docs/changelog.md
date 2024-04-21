@@ -153,6 +153,7 @@
 ### Major Changes
 
 - ndindex now has a logo: ![ndindex logo](_static/ndindex_logo_white_bg.svg)
+
   Thanks to [Irina Fumarel](mailto:ifumarel@quansight.com) for the logo design.
 
 - Improve {any}`ChunkSize.as_subchunks()` to never use the slow fallback
