@@ -48,4 +48,3 @@ slices.md
 multidimensional-indices.md
 other-topics.md
 ```
-## Footnotes

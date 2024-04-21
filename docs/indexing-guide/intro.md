@@ -99,3 +99,5 @@ arrays whose elements come from the indexed array `a`. In practice, the most
 commonly desired indexing operations are represented by the basic indices such
 as [integer indices](integer-indices), [slices](slices-docs), and
 [ellipses](ellipsis-indices).
+
+## Footnotes
