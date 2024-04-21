@@ -1,6 +1,6 @@
 # Multidimensional Indices
 
-TODO: Replace bullet points in this document with subsections.
+TODO: Split this into multiple pages?
 
 Unlike [slices](slices-docs) and [integers](integer-indices), which work not
 only on NumPy arrays but also on built-in Python sequence types such as
