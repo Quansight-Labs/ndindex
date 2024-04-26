@@ -2,21 +2,23 @@
 
 TODO: Split this into multiple pages?
 
-Unlike [slices](slices-docs) and [integers](integer-indices), which work not
-only on NumPy arrays but also on built-in Python sequence types such as
+Unlike [slices](slices-docs) and [integers](integer-indices), which not only
+work on NumPy arrays but also on built-in Python sequence types such as
 `list`, `tuple`, and `str`, the remaining index types do not work at all on
-non-NumPy arrays. If you try to use one of the index types described on this
-page on a `list`, for example, you will get an `IndexError`. The semantics of
-these indices are defined by the NumPy library, not the Python language.
+non-NumPy arrays. For example, if you try to use one of the index types
+described on this page on a `list`, you will get an `IndexError` The
+semantics of these indices are defined by the NumPy library, not the Python
+language.
 
 (what-is-an-array)=
 ## What is an array?
 
 Before we look at indices, let's take a step back and look at the NumPy array.
-Just what is it that makes NumPy arrays so ubiquitous and makes NumPy one of
-the most successful numerical tools ever? The answer is quite a few things,
-which come together to make NumPy a fast and easy to use library for array
-computations. But one in particular is multidimensional indexing.
+Just what is it that makes NumPy arrays so ubiquitous and NumPy one of the
+most successful numerical tools ever? The answer is quite a few things, which
+come together to make NumPy a fast and easy to use library for array
+computations. But one feature in particular stands out: multidimensional
+indexing.
 
 Let's consider pure Python for a second. Suppose we have a list of values, for
 example, a list of your bowling scores.
@@ -36,7 +38,7 @@ it.
 [71, 80, 73]
 ```
 
-One can imagine all different sorts of things you'd want to do with your
+You can imagine all sorts of different things you'd want to do with your
 scores that might involve selecting individual scores or ranges of scores (for
 example, with the above examples, we could easily compute the average score of
 our last three games, and see how it compares to our first game). So hopefully
@@ -48,8 +50,8 @@ and wants you to add his scores as well. He bowls with you, so his scores
 correspond to the same games as yours. You could make a new list,
 `bob_scores`, but this means storing a new variable. You've got a feeling you
 are going to end up keeping track of a lot of people's scores. So instead, you
-change your `scores` list to a list of lists. The first
-inner list is your scores, and the second will be Bob's:
+change your `scores` list into a list of lists. The first inner list is your
+scores, and the second will be Bob's:
 
 ```py
 >>> scores = [[70, 65, 71, 80, 73], [100, 93, 111, 104, 113]]
@@ -114,14 +116,15 @@ be lists. For example, `l = [1, [2, 3]]` is a perfectly valid Python `list`, but
 the expression `[i[0] for i in l]` is invalid, because not every element
 of `l` is a list.
 
-NumPy arrays work like a list of lists, but restricted so that these kinds of
-things always "make sense". More specifically, if you have a "list of lists",
-each element of the "outer list" must be a list. `[1, [2, 3]]` is not a valid
-NumPy array. Furthermore, each inner list must have the same length, or more
-precisely, the lists at each level of nesting must have the same length.
+NumPy arrays function like a list of lists, but are restricted so that these
+kinds of operations always "make sense". More specifically, if you have a
+"list of lists", each element of the "outer list" must be a list. `[1, [2,
+3]]` is not a valid NumPy array. Furthermore, each inner list must have the
+same length, or more precisely, the lists at each level of nesting must have
+the same length.
 
-Lists of lists can be nested more than just two times. For example, you might
-want to take your scores and create a new outer list, splitting them by
+Lists of lists can be nested more than just two levels deep. For example, you
+might want to take your scores and create a new outer list, splitting them by
 season. Then you would have a list of lists of lists, and your indexing
 operations would look like `[[game[0] for game in season] for season in
 scores]`.
@@ -161,8 +164,8 @@ we can simply use
 array([70, 65, 71, 80, 73])
 ```
 
-The index contains two elements, the slice `:` and the integer index `0`. The
-slice `:` says to take everything from the first axis (which represents
+This index contains two components: the slice `:` and the integer index `0`.
+The slice `:` says to take everything from the first axis (which represents
 games), and the integer index `0` says to take the first element of the second
 axis (which represents people).
 
@@ -180,16 +183,16 @@ lists or lists of lists..., we can index things at any "nesting level" equally
 easily. There is a small reasonable restriction, namely that each "level" of
 lists (axis) must have the same number of elements. This restriction is
 reasonable because in the real world, data tends to be tabular, like bowling
-scores, meaning each axis will naturally have the same number of elements (and
-even if this weren't the case, for instance, if Bob was out sick for a game,
-we could easily use a sentinel value like `-1` or `nan` for a missing value so
-that everything stayed the same length).
+scores, meaning each axis will naturally have the same number of elements.
+Even if this weren't the case, for instance, if Bob were out sick for a game,
+we could easily use a sentinel value like `-1` or `nan` for a missing value to
+maintain uniform lengths.
 
 The indexing semantics are only a small part of what makes NumPy arrays so
-powerful. They have many other advantages as well, which are unrelated to
-indexing. They operate on contiguous memory using native machine datatypes,
-which makes them very fast. They can be manipulated using array expressions
-with [broadcasting semantics](broadcasting); for example, you can easily add a
+powerful. They also have many other advantages that are unrelated to indexing.
+They operate on contiguous memory using native machine data types, which makes
+them very fast. They can be manipulated using array expressions with
+[broadcasting semantics](broadcasting); for example, you can easily add a
 handicap to the scores array with something like `scores + np.array([124,
 95])`, which would itself be a nightmare using the list of lists
 representation. This, along with the powerful ecosystem of libraries like
@@ -199,7 +202,7 @@ a popular and essential tool.
 (basic-indices)=
 ## Basic Multidimensional Indices
 
-First let's look at the basic multidimensional indices ("basic" as opposed to
+First, let's look at the basic multidimensional indices ("basic" as opposed to
 ["advanced" indices](advanced-indices), which are discussed below). We've
 already learned about [integers](integer-indices) and [slices](slices), but
 there are three others:  [tuples](tuple-indices),
@@ -211,9 +214,12 @@ there are three others:  [tuples](tuple-indices),
 The basic building block of multidimensional indexing is the `tuple` index. A
 tuple index doesn't select elements on its own. Rather, it contains other
 indices, which themselves select elements. The general rule for tuples is that
-**each element of a tuple index selects the corresponding elements for the
-corresponding axis of the array** (this rule is modified a little bit in the
-presence of ellipses or newaxis, as we will see below).
+
+> **each element of a tuple index selects the corresponding elements for the
+  corresponding axis of the array**
+
+(this rule is modified a little bit in the presence of ellipses or newaxis, as
+we will see below).
 
 For example, let's suppose we have the 3-dimensional array `a` with shape `(3,
 2, 4)`. For simplicity, we'll define `a` as a reshaped `arange`, so that each
@@ -245,7 +251,7 @@ array([[[16, 17, 18, 19],
 ```
 
 We also see that integer indices remove the axis, and slices keep the axis
-(even when the resulting axis has shape 1):
+(even when the resulting axis has size 1):
 
 ```py
 >>> a[0].shape
@@ -254,12 +260,12 @@ We also see that integer indices remove the axis, and slices keep the axis
 (1, 2, 4)
 ```
 
-A tuple index indices the corresponding element of the corresponding axis. So
-for example, the index `(1, 0, 2)` grabs the element in the second element of
-the first axis, the first element of the second axis, and the third element of
-the third axis (remember that indexing is 0-based, so index `0` corresponds to
-the first element, index `1` to the second, and so on). Looking at the list of
-lists representation of `a` that was printed by NumPy:
+A tuple index indexes the corresponding element of the corresponding axis. So
+for example, the index `(1, 0, 2)` selects the second element of the first
+axis, the first element of the second axis, and the third element of the third
+axis (remember that indexing is 0-based, so index `0` corresponds to the first
+element, index `1` to the second, and so on). Looking at the list of lists
+representation of `a` that was printed by NumPy:
 
 ```py
 >>> a
