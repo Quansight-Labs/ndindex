@@ -2300,19 +2300,19 @@ rules themselves. But I want to take a moment to give my views on them. I have
 worked with slice objects quite a bit in building ndindex, as well as just
 general usage with Python and NumPy.
 
-Python's slice syntax is, without a doubt, extremely expressive, and has a
-straightforward and simple syntax. However, simply put, the semantic rules for
-slices are completely bonkers. They lend themselves to several invalid
-interpretations, which I have outlined above, which seem valid at first glance
-but fall apart in corner cases. The "correct" ways to think about slices are
-very particular. I have tried to [outline](rules) them carefully, but one gets
-the impression that unless one works with slices regularly, it will be hard to
+Without a doubt, Python's slice syntax is extremely expressive and
+straightforward. However, simply put, the semantic rules for slices are
+completely bonkers. They lend themselves to several invalid interpretations,
+which I have outlined above, and which seem valid at first glance but fall
+apart in corner cases. The "correct" ways to think about slices are very
+particular. I have tried to [outline](rules) them carefully, but one gets the
+impression that unless one works with slices regularly, it will be hard to
 remember the "right" ways and not fallback to thinking about the "wrong" ways,
 or, as most Python programmers probably do, simply "guessing and checking" and
 probably not correctly handling corner cases.
 
 Furthermore, the discontinuous nature of the `start` and `stop` parameters not
-only makes it hard to remember how slices work, but it makes it *extremely*
+only makes it hard to remember how slices work but it also makes it *extremely*
 hard to write slice arithmetic (i.e., for anyone implementing ` __getitem__`
 or `__setitem__` that accepts slices matching the standard semantics). The
 arithmetic is already hard enough due to the modular nature of `step`, but the
@@ -2337,10 +2337,10 @@ focused on making the logic correct, and less on making it elegant. I welcome
 any pull requests that simplifies the logic of a function. The extensive
 [testing](testing) should ensure that any rewritten function remains correct.
 
-It is my opinion that Python's slicing semantics could be just as expressive,
-but much less confusing and difficult to work with, both for end-users of
-slices and people writing slice arithmetic (a typical user of ndindex). The
-changes I would make to improve the semantics would be
+I believe that Python's slicing semantics could remain just as expressive
+while being less confusing and easier to work with for both end-users and
+developers writing slice arithmetic (a typical user of ndindex). The changes I
+would make to improve the semantics would be
 
 1. Remove the special meaning of negative numbers.
 2. Use 1-based indexing instead of 0-based indexing.
@@ -2350,22 +2350,22 @@ changes I would make to improve the semantics would be
 
 1. **Negative numbers.** The special meaning of negative numbers, to index
    from the end of the list, is by far the biggest problem with Python's slice
-   semantics. It is a fundamental discontinuity in the definition of an index.
-   This makes it completely impossible to write a formula for almost anything
-   relating to slices that will not end up having branching `if` conditions.
-   But the problem isn't just for code that manipulates slices. The [example
-   above](negative-indices-example) shows how negative indices can easily lead
-   to bugs in end-user code. Effectively, any time you have a slice `a[i:j]`,
-   if `i` and `j` are nontrivial expressions, they must be checked to ensure
-   they do not go negative. If they can be both negative and nonnegative, it
-   is virtually never the case that the slice will give you what you want in
-   both cases. This is because the discontinuity inherent in the definition of
-   [negative indexing](negative-indices) disagrees with the concept of
-   [clipping](clipping). `a[i:j]` will slice "as far as it can" if `j` is "too
-   big" (greater than `len(a)`), but it does something completely different if
-   `i` is "too small" as soon as "too small" means "negative". Clipping is a
-   good idea. It tends to lead to behavior that gives what you would want for
-   slices that go out of bounds.
+   semantics. It introduces a fundamental discontinuity to the definition of
+   an index. This makes it completely impossible to write a formula for almost
+   anything relating to slices that will not end up having branching `if`
+   conditions. But the problem isn't just for code that manipulates slices.
+   The [example above](negative-indices-example) shows how negative indices
+   can easily lead to bugs in end-user code. Effectively, any time you have a
+   slice `a[i:j]`, if `i` and `j` are nontrivial expressions, they must be
+   checked to ensure they do not go negative. If they can be both negative and
+   nonnegative, it is virtually never the case that the slice will give you
+   what you want in both cases. This is because the discontinuity inherent in
+   the definition of [negative indexing](negative-indices) disagrees with the
+   concept of [clipping](clipping). `a[i:j]` will slice "as far as it can" if
+   `j` is "too big" (greater than `len(a)`), but it does something completely
+   different if `i` is "too small" as soon as "too small" means "negative".
+   Clipping is a good idea. It tends to lead to behavior that gives what you
+   would want for slices that go out-of-bounds.
 
    Negative indexing is, strictly speaking, a syntactic sugar only.
    Slicing/indexing from the end of a list can always be done in terms of the
@@ -2386,14 +2386,13 @@ changes I would make to improve the semantics would be
    good syntax (again, I think Python slicing has good *syntax*. I only take
    issue with some of its *semantics*).
 
-2. **0-based vs. 1-based indexing.** The second point, on using 1-based
-   indexing instead of 0-based indexing, will likely be the most
-   controversial. For many people reading this, the notion that 0-based
-   indexing is superior has been preached as irreproachable gospel. I
-   encourage you to open your mind and try to unlearn what you have been
-   taught and take a fresh view of the matter. (Or don't. These are just my
-   opinions after all, and none of it changes the fact that Python is what it
-   is and isn't going to change.)
+2. **0-based vs. 1-based indexing.** The suggestion to switch from 0-based to
+   1-based indexing is likely to be the most controversial. For many people
+   reading this, the notion that 0-based indexing is superior has been
+   preached as irreproachable gospel. I encourage you to open your mind and
+   try to unlearn what you have been taught and take a fresh view of the
+   matter. (Or don't. These are just my opinions after all, and none of it
+   changes the fact that Python is what it is and isn't going to change.)
 
    0-based indexing certainly has its uses. In C, where an index is literally
    a syntactic macro for adding two pointers, 0-based indexing makes sense,
@@ -2414,7 +2413,7 @@ changes I would make to improve the semantics would be
    learn new base number systems like base-2 and base-16 when doing certain
    kinds of programming.
 
-   But for Python, what truly is the benefit of counting starting at 0? The
+   But for Python, what are the true benefits of counting starting at 0? The
    main benefit is that the implementation is easier, because Python is itself
    written in C, which uses 0-based indexing, so Python does not need to
    handle shifting in the translation. But this has never been a valid
@@ -2436,7 +2435,7 @@ changes I would make to improve the semantics would be
    Even experienced programmers of languages like Python that use 0-based
    indexing must occasionally stop themselves from writing something like
    `a[3]` instead of `a[2]` to get the third element of `a`. It is very
-   difficult to "unlearn" 1-based counting," which was not only the first way
+   difficult to "unlearn" 1-based counting, which was not only the first way
    that you learned to count, but is also the way that you and everyone else
    around you continues to count outside of programming contexts.
 
