@@ -16,7 +16,8 @@ times.
 Normally, when we perform an operation on two arrays with the same shape, it
 does what we'd expect, i.e., the operation is applied to each corresponding
 element of each array. For example, if `x` and `y` are both `(2, 2)` arrays,
-then `x + y` is a `(2, 2)` array with the sum of the corresonding elements.
+`x + y` results in a `(2, 2)` array with the sum of the corresponding
+elements.
 
 ```py
 >>> import numpy as np
@@ -31,7 +32,7 @@ array([[102, 104],
 
 However, you may have noticed that `x` and `y` doesn't always have to be two
 arrays with the same shape. For example, you can add a single scalar element
-to and array, and it will add it to each element.
+to an array, and it will add it to each element.
 
 ```py
 >>> a + 1
@@ -74,14 +75,14 @@ array([[0, 2],
        [0, 2]])
 ```
 
-This is what the array `y` looks like before it is combined with `x`. Except
+This is what the array `y` looks like before it is combined with `x`, except
 the power of broadcasting is that the repeated entries are not literally
 repeated in memory. Broadcasting is implemented efficiently so that the
-"repeated" elements actually refer to the same objects in memory (see
-[](views-vs-copies) and [](strides) below).
+"repeated" elements actually refer to the same objects in memory. See
+[](views-vs-copies) and [](strides) below.
 
 Broadcasting always happens automatically in NumPy whenever two arrays with
-different shapes are combined with any function or operator, assuming those
+different shapes are combined using any function or operator, assuming those
 shapes are broadcast compatible. The rule for broadcast compatibility is that
 the shorter of the shapes are prepended with length 1 dimensions so that they
 have the same number of dimensions. Then any dimensions that are size 1 in a
@@ -92,9 +93,9 @@ In the above example, we broadcast `(3, 2)` with `(2,)` by first extending
 `(2,)` to `(1, 2)` then broadcasting the size `1` dimension to the
 corresponding size in the other shape, `3`, giving a broadcasted shape of `(3,
 2)`. In more advanced examples, both shapes may have broadcasted dimensions.
-For instance, `(3, 1)` can broadcast with `(2,)` giving `(3, 2)`. The first
-shape would repeat the first axis 2 times along the second axis, and the
-second would insert a new axis in the beginning that would repeat 3 times.
+For instance, `(3, 1)` can broadcast with `(2,)` to create `(3, 2)`. The first
+shape repeats the first axis 2 times along the second axis, while the second
+shape inserts a new axis at the beginning that repeats 3 times.
 
 We can think of `(3, 2)` as a "stack" of 3 shape `(2,)` arrays. Just as the
 scalar 1 got repeated to match the full shape of `a` above, the shape `(2,)`
@@ -115,16 +116,16 @@ more examples of broadcasting.
 (views-vs-copies)=
 ## Views vs. Copies
 
-There is a distinction between basic indices (i.e.,
+There is an important distinction between basic indices (i.e.,
 [integers](integer-indices), [slices](slices-docs),
 [ellipses](ellipsis-indices), [newaxis](newaxis-indices)) and [advanced
 indices](advanced-indices) (i.e., [integer array
 indices](integer-array-indices) and [boolean array
-indices](boolean-array-indices)) in NumPy that is important to make note of in
-some situations. Namely, the basic indices will always create a **view** into
-an array[^view-scalar-footnote], whereas the advanced indices will always
-create a **copy** of the underlying array. [Tuple](tuple-indices) indices
-(i.e., multidimensional indices) will create a view if they do not contain an
+indices](boolean-array-indices)) in NumPy that must be noted in some
+situations. Specifically, basic indices always create a **view** into an
+array[^view-scalar-footnote], while advanced indices always create a **copy**
+of the underlying array. [Tuple](tuple-indices) indices (i.e.,
+multidimensional indices) will create a view if they do not contain an
 advanced index and a copy if they do.
 
 
@@ -205,8 +206,8 @@ array([-1, 2, 3])
 array([0, 2, 3])
 ```
 
-Views don't just come from indexing. For instance you reshape an array, that will
-also create a view.
+Views don't just come from indexing. For instance, when you reshape an array,
+that also creates a view.
 
 ```py
 >>> a = np.arange(24)
@@ -239,9 +240,9 @@ and
     always possible to represent a reshape as a [strides](strides)
     manipulation if the strides are already non-contiguous.
 
-To check if an array is a view, check `a.base`. It will be `None` if it not a
-view and point to the base array otherwise. A view of a view will have the
-same base as the original.
+To check if an array is a view, check `a.base`. It will be `None` if it is not
+a view and will point to the base array otherwise. A view of a view will have
+the same base as the original array.
 
 ```py
 >>> a = np.arange(24)
@@ -255,8 +256,8 @@ True
 True
 ```
 
-To contrast, an advanced index will always create a copy (even if it would be
-possible to represent it with a view). This includes any [tuple
+In contrast, an advanced index will always create a copy (even if it would be
+possible to represent it as a view). This includes any [tuple
 index](tuple-indices) (i.e., multidimensional index) that contains at least
 one array index.
 
