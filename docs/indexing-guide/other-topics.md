@@ -317,13 +317,13 @@ Whether an array is a view or a copy matters for two reasons:
 (strides)=
 ## Strides
 
-The reason so many types of indexing into arrays are able to be a
-[view](views-vs-copies) without a copy is that NumPy arrays aren't just a
-pointer to a blob of memory. They are a pointer along with something called
-*strides*. The strides tell NumPy how many bytes to skip in memory along
-each axis to get to the next element of the array along that dimension. This
-along with the *memory offset* (the address in physical memory of the first
-byte of data), the *shape*, and the *itemsize* (the number of bytes each
+The reason so many types of indexing into arrays can be represented as a
+[view](views-vs-copies) without creating a copy is that NumPy arrays aren't
+merely a pointer to a blob of memory. They are a pointer along with something
+called *strides*. The strides tell NumPy how many bytes to skip in memory
+along each axis to get to the next element of the array along that dimension.
+This along with the *memory offset* (the address in physical memory of the
+first byte of data), the *shape*, and the *itemsize* (the number of bytes each
 element takes up, which depends on the *dtype*) exactly determines how the
 corresponding memory is organized into an array. For example, let's start with
 a flat 1-dimensional array with `24` elements whose itemsize is 8 (an `int64`
@@ -363,19 +363,18 @@ array([[[ 0,  1,  2,  3],
 (3, 2, 4)
 ```
 
-This tells NumPy that along to get the next element in the first dimension of
-`b`, it needs to skip 64 bytes. That's because the first dimension contains
-2\*4=8 items each, corresponding to the sizes of the second and third
-dimensions, and each item is 8 bytes, so 8\*8=64. For example, the next
-element in the first dimension after `0` (index `(0, 0, 0)`) is `8` (index
-`(1, 0, 0)`), which sits exactly 64 bytes after it in memory. Similarly, to
-get the next element in the second dimension, it should skip 32 bytes (4
-elements).
+This tells NumPy that to get the next element in the first dimension of `b`,
+it needs to skip 64 bytes. That's because the first dimension contains 2\*4=8
+items each, corresponding to the sizes of the second and third dimensions, and
+each item is 8 bytes, so 8\*8=64. For example, the next element in the first
+dimension after `0` (index `(0, 0, 0)`) is `8` (index `(1, 0, 0)`), which sits
+exactly 64 bytes after it in memory. Similarly, to get the next element in the
+second dimension, it should skip 32 bytes (4 elements).
 
-The memory offset of an array can be accessed with `a.ctypes.data`. This is
-the address in physical memory where the data (`0 1 2 ... 23`) lives. `a` and
-`b` have the same memory offset because they both start with the same first
-element:
+The memory offset of an array can be accessed using `a.ctypes.data`. This is
+the address in physical memory where the data (`0 1 2 ... 23`) lives. `a`
+and `b` have the same memory offset because they both start with the same
+first element:
 
 ```py
 >>> a.ctypes.data # doctest: +SKIP
@@ -482,9 +481,9 @@ True
 True
 ```
 
-If you've ever used `broadcast_to()`, you might have noticed that the array
-returned by it is read-only. That's because writing into it would not do what
-you'd expect, since the repeated elements literally refer to the same memory.
+If you've ever used `broadcast_to()`, you might have noticed that it returns a
+read-only array. That's because writing into it would not do what you'd
+expect, since the repeated elements literally refer to the same memory.
 
 This shows why [broadcasting](broadcasting) is so powerful: it can be done
 without any actual copy of the data. When you perform an operation on two
