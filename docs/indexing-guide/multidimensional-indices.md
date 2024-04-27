@@ -621,14 +621,14 @@ other words,
 
 Now that we understand how [tuple indices](tuple-indices) work, the remaining
 basic index types are relatively straightforward. The first type of index we
-will look at is the ellipsis. An ellipsis is written as literally three dots,
+will look at is the ellipsis. An ellipsis is written as literally three dots:
 `...`.[^ellipsis-footnote]
 
 [^ellipsis-footnote]: You can also write out the word `Ellipsis`, but this is
     discouraged. In older versions of Python, the three dots `...` were not
     valid syntax outside of the square brackets of an index, but as of Python
-    3, `...` is valid anywhere, so it is unnecessary to use the spelled out
-    `Ellipsis` an any context. The only reason I mention this is that if you
+    3, `...` is valid anywhere, making it unnecessary to use the spelled out
+    `Ellipsis` in any context. The only reason I mention this is that if you
     type `...` at the interpreter, it will print "Ellipsis", and this explains
     why.
 
@@ -665,13 +665,12 @@ array([[ 0,  4],
        [16, 20]])
 ```
 
-However, this is only actually correct for our specific array, because we know
-that it has 3 dimensions. If it instead of 5 dimensions, we would need to
-instead use `a[:, :, :, :, 0]`. This is not only tedious to type, but it makes
-it impossible to write our index in a way that works for any number of
-dimensions. To contrast, if we wanted the first element of the *first* axis,
-we could write `a[0]`, which works if `a` has 3 dimensions or 5 dimensions or
-any number of dimensions.
+However, this index only works for our specific array, because it has 3
+dimensions. If it had 5 dimensions instead, we would need to use `a[:, :, :,
+:, 0]`. This is not only tedious to type, but also makes it impossible to
+write an index that works for any number of dimensions. To contrast, if we
+wanted the first element of the *first* axis, we could write `a[0]`, which
+works if `a` has 3 dimensions or 5 dimensions or any number of dimensions.
 
 The ellipsis solves this problem. An ellipsis index skips all the axes of an
 array to the end, so that the indices after it select the last axes of the
@@ -684,20 +683,19 @@ array([[ 0,  4],
        [16, 20]])
 ```
 
-You are also allowed to put indices before the ellipsis. The indices before
-the ellipsis will select the first axes of the array, and the indices after it
-will select the last axes. The ellipsis automatically skips all intermediate
-axes. For example, to select the first element of the first axis and the last
-element of the last axis, we could use
+You can also place indices before the ellipsis. The indices before the
+ellipsis will select the first axes of the array, and the indices after it
+will select the last axes. The ellipsis automatically skips all the
+intermediate axes. For example, to select the first element of the first axis
+and the last element of the last axis, we could use
 
 ```py
 >>> a[0, ..., -1]
 array([3, 7])
 ```
 
-An ellipsis is also allowed to skip zero axes, if all the axes of the array
-are already accounted for. For example, these are the same because `a` has 3
-dimensions:
+An ellipsis can also skip zero axes if all the axes of the array are already
+accounted for. For example, these are the same because `a` has 3 dimensions:
 
 ```py
 >>> a[1, 0:2, 2]
@@ -706,13 +704,13 @@ array([10, 14])
 array([10, 14])
 ```
 
-And indeed, the index `1, 0:2, ..., 2` will work with any array with *at
-least* 3 dimensions (assuming of course that the first dimension is at least
-size `2` and the last dimension is at least size `3`).
+Indeed, the index `1, 0:2, ..., 2` will work with any array that has *at
+least* three dimensions (assuming of course that the first dimension is at
+least size `2` and the last dimension is at least size `3`).
 
 Above, we saw that a tuple index implicitly ends in some number of trivial `:`
-slices. We can also see here that a tuple index also always implicitly ends in
-an ellipsis, which serves the exact same purpose. In other words:
+slices. We can also see here that a tuple index always implicitly ends with an
+ellipsis, serving the same purpose. In other words:
 
 > **An ellipsis automatically serves as a stand-in for the "correct" number of
 trivial `:` slices to select the intermediate axes of an array**.
@@ -757,7 +755,7 @@ In summary, the rules for an ellipsis index are
 - **Every tuple index that does not have an ellipsis in it implicitly ends in
   `...`.**
 
-- **At most `...` is allowed in a tuple index.**
+- **At most one `...` is allowed in a tuple index.**
 
 (newaxis-indices)=
 ### newaxis
