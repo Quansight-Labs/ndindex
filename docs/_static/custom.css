@@ -379,3 +379,10 @@ html {
     background-color: var(--color-highlight-on-target);
     color: var(--color-foreground-primary);
 }
+
+/* Work around footnote indentation issue. This can be deleted when
+   https://github.com/pradyunsg/furo/pull/788 is merged. */
+
+aside.footnote>:not(span) {
+    margin-left: 2rem;
+}
