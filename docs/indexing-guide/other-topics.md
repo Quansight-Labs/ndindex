@@ -507,7 +507,7 @@ docs](https://numpy.org/doc/stable/reference/generated/numpy.lib.stride_tricks.a
 ## C vs. Fortran Ordering
 
 NumPy has an internal distinction between C order and Fortran
-order.[^c-order-footnote] C ordered arrays are stored in memory so that the
+order.[^c-order-footnote] C-ordered arrays are stored in memory such that the
 last axis varies the fastest. For example, if `a` has 3 dimensions, then its
 elements are stored in memory like `a[0, 0, 0], a[0, 0, 1], a[0, 0, 2], ...,
 a[0, 1, 0], a[0, 1, 1], ...`. Fortran ordering is the opposite: the elements
@@ -587,14 +587,14 @@ increase, because a smaller stride corresponds to "faster varying".
 ~~~~
 
 **What ordering *does* affect is the performance of certain operations.** In
-particular, the ordering affects whether it is more optimal to index along the
-first axis or last axis of an array. For example, `a[0]` selects the first
+particular, the ordering determines whether it is more optimal to index along
+the first or last axes of an array. For example, `a[0]` selects the first
 subarray along the first axis (recall that `a[0]` is a [view](views-vs-copies)
-into `a`, so it references the exact same memory as `a`). For a C ordered
+into `a`, so it references the exact same memory as `a`). For a C-ordered
 array, which is the default, this subarray is contiguous in memory. This is
 because the indices on the last axes vary the fastest (i.e., are next to each
 other in memory), so selecting a subarray of the first axis picks elements
-which are still contiguous. Conversely, for a Fortran ordered array, `a[0]` is
+which are still contiguous. Conversely, for a Fortran-ordered array, `a[0]` is
 not contiguous, but `a[..., 0]` is.
 
 ```
@@ -606,13 +606,13 @@ False
 True
 ```
 
-Operating on memory that is contiguous allows the CPU to place the entire
-memory in the cache at once, and as a result is more performant. The
-performance difference won't be noticeable for our small example `a` above,
-which is small enough to fit in cache entirely, but it matters for larger
-arrays. Compare the time to sum along `a[0]` or `a[..., 0]` for C and Fortran
-ordered arrays for a 3-dimensional array with a million elements (using
-[IPython](https://ipython.org/)'s `%timeit`):
+Operating on contiguous memory allows the CPU to place the entire memory block
+in the cache at once, and is more performant as a result. The performance
+difference won't be noticeable for our small example `a` above, as it is small
+enough to fit entirely in the cache, but it becomes significant for larger
+arrays. Compare the time to sum along `a[0]` or `a[..., 0]` for C- and
+Fortran-ordered arrays for a 3-dimensional array with a million elements
+(using [IPython](https://ipython.org/)'s `%timeit`):
 
 ```
 In [1]: import numpy as np
@@ -637,19 +637,18 @@ In [7]: %timeit np.sum(a_f[..., 0])
 Summing along contiguous memory (`a[0]` for C ordering and `a[..., 0]` for
 Fortran ordering) is about 3x faster.
 
-NumPy indexing semantics tend to favor thinking about arrays using the C
-order, as one does not need to use an ellipsis to select contiguous subarrays.
-C ordering also matches the [list-of-lists intuition](what-is-an-array) of an
-array, since an array like `[[0, 1], [2, 3]]` is stored in memory as literally
-`0, 1, 2, 3` with C ordering. It also aligns well with NumPy's
-[broadcasting](broadcasting) rules, where broadcasted dimensions are prepended
-by default, allowing one to think of an array as a "stack" of contiguous
-subarrays.
+NumPy indexing semantics generally favor using the C order, as it does not
+require an ellipsis to select contiguous subarrays. C ordering also matches
+the [list-of-lists intuition](what-is-an-array) of an array, since an array
+like `[[0, 1], [2, 3]]` is stored in memory as literally `0, 1, 2, 3` with C
+ordering. It also aligns well with NumPy's [broadcasting](broadcasting) rules,
+where broadcasted dimensions are prepended by default, allowing one to think
+of an array as a "stack" of contiguous subarrays.
 
 C ordering is the default in NumPy when creating arrays with functions like
 `asarray`, `ones`, `arange`, and so on. One typically only switches to
 Fortran ordering when calling certain Fortran codes, or when creating an
-array from another memory source that produces Fortran ordered data.
+array from another memory source that produces Fortran-ordered data.
 
 Regardless of which ordering you are using, it is worth structuring your data
 so that operations are done on contiguous memory when possible.

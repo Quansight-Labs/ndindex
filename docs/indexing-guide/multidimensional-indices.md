@@ -1926,7 +1926,7 @@ order. C order also corresponds to reading the elements of the array in the
 order that NumPy prints them in, from left to right (ignoring the brackets
 and commas).
 
-C ordering is always used, even when the underlying memory is not C ordered
+C ordering is always used, even when the underlying memory is not C-ordered
 (see [](c-vs-fortran-ordering) for more details on C array order).
 
 ##### `nonzero` Equivalence
