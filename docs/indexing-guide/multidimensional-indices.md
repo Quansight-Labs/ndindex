@@ -252,7 +252,7 @@ array([[[16, 17, 18, 19],
 ```
 
 We also observe that integer indices remove the axis, and slices keep the axis
-(even when the resulting axis has size 1):
+(even when the resulting axis has size-1):
 
 ```py
 >>> a[0].shape
@@ -553,14 +553,14 @@ because it means that you can index the array
 uniformly.[^size-1-dimension-footnote] And this doesn't apply just to
 indexing. Many NumPy functions reduce the number of dimensions of their output
 (for example, {external+numpy:func}`numpy.sum`), but they have a `keepdims`
-argument to retain the dimension as a size 1 dimension instead.
+argument to retain the dimension as a size-1 dimension instead.
 
 [^size-1-dimension-footnote]: In this example, if we knew that we were always
     going to select exactly one element (say, the second one) from the first
     dimension, we could equivalently use `a[1, np.newaxis]` (see
     [](integer-indices) and [](newaxis-indices)). The advantage of this is
     that we would get an error if the first dimension of `a` didn't actually
-    have `2` elements, whereas `a[1:2]` would just silently give an [size 0
+    have `2` elements, whereas `a[1:2]` would just silently give an [size-0
     array](size-0-arrays).
 
 There are two final facts about tuple indices that should be noted before we
@@ -940,12 +940,12 @@ array([[ 0],
 `(3, 1)` column vector.
 
 But the most common usage is due to [broadcasting](broadcasting). The key idea
-of broadcasting is that size 1 dimensions are not directly useful, in the sense that
-they could be removed without actually changing anything about the underlying
-data in the array. So they are used as a signal that that dimension can be
-repeated in operations. `newaxis` is therefore useful for inserting these size
-1 dimensions in situations where you want to force your data to be repeated. For
-example, suppose we have the two arrays
+of broadcasting is that size-1 dimensions are not directly useful, in the
+sense that they could be removed without actually changing anything about the
+underlying data in the array. So they are used as a signal that that dimension
+can be repeated in operations. `newaxis` is therefore useful for inserting
+these size-1 dimensions in situations where you want to force your data to be
+repeated. For example, suppose we have the two arrays
 
 ```py
 >>> x = np.array([1, 2, 3])
@@ -1011,7 +1011,7 @@ array([[101, 201],
        [103, 203]])
 ```
 
-As we saw [before](single-axis-tuple), size 1 dimensions may seem redundant,
+As we saw [before](single-axis-tuple), size-1 dimensions may seem redundant,
 but they are not a bad thing. Not only do they allow indexing an array
 uniformly, they are also very important in the way they interact with NumPy's
 broadcasting rules.
@@ -1460,7 +1460,7 @@ For example, consider:
 ...                [103, 104, 105]]])
 ```
 
-This is the same `a` as in the above examples, except it has an extra size 1
+This is the same `a` as in the above examples, except it has an extra size-1
 dimension:
 
 ```py

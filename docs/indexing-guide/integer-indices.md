@@ -161,7 +161,7 @@ the total size of the array):
 
 ```py
 >>> import numpy as np
->>> a = np.ones((2, 3)) # A has 6 elements but the first axis is size 2
+>>> a = np.ones((2, 3)) # A has 6 elements but the first axis has size 2
 >>> a[2]
 Traceback (most recent call last):
 ...

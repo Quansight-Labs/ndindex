@@ -655,7 +655,7 @@ Regardless of which ordering you are using, it is worth structuring your data
 so that operations are done on contiguous memory when possible.
 
 (size-0-arrays)=
-## Size 0 Arrays
+## Size-0 Arrays
 
 <!-- TODO: Rewrite or delete this section -->
 
@@ -711,7 +711,7 @@ np.empty((0,))
 
 What then, is the point of NumPy allowing all these arrays to be distinct?
 
-The key point to understand with size 0 arrays is that
+The key point to understand with size-0 arrays is that
 
 > **NumPy does not special case `0` in the shape of an array. The behavior
 > when a dimension has size `0` is the same as the behavior when the dimension
@@ -801,7 +801,7 @@ broadcast `(1, 2, 4)` with any `(x, 2, 4)` shape:
 
 It's also true of most mathematical functions. For example, elementwise
 functions "apply" to every element of the array, i.e., they just return back
-another size 0 array of the same shape
+another size-0 array of the same shape
 
 ```py
 >>> np.sin(np.empty((0, 2, 4)))
@@ -838,16 +838,16 @@ array([], shape=(0, 2), dtype=float64)
 array([], shape=(2, 1, 0), dtype=float64)
 ```
 
-Furthermore, a composition of operations that make sense for size 0
-arrays, will also make sense for a size 0 dimension. So a larger operation
+Furthermore, a composition of operations that make sense for size-0
+arrays, will also make sense for a size-0 dimension. So a larger operation
 can have a meaningful result as well. For example, TODO
 
-Supporting size 0 arrays isn't just about being as general as possible. They
+Supporting size-0 arrays isn't just about being as general as possible. They
 very often come about naturally. As noted above, there are two primary ways
-you might naturally come across a size 0 array (aside from creating one
+you might naturally come across a size-0 array (aside from creating one
 manually using an array constructor like `np.empty()`), an [out-of-bounds
 slice](empty-slice) or a [boolean mask](boolean-array-indices) that is all
-`False`. In both cases, the point is that **a size 0 array is the result of an
+`False`. In both cases, the point is that **a size-0 array is the result of an
 edge case of a general index formula**.
 
 For example, suppose we want to write a function to trim the first `k` elements from a
@@ -866,7 +866,7 @@ array([4, 5, 6, 7, 8, 9])
 ```
 
 Now if we specify a `k` that is larger than the size of `a`, we will get an
-size 0 array as a result:
+size-0 array as a result:
 
 ```py
 >>> trim(a, 11)
@@ -896,7 +896,7 @@ array([], dtype=int64)
 ```
 
 Again, if we mask off some part of an array, and nothing actually matches,
-there are two choices: an error or a size 0 array. NumPy gives a size 0 array,
+there are two choices: an error or a size-0 array. NumPy gives a size-0 array,
 because it can often result in a meaningful answer. A meaningful answer is
 always preferable to an error.
 
