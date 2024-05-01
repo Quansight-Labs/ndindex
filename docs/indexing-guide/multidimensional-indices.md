@@ -1509,7 +1509,9 @@ with the {external+numpy:func}`numpy.ix_` function.[^ix-footnote]
 
 [^ix-footnote]: `ix_()` is currently limited to only support 1-D input arrays.
     In the general case you will need to apply the reshaping operation
-    manually.
+    manually. There is an [open
+    issue](https://github.com/Quansight-Labs/ndindex/issues/29) to implement
+    this more generally in ndindex.
 
 ```py
 >>> np.ix_(idx1, idx2)
