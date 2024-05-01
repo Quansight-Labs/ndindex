@@ -1156,6 +1156,7 @@ not seem possible. The elements `105` and `100` are not in the same row or
 column of `a`. However, this is doable by providing multiple integer array
 indices.
 
+(multiple-integer-arrays)=
 When multiple integer array indices are provided, the elements of each index
 are correspondingly selected for that axis. It's perhaps most illustrative to
 show this as an example. Given the above `a`, we can produce the array `[105,
@@ -1317,8 +1318,6 @@ able to [broadcast](broadcasting) together to the same shape. The
 broadcasting behavior is useful if the index array would otherwise be
 repeated in a given dimension.
 
-TODO: Make note of the outer indexing behavior this gives
-
 It also means that if you mix an integer array index with a single
 [integer](integer-indices) index. it is the same as if you replaced the
 single integer index with an array of the same shape filled with that
@@ -1359,7 +1358,7 @@ array([[103, 100],
 
 And mixing an array and an integer index:
 
-```
+```py
 >>> a
 array([[100, 101, 102],
        [103, 104, 105]])
@@ -1401,6 +1400,145 @@ into a canonical form.
     >>> print(a[np.array(0)].base)
     None
     ```
+
+###### Outer Indexing
+
+The broadcasting behavior for multiple integer indices may seem odd, but it
+serves a useful purpose. [As we saw above](multiple-integer-arrays), multiple
+integer array indices are required to select elements from higher dimensional
+arrays, one array for each dimension. These integer arrays enumerate the
+indices of the selected elements along those dimensions. For example, as
+above:
+
+```py
+>>> a = np.array([[100, 101, 102],
+...               [103, 104, 105]])
+>>> a[[1, 0], [2, 0]] # selects elements (1, 2) and (0, 0)
+array([105, 100])
+```
+
+However, this behavior is a little unusual compared to other index types. For
+basic index types, each index applies "independently" on each dimension. For
+example, `x[0:3, 0:2]` applies the slice `0:3` to the first dimension of `x`
+and `0:2` to the second dimension. The resulting array would have `3*2 = 6`
+elements, because there are 3 subarrays selected from the first dimension
+with 2 elements each. But in the above example, `a[[1, 0], [2, 0]]` only has
+2 elements, not 4. And something like `a[[1, 0], [2, 0, 1]]` is an error.
+
+The integer array equivalent of the way slices work is called "outer
+indexing".[^vectorized-indexing-footnote] An outer index "`a[[1, 0], [2, 0, 1]]`" would have 6 elements: rows
+1 and 0, with elements from columns 2, 0, and 1 (in that order). However, the
+index `a[[1, 0], [2, 0, 1]]` doesn't actually work like
+this.[^outer-indexing-footnote]
+
+[^vectorized-indexing-footnote]: The type of integer array indexing that NumPy
+    uses, where arrays are broadcast together and each array represents
+    indices for that dimension corresponding to the indices in the other
+    arrays is sometimes called "vectorized indexing" or "inner indexing". The
+    "outer" and "inner" are because they act like an outer- or inner-product.
+
+[^outer-indexing-footnote]: There is a proposed
+    [NEP](https://numpy.org/neps/nep-0021-advanced-indexing.html) to add more
+    direct support for outer indexing like this, but it hasn't been accepted
+    yet.
+
+Strictly speaking, though, NumPy's integer array indexing rules do allow for
+outer indexing. This is because as we saw above they allow for creating
+*arbitrary* new arrays from a given input array. And as it turns out, the
+integer arrays required to represent an outer array index are quite simple to
+construct. They are simply the outer index arrays broadcasted together.
+
+To see why this is, consider the above example, `a[[1, 0], [2, 0, 1]]`. We
+want our end result to be
+
+```
+[[105, 103, 104],
+ [102, 101, 100]]
+```
+
+That is, the rows of `a` should be in the order `[0, 1]`, and the columns
+should be in the order `[2, 0, 1]`. The end result should be an array of shape
+`(2, 3)` (which happens to be the same shape as `a`, but that's just a
+coincidence; an outer-indexed array constructed from `a` could have any 2-D
+shape). So using the integer array indexing rules above, we need to index `a`
+by integer arrays of shape `(2, 3)`. Since `a` has two dimensions, we will
+need two arrays, one for each dimension. Let's consider what these arrays
+should be. For the first dimension, we want to select row `1` three times and
+then row `0` three times:
+
+```
+[[1, 1, 1],
+ [0, 0, 0]]
+```
+
+And for the second dimension, we want to select the columns `2`, `0`, and `1`,
+in that order, regardless of which row we are in:
+
+```
+[[2, 0, 1],
+ [2, 0, 1]]
+```
+
+In general, we want to repeat the selection array along the corresponding
+dimension to fill an array with the final desired shape. This is exactly what
+broadcasting does! If we reshape our first array to have shape `(2, 1)` and
+the second array to have shape `(1, 3)`, then broadcasting them together will
+repeat the first dimension of the first array along the second axis, and the
+second dimension of the second array along the first axis, i.e., exactly the
+arrays we want.
+
+This is why NumPy automatically broadcasts integer array indices together. We
+can construct an outer index just by inserting size-1 dimensions into our
+integer array indices so that the non-size-1 dimension for each is in the
+indexing dimension. For example,
+
+```py
+>>> idx1 = np.array([1, 0])
+>>> idx2 = np.array([2, 0, 1])
+>>> a[idx1[:, np.newaxis], idx1[np.newaxis, :]]
+array([[105, 103, 104],
+       [102, 100, 101]])
+```
+
+Here, we use [newaxis](newaxis) along with `:` to turn `idx1` and `idx2` into
+shape `(2, 1)` and `(1, 3)` arrays, respectively. These then automatically
+broadcast together to give the desired outer index.
+
+This "insert size-1 dimensions" operation can also be performed automatically
+with the {external+numpy:func}`numpy.ix_` function.[^ix-footnote]
+
+[^ix-footnote]: `ix_()` is currently limited to only support 1-D input arrays.
+    In the general case you will need to apply the reshaping operation
+    manually.
+
+```py
+>>> np.ix_(idx1, idx2)
+(array([[1],
+       [0]]), array([[2, 0, 1]]))
+>>> a[np.ix_(idx1, idx2)]
+array([[105, 103, 104],
+       [102, 100, 101]])
+```
+
+Outer indexing can be thought of as a generalization of slicing. With a
+[slice](slices-docs), you can only really select a "regular" sequence of
+elements from a dimension, namely, either a contiguous chunk, or a contiguous
+chunk split by a regular step value. It's impossible, for instance, to use a
+slice to select the indices `[0, 1, 2, 3, 5, 6, 7]`, because `4` is omitted.
+For instance, say the first dimension of your array represents time steps and
+you want to select time steps 0--7, but time step 4 is invalid for some reason
+and you want to ignore it for your analysis. If you just care about the first
+dimension, you can just use the integer index `[0, 1, 2, 3, 5, 6, 7]`. But
+suppose you also wanted select some other non-contiguous "slice" from the
+second dimension. Using just basic indices, you'd have to index the array with
+normal slices then either remove or ignore the non-desired indices, neither
+of which is ideal. And it would be even more complicated if you also wanted
+indices out-of-order or repeated for some reason.
+
+With outer indexing, you would just construct your "slice" of non-contiguous
+indices as integer arrays, turn them into "outer" indices using `ix_` or
+manual reshaping, then use that outer index to construct the desired array
+directly.
 
 ##### Assigning to an Integer Array Index
 
