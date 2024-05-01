@@ -1,6 +1,5 @@
 (slices-docs)=
-Slices
-======
+# Slices
 
 Python's slice syntax is one of the more confusing parts of the language, even
 for experienced developers. This page carefully breaks down the rules for
