@@ -1496,7 +1496,7 @@ indexing dimension. For example,
 ```py
 >>> idx1 = np.array([1, 0])
 >>> idx2 = np.array([2, 0, 1])
->>> a[idx1[:, np.newaxis], idx1[np.newaxis, :]]
+>>> a[idx1[:, np.newaxis], idx2[np.newaxis, :]]
 array([[105, 103, 104],
        [102, 100, 101]])
 ```
@@ -2218,11 +2218,11 @@ has shape `(1, s1, ..., sn)`, and `a[False]` has shape `(0, s1, ..., sn)`.
 
 ```py
 >>> a.shape # as above
-(3, 4)
+(2, 5)
 >>> a[True].shape
-(1, 3, 4)
+(1, 2, 5)
 >>> a[False].shape
-(0, 3, 4)
+(0, 2, 5)
 ```
 
 This breaks with what `a[np.nonzero(True)]` would give:[^nonzero-scalar-footnote]
@@ -2236,9 +2236,9 @@ This breaks with what `a[np.nonzero(True)]` would give:[^nonzero-scalar-footnote
 
 ```py
 >>> a[np.nonzero(True)].shape
-(1, 4)
+(1, 5)
 >>> a[np.nonzero(False)].shape
-(0, 4)
+(0, 5)
 ```
 
 The scalar boolean behavior may seem like an odd corner case. You might wonder
