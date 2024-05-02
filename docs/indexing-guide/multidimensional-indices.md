@@ -1494,14 +1494,14 @@ integer array indices so that the non-size-1 dimension for each is in the
 indexing dimension. For example,
 
 ```py
->>> idx1 = np.array([1, 0])
->>> idx2 = np.array([2, 0, 1])
->>> a[idx1[:, np.newaxis], idx2[np.newaxis, :]]
+>>> idx0 = np.array([1, 0])
+>>> idx1 = np.array([2, 0, 1])
+>>> a[idx0[:, np.newaxis], idx1[np.newaxis, :]]
 array([[105, 103, 104],
        [102, 100, 101]])
 ```
 
-Here, we use [newaxis](newaxis) along with `:` to turn `idx1` and `idx2` into
+Here, we use [newaxis](newaxis) along with `:` to turn `idx0` and `idx1` into
 shape `(2, 1)` and `(1, 3)` arrays, respectively. These then automatically
 broadcast together to give the desired outer index.
 
@@ -1515,10 +1515,10 @@ with the {external+numpy:func}`numpy.ix_` function.[^ix-footnote]
     this more generally in ndindex.
 
 ```py
->>> np.ix_(idx1, idx2)
+>>> np.ix_(idx0, idx1)
 (array([[1],
        [0]]), array([[2, 0, 1]]))
->>> a[np.ix_(idx1, idx2)]
+>>> a[np.ix_(idx0, idx1)]
 array([[105, 103, 104],
        [102, 100, 101]])
 ```
