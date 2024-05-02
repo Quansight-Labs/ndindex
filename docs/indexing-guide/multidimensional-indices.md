@@ -1401,6 +1401,7 @@ into a canonical form.
     None
     ```
 
+(outer-indexing)=
 ###### Outer Indexing
 
 The broadcasting behavior for multiple integer indices may seem odd, but it
@@ -1754,6 +1755,18 @@ array([[ 5,  4,  6,  7],
 
 You can check that this is a permutation of `a` where each axis is permuted
 independently.
+
+We can also interpret this as an [outer indexing](outer-indexing) operation.
+In this case, our non-contiguous "slices" that we are outer indexing by are a
+full slice along each axis, just permuted. We can use the `ix_` helper to
+construct the same index as above
+
+```
+>>> a[np.ix_(idx0, idx1)]
+array([[ 5,  4,  6,  7],
+       [ 1,  0,  2,  3],
+       [ 9,  8, 10, 11]])
+```
 
 As an extra bonus, here's how we can interpret this as a multiplication by
 permutation matrices, using the same indices (but of course, simply permuting
