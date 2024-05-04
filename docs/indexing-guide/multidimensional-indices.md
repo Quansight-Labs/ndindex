@@ -1501,9 +1501,9 @@ array([[105, 103, 104],
        [102, 100, 101]])
 ```
 
-Here, we use [newaxis](newaxis) along with `:` to turn `idx0` and `idx1` into
-shape `(2, 1)` and `(1, 3)` arrays, respectively. These then automatically
-broadcast together to give the desired outer index.
+Here, we use [newaxis](newaxis-indices) along with `:` to turn `idx0` and
+`idx1` into shape `(2, 1)` and `(1, 3)` arrays, respectively. These then
+automatically broadcast together to give the desired outer index.
 
 This "insert size-1 dimensions" operation can also be performed automatically
 with the {external+numpy:func}`numpy.ix_` function.[^ix-footnote]
