@@ -49,7 +49,7 @@ def broadcast_shapes(*shapes, skip_axes=()):
     """
     Broadcast the input shapes `shapes` to a single shape.
 
-    This is the same as :py:func:`np.broadcast_shapes()
+    This is the same as :external+numpy:py:func:`np.broadcast_shapes()
     <numpy.broadcast_shapes>`, except is also supports skipping axes in the
     shape with `skip_axes`.
 
@@ -119,7 +119,7 @@ def iter_indices(*shapes, skip_axes=(), _debug=False):
     tuple of indices, one for each shape, which would correspond to the same
     elements if the arrays of the given shapes were first broadcast together.
 
-    This is a generalization of the NumPy :py:class:`np.ndindex()
+    This is a generalization of the NumPy :external+numpy:py:class:`np.ndindex()
     <numpy.ndindex>` function (which otherwise has no relation).
     `np.ndindex()` only iterates indices for a single shape, whereas
     `iter_indices()` supports generating indices for multiple broadcast

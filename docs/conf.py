@@ -50,6 +50,9 @@ intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),
     'pandas': ('https://pandas.pydata.org/docs/', None),
 }
+# Require :external: to reference intersphinx. Prevents accidentally linking
+# to something from numpy.
+intersphinx_disabled_reftypes = ['*']
 
 # # From
 # # https://stackoverflow.com/questions/56062402/force-sphinx-to-interpret-markdown-in-python-docstrings-instead-of-restructuredt
