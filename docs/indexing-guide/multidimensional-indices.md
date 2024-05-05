@@ -304,8 +304,8 @@ Finally, the last index is `2`, giving the third element of this list:
 And indeed:
 
 ```py
->>> a[(1, 0, 2)]
-10
+>>> a[(1, 0, 2)] # doctest: +SKIPNP1
+np.int64(10)
 ```
 
 If we had stopped at an intermediate tuple, instead of getting an element, we
@@ -349,8 +349,8 @@ in a tuple index are completely optional.** Instead of writing `a[(1, 0, 2)]`,
 we could simply write `a[1, 0, 2]`.
 
 ```py
->>> a[1, 0, 2]
-10
+>>> a[1, 0, 2] # doctest: +SKIPNP1
+np.int64(10)
 ```
 
 These are exactly the same. When the parentheses are omitted, Python
@@ -483,8 +483,8 @@ and want to get the first element of the last row.
 ```py
 >>> n = 2
 >>> b = a[:n]
->>> b[-1, -1, 0]
-12
+>>> b[-1, -1, 0] # doctest: +SKIPNP1
+np.int64(12)
 ```
 
 Here `b = a[:2]` has shape `(2, 2, 4)`
@@ -500,8 +500,8 @@ instead
 ```py
 >>> n = 1
 >>> b = a[:n]
->>> b[-1, -1, 0]
-4
+>>> b[-1, -1, 0] # doctest: +SKIPNP1
+np.int64(4)
 ```
 
 It still works. Here `b` has shape `(1, 2, 4)`:
@@ -588,10 +588,10 @@ other words,
     ```py
     >>> s = np.int64(0) # scalar
     >>> x = np.array(0) # 0-D array
-    >>> s[()]
-    0
-    >>> x[()]
-    0
+    >>> s[()] # doctest: +SKIPNP1
+    np.int64(0)
+    >>> x[()] # doctest: +SKIPNP1
+    np.int64(0)
     >>> s[...]
     array(0)
     >>> x[...]
@@ -603,8 +603,8 @@ other words,
     array. Otherwise, the result is a scalar. With the example array:
 
     ```py
-    >>> a[1, 0, 2] # scalar
-    10
+    >>> a[1, 0, 2] # scalar # doctest: +SKIPNP1
+    np.int64(10)
     >>> a[1, 0, 2, ...] # 0-D array
     array(10)
     ```
@@ -1173,8 +1173,8 @@ arrays, which are both the same shape. The first element of our desired
 result, `105` corresponds to index `(1, 2)` in `a`:
 
 ```py
->>> a[1, 2]
-105
+>>> a[1, 2] # doctest: +SKIPNP1
+np.int64(105)
 ```
 
 So we write `1` in the first array and `2` in the second array. Similarly, the

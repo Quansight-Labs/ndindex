@@ -138,8 +138,8 @@ advanced index and a copy if they do.
 
     ```py
     >>> a = np.arange(20)
-    >>> a[0]
-    0
+    >>> a[0] # doctest: +SKIPNP1
+    np.int64(0)
     >>> print(a[0].base)
     None
     >>> a[0, ...]
@@ -813,14 +813,14 @@ Reduction functions like [`sum`](https://en.wikipedia.org/wiki/Empty_sum),
 conventions for application over the empty set:
 
 ```py
->>> np.sum(np.empty((0,)))
-0.0
->>> np.prod(np.empty((0,)))
-1.0
->>> np.any(np.empty((0,), dtype=bool))
-False
->>> np.all(np.empty((0,), dtype=bool))
-True
+>>> np.sum(np.empty((0,))) # doctest: +SKIPNP1
+np.float64(0.0)
+>>> np.prod(np.empty((0,))) # doctest: +SKIPNP1
+np.float64(1.0)
+>>> np.any(np.empty((0,), dtype=bool)) # doctest: +SKIPNP1
+np.False_
+>>> np.all(np.empty((0,), dtype=bool)) # doctest: +SKIPNP1
+np.True_
 ```
 
 And many manipulation functions just apply some operation along certain
