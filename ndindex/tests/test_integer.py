@@ -68,6 +68,7 @@ def test_integer_reduce_exhaustive():
                 assert reduced.reduce(**kwargs) == reduced
                 assert reduced.reduce(10, **kwargs) == reduced
 
+@example(0, (1,), {'negative_int': True})
 @given(ints(), shapes, reduce_kwargs)
 def test_integer_reduce_hypothesis(i, shape, kwargs):
     a = arange(prod(shape)).reshape(shape)
