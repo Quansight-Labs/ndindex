@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="api.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.04.27 -->
         <title>ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=16cf08d2" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=437aa6ec" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1475cf01" />
@@ -185,6 +185,8 @@
   <div class="visually-hidden">Hide table of contents sidebar</div>
 </label>
 
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
 
 
 <div class="page">
@@ -270,9 +272,9 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <article role="main">
+        <article role="main" id="furo-main-content">
           <section id="ndindex">
-<h1>ndindex<a class="headerlink" href="#ndindex" title="Link to this heading">#</a></h1>
+<h1>ndindex<a class="headerlink" href="#ndindex" title="Link to this heading">¶</a></h1>
 <p>A Python library for manipulating indices of ndarrays.</p>
 <p>ndindex is a library that allows representing and manipulating objects that
 can be valid indices to numpy arrays, i.e., slices, integers, ellipses,
@@ -296,7 +298,7 @@ given shape.</p></li>
 <li><p>Enable useful transformation and manipulation functions on index objects.</p></li>
 </ul>
 <section id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">¶</a></h2>
 <p>If you’ve ever worked with Python’s <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects, you will quickly discover
 their limitations:</p>
 <ul>
@@ -337,10 +339,10 @@ extensive testing (see below), you can be assured that ndindex is correct.</p>
 </ul>
 </section>
 <section id="installation">
-<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
 <p>ndindex can be installed using pip (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ndindex</span></code>) or conda (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-f</span> <span class="pre">conda-forge</span> <span class="pre">ndindex</span></code>).</p>
 <section id="experimental-cythonization">
-<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Link to this heading">#</a></h3>
+<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Link to this heading">¶</a></h3>
 <p>When installing ndindex from source (using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>) all
 Python modules (except tests) will be Cythonized when Cython and a working
 compiler are installed. This can improve the general performance of ndindex.
@@ -359,7 +361,7 @@ of ndindex may enable Cythonization for all installs.</p>
 </section>
 </section>
 <section id="features">
-<h2>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h2>
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
 <p>ndindex is still a work in progress. The following things are currently
 implemented:</p>
 <ul>
@@ -515,7 +517,7 @@ do, please <a class="reference external" href="https://github.com/quansight-labs
 requests are welcome as well.</p>
 </section>
 <section id="testing-and-correctness">
-<span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Link to this heading">#</a></h2>
+<span id="testing"></span><h2>Testing and correctness<a class="headerlink" href="#testing-and-correctness" title="Link to this heading">¶</a></h2>
 <p>The most important priority for a library like this is correctness. Index
 manipulations, and especially slice manipulations, are complicated to code
 correctly, and the code for them typically involves dozens of different
@@ -565,16 +567,16 @@ failure. Consequently every exhaustive test will also have a corresponding
 hypothesis test.</p>
 </section>
 <section id="benchmarks">
-<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Link to this heading">#</a></h2>
+<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Link to this heading">¶</a></h2>
 <p>Benchmarks for ndindex are published
 <a class="reference external" href="https://quansight-labs.github.io/ndindex/benchmarks/">here</a>.</p>
 </section>
 <section id="license">
-<h2>License<a class="headerlink" href="#license" title="Link to this heading">#</a></h2>
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
 <p><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/main/LICENSE">MIT License</a></p>
 </section>
 <section id="acknowledgments">
-<span id="id2"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Link to this heading">#</a></h2>
+<span id="id2"></span><h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Link to this heading">¶</a></h2>
 <p>ndindex development is supported by <a class="reference external" href="https://labs.quansight.org/">Quansight
 Labs</a> and is sponsored in part by <a class="reference external" href="https://www.deshaw.com/">the D. E.
 Shaw group</a>. The D. E. Shaw group collaborates with
@@ -588,7 +590,7 @@ Jupyter.</p>
 </div>
 </section>
 <section id="table-of-contents">
-<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
@@ -677,10 +679,12 @@ Jupyter.</p>
     </aside>
   </div>
 </div><script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="_static/scripts/furo.js?v=4e2eecee"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
+    <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>
