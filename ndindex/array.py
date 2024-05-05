@@ -70,7 +70,7 @@ class ArrayIndex(NDIndex):
     def __array_function__(self, func, types, args, kwargs):
         return NotImplemented
 
-    def __array__(self):
+    def __array__(self, **kwargs):
         raise TypeError(f"Cannot convert {self.__class__.__name__} to an array. Use .array instead.")
 
 
