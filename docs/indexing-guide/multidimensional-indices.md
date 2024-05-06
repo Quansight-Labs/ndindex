@@ -2200,12 +2200,19 @@ returns a tuple with as many arrays as dimensions of `a`:
 ```
 
 But for a 0-D array, `np.nonzero(a)` doesn't return an empty tuple, but
-rather the same thing as `np.nonzero(np.array([a]))`:
+rather the same thing as
+`np.nonzero(np.array([a]))`:[^nonzero-deprecated-footnote]
+
+<!-- TODO: Update this text when NumPy 2.0 is released. -->
+[^nonzero-deprecated-footnote]: Actually, in NumPy 2.0, calling nonzero on a
+    0-D array is deprecated, and in NumPy 2.1 it will result in an error,
+    precisely due to this odd behavior.
+
 
 ```py
->>> np.nonzero(np.array(False))
+>>> np.nonzero(np.array(False)) # doctest: +SKIP
 (array([], dtype=int64),)
->>> np.nonzero(np.array(True))
+>>> np.nonzero(np.array(True)) # doctest: +SKIP
 (array([0]),)
 ```
 
