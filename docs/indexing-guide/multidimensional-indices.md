@@ -1702,10 +1702,10 @@ logic.[^ndindex-advanced-indexing-design-flaw-footnote]
 
 #### Exercise
 
-Given the above, you should be able to do the following exercise: how might
-you randomly permute a 2-D array, using
-{external+numpy:meth}`numpy.random.Generator.permutation` and indexing, in
-such a way that each axis is permuted independently. This might correspond to
+Based on the above sections, you should be able to complete the following
+exercise: How might you randomly permute a 2-D array using
+{external+numpy:meth}`numpy.random.Generator.permutation` and indexing, so
+that each axis is permuted independently? This operation might correspond to
 multiplying the array by random [permutation
 matrices](https://en.wikipedia.org/wiki/Permutation_matrix) on the left and
 right, like $P_1AP_2$. (Hint, one of the [basic indices](basic-indices)
@@ -1728,12 +1728,12 @@ a_perm = array([[ 5,  4,  6,  7],
                 [ 9,  8, 10, 11]])
 ```
 
-(note this isn't a full permutation of the array. For instance, the first row
-`[5, 4, 7, 6]` contains only elements from the second row of `a`)
+(Note that his is not a full permutation of the array. For instance, the first
+row `[5, 4, 7, 6]` contains only elements from the second row of `a`.)
 
 ~~~~{dropdown} Click here to show the solution
 
-Suppose we have the following 2-D array `a`:
+Suppose we start with the following 2-D array `a`:
 
 ```py
 >>> a = np.arange(12).reshape((3, 4))
@@ -1764,7 +1764,7 @@ with shapes (3,) (4,)
 ```
 
 Remember that we want a permutation of `a`, so the result array should have
-the same shape as `a` (`(3, 4)`). This should therefore be the (broadcasted)
+the same shape as `a` (`(3, 4)`). This should therefore be the broadcasted
 shape of `idx0` and `idx1`, which are currently shapes `(3,)`, and `(4,)`. We
 can use [`newaxis`](newaxis-indices) to insert dimensions so that they are
 shape `(3, 1)` and `(1, 4)` so that they broadcast together to this shape.
