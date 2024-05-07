@@ -1331,18 +1331,18 @@ array([100, 101, 103])
 
 ##### Broadcasting
 
-> **The integer arrays in an index need to either be the same shape or to be
-able to [broadcast](broadcasting) together to the same shape.**
+> **The integer arrays in an index must either be the same shape or be able to
+> be [broadcast](broadcasting) together to the same shape.**
 
-If the arrays are not the same shape, they are first broadcasted together and
-those broadcasted arrays are used as the indices. This broadcasting behavior
-is useful if the index array would otherwise be repeated in a given dimension.
+If the arrays are not the same shape, they are first broadcast together, and
+those broadcast arrays are used as the indices. This broadcasting behavior is
+useful if the index array would otherwise be repeated in a given dimension.
 
-It also means that if you mix an integer array index with a single
-[integer](integer-indices) index. it is the same as if you replaced the
-single integer index with an array of the same shape filled with that
-integer (because remember, a single integer index is the same thing as an
-integer array index of shape `()`).
+This also means that mixing an integer array index with a single [integer
+index](integer-indices) is the same as replacing the single integer index with
+an array of the same shape filled with that integer (because remember, a
+single integer index is the same thing as an integer array index of shape
+`()`).
 
 For example:
 
@@ -1398,10 +1398,10 @@ dimension. This is the same as using the array `[2, 2]` for the second
 dimension, since this is the scalar `2` broadcasted to the shape of `[1,
 0]`.
 
-The ndindex method
-[`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
-[`expand()`](ndindex.Tuple.expand)) will broadcast array indices together
-into a canonical form.
+The ndindex methods
+[`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) and
+[`expand()`](ndindex.Tuple.expand) will broadcast array indices together into
+a canonical form.
 
 [^integer-scalar-footnote]: In fact, if the integer array index itself has
     shape `()`, then the behavior is identical to simply using an `int` with
