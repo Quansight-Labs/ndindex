@@ -1428,7 +1428,7 @@ The broadcasting behavior for multiple integer indices may seem odd, but it
 serves a useful purpose. [As we saw above](multiple-integer-arrays), multiple
 integer array indices are required to select elements from higher dimensional
 arrays, one array for each dimension. These integer arrays enumerate the
-indices of the selected elements along those dimensions. For example, as
+indices of the selected elements along these dimensions. For example, as
 above:
 
 ```py
@@ -1438,9 +1438,9 @@ above:
 array([105, 100])
 ```
 
-However, you might have noticed that this behavior is a little unusual
-compared to other index types. For all the other index types we've discussed
-so far, like [slices](slices-docs) and [integer indices](integer-indices.md),
+However, you might have noticed that this behavior is somewhat unusual
+compared to other index types. For all other index types we've discussed so
+far, such as [slices](slices-docs) and [integer indices](integer-indices.md),
 each index applies "independently" along each dimension. For example, `x[0:3,
 0:2]` applies the slice `0:3` to the first dimension of `x` and `0:2` to the
 second dimension. The resulting array has `3*2 = 6` elements, because there
@@ -1572,9 +1572,9 @@ directly.
 
 ##### Assigning to an Integer Array Index
 
-As with all index types discussed in this guide, an integer array index can
-be used on the left-hand side of an assignment. This can be useful as it
-lets you surgically inject new elements into your array.
+As with all index types discussed in this guide, an integer array index can be
+used on the left-hand side of an assignment. This is useful because it allows
+you to surgically inject new elements into your array.
 
 ```py
 >>> a = np.array([100, 101, 102, 103]) # as above
@@ -1584,9 +1584,9 @@ lets you surgically inject new elements into your array.
 array([200, 101, 102, 203])
 ```
 
-However, be careful, as there is inherent ambiguity here if your index array
-contains duplicate elements. For example, here we are saying to set index
-`0` to both `1` and `3`:
+However, exercise caution, as this is inherently ambiguous if the index array
+contains duplicate elements. For example, suppose we attempted to
+set index `0` to both `1` and `3`:
 
 ```py
 >>> a = np.array([100, 101, 102, 103]) # as above
@@ -1596,13 +1596,13 @@ contains duplicate elements. For example, here we are saying to set index
 array([  3,   2, 102, 103])
 ```
 
-The end result was `3`. This happened because `3` corresponded to the last
-`0` in the index array, but importantly, this is just an implementation
-detail. **NumPy makes no guarantees about the order in which index elements
-are assigned to.**[^cupy-assignment-footnote] If you are using an integer
-array as an assignment index, it's best to be careful to avoid duplicate
-entries in the index (or at least ensure that duplicate entries are always
-assigned the same value).
+The end result was `3`. This happened because `3` corresponded to the last `0`
+in the index array. But importantly, this is just an implementation detail.
+**NumPy makes no guarantees regarding the order in which index elements are
+assigned.**[^cupy-assignment-footnote] If you are using an integer array as an
+assignment index, be careful to avoid duplicate entries in the index or, at
+the very least, ensure that duplicate entries are always assigned the same
+value.
 
 [^cupy-assignment-footnote]: For example, in [CuPy](https://cupy.dev/),
   which implements the NumPy API on top of GPUs, [the behavior of this sort
