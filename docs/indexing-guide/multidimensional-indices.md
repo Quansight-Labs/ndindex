@@ -1281,10 +1281,10 @@ array([203, 201, 200, 202])
 
 #### Advanced Notes
 
-The above gives the basic gist of integer array indexing, but there are many
-subtleties and advanced behaviors involved with them as well. The subsections
-here are included for completeness but if you are only a beginner NumPy user,
-you may wish to skip them.
+The information above provides the basic gist of integer array indexing, but
+it also involves many subtleties and advanced behaviors. The subsections here
+are included for completeness; however, if you are a beginner NumPy user, you
+may wish to skip them.
 
 ##### Negative Indices
 
@@ -1301,21 +1301,18 @@ nonnegative indices can be mixed arbitrarily.
 array([100, 101, 103])
 ```
 
-If you want to convert an index with negative indices to an index without
-any negative indices, you can use the ndindex
-[`reduce()`](ndindex.IntegerArray.reduce) method with a shape.
+If you want to convert an index containing negative indices into an index
+without any negative indices, you can use the ndindex
+[`reduce()`](ndindex.IntegerArray.reduce) with a shape argument.
 
 ##### Python Lists
 
 > **You can use a list of integers instead of an array to represent an integer
 array index.[^lists-footnote]**
 
-Using a list is useful if you are writing an array
-index by hand, but in all other cases, it is better to use an actual array
-instead. This will perform basic type checking (like that the shape and
-dtype are correct) when the index array is created rather than when the
-indexing happens. In most real-world use-cases, the index itself is
-constructed from some other array method.
+Using a list is useful when writing an array index by hand; however, in all
+other cases, using an actual array is preferable. In most real-world
+use-cases, the index itself is constructed from some other array methods.
 
 [^lists-footnote]: Beware that [versions of NumPy prior to
     1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
