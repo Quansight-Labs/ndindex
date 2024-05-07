@@ -1042,9 +1042,10 @@ latter that is restricted to being integer or boolean.
 (integer-array-indices)=
 ### Integer Arrays
 
-Integer array indices are very powerful. Using them, it is possible to
-construct effectively arbitrary new arrays consisting of elements from the
-original indexed array.
+Integer array indices are very powerful. Using them, you can effectively
+construct arbitrary new arrays consisting of elements from the original
+indexed array.
+
 
 Let's consider, as a start, a simple one-dimensional array:
 
@@ -1052,7 +1053,7 @@ Let's consider, as a start, a simple one-dimensional array:
 >>> a = np.array([100, 101, 102, 103])
 ```
 
-Let's suppose we wish to construct from this array, the 2-D array
+Let's suppose we wish to construct the following 2-D array from this array:
 
 ```
 [[ 100, 102, 100 ],
@@ -1079,7 +1080,7 @@ array([[100, 102, 100],
        [103, 100, 102]])
 ```
 
-This is the array we wanted. We sort of constructed it using only indexing
+This is the array we want. We sort of constructed it using only indexing
 operations, but we didn't actually do `a[idx]` for some index `idx`. Instead,
 we just listed the index of each individual element.
 
@@ -1125,8 +1126,9 @@ dimension in the shape with `()`, the "shape" of the integer index.
 
 Similarly,
 
-> **an integer array index always selects elements from the given axis, and
-replaces the dimension in the shape with the shape of the index array.**
+> **an integer array index always selects elements from the specified axis and
+> replaces the dimension in the shape with the shape of the index array.
+
 
 For example:
 
