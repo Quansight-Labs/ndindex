@@ -510,18 +510,20 @@ NumPy has an internal distinction between C order and Fortran
 order.[^c-order-footnote] C-ordered arrays are stored in memory such that the
 last axis varies the fastest. For example, if `a` has 3 dimensions, then its
 elements are stored in memory like `a[0, 0, 0], a[0, 0, 1], a[0, 0, 2], ...,
-a[0, 1, 0], a[0, 1, 1], ...`. Fortran ordering is the opposite: the elements
-are stored in memory so that the first axis varies fastest, like `a[0, 0, 0],
-a[1, 0, 0], a[2, 0, 0], ..., a[0, 1, 0], a[1, 1, 0], ...`.
+a[0, 1, 0], a[0, 1, 1], a[0, 1, 2], ...`. Fortran ordering is the opposite:
+the elements are stored in memory so that the first axis varies fastest, like
+`a[0, 0, 0], a[1, 0, 0], a[2, 0, 0], ..., a[0, 1, 0], a[1, 1, 0], a[2, 1, 0]
+...`.
 
-[^c-order-footnote]: C order and Fortran order are also sometimes row-major
-  and column-major ordering, respectively. However, this terminology is
-  confusing when the array has more than two axes or when it does not
-  represent a mathematical matrix. It's better to think of them in terms of
-  which axes vary the fastest---the last for C ordering and the first for
-  Fortran ordering. Also, I don't know about you, but I can never remember
-  which is supposed to be "row-" and "column-" major, but I do remember how
-  indexing works in C, so just thinking about that requires no mnemonic.
+[^c-order-footnote]: C ordering and Fortran ordering are also sometimes
+  "row-major" and "column-major" ordering, respectively. However, this
+  terminology is confusing when the array has more than two axes or when it
+  does not represent a mathematical matrix. It's better to think of ordering
+  in terms of which axes vary the fastest---the last for C ordering and the
+  first for Fortran ordering. Also, I don't know about you, but I can never
+  remember which is supposed to be "row-" and "column-" major, but I do
+  remember how array indexing works in C, so just thinking about that requires
+  no mnemonic.
 
 The most important thing to note about C and Fortran ordering for our purposes
 is that
@@ -539,7 +541,7 @@ that because the array is a [view](views-vs-copies) or has some other layout
 due to [stride tricks](strides).
 
 In particular, this also applies to [boolean array
-indices](boolean-array-indices). A boolean mask always [produces the elements
+indices](boolean-array-indices). A boolean mask always [selects the elements
 in C order](boolean-array-c-order), even if the underlying arrays use Fortran
 ordering.
 
@@ -558,9 +560,8 @@ array([[0, 1, 2],
 ...     [False,  True, False],
 ...     [ True,  True, False],
 ...     [False, False, False]])
->>> idx_f = np.asarray(idx, order='F')
->>> # These are all the same
->>> a[idx]
+>>> idx_f = np.asarray(idx, order='F') # It doesn't matter if the index array is Fortran-ordered either
+>>> a[idx] # These are all the same
 array([1, 3, 4])
 >>> a_f[idx]
 array([1, 3, 4])
@@ -610,8 +611,8 @@ Operating on contiguous memory allows the CPU to place the entire memory block
 in the cache at once, and is more performant as a result. The performance
 difference won't be noticeable for our small example `a` above, as it is small
 enough to fit entirely in the cache, but it becomes significant for larger
-arrays. Compare the time to sum along `a[0]` or `a[..., 0]` for C- and
-Fortran-ordered arrays for a 3-dimensional array with a million elements
+arrays. Compare the time to sum along `a[0]` or `a[..., 0]` for a
+3-dimensional array `a` with a million elements using C and Fortran ordering
 (using [IPython](https://ipython.org/)'s `%timeit`):
 
 ```
@@ -637,7 +638,7 @@ In [7]: %timeit np.sum(a_f[..., 0])
 Summing along contiguous memory (`a[0]` for C ordering and `a[..., 0]` for
 Fortran ordering) is about 3x faster.
 
-NumPy indexing semantics generally favor using the C order, as it does not
+NumPy indexing semantics generally favor using C ordering, as it does not
 require an ellipsis to select contiguous subarrays. C ordering also matches
 the [list-of-lists intuition](what-is-an-array) of an array, since an array
 like `[[0, 1], [2, 3]]` is stored in memory as literally `0, 1, 2, 3` with C
