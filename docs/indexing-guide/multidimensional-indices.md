@@ -1660,16 +1660,14 @@ semantic completeness.
 
 ##### Integer Array Indices Separated by Basic Indices
 
-Finally, if the [slice](slices-docs), [ellipsis](ellipsis-indices), or
-[newaxis](newaxis-indices) indices are *in between* the integer array indices,
-then something more strange happens. The two index types still operate
-"independently", but instead of the resulting array having the dimensions
-corresponding to the location of the indices, like in the previous bullet
-(and, indeed, as indexing works in every other instance), the shape
-corresponding to the (broadcasted) array indices (including integer indices)
-is *prepended* to the shape corresponding to the non-array indices. This is
-because there is inherent ambiguity in where these dimensions should be placed
-in the final shape.
+Finally, if the [slices](slices-docs), [ellipses](ellipsis-indices), or
+[newaxes](newaxis-indices) are *in between* the integer array indices, then
+something more strange happens. The two index types still operate
+"independently"; however, unlike previous cases where the resulting array's
+dimensions correspond to the location of the indices, the shape derived from
+the array indices is *prepended* to the shape derived from the non-array
+indices. This is because in these cases there is inherent ambiguity in where
+these dimensions should be placed in the final shape.
 
 An example demonstrates this most clearly:
 
@@ -1684,16 +1682,15 @@ An example demonstrates this most clearly:
 (10, 20, 3, 4)
 ```
 
-Here the (broadcasted) integer array index shape `(10, 20)` comes first in
-the result array and the shape corresponding to the rest of the index, `(3,
-4)`, comes last.
+Here the integer array index shape `(10, 20)` comes first in the result array
+and the shape corresponding to the rest of the index, `(3, 4)`, comes last.
 
 If you find yourself running into this behavior, chances are you would be
-better off rewriting the indexing operation to be simpler. It's considered a
-design flaw of NumPy[^advanced-indexing-design-flaw-footnote], and it's not
-one that any other Python array library has copied. ndindex will raise a
-`NotImplementedError` exception on indices like these, because I don't want
-to deal with implementing this obscure
+better off rewriting the indexing operation to be simpler. This is considered
+a design flaw in NumPy[^advanced-indexing-design-flaw-footnote], and no other
+Python array library has replicated it. ndindex will raise a
+`NotImplementedError` exception on indices like these, because I don't want to
+deal with implementing this obscure
 logic.[^ndindex-advanced-indexing-design-flaw-footnote]
 
 [^advanced-indexing-design-flaw-footnote]: Travis Oliphant, the original
