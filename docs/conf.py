@@ -101,8 +101,8 @@ html_sidebars = {
         "sidebar/brand.html",
         "sidebar/search.html",
         "sidebar/navigation.html",
-        "sidebar/github.html",
         "sidebar/scroll-end.html",
+        "sidebar/github.html",
     ],
 }
 
