@@ -1614,13 +1614,12 @@ value.
 
 ##### Combining Integer Arrays Indices with Basic Indices
 
-When one or more [slice](slices-docs), [ellipsis](ellipsis-indices), or
-[newaxis](newaxis-indices) indexes come before or after all the
-[integer](integer-indices) and integer array indices, the two sets of
-indices operate independently of one another. The slices and ellipses select
-the corresponding axes and newaxes add new axes to the corresponding
-locations, and the integer array indices select the elements on their
-respective axes, as described above.
+If any [slice](slices-docs), [ellipsis](ellipsis-indices), or
+[newaxis](newaxis-indices) indices precede or follow all the
+[integer](integer-indices) and integer array indices, the two sets of indices
+operate independently. Slices and ellipses select the corresponding axes,
+newaxes add new axes to these locations, and the integer array indices select
+the elements on their respective axes, as previously described.
 
 For example, consider:
 
@@ -1649,28 +1648,28 @@ array([[105, 102]])
 (1, 2)
 ```
 
-The main benefit of this is that you can use `...` at the beginning of an
-index to select the last axes of an array with the integer array indices, or
-some number of `:`s to select some axes in the middle. This lets you do with
-indexing what you can also do with the {external+numpy:func}`numpy.take`
-function.
+The primary point of this behavior is that you can use `...` at the beginning
+of an index to select the last axes of an array using integer array indices,
+or several `:`s to select some middle axes. This lets you do with indexing
+what you can also do with the {external+numpy:func}`numpy.take` function.
 
 To be sure, the slices can be any slice, and you can also include newaxes.
-This may potentially allow combining two sequential indexing operations into
-one, but they are mostly allowed for semantic completeness.
+This potentially allows combining two sequential indexing operations into a
+single step, although this behavior mainly implemented for the sake of
+semantic completeness.
 
 ##### Integer Array Indices Separated by Basic Indices
 
 Finally, if the [slice](slices-docs), [ellipsis](ellipsis-indices), or
-[newaxis](newaxis-indices) indices are *in between* the integer array
-indices, then something more strange happens. The two index types still
-operate "independently", but instead of the resulting array having the
-dimensions corresponding to the location of the indices, like in the
-previous bullet (and, indeed, as indexing works in every other instance),
-the shape corresponding to the (broadcasted) array indices (including
-integer indices) is *prepended* to the shape corresponding to the non-array
-indices. This is because there is inherent ambiguity in where these
-dimensions should be placed in the final shape.
+[newaxis](newaxis-indices) indices are *in between* the integer array indices,
+then something more strange happens. The two index types still operate
+"independently", but instead of the resulting array having the dimensions
+corresponding to the location of the indices, like in the previous bullet
+(and, indeed, as indexing works in every other instance), the shape
+corresponding to the (broadcasted) array indices (including integer indices)
+is *prepended* to the shape corresponding to the non-array indices. This is
+because there is inherent ambiguity in where these dimensions should be placed
+in the final shape.
 
 An example demonstrates this most clearly:
 
