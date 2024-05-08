@@ -581,9 +581,9 @@ other words,
 
 [^tuple-ellipsis-footnote]: There is one important distinction between the
     empty tuple index (`a[()]`) and a single ellipsis index (`a[...]`). NumPy
-    makes a distinction between scalars and 0-D (i.e., shape `()`) arrays. On either, an
-    empty tuple index `()` will always produce a scalar, and a single ellipsis
-    `...` will always produce a 0-D array:
+    makes a distinction between scalars and 0-D (i.e., shape `()`) arrays. On
+    either, an empty tuple index `()` will always produce a scalar, and a
+    single ellipsis `...` will always produce a 0-D array:
 
     ```py
     >>> s = np.int64(0) # scalar
@@ -2186,7 +2186,8 @@ subset of the array dimensions? Well we might want to use a boolean index to
 only select along the inner "subarray" dimensions, and pretend like the
 outer "batching" dimensions are our "array".
 
-For example, say we have an image:
+For example, say we have an image, represented in
+[scikit-image](https://scikit-image.org/) as a 3-D array:
 
 ```{eval-rst}
 .. plot::
@@ -2204,10 +2205,11 @@ For example, say we have an image:
    (512, 512, 3)
    >>> imshow(image, "Original Image")
 
-and we want to increase the saturation of this image. We can do this by
-converting the image to `HSV space
+Now suppose we want to increase the saturation of this image. We can do this
+by converting the image to `HSV space
 <https://en.wikipedia.org/wiki/HSL_and_HSV>`_ and increasing the saturation
-value (the second value in the last dimension, which should always be between 0 and 1):
+value (the second value in the last dimension, which should always be between
+0 and 1):
 
 .. plot::
    :context: close-figs
@@ -2221,10 +2223,10 @@ value (the second value in the last dimension, which should always be between 0 
    >>> saturated_image = color.hsv2rgb(hsv_image)
    >>> imshow(saturated_image, "Saturated Image (Naive)")
 
-However, this ends up looking bad, because the whole image now has a minimum
-saturation of 0.3. A better approach would be to take only those pixels that
-already have a saturation above some threshold, and increase the saturation of
-only those pixels:
+However, this ends up looking bad and washed out, because the whole image now
+has a minimum saturation of 0.3. A better approach would be to take only those
+pixels that already have a saturation above some threshold, and increase the
+saturation of only those pixels:
 
 .. plot::
    :context: close-figs
@@ -2244,10 +2246,11 @@ only those pixels:
 Here, `hsv_image.shape` is `(512, 512, 3)`, so our mask `hsv_image[:, :, 1] >
 0.6` has shape `(512, 512)`, i.e., the shape of the first two dimensions. In
 other words, the mask has one value for each pixel, either `True` if the
-saturation is `> 0.6` and `False` if it isn't. To add 0.3 to only these
-values, we mask the original array with `hsv_image[high_sat_mask, 1]`. This
-selects only those pixel values that have high saturation, and selects only
-the saturation channel in those pixels.
+saturation is `> 0.6` or `False` if it isn't. To add 0.3 to only those pixels
+above the threshold, we mask the original array with `hsv_image[high_sat_mask,
+1]`. The `high_sat_mask` part of the index selects only those pixel values
+that have high saturation, and the `1` in the final dimension selects the
+saturation channel for those pixels.
 
 (nonzero-equivalence)=
 ##### `nonzero()` Equivalence
