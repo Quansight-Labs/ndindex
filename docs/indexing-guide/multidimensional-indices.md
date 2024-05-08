@@ -2036,6 +2036,7 @@ As [with integer array indices](integer-arrays-advanced-notes), the above
 section provides the basic gist of boolean array indexing, but there are some
 advanced semantics described below, which can be skipped by new NumPy users.
 
+(boolean-array-result-shape)=
 ##### Result Shape
 
 > **A boolean array index will remove as many dimensions as the index has, and
@@ -2253,6 +2254,7 @@ values, we mask the original array with `hsv_image[high_sat_mask, 1]`. This
 selects only those pixel values that have high saturation, and selects only
 the saturation channel in those pixels.
 
+(nonzero-equivalence)=
 ##### `nonzero()` Equivalence
 
 Another way to think about boolean array indices is based on the
@@ -2349,9 +2351,10 @@ array indices together into a canonical form.
 ##### Boolean Scalar Indices
 
 A 0-dimensional boolean index (i.e., just the scalar `True` or `False`) is a
-little special. The `np.nonzero` rule stated above does not actually apply.
-That's because `np.nonzero` has odd behavior for 0-D arrays. `np.nonzero(a)` usually
-returns a tuple with as many arrays as dimensions of `a`:
+little special. The [`np.nonzero` rule](nonzero-equivalence) stated above does
+not actually apply. That's because `np.nonzero` has odd behavior for 0-D
+arrays. `np.nonzero(a)` usually returns a tuple with as many arrays as
+dimensions of `a`:
 
 ```py
 >>> np.nonzero(np.array([True, False]))
@@ -2377,12 +2380,13 @@ rather the same thing as
 (array([0]),)
 ```
 
-However, the key point, that a boolean array index removes and flattens
-`idx.ndim` dimensions from `a` is still True. Here, `idx.ndim` is `0`,
-because `array(True)` and `array(False)` have shape `()`. So what these
-indices do is remove 0 dimensions and add a single dimension of length 1 for
-True or 0 for False. Hence, if `a` has shape `(s1, ..., sn)`, then `a[True]`
-has shape `(1, s1, ..., sn)`, and `a[False]` has shape `(0, s1, ..., sn)`.
+However, the key point, that a [boolean array index removes and flattens
+`idx.ndim` dimensions from `a`](boolean-array-result-shape), is still true.
+Here, `idx.ndim` is `0`, because `array(True)` and `array(False)` have shape
+`()`. So what these indices do is remove 0 dimensions and add a single
+dimension of length 1 for True or 0 for False. Hence, if `a` has shape `(s1,
+..., sn)`, then `a[True]` has shape `(1, s1, ..., sn)`, and `a[False]` has
+shape `(0, s1, ..., sn)`.
 
 ```py
 >>> a.shape # as above
@@ -2413,7 +2417,7 @@ The scalar boolean behavior may seem like an odd corner case. You might wonder
 why NumPy supports using a `True` or `False` as an index, especially since it
 has slightly different semantics than higher dimensional boolean arrays.
 
-The main reason scalar booleans are supported is that they are a natural
+The reason scalar booleans are supported is that they are a natural
 generalization of n-D boolean array indices. While the `np.nonzero()` rule
 does not hold for them, the more general rule about removing and flatting
 `idx.ndim` dimensions does.
@@ -2523,7 +2527,7 @@ array(1)
 
 The point is that the underlying logic works out so that `a[a == 0] = -1`
 always does what you'd expect: every `0` value in `a` is replaced with `-1`
-*regardless* of the shape of `a`.
+*regardless* of the shape of `a`, including if that shape is `()`.
 
 <!-- TODO: Write something about mixing scalar booleans with other boolean -->
 <!-- array indices -->
