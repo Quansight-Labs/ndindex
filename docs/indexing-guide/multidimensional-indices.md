@@ -2193,16 +2193,16 @@ For example, say we have an image:
    :context: reset
    :include-source: True
 
-   >>> import matplotlib.pyplot as plt
+   >>> def imshow(image, title):
+   ...     import matplotlib.pyplot as plt
+   ...     plt.axis('off')
+   ...     plt.title(title)
+   ...     plt.imshow(image)
    >>> from skimage.data import astronaut
-   >>> from skimage import color
    >>> image = astronaut()
    >>> image.shape
    (512, 512, 3)
-   >>> plt.axis('off')
-   >>> plt.title("Original Image")
-   >>> plt.imshow(image)
-   <matplotlib.image.AxesImage object at ...>
+   >>> imshow(image, "Original Image")
 
 and we want to increase the saturation of this image. We can do this by
 converting the image to `HSV space
@@ -2213,15 +2213,13 @@ value (the second value in the last dimension, which should always be between 0 
    :context: close-figs
    :include-source: True
 
+   >>> from skimage import color
    >>> hsv_image = color.rgb2hsv(image)
    >>> # Add 0.3 to the saturation, clipping the values to the range [0, 1]
    >>> hsv_image[..., 1] = np.clip(hsv_image[..., 1] + 0.3, 0, 1)
    >>> # Convert back to RGB
    >>> saturated_image = color.hsv2rgb(hsv_image)
-   >>> plt.axis('off')
-   >>> plt.title("Saturated Image (Naive)")
-   >>> plt.imshow(saturated_image)
-   <matplotlib.image.AxesImage object at ...>
+   >>> imshow(saturated_image, "Saturated Image (Naive)")
 
 However, this ends up looking bad, because the whole image now has a minimum
 saturation of 0.3. A better approach would be to take only those pixels that
@@ -2239,10 +2237,7 @@ only those pixels:
    >>> hsv_image[high_sat_mask, 1] = np.clip(hsv_image[high_sat_mask, 1] + 0.3, 0, 1)
    >>> # Convert back to RGB
    >>> enhanced_color_image = color.hsv2rgb(hsv_image)
-   >>> plt.axis('off')
-   >>> plt.title("Saturated Image")
-   >>> plt.imshow(enhanced_color_image)
-   <matplotlib.image.AxesImage object at ...>
+   >>> imshow(enhanced_color_image, "Saturated Image")
 
 ```
 
@@ -2286,6 +2281,7 @@ indices](0-d-boolean-index).
 
 
 ```py
+>>> a = np.arange(12).reshape((3, 4))
 >>> a[idx]
 array([ 0,  2,  3,  5,  8,  9, 11])
 >>> np.nonzero(idx)
