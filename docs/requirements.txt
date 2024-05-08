@@ -2,6 +2,7 @@ furo
 linkify-it-py
 matplotlib
 myst-parser
+skimage
 sphinx
 sphinx-copybutton
 sphinx-reredirects

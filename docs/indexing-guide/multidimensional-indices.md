@@ -1098,6 +1098,7 @@ array([[100, 102, 100],
        [103, 100, 102]])
 ```
 
+(multidimensional-integer-indices)=
 This is how integer array indices work:
 
 > **An integer array index can construct *arbitrary* new arrays with elements
@@ -1329,6 +1330,7 @@ array([100, 101, 103])
 array([100, 101, 103])
 ```
 
+(integer-array-broadcasting)=
 ##### Broadcasting
 
 > **The integer arrays in an index must either be the same shape or be able to
@@ -1619,6 +1621,7 @@ value.
   the element that gets assigned to the duplicate index "last" becomes
   dependent on a race condition.
 
+(integer-arrays-combined-with-basic-indices)=
 ##### Combining Integer Arrays Indices with Basic Indices
 
 If any [slice](slices-docs), [ellipsis](ellipsis-indices), or
@@ -1692,11 +1695,13 @@ Here the integer array index shape `(10, 20)` comes first in the result array
 and the shape corresponding to the rest of the index, `(3, 4)`, comes last.
 
 If you find yourself running into this behavior, chances are you would be
-better off rewriting the indexing operation to be simpler. This is considered
-a design flaw in NumPy[^advanced-indexing-design-flaw-footnote], and no other
-Python array library has replicated it. ndindex will raise a
-`NotImplementedError` exception on indices like these, because I don't want to
-deal with implementing this obscure
+better off rewriting the indexing operation to be simpler, for instance, by
+first reshaping the array so that the integer array indices are together in
+the index. This is considered a design flaw in
+NumPy[^advanced-indexing-design-flaw-footnote], and no other Python array
+library has replicated it. ndindex will raise a `NotImplementedError`
+exception on indices like these, because I don't want to deal with
+implementing this obscure
 logic.[^ndindex-advanced-indexing-design-flaw-footnote]
 
 [^advanced-indexing-design-flaw-footnote]: Travis Oliphant, the original
@@ -2117,14 +2122,161 @@ and commas).
 C ordering is always used, even when the underlying memory is not C-ordered
 (see [](c-vs-fortran-ordering) for more details on C array ordering).
 
+##### Masking a Subset of Dimensions
+
+It is possible to use a boolean mask to select only a subset of the dimensions
+of `a`. For example, let's take a shape `(2, 3, 4)` array `a`:
+
+```py
+>>> a = np.arange(24).reshape((2, 3, 4))
+>>> a
+array([[[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7],
+        [ 8,  9, 10, 11]],
+<BLANKLINE>
+       [[12, 13, 14, 15],
+        [16, 17, 18, 19],
+        [20, 21, 22, 23]]])
+```
+
+Say we want to select the elements of `a` that are greater than 5, but only in
+the first subarray along the first dimension (only the elements from 0 to 11).
+We can create a mask on only that subarray:
+
+```py
+>>> mask = a[0] > 5
+>>> mask.shape
+(3, 4)
+```
+
+Then apply it to that same subarray
+
+```py
+>>> a[0, mask]
+array([ 6,  7,  8,  9, 10, 11])
+```
+
+The [tuple](tuple-indices) index `(0, mask)` works just like any other
+tuple index: it selects the subarray `a[0]` along the first axis, then
+applies the `mask` to the remaining dimensions. The shape of `mask`, `(3, 4)`
+matches those remaining dimensions (by construction), so the index is valid.
+
+Masking a subset of dimension is not as common as masking the entire array
+`a`, but it does happen. Remember that we can always think of an array as an
+"array of subarrays". For instance, suppose we have a video with 1920 x 1080
+pixels and 500 frames. This might be represented as an array of shape `(500,
+1080, 1920, 3)`, where the final dimension 3 represents the 3 RGB color values
+of a pixel. We can think of this array as 500 `(1080, 1920, 3)` "frames". Or
+as 500 x 1080 x 1920 3-tuple "pixels". Or we could slice along the last
+dimension and think of it as 3 `(500, 1080, 1920)` video "channels", one for
+each primary color.
+
+In each case, we imagine that our array is really an array (or a stack or
+batch) of subarrays, where some of our dimensions are the "stacking"
+dimensions and some of them are the array dimensions. This way of thinking is
+also common when doing linear algebra on arrays. The last two dimensions
+(typically) are considered matrices, and the leading dimensions are batch
+dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5 x 4
+matrices. NumPy linear algebra functions like `solve` and the `@` matmul
+operator will automatically operate on the last two dimensions of an array.
+
+So how does this relate to using a boolean array index to select only a
+subset of the array dimensions? Well we might want to use a boolean index to
+only select along the inner "subarray" dimensions, and pretend like the
+outer "batching" dimensions are our "array".
+
+For example, say we have an image:
+
+```{eval-rst}
+.. plot::
+   :context: reset
+   :include-source: True
+
+   >>> import matplotlib.pyplot as plt
+   >>> from skimage.data import astronaut
+   >>> from skimage import color
+   >>> image = astronaut()
+   >>> image.shape
+   (512, 512, 3)
+   >>> plt.axis('off')
+   >>> plt.title("Original Image")
+   >>> plt.imshow(image)
+   <matplotlib.image.AxesImage object at ...>
+
+and we want to increase the saturation of this image. We can do this by
+converting the image to `HSV space
+<https://en.wikipedia.org/wiki/HSL_and_HSV>`_ and increasing the saturation
+value (the second value in the last dimension, which should always be between 0 and 1):
+
+.. plot::
+   :context: close-figs
+   :include-source: True
+
+   >>> hsv_image = color.rgb2hsv(image)
+   >>> # Add 0.3 to the saturation, clipping the values to the range [0, 1]
+   >>> hsv_image[..., 1] = np.clip(hsv_image[..., 1] + 0.3, 0, 1)
+   >>> # Convert back to RGB
+   >>> saturated_image = color.hsv2rgb(hsv_image)
+   >>> plt.axis('off')
+   >>> plt.title("Saturated Image (Naive)")
+   >>> plt.imshow(saturated_image)
+   <matplotlib.image.AxesImage object at ...>
+
+However, this ends up looking bad, because the whole image now has a minimum
+saturation of 0.3. A better approach would be to take only those pixels that
+already have a saturation above some threshold, and increase the saturation of
+only those pixels:
+
+.. plot::
+   :context: close-figs
+   :include-source: True
+
+   >>> hsv_image = color.rgb2hsv(image)
+   >>> # Mask only those pixels whose saturation is > 0.6
+   >>> high_sat_mask = hsv_image[:, :, 1] > 0.6
+   >>> # Increase the saturation of those pixels by 0.3
+   >>> hsv_image[high_sat_mask, 1] = np.clip(hsv_image[high_sat_mask, 1] + 0.3, 0, 1)
+   >>> # Convert back to RGB
+   >>> enhanced_color_image = color.hsv2rgb(hsv_image)
+   >>> plt.axis('off')
+   >>> plt.title("Saturated Image")
+   >>> plt.imshow(enhanced_color_image)
+   <matplotlib.image.AxesImage object at ...>
+
+```
+
+Here, `hsv_image.shape` is `(512, 512, 3)`, so our mask `hsv_image[:, :, 1] >
+0.6` has shape `(512, 512)`, i.e., the shape of the first two dimensions. In
+other words, the mask has one value for each pixel, either `True` if the
+saturation is `> 0.6` and `False` if it isn't. To add 0.3 to only these
+values, we mask the original array with `hsv_image[high_sat_mask, 1]`. This
+selects only those pixel values that have high saturation, and selects only
+the saturation channel in those pixels.
+
 ##### `nonzero()` Equivalence
 
-Another way to think about the result order that elements of a mask are
-selected in is based on the `np.nonzero()` function:
+Another way to think about boolean array indices is based on the
+`np.nonzero()` function. `np.nonzero(x)` returns a tuple of arrays of integer
+indices where `x` is nonzero, or in the case where `x` is boolean, where `x`
+is True. For example:
 
-> **A boolean array index is the same as if you replaced `idx` with the result
-of {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking the
-tuple), using the rules for [integer array indices](integer-array-indices)
+```py
+>>> idx = np.array([[ True, False,  True,  True],
+...                 [False,  True, False, False],
+...                 [ True,  True, False,  True]])
+>>> np.nonzero(idx)
+(array([0, 0, 0, 1, 2, 2, 2]), array([0, 2, 3, 1, 0, 1, 3]))
+```
+
+The first array in the tuple corresponds to indices for the first dimension,
+the second array to the second dimension, and so on. If this seems familiar,
+it's because this is exactly how we saw that [multidimensional integer array
+indices](multidimensional-integer-indices) worked. Indeed, there is a basic
+equivalence between the two:
+
+> **A boolean array index `idx` is the same as if you replaced `idx` with the
+result of {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking
+the tuple), using the rules for [integer array indices](integer-array-indices)
 outlined above.**
 
 Although note that this rule *doesn't* apply to [0-dimensional boolean
@@ -2132,6 +2284,8 @@ indices](0-d-boolean-index).
 
 
 ```py
+>>> a[idx]
+array([ 0,  2,  3,  5,  8,  9, 11])
 >>> np.nonzero(idx)
 (array([0, 0, 0, 1, 2, 2, 2]), array([0, 2, 3, 1, 0, 1, 3]))
 >>> idx0, idx1 = np.nonzero(idx)
@@ -2153,10 +2307,11 @@ array([ True,  True,  True,  True,  True,  True,  True])
 ```
 
 What this all means is that all the rules that are outlined above about
-[integer array indices](integer-array-indices), e.g., how they broadcast or
-combine together with slices, all also apply to boolean array indices after
-this transformation. This also specifies how boolean array indices and
-integer array indices combine
+[integer array indices](integer-array-indices), e.g., [how they
+broadcast](integer-array-broadcasting) or [combine together with
+slices](integer-arrays-combined-with-basic-indices), all also apply to boolean
+array indices after this transformation. This also specifies how boolean array
+indices and integer array indices combine
 together.[^combining-integer-and-boolean-indices-footnote]
 
 [^combining-integer-and-boolean-indices-footnote]: Combining an integer array
@@ -2174,47 +2329,15 @@ together.[^combining-integer-and-boolean-indices-footnote]
     IndexError: shape mismatch: indexing arrays could not be broadcast together with shapes (3,) (4,)
     ```
 
-    It's not impossible it could come up in practice, but like many of the
-    advanced indexing semantics, it's mostly supported for the sake of
-    completeness.
+    It's not impossible for this to come up in practice, but like many of the
+    advanced indexing semantics discussed here, it's mostly supported for the
+    sake of completeness.
 
 Effectively, a boolean array index can be combined with other boolean array
 indices or integer or integer array indices by first converting the boolean
 index into integer indices (one for each dimension of the boolean index)
 that select each `True` element of the index, then broadcasting them all to
 a common shape.
-
-The particular thing to note here is that it is possible to use a boolean
-mask to select only a subset of the dimensions of `a`: TODO
-
-This is not nearly as common as masking the entire array `a`, but it can
-happen. Remember that we can always think of an array as an "array of
-subarrays". For instance, suppose we have a video with 1920 x 1080 pixels
-and 500 frames. This might be represented as an array of shape `(500, 1080,
-1920, 3)`[^skvideo-footnote], where the final dimension 3 represents the 3
-RGB color values of a pixel. We can think of this array as 500 `(1080, 1920,
-3)` "frames". Or as 500 x 1080 x 1920 "pixels". Or we could slice along a
-different dimension and think of it as 3 `(500, 1080, 1920)` video
-"channels", one for each primary color.
-
-[^skvideo-footnote]: This is how the
-[skikit-video](https://www.scikit-video.org/) package represents videos as
-NumPy arrays. Note that the height and width dimensions are reversed from
-the usual way of writing the.
-
-In each case, we imagine that our array is really an array (or a stack or
-batch) of subarrays, where some of our dimensions are the "stacking"
-dimensions and some of them are the array dimensions. This way of thinking
-is also common when doing linear algebra on arrays. The last two dimensions
-(typically) are considered matrices, and the leading dimensions are batch
-dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5 x 4
-matrices. NumPy functions like the `@` matmul operator will automatically
-operate on the last two dimensions of an array.
-
-So how does this relate to using a boolean array index to select only a
-subset of the array dimensions? Well we might want to use a boolean index to
-only select along the inner "subarray" dimensions, and pretend like the
-outer "batching" dimensions are our "array". TODO
 
 The ndindex method
 [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
