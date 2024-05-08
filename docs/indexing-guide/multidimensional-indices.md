@@ -1877,8 +1877,8 @@ A typical use-case of boolean indexing is to create a boolean mask using the
 array itself with some operators that return boolean arrays, such as
 relational operators (`<`, `<=`, `==`, `>`, `>=`, and `!=`), logical
 operators (`&` (and), `|` (or), `~` (not), and `^` (xor)), and boolean
-functions (like {external+numpy:func}`isnan() <numpy.isnan>` or
-{external+numpy:func}`isinf() <numpy.isinf>`).
+functions (like {external+numpy:py:data}`isnan() <numpy.isnan>` or
+{external+numpy:py:data}`isinf() <numpy.isinf>`).
 
 Consider an array of the integers from -10 to 10:
 
