@@ -2047,8 +2047,8 @@ advanced semantics described below, which can be skipped by new NumPy users.
 > replace them with a single flat dimension, which has size equal to the
 > number of `True` elements in the index.**
 
-The shape of the boolean array index must exactly match the dimensions that
-are being replaced, or the index will result in an `IndexError`.
+The shape of the boolean array index must exactly match the dimensions being
+replaced, or the index will result in an `IndexError`.
 
 For example:
 
@@ -2067,32 +2067,32 @@ For example:
 ```
 
 This means that the final shape of an array indexed with a boolean mask
-depends on the value of the mask, specifically, the number of `True` values
-in it. It is easy to construct array expressions with boolean masks where
-the size of the array is impossible to know until runtime. For example:
+depends on the value of the mask, specifically, the number of `True` values in
+it. It is easy to construct array expressions with boolean masks where the
+size of the array cannot be determined until runtime. For example:
 
 ```py
 >>> rng = np.random.default_rng(11) # Seeded so this example reproduces
->>> a = rng.integers(0, 2, (3, 4)) # A size (3, 4) array of 0s and 1s
+>>> a = rng.integers(0, 2, (3, 4)) # A shape (3, 4) array of 0s and 1s
 >>> a[a==0].shape # Could be any size from 0 to 12
 (7,)
 ```
 
-However, even if the number of elements of an indexed array is not knowable
-until runtime, the _number of dimensions_ is knowable. That's because a
-boolean mask acts as a flattening operation. The number of dimensions of the
-boolean array index are all removed from the indexed array and replaced with
-a single dimension. Only the *size* of this dimension cannot be known unless
-you know how many `True` elements there are in the index.
+However, even if the number of elements in an indexed array is not
+determinable until runtime, the *number of dimensions* is determinable. This
+is because a boolean mask acts as a flattening operation. All the dimensions
+of the boolean array index are removed from the indexed array and replaced
+with a single dimension. Only the *size* of this dimension cannot be
+determined, unless the number of `True` elements in the index is known.
 
-This detail about boolean array indexing means that sometimes code that uses
-boolean array indexing can be difficult to reason about statically, because
-the array shapes are inherently unknowable until runtime and may depend on
-data. Some array libraries that build computational graphs from array
-expressions without evaluating them, such as
+This detail means that sometimes code that uses boolean array indexing can be
+difficult to reason about statically, because the array shapes are inherently
+unknowable until runtime and may depend on data. For this reason, array
+libraries that build computational graphs from array expressions without
+evaluating them, such as
 [JAX](https://jax.readthedocs.io/en/latest/index.html) or [Dask
 Array](https://docs.dask.org/en/stable/array.html), may have limited or no
-boolean array indexing support for this reason.
+support for boolean array indexing.
 
 (boolean-array-c-order)=
 ##### Result Order
