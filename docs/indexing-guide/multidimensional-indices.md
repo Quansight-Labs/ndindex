@@ -1986,6 +1986,7 @@ both. -->
 
 ```{eval-rst}
 .. plot::
+   :context: reset
    :include-source: True
    :output-base-name: plot-{counter}
    :alt: A plot of 4*x*np.sin(x) - x**2/4 - 2*x from -10 to 10. The curve crosses the x-axis several times at irregular intervals.
@@ -1995,16 +1996,14 @@ both. -->
    >>> y = 4*x*np.sin(x) - x**2/4 - 2*x # our function
    >>> plt.scatter(x, y, marker=',', s=1)
    <matplotlib.collections.PathCollection object at ...>
-```
-
 
 If we want to show only those x values that are positive, we could easily do
-this by modifying the `linspace` call that created `x`. But what if we want to
-show only those `y` values that are positive? The only way to do this is to
-select them using a mask:
+this by modifying the ``linspace`` call that created ``x``. But what if we
+want to show only those ``y`` values that are positive? The only way to do
+this is to select them using a mask:
 
-```{eval-rst}
 .. plot::
+   :context: close-figs
    :include-source: True
    :output-base-name: plot-{counter}
    :alt: A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis.
@@ -2196,6 +2195,7 @@ For example, say we have an image, represented in
 
 ```{eval-rst}
 .. plot::
+   :context: reset
    :include-source: True
    :output-base-name: astronaut-{counter}
    :alt: An image of an astronaut, which is represented as a shape (512, 512, 3) array.
@@ -2210,16 +2210,15 @@ For example, say we have an image, represented in
    >>> image.shape
    (512, 512, 3)
    >>> imshow(image, "Original Image")
-```
 
 Now suppose we want to increase the saturation of this image. We can do this
-by converting the image to [HSV
-space](https://en.wikipedia.org/wiki/HSL_and_HSV) and increasing the
-saturation value (the second value in the last dimension, which should always
-be between 0 and 1):
+by converting the image to `HSV space
+<https://en.wikipedia.org/wiki/HSL_and_HSV>`_ and increasing the saturation
+value (the second value in the last dimension, which should always be between
+0 and 1):
 
-```{eval-rst}
 .. plot::
+   :context: close-figs
    :include-source: True
    :output-base-name: astronaut-{counter}
    :alt: An image of an astronaut with increased saturation. The lighter parts of the image appear washed out.
@@ -2231,15 +2230,14 @@ be between 0 and 1):
    >>> # Convert back to RGB
    >>> saturated_image = color.hsv2rgb(hsv_image)
    >>> imshow(saturated_image, "Saturated Image (Naive)")
-```
 
 However, this ends up looking bad and washed out, because the whole image now
 has a minimum saturation of 0.3. A better approach would be to take only those
 pixels that already have a saturation above some threshold, and increase the
 saturation of only those pixels:
 
-```{eval-rst}
 .. plot::
+   :context: close-figs
    :include-source: True
    :output-base-name: astronaut-{counter}
    :alt: An image of an astronaut with increased saturation. The image does not appear washed out.
