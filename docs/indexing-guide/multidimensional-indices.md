@@ -2277,7 +2277,7 @@ is True. For example:
 (array([0, 0, 0, 1, 2, 2, 2]), array([0, 2, 3, 1, 0, 1, 3]))
 ```
 
-The first array in the tuple corresponds to indices for the first dimension,
+The first array in the tuple corresponds to indices for the first dimension;
 the second array to the second dimension, and so on. If this seems familiar,
 it's because this is exactly how we saw that [multidimensional integer array
 indices](multidimensional-integer-indices) worked. Indeed, there is a basic
@@ -2288,9 +2288,8 @@ result of {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking
 the tuple), using the rules for [integer array indices](integer-array-indices)
 outlined above.**
 
-Although note that this rule *doesn't* apply to [0-dimensional boolean
+Note, however, that this rule *does not* apply to [0-dimensional boolean
 indices](0-d-boolean-index).
-
 
 ```py
 >>> a = np.arange(12).reshape((3, 4))
@@ -2343,11 +2342,10 @@ together.[^combining-integer-and-boolean-indices-footnote]
     advanced indexing semantics discussed here, it's mostly supported for the
     sake of completeness.
 
-Effectively, a boolean array index can be combined with other boolean array
-indices or integer or integer array indices by first converting the boolean
-index into integer indices (one for each dimension of the boolean index)
-that select each `True` element of the index, then broadcasting them all to
-a common shape.
+Effectively, a boolean array index can be combined with other boolean or
+integer array indices by first converting the boolean index into integer
+indices (one for each dimension of the boolean index) that select each `True`
+element of the index, and then broadcasting them all to a common shape.
 
 The ndindex method
 [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) (as well as
