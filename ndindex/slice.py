@@ -49,7 +49,7 @@ class Slice(NDIndex):
     >>> s.raw
     slice(None, 10, None)
 
-    For most use-cases, it's more convenient to create Slice objects using
+    For most use cases, it's more convenient to create Slice objects using
     `ndindex[slice]`, which allows using `a:b` slicing syntax:
 
     >>> from ndindex import ndindex

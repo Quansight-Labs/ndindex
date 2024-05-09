@@ -418,7 +418,7 @@ element. And we considered sub-tuples of this, `(1,)` and `(1, 0)`, which
 selected subarrays. What if we want to select other subarrays? For example,
 `a[1, 0]` selects the subarray with the second element of the first axis and
 the first element of the second axis. What if instead we wanted the first
-element of the *last* axis (axis 3).
+element of the *last* axis (axis 3)?
 
 We can do this with slices. In particular, the trivial slice `:` will select
 every single element of an axis (remember that the `:` slice means ["select
@@ -669,7 +669,7 @@ However, this index only works for our specific array, because it has 3
 dimensions. If it had 5 dimensions instead, we would need to use `a[:, :, :,
 :, 0]`. This is not only tedious to type, but also makes it impossible to
 write an index that works for any number of dimensions. To contrast, if we
-wanted the first element of the *first* axis, we could write `a[0]`, which
+want the first element of the *first* axis, we could write `a[0]`, which
 works if `a` has 3 dimensions or 5 dimensions or any number of dimensions.
 
 The ellipsis solves this problem. An ellipsis index skips all the axes of an
@@ -917,7 +917,7 @@ In summary,
 #### Where `newaxis` is Used
 
 What we haven't said yet is why you would want to do such a thing in the first
-place. One use-case is to explicitly convert a 1-D vector into a 2-D matrix
+place. One use case is to explicitly convert a 1-D vector into a 2-D matrix
 representing a row or column vector. For example,
 
 ```py
@@ -1156,7 +1156,7 @@ array([[100, 100, 101],
 ```
 
 It would appear that this limits the ability to arbitrarily shuffle elements
-of `a` using integer indexing. For instance, suppose we wanted to create the
+of `a` using integer indexing. For instance, suppose we want to create the
 array `[105, 100]` from the above 2-D `a`. Based on the above examples, it
 might not seem possible. The elements `105` and `100` are not in the same row
 or column of `a`.
@@ -1197,7 +1197,7 @@ arrays, we would get the set of indices for each corresponding element, `(1,
 2)` and `(0, 0)`.
 
 The resulting array has the same shape as our two index arrays. As before,
-this shape can be arbitrary. Suppose we wanted to create the array
+this shape can be arbitrary. Suppose we want to create the array
 
 ```
 [[[ 102, 103],
@@ -1230,9 +1230,9 @@ array([[[102, 103],
 Again, reading across, the first element, `102` corresponds to index `(0, 2)`,
 the next element, `103`, corresponds to index `(1, 0)`, and so on.
 
-#### Use-Cases
+#### Use Cases
 
-A common use-case for integer array indexing is sampling. For example, to
+A common use case for integer array indexing is sampling. For example, to
 sample $k$ elements from a 1-D array of size $n$ with replacement, we can
 simply construct an a random integer index in the range $[0, n)$ with $k$
 elements (see the
@@ -1256,7 +1256,7 @@ array([100, 100, 103, 101, 102, 102, 102, 100, 101, 100])
 
 (permutation-example)=
 
-Another common use-case of integer array indexing is to permute an array. An
+Another common use case of integer array indexing is to permute an array. An
 array can be randomly permuted with
 {external+numpy:meth}`numpy.random.Generator.permutation`. But what if we want
 to permute two arrays with the same permutation? We can compute a permutation
@@ -1844,7 +1844,7 @@ array([[0, 1, 2],
        [6, 7, 8]])
 ```
 
-Suppose we want to select the elements `1`, `3`, and `4`. To do so, we create a
+Suppose we want to select the elements `1`, `3`, and `4`: to do so, we create a
 boolean array of the same shape as `a` which is `True` in the positions where
 those elements are and `False` everywhere else.
 
@@ -1859,25 +1859,25 @@ array([1, 3, 4])
 
 From this we can see a few things:
 
-- The result of indexing by the boolean mask is a 1-D array. If we think about
-  it, this is the only possibility. A boolean index could select any number of
-  elements. In this case, it selected 3 elements, but it could select as few
-  as 0 and as many as 9 elements from `a`. So there would be no way to return
-  a higher dimensional shape or for the shape of the result to be somehow
-  related to the shape of `a`.
+- The result of indexing with the boolean mask is a 1-D array. If we think
+  about it, this is the only possibility. A boolean index could select any
+  number of elements. In this case, it selected 3 elements, but it could
+  select as few as 0 and as many as 9 elements from `a`. So there would be no
+  way to return a higher dimensional shape or for the shape of the result to
+  be somehow related to the shape of `a`.
 
 - The selected elements are "in order" ([more on what this means
   later](boolean-array-c-order)).
 
-However, these details are usually not important. That is because an array
-indexed by a boolean array is typically only used indirectly, such as in the
+However, these details are usually not important. This is because an array
+indexed by a boolean array is typically used indirectly, such as on the
 left-hand side of an assignment.
 
-A typical use-case of boolean indexing is to create a boolean mask using the
-array itself with some operators that return boolean arrays, such as
-relational operators (`<`, `<=`, `==`, `>`, `>=`, and `!=`), logical
-operators (`&` (and), `|` (or), `~` (not), and `^` (xor)), and boolean
-functions (like {external+numpy:py:data}`isnan() <numpy.isnan>` or
+A typical use case of boolean indexing involves creating a boolean mask using
+the array itself with operators that return boolean arrays, such as relational
+operators (`<`, `<=`, `==`, `>`, `>=`, `!=`), logical operators (`&` (and),
+`|` (or), `~` (not), `^` (xor)), and boolean functions (e.g.,
+{external+numpy:py:data}`isnan() <numpy.isnan>` or
 {external+numpy:py:data}`isinf() <numpy.isinf>`).
 
 Consider an array of the integers from -10 to 10:
@@ -1899,9 +1899,9 @@ array `a % 2 == 1` represents which elements are odd. So our mask would be
 
 Note the careful use of parentheses to match [Python operator
 precedence](https://docs.python.org/3/reference/expressions.html#operator-precedence).
-Masks must use the logical operators `&`, `|`, and `~` so that they can be
-arrays. They cannot use the Python keywords `and`, `or`, and `not`, because
-they don't work on arrays.
+Masks must use the logical operators `&`, `|`, and `~` so that they can
+operate on arrays. They cannot use the Python keywords `and`, `or`, and `not`,
+because they don't work on arrays.
 
 Our `mask` is just an array of booleans:
 
@@ -1919,15 +1919,16 @@ To get the actual matching elements, we need to index `a` with the mask:
 array([1, 3, 5, 7, 9])
 ```
 
-Often one will see the `mask` written directly in the index, like
+Often, one will see the `mask` written directly in the index, like
 
 ```py
 >>> a[(a > 0) & (a % 2 == 1)]
 array([1, 3, 5, 7, 9])
 ```
 
-Suppose we wanted to set these elements of `a` to `-100` (i.e., to "mask" them
-out). This can be easily done with an indexing assignment[^indexing-assignment-footnote]:
+Suppose we want to set these elements of `a` to `-100` (i.e., to "mask" them
+out). This can be done easily with an indexing
+assignment[^indexing-assignment-footnote]:
 
 [^indexing-assignment-footnote]: All the indexing rules discussed in this
     guide apply when the indexed array is on the left-hand side of an `=`
@@ -1941,7 +1942,7 @@ array([ -10,   -9,   -8,   -7,   -6,   -5,   -4,   -3,   -2,   -1,    0,
        -100,    2, -100,    4, -100,    6, -100,    8, -100,   10])
 ```
 
-One common use-case of this sort of thing is to mask out `nan` entries with a
+One common use case of this sort of thing is to mask out `nan` entries with a
 finite number, like `0`:
 
 ```
@@ -1959,7 +1960,7 @@ array([ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
 Here `np.isnan(x)` returns a boolean array of the same shape as `x` that is
 `True` if the corresponding element is `nan` and `False` otherwise.
 
-Note that for this kind of use-case, the actual shape of `a[mask]` is
+Note that for this kind of use case, the actual shape of `a[mask]` is
 irrelevant. The important thing is that it is some subset of `a`, which is
 then assigned to, mutating only those elements of `a`.
 
@@ -1972,11 +1973,11 @@ elements.**
 
 This distinction might feel overly pedantic, but it matters once you realize
 that a mask created with one array can be used on another array, so long as it
-has the same shape. It's common to have multiple arrays representing different
-data about the same set of points. You may wish to select a subset of one
-array based on the values of the corresponding points in another array.
+has the same shape. It is common to have multiple arrays representing
+different data about the same set of points. You may want to select a subset
+of one array based on the values of the corresponding points in another array.
 
-For example, suppose we wanted to plot the function $f(x) = 4x\sin(x) -
+For example, suppose we want to plot the function $f(x) = 4x\sin(x) -
 \frac{x^2}{4} - 2x$ on $[-10,10]$. We can set `x = np.linspace(-10, 10)` and
 compute the array expression:
 
@@ -2017,22 +2018,21 @@ Here we are using the mask `y > 0` to select the corresponding values from
 *both* the `x` and the `y` arrays. Since the same mask is used on both arrays,
 the values corresponding to this mask in both arrays will be selected. With
 `x[y > 0]`, even though the mask itself is not strictly created *from* `x`, it
-still makes sense as a mask for the array `x`. In this case, this mask selects
+still makes sense as a mask for the array `x`. In this case, the mask selects
 a nontrivial subset of `x`.
 
 Using a boolean array mask created from a different array is very common. For
-example, in [scikit-image](https://scikit-image.org/) an image is represented
-as an array of pixel values. Masks can be used to select subset of the image,
-and may be constructed based on the pixel values (e.g., all red pixels), which
-would depend on the array. Or they could be based on a geometric shape
-independent of the pixel values, e.g., a
-[circle](https://scikit-image.org/docs/stable/auto_examples/numpy_operations/plot_camera_numpy.html)).
-In that case, the mask would not depend on the image array values at all, but
-rather just be a circular arrangement of `True`s and `False`s. As another
-example, in machine learning, if `group` is an array with group numbers and
-`X` is an array of features with repeated measurements per group, one can
-select the features for a single group to do cross-validation like `X[group ==
-0]`.
+example, in [scikit-image](https://scikit-image.org/), an image is represented
+as an array of pixel values. Masks can be used to select a subset of the
+image. A mask based on the pixel values (e.g., all red pixels) would depend on
+the array, but a mask based on a geometric shape independent of the pixel
+values, such as a
+[circle](https://scikit-image.org/docs/stable/auto_examples/numpy_operations/plot_camera_numpy.html),
+would not. In that case, the mask would just be a circular arrangement of
+`True`s and `False`s. As another example, in machine learning, if `group` is
+an array with group numbers and `X` is an array of features with repeated
+measurements per group, one can select the features for a single group to do
+cross-validation like `X[group == 0]`.
 
 #### Advanced Notes
 

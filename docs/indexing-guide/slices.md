@@ -2499,11 +2499,11 @@ would make to improve the semantics would be
      closed-closed/1-based semantics is very reasonable.
 
    To me, the ideal indexing system defaults to 1-based, but allows starting
-   at any index. That way, if you are dealing with a use-case where 0-based
+   at any index. That way, if you are dealing with a use case where 0-based
    indexing really does make more sense, you can easily use it. Indices should
    also be able to start at any other number, including negative numbers
    (which is another reason to remove the special meaning of negative
-   indices). An example of a use-case where 0-based indexing truly is more
+   indices). An example of a use case where 0-based indexing truly is more
    natural than 1-based indexing is polynomials. Say we have a polynomial <!--
    --> $a_0 + a_1x + a_2x^2 + \cdots$. Then we can represent the coefficients
    $a_0, a_1, a_2, \ldots$ in a list `[a0, a1, a2, ...]`. Since a polynomial
