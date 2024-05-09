@@ -1989,6 +1989,7 @@ both. -->
    :context: reset
    :include-source: True
    :output-base-name: plot-{counter}
+   :alt: A plot of 4*x*np.sin(x) - x**2/4 - 2*x from -10 to 10. The curve crosses the x-axis several times at irregular intervals.
 
    >>> import matplotlib.pyplot as plt
    >>> x = np.linspace(-10, 10, 10000) # 10000 evenly spaced points between -10 and 10
@@ -2005,6 +2006,7 @@ this is to select them using a mask:
    :context: close-figs
    :include-source: True
    :output-base-name: plot-{counter}
+   :alt: A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis.
 
    >>> plt.scatter(x[y > 0], y[y > 0], marker=',', s=1)
    <matplotlib.collections.PathCollection object at ...>
@@ -2196,6 +2198,7 @@ For example, say we have an image, represented in
    :context: reset
    :include-source: True
    :output-base-name: astronaut-{counter}
+   :alt: An image of an astronaut, which is represented as a shape (512, 512, 3) array.
 
    >>> def imshow(image, title):
    ...     import matplotlib.pyplot as plt
@@ -2218,6 +2221,7 @@ value (the second value in the last dimension, which should always be between
    :context: close-figs
    :include-source: True
    :output-base-name: astronaut-{counter}
+   :alt: An image of an astronaut with increased saturation. The lighter parts of the image appear washed out.
 
    >>> from skimage import color
    >>> hsv_image = color.rgb2hsv(image)
@@ -2236,6 +2240,7 @@ saturation of only those pixels:
    :context: close-figs
    :include-source: True
    :output-base-name: astronaut-{counter}
+   :alt: An image of an astronaut with increased saturation. The image does not appear washed out.
 
    >>> hsv_image = color.rgb2hsv(image)
    >>> # Mask only those pixels whose saturation is > 0.6
