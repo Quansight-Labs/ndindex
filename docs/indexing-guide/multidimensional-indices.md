@@ -2229,7 +2229,7 @@ value (the second value in the last dimension, which should always be between
    >>> imshow(saturated_image, "Saturated Image (Naive)")
 
 However, this ends up looking bad and washed out, because the whole image now
-has a minimum saturation of 0.3. A better approach would be to take only those
+has a minimum saturation of 0.3. A better approach would be to select the
 pixels that already have a saturation above some threshold, and increase the
 saturation of only those pixels:
 
