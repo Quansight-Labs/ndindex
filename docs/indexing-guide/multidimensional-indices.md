@@ -1,7 +1,5 @@
 # Multidimensional Indices
 
-TODO: Split this into multiple pages?
-
 Unlike [slices](slices-docs) and [integers](integer-indices), which not only
 work on NumPy arrays but also on built-in Python sequence types such as
 `list`, `tuple`, and `str`, the remaining index types do not work at all on
