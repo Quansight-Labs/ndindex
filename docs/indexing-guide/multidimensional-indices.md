@@ -2536,14 +2536,6 @@ The point is that the underlying logic works out so that `a[a == 0] = -1`
 always does what you'd expect: every `0` value in `a` is replaced with `-1`
 *regardless* of the shape of `a`, including if that shape is `()`.
 
-<!-- TODO: Write something about mixing scalar booleans with other boolean -->
-<!-- array indices -->
-
-<!-- Scalar boolean indices can also be extra confusing if they are mixed with -->
-<!-- other indices, but this is again just a special case of mixing boolean array -->
-<!-- masks with other indices. Firstly, note that this is not nearly as common as -->
-<!-- masking the entire array, as described above. -->
-
 ## Footnotes
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
