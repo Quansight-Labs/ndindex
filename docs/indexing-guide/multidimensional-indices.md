@@ -1988,6 +1988,7 @@ both. -->
 .. plot::
    :context: reset
    :include-source: True
+   :output-base-name: plot-{counter}
 
    >>> import matplotlib.pyplot as plt
    >>> x = np.linspace(-10, 10, 10000) # 10000 evenly spaced points between -10 and 10
@@ -2003,6 +2004,7 @@ this is to select them using a mask:
 .. plot::
    :context: close-figs
    :include-source: True
+   :output-base-name: plot-{counter}
 
    >>> plt.scatter(x[y > 0], y[y > 0], marker=',', s=1)
    <matplotlib.collections.PathCollection object at ...>
@@ -2193,6 +2195,7 @@ For example, say we have an image, represented in
 .. plot::
    :context: reset
    :include-source: True
+   :output-base-name: astronaut-{counter}
 
    >>> def imshow(image, title):
    ...     import matplotlib.pyplot as plt
@@ -2214,6 +2217,7 @@ value (the second value in the last dimension, which should always be between
 .. plot::
    :context: close-figs
    :include-source: True
+   :output-base-name: astronaut-{counter}
 
    >>> from skimage import color
    >>> hsv_image = color.rgb2hsv(image)
@@ -2231,6 +2235,7 @@ saturation of only those pixels:
 .. plot::
    :context: close-figs
    :include-source: True
+   :output-base-name: astronaut-{counter}
 
    >>> hsv_image = color.rgb2hsv(image)
    >>> # Mask only those pixels whose saturation is > 0.6
