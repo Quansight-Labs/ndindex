@@ -7,4 +7,5 @@ pytest
 pytest-cov
 pytest-doctestplus
 pytest-flakes
+scikit-image
 slotscheck
