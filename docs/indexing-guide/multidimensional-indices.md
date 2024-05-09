@@ -2411,10 +2411,11 @@ return:[^nonzero-scalar-footnote]
     to the actual indexing behavior of a boolean scalar, especially for
     `False`.
 
+<!-- TODO: Update this when NumPy 2.0 is released. -->
 ```py
->>> a[np.nonzero(True)].shape
+>>> a[np.nonzero(True)].shape # doctest: +SKIP
 (1, 5)
->>> a[np.nonzero(False)].shape
+>>> a[np.nonzero(False)].shape # doctest: +SKIP
 (0, 5)
 ```
 
