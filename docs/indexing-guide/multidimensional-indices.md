@@ -2425,8 +2425,8 @@ has slightly different semantics than higher dimensional boolean arrays.
 
 The reason scalar booleans are supported is that they are a natural
 generalization of n-D boolean array indices. While the `np.nonzero()` rule
-does not hold for them, the more general rule about removing and flatting
-`idx.ndim` dimensions does.
+does not hold for them, the more general rule about replacing
+`idx.ndim` dimensions a single dimension does.
 
 Consider the most common case of using a boolean index: masking some subset of
 the entire array. This typically looks something like
