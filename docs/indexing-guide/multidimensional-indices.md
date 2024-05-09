@@ -560,8 +560,8 @@ argument to retain the dimension as a size-1 dimension instead.
     dimension, we could equivalently use `a[1, np.newaxis]` (see
     [](integer-indices) and [](newaxis-indices)). The advantage of this is
     that we would get an error if the first dimension of `a` didn't actually
-    have `2` elements, whereas `a[1:2]` would just silently give an [size-0
-    array](size-0-arrays).
+    have `2` elements, whereas `a[1:2]` would just silently give a size-0
+    array.
 
 There are two final facts about tuple indices that should be noted before we
 move on to the other basic index types. First, as we noticed above,
@@ -2475,7 +2475,7 @@ Or if it had no actual `0`s:[^0-d-mask-footnote]
     with the shape `(0,)` to the shape `(0,)`, and so this is what gets
     assigned, i.e., "nothing" (of shape `(0,)`) gets assigned to "nothing" (of
     matching shape `(0,)`). This is one reason why [broadcasting
-    rules](broadcasting) apply even to dimensions of [size 0](size-0-arrays).
+    rules](broadcasting) apply even to dimensions of size 0.
 
 ```py
 >>> a = np.asarray([1, 1, 2])
