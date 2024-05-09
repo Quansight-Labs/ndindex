@@ -2358,8 +2358,8 @@ array indices together into a canonical form.
 
 A 0-dimensional boolean index (i.e., just the scalar `True` or `False`) is a
 little special. The [`np.nonzero` rule](nonzero-equivalence) stated above does
-not actually apply. That's because `np.nonzero` has odd behavior for 0-D
-arrays. `np.nonzero(a)` usually returns a tuple with as many arrays as
+not actually apply. This is because `np.nonzero` exhibits odd behavior with
+0-D arrays. `np.nonzero(a)` usually returns a tuple with as many arrays as
 dimensions of `a`:
 
 ```py
@@ -2374,8 +2374,8 @@ rather the same thing as
 `np.nonzero(np.array([a]))`:[^nonzero-deprecated-footnote]
 
 <!-- TODO: Update this text when NumPy 2.0 is released. -->
-[^nonzero-deprecated-footnote]: Actually, in NumPy 2.0, calling `nonzero()` on
-    a 0-D array is deprecated, and in NumPy 2.1 it will result in an error,
+[^nonzero-deprecated-footnote]: In NumPy 2.0, calling `nonzero()` on a 0-D
+    array is deprecated, and in NumPy 2.1 it will result in an error,
     precisely due to this odd behavior.
 
 
@@ -2386,13 +2386,14 @@ rather the same thing as
 (array([0]),)
 ```
 
-However, the key point, that a [boolean array index removes and flattens
-`idx.ndim` dimensions from `a`](boolean-array-result-shape), is still true.
+However, the key point---that a [boolean array index removes `idx.ndim`
+dimensions from `a` and replaces them with a single dimension with size equal
+to the number of `True` elements](boolean-array-result-shape)---remains true.
 Here, `idx.ndim` is `0`, because `array(True)` and `array(False)` have shape
-`()`. So what these indices do is remove 0 dimensions and add a single
-dimension of length 1 for True or 0 for False. Hence, if `a` has shape `(s1,
-..., sn)`, then `a[True]` has shape `(1, s1, ..., sn)`, and `a[False]` has
-shape `(0, s1, ..., sn)`.
+`()`. Thus, these indices "remove" 0 dimensions and add a single dimension of
+size 1 for `True` or 0 for `False`. Hence, if `a` has shape `(s1, ..., sn)`,
+then `a[True]` has shape `(1, s1, ..., sn)`, and `a[False]` has shape `(0, s1,
+..., sn)`.
 
 ```py
 >>> a.shape # as above
@@ -2403,8 +2404,8 @@ shape `(0, s1, ..., sn)`.
 (0, 2, 5)
 ```
 
-This breaks with what `a[np.nonzero(True)]` would give:[^nonzero-scalar-footnote]
-
+This is different from what `a[np.nonzero(True)]` would
+return:[^nonzero-scalar-footnote]
 
 [^nonzero-scalar-footnote]: But note that this also wouldn't work if
     `np.nonzero(True)` returned the empty tuple `()`. In fact, there's no
