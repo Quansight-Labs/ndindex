@@ -25,7 +25,7 @@ jobs:
           if [[ ${{ matrix.numpy-version }} == 'latest' ]]; then
               python -m pip install --upgrade numpy
           elif [[ ${{ matrix.numpy-version }} == 'dev' ]]; then
-              python -m pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
+              python -m pip install --pre --upgrade --extra-index https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy -r requirements-dev.txt
           else
               python -m pip install --upgrade numpy==${{ matrix.numpy-version }}.*
           fi
