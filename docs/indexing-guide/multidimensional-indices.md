@@ -2101,7 +2101,7 @@ support for boolean array indexing.
 > corresponds to the elements being iterated in C order.**
 
 C order iterates the array `a` so that the last axis varies the fastest,
-like `(0, 0, 0)`, `(0, 0, 1)`, `(0, 0, 2)`, `(0, 1, 0)`, `(0, 1, 1)` etc.
+like `(0, 0, 0)`, `(0, 0, 1)`, `(0, 0, 2)`, `(0, 1, 0)`, `(0, 1, 1)`, etc.
 
 For example:
 
@@ -2118,11 +2118,10 @@ array([[ 0,  1,  2,  3],
 array([ 0,  2,  3,  5,  8,  9, 11])
 ```
 
-In this example, the elements of `a` are ordered `0 1 2 ...` in C order,
-which why in the final indexed array `a[idx]`, they are still in sorted
-order. C order also corresponds to reading the elements of the array in the
-order that NumPy prints them in, from left to right (ignoring the brackets
-and commas).
+In this example, the elements of `a` are ordered `0 1 2 ...` in C order, which
+is why in the final indexed array `a[idx]`, they are still in sorted order. C
+order also corresponds to reading the elements of the array in the order that
+NumPy prints them, from left to right, ignoring the brackets and commas.
 
 C ordering is always used, even when the underlying memory is not C-ordered
 (see [](c-vs-fortran-ordering) for more details on C array ordering).
@@ -2154,27 +2153,27 @@ We can create a mask on only that subarray:
 (3, 4)
 ```
 
-Then apply it to that same subarray
+Then, apply it to that same subarray:
 
 ```py
 >>> a[0, mask]
 array([ 6,  7,  8,  9, 10, 11])
 ```
 
-The [tuple](tuple-indices) index `(0, mask)` works just like any other
-tuple index: it selects the subarray `a[0]` along the first axis, then
-applies the `mask` to the remaining dimensions. The shape of `mask`, `(3, 4)`
-matches those remaining dimensions (by construction), so the index is valid.
+The [tuple](tuple-indices) index `(0, mask)` works just like any other tuple
+index: it selects the subarray `a[0]` along the first axis, then applies the
+`mask` to the remaining dimensions. The shape of `mask`, `(3, 4)`, matches
+those remaining dimensions (by construction), so the index is valid.
 
 Masking a subset of dimension is not as common as masking the entire array
 `a`, but it does happen. Remember that we can always think of an array as an
 "array of subarrays". For instance, suppose we have a video with 1920 x 1080
 pixels and 500 frames. This might be represented as an array of shape `(500,
-1080, 1920, 3)`, where the final dimension 3 represents the 3 RGB color values
-of a pixel. We can think of this array as 500 `(1080, 1920, 3)` "frames". Or
-as 500 x 1080 x 1920 3-tuple "pixels". Or we could slice along the last
-dimension and think of it as 3 `(500, 1080, 1920)` video "channels", one for
-each primary color.
+1080, 1920, 3)`, where the final dimension, 3, represents the 3 RGB color
+values of a pixel. We can think of this array as 500 `(1080, 1920, 3)`
+"frames". Or as 500 x 1080 x 1920 3-tuple "pixels". Or we could slice along
+the last dimension and think of it as 3 `(500, 1080, 1920)` video "channels",
+one for each primary color.
 
 In each case, we imagine that our array is really an array (or a stack or
 batch) of subarrays, where some of our dimensions are the "stacking"
@@ -2185,12 +2184,12 @@ dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5 x 4
 matrices. NumPy linear algebra functions like `solve` and the `@` matmul
 operator will automatically operate on the last two dimensions of an array.
 
-So how does this relate to using a boolean array index to select only a
-subset of the array dimensions? Well we might want to use a boolean index to
-only select along the inner "subarray" dimensions, and pretend like the
-outer "batching" dimensions are our "array".
+So, how does this relate to using a boolean array index to select only a
+subset of the array dimensions? Well, we might want to use a boolean index to
+select only along the inner "subarray" dimensions, and pretend like the outer
+"batching" dimensions are our "array".
 
-For example, say we have an image, represented in
+For example, say we have an image represented in
 [scikit-image](https://scikit-image.org/) as a 3-D array:
 
 ```{eval-rst}
@@ -2211,7 +2210,7 @@ For example, say we have an image, represented in
    (512, 512, 3)
    >>> imshow(image, "Original Image")
 
-Now suppose we want to increase the saturation of this image. We can do this
+Now, suppose we want to increase the saturation of this image. We can do this
 by converting the image to `HSV space
 <https://en.wikipedia.org/wiki/HSL_and_HSV>`_ and increasing the saturation
 value (the second value in the last dimension, which should always be between
