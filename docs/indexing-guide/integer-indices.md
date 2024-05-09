@@ -195,13 +195,11 @@ Python. A single character is just represented as a string of length 1.
 <class 'str'>
 ```
 
-<!-- TODO: Expand on the behavior for multidimensional arrays -->
-
 For NumPy arrays, an integer index always indexes a single axis of the array.
 By default, it indexes the first axis, unless it is part of a larger
-[multidimensional index](multidimensional-indices). The resulting array is
-always an array with the dimensionality reduced by 1, namely, the axis being
-indexed is removed from the resulting shape. This is in contrast with
+[multidimensional index](multidimensional-indices). The result is always an
+array with the dimensionality reduced by 1, namely, the axis being indexed is
+removed from the resulting shape. This is in contrast with
 [slices](slices-docs), which always [maintain the dimension being
 sliced](subarray).
 
@@ -217,8 +215,33 @@ sliced](subarray).
 (2, 3)
 ```
 
-The resulting array is a subarray corresponding to the `i`-th position along
-the given axis, using the 0- and &minus;1-based rules discussed above.
+If `a` has only a single dimension, the result is a 0-D array, i.e., a single
+scalar element (just as if `a` were a list):
+
+```py
+>>> a = np.asarray(['a', 'b', 'c', 'd', 'e', 'f', 'g'])
+>>> a[3] # doctest: +SKIPNP1
+np.str_('d')
+```
+
+In general, the resulting array is a subarray corresponding to the `i`-th
+position along the given axis, using the 0- and &minus;1-based rules discussed
+above. For example:
+
+```py
+>>> a = np.arange(4).reshape((2, 2))
+>>> a
+array([[0, 1],
+       [2, 3]])
+>>> a[0] # The first subarray along the first axis
+array([0, 1])
+>>> a[1] # The second subarray along the first axis
+array([2, 3])
+>>> a[:, 0] # The first subarray along the second axis
+array([0, 2])
+>>> a[:, 1] # The second subarray along the second axis
+array([1, 3])
+```
 
 A helpful analogy for understanding integer indexing on NumPy arrays is to
 consider it in terms of a [list of lists](what-is-an-array). An integer index
@@ -230,11 +253,11 @@ example, if `l` is a nested list of lists
 [^nesting-level]: Thinking about the `k`-th level of nesting can get
     confusing. For instance, it is unclear whether `k` should be counted with
     0-based or 1-based numbering, or which level counts as which, considering
-    that at the outermost "level," there is always a single list. List-of-lists
-    is a good analogy for thinking about why one might want to use an nd-array
-    in the first place. But as you actually use NumPy arrays in practice,
-    you'll find it's much better to think about dimensions and axes directly,
-    not "levels of nesting."
+    that at the outermost "level," there is always a single list.
+    List-of-lists is a good analogy for thinking about why one might want to
+    use an nd-array in the first place, but as you actually use NumPy arrays
+    in practice, you'll find it's much better to think about dimensions and
+    axes directly, not "levels of nesting."
 
 ```py
 >>> l = [[0, 1], [2, 3]]
