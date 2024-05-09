@@ -89,6 +89,7 @@ def load_tests(loader, tests, ignore):
     return tests
 
 def run_doctests():
+    numpy.seterr(all='ignore')
     with patch_doctest():
         return unittest.main(module='ndindex.tests.doctest', exit=False).result
 
