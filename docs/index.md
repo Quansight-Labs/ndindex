@@ -54,17 +54,18 @@ their limitations:
 
 - The above limitations can be annoying, but you might consider them worth
   living with. The real pain comes when you start trying to do slice
-  arithmetic. [Slices in Python](slices-docs) behave fundamentally differently
-  depending on whether the step is positive or negative and the start and stop
-  are positive, negative, or None. Consider, for example, the meaning of the
-  slice `a[4:-2:-2]`, where `a` is a one-dimensional array. This slices every
-  other element from the fifth element to the second from the last, but not
-  including the second from last. The resulting array will have shape `(0,)`
-  if the original shape is less than 1 or greater than 5, and shape `(1,)`
-  otherwise. In ndindex, one can use `len(Slice(4, -2, -2))` to compute the
-  maximum length of this slice (`1`), or `len(Slice(4, -2, -2).reduce(shape))`
-  to compute the length for a specific array shape. See
-  {meth}`ndindex.Slice.__len__` and {meth}`ndindex.Slice.reduce`.
+  arithmetic. [Slices in Python](indexing-guide/slices.md) behave
+  fundamentally differently depending on whether the step is positive or
+  negative and the start and stop are positive, negative, or None. Consider,
+  for example, the meaning of the slice `a[4:-2:-2]`, where `a` is a
+  one-dimensional array. This slices every other element from the fifth
+  element to the second from the last, but not including the second from last.
+  The resulting array will have shape `(0,)` if the original shape is less
+  than 1 or greater than 5, and shape `(1,)` otherwise. In ndindex, one can
+  use `len(Slice(4, -2, -2))` to compute the maximum length of this slice
+  (`1`), or `len(Slice(4, -2, -2).reduce(shape))` to compute the length for a
+  specific array shape. See {meth}`ndindex.Slice.__len__` and
+  {meth}`ndindex.Slice.reduce`.
 
   ndindex pre-codes common slice arithmetic into useful abstractions so you
   don't have to try to figure out all the different cases yourself. And due to

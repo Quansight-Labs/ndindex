@@ -1,7 +1,7 @@
 # Multidimensional Indices
 
-Unlike [integers](../integer-indices) and [slices](../slices), which not only
-work on NumPy arrays but also on built-in Python sequence types such as
+Unlike [integers](../integer-indices.md) and [slices](../slices.md), which not
+only work on NumPy arrays but also on built-in Python sequence types such as
 `list`, `tuple`, and `str`, the remaining index types do not work at all on
 built-in sequence types. For example, if you try to use one of the index types
 described on this page on a `list`, you will get an `IndexError` The semantics
@@ -18,14 +18,14 @@ First, let's look at the basic multidimensional indices ("basic" as opposed to
 ["advanced" indices](advanced-indices), which are discussed below). We've
 already learned about two in previous sections:
 
-- [](../integer-indices)
-- [](../slices)
+- [](../integer-indices.md)
+- [](../slices.md)
 
 There are three others:
 
-- [](tuples)
-- [](ellipses)
-- [](newaxis)
+- [](tuples.md)
+- [](ellipses.md)
+- [](newaxis.md)
 
 (advanced-indices)=
 ## Advanced Indices
@@ -38,8 +38,8 @@ impossible with the basic index types. Advanced indexing is also sometimes
 called "fancy indexing" or indexing by arrays, as the indices themselves are
 arrays:
 
-- [](integer-arrays)
-- [](boolean-array-indices)
+- [](integer-arrays.md)
+- [](boolean-arrays.md)
 
 Using an array that does not have an integer or boolean dtype as an index
 results in an error.

@@ -1,4 +1,3 @@
-(integer-array-indices)=
 # Integer Array Indices
 
 ```{note}
@@ -29,8 +28,8 @@ only indexing operations:
 
 It should hopefully be clear that there's no way we could possibly construct
 this array as `a[idx]` using only the index types we've discussed so far. For
-one thing, [integer indices](../integer-indices), [slices](slices-docs),
-[ellipses](ellipsis-indices), and [newaxes](newaxis-indices) all only select
+one thing, [integer indices](../integer-indices.md), [slices](../slices.md),
+[ellipses](ellipses.md), and [newaxes](newaxis.md) all only select
 elements of the array in order (or possibly [reversed order](negative-steps)
 for slices), whereas this array has elements completely shuffled from `a`, and
 some are even repeated.
@@ -51,7 +50,7 @@ we just listed the index of each individual element.
 
 An integer array index is essentially this "cheating" method, but as a single
 index. Instead of listing out `a[0]`, `a[2]`, and so on, we just create a
-single integer array with those [integer indices](../integer-indices):
+single integer array with those [integer indices](../integer-indices.md):
 
 ```py
 >>> idx = np.array([[0, 2, 0],
@@ -83,11 +82,11 @@ and 3, `a[idx]` would create a new array with the same shape as `idx` with
 corresponding elements selected from `a`.
 
 A useful way to think about integer array indexing is that it generalizes
-[integer indexing](../integer-indices). With integer indexing, we are effectively
-indexing using a 0-dimensional integer array, that is, a single
+[integer indexing](../integer-indices.md). With integer indexing, we are
+effectively indexing using a 0-dimensional integer array, that is, a single
 integer.[^integer-scalar-footnote] This always selects the corresponding
-element from the given axis and removes the dimension. That is, it replaces that
-dimension in the shape with `()`, the "shape" of the integer index.
+element from the given axis and removes the dimension. That is, it replaces
+that dimension in the shape with `()`, the "shape" of the integer index.
 
 Similarly,
 
@@ -146,9 +145,9 @@ show this as an example. Given the above `a`, we can produce the array `[105,
 array([105, 100])
 ```
 
-Let's break this down. `idx` is a [tuple index](tuple-indices) with two
-arrays, which are both the same shape. The first element of our desired
-result, `105` corresponds to index `(1, 2)` in `a`:
+Let's break this down. `idx` is a [tuple index](tuples.md) with two arrays,
+which are both the same shape. The first element of our desired result, `105`
+corresponds to index `(1, 2)` in `a`:
 
 ```py
 >>> a[1, 2] # doctest: +SKIPNP1
@@ -258,7 +257,7 @@ NumPy user, you may wish to skip them.
 ### Negative Indices
 
 > **Indices in the integer array can also be negative. Negative indices work
-the same as they do with [integer indices](../integer-indices).**
+the same as they do with [integer indices](../integer-indices.md).**
 
 Negative and
 nonnegative indices can be mixed arbitrarily.
@@ -285,8 +284,8 @@ scenarios, an array index is constructed from some other array methods.
 
 [^lists-footnote]: Beware that [versions of NumPy prior to
     1.23](https://numpy.org/doc/stable/release/1.23.0-notes.html#expired-deprecations)
-    treated a single list as a [tuple index](tuple-indices) rather than as
-    an array.
+    treated a single list as a [tuple index](tuples.md) rather than as an
+    array.
 
 
 ```py
@@ -311,10 +310,10 @@ and provides a convenient way to do outer indexing (see the [next
 section](outer-indexing)).
 
 This also means that mixing an integer array index with a single [integer
-index](../integer-indices) is the same as replacing the single integer index with
-an array of the same shape filled with that integer (because remember, a
-single integer index is the same thing as an integer array index of shape
-`()`).
+index](../integer-indices.md) is the same as replacing the single integer
+index with an array of the same shape filled with that integer (because
+remember, a single integer index is the same thing as an integer array index
+of shape `()`).
 
 For example:
 
@@ -410,7 +409,7 @@ array([105, 100])
 
 However, you might have noticed that this behavior is somewhat unusual
 compared to other index types. For all other index types we've discussed so
-far, such as [slices](slices-docs) and [integer indices](../integer-indices.md),
+far, such as [slices](../slices.md) and [integer indices](../integer-indices.md),
 each index applies "independently" along each dimension. For example, `x[0:3,
 0:2]` applies the slice `0:3` to the first dimension of `x` and `0:2` to the
 second dimension. The resulting array has `3*2 = 6` elements, because there
@@ -497,7 +496,7 @@ array([[105, 103, 104],
        [102, 100, 101]])
 ```
 
-Here, we use [newaxis](newaxis-indices) along with `:` to turn `idx0` and
+Here, we use [newaxis](newaxis.md) along with `:` to turn `idx0` and
 `idx1` into shape `(2, 1)` and `(1, 3)` arrays, respectively. These then
 automatically broadcast together to give the desired outer index.
 
@@ -520,7 +519,7 @@ array([[105, 103, 104],
 ```
 
 Outer indexing can be thought of as a generalization of slicing. With a
-[slice](slices-docs), you can really only select a "regular" sequence of
+[slice](../slices.md), you can really only select a "regular" sequence of
 elements from a dimension, that is, either a contiguous chunk, or a contiguous
 chunk split by a regular step value. It's impossible, for instance, to use a
 slice to select the indices `[0, 1, 2, 3, 5, 6, 7]`, because `4` is omitted.
@@ -592,8 +591,8 @@ value.
 (integer-arrays-combined-with-basic-indices)=
 ### Combining Integer Arrays Indices with Basic Indices
 
-If any [slice](slices-docs), [ellipsis](ellipsis-indices), or
-[newaxis](newaxis-indices) indices precede or follow all the
+If any [slice](../slices.md), [ellipsis](ellipses.md), or
+[newaxis](newaxis.md) indices precede or follow all the
 [integer](../integer-indices) and integer array indices in an index, the two
 sets of indices operate independently. Slices and ellipses select the
 corresponding axes, newaxes add new axes to these locations, and the integer
@@ -639,8 +638,8 @@ sequential indexing operations into a single step.
 
 ### Integer Array Indices Separated by Basic Indices
 
-Finally, if the [slices](slices-docs), [ellipses](ellipsis-indices), or
-[newaxes](newaxis-indices) are *in between* the integer array indices, then
+Finally, if the [slices](../slices.md), [ellipses](ellipses.md), or
+[newaxes](newaxis.md) are *in between* the integer array indices, then
 something more strange happens. The two index types still operate
 "independently"; however, unlike the previous case, the shape derived from the
 array indices is *prepended* to the shape derived from the non-array indices.
@@ -745,7 +744,7 @@ with shapes (3,) (4,)
 Remember that we want a permutation of `a`, so the result array should have
 the same shape as `a` (`(3, 4)`). This should therefore be the broadcasted
 shape of `idx0` and `idx1`, which are currently shapes `(3,)`, and `(4,)`. We
-can use [`newaxis`](newaxis-indices) to insert dimensions so that they are
+can use [`newaxis`](newaxis.md) to insert dimensions so that they are
 shape `(3, 1)` and `(1, 4)` so that they broadcast together to this shape.
 
 ```py

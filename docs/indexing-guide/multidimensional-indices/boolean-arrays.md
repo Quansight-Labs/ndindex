@@ -1,4 +1,3 @@
-(boolean-array-indices)=
 # Boolean Array Indices
 
 The final index type is boolean arrays. Boolean array indices are also
@@ -6,7 +5,7 @@ sometimes called *masks*,[^mask-footnote] because they "mask out" elements of
 the array.
 
 ```{note}
-In this section, as with [the previous](integer-arrays), do not confuse the
+In this section, as with [the previous](integer-arrays.md), do not confuse the
 *array being indexed* with the *array that is the index*. The former can be
 anything and have any dtype. It is only the latter that is restricted to being
 integer or boolean.
@@ -20,7 +19,7 @@ and which should not be selected.
 
 The simplest and most common case is where a boolean array index has the same
 shape as the array being indexed, and is the sole index (i.e., not part of a
-larger [tuple index](tuple-indices)).
+larger [tuple index](tuples.md)).
 
 Consider the array:
 
@@ -155,9 +154,8 @@ then assigned to, mutating only those elements of `a`.
 It's important to not be fooled by this way of constructing a mask. Even
 though the *expression* `(a > 0) & (a % 2 == 1)` depends on `a`, the resulting
 *array itself* does not---it is just an array of booleans. **Boolean array
-indexing, as with [all other types of indexing](what-is-an-index),
-does not depend on the values of the array, only in the positions of its
-elements.**
+indexing, as with [all other types of indexing](../intro.md), does not depend
+on the values of the array, only in the positions of its elements.**
 
 This distinction might feel overly pedantic, but it matters once you realize
 that a mask created with one array can be used on another array, so long as it
@@ -348,7 +346,7 @@ Then, apply it to that same subarray:
 array([ 6,  7,  8,  9, 10, 11])
 ```
 
-The [tuple](tuple-indices) index `(0, mask)` works just like any other tuple
+The [tuple](tuples.md) index `(0, mask)` works just like any other tuple
 index: it selects the subarray `a[0]` along the first axis, then applies the
 `mask` to the remaining dimensions. The shape of `mask`, `(3, 4)`, matches
 those remaining dimensions (by construction), so the index is valid.
@@ -473,7 +471,7 @@ equivalence between the two:
 
 > **A boolean array index `idx` is the same as if you replaced `idx` with the
 result of {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking
-the tuple), using the rules for [integer array indices](integer-array-indices)
+the tuple), using the rules for [integer array indices](integer-arrays.md)
 outlined above.**
 
 Note, however, that this rule *does not* apply to [0-dimensional boolean
@@ -504,7 +502,7 @@ array([ True,  True,  True,  True,  True,  True,  True])
 ```
 
 What this all means is that all the rules that are outlined above about
-[integer array indices](integer-array-indices), e.g., [how they
+[integer array indices](integer-arrays.md), e.g., [how they
 broadcast](integer-array-broadcasting) or [combine together with
 slices](integer-arrays-combined-with-basic-indices), all also apply to boolean
 array indices after this transformation. This also specifies how boolean array

@@ -1,4 +1,3 @@
-(newaxis-indices)=
 # newaxis
 
 The final basic multidimensional index type is `newaxis`. `np.newaxis` is an
@@ -18,8 +17,8 @@ True
 `newaxis`, as the name suggests, adds a new axis. This new axis has size `1`.
 The new axis is added at the corresponding location within the array. A size
 `1` axis neither adds nor removes any elements from the array. Using the
-[nested lists analogy](what-is-an-array), it essentially adds a new "layer" to
-the list of lists.
+[nested lists analogy](what-is-an-array.md), it essentially adds a new "layer"
+to the list of lists.
 
 
 ```py
@@ -34,10 +33,10 @@ array([[0, 1, 2, 3]])
 (1, 4)
 ```
 
-Including `newaxis` alongside other indices in a [tuple index](tuple-indices)
-does not affect which axes those indices select. You can think of the
-`newaxis` index as inserting the new axis in-place in the index, so that the
-other indices still select the same corresponding axes they would select if it
+Including `newaxis` alongside other indices in a [tuple index](tuples.md) does
+not affect which axes those indices select. You can think of the `newaxis`
+index as inserting the new axis in-place in the index, so that the other
+indices still select the same corresponding axes they would select if it
 weren't there.
 
 Take our example array, which has shape `(3, 2, 4)`:

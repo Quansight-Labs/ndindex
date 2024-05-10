@@ -1,4 +1,3 @@
-(tuple-indices)=
 # Tuples
 
 The basic building block of multidimensional indexing is the `tuple` index. A
@@ -264,10 +263,10 @@ This is a rule in general:
   dimensions of the array.**
 
 (single-axis-tuple)=
-The [slices](slices-docs) page stressed the point that [slices always keep the
-axis they index](subarray), but it wasn't clear why that is important until
-now. Suppose we slice the first axis of `a`, then later, we take that array
-and want to get the first element of the last row.
+The [slices](../slices.md) page stressed the point that [slices always keep
+the axis they index](subarray), but it wasn't clear why that is important
+until now. Suppose we slice the first axis of `a`, then later, we take that
+array and want to get the first element of the last row.
 
 
 ```py
@@ -348,7 +347,7 @@ argument to retain the dimension as a size-1 dimension instead.
 [^size-1-dimension-footnote]: In this example, if we knew that we were always
     going to select exactly one element (say, the second one) from the first
     dimension, we could equivalently use `a[1, np.newaxis]` (see
-    [](../integer-indices) and [](newaxis-indices)). The advantage of this is
+    [](../integer-indices.md) and [](newaxis.md)). The advantage of this is
     that we would get an error if the first dimension of `a` didn't actually
     have `2` elements, whereas `a[1:2]` would just silently give a size-0
     array.

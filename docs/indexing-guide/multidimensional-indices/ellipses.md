@@ -1,7 +1,6 @@
-(ellipsis-indices)=
 # Ellipses
 
-Now that we understand how [tuple indices](tuple-indices) work, the remaining
+Now that we understand how [tuple indices](tuples.md) work, the remaining
 basic index types are relatively straightforward. The first type of index we
 will look at is the ellipsis. An ellipsis is written as literally three dots:
 `...`.[^ellipsis-footnote]

@@ -117,16 +117,17 @@ more examples of broadcasting.
 ## Views vs. Copies
 
 There is an important distinction between basic indices (i.e.,
-[integers](integer-indices), [slices](slices-docs),
-[ellipses](ellipsis-indices), [newaxis](newaxis-indices)) and [advanced
+[integers](integer-indices.md), [slices](slices.md),
+[ellipses](multidimensional-indices/ellipses.md),
+[newaxis](multidimensional-indices/newaxis.md)) and [advanced
 indices](advanced-indices) (i.e., [integer array
-indices](integer-array-indices) and [boolean array
-indices](boolean-array-indices)) in NumPy that must be noted in some
-situations. Specifically, basic indices always create a **view** into an
-array[^view-scalar-footnote], while advanced indices always create a **copy**
-of the underlying array. [Tuple](tuple-indices) indices (i.e.,
-multidimensional indices) will create a view if they do not contain an
-advanced index and a copy if they do.
+indices](multidimensional-indices/integer-arrays.md) and [boolean array
+indices](multidimensional-indices/boolean-arrays.md)) in NumPy that must be
+noted in some situations. Specifically, basic indices always create a **view**
+into an array[^view-scalar-footnote], while advanced indices always create a
+**copy** of the underlying array. [Tuple](multidimensional-indices/tuples.md)
+indices (i.e., multidimensional indices) will create a view if they do not
+contain an advanced index and a copy if they do.
 
 
 [^view-scalar-footnote]: There is one exception to this rule, which is that an
@@ -258,8 +259,8 @@ True
 
 In contrast, an advanced index will always create a copy (even if it would be
 possible to represent it as a view). This includes any [tuple
-index](tuple-indices) (i.e., multidimensional index) that contains at least
-one array index.
+index](multidimensional-indices/tuples.md) (i.e., multidimensional index) that
+contains at least one array index.
 
 ```py
 >>> a = np.arange(10)
@@ -541,9 +542,9 @@ that because the array is a [view](views-vs-copies) or has some other layout
 due to [stride tricks](strides).
 
 In particular, this also applies to [boolean array
-indices](boolean-array-indices). A boolean mask always [selects the elements
-in C order](boolean-array-c-order), even if the underlying arrays use Fortran
-ordering.
+indices](multidimensional-indices/boolean-arrays.md). A boolean mask always
+[selects the elements in C order](boolean-array-c-order), even if the
+underlying arrays use Fortran ordering.
 
 ```py
 >>> a = np.arange(9).reshape((3, 3))
@@ -640,11 +641,12 @@ Fortran ordering) is about 3x faster.
 
 NumPy indexing semantics generally favor using C ordering, as it does not
 require an ellipsis to select contiguous subarrays. C ordering also matches
-the [list-of-lists intuition](what-is-an-array) of an array, since an array
-like `[[0, 1], [2, 3]]` is stored in memory as literally `0, 1, 2, 3` with C
-ordering. It also aligns well with NumPy's [broadcasting](broadcasting) rules,
-where broadcasted dimensions are prepended by default, allowing one to think
-of an array as a "stack" of contiguous subarrays.
+the [list-of-lists intuition](multidimensional-indices/what-is-an-array.md) of
+an array, since an array like `[[0, 1], [2, 3]]` is stored in memory as
+literally `0, 1, 2, 3` with C ordering. It also aligns well with NumPy's
+[broadcasting](broadcasting) rules, where broadcasted dimensions are prepended
+by default, allowing one to think of an array as a "stack" of contiguous
+subarrays.
 
 C ordering is the default in NumPy when creating arrays with functions like
 `asarray`, `ones`, `arange`, and so on. One typically only switches to

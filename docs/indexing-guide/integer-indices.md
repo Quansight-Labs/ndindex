@@ -28,9 +28,9 @@ Let us consider the following prototype list as an example:
 The list `a` has 7 elements.
 
 The elements of `a` are strings, but the indices and slices on the list `a`
-will always use integers. As with [all other index types](what-is-an-index),
-**the result of an integer index is never based on the values of the elements;
-it is based instead on their positions in the list.**[^dict-footnote]
+will always use integers. As with [all other index types](intro.md), **the
+result of an integer index is never based on the values of the elements; it is
+based instead on their positions in the list.**[^dict-footnote]
 
 [^dict-footnote]: If you are looking for something that allows non-integer
 indices or that indexes by value, you may want a `dict`.
@@ -180,7 +180,7 @@ dimensionality of the container being indexed. For a `list` or `tuple`, this
 means that an integer index returns an element of the list, which is in
 general a different type than `list` or `tuple`. For instance, above we saw
 that indexing `a` with an integer resulted in a `str`, because `a` is a list
-that contains strings. This is in contrast with [slices](slices-docs), which
+that contains strings. This is in contrast with [slices](slices.md), which
 always [return the same container type](subarray).
 
 (strings-integer-indexing)=
@@ -200,7 +200,7 @@ By default, it indexes the first axis, unless it is part of a larger
 [multidimensional index](multidimensional-indices/index). The result is always
 an array with the dimensionality reduced by 1, namely, the axis being indexed
 is removed from the resulting shape. This is in contrast with
-[slices](slices-docs), which always [maintain the dimension being
+[slices](slices.md), which always [maintain the dimension being
 sliced](subarray).
 
 ```py
@@ -244,11 +244,12 @@ array([1, 3])
 ```
 
 A helpful analogy for understanding integer indexing on NumPy arrays is to
-consider it in terms of a [list of lists](what-is-an-array). An integer index
-on the first axis `a[i]` selects the `i`-th sub-list at the top level of
-sub-list nesting. And in general, an integer index `i` on axis `k` selects the
-`i`-th sub-lists at the `k`-th nesting level.[^nesting-level] For
-example, if `l` is a nested list of lists
+consider it in terms of a [list of
+lists](multidimensional-indices/what-is-an-array.md). An integer index on the
+first axis `a[i]` selects the `i`-th sub-list at the top level of sub-list
+nesting. And in general, an integer index `i` on axis `k` selects the `i`-th
+sub-lists at the `k`-th nesting level.[^nesting-level] For example, if `l` is
+a nested list of lists
 
 [^nesting-level]: Thinking about the `k`-th level of nesting can get
     confusing. For instance, it is unclear whether `k` should be counted with

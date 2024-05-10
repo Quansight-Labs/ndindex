@@ -1,4 +1,3 @@
-(slices-docs)=
 # Slices
 
 Python's slice syntax is one of the more confusing parts of the language, even
@@ -146,7 +145,7 @@ used in the [integer indexing section](prototype-example):
 The list `a` has 7 elements.
 
 As a reminder, the elements of `a` are strings, but the slices on the list `a`
-will always use integers. Like [all other index types](what-is-an-index),
+will always use integers. Like [all other index types](intro.md),
 **the result of a slice is never based on the values of the elements, but
 rather on the position of the elements in the list.**[^dict-footnote]
 

@@ -5,7 +5,7 @@ indices. This really is more of a documentation of NumPy itself than of
 ndindex. However, understanding the underlying semantics of indices is
 critical to making the best use of ndindex, as well as for making the best use
 of NumPy arrays themselves. Furthermore, the sections on [integer
-indices](integer-indices) and [slices](slices-docs) also apply to the built-in
+indices](integer-indices.md) and [slices](slices.md) also apply to the built-in
 Python sequence types like `list` and `str`.
 
 This guide is aimed for people who are new to NumPy indexing semantics, but it

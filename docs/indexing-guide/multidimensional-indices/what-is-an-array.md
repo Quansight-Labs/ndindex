@@ -1,4 +1,3 @@
-(what-is-an-array)=
 # What is an Array?
 
 Before we look at indices, let's take a step back and look at the NumPy array.

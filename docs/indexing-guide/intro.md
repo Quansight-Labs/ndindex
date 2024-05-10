@@ -1,4 +1,3 @@
-(what-is-an-index)=
 # Introduction: What is an Index?
 
 Nominally, an index is any object that can be placed between the square
@@ -16,7 +15,7 @@ subset of the full NumPy semantics outlined here.
 
 [^index-vs-slice-footnote]: Some people call `x` a *slice* of `a`, but we
     avoid this confusing nomenclature, using *slice* to refer only to the
-    [slice index type](slices-docs). The term "index" is used in the Python
+    [slice index type](slices.md). The term "index" is used in the Python
     language itself (e.g., in the built-in exception type `IndexError`).
 
 Semantically, an index `x` selects, or *indexes*[^indexes-footnote], some
@@ -97,7 +96,7 @@ Therefore, the following statements are always true about any index:
 The full range of valid indices allows the generation of more or less
 arbitrary new arrays whose elements come from the indexed array `a`. In
 practice, the most commonly desired indexing operations are represented by
-basic indices such as [integer indices](integer-indices),
-[slices](slices-docs), and [ellipses](ellipsis-indices).
+basic indices such as [integer indices](integer-indices.md),
+[slices](slices.md), and [ellipses](multidimensional-indices/ellipses.md).
 
 ## Footnotes
