@@ -29,9 +29,17 @@ confused and the guide on slicing clarifies their exact rules and debunks some
 commonly spouted false beliefs about how they work.
 
 The third section covers [multidimensional
-indices](multidimensional-indices/index.md). These indices will not work on the
-built-in Python sequence types like `list` and `str`; they are only defined
-for NumPy arrays.
+indices](multidimensional-indices/index.md). These indices will not work on
+the built-in Python sequence types like `list` and `str`; they are only
+defined for NumPy arrays. This section is itself split into six subsections.
+First is a basic introduction to [what a NumPy array
+is](multidimensional-indices/what-is-an-array.md). Following this are pages
+for each of the remaining index types, the basic indices:
+[tuples](multidimensional-indices/tuples.md),
+[ellipses](multidimensional-indices/ellipses.md), and
+[newaxis](multidimensional-indices/newaxis.md); and the advanced indices:
+[integer arrays](multidimensional-indices/integer-arrays.md) and [boolean
+arrays](multidimensional-indices/boolean-arrays.md).
 
 Finally, a page on [other topics relevant to indexing](other-topics.md) covers
 a set of miscellaneous topics about NumPy arrays that are useful for
@@ -41,6 +49,7 @@ understanding how indexing works, such as [broadcasting](broadcasting),
 
 ```{toctree}
 :titlesonly:
+:includehidden:
 
 intro.md
 integer-indices.md

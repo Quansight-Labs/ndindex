@@ -1,4 +1,4 @@
-# Tuples
+# Tuple Indices
 
 The basic building block of multidimensional indexing is the `tuple` index. A
 tuple index doesn't select elements on its own. Instead, it contains other
