@@ -7,8 +7,8 @@ indices that themselves select elements. The general rule for tuples is that
 > **each element of a tuple index selects the corresponding elements for the
   corresponding axis of the array**
 
-(this rule is modified a little bit in the presence of ellipses or newaxis, as
-we will see below).
+(this rule is modified a little bit in the presence of [ellipses](ellipses.md)
+or [newaxis](newaxis.md), as we will see later).
 
 For example, suppose we have a three-dimensional array `a` with the
 shape `(3, 2, 4)`. For simplicity, we'll define `a` as a reshaped `arange`, so
@@ -209,6 +209,7 @@ selected subarrays. What if we want to select other subarrays? For example,
 the first element of the second axis. What if instead we wanted the first
 element of the *last* axis (axis 3)?
 
+(tuples-slices-example)=
 We can do this with slices. In particular, the trivial slice `:` will select
 every single element of an axis (remember that the `:` slice means ["select
 everything"](omitted)). So we want to select every element from the first and

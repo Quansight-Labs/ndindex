@@ -472,7 +472,7 @@ equivalence between the two:
 > **A boolean array index `idx` is the same as if you replaced `idx` with the
 result of {external+numpy:func}`np.nonzero(idx) <numpy.nonzero>` (unpacking
 the tuple), using the rules for [integer array indices](integer-arrays.md)
-outlined above.**
+outlined previously.**
 
 Note, however, that this rule *does not* apply to [0-dimensional boolean
 indices](0-d-boolean-index).
@@ -501,7 +501,7 @@ always return an array of `np.count_nonzero(idx)` `True`s, because
 array([ True,  True,  True,  True,  True,  True,  True])
 ```
 
-What this all means is that all the rules that are outlined above about
+What this all means is that all the rules that are outlined previously about
 [integer array indices](integer-arrays.md), e.g., [how they
 broadcast](integer-array-broadcasting) or [combine together with
 slices](integer-arrays-combined-with-basic-indices), all also apply to boolean

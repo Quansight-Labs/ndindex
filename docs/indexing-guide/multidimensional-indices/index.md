@@ -15,8 +15,8 @@ To begin, we should be sure we understand what an array is:
 ## Basic Multidimensional Indices
 
 First, let's look at the basic multidimensional indices ("basic" as opposed to
-["advanced" indices](advanced-indices), which are discussed below). We've
-already learned about two in previous sections:
+["advanced" indices](advanced-indices)). We've already learned about two in
+previous sections:
 
 - [](../integer-indices.md)
 - [](../slices.md)

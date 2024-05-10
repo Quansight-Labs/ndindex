@@ -21,7 +21,7 @@ will look at is the ellipsis. An ellipsis is written as literally three dots:
     This is also why the type name for the [ndindex `ellipsis`](ellipsis)
     object is lowercase, since `Ellipsis` is already a built-in name.
 
-Let's go back to one of the examples above. To remind, we have our array `a`:
+Consider an array with three dimensions:
 
 ```py
 >>> a = np.arange(24).reshape((3, 2, 4))
@@ -36,8 +36,9 @@ array([[[ 0,  1,  2,  3],
         [20, 21, 22, 23]]])
 ```
 
-In one of the examples, we wanted to select only the first element of the last
-axis. We saw that we could use the index `:, :, 0`:
+In [one of the examples in the previous section](tuples-slices-example), we
+wanted to select only the first element of the last axis, and we saw that we
+could use the index `:, :, 0`:
 
 ```py
 >>> a[:, :, 0]
@@ -89,9 +90,9 @@ Indeed, the index `1, 0:2, ..., 2` will work with any array that has *at
 least* three dimensions (assuming of course that the first dimension is at
 least size `2` and the last dimension is at least size `3`).
 
-Above, we saw that a tuple index implicitly ends in some number of trivial `:`
-slices. We can also see here that a tuple index always implicitly ends with an
-ellipsis, serving the same purpose. In other words:
+Previously, we saw that a [tuple index](tuples.md) implicitly ends in some
+number of trivial `:` slices. We can also see here that a tuple index always
+implicitly ends with an ellipsis, serving the same purpose. In other words:
 
 > **An ellipsis automatically serves as a stand-in for the "correct" number of
 trivial `:` slices to select the intermediate axes of an array**.
