@@ -143,6 +143,9 @@ theme_colors_common = {
 html_theme_options = {
     'light_logo': 'ndindex_logo_white_bg.svg',
     'dark_logo': 'ndindex_logo_dark_bg.svg',
+    "source_repository": "https://github.com/Quansight-Labs/ndindex/",
+    "source_branch": "main",
+    "source_directory": "docs/",
     "light_css_variables": {
         **theme_colors_common,
         "color-brand-primary": dark_blue,
