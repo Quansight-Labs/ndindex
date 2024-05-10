@@ -17,7 +17,7 @@ To begin, we should be sure we understand what an array is:
 
 There are two types of multidimensional indices, basic and advanced indices.
 Basic indices are so-called because they are simpler and the most common. They
-also are notable because they always return a view (see [](views-vs-copies).
+also are notable because they always return a view (see [](views-vs-copies)).
 
 We've already learned about two types of basic indices in previous sections:
 
