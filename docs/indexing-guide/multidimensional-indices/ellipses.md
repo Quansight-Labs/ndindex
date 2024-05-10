@@ -24,6 +24,7 @@ will look at is the ellipsis. An ellipsis is written as literally three dots:
 Consider an array with three dimensions:
 
 ```py
+>>> import numpy as np
 >>> a = np.arange(24).reshape((3, 2, 4))
 >>> a
 array([[[ 0,  1,  2,  3],

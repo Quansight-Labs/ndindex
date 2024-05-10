@@ -16,6 +16,7 @@ that each element is distinct and we can easily see which elements are
 selected.
 
 ```py
+>>> import numpy as np
 >>> a = np.arange(24).reshape((3, 2, 4))
 >>> a
 array([[[ 0,  1,  2,  3],

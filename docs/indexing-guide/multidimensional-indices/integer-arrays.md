@@ -15,6 +15,7 @@ indexed array.
 To start, let's consider a simple one-dimensional array:
 
 ```py
+>>> import numpy as np
 >>> a = np.array([100, 101, 102, 103])
 ```
 

@@ -8,6 +8,7 @@ directly instead of `np.newaxis`, so it's important to remember that they are
 the same thing.
 
 ```py
+>>> import numpy as np
 >>> print(np.newaxis)
 None
 >>> np.newaxis is None # They are exactly the same thing

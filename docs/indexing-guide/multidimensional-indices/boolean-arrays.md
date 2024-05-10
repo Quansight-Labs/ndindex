@@ -24,6 +24,7 @@ larger [tuple index](tuples.md)).
 Consider the array:
 
 ```py
+>>> import numpy as np
 >>> a = np.arange(9).reshape((3, 3))
 >>> a
 array([[0, 1, 2],
