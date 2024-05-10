@@ -29,7 +29,7 @@ confused and the guide on slicing clarifies their exact rules and debunks some
 commonly spouted false beliefs about how they work.
 
 The third section covers [multidimensional
-indices](multidimensional-indices.md). These indices will not work on the
+indices](multidimensional-indices/index.md). These indices will not work on the
 built-in Python sequence types like `list` and `str`; they are only defined
 for NumPy arrays.
 
@@ -45,6 +45,6 @@ understanding how indexing works, such as [broadcasting](broadcasting),
 intro.md
 integer-indices.md
 slices.md
-multidimensional-indices.md
+multidimensional-indices/index.md
 other-topics.md
 ```

@@ -197,9 +197,9 @@ Python. A single character is just represented as a string of length 1.
 
 For NumPy arrays, an integer index always indexes a single axis of the array.
 By default, it indexes the first axis, unless it is part of a larger
-[multidimensional index](multidimensional-indices). The result is always an
-array with the dimensionality reduced by 1, namely, the axis being indexed is
-removed from the resulting shape. This is in contrast with
+[multidimensional index](multidimensional-indices/index). The result is always
+an array with the dimensionality reduced by 1, namely, the axis being indexed
+is removed from the resulting shape. This is in contrast with
 [slices](slices-docs), which always [maintain the dimension being
 sliced](subarray).
 
