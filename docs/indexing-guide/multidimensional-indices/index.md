@@ -9,7 +9,7 @@ of these indices are defined by the NumPy library, not the Python language.
 
 To begin, we should be sure we understand what an array is:
 
-- [Introduction: What is an Array?](intro)
+- [](what-is-an-array.md)
 
 (basic-indices)=
 ## Basic Multidimensional Indices
@@ -18,14 +18,14 @@ First, let's look at the basic multidimensional indices ("basic" as opposed to
 ["advanced" indices](advanced-indices), which are discussed below). We've
 already learned about two in previous sections:
 
-- [Integers](../integer-indices)
-- [Slices](../slices)
+- [](../integer-indices)
+- [](../slices)
 
 There are three others:
 
-- [Tuples](tuples)
-- [Ellipsis](ellipses)
-- [newaxis](newaxis)
+- [](tuples)
+- [](ellipses)
+- [](newaxis)
 
 (advanced-indices)=
 ## Advanced Indices
@@ -38,8 +38,8 @@ impossible with the basic index types. Advanced indexing is also sometimes
 called "fancy indexing" or indexing by arrays, as the indices themselves are
 arrays:
 
-- [Integer Arrays](integer-arrays)
-- [Boolean Arrays](boolean-array-indices)
+- [](integer-arrays)
+- [](boolean-array-indices)
 
 Using an array that does not have an integer or boolean dtype as an index
 results in an error.
@@ -48,7 +48,7 @@ results in an error.
 :titlesonly:
 :hidden:
 
-intro.md
+what-is-an-array.md
 tuples.md
 ellipses.md
 newaxis.md

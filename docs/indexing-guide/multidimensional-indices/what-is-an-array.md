@@ -1,5 +1,5 @@
 (what-is-an-array)=
-# Introduction: What is an Array?
+# What is an Array?
 
 Before we look at indices, let's take a step back and look at the NumPy array.
 Just what is it that makes NumPy arrays so ubiquitous and NumPy one of the
