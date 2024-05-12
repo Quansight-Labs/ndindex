@@ -2668,6 +2668,7 @@ Finally, I believe that simply understanding that Python has made these
 decisions, whether you agree with them or not, will help you to remember the
 slicing [rules](rules), and that's my true goal here.
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

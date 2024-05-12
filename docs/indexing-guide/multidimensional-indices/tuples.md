@@ -407,6 +407,7 @@ other words,
     to Indexing"](view-scalar-footnote-ref) for two important
     differences between the scalars and 0-D arrays which are related to indexing.
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

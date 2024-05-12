@@ -140,6 +140,7 @@ In summary, the rules for an ellipsis index are
 
 - **At most one `...` is allowed in a tuple index.**
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

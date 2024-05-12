@@ -656,6 +656,7 @@ array from another memory source that produces Fortran-ordered data.
 Regardless of which ordering you are using, it is worth structuring your data
 so that operations are done on contiguous memory when possible.
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

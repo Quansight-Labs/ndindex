@@ -289,4 +289,7 @@ indexing `0` in each list inside of `l`, like
 array([0, 2])
 ```
 
-## Footnotes
+```{rubric} Footnotes
+```
+<!-- Footnotes are written inline above but markdown will put them here at the
+end of the document. -->

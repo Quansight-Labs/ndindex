@@ -186,6 +186,7 @@ representation. This, along with the powerful ecosystem of libraries like
 `scipy`, `matplotlib`, and thousands of others, are what have made NumPy such
 a popular and essential tool.
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

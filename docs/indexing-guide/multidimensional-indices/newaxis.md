@@ -258,6 +258,7 @@ but they are not a bad thing. Not only do they allow indexing an array
 uniformly, they are also very important in the way they interact with NumPy's
 broadcasting rules.
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

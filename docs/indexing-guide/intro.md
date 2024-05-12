@@ -99,4 +99,7 @@ practice, the most commonly desired indexing operations are represented by
 basic indices such as [integer indices](integer-indices.md),
 [slices](slices.md), and [ellipses](multidimensional-indices/ellipses.md).
 
-## Footnotes
+```{rubric} Footnotes
+```
+<!-- Footnotes are written inline above but markdown will put them here at the
+end of the document. -->

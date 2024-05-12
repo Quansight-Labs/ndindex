@@ -786,6 +786,7 @@ array([[ 5,  4,  6,  7],
 Can you see why this works?
 ~~~~
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

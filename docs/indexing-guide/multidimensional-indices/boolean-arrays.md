@@ -724,6 +724,7 @@ The point is that the underlying logic works out so that `a[a == 0] = -1`
 always does what you'd expect: every `0` value in `a` is replaced with `-1`
 *regardless* of the shape of `a`, including if that shape is `()`.
 
-## Footnotes
+```{rubric} Footnotes
+```
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
