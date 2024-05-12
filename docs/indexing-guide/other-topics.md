@@ -130,12 +130,13 @@ indices (i.e., multidimensional indices) will create a view if they do not
 contain an advanced index and a copy if they do.
 
 
-[^view-scalar-footnote]: There is one exception to this rule, which is that an
-    index that would return a scalar returns a copy, since scalars are
-    supposed to be immutable.
-
+[^view-scalar-footnote]:
     <!-- This is the only way to cross reference a footnote across documents -->
     (view-scalar-footnote-ref)=
+
+    There is one exception to this rule, which is that an
+    index that would return a scalar returns a copy, since scalars are
+    supposed to be immutable.
 
     ```py
     >>> a = np.arange(20)

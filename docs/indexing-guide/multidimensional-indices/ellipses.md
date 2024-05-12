@@ -104,6 +104,9 @@ of trivial `:` slices, a single ellipsis and nothing else is the same as
 selecting every axis of the array, i.e., it leaves the array
 intact.[^tuple-ellipsis-footnote]
 
+[^tuple-ellipsis-footnote]: See [footnote 2](tuple-ellipsis-footnote-ref) in
+    the [](tuples.md) section.
+
 ```py
 >>> a[...]
 array([[[ 0,  1,  2,  3],

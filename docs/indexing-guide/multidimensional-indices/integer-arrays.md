@@ -373,7 +373,11 @@ The ndindex methods
 [`expand()`](ndindex.Tuple.expand) will broadcast array indices together into
 a canonical form.
 
-[^integer-scalar-footnote]: In fact, if the integer array index itself has
+[^integer-scalar-footnote]:
+    <!-- This is the only way to cross reference a footnote across documents -->
+    (integer-scalar-footnote-ref)=
+
+    In fact, if the integer array index itself has
     shape `()`, then the behavior is identical to simply using an `int` with
     the same value. So it's a true generalization. In ndindex,
     [`IntegerArray.reduce()`](ndindex.IntegerArray.reduce) will always convert

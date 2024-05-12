@@ -370,11 +370,16 @@ other words,
 > **the empty tuple index `a[()]` always just returns the entire array `a`
   unchanged.**[^tuple-ellipsis-footnote]
 
-[^tuple-ellipsis-footnote]: There is one important distinction between the
+[^tuple-ellipsis-footnote]:
+    <!-- This is the only way to cross reference a footnote across documents -->
+    (tuple-ellipsis-footnote-ref)=
+
+    There is one important distinction between the
     empty tuple index (`a[()]`) and a single ellipsis index (`a[...]`). NumPy
     makes a distinction between scalars and 0-D (i.e., shape `()`) arrays. On
     either, an empty tuple index `()` will always produce a scalar, and a
     single ellipsis `...` will always produce a 0-D array:
+
 
     ```py
     >>> s = np.int64(0) # scalar
@@ -403,8 +408,9 @@ other words,
     The difference between scalars and 0-D arrays in NumPy is subtle. In most
     contexts, they will both work identically, but, rarely, you may need one
     and not the other, and the above trick can be used to convert between
-    them. See footnotes [^integer-scalar-footnote] and [1 in "Other Topics Relevant
-    to Indexing"](view-scalar-footnote-ref) for two important
+    them. See [footnote 1](integer-scalar-footnote-ref) in the [](integer-arrays.md)
+    section and [footnote 1](view-scalar-footnote-ref) in the
+    [](../other-topics.md) section for two important
     differences between the scalars and 0-D arrays which are related to indexing.
 
 ```{rubric} Footnotes
