@@ -49,6 +49,7 @@
     align-items: center;
     padding-left: 2em;
     padding-right: 2em;
+    overflow: auto;
     --color-slice-diagram-selected: #3030FF;
     --color-slice-diagram-not-selected: #EE0000;
     --color-slice-diagram-slice: var(--color-slice-diagram-selected);
