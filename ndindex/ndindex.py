@@ -222,18 +222,9 @@ class NDIndex(ImmutableObject):
     - `raw` (a **@property** method) should return the raw index that can be
       passed as an index to a numpy array.
 
-    In addition other methods should be defined as necessary.
-
-    - `__len__` should return the largest possible shape of an axis sliced by
-      the index (for single-axis indices), or raise ValueError if no such
-      maximum exists.
-
-    - `reduce(shape=None)` should reduce an index to an equivalent form for
-      arrays of shape `shape`, or raise an `IndexError`. The error messages
-      should match numpy as much as possible. The class of the equivalent
-      index may be different. If `shape` is `None`, it should return a
-      canonical form that is equivalent for all array shapes (assuming no
-      IndexErrors).
+    In addition other methods on this should be re-defined as necessary. Some
+    methods have a default implementation on this class, which is sufficient
+    for some subclasses.
 
     The methods `__init__` and `__eq__` should *not* be overridden. Equality
     (and hashability) on `NDIndex` subclasses is determined by equality of
@@ -410,7 +401,8 @@ class NDIndex(ImmutableObject):
           combined into a single term (the same as with :meth:`.Tuple.reduce`).
 
         - Non-scalar :class:`~.BooleanArray`\ s are all converted into
-          equivalent :class:`~.IntegerArray`\ s via `nonzero()` and broadcast.
+          equivalent :class:`~.IntegerArray`\ s via `nonzero()` and
+          broadcasted.
 
         >>> from ndindex import Tuple, Slice
         >>> Slice(None).expand((2, 3))
@@ -570,10 +562,10 @@ class NDIndex(ImmutableObject):
         `None`, isempty() will return `True` when `self` is always empty for
         any array shape. However, if it gives `False`, it could still give an
         empty array for some array shapes, but not all. If you know the shape
-        of the array that will be indexed, you can call `idx.isempty(shape)`
-        first and the result will be correct for arrays of shape `shape`. If
-        `shape` is given and `self` would raise an `IndexError` on an array of
-        shape `shape`, `isempty()` also raises `IndexError`.
+        of the array that will be indexed, use `idx.isempty(shape)` and the
+        result will be correct for arrays of shape `shape`. If `shape` is
+        given and `self` would raise an `IndexError` on an array of shape
+        `shape`, `isempty()` also raises `IndexError`.
 
         >>> from ndindex import Tuple, Slice
         >>> Tuple(0, slice(0, 1)).isempty()

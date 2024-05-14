@@ -32,8 +32,8 @@ class Slice(NDIndex):
     because Python itself does not make the distinction between `x:y` and
     `x:y:` syntactically.
 
-    See :ref:`slices-docs` for a description of the semantic meaning of slices
-    on arrays.
+    See :doc:`../indexing-guide/slices` for a description of the semantic
+    meaning of slices on arrays.
 
     Slice has attributes `start`, `stop`, and `step` to access the
     corresponding attributes.
@@ -49,7 +49,7 @@ class Slice(NDIndex):
     >>> s.raw
     slice(None, 10, None)
 
-    For most use-cases, it's more convenient to create Slice objects using
+    For most use cases, it's more convenient to create Slice objects using
     `ndindex[slice]`, which allows using `a:b` slicing syntax:
 
     >>> from ndindex import ndindex
@@ -215,11 +215,12 @@ class Slice(NDIndex):
         given shape, or for any shape if `shape` is `None` (the default).
 
         `Slice.reduce` is a perfect canonicalization, meaning that two slices
-        are equal---for all array shapes if `shape=None` or for arrays of shape
-        `shape` otherwise---if and only if they `reduce` to the same Slice
-        object. Note that ndindex objects do not simplify automatically, and
-        `==` only does exact equality comparison, so to test that two slices
-        are equal, use `slice1.reduce(shape) == slice2.reduce(shape)`.
+        are equal---for all array shapes if `shape=None` or for arrays of
+        shape `shape` otherwise---if and only if they `reduce` to the same
+        `Slice` object. Note that ndindex objects do not simplify
+        automatically, and `==` only does exact equality comparison, so to
+        test that two slices are equal, use `slice1.reduce(shape) ==
+        slice2.reduce(shape)`.
 
         - If `shape` is `None`, the following properties hold after calling
           `reduce()`:

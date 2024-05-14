@@ -1,4 +1,5 @@
 hypothesis
+matplotlib
 numpy
 packaging
 pyflakes
@@ -6,4 +7,5 @@ pytest
 pytest-cov
 pytest-doctestplus
 pytest-flakes
+scikit-image
 slotscheck

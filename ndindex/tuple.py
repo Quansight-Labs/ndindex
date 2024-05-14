@@ -236,9 +236,9 @@ class Tuple(NDIndex):
         ====
 
         ndindex presently does not distinguish between scalar objects and
-        rank-0 arrays. It is possible for the original index to produce one
+        0-D arrays. It is possible for the original index to produce one
         and the reduced index to produce the other. In particular, the
-        presence of a redundant ellipsis forces NumPy to return a rank-0 array
+        presence of a redundant ellipsis forces NumPy to return a 0-D array
         instead of a scalar.
 
         >>> import numpy as np

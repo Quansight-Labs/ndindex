@@ -12,6 +12,8 @@
 #
 import os
 import sys
+import subprocess
+import inspect
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -32,12 +34,25 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.linkcode',
     'sphinx_copybutton',
+    'sphinx_reredirects',
+    'sphinx_design',
+    'matplotlib.sphinxext.plot_directive',
 ]
+
+plot_html_show_source_link = False
+plot_include_source = False
+plot_html_show_formats = False
+plot_formats = ['svg']
 
 intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),
+    'pandas': ('https://pandas.pydata.org/docs/', None),
 }
+# Require :external: to reference intersphinx. Prevents accidentally linking
+# to something from numpy.
+intersphinx_disabled_reftypes = ['*']
 
 # # From
 # # https://stackoverflow.com/questions/56062402/force-sphinx-to-interpret-markdown-in-python-docstrings-instead-of-restructuredt
@@ -78,6 +93,19 @@ html_theme = 'furo'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+templates_path = ['_templates']
+
+html_sidebars = {
+    "**": [
+        "sidebar/scroll-start.html",
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/navigation.html",
+        "sidebar/scroll-end.html",
+        "sidebar/github.html",
+    ],
+}
+
 # These are defined in _static/custom.css
 light_blue = "var(--color-brand-light-blue)"
 green = "var(--color-brand-green)"
@@ -110,10 +138,14 @@ theme_colors_common = {
 
     "code-font-size": "var(--font-size--small)",
 
+    "color-highlight-on-target": "var(--color-highlighted-background)",
     }
 html_theme_options = {
     'light_logo': 'ndindex_logo_white_bg.svg',
     'dark_logo': 'ndindex_logo_dark_bg.svg',
+    "source_repository": "https://github.com/Quansight-Labs/ndindex/",
+    "source_branch": "main",
+    "source_directory": "docs/",
     "light_css_variables": {
         **theme_colors_common,
         "color-brand-primary": dark_blue,
@@ -178,7 +210,9 @@ mathjax3_config = {
   },
 }
 
-myst_update_mathjax=False
+myst_update_mathjax = False
+
+myst_footnote_transition = False
 
 # Lets us use single backticks for code
 default_role = 'code'
@@ -193,3 +227,102 @@ ndindex pull request <a href="https://github.com/Quansight-Labs/ndindex/pull/{PR
 href="https://github.com/Quansight-Labs/ndindex/pull/{PR_NUMBER}/commits/{SHA1}">{SHA1[:7]}</a>.
 If you aren't looking for a PR preview, go to <a
 href="https://quansight-labs.github.io/ndindex//">the main ndindex documentation</a>. """
+
+# Add redirects here. This should be done whenever a page that is in the
+# existing release docs is moved somewhere else so that the URLs don't break.
+# The format is
+
+# "page/path/without/extension": "../relative_path_with.html"
+
+# Note that the html path is relative to the redirected page. Always test the
+# redirect manually (they aren't tested automatically). See
+# https://documatt.gitlab.io/sphinx-reredirects/usage.html
+
+redirects = {
+    "slices": "indexing-guide/slices.html",
+    "api": "api/index.html",
+}
+
+
+# Required for linkcode extension.
+# Get commit hash from the external file.
+
+# Based on code from SymPy's conf.py
+
+commit_hash_filepath = '../commit_hash.txt'
+commit_hash = None
+if os.path.isfile(commit_hash_filepath):
+    with open(commit_hash_filepath) as f:
+        commit_hash = f.readline()
+
+# Get commit hash from the external file.
+if not commit_hash:
+    try:
+        commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+        commit_hash = commit_hash.decode('ascii')
+        commit_hash = commit_hash.rstrip()
+    except:
+        import warnings
+        warnings.warn(
+            "Failed to get the git commit hash as the command " \
+            "'git rev-parse HEAD' is not working. The commit hash will be " \
+            "assumed as the ndindex master, but the lines may be misleading " \
+            "or nonexistent as it is not the correct branch the doc is " \
+            "built with. Check your installation of 'git' if you want to " \
+            "resolve this warning.")
+        commit_hash = 'master'
+
+fork = 'Quansight-Labs'
+blobpath = \
+    "https://github.com/{}/ndindex/blob/{}/ndindex/".format(fork, commit_hash)
+
+
+def linkcode_resolve(domain, info):
+    """Determine the URL corresponding to Python object."""
+    import ndindex
+
+    if domain != 'py':
+        return
+
+    modname = info['module']
+    fullname = info['fullname']
+
+    submod = sys.modules.get(modname)
+    if submod is None:
+        return
+
+    obj = submod
+    for part in fullname.split('.'):
+        try:
+            obj = getattr(obj, part)
+        except Exception:
+            return
+
+    # strip decorators, which would resolve to the source of the decorator
+    # possibly an upstream bug in getsourcefile, bpo-1764286
+    try:
+        unwrap = inspect.unwrap
+    except AttributeError:
+        pass
+    else:
+        obj = unwrap(obj)
+
+    try:
+        fn = inspect.getsourcefile(obj)
+    except Exception:
+        fn = None
+    if not fn:
+        return
+
+    try:
+        source, lineno = inspect.getsourcelines(obj)
+    except Exception:
+        lineno = None
+
+    if lineno:
+        linespec = "#L%d-L%d" % (lineno, lineno + len(source) - 1)
+    else:
+        linespec = ""
+
+    fn = os.path.relpath(fn, start=os.path.dirname(ndindex.__file__))
+    return blobpath + fn + linespec

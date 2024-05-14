@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Based on https://commons.wikimedia.org/wiki/File:U%2B2192.svg -->
+
+<svg
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   sodipodi:docname="arrow-short-curved.svg"
+   id="svg3555"
+   version="1.1"
+   height="47"
+   width="191"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs3559" />
+  <sodipodi:namedview
+     id="namedview3557"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-others="true"
+     inkscape:snap-midpoints="false"
+     inkscape:snap-smooth-nodes="false"
+     inkscape:snap-intersection-paths="false"
+     inkscape:object-paths="true"
+     inkscape:zoom="4.5156423"
+     inkscape:cx="91.570584"
+     inkscape:cy="1.6608933"
+     inkscape:window-width="1536"
+     inkscape:window-height="907"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg3555"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
+  <metadata
+     id="metadata5724">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     d="m 0.8403006,14.930942 c 2.2381554,2.331925 3.5765507,4.99012 4.015159,7.974572 l 1.1660439,0.57124 C 6.2629854,21.653644 6.1057255,19.743775 5.549692,17.747165 5.6914242,17.483858 5.8255938,17.217008 5.9558046,16.948226 6.0860155,16.679444 6.2122674,16.40873 6.3381642,16.137693 8.256588,15.353319 9.864745,14.301537 11.162655,12.982359 l -1.166044,-0.57124 c -2.6270153,1.482643 -5.547718,2.054338 -8.7620719,1.715083 l -0.3942385,0.80474"
+     id="arrow-head"
+     sodipodi:nodetypes="ccccsccccc" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1.2581;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 190.0811,16.914227 A 130.26695,63.944771 0 0 1 97.968449,35.643217 130.26695,63.944771 0 0 1 5.8558046,16.914226"
+     id="arrow-tail" />
+</svg>

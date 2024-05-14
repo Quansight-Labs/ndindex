@@ -101,7 +101,7 @@
 
 - Minor improvements to some documentation.
 
-- Fix a typo in the [type confusion](type-confusion) docs. (@ruancomelli)
+- Fix a typo in the [type confusion](type-confusion.md) docs. (@ruancomelli)
 
 ## Version 1.6 (2022-01-24)
 
@@ -153,6 +153,7 @@
 ### Major Changes
 
 - ndindex now has a logo: ![ndindex logo](_static/ndindex_logo_white_bg.svg)
+
   Thanks to [Irina Fumarel](mailto:ifumarel@quansight.com) for the logo design.
 
 - Improve {any}`ChunkSize.as_subchunks()` to never use the slow fallback
@@ -289,10 +290,10 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
   for these, please [open an
   issue](https://github.com/Quansight-Labs/ndindex/issues) to let me know.
 
-- Add a new document to the documentation on [type confusion](type-confusion).
-  The document stresses that ndindex types should not be confused with the
-  built-in/NumPy types that they wrap, and outlines some pitfalls and best
-  practices to avoid them when using ndindex.
+- Add a new document to the documentation on [type
+  confusion](type-confusion.md). The document stresses that ndindex types
+  should not be confused with the built-in/NumPy types that they wrap, and
+  outlines some pitfalls and best practices to avoid them when using ndindex.
 
 ### Minor Changes
 
@@ -368,7 +369,7 @@ run the ndindex test suite due to the way ndindex tests itself against NumPy.
 
 - SymPy is now a hard dependency of ndindex.
 
-- Added extensive documentation on [slice semantics](slices) to the
+- Added extensive documentation on [slice semantics](indexing-guide/slices) to the
   documentation.
 
 ### Minor Changes
