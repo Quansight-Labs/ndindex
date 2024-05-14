@@ -174,6 +174,8 @@ def test_as_subchunks(chunk_size, idx, shape):
 def test_as_subchunks_error():
     raises(ValueError, lambda: next(ChunkSize((1, 2)).as_subchunks(..., (1, 2, 3))))
 
+@example(chunk_size=(1,), idx=(slice(None), slice(None)), shape=(0,))
+@example(chunk_size=(), idx=(), shape=())
 @example(chunk_size=(1, 1), idx=[[False, True], [True, True]],
          shape=(2, 2))
 @example(chunk_size=(1,), idx=None, shape=(1,))
