@@ -3,15 +3,17 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ndindex Changelog" href="changelog.html" /><link rel="prev" title="Slices" href="slices.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ndindex Changelog" href="changelog.html" /><link rel="prev" title="Other Topics Relevant to Indexing" href="indexing-guide/other-topics.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.04.27 -->
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
         <title>Type Confusion - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=16cf08d2" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=437aa6ec" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1475cf01" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e072bb5a" />
     
     
 
@@ -36,6 +38,7 @@
   --color-api-pre-name: var(--color-brand-content);
   --api-font-size: var(--font-size--normal);
   --code-font-size: var(--font-size--small);
+  --color-highlight-on-target: var(--color-highlighted-background);
   --color-brand-primary: var(--color-brand-dark-blue);
   --color-brand-content: var(--color-brand-dark-blue);
   --color-sidebar-background: #EEEEEE;
@@ -63,6 +66,7 @@
   --color-api-pre-name: var(--color-brand-content);
   --api-font-size: var(--font-size--normal);
   --code-font-size: var(--font-size--small);
+  --color-highlight-on-target: var(--color-highlighted-background);
   --color-brand-primary: var(--color-brand-light-blue);
   --color-brand-content: var(--color-brand-light-blue);
   --color-api-overall: #FFFFFF90;
@@ -94,6 +98,7 @@
   --color-api-pre-name: var(--color-brand-content);
   --api-font-size: var(--font-size--normal);
   --code-font-size: var(--font-size--small);
+  --color-highlight-on-target: var(--color-highlighted-background);
   --color-brand-primary: var(--color-brand-light-blue);
   --color-brand-content: var(--color-brand-light-blue);
   --color-api-overall: #FFFFFF90;
@@ -141,7 +146,7 @@
   <symbol id="svg-sun" viewBox="0 0 24 24">
     <title>Light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
       <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -156,7 +161,7 @@
   <symbol id="svg-moon" viewBox="0 0 24 24">
     <title>Dark mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
@@ -164,7 +169,7 @@
   <symbol id="svg-sun-half" viewBox="0 0 24 24">
     <title>Auto light/dark mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <circle cx="12" cy="12" r="9" />
       <path d="M13 12h5" />
@@ -172,6 +177,60 @@
       <path d="M13 18h1" />
       <path d="M13 9h4" />
       <path d="M13 6h1" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" /
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
 </svg>
@@ -204,7 +263,8 @@
       <div class="theme-toggle-container theme-toggle-header">
         <button class="theme-toggle">
           <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
@@ -218,7 +278,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo only-light" src="_static/ndindex_logo_white_bg.svg" alt="Light Logo"/>
@@ -232,18 +292,45 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
-<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+<div id="searchbox"></div><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="slices.html">Slices</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/ndindex.html">ndindex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/index-types.html">Index Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/shapetools.html">Shape Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/chunking.html">Chunking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/internal.html">Internal API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="indexing-guide/index.html">Guide to NumPy Indexing</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Guide to NumPy Indexing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="indexing-guide/intro.html">Introduction: What is an Index?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexing-guide/integer-indices.html">Integer Indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexing-guide/slices.html">Slices</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="indexing-guide/multidimensional-indices/index.html">Multidimensional Indices</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Multidimensional Indices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="indexing-guide/multidimensional-indices/what-is-an-array.html">What is an Array?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indexing-guide/multidimensional-indices/tuples.html">Tuple Indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indexing-guide/multidimensional-indices/ellipses.html">Ellipses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indexing-guide/multidimensional-indices/newaxis.html">newaxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indexing-guide/multidimensional-indices/integer-arrays.html">Integer Array Indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indexing-guide/multidimensional-indices/boolean-arrays.html">Boolean Array Indices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="indexing-guide/other-topics.html">Other Topics Relevant to Indexing</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Type Confusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">ndindex Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="style-guide.html">Documentation Style Guide</a></li>
 </ul>
 
+</div></div><div class="sidebar-tree sidebar-extra">
+  <ul>
+    <li class="toctree-l1">
+      <a class="sidebar-extra"
+      href="https://github.com/Quansight-Labs/ndindex">GitHub<svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-link-external" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M10.604 1h4.146a.25.25 0 01.25.25v4.146a.25.25 0 01-.427.177L13.03 4.03 9.28 7.78a.75.75 0 01-1.06-1.06l3.75-3.75-1.543-1.543A.25.25 0 0110.604 1zM3.75 2A1.75 1.75 0 002 3.75v8.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 12.25v-3.5a.75.75 0 00-1.5 0v3.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-8.5a.25.25 0 01.25-.25h3.5a.75.75 0 000-1.5h-3.5z"></path></svg></a>
+    </li>
+  </ul>
 </div>
-</div>
-
       </div>
       
     </div>
@@ -258,11 +345,21 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/Quansight-Labs/ndindex/blob/main/docs/type-confusion.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Quansight-Labs/ndindex/edit/main/docs/type-confusion.md" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
@@ -274,7 +371,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="type-confusion">
-<h1>Type Confusion<a class="headerlink" href="#type-confusion" title="Link to this heading">¶</a></h1>
+<span id="id1"></span><h1>Type Confusion<a class="headerlink" href="#type-confusion" title="Link to this heading">¶</a></h1>
 <p>When using the ndindex API, it is important to avoid type confusion. Many
 types that are used as indices for arrays also have semantic meaning outside
 of indexing. For example, tuples and arrays mean one thing when they are
@@ -285,18 +382,18 @@ classes with the classes they represent. Most methods that work on the native
 classes are not available on the ndindex classes.</p>
 <p>Some general types to help avoid type confusion:</p>
 <ul>
-<li><p><strong>Always use the <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><code class="xref py py-func docutils literal notranslate"><span class="pre">ndindex()</span></code></a> function to create ndindex types.</strong> When
-calling ndindex methods or creating <a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> objects, it is not
+<li><p><strong>Always use the <a class="reference internal" href="api/ndindex.html#ndindex.ndindex" title="ndindex.ndindex"><code class="xref py py-func docutils literal notranslate"><span class="pre">ndindex()</span></code></a> function to create ndindex types.</strong> When
+calling ndindex methods or creating <a class="reference internal" href="api/index-types.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> objects, it is not
 necessary to convert arguments to ndindex types first. Slice literals (using
 <code class="docutils literal notranslate"><span class="pre">:</span></code>) are not valid syntax outside of a getitem (square brackets), but you
 can use the <code class="docutils literal notranslate"><span class="pre">slice</span></code> built-in object to create slices. <code class="docutils literal notranslate"><span class="pre">slice(a,</span> <span class="pre">b,</span> <span class="pre">c)</span></code> is
 the same as <code class="docutils literal notranslate"><span class="pre">a:b:c</span></code>.</p>
-<p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>
-</pre></div>
-</div>
 <p><strong>Wrong:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span> <span class="c1"># More verbose than necessary</span>
+</pre></div>
+</div>
+<p><strong>Right:</strong></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>
 </pre></div>
 </div>
 </li>
@@ -305,14 +402,14 @@ indexing.</strong> If all you are doing with an index is indexing it, and not
 manipulating it or storing it somewhere else, there is no need to use
 ndindex. But if you are storing ndindex types separately before indexing, or
 plan to manipulate them in any way, it is best to convert them to ndindex
-types with <a class="reference internal" href="api.html#ndindex.ndindex" title="ndindex.ndindex"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></span></a> as early as possible, and store
+types with <a class="reference internal" href="api/ndindex.html#ndindex.ndindex" title="ndindex.ndindex"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">ndindex()</span></code></span></a> as early as possible, and store
 them in that form. Only convert back to a raw index (with <code class="docutils literal notranslate"><span class="pre">.raw</span></code>, see the
 next bullet point) once doing an actual index operation. Avoid mixing
 ndindex and “raw” or non-ndindex types. There are many reasons to avoid
 this:</p>
 <ul>
 <li><p>Raw types (such as <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">slice</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">array</span></code>, and so on), do not
-have any of the same methods as ndindex, so your code may fail</p></li>
+have any of the same methods as ndindex, so your code may fail.</p></li>
 <li><p>Some raw types, such as slices, arrays, and tuples containing slices or
 arrays, are not hashable, so if you try to use them as a dictionary key,
 they will fail. ndindex types are always hashable.</p>
@@ -364,6 +461,9 @@ indices are exactly equal.</p>
     <span class="o">...</span>
 </pre></div>
 </div>
+<p>Additionally, all ndindex types are immutable, including types
+representing NumPy arrays, so it is impossible to accidentally mutate an
+ndindex array index object.</p>
 </li>
 </ul>
 </li>
@@ -409,20 +509,22 @@ so there is no issue with managing it separately).</p>
 </li>
 <li><p><strong>Try to use ndindex methods to manipulate indices.</strong> The whole reason
 ndindex exists is that writing formulas for manipulating indices is hard,
-and it’s easy to get the corner cases wrong. If you find yourself
-manipulating index args directly in complex ways, it’s a sign you should
-probably be using a higher level abstraction. If what you are trying to do
-doesn’t exist yet, <a class="reference external" href="https://github.com/Quansight-labs/ndindex/issues">open an
-issue</a> so we can implement it.</p></li>
+and it’s easy to get the corner cases wrong. ndindex is <a class="reference internal" href="index.html#testing"><span class="std std-ref">rigorously
+tested</span></a> so you can be highly confident of its correctness. If you
+find yourself manipulating index args directly in complex ways, it’s a sign
+you should probably be using a higher level abstraction. If what you are
+trying to do doesn’t exist yet, <a class="reference external" href="https://github.com/Quansight-labs/ndindex/issues">open an
+issue</a> so we can implement
+it.</p></li>
 </ul>
 <p>Additionally, some advice for specific types:</p>
 <section id="integer">
 <h2>Integer<a class="headerlink" href="#integer" title="Link to this heading">¶</a></h2>
 <ul>
-<li><p><strong><a class="reference internal" href="api.html#ndindex.Integer" title="ndindex.Integer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It
-represents integers <strong>as indices</strong>. It is not usable in contexts where
-integers are usable. For example, arithmetic will not work on it. If you
-need to manipulate the integer index as an integer, use <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
+<li><p><strong><a class="reference internal" href="api/index-types.html#ndindex.Integer" title="ndindex.Integer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Integer</span></code></a> should not be thought of as an int type.</strong> It
+represents integers <strong>as indices</strong>. It is not usable in other contexts where
+ints are usable. For example, arithmetic will not work on it. If you need to
+manipulate the <code class="docutils literal notranslate"><span class="pre">Integer</span></code> index as an <code class="docutils literal notranslate"><span class="pre">int</span></code>, use <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
 <p><strong>Right:</strong></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">ndindex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mi">1</span>
@@ -447,7 +549,7 @@ docstring).</p></li>
 <section id="tuple">
 <span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Link to this heading">¶</a></h2>
 <ul>
-<li><p><strong><a class="reference internal" href="api.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular,
+<li><p><strong><a class="reference internal" href="api/index-types.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular,
 things like <code class="docutils literal notranslate"><span class="pre">idx[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">len(idx)</span></code> will not work if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>. If
 you need to access the specific term in a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, use <code class="docutils literal notranslate"><span class="pre">Tuple.args</span></code> if you
 want the ndindex type, or <code class="docutils literal notranslate"><span class="pre">Tuple.raw</span></code> if you want the raw type.</p>
@@ -482,7 +584,7 @@ want the ndindex type, or <code class="docutils literal notranslate"><span class
 <section id="ellipsis">
 <span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Link to this heading">¶</a></h2>
 <ul>
-<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
+<li><p>You should almost never use the ndindex <a class="reference internal" href="api/index-types.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
 Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex[...]</span></code></strong>. As noted above, all ndindex
 methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will automatically convert <code class="docutils literal notranslate"><span class="pre">...</span></code> into the ndindex type.</p>
 <p><strong>Right:</strong></p>
@@ -557,7 +659,7 @@ allow <code class="docutils literal notranslate"><span class="pre">==</span></co
 <a class="reference internal" href="#type-confusion-ellipsis"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">ellipsis</span></code></span></a>. Note that <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> is just an alias
 for <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <ul>
-<li><p>You should almost never use the ndindex <a class="reference internal" href="api.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> class directly.
+<li><p>You should almost never use the ndindex <a class="reference internal" href="api/index-types.html#ndindex.Newaxis" title="ndindex.Newaxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Newaxis</span></code></a> class directly.
 Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">ndindex(np.newaxis)</span></code>, or
 <code class="docutils literal notranslate"><span class="pre">ndindex(None)</span></code></strong>. As noted above, all ndindex methods and <code class="docutils literal notranslate"><span class="pre">Tuple</span></code> will
 automatically convert <code class="docutils literal notranslate"><span class="pre">None</span></code> into the ndindex type.</p>
@@ -624,18 +726,18 @@ NumPy arrays).</p>
 <section id="integerarray-and-booleanarray">
 <h2>IntegerArray and BooleanArray<a class="headerlink" href="#integerarray-and-booleanarray" title="Link to this heading">¶</a></h2>
 <ul>
-<li><p><strong><a class="reference internal" href="api.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought
+<li><p><strong><a class="reference internal" href="api/index-types.html#ndindex.IntegerArray" title="ndindex.IntegerArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegerArray</span></code></a> and <a class="reference internal" href="api/index-types.html#ndindex.BooleanArray" title="ndindex.BooleanArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanArray</span></code></a> should not be thought
 of as arrays.</strong> They do not have the methods that <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> would
 have. They also have fixed dtypes (<code class="docutils literal notranslate"><span class="pre">intp</span></code> and <code class="docutils literal notranslate"><span class="pre">bool_</span></code>) and are restricted by
 what is allowed as indices by NumPy. To access the arrays they represent,
 use <code class="docutils literal notranslate"><span class="pre">idx.array</span></code> or <code class="docutils literal notranslate"><span class="pre">idx.raw</span></code>.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
 <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Gives an error</span>
 </pre></div>
 </div>
@@ -643,19 +745,19 @@ use <code class="docutils literal notranslate"><span class="pre">idx.array</span
 <li><p><strong>Like all other ndindex types, <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> and <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> are
 immutable.</strong>. The <code class="docutils literal notranslate"><span class="pre">.array</span></code> object on them is set as read-only to enforce
 this. To modify an array index, create a new object. All ndindex methods
-that manipulate indices, like <a class="reference internal" href="api.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></span></a>, return new
+that manipulate indices, like <a class="reference internal" href="api/internal.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></span></a>, return new
 objects. If you create an <code class="docutils literal notranslate"><span class="pre">IntegerArray</span></code> or <code class="docutils literal notranslate"><span class="pre">BooleanArray</span></code> object out of an
 existing array, the array is copied so that modifications to the original
 array do not affect the ndindex objects.</p>
 <p><strong>Right:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
 <span class="n">arr</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">idx2</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Wrong:</strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">IntegerArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
 <span class="n">idx</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Gives an error</span>
 </pre></div>
 </div>
@@ -678,14 +780,14 @@ array do not affect the ndindex objects.</p>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="slices.html">
+          <a class="prev-page" href="indexing-guide/other-topics.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Slices</div>
+                <div class="title">Other Topics Relevant to Indexing</div>
                 
               </div>
             </a>
@@ -749,5 +851,6 @@ array do not affect the ndindex objects.</p>
     <script src="_static/scripts/furo.js?v=4e2eecee"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
     </body>
 </html>

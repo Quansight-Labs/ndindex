@@ -19,6 +19,7 @@
     --color-sidebar-current: white;
     --color-sidebar-background-current: var(--color-brand-medium-blue);
     --color-sidebar--hover: var(--color-brand-dark-blue);
+    --color-sidebar-arrow-current: white;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,12 +27,245 @@
         --color-sidebar-background-current: var(--color-brand-dark-blue);
         --color-brand-bg: var(--color-brand-dark-bg);
         --color-sidebar--hover: white;
+        --color-sidebar-arrow-current: var(--color-sidebar-link-text--top-level);
     }
 }
 [data-theme='dark'] {
     --color-sidebar-background-current: var(--color-brand-dark-blue);
     --color-brand-bg: var(--color-brand-dark-bg);
     --color-sidebar--hover: white;
+    --color-sidebar-arrow-current: var(--color-sidebar-link-text--top-level);
+}
+
+/* Slice diagram stuff from the indexing guide */
+
+.slice-diagram {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    padding-left: 2em;
+    padding-right: 2em;
+    overflow: auto;
+    --color-slice-diagram-selected: #3030FF;
+    --color-slice-diagram-not-selected: #EE0000;
+    --color-slice-diagram-slice: var(--color-slice-diagram-selected);
+}
+[data-theme="dark"] .slice-diagram {
+    /* We could also use --color-brand-green here */
+    --color-slice-diagram-selected: var(--color-brand-light-blue);
+    --color-slice-diagram-not-selected: #FF5E5E;
+    --color-slice-diagram-slice: var(--color-slice-diagram-selected);
+}
+.slice-diagram>code {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.centered-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: var(--color-background-primary);
+    padding: 0 10px;
+    z-index: 1;
+}
+
+.horizontal-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1.5px solid var(--color-foreground-primary);
+    margin-left: 10px;
+    margin-right: 10px;
+    z-index: 0;
+}
+.slice-diagram table {
+    border-collapse: collapse;
+}
+
+.slice-diagram th {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.slice-diagram td {
+    border: none;
+    padding: 0.5em;
+    text-align: center;
+    position: relative;
+    width: 0.8em;
+    height: 0.8em;
+    white-space: nowrap;
+}
+
+.underline-cell {
+    position: relative;
+}
+
+.underline-cell::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.3em; /* Position of the underline relative to the cell */
+    height: 2px; /* Thickness of the underline */
+    background-color: var(--color-slice-diagram-selected);
+}
+
+.vertical-bar-red:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    border-left: 2px dotted var(--color-slice-diagram-not-selected);
+}
+
+.vertical-bar-blue:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    border-left: 2px solid var(--color-slice-diagram-selected);
+}
+
+.slice-diagram td:first-child {
+    border-left: none;
+}
+
+.slice-diagram td:last-child:before {
+    border-right: none;
+}
+
+.overflow-content {
+    white-space: nowrap;
+    overflow: visible;
+    width: 100%;
+    max-width: 0px;
+}
+
+.slice-diagram-slice {
+    color: var(--color-slice-diagram-slice);
+}
+.slice-diagram-selected {
+    color: var(--color-slice-diagram-selected);
+    /* text-decoration: underline; */
+}
+.slice-diagram-not-selected {
+    color: var(--color-slice-diagram-not-selected);
+}
+.slice-diagram-index-label-selected {
+    line-height: 0em;
+    vertical-align: top;
+    color: var(--color-slice-diagram-selected);
+}
+.slice-diagram-index-label-not-selected {
+    line-height: 0em;
+    vertical-align: top;
+    color: var(--color-slice-diagram-not-selected);
+}
+.circle-red,
+.circle-blue {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 50%;
+    text-align: center;
+}
+.circle-red {
+    border: 1px solid var(--color-slice-diagram-not-selected);
+}
+.circle-blue {
+    border: 1px solid var(--color-slice-diagram-selected);
+}
+.left-arrow-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('./arrow.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+}
+[data-theme="dark"] .left-arrow-cell::before {
+    filter: invert(1);
+}
+
+.right-arrow-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('./arrow.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    transform: scaleX(-1);
+}
+[data-theme="dark"] .right-arrow-cell::before {
+    filter: invert(1);
+}
+
+.left-arrow-curved-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: url('./arrow-short-curved.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: contain;
+    transform: translate(0px, -41px);
+}
+[data-theme="dark"] .left-arrow-curved-cell::before {
+    filter: invert(1);
+}
+
+.right-arrow-curved-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: url('./arrow-short-curved.svg');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: contain;
+    transform: translate(0px, -41px) scaleX(-1);
+}
+[data-theme="dark"] .right-arrow-curved-cell::before {
+    filter: invert(1);
+}
+
+/* Styling for the GitHub link in the sidebar */
+.sidebar-tree .sidebar-extra {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 100%;
+    line-height: var(--sidebar-item-line-height);
+    overflow-wrap: anywhere;
+    padding: var(--sidebar-item-spacing-vertical) var(--sidebar-item-spacing-horizontal);
+    width: 100%;
+    font-weight: bold !important
 }
 
 /* The furo theme uses only-light and only-dark for light/dark-mode only
@@ -75,6 +309,15 @@ html body .only-dark-inline {
 .sidebar-tree .reference:hover {
     color: var(--color-sidebar--hover);
 }
+
+.sidebar-tree .current-page>label:not(:hover) .icon {
+    color: var(--color-sidebar-arrow-current);
+}
+
+.sidebar-tree .reference:hover ~ label .icon {
+    color: var(--color-sidebar-link-text--top-level) !important;
+}
+
 
 /* The "hide search matches" text after doing a search. Defaults to the same
    color as the search icon which is illegible on the colored background. */
@@ -125,4 +368,15 @@ h4, h5, h6 {
    slow for long pages) */
 html {
     scroll-behavior: auto;
+}
+
+/* Hide the annoying "back to top" button */
+.show-back-to-top .back-to-top {
+    display: none;
+}
+
+/* Highlight footnotes when they are linked to */
+.footnote:target {
+    background-color: var(--color-highlight-on-target);
+    color: var(--color-foreground-primary);
 }
