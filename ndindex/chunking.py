@@ -323,9 +323,10 @@ class ChunkSize(ImmutableObject, Sequence):
         if len(shape) != len(self):
             raise ValueError("chunks dimensions must equal the array dimensions")
 
+        idx = ndindex(idx).expand(shape)
+
         if 0 in shape:
             return 0
-        idx = ndindex(idx).expand(shape)
 
         if idx.isempty(shape):
             return 0
