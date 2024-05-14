@@ -122,7 +122,7 @@ shape.
 axis is inserted at the end of the shape. The resulting shape is `(2, 4, 1)`.
 
 In general, in a tuple index, the axis that each index selects corresponds to
-its position in the tuple index after removing any `newaxis` indices
+its position in the tuple index after removing any `newaxis` indices.
 Equivalently, `newaxis` indices can be though of as adding new axes *after*
 the existing axes are indexed.
 
