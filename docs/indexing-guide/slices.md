@@ -1402,7 +1402,7 @@ Note that this also works when `n` is even, although unlike above, `n=2` gives
 (clipping)=
 ### Clipping
 
-Slices can never result in an out-of-bounds `IndexError`. This differs from
+Slices can never result in an out of bounds `IndexError`. This differs from
 [integer indices](integer-indices), which require the index to be in bounds.
 Instead, slice values *clip* to the bounds of the array.
 
@@ -1462,13 +1462,13 @@ inexpensive operation. Slicing a `list` does make a copy, but it's a shallow
 copy so it isn't particularly expensive either.
 
 The clipping behavior of slices also means that you cannot rely on runtime
-checks for out-of-bounds slices. Simply put, there is no such thing as an
-"out-of-bounds slice." If you really want a bounds check, you have to do it
+checks for out of bounds slices. Simply put, there is no such thing as an
+"out of bounds slice." If you really want a bounds check, you have to do it
 manually.
 
 There's a cute trick you can sometimes use that takes advantage of clipping.
 By using a slice that selects a single element instead of an integer index,
-you can avoid `IndexError` when the index is out-of-bounds. For example,
+you can avoid `IndexError` when the index is out of bounds. For example,
 suppose you want to implement a quick script with a rudimentary optional
 command line argument (without the hassle of
 [argparse](https://docs.python.org/3/library/argparse.html)). This can be done
@@ -1485,7 +1485,7 @@ if sys.argv[1] == 'help':
 ```
 
 The problem with this code is that it fails if no command line arguments are
-passed, because `sys.argv[1]` will give an `IndexError` for the out-of-bounds
+passed, because `sys.argv[1]` will give an `IndexError` for the out of bounds
 index 1. The most obvious fix is to add a length check:
 
 ```py
@@ -1559,7 +1559,7 @@ def ends_in_punctuation(a: str) -> bool:
 
 This sort of trick may seem scary and magic, but once you have digested this
 guide and become comfortable with slice semantics, it is a natural and clean
-way to embed length checks into comparison logic and avoid out-of-bounds
+way to embed length checks into comparison logic and avoid out of bounds
 corner cases.
 
 (steps)=
@@ -1580,7 +1580,7 @@ The important thing to remember about the `step` is that its presence does not
 change the fundamental [rules](rules) of slices that we have learned so far.
 The `start` and `stop` still use [0-based indexing](0-based). The `stop` is
 [never included](half-open) in the slice. [Negative](negative-indices) `start`
-and `stop` index from the end of the list. Out-of-bounds `start` and `stop`
+and `stop` index from the end of the list. Out of bounds `start` and `stop`
 still [clip](clipping) to the beginning or end of the list. And (see below) an
 [omitted](omitted) `start` or `stop` still extends to the beginning or end of
 `a`.
@@ -2363,7 +2363,7 @@ would make to improve the semantics would be
    `j` is "too big" (greater than `len(a)`), but it does something completely
    different if `i` is "too small" as soon as "too small" means "negative".
    Clipping is a good idea. It tends to lead to behavior that gives what you
-   would want for slices that go out-of-bounds.
+   would want for slices that go out of bounds.
 
    Negative indexing is, strictly speaking, a syntactic sugar only.
    Slicing/indexing from the end of a list can always be done in terms of the
