@@ -98,30 +98,30 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. Slicing something never raises an `IndexError`, even if the slice is empty.
+1. **Slicing something never raises an `IndexError`, even if the slice is empty.
    For a NumPy array, a slice always keeps the axis being sliced, even if that
-   means the resulting dimension will be 0 or 1. (See section {ref}`subarray`)
+   means the resulting dimension will be 0 or 1.** (See section {ref}`subarray`)
 
-2. The `start` and `stop` use *0-based indexing* from the *beginning* of `a` when
+2. **The `start` and `stop` use *0-based indexing* from the *beginning* of `a` when
    they are *nonnegative*, and *−1-based indexing* from *end* of `a` when they
-   are *negative*. (See sections {ref}`0-based` and {ref}`negative-indices`)
+   are *negative*.** (See sections {ref}`0-based` and {ref}`negative-indices`)
 
-3. The `stop` is never included in the slice. (See section {ref}`half-open`)
+3. **The `stop` is never included in the slice.** (See section {ref}`half-open`)
 
-4. The `start` and `stop` are clipped to the bounds of `a`. (See section
+4. **The `start` and `stop` are clipped to the bounds of `a`.** (See section
    {ref}`clipping`)
 
-5. The slice starts at the `start` and successively adds `step` until it
+5. **The slice starts at the `start` and successively adds `step` until it
    reaches an index that is at or past the `stop`, and then stops without
-   including that `stop` index. (See sections {ref}`steps` and
+   including that `stop` index.** (See sections {ref}`steps` and
    {ref}`negative-steps`)
 
-6. If the `step` is omitted it defaults to `1`. (See section {ref}`omitted`)
+6. **If the `step` is omitted it defaults to `1`.** (See section {ref}`omitted`)
 
-7. If the `start` or `stop` are omitted they extend to the beginning or end of
+7. **If the `start` or `stop` are omitted they extend to the beginning or end of
    `a` in the direction being sliced. Slices like `a[:i]` or `a[i:]` should be
    thought of as the `start` or `stop` being omitted, not as a colon to the
-   left or right of an index. (See section {ref}`omitted`)
+   left or right of an index.** (See section {ref}`omitted`)
 
 Throughout this guide, we will use as an example the same prototype list as we
 used in the [integer indexing section](prototype-example):
