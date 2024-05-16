@@ -122,11 +122,12 @@ indices:
 > **When multiple integer array indices are provided, the elements of each
 > index are selected correspondingly for that axis.**
 
-It's perhaps most illustrative to
-show this as an example. Given the above `a`, we can produce the array `[105,
-100]` using.
+It's perhaps most illustrative to show this as an example. Given the above
+`a`, we can produce the array `[105, 100]` using
 
 ```
+>>> a = np.array([[100, 101, 102],
+...               [103, 104, 105]])
 >>> idx = (np.array([1, 0]), np.array([2, 0]))
 >>> a[idx]
 array([105, 100])
