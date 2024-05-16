@@ -535,8 +535,9 @@ Conversely, a slice like `2:9` is equivalent to the outer index `[2, 3,
 
 [^slice-outer-index-footnote]: They aren't actually equivalent, because [a
     slice creates a view and an integer array index creates a
-    copy](views-vs-copies). If your index can be represented as a slice, it's
-    better to use an actual `slice`.
+    copy](views-vs-copies), not to mention the fact that slices
+    [clip](clipping) and integer arrays have bounds checks. If your index can
+    be represented as a slice, it's usually better to use an actual `slice`.
 
 ### Assigning to an Integer Array Index
 
