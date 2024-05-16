@@ -161,8 +161,8 @@ how integer indexing works.. See the previous section, [](integer-indices).
 
 Now, let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
-would necessitate several "if" conditions. The [NumPy
-docs](https://numpy.org/doc/stable/user/basics.indexing.html#slicing-and-striding) on slices
+would necessitate several "if" conditions. The [NumPy docs on
+slices](https://numpy.org/doc/stable/user/basics.indexing.html#slicing-and-striding)
 say
 
 (numpy-definition)=
@@ -198,7 +198,7 @@ dimension that is sliced.**
 (empty-slice)=
 This holds true even if the slice selects only a single element, or even if it
 selects no elements at all (a slice that selects no elements is called an
-*empty slice*, and produces an size-0 array. This is also true for lists,
+*empty slice*). This is also true for lists,
 tuples, and strings, in the sense that a slice on a list, tuple, or string
 will always produce a list, tuple, or string. This behavior is different from
 [integer indices](integer-indices), which always remove the dimension that
