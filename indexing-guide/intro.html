@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e072bb5a" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=254c7fb8" />
     
     
 
@@ -391,7 +391,7 @@ When it comes to indexing, the most important rule, which applies to all types
 of indices, is this:</p>
 <blockquote>
 <div><p><strong>Indices do not in any way depend on the <em>values</em> of the elements they
-select. They only depend on their <em>positions</em> in the array <code class="docutils literal notranslate"><span class="pre">a</span></code>.</strong></p>
+select. They only depend on their <em>positions</em> in the array.</strong></p>
 </div></blockquote>
 <p>For example, consider <code class="docutils literal notranslate"><span class="pre">a</span></code>, an array of integers with the shape <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">3,</span> <span class="pre">2)</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -441,11 +441,11 @@ The values of these elements are irrelevant.</strong></p></li>
 produce an array with the exact same resulting shape with elements in the
 exact same corresponding places.</strong></p></li>
 </ul>
-<p>The full range of valid indices allows the generation of more or less
-arbitrary new arrays whose elements come from the indexed array <code class="docutils literal notranslate"><span class="pre">a</span></code>. In
-practice, the most commonly desired indexing operations are represented by
-basic indices such as <a class="reference internal" href="integer-indices.html"><span class="std std-doc">integer indices</span></a>,
-<a class="reference internal" href="slices.html"><span class="std std-doc">slices</span></a>, and <a class="reference internal" href="multidimensional-indices/ellipses.html"><span class="std std-doc">ellipses</span></a>.</p>
+<p>The full range of valid indices allows the generation of arbitrary new arrays
+whose elements come from the indexed array <code class="docutils literal notranslate"><span class="pre">a</span></code>. In practice, the most commonly
+desired indexing operations are represented by basic indices such as <a class="reference internal" href="integer-indices.html"><span class="std std-doc">integer
+indices</span></a>, <a class="reference internal" href="slices.html"><span class="std std-doc">slices</span></a>, and
+<a class="reference internal" href="multidimensional-indices/ellipses.html"><span class="std std-doc">ellipses</span></a>.</p>
 <p class="rubric">Footnotes</p>
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->

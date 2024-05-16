@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e072bb5a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=254c7fb8" />
     
     
 
@@ -512,8 +512,11 @@ both. -->
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
-<figure class="align-default">
-<img alt="A plot of 4*x*np.sin(x) - x**2/4 - 2*x from -10 to 10. The curve crosses the x-axis several times at irregular intervals." class="plot-directive" src="../../_images/plot-1.svg" /></figure>
+<figure class="align-default" id="id8">
+<img alt="A plot of 4*x*np.sin(x) - x**2/4 - 2*x from -10 to 10. The curve crosses the x-axis several times at irregular intervals." class="plot-directive" src="../../_images/plot-1.svg" /><figcaption>
+<p><span class="caption-text">Plot of <span class="math notranslate nohighlight">\(y = 4x\sin(x) - \frac{x^2}{4} - 2x\)</span></span><a class="headerlink" href="#id8" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>If we want to show only those x values that are positive, we could easily do
 this by modifying the <code class="docutils literal notranslate"><span class="pre">linspace</span></code> call that created <code class="docutils literal notranslate"><span class="pre">x</span></code>. But what if we
 want to show only those <code class="docutils literal notranslate"><span class="pre">y</span></code> values that are positive? The only way to do
@@ -522,8 +525,11 @@ this is to select them using a mask:</p>
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
-<figure class="align-default">
-<img alt="A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis." class="plot-directive" src="../../_images/plot-2.svg" /></figure>
+<figure class="align-default" id="id10">
+<img alt="A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis." class="plot-directive" src="../../_images/plot-2.svg" /><figcaption>
+<p><span class="caption-text">Plot of <span class="math notranslate nohighlight">\(y = 4x\sin(x) - \frac{x^2}{4} - 2x\)</span> where <span class="math notranslate nohighlight">\(y &gt; 0\)</span></span><a class="headerlink" href="#id10" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>Here we are using the mask <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> to select the corresponding values from
 <em>both</em> the <code class="docutils literal notranslate"><span class="pre">x</span></code> and the <code class="docutils literal notranslate"><span class="pre">y</span></code> arrays. Since the same mask is used on both arrays,
 the values corresponding to this mask in both arrays will be selected. With

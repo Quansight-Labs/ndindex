@@ -98,30 +98,30 @@ In this document, "*nonnegative*" means $\geq 0$ and "*negative*" means $< 0$.
 
 For a slice `a[start:stop:step]`:
 
-1. Slicing something never raises an `IndexError`, even if the slice is empty.
+1. **Slicing something never raises an `IndexError`, even if the slice is empty.
    For a NumPy array, a slice always keeps the axis being sliced, even if that
-   means the resulting dimension will be 0 or 1. (See section {ref}`subarray`)
+   means the resulting dimension will be 0 or 1.** (See section {ref}`subarray`)
 
-2. The `start` and `stop` use *0-based indexing* from the *beginning* of `a` when
+2. **The `start` and `stop` use *0-based indexing* from the *beginning* of `a` when
    they are *nonnegative*, and *−1-based indexing* from *end* of `a` when they
-   are *negative*. (See sections {ref}`0-based` and {ref}`negative-indices`)
+   are *negative*.** (See sections {ref}`0-based` and {ref}`negative-indices`)
 
-3. The `stop` is never included in the slice. (See section {ref}`half-open`)
+3. **The `stop` is never included in the slice.** (See section {ref}`half-open`)
 
-4. The `start` and `stop` are clipped to the bounds of `a`. (See section
+4. **The `start` and `stop` are clipped to the bounds of `a`.** (See section
    {ref}`clipping`)
 
-5. The slice starts at the `start` and successively adds `step` until it
+5. **The slice starts at the `start` and successively adds `step` until it
    reaches an index that is at or past the `stop`, and then stops without
-   including that `stop` index. (See sections {ref}`steps` and
+   including that `stop` index.** (See sections {ref}`steps` and
    {ref}`negative-steps`)
 
-6. If the `step` is omitted it defaults to `1`. (See section {ref}`omitted`)
+6. **If the `step` is omitted it defaults to `1`.** (See section {ref}`omitted`)
 
-7. If the `start` or `stop` are omitted they extend to the beginning or end of
+7. **If the `start` or `stop` are omitted they extend to the beginning or end of
    `a` in the direction being sliced. Slices like `a[:i]` or `a[i:]` should be
    thought of as the `start` or `stop` being omitted, not as a colon to the
-   left or right of an index. (See section {ref}`omitted`)
+   left or right of an index.** (See section {ref}`omitted`)
 
 Throughout this guide, we will use as an example the same prototype list as we
 used in the [integer indexing section](prototype-example):
@@ -161,8 +161,8 @@ how integer indexing works.. See the previous section, [](integer-indices).
 
 Now, let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
-would necessitate several "if" conditions. The [NumPy
-docs](https://numpy.org/doc/stable/user/basics.indexing.html#slicing-and-striding) on slices
+would necessitate several "if" conditions. The [NumPy docs on
+slices](https://numpy.org/doc/stable/user/basics.indexing.html#slicing-and-striding)
 say
 
 (numpy-definition)=
@@ -198,7 +198,7 @@ dimension that is sliced.**
 (empty-slice)=
 This holds true even if the slice selects only a single element, or even if it
 selects no elements at all (a slice that selects no elements is called an
-*empty slice*, and produces an size-0 array. This is also true for lists,
+*empty slice*). This is also true for lists,
 tuples, and strings, in the sense that a slice on a list, tuple, or string
 will always produce a list, tuple, or string. This behavior is different from
 [integer indices](integer-indices), which always remove the dimension that
@@ -1402,7 +1402,7 @@ Note that this also works when `n` is even, although unlike above, `n=2` gives
 (clipping)=
 ### Clipping
 
-Slices can never result in an out-of-bounds `IndexError`. This differs from
+Slices can never result in an out of bounds `IndexError`. This differs from
 [integer indices](integer-indices), which require the index to be in bounds.
 Instead, slice values *clip* to the bounds of the array.
 
@@ -1462,13 +1462,13 @@ inexpensive operation. Slicing a `list` does make a copy, but it's a shallow
 copy so it isn't particularly expensive either.
 
 The clipping behavior of slices also means that you cannot rely on runtime
-checks for out-of-bounds slices. Simply put, there is no such thing as an
-"out-of-bounds slice." If you really want a bounds check, you have to do it
+checks for out of bounds slices. Simply put, there is no such thing as an
+"out of bounds slice." If you really want a bounds check, you have to do it
 manually.
 
 There's a cute trick you can sometimes use that takes advantage of clipping.
 By using a slice that selects a single element instead of an integer index,
-you can avoid `IndexError` when the index is out-of-bounds. For example,
+you can avoid `IndexError` when the index is out of bounds. For example,
 suppose you want to implement a quick script with a rudimentary optional
 command line argument (without the hassle of
 [argparse](https://docs.python.org/3/library/argparse.html)). This can be done
@@ -1485,7 +1485,7 @@ if sys.argv[1] == 'help':
 ```
 
 The problem with this code is that it fails if no command line arguments are
-passed, because `sys.argv[1]` will give an `IndexError` for the out-of-bounds
+passed, because `sys.argv[1]` will give an `IndexError` for the out of bounds
 index 1. The most obvious fix is to add a length check:
 
 ```py
@@ -1559,7 +1559,7 @@ def ends_in_punctuation(a: str) -> bool:
 
 This sort of trick may seem scary and magic, but once you have digested this
 guide and become comfortable with slice semantics, it is a natural and clean
-way to embed length checks into comparison logic and avoid out-of-bounds
+way to embed length checks into comparison logic and avoid out of bounds
 corner cases.
 
 (steps)=
@@ -1580,7 +1580,7 @@ The important thing to remember about the `step` is that its presence does not
 change the fundamental [rules](rules) of slices that we have learned so far.
 The `start` and `stop` still use [0-based indexing](0-based). The `stop` is
 [never included](half-open) in the slice. [Negative](negative-indices) `start`
-and `stop` index from the end of the list. Out-of-bounds `start` and `stop`
+and `stop` index from the end of the list. Out of bounds `start` and `stop`
 still [clip](clipping) to the beginning or end of the list. And (see below) an
 [omitted](omitted) `start` or `stop` still extends to the beginning or end of
 `a`.
@@ -2363,7 +2363,7 @@ would make to improve the semantics would be
    `j` is "too big" (greater than `len(a)`), but it does something completely
    different if `i` is "too small" as soon as "too small" means "negative".
    Clipping is a good idea. It tends to lead to behavior that gives what you
-   would want for slices that go out-of-bounds.
+   would want for slices that go out of bounds.
 
    Negative indexing is, strictly speaking, a syntactic sugar only.
    Slicing/indexing from the end of a list can always be done in terms of the

@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e072bb5a" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=254c7fb8" />
     
     
 
@@ -440,24 +440,24 @@ are always correct.</p>
 <p>In this document, “<em>nonnegative</em>” means <span class="math notranslate nohighlight">\(\geq 0\)</span> and “<em>negative</em>” means <span class="math notranslate nohighlight">\(&lt; 0\)</span>.</p>
 <p>For a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code>:</p>
 <ol class="arabic simple">
-<li><p>Slicing something never raises an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>, even if the slice is empty.
+<li><p><strong>Slicing something never raises an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>, even if the slice is empty.
 For a NumPy array, a slice always keeps the axis being sliced, even if that
-means the resulting dimension will be 0 or 1. (See section <a class="reference internal" href="#subarray"><span class="std std-ref">Subarray</span></a>)</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> use <em>0-based indexing</em> from the <em>beginning</em> of <code class="docutils literal notranslate"><span class="pre">a</span></code> when
+means the resulting dimension will be 0 or 1.</strong> (See section <a class="reference internal" href="#subarray"><span class="std std-ref">Subarray</span></a>)</p></li>
+<li><p><strong>The <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> use <em>0-based indexing</em> from the <em>beginning</em> of <code class="docutils literal notranslate"><span class="pre">a</span></code> when
 they are <em>nonnegative</em>, and <em>−1-based indexing</em> from <em>end</em> of <code class="docutils literal notranslate"><span class="pre">a</span></code> when they
-are <em>negative</em>. (See sections <a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a> and <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a>)</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">stop</span></code> is never included in the slice. (See section <a class="reference internal" href="#half-open"><span class="std std-ref">Half-open</span></a>)</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are clipped to the bounds of <code class="docutils literal notranslate"><span class="pre">a</span></code>. (See section
+are <em>negative</em>.</strong> (See sections <a class="reference internal" href="#based"><span class="std std-ref">0-based</span></a> and <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative Indices</span></a>)</p></li>
+<li><p><strong>The <code class="docutils literal notranslate"><span class="pre">stop</span></code> is never included in the slice.</strong> (See section <a class="reference internal" href="#half-open"><span class="std std-ref">Half-open</span></a>)</p></li>
+<li><p><strong>The <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> are clipped to the bounds of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</strong> (See section
 <a class="reference internal" href="#clipping"><span class="std std-ref">Clipping</span></a>)</p></li>
-<li><p>The slice starts at the <code class="docutils literal notranslate"><span class="pre">start</span></code> and successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it
+<li><p><strong>The slice starts at the <code class="docutils literal notranslate"><span class="pre">start</span></code> and successively adds <code class="docutils literal notranslate"><span class="pre">step</span></code> until it
 reaches an index that is at or past the <code class="docutils literal notranslate"><span class="pre">stop</span></code>, and then stops without
-including that <code class="docutils literal notranslate"><span class="pre">stop</span></code> index. (See sections <a class="reference internal" href="#steps"><span class="std std-ref">Steps</span></a> and
+including that <code class="docutils literal notranslate"><span class="pre">stop</span></code> index.</strong> (See sections <a class="reference internal" href="#steps"><span class="std std-ref">Steps</span></a> and
 <a class="reference internal" href="#negative-steps"><span class="std std-ref">Negative Steps</span></a>)</p></li>
-<li><p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted it defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>. (See section <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
-<li><p>If the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are omitted they extend to the beginning or end of
+<li><p><strong>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is omitted it defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</strong> (See section <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
+<li><p><strong>If the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> are omitted they extend to the beginning or end of
 <code class="docutils literal notranslate"><span class="pre">a</span></code> in the direction being sliced. Slices like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code> or <code class="docutils literal notranslate"><span class="pre">a[i:]</span></code> should be
 thought of as the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> being omitted, not as a colon to the
-left or right of an index. (See section <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
+left or right of an index.</strong> (See section <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p></li>
 </ol>
 <p>Throughout this guide, we will use as an example the same prototype list as we
 used in the <a class="reference internal" href="integer-indices.html#prototype-example"><span class="std std-ref">integer indexing section</span></a>:</p>
@@ -488,8 +488,8 @@ rather on the position of the elements in the list.</strong><a class="footnote-r
 how integer indexing works.. See the previous section, <a class="reference internal" href="integer-indices.html"><span class="doc std std-doc">Integer Indices</span></a>.</p>
 <p>Now, let us come back to slices. The full definition of a slice could be
 written down in a couple of sentences, although the discontinuous definitions
-would necessitate several “if” conditions. The <a class="reference external" href="https://numpy.org/doc/stable/user/basics.indexing.html#slicing-and-striding">NumPy
-docs</a> on slices
+would necessitate several “if” conditions. The <a class="reference external" href="https://numpy.org/doc/stable/user/basics.indexing.html#slicing-and-striding">NumPy docs on
+slices</a>
 say</p>
 <blockquote id="numpy-definition">
 <div><p>The basic slice syntax is <code class="docutils literal notranslate"><span class="pre">i:j:k</span></code> where <em>i</em> is the starting index, <em>j</em> is
@@ -515,7 +515,7 @@ dimension that is sliced.</strong></p>
 </div></blockquote>
 <p id="empty-slice">This holds true even if the slice selects only a single element, or even if it
 selects no elements at all (a slice that selects no elements is called an
-<em>empty slice</em>, and produces an size-0 array. This is also true for lists,
+<em>empty slice</em>). This is also true for lists,
 tuples, and strings, in the sense that a slice on a list, tuple, or string
 will always produce a list, tuple, or string. This behavior is different from
 <a class="reference internal" href="integer-indices.html"><span class="doc std std-doc">integer indices</span></a>, which always remove the dimension that
@@ -1615,7 +1615,7 @@ Click here to show the solution<div class="sd-summary-down docutils">
 </details></section>
 <section id="clipping">
 <span id="id12"></span><h3>Clipping<a class="headerlink" href="#clipping" title="Link to this heading">¶</a></h3>
-<p>Slices can never result in an out-of-bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This differs from
+<p>Slices can never result in an out of bounds <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>. This differs from
 <a class="reference internal" href="integer-indices.html"><span class="doc std std-doc">integer indices</span></a>, which require the index to be in bounds.
 Instead, slice values <em>clip</em> to the bounds of the array.</p>
 <p>The rule for clipping is this:</p>
@@ -1656,12 +1656,12 @@ are sure that the length of the input is at least that. Rather, this is the
 <em>maximum</em> length of the slice. It could end up slicing something
 smaller.<a class="footnote-reference brackets" href="#ndindex-calculations-footnote" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></p>
 <p>The clipping behavior of slices also means that you cannot rely on runtime
-checks for out-of-bounds slices. Simply put, there is no such thing as an
-“out-of-bounds slice.” If you really want a bounds check, you have to do it
+checks for out of bounds slices. Simply put, there is no such thing as an
+“out of bounds slice.” If you really want a bounds check, you have to do it
 manually.</p>
 <p>There’s a cute trick you can sometimes use that takes advantage of clipping.
 By using a slice that selects a single element instead of an integer index,
-you can avoid <code class="docutils literal notranslate"><span class="pre">IndexError</span></code> when the index is out-of-bounds. For example,
+you can avoid <code class="docutils literal notranslate"><span class="pre">IndexError</span></code> when the index is out of bounds. For example,
 suppose you want to implement a quick script with a rudimentary optional
 command line argument (without the hassle of
 <a class="reference external" href="https://docs.python.org/3/library/argparse.html">argparse</a>). This can be done
@@ -1675,7 +1675,7 @@ can do something like</p>
 </pre></div>
 </div>
 <p>The problem with this code is that it fails if no command line arguments are
-passed, because <code class="docutils literal notranslate"><span class="pre">sys.argv[1]</span></code> will give an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code> for the out-of-bounds
+passed, because <code class="docutils literal notranslate"><span class="pre">sys.argv[1]</span></code> will give an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code> for the out of bounds
 index 1. The most obvious fix is to add a length check:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span><span class="p">:</span>
@@ -1732,7 +1732,7 @@ consisting of the last character, but if <code class="docutils literal notransla
 </div>
 <p>This sort of trick may seem scary and magic, but once you have digested this
 guide and become comfortable with slice semantics, it is a natural and clean
-way to embed length checks into comparison logic and avoid out-of-bounds
+way to embed length checks into comparison logic and avoid out of bounds
 corner cases.</p>
 </section>
 <section id="steps">
@@ -1751,7 +1751,7 @@ past the <code class="docutils literal notranslate"><span class="pre">stop</span
 change the fundamental <a class="reference internal" href="#rules"><span class="std std-ref">rules</span></a> of slices that we have learned so far.
 The <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> still use <a class="reference internal" href="#based"><span class="std std-ref">0-based indexing</span></a>. The <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
 <a class="reference internal" href="#half-open"><span class="std std-ref">never included</span></a> in the slice. <a class="reference internal" href="#negative-indices"><span class="std std-ref">Negative</span></a> <code class="docutils literal notranslate"><span class="pre">start</span></code>
-and <code class="docutils literal notranslate"><span class="pre">stop</span></code> index from the end of the list. Out-of-bounds <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>
+and <code class="docutils literal notranslate"><span class="pre">stop</span></code> index from the end of the list. Out of bounds <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>
 still <a class="reference internal" href="#clipping"><span class="std std-ref">clip</span></a> to the beginning or end of the list. And (see below) an
 <a class="reference internal" href="#omitted"><span class="std std-ref">omitted</span></a> <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">stop</span></code> still extends to the beginning or end of
 <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
@@ -2454,7 +2454,7 @@ concept of <a class="reference internal" href="#clipping"><span class="std std-r
 <code class="docutils literal notranslate"><span class="pre">j</span></code> is “too big” (greater than <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>), but it does something completely
 different if <code class="docutils literal notranslate"><span class="pre">i</span></code> is “too small” as soon as “too small” means “negative”.
 Clipping is a good idea. It tends to lead to behavior that gives what you
-would want for slices that go out-of-bounds.</p>
+would want for slices that go out of bounds.</p>
 <p>Negative indexing is, strictly speaking, a syntactic sugar only.
 Slicing/indexing from the end of a list can always be done in terms of the
 length of the list. <code class="docutils literal notranslate"><span class="pre">a[-x]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[len(a)-x]</span></code> (when using
