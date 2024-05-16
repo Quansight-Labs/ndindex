@@ -32,7 +32,7 @@ of indices, is this:
       tuple index `(i, j)`, which *indexes* the array `a`.
 
 > **Indices do not in any way depend on the *values* of the elements they
-  select. They only depend on their *positions* in the array `a`.**
+  select. They only depend on their *positions* in the array.**
 
 For example, consider `a`, an array of integers with the shape `(2, 3, 2)`:
 
@@ -93,11 +93,11 @@ Therefore, the following statements are always true about any index:
   produce an array with the exact same resulting shape with elements in the
   exact same corresponding places.**
 
-The full range of valid indices allows the generation of more or less
-arbitrary new arrays whose elements come from the indexed array `a`. In
-practice, the most commonly desired indexing operations are represented by
-basic indices such as [integer indices](integer-indices.md),
-[slices](slices.md), and [ellipses](multidimensional-indices/ellipses.md).
+The full range of valid indices allows the generation of arbitrary new arrays
+whose elements come from the indexed array `a`. In practice, the most commonly
+desired indexing operations are represented by basic indices such as [integer
+indices](integer-indices.md), [slices](slices.md), and
+[ellipses](multidimensional-indices/ellipses.md).
 
 ```{rubric} Footnotes
 ```
