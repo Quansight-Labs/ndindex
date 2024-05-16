@@ -156,7 +156,7 @@ It's important to not be fooled by this way of constructing a mask. Even
 though the *expression* `(a > 0) & (a % 2 == 1)` depends on `a`, the resulting
 *array itself* does not---it is just an array of booleans. **Boolean array
 indexing, as with [all other types of indexing](../intro.md), does not depend
-on the values of the array, only in the positions of its elements.**
+on the values of the array, only on the positions of its elements.**
 
 This distinction might feel overly pedantic, but it matters once you realize
 that a mask created with one array can be used on another array, so long as it
@@ -186,10 +186,10 @@ both. -->
    >>> plt.scatter(x, y, marker=',', s=1)
    <matplotlib.collections.PathCollection object at ...>
 
-If we want to show only those x values that are positive, we could easily do
-this by modifying the ``linspace`` call that created ``x``. But what if we
-want to show only those ``y`` values that are positive? The only way to do
-this is to select them using a mask:
+If we want to show only those :math:`x` values that are positive, we could
+easily do this by modifying the ``linspace`` call that created ``x``. But what
+if we want to show only those :math:`y` values that are positive? The only way
+to do this is to select them using a mask:
 
 .. plot::
    :context: close-figs
@@ -359,19 +359,21 @@ Masking a subset of dimension is not as common as masking the entire array
 "array of subarrays". For instance, suppose we have a video with 1920 x 1080
 pixels and 500 frames. This might be represented as an array of shape `(500,
 1080, 1920, 3)`, where the final dimension, 3, represents the 3 RGB color
-values of a pixel. We can think of this array as 500 `(1080, 1920, 3)`
-"frames". Or as 500 x 1080 x 1920 3-tuple "pixels". Or we could slice along
-the last dimension and think of it as 3 `(500, 1080, 1920)` video "channels",
-one for each primary color.
+values of a pixel. We can think of this array as 500 different 1080 &times;
+1920 &times; 3 "frames". Or as a 500 &times; 1080 &times; 1920 array of
+3-tuple "pixels". Or we could slice along the last dimension and think of it
+as three 500 &times; 1080 &times; 1920 video "channels", one for each primary
+color.
 
 In each case, we imagine that our array is really an array (or a stack or
 batch) of subarrays, where some of our dimensions are the "stacking"
 dimensions and some of them are the array dimensions. This way of thinking is
 also common when doing linear algebra on arrays. The last two dimensions
 (typically) are considered matrices, and the leading dimensions are batch
-dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5 x 4
-matrices. NumPy linear algebra functions like `solve` and the `@` matmul
-operator will automatically operate on the last two dimensions of an array.
+dimensions. An array of shape `(10, 5, 4)` might be thought of as ten 5
+&times; 4 matrices. NumPy linear algebra functions like `solve` and the `@`
+matmul operator will automatically operate on the last two dimensions of an
+array.
 
 So, how does this relate to using a boolean array index to select only a
 subset of the array dimensions? Well, we might want to use a boolean index to
@@ -437,18 +439,18 @@ saturation of only those pixels:
    >>> hsv_image[high_sat_mask, 1] = np.clip(hsv_image[high_sat_mask, 1] + 0.3, 0, 1)
    >>> # Convert back to RGB
    >>> enhanced_color_image = color.hsv2rgb(hsv_image)
-   >>> imshow(enhanced_color_image, "Saturated Image")
+   >>> imshow(enhanced_color_image, "Saturated Image (Better)")
 
 ```
 
 Here, `hsv_image.shape` is `(512, 512, 3)`, so our mask `hsv_image[:, :, 1] >
 0.6` has shape `(512, 512)`, i.e., the shape of the first two dimensions. In
 other words, the mask has one value for each pixel, either `True` if the
-saturation is `> 0.6` or `False` if it isn't. To add 0.3 to only those pixels
-above the threshold, we mask the original array with `hsv_image[high_sat_mask,
-1]`. The `high_sat_mask` part of the index selects only those pixel values
-that have high saturation, and the `1` in the final dimension selects the
-saturation channel for those pixels.
+saturation is `> 0.6` or `False` if it isn't. To add `0.3` saturation to only
+those pixels above the threshold, we mask the original array with
+`hsv_image[high_sat_mask, 1]`. The `high_sat_mask` part of the index selects
+only those pixel values that have high saturation, and the `1` in the final
+dimension selects the saturation channel for those pixels.
 
 (nonzero-equivalence)=
 ### `nonzero()` Equivalence
