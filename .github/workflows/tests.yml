@@ -32,8 +32,10 @@ jobs:
       - name: Run Doctests
         run: |
           ./run_doctests
-        # A NumPy 2.0 compatible skimage doesn't support 3.9. Easiest to just skip this for now.
-        if: matrix.numpy-version != 'dev' && matrix.python-version != '3.9'
+        # A NumPy 2.0 compatible skimage doesn't support 3.9, and we need a
+        # version of matplotlib that requires NumPy 1.23. Easiest to just
+        # skip this for now.
+        if: matrix.numpy-version != 'dev' && matrix.python-version != '3.9' && matrix.numpy-version != '1.22'
       - name: Test Installation
         run: |
           python -m pip install .
