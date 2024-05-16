@@ -402,9 +402,9 @@ array([105, 100])
 However, you might have noticed that this behavior is somewhat unusual
 compared to other index types. For all other index types we've discussed so
 far, such as [slices](../slices.md) and [integer indices](../integer-indices.md),
-each index applies "independently" along each dimension. For example, `x[0:3,
-0:2]` applies the slice `0:3` to the first dimension of `x` and `0:2` to the
-second dimension. The resulting array has `3*2 = 6` elements, because there
+each index applies "independently" along each dimension. For example, `x[0:2,
+0:3]` applies the slice `0:2` to the first dimension of `x` and `0:3` to the
+second dimension. The resulting array has `2*3 = 6` elements, because there
 are 3 subarrays selected from the first dimension with 2 elements each. But in
 the above example, `a[[1, 0], [2, 0]]` only has 2 elements, not 4. And
 something like `a[[1, 0], [2, 0, 1]]` is an error.
