@@ -543,7 +543,7 @@ Conversely, a slice like `2:9` is equivalent to the outer index `[2, 3,
 
 As with all index types discussed in this guide, an integer array index can be
 used on the left-hand side of an assignment. This is useful because it allows
-you to surgically inject new elements into your array.
+you to surgically inject new elements into existing positions in your array.
 
 ```py
 >>> a = np.array([100, 101, 102, 103]) # as above
