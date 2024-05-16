@@ -676,9 +676,9 @@ Or if it had no actual `0`s:[^0-d-mask-footnote]
 array([1, 1, 2])
 ```
 
-But even if `a` is a 0-D array, i.e., a single scalar value, we would expect
-this sort of thing to still work, since, as we said, `a[a == 0] = -1` should
-work for *any* array. And indeed, it does:
+But even if `a` is a 0-D array, i.e., a single scalar value, we would still
+expect this sort of thing to still work, since, as we said, `a[a == 0] = -1`
+should work for *any* array. And indeed, it does:
 
 ```py
 >>> a = np.asarray(0)
@@ -716,7 +716,7 @@ array([], dtype=int64)
 ```
 
 In this case, `a[a == 0] = -1` would assign `-1` to all the values in `a[a
-== 0]`, which would be no values, so `a` would remain unchanged:
+== 0]`, i.e., no values, so `a` would remain unchanged:
 
 ```py
 >>> a[a == 0] = -1
