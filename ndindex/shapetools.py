@@ -25,7 +25,7 @@ class BroadcastError(ValueError):
 class AxisError(ValueError, IndexError):
     """
     Exception raised by :func:`iter_indices()` and
-    :func:`broadcast_shapes()` when the `skip_axes` argument is out-of-bounds.
+    :func:`broadcast_shapes()` when the `skip_axes` argument is out of bounds.
 
     This is used instead of the NumPy exception of the same name so that
     `iter_indices` does not need to depend on NumPy.
