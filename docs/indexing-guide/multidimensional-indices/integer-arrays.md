@@ -108,26 +108,12 @@ For example:
 ```
 
 In particular, even when the index array `idx` has more than one dimension, an
-integer array index still only selects elements from a single axis of `a`.
-
-```
->>> a = np.array([[100, 101, 102],
-...               [103, 104, 105]])
->>> idx = np.array([0, 0, 1])
->>> a[idx] # Index the first dimension
-array([[100, 101, 102],
-       [100, 101, 102],
-       [103, 104, 105]])
->>> a[:, idx] # Index the second dimension
-array([[100, 100, 101],
-       [103, 103, 104]])
-```
-
-It would appear that this limits the ability to arbitrarily shuffle elements
-of `a` using integer indexing. For instance, suppose we want to create the
-array `[105, 100]` from the above 2-D `a`. Based on the above examples, it
-might not seem possible. The elements `105` and `100` are not in the same row
-or column of `a`.
+integer array index still only selects elements from a single axis of `a`. It
+would appear that this limits the ability to arbitrarily shuffle elements of
+`a` using integer indexing. For instance, suppose we want to create the array
+`[105, 100]` from the above 2-D `a`. Based on the above examples, it might not
+seem possible, since the elements `105` and `100` are not in the same row or
+column of `a`.
 
 However, this is doable by providing multiple integer array
 indices:
