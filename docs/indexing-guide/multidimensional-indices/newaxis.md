@@ -156,6 +156,7 @@ In summary,
   non-`newaxis` indices in the tuple index are indexed as if the `newaxis`
   indices were not there.**
 
+(where-newaxis-is-used)=
 ## Where `newaxis` is Used
 
 What we haven't said yet is why you would want to do such a thing in the first

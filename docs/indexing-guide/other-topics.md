@@ -109,6 +109,11 @@ It can be useful to think of broadcasting as repeating "stacks" of smaller
 arrays in this way. The size `1` dimension rule allows these "stacks" to be
 along any dimensions of the array, not just the last ones.
 
+When it comes to indexing, one of the most useful types of index for use with
+broadcasting is [newaxis](./multidimensional-indices/newaxis.md), which lets
+you easily insert size `1` dimensions into an array to make the broadcastable
+in a specific way. See [](where-newaxis-is-used).
+
 See the [NumPy
 documentation](https://numpy.org/doc/stable/user/basics.broadcasting.html) for
 more examples of broadcasting.
