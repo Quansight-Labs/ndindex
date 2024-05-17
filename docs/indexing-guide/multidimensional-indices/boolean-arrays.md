@@ -444,13 +444,17 @@ saturation of only those pixels:
 ```
 
 Here, `hsv_image.shape` is `(512, 512, 3)`, so our mask `hsv_image[:, :, 1] >
-0.6` has shape `(512, 512)`, i.e., the shape of the first two dimensions. In
-other words, the mask has one value for each pixel, either `True` if the
-saturation is `> 0.6` or `False` if it isn't. To add `0.3` saturation to only
-those pixels above the threshold, we mask the original array with
-`hsv_image[high_sat_mask, 1]`. The `high_sat_mask` part of the index selects
-only those pixel values that have high saturation, and the `1` in the final
-dimension selects the saturation channel for those pixels.
+0.6`[^high_sat_mask-footnote] has shape `(512, 512)`, i.e., the shape of the
+first two dimensions. In other words, the mask has one value for each pixel,
+either `True` if the saturation is `> 0.6` or `False` if it isn't. To add
+`0.3` saturation to only those pixels above the threshold, we mask the
+original array with `hsv_image[high_sat_mask, 1]`. The `high_sat_mask` part of
+the index selects only those pixel values that have high saturation, and the
+`1` in the final dimension selects the saturation channel for those pixels.
+
+[^high_sat_mask-footnote]: We could have also written `(hsv_image > 0.6)[:, :,
+    1]`, although this would be less efficient because it would unnecessarily
+    compute `> 0.6` for the hue and value channels.
 
 (nonzero-equivalence)=
 ### `nonzero()` Equivalence
