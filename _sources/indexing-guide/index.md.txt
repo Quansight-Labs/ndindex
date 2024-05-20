@@ -39,7 +39,7 @@ for each of the remaining index types, the basic indices:
 [ellipses](multidimensional-indices/ellipses.md), and
 [newaxis](multidimensional-indices/newaxis.md); and the advanced indices:
 [integer arrays](multidimensional-indices/integer-arrays.md) and [boolean
-arrays](multidimensional-indices/boolean-arrays.md).
+arrays](multidimensional-indices/boolean-arrays.md) (i.e., masks).
 
 Finally, a page on [other topics relevant to indexing](other-topics.md) covers
 a set of miscellaneous topics about NumPy arrays that are useful for

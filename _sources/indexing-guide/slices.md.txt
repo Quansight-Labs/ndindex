@@ -1299,7 +1299,7 @@ Something like the following would work:
 ```py
 >>> mid = len(a)//2
 >>> n = 4
->>> a[mid - n//2: mid + n//2]
+>>> a[mid - n//2:mid + n//2]
 ['b', 'c', 'd', 'e']
 ```
 
@@ -1311,7 +1311,7 @@ However, let's look at what happens when `n` is larger than the size of `a`:
 
 ```py
 >>> n = 8
->>> a[mid - n//2: mid + n//2]
+>>> a[mid - n//2:mid + n//2]
 ['g']
 ```
 
@@ -1346,10 +1346,10 @@ manually clip with `max(mid - n//2, 0)`:
 
 ```py
 >>> n = 4
->>> a[max(mid - n//2, 0): mid + n//2]
+>>> a[max(mid - n//2, 0):mid + n//2]
 ['b', 'c', 'd', 'e']
 >>> n = 8
->>> a[max(mid - n//2, 0): mid + n//2]
+>>> a[max(mid - n//2, 0):mid + n//2]
 ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 ```
 
@@ -1457,7 +1457,7 @@ the *maximum* length of a slice. If the shape or length of the input is known,
 {meth}`len(ndindex.Slice(...).reduce(shape)) <ndindex.Slice.reduce>` will
 compute the true length of the slice. Of course, if you already have a list or
 a NumPy array, you can just slice it and check the shape. Slicing a NumPy
-array always produces a [view on the array](views-vs-copies), so it is a very
+array always produces a [view on the array](views-vs-copies), so it is an
 inexpensive operation. Slicing a `list` does make a copy, but it's a shallow
 copy so it isn't particularly expensive either.
 

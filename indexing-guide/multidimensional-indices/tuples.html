@@ -535,9 +535,9 @@ every index type as a single element tuple index. An integer index <code class="
 <code class="docutils literal notranslate"><span class="pre">a[0:3,]</span></code>. This is a good way to think about indices because it will help you
 remember that non-tuple indices operate as if they were the first element of a
 single-element tuple index, namely, they operate on the first axis of the
-array. Remember, however, that this does not apply to Python built-in types;
-for example, <code class="docutils literal notranslate"><span class="pre">l[0,]</span></code> and <code class="docutils literal notranslate"><span class="pre">l[0:3,]</span></code> will both produce errors if <code class="docutils literal notranslate"><span class="pre">l</span></code> is a
-<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, or <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+array. Remember, however, that this does not apply to Python built-in types:
+<code class="docutils literal notranslate"><span class="pre">l[0,]</span></code> and <code class="docutils literal notranslate"><span class="pre">l[0:3,]</span></code> will both produce errors if <code class="docutils literal notranslate"><span class="pre">l</span></code> is a <code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
 <p>Up to now, we looked at the tuple index <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">0,</span> <span class="pre">2)</span></code>, which selected a single
 element. And we considered sub-tuples of this, <code class="docutils literal notranslate"><span class="pre">(1,)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">0)</span></code>, which
 selected subarrays. What if we want to select other subarrays? For example,
@@ -656,7 +656,7 @@ indexing. Many NumPy functions reduce the number of dimensions of their output
 (for example, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.sum()</span></code></a>), but they have a <code class="docutils literal notranslate"><span class="pre">keepdims</span></code>
 argument to retain the dimension as a size-1 dimension instead.</p>
 <p>There are two final facts about tuple indices that should be noted before we
-move on to the other basic index types. First, as we noticed above,</p>
+move on to the other basic index types. First, as we saw above,</p>
 <blockquote>
 <div><p><strong>if a tuple index has more elements than there are dimensions in an array,
 it raises an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code>.</strong></p>

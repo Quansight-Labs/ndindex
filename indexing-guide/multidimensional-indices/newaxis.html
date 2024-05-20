@@ -460,7 +460,8 @@ where the size-1 axis is inserted:</p>
 <span class="go">        [7]]])</span>
 </pre></div>
 </div>
-<ul class="simple">
+<p>Let’s look at each of these more closely:</p>
+<ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">a[np.newaxis,</span> <span class="pre">0,</span> <span class="pre">:2]</span></code>: the new axis is inserted before the first axis, but
 the <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">:2</span></code> still index the original first and second axes. The resulting
 shape is <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">2,</span> <span class="pre">4)</span></code>.</p></li>
@@ -475,7 +476,7 @@ That’s why in this example, the <code class="docutils literal notranslate"><sp
 shape.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">a[0,</span> <span class="pre">:2,</span> <span class="pre">...,</span> <span class="pre">np.newaxis]</span></code>: the <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> is after an ellipsis, so the new
 axis is inserted at the end of the shape. The resulting shape is <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">4,</span> <span class="pre">1)</span></code>.</p></li>
-</ul>
+</ol>
 <p>In general, in a tuple index, the axis that each index selects corresponds to
 its position in the tuple index after removing any <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> indices.
 Equivalently, <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> indices can be though of as adding new axes <em>after</em>
@@ -509,7 +510,7 @@ non-<code class="docutils literal notranslate"><span class="pre">newaxis</span><
 indices were not there.</strong></p>
 </div></blockquote>
 <section id="where-newaxis-is-used">
-<h2>Where <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> is Used<a class="headerlink" href="#where-newaxis-is-used" title="Link to this heading">¶</a></h2>
+<span id="id1"></span><h2>Where <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> is Used<a class="headerlink" href="#where-newaxis-is-used" title="Link to this heading">¶</a></h2>
 <p>What we haven’t said yet is why you would want to do such a thing in the first
 place. One use case is to explicitly convert a 1-D vector into a 2-D matrix
 representing a row or column vector. For example,</p>
@@ -567,7 +568,7 @@ This can easily be done with <code class="docutils literal notranslate"><span cl
 </pre></div>
 </div>
 <p>Once we have the desired shapes, we just perform the operation, and NumPy will
-do the broadcasting automatically.<a class="footnote-reference brackets" href="#outer-footnote" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+do the broadcasting automatically.<a class="footnote-reference brackets" href="#outer-footnote" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
 <span class="go">array([[101, 201],</span>
 <span class="go">       [102, 202],</span>
@@ -591,7 +592,7 @@ broadcasting rules.</p>
 end of the document. -->
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="outer-footnote" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
 <p>We could have also used the
 <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.outer.html"><code class="docutils literal notranslate"><span class="pre">outer</span></code></a>
 method of the <code class="docutils literal notranslate"><span class="pre">add</span></code> ufunc to achieve this, but using this for more a more

@@ -460,33 +460,23 @@ and replaces the dimension in the shape with the shape of the index array
 </pre></div>
 </div>
 <p>In particular, even when the index array <code class="docutils literal notranslate"><span class="pre">idx</span></code> has more than one dimension, an
-integer array index still only selects elements from a single axis of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">],</span>
-<span class="gp">... </span>              <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="c1"># Index the first dimension</span>
-<span class="go">array([[100, 101, 102],</span>
-<span class="go">       [100, 101, 102],</span>
-<span class="go">       [103, 104, 105]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="c1"># Index the second dimension</span>
-<span class="go">array([[100, 100, 101],</span>
-<span class="go">       [103, 103, 104]])</span>
-</pre></div>
-</div>
-<p>It would appear that this limits the ability to arbitrarily shuffle elements
-of <code class="docutils literal notranslate"><span class="pre">a</span></code> using integer indexing. For instance, suppose we want to create the
-array <code class="docutils literal notranslate"><span class="pre">[105,</span> <span class="pre">100]</span></code> from the above 2-D <code class="docutils literal notranslate"><span class="pre">a</span></code>. Based on the above examples, it
-might not seem possible. The elements <code class="docutils literal notranslate"><span class="pre">105</span></code> and <code class="docutils literal notranslate"><span class="pre">100</span></code> are not in the same row
-or column of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
+integer array index still only selects elements from a single axis of <code class="docutils literal notranslate"><span class="pre">a</span></code>. It
+would appear that this limits the ability to arbitrarily shuffle elements of
+<code class="docutils literal notranslate"><span class="pre">a</span></code> using integer indexing. For instance, suppose we want to create the array
+<code class="docutils literal notranslate"><span class="pre">[105,</span> <span class="pre">100]</span></code> from the above 2-D <code class="docutils literal notranslate"><span class="pre">a</span></code>. Based on the above examples, it might not
+seem possible, since the elements <code class="docutils literal notranslate"><span class="pre">105</span></code> and <code class="docutils literal notranslate"><span class="pre">100</span></code> are not in the same row or
+column of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
 <p>However, this is doable by providing multiple integer array
 indices:</p>
 <blockquote id="multiple-integer-arrays">
 <div><p><strong>When multiple integer array indices are provided, the elements of each
 index are selected correspondingly for that axis.</strong></p>
 </div></blockquote>
-<p>It’s perhaps most illustrative to
-show this as an example. Given the above <code class="docutils literal notranslate"><span class="pre">a</span></code>, we can produce the array <code class="docutils literal notranslate"><span class="pre">[105,</span> <span class="pre">100]</span></code> using.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<p>It’s perhaps most illustrative to show this as an example. Given the above
+<code class="docutils literal notranslate"><span class="pre">a</span></code>, we can produce the array <code class="docutils literal notranslate"><span class="pre">[105,</span> <span class="pre">100]</span></code> using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">],</span>
+<span class="gp">... </span>              <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
 <span class="go">array([105, 100])</span>
 </pre></div>
@@ -696,8 +686,8 @@ above:</p>
 <p>However, you might have noticed that this behavior is somewhat unusual
 compared to other index types. For all other index types we’ve discussed so
 far, such as <a class="reference internal" href="../slices.html"><span class="std std-doc">slices</span></a> and <a class="reference internal" href="../integer-indices.html"><span class="std std-doc">integer indices</span></a>,
-each index applies “independently” along each dimension. For example, <code class="docutils literal notranslate"><span class="pre">x[0:3,</span> <span class="pre">0:2]</span></code> applies the slice <code class="docutils literal notranslate"><span class="pre">0:3</span></code> to the first dimension of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">0:2</span></code> to the
-second dimension. The resulting array has <code class="docutils literal notranslate"><span class="pre">3*2</span> <span class="pre">=</span> <span class="pre">6</span></code> elements, because there
+each index applies “independently” along each dimension. For example, <code class="docutils literal notranslate"><span class="pre">x[0:2,</span> <span class="pre">0:3]</span></code> applies the slice <code class="docutils literal notranslate"><span class="pre">0:2</span></code> to the first dimension of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">0:3</span></code> to the
+second dimension. The resulting array has <code class="docutils literal notranslate"><span class="pre">2*3</span> <span class="pre">=</span> <span class="pre">6</span></code> elements, because there
 are 3 subarrays selected from the first dimension with 2 elements each. But in
 the above example, <code class="docutils literal notranslate"><span class="pre">a[[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]]</span></code> only has 2 elements, not 4. And
 something like <code class="docutils literal notranslate"><span class="pre">a[[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0,</span> <span class="pre">1]]</span></code> is an error.</p>
@@ -796,7 +786,7 @@ directly.</p>
 <h3>Assigning to an Integer Array Index<a class="headerlink" href="#assigning-to-an-integer-array-index" title="Link to this heading">¶</a></h3>
 <p>As with all index types discussed in this guide, an integer array index can be
 used on the left-hand side of an assignment. This is useful because it allows
-you to surgically inject new elements into your array.</p>
+you to surgically inject new elements into existing positions in your array.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">])</span> <span class="c1"># as above</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">203</span><span class="p">])</span>
@@ -1047,8 +1037,9 @@ this more generally in ndindex.</p>
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
 <p>They aren’t actually equivalent, because <a class="reference internal" href="../other-topics.html#views-vs-copies"><span class="std std-ref">a
 slice creates a view and an integer array index creates a
-copy</span></a>. If your index can be represented as a slice, it’s
-better to use an actual <code class="docutils literal notranslate"><span class="pre">slice</span></code>.</p>
+copy</span></a>, not to mention the fact that slices
+<a class="reference internal" href="../slices.html#clipping"><span class="std std-ref">clip</span></a> and integer arrays have bounds checks. If your index can
+be represented as a slice, it’s usually better to use an actual <code class="docutils literal notranslate"><span class="pre">slice</span></code>.</p>
 </aside>
 <aside class="footnote brackets" id="cupy-assignment-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>

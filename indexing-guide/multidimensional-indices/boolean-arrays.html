@@ -493,7 +493,7 @@ then assigned to, mutating only those elements of <code class="docutils literal 
 though the <em>expression</em> <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">&gt;</span> <span class="pre">0)</span> <span class="pre">&amp;</span> <span class="pre">(a</span> <span class="pre">%</span> <span class="pre">2</span> <span class="pre">==</span> <span class="pre">1)</span></code> depends on <code class="docutils literal notranslate"><span class="pre">a</span></code>, the resulting
 <em>array itself</em> does not—it is just an array of booleans. <strong>Boolean array
 indexing, as with <a class="reference internal" href="../intro.html"><span class="std std-doc">all other types of indexing</span></a>, does not depend
-on the values of the array, only in the positions of its elements.</strong></p>
+on the values of the array, only on the positions of its elements.</strong></p>
 <p>This distinction might feel overly pedantic, but it matters once you realize
 that a mask created with one array can be used on another array, so long as it
 has the same shape. It is common to have multiple arrays representing
@@ -512,22 +512,22 @@ both. -->
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
-<figure class="align-default" id="id8">
+<figure class="align-default" id="id9">
 <img alt="A plot of 4*x*np.sin(x) - x**2/4 - 2*x from -10 to 10. The curve crosses the x-axis several times at irregular intervals." class="plot-directive" src="../../_images/plot-1.svg" /><figcaption>
-<p><span class="caption-text">Plot of <span class="math notranslate nohighlight">\(y = 4x\sin(x) - \frac{x^2}{4} - 2x\)</span></span><a class="headerlink" href="#id8" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Plot of <span class="math notranslate nohighlight">\(y = 4x\sin(x) - \frac{x^2}{4} - 2x\)</span></span><a class="headerlink" href="#id9" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>If we want to show only those x values that are positive, we could easily do
-this by modifying the <code class="docutils literal notranslate"><span class="pre">linspace</span></code> call that created <code class="docutils literal notranslate"><span class="pre">x</span></code>. But what if we
-want to show only those <code class="docutils literal notranslate"><span class="pre">y</span></code> values that are positive? The only way to do
-this is to select them using a mask:</p>
+<p>If we want to show only those <span class="math notranslate nohighlight">\(x\)</span> values that are positive, we could
+easily do this by modifying the <code class="docutils literal notranslate"><span class="pre">linspace</span></code> call that created <code class="docutils literal notranslate"><span class="pre">x</span></code>. But what
+if we want to show only those <span class="math notranslate nohighlight">\(y\)</span> values that are positive? The only way
+to do this is to select them using a mask:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
-<figure class="align-default" id="id10">
+<figure class="align-default" id="id11">
 <img alt="A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis." class="plot-directive" src="../../_images/plot-2.svg" /><figcaption>
-<p><span class="caption-text">Plot of <span class="math notranslate nohighlight">\(y = 4x\sin(x) - \frac{x^2}{4} - 2x\)</span> where <span class="math notranslate nohighlight">\(y &gt; 0\)</span></span><a class="headerlink" href="#id10" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Plot of <span class="math notranslate nohighlight">\(y = 4x\sin(x) - \frac{x^2}{4} - 2x\)</span> where <span class="math notranslate nohighlight">\(y &gt; 0\)</span></span><a class="headerlink" href="#id11" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>Here we are using the mask <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> to select the corresponding values from
@@ -665,18 +665,20 @@ those remaining dimensions (by construction), so the index is valid.</p>
 <code class="docutils literal notranslate"><span class="pre">a</span></code>, but it does happen. Remember that we can always think of an array as an
 “array of subarrays”. For instance, suppose we have a video with 1920 x 1080
 pixels and 500 frames. This might be represented as an array of shape <code class="docutils literal notranslate"><span class="pre">(500,</span> <span class="pre">1080,</span> <span class="pre">1920,</span> <span class="pre">3)</span></code>, where the final dimension, 3, represents the 3 RGB color
-values of a pixel. We can think of this array as 500 <code class="docutils literal notranslate"><span class="pre">(1080,</span> <span class="pre">1920,</span> <span class="pre">3)</span></code>
-“frames”. Or as 500 x 1080 x 1920 3-tuple “pixels”. Or we could slice along
-the last dimension and think of it as 3 <code class="docutils literal notranslate"><span class="pre">(500,</span> <span class="pre">1080,</span> <span class="pre">1920)</span></code> video “channels”,
-one for each primary color.</p>
+values of a pixel. We can think of this array as 500 different 1080 ×
+1920 × 3 “frames”. Or as a 500 × 1080 × 1920 array of
+3-tuple “pixels”. Or we could slice along the last dimension and think of it
+as three 500 × 1080 × 1920 video “channels”, one for each primary
+color.</p>
 <p>In each case, we imagine that our array is really an array (or a stack or
 batch) of subarrays, where some of our dimensions are the “stacking”
 dimensions and some of them are the array dimensions. This way of thinking is
 also common when doing linear algebra on arrays. The last two dimensions
 (typically) are considered matrices, and the leading dimensions are batch
-dimensions. An array of shape <code class="docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">5,</span> <span class="pre">4)</span></code> might be thought of as ten 5 x 4
-matrices. NumPy linear algebra functions like <code class="docutils literal notranslate"><span class="pre">solve</span></code> and the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> matmul
-operator will automatically operate on the last two dimensions of an array.</p>
+dimensions. An array of shape <code class="docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">5,</span> <span class="pre">4)</span></code> might be thought of as ten 5
+× 4 matrices. NumPy linear algebra functions like <code class="docutils literal notranslate"><span class="pre">solve</span></code> and the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>
+matmul operator will automatically operate on the last two dimensions of an
+array.</p>
 <p>So, how does this relate to using a boolean array index to select only a
 subset of the array dimensions? Well, we might want to use a boolean index to
 select only along the inner “subarray” dimensions, and pretend like the outer
@@ -723,20 +725,21 @@ saturation of only those pixels:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hsv_image</span><span class="p">[</span><span class="n">high_sat_mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">hsv_image</span><span class="p">[</span><span class="n">high_sat_mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert back to RGB</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">enhanced_color_image</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">hsv2rgb</span><span class="p">(</span><span class="n">hsv_image</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">enhanced_color_image</span><span class="p">,</span> <span class="s2">&quot;Saturated Image&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">enhanced_color_image</span><span class="p">,</span> <span class="s2">&quot;Saturated Image (Better)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
 <img alt="An image of an astronaut with increased saturation. The image does not appear washed out." class="plot-directive" src="../../_images/astronaut-3.svg" /></figure>
-<p>Here, <code class="docutils literal notranslate"><span class="pre">hsv_image.shape</span></code> is <code class="docutils literal notranslate"><span class="pre">(512,</span> <span class="pre">512,</span> <span class="pre">3)</span></code>, so our mask <code class="docutils literal notranslate"><span class="pre">hsv_image[:,</span> <span class="pre">:,</span> <span class="pre">1]</span> <span class="pre">&gt;</span> <span class="pre">0.6</span></code> has shape <code class="docutils literal notranslate"><span class="pre">(512,</span> <span class="pre">512)</span></code>, i.e., the shape of the first two dimensions. In
-other words, the mask has one value for each pixel, either <code class="docutils literal notranslate"><span class="pre">True</span></code> if the
-saturation is <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">0.6</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> if it isn’t. To add 0.3 to only those pixels
-above the threshold, we mask the original array with <code class="docutils literal notranslate"><span class="pre">hsv_image[high_sat_mask,</span> <span class="pre">1]</span></code>. The <code class="docutils literal notranslate"><span class="pre">high_sat_mask</span></code> part of the index selects only those pixel values
-that have high saturation, and the <code class="docutils literal notranslate"><span class="pre">1</span></code> in the final dimension selects the
-saturation channel for those pixels.</p>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">hsv_image.shape</span></code> is <code class="docutils literal notranslate"><span class="pre">(512,</span> <span class="pre">512,</span> <span class="pre">3)</span></code>, so our mask <code class="docutils literal notranslate"><span class="pre">hsv_image[:,</span> <span class="pre">:,</span> <span class="pre">1]</span> <span class="pre">&gt;</span> <span class="pre">0.6</span></code><a class="footnote-reference brackets" href="#high-sat-mask-footnote" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> has shape <code class="docutils literal notranslate"><span class="pre">(512,</span> <span class="pre">512)</span></code>, i.e., the shape of the
+first two dimensions. In other words, the mask has one value for each pixel,
+either <code class="docutils literal notranslate"><span class="pre">True</span></code> if the saturation is <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">0.6</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> if it isn’t. To add
+<code class="docutils literal notranslate"><span class="pre">0.3</span></code> saturation to only those pixels above the threshold, we mask the
+original array with <code class="docutils literal notranslate"><span class="pre">hsv_image[high_sat_mask,</span> <span class="pre">1]</span></code>. The <code class="docutils literal notranslate"><span class="pre">high_sat_mask</span></code> part of
+the index selects only those pixel values that have high saturation, and the
+<code class="docutils literal notranslate"><span class="pre">1</span></code> in the final dimension selects the saturation channel for those pixels.</p>
 </section>
 <section id="nonzero-equivalence">
-<span id="id3"></span><h3><code class="docutils literal notranslate"><span class="pre">nonzero()</span></code> Equivalence<a class="headerlink" href="#nonzero-equivalence" title="Link to this heading">¶</a></h3>
+<span id="id4"></span><h3><code class="docutils literal notranslate"><span class="pre">nonzero()</span></code> Equivalence<a class="headerlink" href="#nonzero-equivalence" title="Link to this heading">¶</a></h3>
 <p>Another way to think about boolean array indices is based on the
 <code class="docutils literal notranslate"><span class="pre">np.nonzero()</span></code> function. <code class="docutils literal notranslate"><span class="pre">np.nonzero(x)</span></code> returns a tuple of arrays of integer
 indices where <code class="docutils literal notranslate"><span class="pre">x</span></code> is nonzero, or in the case where <code class="docutils literal notranslate"><span class="pre">x</span></code> is boolean, where <code class="docutils literal notranslate"><span class="pre">x</span></code>
@@ -788,7 +791,7 @@ broadcast</span></a> or <a class="reference internal" href="integer-arrays.html#
 slices</span></a>, all also apply to boolean
 array indices after this transformation. This also specifies how boolean array
 indices and integer array indices combine
-together.<a class="footnote-reference brackets" href="#combining-integer-and-boolean-indices-footnote" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
+together.<a class="footnote-reference brackets" href="#combining-integer-and-boolean-indices-footnote" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
 <p>Effectively, a boolean array index can be combined with other boolean or
 integer array indices by first converting the boolean index into integer
 indices (one for each dimension of the boolean index) that select each <code class="docutils literal notranslate"><span class="pre">True</span></code>
@@ -814,7 +817,7 @@ dimensions of <code class="docutils literal notranslate"><span class="pre">a</sp
 </div>
 <p>But for a 0-D array, <code class="docutils literal notranslate"><span class="pre">np.nonzero(a)</span></code> doesn’t return an empty tuple, but
 rather the same thing as
-<code class="docutils literal notranslate"><span class="pre">np.nonzero(np.array([a]))</span></code>:<a class="footnote-reference brackets" href="#nonzero-deprecated-footnote" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
+<code class="docutils literal notranslate"><span class="pre">np.nonzero(np.array([a]))</span></code>:<a class="footnote-reference brackets" href="#nonzero-deprecated-footnote" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p>
 <!-- TODO: Update this text when NumPy 2.0 is released. -->
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="kc">False</span><span class="p">))</span> 
 <span class="go">(array([], dtype=int64),)</span>
@@ -838,7 +841,7 @@ then <code class="docutils literal notranslate"><span class="pre">a[True]</span>
 </pre></div>
 </div>
 <p>This is different from what <code class="docutils literal notranslate"><span class="pre">a[np.nonzero(True)]</span></code> would
-return:<a class="footnote-reference brackets" href="#nonzero-scalar-footnote" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p>
+return:<a class="footnote-reference brackets" href="#nonzero-scalar-footnote" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
 <!-- TODO: Update this when NumPy 2.0 is released. -->
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="kc">True</span><span class="p">)]</span><span class="o">.</span><span class="n">shape</span> 
 <span class="go">(1, 5)</span>
@@ -885,16 +888,16 @@ it had 2 dimensions and two <code class="docutils literal notranslate"><span cla
 <span class="go">array([-1,  1, -1,  1])</span>
 </pre></div>
 </div>
-<p>Or if it had no actual <code class="docutils literal notranslate"><span class="pre">0</span></code>s:<a class="footnote-reference brackets" href="#d-mask-footnote" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
+<p>Or if it had no actual <code class="docutils literal notranslate"><span class="pre">0</span></code>s:<a class="footnote-reference brackets" href="#d-mask-footnote" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">array([1, 1, 2])</span>
 </pre></div>
 </div>
-<p>But even if <code class="docutils literal notranslate"><span class="pre">a</span></code> is a 0-D array, i.e., a single scalar value, we would expect
-this sort of thing to still work, since, as we said, <code class="docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">==</span> <span class="pre">0]</span> <span class="pre">=</span> <span class="pre">-1</span></code> should
-work for <em>any</em> array. And indeed, it does:</p>
+<p>But even if <code class="docutils literal notranslate"><span class="pre">a</span></code> is a 0-D array, i.e., a single scalar value, we would still
+expect this sort of thing to still work, since, as we said, <code class="docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">==</span> <span class="pre">0]</span> <span class="pre">=</span> <span class="pre">-1</span></code>
+should work for <em>any</em> array. And indeed, it does:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">()</span>
@@ -923,7 +926,7 @@ assignment mutates it to <code class="docutils literal notranslate"><span class=
 <span class="go">(0,)</span>
 </pre></div>
 </div>
-<p>In this case, <code class="docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">==</span> <span class="pre">0]</span> <span class="pre">=</span> <span class="pre">-1</span></code> would assign <code class="docutils literal notranslate"><span class="pre">-1</span></code> to all the values in <code class="docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">==</span> <span class="pre">0]</span></code>, which would be no values, so <code class="docutils literal notranslate"><span class="pre">a</span></code> would remain unchanged:</p>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">==</span> <span class="pre">0]</span> <span class="pre">=</span> <span class="pre">-1</span></code> would assign <code class="docutils literal notranslate"><span class="pre">-1</span></code> to all the values in <code class="docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">==</span> <span class="pre">0]</span></code>, i.e., no values, so <code class="docutils literal notranslate"><span class="pre">a</span></code> would remain unchanged:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">array(1)</span>
@@ -947,8 +950,13 @@ guide apply when the indexed array is on the left-hand side of an <code class="d
 assignment. The elements of the array that are selected by the index are
 assigned in-place to the array or number on the right-hand side.</p>
 </aside>
+<aside class="footnote brackets" id="high-sat-mask-footnote" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>We could have also written <code class="docutils literal notranslate"><span class="pre">(hsv_image</span> <span class="pre">&gt;</span> <span class="pre">0.6)[:,</span> <span class="pre">:,</span> <span class="pre">1]</span></code>, although this would be less efficient because it would unnecessarily
+compute <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">0.6</span></code> for the hue and value channels.</p>
+</aside>
 <aside class="footnote brackets" id="combining-integer-and-boolean-indices-footnote" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
 <p>Combining an integer array
 and boolean array index together is not common, as the shape of the
 integer array index would have to be broadcast compatible with the number
@@ -967,13 +975,13 @@ advanced indexing semantics discussed here, it’s mostly supported for the
 sake of completeness.</p>
 </aside>
 <aside class="footnote brackets" id="nonzero-deprecated-footnote" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">5</a><span class="fn-bracket">]</span></span>
 <p>In NumPy 2.0, calling <code class="docutils literal notranslate"><span class="pre">nonzero()</span></code> on a 0-D
 array is deprecated, and in NumPy 2.1 it will result in an error,
 precisely due to this odd behavior.</p>
 </aside>
 <aside class="footnote brackets" id="nonzero-scalar-footnote" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">6</a><span class="fn-bracket">]</span></span>
 <p>But note that this also wouldn’t work if
 <code class="docutils literal notranslate"><span class="pre">np.nonzero(True)</span></code> returned the empty tuple <code class="docutils literal notranslate"><span class="pre">()</span></code>. In fact, there’s no
 generic index that <code class="docutils literal notranslate"><span class="pre">np.nonzero()</span></code> could return that would be equivalent
@@ -981,7 +989,7 @@ to the actual indexing behavior of a boolean scalar, especially for
 <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 </aside>
 <aside class="footnote brackets" id="d-mask-footnote" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">6</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
 <p>In this example, <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">==</span> <span class="pre">0</span></code> is <code class="docutils literal notranslate"><span class="pre">array([False,</span> <span class="pre">False,</span> <span class="pre">False])</span></code>, and <code class="docutils literal notranslate"><span class="pre">a[a</span> <span class="pre">==</span> <span class="pre">0]</span></code> is an empty array of shape <code class="docutils literal notranslate"><span class="pre">(0,)</span></code>. The reason
 this works is that the right-hand side of the assignment is a scalar,
 i.e., NumPy casts it to an array of shape <code class="docutils literal notranslate"><span class="pre">()</span></code>. The shape <code class="docutils literal notranslate"><span class="pre">()</span></code> broadcasts

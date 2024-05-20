@@ -462,6 +462,10 @@ that dimension is not size <code class="docutils literal notranslate"><span clas
 <p>It can be useful to think of broadcasting as repeating “stacks” of smaller
 arrays in this way. The size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimension rule allows these “stacks” to be
 along any dimensions of the array, not just the last ones.</p>
+<p>When it comes to indexing, one of the most useful types of index for use with
+broadcasting is <a class="reference internal" href="multidimensional-indices/newaxis.html"><span class="std std-doc">newaxis</span></a>, which lets
+you easily insert size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions into an array to make the broadcastable
+in a specific way. See <a class="reference internal" href="multidimensional-indices/newaxis.html#where-newaxis-is-used"><span class="std std-ref">Where newaxis is Used</span></a>.</p>
 <p>See the <a class="reference external" href="https://numpy.org/doc/stable/user/basics.broadcasting.html">NumPy
 documentation</a> for
 more examples of broadcasting.</p>

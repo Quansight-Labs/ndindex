@@ -1527,7 +1527,7 @@ if those values produce the correct results.</strong></p>
 Something like the following would work:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span> <span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
 <span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
 </pre></div>
 </div>
@@ -1536,7 +1536,7 @@ Something like the following would work:</p>
 now let us assume <code class="docutils literal notranslate"><span class="pre">n</span></code> is even for simplicity).</p>
 <p>However, let’s look at what happens when <code class="docutils literal notranslate"><span class="pre">n</span></code> is larger than the size of <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span> <span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
 <span class="go">[&#39;g&#39;]</span>
 </pre></div>
 </div>
@@ -1563,10 +1563,10 @@ which case you could modify the expression to always be nonnegative.</p>
 <p>In this example, we do want clipping. Instead of using <code class="docutils literal notranslate"><span class="pre">mid</span> <span class="pre">-</span> <span class="pre">n//2</span></code>, we could
 manually clip with <code class="docutils literal notranslate"><span class="pre">max(mid</span> <span class="pre">-</span> <span class="pre">n//2,</span> <span class="pre">0)</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
 <span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
 <span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
 </pre></div>
 </div>
@@ -2788,7 +2788,7 @@ the <em>maximum</em> length of a slice. If the shape or length of the input is k
 <a class="reference internal" href="../api/index-types.html#ndindex.Slice.reduce" title="ndindex.Slice.reduce"><code class="xref py py-meth docutils literal notranslate"><span class="pre">len(ndindex.Slice(...).reduce(shape))</span></code></a> will
 compute the true length of the slice. Of course, if you already have a list or
 a NumPy array, you can just slice it and check the shape. Slicing a NumPy
-array always produces a <a class="reference internal" href="other-topics.html#views-vs-copies"><span class="std std-ref">view on the array</span></a>, so it is a very
+array always produces a <a class="reference internal" href="other-topics.html#views-vs-copies"><span class="std std-ref">view on the array</span></a>, so it is an
 inexpensive operation. Slicing a <code class="docutils literal notranslate"><span class="pre">list</span></code> does make a copy, but it’s a shallow
 copy so it isn’t particularly expensive either.</p>
 </aside>
