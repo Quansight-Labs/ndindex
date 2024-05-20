@@ -102,23 +102,24 @@ array([[[0],
         [7]]])
 ```
 
+Let's look at each of these more closely:
 
-- `a[np.newaxis, 0, :2]`: the new axis is inserted before the first axis, but
+1. `a[np.newaxis, 0, :2]`: the new axis is inserted before the first axis, but
 the `0` and `:2` still index the original first and second axes. The resulting
 shape is `(1, 2, 4)`.
 
-- `a[0, np.newaxis, :2]`: the new axis is inserted after the first axis, but
+2. `a[0, np.newaxis, :2]`: the new axis is inserted after the first axis, but
 because the `0` removes this axis when it indexes it, the resulting shape is
 still `(1, 2, 4)` (and the resulting array is the same).
 
-- `a[0, :2, np.newaxis]`: the new axis is inserted after the second axis,
+3. `a[0, :2, np.newaxis]`: the new axis is inserted after the second axis,
 because the `newaxis` comes right after the `:2`, which indexes the second
 axis. The resulting shape is `(2, 1, 4)`. Remember that the `4` in the shape
 corresponds to the last axis, which isn't represented in the index at all.
 That's why in this example, the `4` still comes at the end of the resulting
 shape.
 
-- `a[0, :2, ..., np.newaxis]`: the `newaxis` is after an ellipsis, so the new
+4. `a[0, :2, ..., np.newaxis]`: the `newaxis` is after an ellipsis, so the new
 axis is inserted at the end of the shape. The resulting shape is `(2, 4, 1)`.
 
 In general, in a tuple index, the axis that each index selects corresponds to
@@ -155,6 +156,7 @@ In summary,
   non-`newaxis` indices in the tuple index are indexed as if the `newaxis`
   indices were not there.**
 
+(where-newaxis-is-used)=
 ## Where `newaxis` is Used
 
 What we haven't said yet is why you would want to do such a thing in the first

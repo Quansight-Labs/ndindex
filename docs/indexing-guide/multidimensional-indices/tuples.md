@@ -199,9 +199,9 @@ every index type as a single element tuple index. An integer index `0` is
 `a[0:3,]`. This is a good way to think about indices because it will help you
 remember that non-tuple indices operate as if they were the first element of a
 single-element tuple index, namely, they operate on the first axis of the
-array. Remember, however, that this does not apply to Python built-in types;
-for example, `l[0,]` and `l[0:3,]` will both produce errors if `l` is a
-`list`, `tuple`, or `str`.
+array. Remember, however, that this does not apply to Python built-in types:
+`l[0,]` and `l[0:3,]` will both produce errors if `l` is a `list`, `tuple`, or
+`str`.
 
 Up to now, we looked at the tuple index `(1, 0, 2)`, which selected a single
 element. And we considered sub-tuples of this, `(1,)` and `(1, 0)`, which
@@ -355,7 +355,7 @@ argument to retain the dimension as a size-1 dimension instead.
     array.
 
 There are two final facts about tuple indices that should be noted before we
-move on to the other basic index types. First, as we noticed above,
+move on to the other basic index types. First, as we saw above,
 
 > **if a tuple index has more elements than there are dimensions in an array,
   it raises an `IndexError`.**

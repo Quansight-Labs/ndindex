@@ -108,26 +108,12 @@ For example:
 ```
 
 In particular, even when the index array `idx` has more than one dimension, an
-integer array index still only selects elements from a single axis of `a`.
-
-```
->>> a = np.array([[100, 101, 102],
-...               [103, 104, 105]])
->>> idx = np.array([0, 0, 1])
->>> a[idx] # Index the first dimension
-array([[100, 101, 102],
-       [100, 101, 102],
-       [103, 104, 105]])
->>> a[:, idx] # Index the second dimension
-array([[100, 100, 101],
-       [103, 103, 104]])
-```
-
-It would appear that this limits the ability to arbitrarily shuffle elements
-of `a` using integer indexing. For instance, suppose we want to create the
-array `[105, 100]` from the above 2-D `a`. Based on the above examples, it
-might not seem possible. The elements `105` and `100` are not in the same row
-or column of `a`.
+integer array index still only selects elements from a single axis of `a`. It
+would appear that this limits the ability to arbitrarily shuffle elements of
+`a` using integer indexing. For instance, suppose we want to create the array
+`[105, 100]` from the above 2-D `a`. Based on the above examples, it might not
+seem possible, since the elements `105` and `100` are not in the same row or
+column of `a`.
 
 However, this is doable by providing multiple integer array
 indices:
@@ -136,11 +122,12 @@ indices:
 > **When multiple integer array indices are provided, the elements of each
 > index are selected correspondingly for that axis.**
 
-It's perhaps most illustrative to
-show this as an example. Given the above `a`, we can produce the array `[105,
-100]` using.
+It's perhaps most illustrative to show this as an example. Given the above
+`a`, we can produce the array `[105, 100]` using
 
 ```
+>>> a = np.array([[100, 101, 102],
+...               [103, 104, 105]])
 >>> idx = (np.array([1, 0]), np.array([2, 0]))
 >>> a[idx]
 array([105, 100])
@@ -415,9 +402,9 @@ array([105, 100])
 However, you might have noticed that this behavior is somewhat unusual
 compared to other index types. For all other index types we've discussed so
 far, such as [slices](../slices.md) and [integer indices](../integer-indices.md),
-each index applies "independently" along each dimension. For example, `x[0:3,
-0:2]` applies the slice `0:3` to the first dimension of `x` and `0:2` to the
-second dimension. The resulting array has `3*2 = 6` elements, because there
+each index applies "independently" along each dimension. For example, `x[0:2,
+0:3]` applies the slice `0:2` to the first dimension of `x` and `0:3` to the
+second dimension. The resulting array has `2*3 = 6` elements, because there
 are 3 subarrays selected from the first dimension with 2 elements each. But in
 the above example, `a[[1, 0], [2, 0]]` only has 2 elements, not 4. And
 something like `a[[1, 0], [2, 0, 1]]` is an error.
@@ -548,14 +535,15 @@ Conversely, a slice like `2:9` is equivalent to the outer index `[2, 3,
 
 [^slice-outer-index-footnote]: They aren't actually equivalent, because [a
     slice creates a view and an integer array index creates a
-    copy](views-vs-copies). If your index can be represented as a slice, it's
-    better to use an actual `slice`.
+    copy](views-vs-copies), not to mention the fact that slices
+    [clip](clipping) and integer arrays have bounds checks. If your index can
+    be represented as a slice, it's usually better to use an actual `slice`.
 
 ### Assigning to an Integer Array Index
 
 As with all index types discussed in this guide, an integer array index can be
 used on the left-hand side of an assignment. This is useful because it allows
-you to surgically inject new elements into your array.
+you to surgically inject new elements into existing positions in your array.
 
 ```py
 >>> a = np.array([100, 101, 102, 103]) # as above
