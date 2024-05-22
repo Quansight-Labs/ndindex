@@ -245,7 +245,7 @@ array([[101, 201],
        [103, 203]])
 ```
 
-Note: broadcasting automatically prepends shape `1` dimensions, so the
+Note: broadcasting automatically prepends size-1 dimensions, so the
 `y[np.newaxis, :]` operation is unnecessary.
 
 ```py
