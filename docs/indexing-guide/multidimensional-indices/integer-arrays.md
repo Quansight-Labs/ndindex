@@ -82,7 +82,7 @@ there are some elements which aren't selected at all. Indeed, we could take
 between 0 and 3, `a[idx]` would create a new array with the same shape as
 `idx` with corresponding elements selected from `a`.
 
-The shape `a` is `(4,)` and the shape of `a[idx]` is `(2, 3)`, the same as the
+The shape of `a` is `(4,)` and the shape of `a[idx]` is `(2, 3)`, the same as the
 shape of `idx`. In general,
 
 > **an integer array index `a[idx]` selects elements from the specified axis
@@ -141,7 +141,7 @@ same.[^integer-scalar-footnote]
 >>> a = np.arange(12).reshape((3, 4))
 >>> a[idx].shape # replaces (3,) with ()
 (4,)
->>> a[:, idx].shape # repalces (4,) with ()
+>>> a[:, idx].shape # replaces (4,) with ()
 (3,)
 >>> a[idx] # a[asarray(0)] is the exact same as a[0]
 array([0, 1, 2, 3])
