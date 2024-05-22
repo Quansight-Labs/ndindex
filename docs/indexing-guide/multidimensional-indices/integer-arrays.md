@@ -1,7 +1,7 @@
 # Integer Array Indices
 
 ```{note}
-In this section, and [the next](boolean-arrays), do not confuse the *array
+In this section and [the next](boolean-arrays), do not confuse the *array
 being indexed* with the *array that is the index*. The former can be anything
 and have any dtype. It is only the latter that is restricted to being integer
 or boolean.
@@ -35,7 +35,7 @@ elements of the array in order (or possibly [reversed order](negative-steps)
 for slices), whereas this array has elements completely shuffled from `a`, and
 some are even repeated.
 
-However, we could "cheat" a bit here, and do something like
+However, we could "cheat" a bit here and do something like
 
 ```py
 >>> new_array = np.array([[a[0], a[2], a[0]],
@@ -47,7 +47,7 @@ array([[100, 102, 100],
 
 This is the array we want. We sort of constructed it using only indexing
 operations, but we didn't actually do `a[idx]` for some index `idx`. Instead,
-we just listed the index of each individual element.
+we just listed the indices of each individual element.
 
 An integer array index is essentially this "cheating" method, but as a single
 index. Instead of listing out `a[0]`, `a[2]`, and so on, we just create a
@@ -83,7 +83,7 @@ between 0 and 3, `a[idx]` would create a new array with the same shape as
 `idx` with corresponding elements selected from `a`.
 
 The shape `a` is `(4,)` and the shape of `a[idx]` is `(2, 3)`, the same as the
-shape of `idx`. In general,
+shape of `idx`. In general:
 
 > **an integer array index `a[idx]` selects elements from the specified axis
 > and replaces the selected dimension in the shape of `a` with the shape of
@@ -160,8 +160,8 @@ would appear that this limits the ability to arbitrarily shuffle elements of
 ```
 
 and we wanted use indexing to create the array `[105, 100]`. Based on the
-above examples, it might not seem possible, since the elements `105` and `100`
-are not in the same row or column of `a`.
+above examples, this might not seem possible, since the elements `105` and
+`100` are not in the same row or column of `a`.
 
 However, this is doable by providing multiple integer array
 indices:
