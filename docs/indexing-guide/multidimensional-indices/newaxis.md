@@ -15,11 +15,11 @@ None
 True
 ```
 
-`newaxis`, as the name suggests, adds a new axis. This new axis has size `1`.
-The new axis is added at the corresponding location within the array. A size
-`1` axis neither adds nor removes any elements from the array. Using the
-[nested lists analogy](what-is-an-array.md), it essentially adds a new "layer"
-to the list of lists.
+`newaxis`, as the name suggests, adds a new axis to an array. This new axis
+has size `1`. The new axis is added at the corresponding location within the
+array shape. A size `1` axis neither adds nor removes any elements from the
+array. Using the [nested lists analogy](what-is-an-array.md), it essentially
+adds a new "layer" to the list of lists.
 
 
 ```py
@@ -197,9 +197,9 @@ repeated. For example, suppose we have the two arrays
 ```
 
 and suppose we want to compute an "outer" sum of `x` and `y`, that is, we want
-to compute every combination of `i + j` where `i` is from `x` and `j` is from
+to compute every combination of `a + b` where `a` is from `x` and `b` is from
 `y`. The key realization here is that what we want is simply to
-repeat each entry of `x` 3 times, to correspond to each entry of `y`, and
+repeat each entry of `x` 2 times, to correspond to each entry of `y`, and
 respectively repeat each entry of `y` 3 times, to correspond to each entry of
 `x`. And this is exactly the sort of thing broadcasting does! We only need to
 make the shapes of `x` and `y` match in such a way that the broadcasting will
@@ -217,7 +217,7 @@ from `x`, and the second dimension will correspond to values from `y`, i.e.,
 `a[i, j]` will be `x[i] + y[j]`. Thus the resulting array will have shape `(3,
 2)`. So to make `x` (which is shape `(3,)`) and `y` (which is shape `(2,)`)
 broadcast to this, we need to make them `(3, 1)` and `(1, 2)`, respectively.
-This can easily be done with `np.newaxis`.
+This can easily be done with `np.newaxis`:
 
 ```py
 >>> x[:, np.newaxis].shape

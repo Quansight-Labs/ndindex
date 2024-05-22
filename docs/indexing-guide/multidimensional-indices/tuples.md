@@ -42,7 +42,7 @@ array([[[16, 17, 18, 19],
 ```
 
 We also observe that integer indices remove the axis, and slices keep the axis
-(even when the resulting axis has size-1):
+(even when the resulting axis has size 1):
 
 ```py
 >>> a[0].shape
