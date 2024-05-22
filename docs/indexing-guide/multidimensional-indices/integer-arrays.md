@@ -522,8 +522,8 @@ axis, i.e., exactly the arrays we want.
 
 This is why NumPy automatically broadcasts integer array indices together.
 
-> **Outer indexing arrays can be constructed by inserting size-1 dimensions
-> into the desired "outer" integer array indices so that the non-size-1
+> **Outer indexing arrays can be constructed by inserting size `1` dimensions
+> into the desired "outer" integer array indices so that the non-size `1`
 > dimension for each is in the indexing dimension.**
 
 For example,
@@ -540,7 +540,7 @@ Here, we use [newaxis](newaxis.md) along with `:` to turn `idx0` and
 `idx1` into shape `(2, 1)` and `(1, 3)` arrays, respectively. These then
 automatically broadcast together to give the desired outer index.
 
-This "insert size-1 dimensions" operation can also be performed automatically
+This "insert size `1` dimensions" operation can also be performed automatically
 with the {external+numpy:func}`numpy.ix_` function.[^ix-footnote]
 
 [^ix-footnote]: `ix_()` is currently limited to only support 1-D input arrays
@@ -647,7 +647,7 @@ For example, consider:
 ...                [103, 104, 105]]])
 ```
 
-This is the same `a` as in the above examples, except it has an extra size-1
+This is the same `a` as in the above examples, except it has an extra size `1`
 dimension:
 
 ```py

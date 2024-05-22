@@ -344,14 +344,14 @@ because it means that you can index the array
 uniformly.[^size-1-dimension-footnote] And this doesn't apply just to
 indexing. Many NumPy functions reduce the number of dimensions of their output
 (for example, {external+numpy:func}`numpy.sum`), but they have a `keepdims`
-argument to retain the dimension as a size-1 dimension instead.
+argument to retain the dimension as a size `1` dimension instead.
 
 [^size-1-dimension-footnote]: In this example, if we knew that we were always
     going to select exactly one element (say, the second one) from the first
     dimension, we could equivalently use `a[1, np.newaxis]` (see
     [](../integer-indices.md) and [](newaxis.md)). The advantage of this is
     that we would get an error if the first dimension of `a` didn't actually
-    have `2` elements, whereas `a[1:2]` would just silently give a size-0
+    have `2` elements, whereas `a[1:2]` would just silently give a size `0`
     array.
 
 There are two final facts about tuple indices that should be noted before we

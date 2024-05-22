@@ -85,9 +85,9 @@ Broadcasting always happens automatically in NumPy whenever two arrays with
 different shapes are combined using any function or operator, assuming those
 shapes are broadcast compatible. The rule for broadcast compatibility is that
 the shorter of the shapes are prepended with length 1 dimensions so that they
-have the same number of dimensions. Then any dimensions that are size 1 in a
+have the same number of dimensions. Then any dimensions that are size `1` in a
 shape are replaced with the corresponding size in the other shape. The other
-non-1 sizes must be equal or broadcasting is not allowed.
+non-`1` sizes must be equal or broadcasting is not allowed.
 
 In the above example, we broadcast `(3, 2)` with `(2,)` by first extending
 `(2,)` to `(1, 2)` then broadcasting the size `1` dimension to the
