@@ -333,6 +333,28 @@ array([100, 101, 103])
 array([100, 101, 103])
 ```
 
+### Bounds Checking
+
+As with [integer indices](../integer-indices.md), integer array indexing uses
+bounds checking, with the [same rule as integer
+indices](integer-indices-bounds-checking).
+
+> **If any entry in an integer array index is greater than `size - 1` or less
+> than `-size`, where `size` is the size of the dimension being indexed, an
+> `IndexError` is raised.**
+
+```py
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> a[[2, 3, 4]]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: index 4 is out of bounds for axis 0 with size 4
+>>> a[[-5, -4, -3]]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: index -5 is out of bounds for axis 0 with size 4
+```
+
 (integer-array-broadcasting)=
 ### Broadcasting
 
