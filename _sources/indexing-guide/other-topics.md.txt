@@ -30,7 +30,7 @@ array([[102, 104],
        [106, 108]])
 ```
 
-However, you may have noticed that `x` and `y` doesn't always have to be two
+However, you may have noticed that `x` and `y` don't always have to be two
 arrays with the same shape. For example, you can add a single scalar element
 to an array, and it will add it to each element.
 
@@ -43,8 +43,8 @@ array([[2, 3],
 In the above example, we can think of the scalar `1` as a shape `()` array,
 whereas `x` is a shape `(2, 2)` array. Thus, `x` and `1` do not have the same
 shape, but `x + 1` is allowed via repeating `1` across every element of `x`.
-This means taking `1` and treating it as if it were the shape `(2, 2)` array
-`[[1, 1], [1, 1]]`.
+This means NumPy is taking `1` and treating it as if it were the shape `(2,
+2)` array `[[1, 1], [1, 1]]`.
 
 Broadcasting is a generalization of this behavior. Specifically, instead of
 repeating just a single number into an array, we can repeat just some
@@ -75,19 +75,18 @@ array([[0, 2],
        [0, 2]])
 ```
 
-This is what the array `y` looks like before it is combined with `x`, except
-the power of broadcasting is that the repeated entries are not literally
-repeated in memory. Broadcasting is implemented efficiently so that the
-"repeated" elements actually refer to the same objects in memory. See
-[](views-vs-copies) and [](strides) below.
+This is what the array `y` looks like before it is combined with `x`. Although
+note that broadcasting is implemented efficiently, so that the "repeated"
+elements actually refer to the same objects in memory. See [](views-vs-copies)
+and [](strides) below.
 
 Broadcasting always happens automatically in NumPy whenever two arrays with
 different shapes are combined using any function or operator, assuming those
 shapes are broadcast compatible. The rule for broadcast compatibility is that
 the shorter of the shapes are prepended with length 1 dimensions so that they
-have the same number of dimensions. Then any dimensions that are size 1 in a
+have the same number of dimensions. Then any dimensions that are size `1` in a
 shape are replaced with the corresponding size in the other shape. The other
-non-1 sizes must be equal or broadcasting is not allowed.
+non-`1` sizes must be equal or broadcasting is not allowed.
 
 In the above example, we broadcast `(3, 2)` with `(2,)` by first extending
 `(2,)` to `(1, 2)` then broadcasting the size `1` dimension to the
@@ -98,16 +97,18 @@ shape repeats the first axis 2 times along the second axis, while the second
 shape inserts a new axis at the beginning that repeats 3 times.
 
 We can think of `(3, 2)` as a "stack" of 3 shape `(2,)` arrays. Just as the
-scalar 1 got repeated to match the full shape of `a` above, the shape `(2,)`
+scalar `1` got repeated to match the full shape of `a` above, the shape `(2,)`
 array `y` gets repeated into a `(3,)` "stack" so it matches the shape of `x`.
 
 Additionally, size `1` dimensions are a signal to NumPy that that dimension is
 allowed to be repeated, or broadcasted, when used with another array where
-that dimension is not size `1`.
+the other dimensions match.
 
 It can be useful to think of broadcasting as repeating "stacks" of smaller
-arrays in this way. The size `1` dimension rule allows these "stacks" to be
-along any dimensions of the array, not just the last ones.
+arrays in this way. The automatic prepending rule lets you automatically treat
+array "stacking" along the last dimension, which is the most common, but the
+size `1` dimension rule allows these stacks to be along any dimensions of
+the array, not just the last ones.
 
 When it comes to indexing, one of the most useful types of index for use with
 broadcasting is [newaxis](./multidimensional-indices/newaxis.md), which lets

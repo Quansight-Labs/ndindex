@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=254c7fb8" />
     
@@ -385,11 +385,11 @@ the same thing.</p>
 <span class="go">True</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">newaxis</span></code>, as the name suggests, adds a new axis. This new axis has size <code class="docutils literal notranslate"><span class="pre">1</span></code>.
-The new axis is added at the corresponding location within the array. A size
-<code class="docutils literal notranslate"><span class="pre">1</span></code> axis neither adds nor removes any elements from the array. Using the
-<a class="reference internal" href="what-is-an-array.html"><span class="std std-doc">nested lists analogy</span></a>, it essentially adds a new “layer”
-to the list of lists.</p>
+<p><code class="docutils literal notranslate"><span class="pre">newaxis</span></code>, as the name suggests, adds a new axis to an array. This new axis
+has size <code class="docutils literal notranslate"><span class="pre">1</span></code>. The new axis is added at the corresponding location within the
+array shape. A size <code class="docutils literal notranslate"><span class="pre">1</span></code> axis neither adds nor removes any elements from the
+array. Using the <a class="reference internal" href="what-is-an-array.html"><span class="std std-doc">nested lists analogy</span></a>, it essentially
+adds a new “layer” to the list of lists.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
 <span class="go">array([0, 1, 2, 3])</span>
@@ -437,7 +437,7 @@ within the index <code class="docutils literal notranslate"><span class="pre">a[
 </div>
 <p>In each case, the exact same elements are selected: <code class="docutils literal notranslate"><span class="pre">0</span></code> always targets the
 first axis, and <code class="docutils literal notranslate"><span class="pre">:2</span></code> always targets the second axis. The only difference is
-where the size-1 axis is inserted:</p>
+where the size <code class="docutils literal notranslate"><span class="pre">1</span></code> axis is inserted:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 <span class="go">array([[[0, 1, 2, 3],</span>
 <span class="go">        [4, 5, 6, 7]]])</span>
@@ -481,10 +481,10 @@ axis is inserted at the end of the shape. The resulting shape is <code class="do
 its position in the tuple index after removing any <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> indices.
 Equivalently, <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> indices can be though of as adding new axes <em>after</em>
 the existing axes are indexed.</p>
-<p>A size-1 axis can always be inserted anywhere in an array’s shape without
+<p>A size <code class="docutils literal notranslate"><span class="pre">1</span></code> axis can always be inserted anywhere in an array’s shape without
 changing the underlying elements.</p>
 <p>An array index can include multiple instances of <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> (or <code class="docutils literal notranslate"><span class="pre">None</span></code>). Each
-will add a size-1 axis in the corresponding location.</p>
+will add a size <code class="docutils literal notranslate"><span class="pre">1</span></code> axis in the corresponding location.</p>
 <p><strong>Exercise:</strong> Can you determine the shape of this array, given that <code class="docutils literal notranslate"><span class="pre">a.shape</span></code>
 is <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2,</span> <span class="pre">4)</span></code>?</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">newaxis</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">newaxis</span><span class="p">]</span>
@@ -492,11 +492,7 @@ is <code class="docutils literal notranslate"><span class="pre">(3,</span> <span
 </div>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
 <summary class="sd-summary-title sd-card-header">
-Click here to show the solution<div class="sd-summary-down docutils">
-<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
-<div class="sd-summary-up docutils">
-<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
-</summary><div class="sd-summary-content sd-card-body docutils">
+<span class="sd-summary-text">Click here to show the solution</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(1, 1, 2, 1, 4, 1)</span>
 </pre></div>
@@ -504,7 +500,7 @@ Click here to show the solution<div class="sd-summary-down docutils">
 </div>
 </details><p>In summary,</p>
 <blockquote>
-<div><p><strong><code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> (which is just an alias for <code class="docutils literal notranslate"><span class="pre">None</span></code>) inserts a new size-1 axis
+<div><p><strong><code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> (which is just an alias for <code class="docutils literal notranslate"><span class="pre">None</span></code>) inserts a new size <code class="docutils literal notranslate"><span class="pre">1</span></code> axis
 in the corresponding location in the tuple index. The remaining,
 non-<code class="docutils literal notranslate"><span class="pre">newaxis</span></code> indices in the tuple index are indexed as if the <code class="docutils literal notranslate"><span class="pre">newaxis</span></code>
 indices were not there.</strong></p>
@@ -532,20 +528,20 @@ representing a row or column vector. For example,</p>
 <p><code class="docutils literal notranslate"><span class="pre">v[newaxis]</span></code> inserts an axis at the beginning of the shape, making <code class="docutils literal notranslate"><span class="pre">v</span></code> a <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">3)</span></code> row vector and <code class="docutils literal notranslate"><span class="pre">v[...,</span> <span class="pre">newaxis]</span></code> inserts an axis at the end, making it a
 <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">1)</span></code> column vector.</p>
 <p>But the most common usage is due to <a class="reference internal" href="../other-topics.html#broadcasting"><span class="std std-ref">broadcasting</span></a>. The key idea
-of broadcasting is that size-1 dimensions are not directly useful, in the
+of broadcasting is that size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions are not directly useful, in the
 sense that they could be removed without actually changing anything about the
 underlying data in the array. So they are used as a signal that that dimension
 can be repeated in operations. <code class="docutils literal notranslate"><span class="pre">newaxis</span></code> is therefore useful for inserting
-these size-1 dimensions in situations where you want to force your data to be
-repeated. For example, suppose we have the two arrays</p>
+these size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions in situations where you want to force your data to
+be repeated. For example, suppose we have the two arrays</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>and suppose we want to compute an “outer” sum of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>, that is, we want
-to compute every combination of <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">+</span> <span class="pre">j</span></code> where <code class="docutils literal notranslate"><span class="pre">i</span></code> is from <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> is from
+to compute every combination of <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> where <code class="docutils literal notranslate"><span class="pre">a</span></code> is from <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> is from
 <code class="docutils literal notranslate"><span class="pre">y</span></code>. The key realization here is that what we want is simply to
-repeat each entry of <code class="docutils literal notranslate"><span class="pre">x</span></code> 3 times, to correspond to each entry of <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
+repeat each entry of <code class="docutils literal notranslate"><span class="pre">x</span></code> 2 times, to correspond to each entry of <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
 respectively repeat each entry of <code class="docutils literal notranslate"><span class="pre">y</span></code> 3 times, to correspond to each entry of
 <code class="docutils literal notranslate"><span class="pre">x</span></code>. And this is exactly the sort of thing broadcasting does! We only need to
 make the shapes of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> match in such a way that the broadcasting will
@@ -560,7 +556,7 @@ broadcast both arrays. We want to compute</p>
 from <code class="docutils literal notranslate"><span class="pre">x</span></code>, and the second dimension will correspond to values from <code class="docutils literal notranslate"><span class="pre">y</span></code>, i.e.,
 <code class="docutils literal notranslate"><span class="pre">a[i,</span> <span class="pre">j]</span></code> will be <code class="docutils literal notranslate"><span class="pre">x[i]</span> <span class="pre">+</span> <span class="pre">y[j]</span></code>. Thus the resulting array will have shape <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2)</span></code>. So to make <code class="docutils literal notranslate"><span class="pre">x</span></code> (which is shape <code class="docutils literal notranslate"><span class="pre">(3,)</span></code>) and <code class="docutils literal notranslate"><span class="pre">y</span></code> (which is shape <code class="docutils literal notranslate"><span class="pre">(2,)</span></code>)
 broadcast to this, we need to make them <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">1)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">2)</span></code>, respectively.
-This can easily be done with <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>.</p>
+This can easily be done with <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(3, 1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">shape</span>
@@ -575,7 +571,7 @@ do the broadcasting automatically.<a class="footnote-reference brackets" href="#
 <span class="go">       [103, 203]])</span>
 </pre></div>
 </div>
-<p>Note: broadcasting automatically prepends shape <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions, so the
+<p>Note: broadcasting automatically prepends size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions, so the
 <code class="docutils literal notranslate"><span class="pre">y[np.newaxis,</span> <span class="pre">:]</span></code> operation is unnecessary.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span>
 <span class="go">array([[101, 201],</span>
@@ -583,7 +579,7 @@ do the broadcasting automatically.<a class="footnote-reference brackets" href="#
 <span class="go">       [103, 203]])</span>
 </pre></div>
 </div>
-<p>As we saw <a class="reference internal" href="tuples.html#single-axis-tuple"><span class="std std-ref">before</span></a>, size-1 dimensions may seem redundant,
+<p>As we saw <a class="reference internal" href="tuples.html#single-axis-tuple"><span class="std std-ref">before</span></a>, size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions may seem redundant,
 but they are not a bad thing. Not only do they allow indexing an array
 uniformly, they are also very important in the way they interact with NumPy’s
 broadcasting rules.</p>
@@ -687,6 +683,6 @@ what you want.</p>
     <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     </body>
 </html>

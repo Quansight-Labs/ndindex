@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=254c7fb8" />
     
@@ -397,7 +397,7 @@ elements.</p>
 <span class="go">       [106, 108]])</span>
 </pre></div>
 </div>
-<p>However, you may have noticed that <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> doesn’t always have to be two
+<p>However, you may have noticed that <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> don’t always have to be two
 arrays with the same shape. For example, you can add a single scalar element
 to an array, and it will add it to each element.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span>
@@ -408,8 +408,7 @@ to an array, and it will add it to each element.</p>
 <p>In the above example, we can think of the scalar <code class="docutils literal notranslate"><span class="pre">1</span></code> as a shape <code class="docutils literal notranslate"><span class="pre">()</span></code> array,
 whereas <code class="docutils literal notranslate"><span class="pre">x</span></code> is a shape <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2)</span></code> array. Thus, <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> do not have the same
 shape, but <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">1</span></code> is allowed via repeating <code class="docutils literal notranslate"><span class="pre">1</span></code> across every element of <code class="docutils literal notranslate"><span class="pre">x</span></code>.
-This means taking <code class="docutils literal notranslate"><span class="pre">1</span></code> and treating it as if it were the shape <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2)</span></code> array
-<code class="docutils literal notranslate"><span class="pre">[[1,</span> <span class="pre">1],</span> <span class="pre">[1,</span> <span class="pre">1]]</span></code>.</p>
+This means NumPy is taking <code class="docutils literal notranslate"><span class="pre">1</span></code> and treating it as if it were the shape <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2)</span></code> array <code class="docutils literal notranslate"><span class="pre">[[1,</span> <span class="pre">1],</span> <span class="pre">[1,</span> <span class="pre">1]]</span></code>.</p>
 <p>Broadcasting is a generalization of this behavior. Specifically, instead of
 repeating just a single number into an array, we can repeat just some
 dimensions of an array into a bigger array. For example, here we multiply <code class="docutils literal notranslate"><span class="pre">x</span></code>,
@@ -435,18 +434,17 @@ repeated 3 times.</p>
 <span class="go">       [0, 2]])</span>
 </pre></div>
 </div>
-<p>This is what the array <code class="docutils literal notranslate"><span class="pre">y</span></code> looks like before it is combined with <code class="docutils literal notranslate"><span class="pre">x</span></code>, except
-the power of broadcasting is that the repeated entries are not literally
-repeated in memory. Broadcasting is implemented efficiently so that the
-“repeated” elements actually refer to the same objects in memory. See
-<a class="reference internal" href="#views-vs-copies"><span class="std std-ref">Views vs. Copies</span></a> and <a class="reference internal" href="#strides"><span class="std std-ref">Strides</span></a> below.</p>
+<p>This is what the array <code class="docutils literal notranslate"><span class="pre">y</span></code> looks like before it is combined with <code class="docutils literal notranslate"><span class="pre">x</span></code>. Although
+note that broadcasting is implemented efficiently, so that the “repeated”
+elements actually refer to the same objects in memory. See <a class="reference internal" href="#views-vs-copies"><span class="std std-ref">Views vs. Copies</span></a>
+and <a class="reference internal" href="#strides"><span class="std std-ref">Strides</span></a> below.</p>
 <p>Broadcasting always happens automatically in NumPy whenever two arrays with
 different shapes are combined using any function or operator, assuming those
 shapes are broadcast compatible. The rule for broadcast compatibility is that
 the shorter of the shapes are prepended with length 1 dimensions so that they
-have the same number of dimensions. Then any dimensions that are size 1 in a
+have the same number of dimensions. Then any dimensions that are size <code class="docutils literal notranslate"><span class="pre">1</span></code> in a
 shape are replaced with the corresponding size in the other shape. The other
-non-1 sizes must be equal or broadcasting is not allowed.</p>
+non-<code class="docutils literal notranslate"><span class="pre">1</span></code> sizes must be equal or broadcasting is not allowed.</p>
 <p>In the above example, we broadcast <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2)</span></code> with <code class="docutils literal notranslate"><span class="pre">(2,)</span></code> by first extending
 <code class="docutils literal notranslate"><span class="pre">(2,)</span></code> to <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">2)</span></code> then broadcasting the size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimension to the
 corresponding size in the other shape, <code class="docutils literal notranslate"><span class="pre">3</span></code>, giving a broadcasted shape of <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2)</span></code>. In more advanced examples, both shapes may have broadcasted dimensions.
@@ -454,14 +452,16 @@ For instance, <code class="docutils literal notranslate"><span class="pre">(3,</
 shape repeats the first axis 2 times along the second axis, while the second
 shape inserts a new axis at the beginning that repeats 3 times.</p>
 <p>We can think of <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2)</span></code> as a “stack” of 3 shape <code class="docutils literal notranslate"><span class="pre">(2,)</span></code> arrays. Just as the
-scalar 1 got repeated to match the full shape of <code class="docutils literal notranslate"><span class="pre">a</span></code> above, the shape <code class="docutils literal notranslate"><span class="pre">(2,)</span></code>
+scalar <code class="docutils literal notranslate"><span class="pre">1</span></code> got repeated to match the full shape of <code class="docutils literal notranslate"><span class="pre">a</span></code> above, the shape <code class="docutils literal notranslate"><span class="pre">(2,)</span></code>
 array <code class="docutils literal notranslate"><span class="pre">y</span></code> gets repeated into a <code class="docutils literal notranslate"><span class="pre">(3,)</span></code> “stack” so it matches the shape of <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
 <p>Additionally, size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions are a signal to NumPy that that dimension is
 allowed to be repeated, or broadcasted, when used with another array where
-that dimension is not size <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+the other dimensions match.</p>
 <p>It can be useful to think of broadcasting as repeating “stacks” of smaller
-arrays in this way. The size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimension rule allows these “stacks” to be
-along any dimensions of the array, not just the last ones.</p>
+arrays in this way. The automatic prepending rule lets you automatically treat
+array “stacking” along the last dimension, which is the most common, but the
+size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimension rule allows these stacks to be along any dimensions of
+the array, not just the last ones.</p>
 <p>When it comes to indexing, one of the most useful types of index for use with
 broadcasting is <a class="reference internal" href="multidimensional-indices/newaxis.html"><span class="std std-doc">newaxis</span></a>, which lets
 you easily insert size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions into an array to make the broadcastable
@@ -1048,6 +1048,6 @@ no mnemonic.</p>
     <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     </body>
 </html>

@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=254c7fb8" />
     
@@ -409,7 +409,7 @@ will operate on the first dimension of <code class="docutils literal notranslate
 </pre></div>
 </div>
 <p>We also observe that integer indices remove the axis, and slices keep the axis
-(even when the resulting axis has size-1):</p>
+(even when the resulting axis has size 1):</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(2, 4)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">shape</span>
@@ -654,7 +654,7 @@ because it means that you can index the array
 uniformly.<a class="footnote-reference brackets" href="#size-1-dimension-footnote" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> And this doesn’t apply just to
 indexing. Many NumPy functions reduce the number of dimensions of their output
 (for example, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.sum()</span></code></a>), but they have a <code class="docutils literal notranslate"><span class="pre">keepdims</span></code>
-argument to retain the dimension as a size-1 dimension instead.</p>
+argument to retain the dimension as a size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimension instead.</p>
 <p>There are two final facts about tuple indices that should be noted before we
 move on to the other basic index types. First, as we saw above,</p>
 <blockquote>
@@ -682,7 +682,7 @@ going to select exactly one element (say, the second one) from the first
 dimension, we could equivalently use <code class="docutils literal notranslate"><span class="pre">a[1,</span> <span class="pre">np.newaxis]</span></code> (see
 <a class="reference internal" href="../integer-indices.html"><span class="std std-doc">Integer Indices</span></a> and <a class="reference internal" href="newaxis.html"><span class="std std-doc">newaxis</span></a>). The advantage of this is
 that we would get an error if the first dimension of <code class="docutils literal notranslate"><span class="pre">a</span></code> didn’t actually
-have <code class="docutils literal notranslate"><span class="pre">2</span></code> elements, whereas <code class="docutils literal notranslate"><span class="pre">a[1:2]</span></code> would just silently give a size-0
+have <code class="docutils literal notranslate"><span class="pre">2</span></code> elements, whereas <code class="docutils literal notranslate"><span class="pre">a[1:2]</span></code> would just silently give a size <code class="docutils literal notranslate"><span class="pre">0</span></code>
 array.</p>
 </aside>
 <aside class="footnote brackets" id="tuple-ellipsis-footnote" role="doc-footnote">
@@ -787,7 +787,7 @@ differences between the scalars and 0-D arrays which are related to indexing.</p
     <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>

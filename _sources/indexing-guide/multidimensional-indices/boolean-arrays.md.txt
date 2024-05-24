@@ -671,7 +671,7 @@ Or if it had no actual `0`s:[^0-d-mask-footnote]
     with the shape `(0,)` to the shape `(0,)`, and so this is what gets
     assigned, i.e., "nothing" (of shape `(0,)`) gets assigned to "nothing" (of
     matching shape `(0,)`). This is one reason why [broadcasting
-    rules](broadcasting) apply even to dimensions of size 0.
+    rules](broadcasting) apply even to dimensions of size `0`.
 
 ```py
 >>> a = np.asarray([1, 1, 2])

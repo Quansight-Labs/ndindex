@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=254c7fb8" />
     
@@ -374,7 +374,7 @@
 <h1>Integer Array Indices<a class="headerlink" href="#integer-array-indices" title="Link to this heading">¶</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In this section, and <a class="reference internal" href="boolean-arrays.html"><span class="doc std std-doc">the next</span></a>, do not confuse the <em>array
+<p>In this section and <a class="reference internal" href="boolean-arrays.html"><span class="doc std std-doc">the next</span></a>, do not confuse the <em>array
 being indexed</em> with the <em>array that is the index</em>. The former can be anything
 and have any dtype. It is only the latter that is restricted to being integer
 or boolean.</p>
@@ -400,7 +400,7 @@ one thing, <a class="reference internal" href="../integer-indices.html"><span cl
 elements of the array in order (or possibly <a class="reference internal" href="../slices.html#negative-steps"><span class="std std-ref">reversed order</span></a>
 for slices), whereas this array has elements completely shuffled from <code class="docutils literal notranslate"><span class="pre">a</span></code>, and
 some are even repeated.</p>
-<p>However, we could “cheat” a bit here, and do something like</p>
+<p>However, we could “cheat” a bit here and do something like</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
 <span class="gp">... </span>                      <span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_array</span>
@@ -410,7 +410,7 @@ some are even repeated.</p>
 </div>
 <p>This is the array we want. We sort of constructed it using only indexing
 operations, but we didn’t actually do <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> for some index <code class="docutils literal notranslate"><span class="pre">idx</span></code>. Instead,
-we just listed the index of each individual element.</p>
+we just listed the indices of each individual element.</p>
 <p>An integer array index is essentially this “cheating” method, but as a single
 index. Instead of listing out <code class="docutils literal notranslate"><span class="pre">a[0]</span></code>, <code class="docutils literal notranslate"><span class="pre">a[2]</span></code>, and so on, we just create a
 single integer array with those <a class="reference internal" href="../integer-indices.html"><span class="std std-doc">integer indices</span></a>:</p>
@@ -435,22 +435,18 @@ comes from.</strong></p>
 elements and is 1-dimensional, whereas <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> has 6 elements and is
 2-dimensional. <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> also contains some duplicate elements from <code class="docutils literal notranslate"><span class="pre">a</span></code>, and
 there are some elements which aren’t selected at all. Indeed, we could take
-<em>any</em> integer array of any shape, and as long as the elements are between 0
-and 3, <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> would create a new array with the same shape as <code class="docutils literal notranslate"><span class="pre">idx</span></code> with
-corresponding elements selected from <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
-<p>A useful way to think about integer array indexing is that it generalizes
-<a class="reference internal" href="../integer-indices.html"><span class="std std-doc">integer indexing</span></a>. With integer indexing, we are
-effectively indexing using a 0-dimensional integer array, that is, a single
-integer.<a class="footnote-reference brackets" href="#integer-scalar-footnote" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> This always selects the corresponding
-element from the given axis and removes the dimension. That is, it replaces
-that dimension in the shape with <code class="docutils literal notranslate"><span class="pre">()</span></code>, the “shape” of the integer index.</p>
-<p>Similarly,</p>
+<em>any</em> integer array <code class="docutils literal notranslate"><span class="pre">idx</span></code> of any shape, and as long as the elements are
+between 0 and 3, <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> would create a new array with the same shape as
+<code class="docutils literal notranslate"><span class="pre">idx</span></code> with corresponding elements selected from <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
+<p>The shape of <code class="docutils literal notranslate"><span class="pre">a</span></code> is <code class="docutils literal notranslate"><span class="pre">(4,)</span></code> and the shape of <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> is <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">3)</span></code>, the same as the
+shape of <code class="docutils literal notranslate"><span class="pre">idx</span></code>. In general:</p>
 <blockquote>
 <div><p><strong>an integer array index <code class="docutils literal notranslate"><span class="pre">a[idx]</span></code> selects elements from the specified axis
-and replaces the dimension in the shape with the shape of the index array
-<code class="docutils literal notranslate"><span class="pre">idx</span></code>.</strong></p>
+and replaces the selected dimension in the shape of <code class="docutils literal notranslate"><span class="pre">a</span></code> with the shape of
+the index array <code class="docutils literal notranslate"><span class="pre">idx</span></code>.</strong></p>
 </div></blockquote>
-<p>For example:</p>
+<p>For example, in <code class="docutils literal notranslate"><span class="pre">a[idx].shape</span></code>, <code class="docutils literal notranslate"><span class="pre">4</span></code> is replaced with <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">3)</span></code>. Consider what
+happens when <code class="docutils literal notranslate"><span class="pre">a</span></code> has more than one dimension:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># (3,) is replaced with (2, 2)</span>
@@ -459,13 +455,42 @@ and replaces the dimension in the shape with the shape of the index array
 <span class="go">(3, 2, 2)</span>
 </pre></div>
 </div>
-<p>In particular, even when the index array <code class="docutils literal notranslate"><span class="pre">idx</span></code> has more than one dimension, an
+<p>Here <code class="docutils literal notranslate"><span class="pre">a.shape</span></code> is <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">4)</span></code> and <code class="docutils literal notranslate"><span class="pre">idx.shape</span></code> is <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2)</span></code>. In <code class="docutils literal notranslate"><span class="pre">a[idx].shape</span></code>, the
+<code class="docutils literal notranslate"><span class="pre">3</span></code> is replaced with <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2)</span></code>, giving <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2,</span> <span class="pre">4)</span></code>, and in <code class="docutils literal notranslate"><span class="pre">a[:,</span> <span class="pre">idx].shape</span></code>,
+the <code class="docutils literal notranslate"><span class="pre">4</span></code> is replaced with <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2)</span></code>, giving <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2,</span> <span class="pre">2)</span></code>.</p>
+<p>A useful way to think about integer array indexing is that it generalizes
+<a class="reference internal" href="../integer-indices.html"><span class="std std-doc">integer indexing</span></a>. With integer indexing, we are
+effectively indexing using a 0-dimensional integer array, that is, a single
+integer. This always selects the corresponding element from the given axis and
+removes the dimension. That is, it replaces that dimension in the shape with
+<code class="docutils literal notranslate"><span class="pre">()</span></code> (i.e., nothing), the “shape” of the integer index. The result of indexing
+with an <code class="docutils literal notranslate"><span class="pre">int</span></code> and a corresponding 0-D array is exactly the
+same.<a class="footnote-reference brackets" href="#integer-scalar-footnote" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># 0-D array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># replaces (3,) with ()</span>
+<span class="go">(4,)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># replaces (4,) with ()</span>
+<span class="go">(3,)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="c1"># a[asarray(0)] is the exact same as a[0]</span>
+<span class="go">array([0, 1, 2, 3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">array([0, 1, 2, 3])</span>
+</pre></div>
+</div>
+<p>Note that even when the index array <code class="docutils literal notranslate"><span class="pre">idx</span></code> has more than one dimension, an
 integer array index still only selects elements from a single axis of <code class="docutils literal notranslate"><span class="pre">a</span></code>. It
 would appear that this limits the ability to arbitrarily shuffle elements of
-<code class="docutils literal notranslate"><span class="pre">a</span></code> using integer indexing. For instance, suppose we want to create the array
-<code class="docutils literal notranslate"><span class="pre">[105,</span> <span class="pre">100]</span></code> from the above 2-D <code class="docutils literal notranslate"><span class="pre">a</span></code>. Based on the above examples, it might not
-seem possible, since the elements <code class="docutils literal notranslate"><span class="pre">105</span></code> and <code class="docutils literal notranslate"><span class="pre">100</span></code> are not in the same row or
-column of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">a</span></code> using integer indexing. For instance, suppose we have the 2-D array</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">],</span>
+<span class="gp">... </span>     <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>and we wanted use indexing to create the array <code class="docutils literal notranslate"><span class="pre">[105,</span> <span class="pre">100]</span></code>. Based on the
+above examples, this might not seem possible, since the elements <code class="docutils literal notranslate"><span class="pre">105</span></code> and
+<code class="docutils literal notranslate"><span class="pre">100</span></code> are not in the same row or column of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
 <p>However, this is doable by providing multiple integer array
 indices:</p>
 <blockquote id="multiple-integer-arrays">
@@ -604,6 +629,28 @@ scenarios, an array index is constructed from some other array methods.</p>
 </pre></div>
 </div>
 </section>
+<section id="bounds-checking">
+<h3>Bounds Checking<a class="headerlink" href="#bounds-checking" title="Link to this heading">¶</a></h3>
+<p>As with <a class="reference internal" href="../integer-indices.html"><span class="std std-doc">integer indices</span></a>, integer array indexing uses
+bounds checking, with the <a class="reference internal" href="../integer-indices.html#integer-indices-bounds-checking"><span class="std std-ref">same rule as integer
+indices</span></a>.</p>
+<blockquote>
+<div><p><strong>If any entry in an integer array index is greater than <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">-</span> <span class="pre">1</span></code> or less
+than <code class="docutils literal notranslate"><span class="pre">-size</span></code>, where <code class="docutils literal notranslate"><span class="pre">size</span></code> is the size of the dimension being indexed, an
+<code class="docutils literal notranslate"><span class="pre">IndexError</span></code> is raised.</strong></p>
+</div></blockquote>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">])</span> <span class="c1"># as above</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">IndexError</span>: <span class="n">index 4 is out of bounds for axis 0 with size 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">IndexError</span>: <span class="n">index -5 is out of bounds for axis 0 with size 4</span>
+</pre></div>
+</div>
+</section>
 <section id="broadcasting">
 <span id="integer-array-broadcasting"></span><h3>Broadcasting<a class="headerlink" href="#broadcasting" title="Link to this heading">¶</a></h3>
 <blockquote>
@@ -736,8 +783,8 @@ second axis, and the second dimension of the second array along the first
 axis, i.e., exactly the arrays we want.</p>
 <p>This is why NumPy automatically broadcasts integer array indices together.</p>
 <blockquote>
-<div><p><strong>Outer indexing arrays can be constructed by inserting size-1 dimensions
-into the desired “outer” integer array indices so that the non-size-1
+<div><p><strong>Outer indexing arrays can be constructed by inserting size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions
+into the desired “outer” integer array indices so that the non-size <code class="docutils literal notranslate"><span class="pre">1</span></code>
 dimension for each is in the indexing dimension.</strong></p>
 </div></blockquote>
 <p>For example,</p>
@@ -751,7 +798,7 @@ dimension for each is in the indexing dimension.</strong></p>
 <p>Here, we use <a class="reference internal" href="newaxis.html"><span class="std std-doc">newaxis</span></a> along with <code class="docutils literal notranslate"><span class="pre">:</span></code> to turn <code class="docutils literal notranslate"><span class="pre">idx0</span></code> and
 <code class="docutils literal notranslate"><span class="pre">idx1</span></code> into shape <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">1)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">3)</span></code> arrays, respectively. These then
 automatically broadcast together to give the desired outer index.</p>
-<p>This “insert size-1 dimensions” operation can also be performed automatically
+<p>This “insert size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions” operation can also be performed automatically
 with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ix_.html#numpy.ix_" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ix_()</span></code></a> function.<a class="footnote-reference brackets" href="#ix-footnote" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx0</span><span class="p">,</span> <span class="n">idx1</span><span class="p">)</span>
 <span class="go">(array([[1],</span>
@@ -826,7 +873,7 @@ described.</p>
 <span class="gp">... </span>               <span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">]]])</span>
 </pre></div>
 </div>
-<p>This is the same <code class="docutils literal notranslate"><span class="pre">a</span></code> as in the above examples, except it has an extra size-1
+<p>This is the same <code class="docutils literal notranslate"><span class="pre">a</span></code> as in the above examples, except it has an extra size <code class="docutils literal notranslate"><span class="pre">1</span></code>
 dimension:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(1, 2, 3)</span>
@@ -909,11 +956,7 @@ right, like <span class="math notranslate nohighlight">\(P_1AP_2\)</span>.</p>
 first row <code class="docutils literal notranslate"><span class="pre">[5,</span> <span class="pre">4,</span> <span class="pre">7,</span> <span class="pre">6]</span></code> contains only elements from the second row of <code class="docutils literal notranslate"><span class="pre">a</span></code>.)</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
 <summary class="sd-summary-title sd-card-header">
-Click here to show the solution<div class="sd-summary-down docutils">
-<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
-<div class="sd-summary-up docutils">
-<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
-</summary><div class="sd-summary-content sd-card-body docutils">
+<span class="sd-summary-text">Click here to show the solution</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text">Suppose we start with the following 2-D array <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
@@ -981,12 +1024,7 @@ end of the document. -->
 <aside class="footnote brackets" id="integer-scalar-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <!-- This is the only way to cross reference a footnote across documents -->
-<p id="integer-scalar-footnote-ref">In fact, if the integer array index itself has
-shape <code class="docutils literal notranslate"><span class="pre">()</span></code>, then the behavior is identical to simply using an <code class="docutils literal notranslate"><span class="pre">int</span></code> with
-the same value. So it’s a true generalization. In ndindex,
-<a class="reference internal" href="../../api/index-types.html#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></span></a> will always convert
-a 0-D array index into an <a class="reference internal" href="../../api/index-types.html#ndindex.Integer" title="ndindex.integer.Integer"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Integer</span></code></span></a>.</p>
-<p>However, there is one difference between <code class="docutils literal notranslate"><span class="pre">a[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">a[asarray(0)]</span></code>. The
+<p id="integer-scalar-footnote-ref">There is one difference between <code class="docutils literal notranslate"><span class="pre">a[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">a[asarray(0)]</span></code>. The
 latter is considered an advanced index, so it does not create a
 <a class="reference internal" href="../other-topics.html#views-vs-copies"><span class="std std-ref">view</span></a>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -996,6 +1034,9 @@ latter is considered an advanced index, so it does not create a
 <span class="go">None</span>
 </pre></div>
 </div>
+<p>In ndindex,
+<a class="reference internal" href="../../api/index-types.html#ndindex.IntegerArray.reduce" title="ndindex.IntegerArray.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">IntegerArray.reduce()</span></code></span></a> will always convert
+a 0-D array index into an <a class="reference internal" href="../../api/index-types.html#ndindex.Integer" title="ndindex.integer.Integer"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Integer</span></code></span></a>.</p>
 </aside>
 <aside class="footnote brackets" id="random-integers-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
@@ -1133,6 +1174,7 @@ request implementing it, but I’m not going to do it myself.</p>
 <li><a class="reference internal" href="#advanced-notes">Advanced Notes</a><ul>
 <li><a class="reference internal" href="#negative-indices">Negative Indices</a></li>
 <li><a class="reference internal" href="#python-lists">Python Lists</a></li>
+<li><a class="reference internal" href="#bounds-checking">Bounds Checking</a></li>
 <li><a class="reference internal" href="#broadcasting">Broadcasting</a><ul>
 <li><a class="reference internal" href="#outer-indexing">Outer Indexing</a></li>
 </ul>
@@ -1160,7 +1202,7 @@ request implementing it, but I’m not going to do it myself.</p>
     <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
