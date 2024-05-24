@@ -1,7 +1,7 @@
 # Integer Array Indices
 
 ```{note}
-In this section, and [the next](boolean-arrays), do not confuse the *array
+In this section and [the next](boolean-arrays), do not confuse the *array
 being indexed* with the *array that is the index*. The former can be anything
 and have any dtype. It is only the latter that is restricted to being integer
 or boolean.
@@ -35,7 +35,7 @@ elements of the array in order (or possibly [reversed order](negative-steps)
 for slices), whereas this array has elements completely shuffled from `a`, and
 some are even repeated.
 
-However, we could "cheat" a bit here, and do something like
+However, we could "cheat" a bit here and do something like
 
 ```py
 >>> new_array = np.array([[a[0], a[2], a[0]],
@@ -47,7 +47,7 @@ array([[100, 102, 100],
 
 This is the array we want. We sort of constructed it using only indexing
 operations, but we didn't actually do `a[idx]` for some index `idx`. Instead,
-we just listed the index of each individual element.
+we just listed the indices of each individual element.
 
 An integer array index is essentially this "cheating" method, but as a single
 index. Instead of listing out `a[0]`, `a[2]`, and so on, we just create a
@@ -78,25 +78,19 @@ Note that `a[idx]` above is not the same size as `a` at all. `a` has 4
 elements and is 1-dimensional, whereas `a[idx]` has 6 elements and is
 2-dimensional. `a[idx]` also contains some duplicate elements from `a`, and
 there are some elements which aren't selected at all. Indeed, we could take
-*any* integer array of any shape, and as long as the elements are between 0
-and 3, `a[idx]` would create a new array with the same shape as `idx` with
-corresponding elements selected from `a`.
+*any* integer array `idx` of any shape, and as long as the elements are
+between 0 and 3, `a[idx]` would create a new array with the same shape as
+`idx` with corresponding elements selected from `a`.
 
-A useful way to think about integer array indexing is that it generalizes
-[integer indexing](../integer-indices.md). With integer indexing, we are
-effectively indexing using a 0-dimensional integer array, that is, a single
-integer.[^integer-scalar-footnote] This always selects the corresponding
-element from the given axis and removes the dimension. That is, it replaces
-that dimension in the shape with `()`, the "shape" of the integer index.
-
-Similarly,
+The shape of `a` is `(4,)` and the shape of `a[idx]` is `(2, 3)`, the same as the
+shape of `idx`. In general:
 
 > **an integer array index `a[idx]` selects elements from the specified axis
-> and replaces the dimension in the shape with the shape of the index array
-> `idx`.**
+> and replaces the selected dimension in the shape of `a` with the shape of
+> the index array `idx`.**
 
-
-For example:
+For example, in `a[idx].shape`, `4` is replaced with `(2, 3)`. Consider what
+happens when `a` has more than one dimension:
 
 ```
 >>> a = np.empty((3, 4))
@@ -107,13 +101,67 @@ For example:
 (3, 2, 2)
 ```
 
-In particular, even when the index array `idx` has more than one dimension, an
+Here `a.shape` is `(3, 4)` and `idx.shape` is `(2, 2)`. In `a[idx].shape`, the
+`3` is replaced with `(2, 2)`, giving `(2, 2, 4)`, and in `a[:, idx].shape`,
+the `4` is replaced with `(2, 2)`, giving `(3, 2, 2)`.
+
+A useful way to think about integer array indexing is that it generalizes
+[integer indexing](../integer-indices.md). With integer indexing, we are
+effectively indexing using a 0-dimensional integer array, that is, a single
+integer. This always selects the corresponding element from the given axis and
+removes the dimension. That is, it replaces that dimension in the shape with
+`()` (i.e., nothing), the "shape" of the integer index. The result of indexing
+with an `int` and a corresponding 0-D array is exactly the
+same.[^integer-scalar-footnote]
+
+[^integer-scalar-footnote]:
+    <!-- This is the only way to cross reference a footnote across documents -->
+    (integer-scalar-footnote-ref)=
+
+    There is one difference between `a[0]` and `a[asarray(0)]`. The
+    latter is considered an advanced index, so it does not create a
+    [view](views-vs-copies):
+
+    ```py
+    >>> a = np.empty((2, 3))
+    >>> a[0].base is a
+    True
+    >>> print(a[np.array(0)].base)
+    None
+    ```
+
+    In ndindex,
+    [`IntegerArray.reduce()`](ndindex.IntegerArray.reduce) will always convert
+    a 0-D array index into an [`Integer`](ndindex.integer.Integer).
+
+```py
+>>> idx = np.asarray(0) # 0-D array
+>>> idx.shape
+()
+>>> a = np.arange(12).reshape((3, 4))
+>>> a[idx].shape # replaces (3,) with ()
+(4,)
+>>> a[:, idx].shape # replaces (4,) with ()
+(3,)
+>>> a[idx] # a[asarray(0)] is the exact same as a[0]
+array([0, 1, 2, 3])
+>>> a[0]
+array([0, 1, 2, 3])
+```
+
+Note that even when the index array `idx` has more than one dimension, an
 integer array index still only selects elements from a single axis of `a`. It
 would appear that this limits the ability to arbitrarily shuffle elements of
-`a` using integer indexing. For instance, suppose we want to create the array
-`[105, 100]` from the above 2-D `a`. Based on the above examples, it might not
-seem possible, since the elements `105` and `100` are not in the same row or
-column of `a`.
+`a` using integer indexing. For instance, suppose we have the 2-D array
+
+```
+>>> a = [[100, 101, 102],
+...      [103, 104, 105]]
+```
+
+and we wanted use indexing to create the array `[105, 100]`. Based on the
+above examples, this might not seem possible, since the elements `105` and
+`100` are not in the same row or column of `a`.
 
 However, this is doable by providing multiple integer array
 indices:
@@ -285,6 +333,28 @@ array([100, 101, 103])
 array([100, 101, 103])
 ```
 
+### Bounds Checking
+
+As with [integer indices](../integer-indices.md), integer array indexing uses
+bounds checking, with the [same rule as integer
+indices](integer-indices-bounds-checking).
+
+> **If any entry in an integer array index is greater than `size - 1` or less
+> than `-size`, where `size` is the size of the dimension being indexed, an
+> `IndexError` is raised.**
+
+```py
+>>> a = np.array([100, 101, 102, 103]) # as above
+>>> a[[2, 3, 4]]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: index 4 is out of bounds for axis 0 with size 4
+>>> a[[-5, -4, -3]]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: index -5 is out of bounds for axis 0 with size 4
+```
+
 (integer-array-broadcasting)=
 ### Broadcasting
 
@@ -359,28 +429,6 @@ The ndindex methods
 [`Tuple.broadcast_arrays()`](ndindex.Tuple.broadcast_arrays) and
 [`expand()`](ndindex.Tuple.expand) will broadcast array indices together into
 a canonical form.
-
-[^integer-scalar-footnote]:
-    <!-- This is the only way to cross reference a footnote across documents -->
-    (integer-scalar-footnote-ref)=
-
-    In fact, if the integer array index itself has
-    shape `()`, then the behavior is identical to simply using an `int` with
-    the same value. So it's a true generalization. In ndindex,
-    [`IntegerArray.reduce()`](ndindex.IntegerArray.reduce) will always convert
-    a 0-D array index into an [`Integer`](ndindex.integer.Integer).
-
-    However, there is one difference between `a[0]` and `a[asarray(0)]`. The
-    latter is considered an advanced index, so it does not create a
-    [view](views-vs-copies):
-
-    ```py
-    >>> a = np.empty((2, 3))
-    >>> a[0].base is a
-    True
-    >>> print(a[np.array(0)].base)
-    None
-    ```
 
 (outer-indexing)=
 #### Outer Indexing
@@ -474,8 +522,8 @@ axis, i.e., exactly the arrays we want.
 
 This is why NumPy automatically broadcasts integer array indices together.
 
-> **Outer indexing arrays can be constructed by inserting size-1 dimensions
-> into the desired "outer" integer array indices so that the non-size-1
+> **Outer indexing arrays can be constructed by inserting size `1` dimensions
+> into the desired "outer" integer array indices so that the non-size `1`
 > dimension for each is in the indexing dimension.**
 
 For example,
@@ -492,7 +540,7 @@ Here, we use [newaxis](newaxis.md) along with `:` to turn `idx0` and
 `idx1` into shape `(2, 1)` and `(1, 3)` arrays, respectively. These then
 automatically broadcast together to give the desired outer index.
 
-This "insert size-1 dimensions" operation can also be performed automatically
+This "insert size `1` dimensions" operation can also be performed automatically
 with the {external+numpy:func}`numpy.ix_` function.[^ix-footnote]
 
 [^ix-footnote]: `ix_()` is currently limited to only support 1-D input arrays
@@ -599,7 +647,7 @@ For example, consider:
 ...                [103, 104, 105]]])
 ```
 
-This is the same `a` as in the above examples, except it has an extra size-1
+This is the same `a` as in the above examples, except it has an extra size `1`
 dimension:
 
 ```py

@@ -15,11 +15,11 @@ None
 True
 ```
 
-`newaxis`, as the name suggests, adds a new axis. This new axis has size `1`.
-The new axis is added at the corresponding location within the array. A size
-`1` axis neither adds nor removes any elements from the array. Using the
-[nested lists analogy](what-is-an-array.md), it essentially adds a new "layer"
-to the list of lists.
+`newaxis`, as the name suggests, adds a new axis to an array. This new axis
+has size `1`. The new axis is added at the corresponding location within the
+array shape. A size `1` axis neither adds nor removes any elements from the
+array. Using the [nested lists analogy](what-is-an-array.md), it essentially
+adds a new "layer" to the list of lists.
 
 
 ```py
@@ -77,7 +77,7 @@ within the index `a[0, :2]`:
 
 In each case, the exact same elements are selected: `0` always targets the
 first axis, and `:2` always targets the second axis. The only difference is
-where the size-1 axis is inserted:
+where the size `1` axis is inserted:
 
 ```py
 >>> a[np.newaxis, 0, :2]
@@ -127,11 +127,11 @@ its position in the tuple index after removing any `newaxis` indices.
 Equivalently, `newaxis` indices can be though of as adding new axes *after*
 the existing axes are indexed.
 
-A size-1 axis can always be inserted anywhere in an array's shape without
+A size `1` axis can always be inserted anywhere in an array's shape without
 changing the underlying elements.
 
 An array index can include multiple instances of `newaxis` (or `None`). Each
-will add a size-1 axis in the corresponding location.
+will add a size `1` axis in the corresponding location.
 
 **Exercise:** Can you determine the shape of this array, given that `a.shape`
 is `(3, 2, 4)`?
@@ -151,7 +151,7 @@ a[np.newaxis, 0, newaxis, :2, newaxis, ..., newaxis]
 
 In summary,
 
-> **`np.newaxis` (which is just an alias for `None`) inserts a new size-1 axis
+> **`np.newaxis` (which is just an alias for `None`) inserts a new size `1` axis
   in the corresponding location in the tuple index. The remaining,
   non-`newaxis` indices in the tuple index are indexed as if the `newaxis`
   indices were not there.**
@@ -184,12 +184,12 @@ array([[ 0],
 `(3, 1)` column vector.
 
 But the most common usage is due to [broadcasting](broadcasting). The key idea
-of broadcasting is that size-1 dimensions are not directly useful, in the
+of broadcasting is that size `1` dimensions are not directly useful, in the
 sense that they could be removed without actually changing anything about the
 underlying data in the array. So they are used as a signal that that dimension
 can be repeated in operations. `newaxis` is therefore useful for inserting
-these size-1 dimensions in situations where you want to force your data to be
-repeated. For example, suppose we have the two arrays
+these size `1` dimensions in situations where you want to force your data to
+be repeated. For example, suppose we have the two arrays
 
 ```py
 >>> x = np.array([1, 2, 3])
@@ -197,9 +197,9 @@ repeated. For example, suppose we have the two arrays
 ```
 
 and suppose we want to compute an "outer" sum of `x` and `y`, that is, we want
-to compute every combination of `i + j` where `i` is from `x` and `j` is from
+to compute every combination of `a + b` where `a` is from `x` and `b` is from
 `y`. The key realization here is that what we want is simply to
-repeat each entry of `x` 3 times, to correspond to each entry of `y`, and
+repeat each entry of `x` 2 times, to correspond to each entry of `y`, and
 respectively repeat each entry of `y` 3 times, to correspond to each entry of
 `x`. And this is exactly the sort of thing broadcasting does! We only need to
 make the shapes of `x` and `y` match in such a way that the broadcasting will
@@ -217,7 +217,7 @@ from `x`, and the second dimension will correspond to values from `y`, i.e.,
 `a[i, j]` will be `x[i] + y[j]`. Thus the resulting array will have shape `(3,
 2)`. So to make `x` (which is shape `(3,)`) and `y` (which is shape `(2,)`)
 broadcast to this, we need to make them `(3, 1)` and `(1, 2)`, respectively.
-This can easily be done with `np.newaxis`.
+This can easily be done with `np.newaxis`:
 
 ```py
 >>> x[:, np.newaxis].shape
@@ -245,7 +245,7 @@ array([[101, 201],
        [103, 203]])
 ```
 
-Note: broadcasting automatically prepends shape `1` dimensions, so the
+Note: broadcasting automatically prepends size `1` dimensions, so the
 `y[np.newaxis, :]` operation is unnecessary.
 
 ```py
@@ -255,7 +255,7 @@ array([[101, 201],
        [103, 203]])
 ```
 
-As we saw [before](single-axis-tuple), size-1 dimensions may seem redundant,
+As we saw [before](single-axis-tuple), size `1` dimensions may seem redundant,
 but they are not a bad thing. Not only do they allow indexing an array
 uniformly, they are also very important in the way they interact with NumPy's
 broadcasting rules.

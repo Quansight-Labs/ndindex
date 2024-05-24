@@ -26,9 +26,9 @@ subsets of it.
 ```
 
 You can imagine all sorts of different things you'd want to do with your
-scores that might involve selecting individual scores or ranges of scores (for
+scores that might involve selecting individual scores or ranges of scores. For
 example, with the above examples, we could easily compute the average score of
-our last three games, and see how it compares to our first game). So hopefully
+our last three games, and see how it compares to our first game. So hopefully
 you are convinced that at least the types of indices we have learned so far
 are useful.
 
