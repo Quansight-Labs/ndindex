@@ -553,7 +553,7 @@ the next element, <code class="docutils literal notranslate"><span class="pre">1
 sample <span class="math notranslate nohighlight">\(k\)</span> elements from a 1-D array of size <span class="math notranslate nohighlight">\(n\)</span> with replacement, we can
 simply construct an a random integer index in the range <span class="math notranslate nohighlight">\([0, n)\)</span> with <span class="math notranslate nohighlight">\(k\)</span>
 elements (see the
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.integers.html#numpy.random.Generator.integers" title="(in NumPy v1.26)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.integers()</span></code></a>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.integers.html#numpy.random.Generator.integers" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.integers()</span></code></a>
 documentation):<a class="footnote-reference brackets" href="#random-integers-footnote" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">])</span> <span class="c1"># as above</span>
@@ -567,7 +567,7 @@ documentation):<a class="footnote-reference brackets" href="#random-integers-foo
 </div>
 <p id="permutation-example">Another common use case of integer array indexing is to permute an array. An
 array can be randomly permuted with
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v1.26)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a>. But what if we want
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a>. But what if we want
 to permute two arrays with the same permutation? We can compute a permutation
 index and apply it to both arrays. For a 1-D array <code class="docutils literal notranslate"><span class="pre">a</span></code> of size <span class="math notranslate nohighlight">\(n\)</span>, a
 permutation index is just a permutation of the integer array index
@@ -799,7 +799,7 @@ dimension for each is in the indexing dimension.</strong></p>
 <code class="docutils literal notranslate"><span class="pre">idx1</span></code> into shape <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">1)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">3)</span></code> arrays, respectively. These then
 automatically broadcast together to give the desired outer index.</p>
 <p>This “insert size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions” operation can also be performed automatically
-with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ix_.html#numpy.ix_" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ix_()</span></code></a> function.<a class="footnote-reference brackets" href="#ix-footnote" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
+with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ix_.html#numpy.ix_" title="(in NumPy v2.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ix_()</span></code></a> function.<a class="footnote-reference brackets" href="#ix-footnote" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx0</span><span class="p">,</span> <span class="n">idx1</span><span class="p">)</span>
 <span class="go">(array([[1],</span>
 <span class="go">       [0]]), array([[2, 0, 1]]))</span>
@@ -892,7 +892,7 @@ index as in the example <a class="reference internal" href="#mixing-array-and-in
 <p>The primary point of this behavior is that you can use <code class="docutils literal notranslate"><span class="pre">...</span></code> at the beginning
 of an index to select the last axes of an array using integer array indices,
 or several <code class="docutils literal notranslate"><span class="pre">:</span></code>s to select some middle axes. This lets you do with indexing
-what you can also do with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.take.html#numpy.take" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.take()</span></code></a> function.</p>
+what you can also do with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.take.html#numpy.take" title="(in NumPy v2.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.take()</span></code></a> function.</p>
 <p>To be sure though, this index could use any slice, not just <code class="docutils literal notranslate"><span class="pre">:</span></code>, and could
 also include newaxes. This behavior is mainly implemented for the sake of
 semantic completeness, although it could potentially allow combining two
@@ -935,7 +935,7 @@ logic.<a class="footnote-reference brackets" href="#ndindex-advanced-indexing-de
 <h2>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">¶</a></h2>
 <p>Based on the above sections, you should be able to complete the following
 exercise: How might you randomly permute a 2-D array using
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v1.26)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> and indexing, so
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> and indexing, so
 that each axis is permuted independently? This operation might correspond to
 multiplying the array by random <a class="reference external" href="https://en.wikipedia.org/wiki/Permutation_matrix">permutation
 matrices</a> on the left and
@@ -966,7 +966,7 @@ first row <code class="docutils literal notranslate"><span class="pre">[5,</span
 </pre></div>
 </div>
 <p class="sd-card-text">We can generate permutations for the two axes using
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v1.26)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> <a class="reference internal" href="#permutation-example"><span class="std std-ref">as
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> <a class="reference internal" href="#permutation-example"><span class="std std-ref">as
 above</span></a>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="c1"># Seeded so this example reproduces</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx0</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
@@ -1042,7 +1042,7 @@ a 0-D array index into an <a class="reference internal" href="../../api/index-ty
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Note that <code class="docutils literal notranslate"><span class="pre">np.random</span></code> also supports this
 operation directly with
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.choice.html#numpy.random.Generator.choice" title="(in NumPy v1.26)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.choice()</span></code></a>.</p>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.choice.html#numpy.random.Generator.choice" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.choice()</span></code></a>.</p>
 </aside>
 <aside class="footnote brackets" id="lists-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
