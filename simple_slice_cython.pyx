@@ -6,27 +6,37 @@
 
 from cpython cimport PyObject
 from libc.stdint cimport int64_t
-
-import operator
 import sys
 
 cdef extern from "Python.h":
     int PyIndex_Check(object obj)
     object PyNumber_Index(object obj)
-    bint PyLong_Check(object obj)
+    bint PyBool_Check(object obj)
     int64_t PyLong_AsLongLong(object obj) except? -1
+
+cdef bint _NUMPY_IMPORTED = False
+cdef type _NUMPY_BOOL = None
+
+cdef inline bint is_numpy_bool(object obj):
+    global _NUMPY_IMPORTED, _NUMPY_BOOL
+    if not _NUMPY_IMPORTED:
+        if 'numpy' in sys.modules:
+            _NUMPY_BOOL = sys.modules['numpy'].bool_
+        _NUMPY_IMPORTED = True
+    return _NUMPY_BOOL is not None and isinstance(obj, _NUMPY_BOOL)
 
 cdef inline int64_t cy_operator_index(object idx) except? -1:
     cdef object result
-    if isinstance(idx, bool):
-        raise TypeError("'bool' object cannot be interpreted as an integer")
-    if 'numpy' in sys.modules and isinstance(idx, sys.modules['numpy'].bool_):
-        raise TypeError("'np.bool_' object cannot be interpreted as an integer")
+
+    if PyBool_Check(idx) or is_numpy_bool(idx):
+        raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
+
     if PyIndex_Check(idx):
         result = PyNumber_Index(idx)
         if result is None:
             raise TypeError("'__index__' returned non-int")
         return PyLong_AsLongLong(result)
+
     result = PyNumber_Index(idx)
     if result is None:
         raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
