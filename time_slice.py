@@ -9,26 +9,20 @@ from simple_slice_cython import SimpleSlice as SimpleSliceCython
 sys.path.append('/Users/aaronmeurer/Documents/mypython')
 from mypython.timeit import timeit_format
 
-N_RUNS = 10000
+N_RUNS = 1000000
 
-def time_slice():
+def time_slice(SliceClass):
     x, y, z = random.choice([None, -1, 0, 1, 2]), random.choice([None, -1, 0, 1, 2]), random.choice([None, -1, 1, 2])
     t = time.perf_counter()
-    Slice(x, y, z)
-    return time.perf_counter() - t
-
-def time_simple_slice():
-    x, y, z = random.choice([None, -1, 0, 1, 2]), random.choice([None, -1, 0, 1, 2]), random.choice([None, -1, 1, 2])
-    t = time.perf_counter()
-    SimpleSlice(x, y, z)
+    SliceClass(x, y, z)
     return time.perf_counter() - t
 
 if __name__ == '__main__':
-    times = [time_slice() for i in range(N_RUNS)]
+    times = [time_slice(Slice) for i in range(N_RUNS)]
 
-    simple_times = [time_simple_slice() for i in range(N_RUNS)]
+    simple_times = [time_slice(SimpleSlice) for i in range(N_RUNS)]
 
-    cython_times = [time_simple_slice() for i in range(N_RUNS)]
+    cython_times = [time_slice(SimpleSliceCython) for i in range(N_RUNS)]
 
     print(f"Slice times ({N_RUNS} runs):")
     print(timeit_format(times, 'Slice times'))
