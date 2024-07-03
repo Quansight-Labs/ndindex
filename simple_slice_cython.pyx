@@ -18,15 +18,15 @@ cdef extern from "Python.h":
 
 cdef inline int64_t cy_operator_index(object idx) except? -1:
     cdef object result
+    if isinstance(idx, bool):
+        raise TypeError("'bool' object cannot be interpreted as an integer")
+    if 'numpy' in sys.modules and isinstance(idx, sys.modules['numpy'].bool_):
+        raise TypeError("'np.bool_' object cannot be interpreted as an integer")
     if PyIndex_Check(idx):
         result = PyNumber_Index(idx)
         if result is None:
             raise TypeError("'__index__' returned non-int")
         return PyLong_AsLongLong(result)
-    if isinstance(idx, bool):
-        raise TypeError("'bool' object cannot be interpreted as an integer")
-    if 'numpy' in sys.modules and isinstance(idx, sys.modules['numpy'].bool_):
-        raise TypeError("'np.bool_' object cannot be interpreted as an integer")
     result = PyNumber_Index(idx)
     if result is None:
         raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
