@@ -1,8 +1,8 @@
 import timeit
 import random
 from ndindex import Slice
-from simple_slice import SimpleSlice as PySimpleSlice
-from simple_slice_cython import SimpleSlice as CySimpleSlice
+from simple_slice import SimpleSlice
+from simple_slice_cython import CythonSimpleSlice
 
 N_RUNS = 1_000_000
 
@@ -33,13 +33,13 @@ def main():
 
     print("\nObject Creation:")
     run_benchmark("Creation", benchmark_creation, Slice, inputs)
-    run_benchmark("Creation", benchmark_creation, PySimpleSlice, inputs)
-    run_benchmark("Creation", benchmark_creation, CySimpleSlice, inputs)
+    run_benchmark("Creation", benchmark_creation, SimpleSlice, inputs)
+    run_benchmark("Creation", benchmark_creation, CythonSimpleSlice, inputs)
 
     print("\nArgs Access:")
     run_benchmark("Access", benchmark_args, Slice)
-    run_benchmark("Access", benchmark_args, PySimpleSlice)
-    run_benchmark("Access", benchmark_args, CySimpleSlice)
+    run_benchmark("Access", benchmark_args, SimpleSlice)
+    run_benchmark("Access", benchmark_args, CythonSimpleSlice)
 
 if __name__ == "__main__":
     main()

@@ -35,7 +35,7 @@ cdef inline int64_t cy_operator_index(object idx) except? -1:
 cdef class default:
     pass
 
-cdef class SimpleSlice:
+cdef class SimpleSliceCython:
     cdef readonly tuple args
     cdef int64_t _start
     cdef int64_t _stop
