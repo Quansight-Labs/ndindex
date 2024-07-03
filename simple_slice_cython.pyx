@@ -111,3 +111,8 @@ cdef class SimpleSliceCython:
 
     def __repr__(self):
         return f"SimpleSliceCython{self.args}"
+
+    def __eq__(self, other):
+        if not isinstance(other, SimpleSliceCython):
+            return False
+        return self.args == other.args
