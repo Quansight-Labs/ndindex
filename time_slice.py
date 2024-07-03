@@ -9,31 +9,37 @@ N_RUNS = 1_000_000
 def random_value():
     return random.choice([None] + list(range(-100, -1)) + list(range(1, 100)))
 
-def benchmark_creation(SliceClass):
-    SliceClass(random_value(), random_value(), random_value())
+def generate_inputs(n=N_RUNS):
+    return [(random_value(), random_value(), random_value()) for _ in range(n)]
 
-def benchmark_args(SliceClass,):
+def benchmark_creation(SliceClass, inputs):
+    for start, stop, step in inputs:
+        SliceClass(start, stop, step)
+
+def benchmark_args(SliceClass, n=N_RUNS):
     s = SliceClass(0, 100, 2)
-    start, stop, step = s.args
+    for _ in range(n):
+        start, stop, step = s.args
 
-def run_benchmark(name, func, SliceClass):
-    time = timeit.timeit(lambda: func(SliceClass), number=N_RUNS)
+def run_benchmark(name, func, SliceClass, *args):
+    time = timeit.timeit(lambda: func(SliceClass, *args), number=1)
     print(f"{name} - {SliceClass.__module__}: {time/N_RUNS} seconds")
 
 def main():
     print("Benchmarking SimpleSlice implementations")
     print("----------------------------------------")
 
-    benchmarks = [
-        ("Object Creation", benchmark_creation),
-        ("Args Access", benchmark_args),
-    ]
+    inputs = generate_inputs()
 
-    for name, func in benchmarks:
-        print(f"\n{name}:")
-        run_benchmark(name, func, Slice)
-        run_benchmark(name, func, PySimpleSlice)
-        run_benchmark(name, func, CySimpleSlice)
+    print("\nObject Creation:")
+    run_benchmark("Creation", benchmark_creation, Slice, inputs)
+    run_benchmark("Creation", benchmark_creation, PySimpleSlice, inputs)
+    run_benchmark("Creation", benchmark_creation, CySimpleSlice, inputs)
+
+    print("\nArgs Access:")
+    run_benchmark("Access", benchmark_args, Slice)
+    run_benchmark("Access", benchmark_args, PySimpleSlice)
+    run_benchmark("Access", benchmark_args, CySimpleSlice)
 
 if __name__ == "__main__":
     main()
