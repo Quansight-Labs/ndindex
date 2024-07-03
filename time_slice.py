@@ -4,8 +4,9 @@ from ndindex import Slice
 from simple_slice import SimpleSlice
 from simple_slice_cython import SimpleSliceCython
 from simple_slice_pybind11 import SimpleSlicePybind11
+from simple_slice_rust import SimpleSliceRust
 
-slice_classes = [Slice, SimpleSlice, SimpleSliceCython, SimpleSlicePybind11]
+slice_classes = [Slice, SimpleSlice, SimpleSliceCython, SimpleSlicePybind11, SimpleSliceRust]
 
 N_RUNS = 1_000_000
 
