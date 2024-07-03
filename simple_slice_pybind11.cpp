@@ -9,7 +9,7 @@ class SimpleSlicePybind11 {
 private:
     py::tuple args;
 
-    static int64_t py_index(const py::handle& obj) {
+    static py::ssize_t py_index(const py::handle& obj) {
         if (obj.is_none()) {
             throw py::type_error("Cannot convert None to integer index");
         }
@@ -24,7 +24,7 @@ private:
         if (!index) {
             throw py::error_already_set();
         }
-        int64_t result = PyLong_AsLongLong(index);
+        py::ssize_t result = PyLong_AsSsize_t(index);
         Py_DECREF(index);
         if (result == -1 && PyErr_Occurred()) {
             throw py::error_already_set();
@@ -53,7 +53,7 @@ public:
         if (!start.is_none()) py_index(start);
         if (!stop.is_none()) py_index(stop);
         if (!step.is_none()) {
-            int64_t step_value = py_index(step);
+            py::ssize_t step_value = py_index(step);
             if (step_value == 0) {
                 throw py::value_error("slice step cannot be zero");
             }
@@ -67,8 +67,12 @@ public:
     py::object get_step() const { return args[2]; }
     py::tuple get_args() const { return args; }
 
-    py::slice raw() const {
-        return py::slice(get_start(), get_stop(), get_step());
+    py::object raw() const {
+        return py::reinterpret_steal<py::object>(PySlice_New(
+            get_start().ptr(),
+            get_stop().ptr(),
+            get_step().ptr()
+        ));
     }
 
     bool operator==(const SimpleSlicePybind11& other) const {
