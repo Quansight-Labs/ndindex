@@ -6,6 +6,8 @@ from simple_slice_cython import SimpleSliceCython
 from simple_slice_pybind11 import SimpleSlicePybind11
 from simple_slice_rust import SimpleSliceRust
 
+from IPython.core.magics.execution import _format_time
+
 slice_classes = [Slice, SimpleSlice, SimpleSliceCython, SimpleSlicePybind11, SimpleSliceRust]
 
 N_RUNS = 1_000_000
@@ -27,7 +29,7 @@ def benchmark_args(SliceClass, n=N_RUNS):
 
 def run_benchmark(name, func, SliceClass, *args):
     time = timeit.timeit(lambda: func(SliceClass, *args), number=1)
-    print(f"{name} - {SliceClass.__module__}: {time/N_RUNS} seconds")
+    print(f"{name} - {SliceClass.__module__}: {_format_time(time/N_RUNS)}")
 
 def main():
     print("Benchmarking SimpleSlice implementations")
