@@ -19,18 +19,15 @@ def time_slice(SliceClass):
 
 if __name__ == '__main__':
     times = [time_slice(Slice) for i in range(N_RUNS)]
-
-    simple_times = [time_slice(SimpleSlice) for i in range(N_RUNS)]
-
-    cython_times = [time_slice(SimpleSliceCython) for i in range(N_RUNS)]
-
     print(f"Slice times ({N_RUNS} runs):")
     print(timeit_format(times, 'Slice times'))
     print()
 
+    simple_times = [time_slice(SimpleSlice) for i in range(N_RUNS)]
     print(f"SimpleSlice times ({N_RUNS} runs):")
     print(timeit_format(simple_times, 'SimpleSlice times'))
     print()
 
+    cython_times = [time_slice(SimpleSliceCython) for i in range(N_RUNS)]
     print(f"SimpleSlice Cython times ({N_RUNS} runs):")
     print(timeit_format(cython_times, 'SimpleSlice Cython times'))
