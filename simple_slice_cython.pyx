@@ -50,14 +50,14 @@ cdef class SimpleSliceCython:
     cdef inline void _typecheck(self, object start, object stop, object step) except *:
         cdef object _start, _stop, _step
 
-        if isinstance(start, SimpleSlice):
-            self.args = (<SimpleSlice>start).args
-            self._start = (<SimpleSlice>start)._start
-            self._stop = (<SimpleSlice>start)._stop
-            self._step = (<SimpleSlice>start)._step
-            self._has_start = (<SimpleSlice>start)._has_start
-            self._has_stop = (<SimpleSlice>start)._has_stop
-            self._has_step = (<SimpleSlice>start)._has_step
+        if isinstance(start, SimpleSliceCython):
+            self.args = (<SimpleSliceCython>start).args
+            self._start = (<SimpleSliceCython>start)._start
+            self._stop = (<SimpleSliceCython>start)._stop
+            self._step = (<SimpleSliceCython>start)._step
+            self._has_start = (<SimpleSliceCython>start)._has_start
+            self._has_stop = (<SimpleSliceCython>start)._has_stop
+            self._has_step = (<SimpleSliceCython>start)._has_step
             return
 
         if isinstance(start, slice):
@@ -110,4 +110,4 @@ cdef class SimpleSliceCython:
         return self.args[2]
 
     def __repr__(self):
-        return f"SimpleSlice{self.args}"
+        return f"SimpleSliceCython{self.args}"
