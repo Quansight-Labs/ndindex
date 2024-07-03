@@ -1,7 +1,17 @@
-from setuptools import setup
+from setuptools import setup, Extension
 from Cython.Build import cythonize
+import numpy as np
+
+extensions = [
+    Extension(
+        "simple_slice_cython",
+        ["simple_slice_cython.pyx"],
+        include_dirs=[np.get_include()],
+    ),
+]
 
 setup(
-    ext_modules=cythonize("simple_slice_cython.pyx"),
-    zip_safe=False
+    name="simple_slice_extension",
+    ext_modules=cythonize(extensions),
+    install_requires=['numpy'],
 )

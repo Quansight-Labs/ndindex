@@ -4,9 +4,13 @@
 # cython: wraparound=False
 # cython: initializedcheck=False
 
+cimport numpy as cnp
+import numpy as np
 from cpython cimport PyObject
 from libc.stdint cimport int64_t
-import sys
+
+# Ensure NumPy is initialized
+cnp.import_array()
 
 cdef extern from "Python.h":
     int PyIndex_Check(object obj)
@@ -14,21 +18,10 @@ cdef extern from "Python.h":
     bint PyBool_Check(object obj)
     int64_t PyLong_AsLongLong(object obj) except? -1
 
-cdef bint _NUMPY_IMPORTED = False
-cdef type _NUMPY_BOOL = None
-
-cdef inline bint is_numpy_bool(object obj):
-    global _NUMPY_IMPORTED, _NUMPY_BOOL
-    if not _NUMPY_IMPORTED:
-        if 'numpy' in sys.modules:
-            _NUMPY_BOOL = sys.modules['numpy'].bool_
-        _NUMPY_IMPORTED = True
-    return _NUMPY_BOOL is not None and isinstance(obj, _NUMPY_BOOL)
-
 cdef inline int64_t cy_operator_index(object idx) except? -1:
     cdef object result
 
-    if PyBool_Check(idx) or is_numpy_bool(idx):
+    if PyBool_Check(idx) or isinstance(idx, np.bool_):
         raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
 
     if PyIndex_Check(idx):
@@ -36,6 +29,9 @@ cdef inline int64_t cy_operator_index(object idx) except? -1:
         if result is None:
             raise TypeError("'__index__' returned non-int")
         return PyLong_AsLongLong(result)
+
+    if isinstance(idx, np.integer):
+        return idx.item()
 
     result = PyNumber_Index(idx)
     if result is None:
