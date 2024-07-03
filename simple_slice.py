@@ -43,3 +43,19 @@ class SimpleSlice(ImmutableObject):
         args = (start, stop, step)
 
         return args
+
+    @property
+    def raw(self):
+        return slice(*self.args)
+
+    @property
+    def start(self):
+        return self.args[0]
+
+    @property
+    def stop(self):
+        return self.args[1]
+
+    @property
+    def step(self):
+        return self.args[2]
