@@ -148,3 +148,4 @@ dmypy.json
 .DS_Store
 
 *.c
+Cargo.lock
