@@ -1,33 +1,39 @@
+import timeit
 import random
-import time
-import sys
-
 from ndindex import Slice
-from simple_slice import SimpleSlice
-from simple_slice_cython import SimpleSlice as SimpleSliceCython
+from simple_slice import SimpleSlice as PySimpleSlice
+from simple_slice_cython import SimpleSlice as CySimpleSlice
 
-sys.path.append('/Users/aaronmeurer/Documents/mypython')
-from mypython.timeit import timeit_format
+N_RUNS = 1_000_000
 
-N_RUNS = 1000000
+def random_value():
+    return random.choice([None] + list(range(-100, -1)) + list(range(1, 100)))
 
-def time_slice(SliceClass):
-    x, y, z = random.choice([None, -1, 0, 1, 2]), random.choice([None, -1, 0, 1, 2]), random.choice([None, -1, 1, 2])
-    t = time.perf_counter()
-    SliceClass(x, y, z)
-    return time.perf_counter() - t
+def benchmark_creation(SliceClass):
+    SliceClass(random_value(), random_value(), random_value())
 
-if __name__ == '__main__':
-    times = [time_slice(Slice) for i in range(N_RUNS)]
-    print(f"Slice times ({N_RUNS} runs):")
-    print(timeit_format(times, 'Slice times'))
-    print()
+def benchmark_args(SliceClass,):
+    s = SliceClass(0, 100, 2)
+    start, stop, step = s.args
 
-    simple_times = [time_slice(SimpleSlice) for i in range(N_RUNS)]
-    print(f"SimpleSlice times ({N_RUNS} runs):")
-    print(timeit_format(simple_times, 'SimpleSlice times'))
-    print()
+def run_benchmark(name, func, SliceClass):
+    time = timeit.timeit(lambda: func(SliceClass), number=N_RUNS)
+    print(f"{name} - {SliceClass.__module__}: {time/N_RUNS} seconds")
 
-    cython_times = [time_slice(SimpleSliceCython) for i in range(N_RUNS)]
-    print(f"SimpleSlice Cython times ({N_RUNS} runs):")
-    print(timeit_format(cython_times, 'SimpleSlice Cython times'))
+def main():
+    print("Benchmarking SimpleSlice implementations")
+    print("----------------------------------------")
+
+    benchmarks = [
+        ("Object Creation", benchmark_creation),
+        ("Args Access", benchmark_args),
+    ]
+
+    for name, func in benchmarks:
+        print(f"\n{name}:")
+        run_benchmark(name, func, Slice)
+        run_benchmark(name, func, PySimpleSlice)
+        run_benchmark(name, func, CySimpleSlice)
+
+if __name__ == "__main__":
+    main()
