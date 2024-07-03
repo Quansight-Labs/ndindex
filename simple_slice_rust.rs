@@ -128,8 +128,13 @@ impl SimpleSliceRust {
     }
 }
 
+
 #[pymodule]
-fn simple_slice_rust(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn simple_slice_rust(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<SimpleSliceRust>()?;
+
+    let simple_slice_rust_type = m.getattr("SimpleSliceRust")?;
+    simple_slice_rust_type.setattr("__module__", "simple_slice_rust")?;
+
     Ok(())
 }
