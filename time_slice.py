@@ -3,6 +3,9 @@ import random
 from ndindex import Slice
 from simple_slice import SimpleSlice
 from simple_slice_cython import SimpleSliceCython
+from simple_slice_pybind11 import SimpleSlicePybind11
+
+slice_classes = [Slice, SimpleSlice, SimpleSliceCython, SimpleSlicePybind11]
 
 N_RUNS = 1_000_000
 
@@ -32,11 +35,11 @@ def main():
     inputs = generate_inputs()
 
     print("\nObject Creation:")
-    for SliceClass in [Slice, SimpleSlice, SimpleSliceCython]:
+    for SliceClass in slice_classes:
         run_benchmark("Creation", benchmark_creation, SliceClass, inputs)
 
     print("\nArgs Access:")
-    for SliceClass in [Slice, SimpleSlice, SimpleSliceCython]:
+    for SliceClass in slice_classes:
         run_benchmark("Access", benchmark_args, SliceClass)
 
 if __name__ == "__main__":

@@ -1,12 +1,14 @@
 from ndindex import Slice
 from simple_slice import SimpleSlice
 from simple_slice_cython import SimpleSliceCython
+from simple_slice_pybind11 import SimpleSlicePybind11
 
 from numpy import bool_
 
 from pytest import raises, mark
 
-@mark.parametrize('SliceClass', [Slice, SimpleSlice, SimpleSliceCython])
+@mark.parametrize('SliceClass',
+                  [Slice, SimpleSlice, SimpleSliceCython, SimpleSlicePybind11])
 def test_slice_args(SliceClass):
     # Test the behavior when not all three arguments are given
     # TODO: Incorporate this into the normal slice tests
