@@ -94,6 +94,10 @@ cdef class SimpleSlice:
         self.args = (_start, _stop, _step)
 
     @property
+    def raw(self):
+        return slice(self.start, self.stop, self.step)
+
+    @property
     def start(self):
         return self.args[0]
 
