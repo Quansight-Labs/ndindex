@@ -18,6 +18,21 @@ class ImmutableObject:
         args = self._typecheck(*args, **kwargs)
         self.args = args
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({', '.join(map(repr, self.args))})"
+
+    def __str__(self):
+        return f"{self.__class__.__name__}({', '.join(map(str, self.args))})"
+
+    def __eq__(self, other):
+        if not isinstance(other, ImmutableObject):
+            try:
+                other = self.__class__(other)
+            except TypeError:
+                return False
+
+        return self.args == other.args
+
 class SimpleSlice(ImmutableObject):
     __slots__ = ()
 
