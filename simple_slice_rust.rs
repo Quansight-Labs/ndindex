@@ -5,33 +5,37 @@ use pyo3::PyResult;
 
 #[pyclass(name = "SimpleSliceRust")]
 struct SimpleSliceRust {
-    args: (Option<PyObject>, Option<PyObject>, Option<PyObject>),
+    _start: isize,
+    _stop: isize,
+    _step: isize,
+    _has_start: bool,
+    _has_stop: bool,
+    _has_step: bool,
 }
 
 #[pymethods]
 impl SimpleSliceRust {
     #[new]
     #[pyo3(signature = (start, stop = None, step = None))]
-    fn new<'py>(py: Python<'py>, start: Option<&'py PyAny>, stop: Option<&'py PyAny>, step: Option<&'py PyAny>) -> PyResult<Self> {
+    fn new(py: Python<'_>, start: Option<&PyAny>, stop: Option<&PyAny>, step: Option<&PyAny>) -> PyResult<Self> {
         if let Some(start) = start {
             if let Ok(slice) = start.extract::<PyRef<SimpleSliceRust>>() {
                 return Ok(Self {
-                    args: (
-                        slice.args.0.clone(),
-                        slice.args.1.clone(),
-                        slice.args.2.clone(),
-                    ),
+                    _start: slice._start,
+                    _stop: slice._stop,
+                    _step: slice._step,
+                    _has_start: slice._has_start,
+                    _has_stop: slice._has_stop,
+                    _has_step: slice._has_step,
                 });
             }
 
             if let Ok(slice) = start.downcast::<PySlice>() {
-                return Ok(Self {
-                    args: (
-                        Some(slice.getattr("start")?.into_py(py)),
-                        Some(slice.getattr("stop")?.into_py(py)),
-                        Some(slice.getattr("step")?.into_py(py)),
-                    ),
-                });
+                return Self::new(py,
+                    Some(slice.getattr("start")?),
+                    Some(slice.getattr("stop")?),
+                    Some(slice.getattr("step")?),
+                );
             }
         }
 
@@ -41,10 +45,7 @@ impl SimpleSliceRust {
             std::mem::swap(&mut start, &mut stop);
         }
 
-        let py_index = |obj: &PyAny| -> PyResult<i64> {
-            if obj.is_none() {
-                return Err(PyTypeError::new_err("Cannot convert None to integer index"));
-            }
+        let py_index = |obj: &PyAny| -> PyResult<isize> {
             if obj.is_instance_of::<PyBool>() {
                 return Err(PyTypeError::new_err("'bool' object cannot be interpreted as an integer"));
             }
@@ -52,71 +53,71 @@ impl SimpleSliceRust {
                 return Err(PyTypeError::new_err("'numpy.bool_' object cannot be interpreted as an integer"));
             }
             match obj.call_method0("__index__") {
-                Ok(index_obj) => index_obj.extract::<i64>(),
+                Ok(index_obj) => index_obj.extract::<isize>(),
                 Err(_) => Err(PyTypeError::new_err(format!("'{}' object cannot be interpreted as an integer", obj.get_type().name()?)))
             }
         };
 
-        let check_and_convert = |obj: Option<&PyAny>| -> PyResult<Option<PyObject>> {
-            match obj {
-                Some(o) => {
-                    py_index(o)?;
-                    Ok(Some(o.into_py(py)))
-                },
-                None => Ok(None),
-            }
-        };
+        let _has_start = start.is_some();
+        let _has_stop = stop.is_some();
+        let _has_step = step.is_some();
 
-        let start_obj = check_and_convert(start)?;
-        let stop_obj = check_and_convert(stop)?;
-        let step_obj = if let Some(step) = step {
+        let _start = start.map(py_index).transpose()?.unwrap_or(0);
+        let _stop = stop.map(py_index).transpose()?.unwrap_or(0);
+        let _step = if let Some(step) = step {
             let step_value = py_index(step)?;
             if step_value == 0 {
                 return Err(PyValueError::new_err("slice step cannot be zero"));
             }
-            Some(step.into_py(py))
-        } else {
-            None
-        };
+            step_value
+        } else { 1 };
 
         Ok(Self {
-            args: (start_obj, stop_obj, step_obj),
+            _start,
+            _stop,
+            _step,
+            _has_start,
+            _has_stop,
+            _has_step,
         })
     }
 
     #[getter]
-    fn start<'py>(&self, py: Python<'py>) -> PyObject {
-        self.args.0.as_ref().map_or_else(|| py.None(), |obj| obj.clone_ref(py))
+    fn start(&self, py: Python<'_>) -> PyObject {
+        if self._has_start {
+            self._start.into_py(py)
+        } else {
+            py.None()
+        }
     }
 
     #[getter]
-    fn stop<'py>(&self, py: Python<'py>) -> PyObject {
-        self.args.1.as_ref().map_or_else(|| py.None(), |obj| obj.clone_ref(py))
+    fn stop(&self, py: Python<'_>) -> PyObject {
+        if self._has_stop {
+            self._stop.into_py(py)
+        } else {
+            py.None()
+        }
     }
 
     #[getter]
-    fn step<'py>(&self, py: Python<'py>) -> PyObject {
-        self.args.2.as_ref().map_or_else(|| py.None(), |obj| obj.clone_ref(py))
+    fn step(&self, py: Python<'_>) -> PyObject {
+        if self._has_step {
+            self._step.into_py(py)
+        } else {
+            py.None()
+        }
     }
 
     #[getter]
-    fn args<'py>(&self, py: Python<'py>) -> PyObject {
+    fn args(&self, py: Python<'_>) -> PyObject {
         PyTuple::new(py, &[self.start(py), self.stop(py), self.step(py)]).into()
     }
 
-    #[getter]
-    fn raw<'py>(&self, py: Python<'py>) -> PyResult<Py<PySlice>> {
-        let start = self.start(py).extract::<Option<isize>>(py)?;
-        let stop = self.stop(py).extract::<Option<isize>>(py)?;
-        let step = self.step(py).extract::<Option<isize>>(py)?;
-        Ok(PySlice::new(py, start.unwrap_or(0), stop.unwrap_or(-1), step.unwrap_or(1)).into())
-    }
-
-    fn __eq__(&self, other: &PyAny, py: Python<'_>) -> PyResult<bool> {
+    fn __eq__(&self, other: &PyAny) -> PyResult<bool> {
         if let Ok(other) = other.extract::<PyRef<SimpleSliceRust>>() {
-            let self_tuple = PyTuple::new(py, &[self.start(py), self.stop(py), self.step(py)]);
-            let other_tuple = PyTuple::new(py, &[other.start(py), other.stop(py), other.step(py)]);
-            self_tuple.eq(other_tuple)
+            Ok(self._start == other._start && self._stop == other._stop && self._step == other._step &&
+               self._has_start == other._has_start && self._has_stop == other._has_stop && self._has_step == other._has_step)
         } else {
             Ok(false)
         }
@@ -128,13 +129,8 @@ impl SimpleSliceRust {
     }
 }
 
-
 #[pymodule]
-fn simple_slice_rust(py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn simple_slice_rust(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<SimpleSliceRust>()?;
-
-    let simple_slice_rust_type = m.getattr("SimpleSliceRust")?;
-    simple_slice_rust_type.setattr("__module__", "simple_slice_rust")?;
-
     Ok(())
 }
