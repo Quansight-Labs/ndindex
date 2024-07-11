@@ -16,12 +16,22 @@ private:
     static constexpr uint8_t HAS_STEP = 4;
 
     static inline py::ssize_t py_index(const py::handle& obj) {
+        if (PyBool_Check(obj.ptr())) {
+            throw py::type_error("'bool' object cannot be interpreted as an integer");
+        }
+        if (PyObject_HasAttrString(obj.ptr(), "__class__")) {
+            PyObject* cls = PyObject_GetAttrString(obj.ptr(), "__class__");
+            PyObject* name = PyObject_GetAttrString(cls, "__name__");
+            if (strcmp(PyUnicode_AsUTF8(name), "bool_") == 0) {
+                Py_DECREF(cls);
+                Py_DECREF(name);
+                throw py::type_error("'numpy.bool_' object cannot be interpreted as an integer");
+            }
+            Py_DECREF(cls);
+            Py_DECREF(name);
+        }
         if (PyLong_Check(obj.ptr())) {
             return PyLong_AsSsize_t(obj.ptr());
-        }
-        if (PyBool_Check(obj.ptr()) || (PyObject_HasAttrString(obj.ptr(), "__class__") &&
-            strcmp(PyUnicode_AsUTF8(PyObject_GetAttrString(PyObject_GetAttrString(obj.ptr(), "__class__"), "__name__")), "bool_") == 0)) {
-            throw py::type_error("boolean value cannot be interpreted as an integer");
         }
         PyObject* index = PyNumber_Index(obj.ptr());
         if (!index) {
@@ -47,11 +57,10 @@ public:
         }
 
         if (PySlice_Check(start.ptr())) {
-            Py_ssize_t slice_start, slice_stop, slice_step;
-            PySlice_Unpack(start.ptr(), &slice_start, &slice_stop, &slice_step);
-            _start = slice_start;
-            _stop = slice_stop;
-            _step = slice_step;
+            PyObject *slice_start, *slice_stop, *slice_step;
+            if (PySlice_GetIndices(start.ptr(), PY_SSIZE_T_MAX, &_start, &_stop, &_step) < 0) {
+                throw py::error_already_set();
+            }
             _flags = HAS_START | HAS_STOP | HAS_STEP;
             return;
         }
