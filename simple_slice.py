@@ -5,7 +5,7 @@ import sys
 
 from simple_slice_cython import SimpleSliceCython
 from simple_slice_pybind11 import SimpleSlicePybind11
-from simple_slice_rust import SimpleSliceRust
+# from simple_slice_rust import SimpleSliceRust
 
 def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
     # from .integer import Integer

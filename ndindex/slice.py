@@ -64,29 +64,6 @@ class Slice(SimpleSliceCython, NDIndexBase):
     def __repr__(self):
         return f"{self.__class__.__name__}({', '.join(map(repr, self.args))})"
 
-    def _typecheck(self, start, stop=default, step=None):
-        if isinstance(start, Slice):
-            return start.args
-        if isinstance(start, slice):
-            start, stop, step = start.start, start.stop, start.step
-
-        if stop is default:
-            start, stop = None, start
-
-        if step == 0:
-            raise ValueError("slice step cannot be zero")
-
-        if start is not None:
-            start = operator_index(start)
-        if stop is not None:
-            stop = operator_index(stop)
-        if step is not None:
-            step = operator_index(step)
-
-        args = (start, stop, step)
-
-        return args
-
     def __hash__(self):
         # Slices are only hashable in Python 3.12+
         try:
