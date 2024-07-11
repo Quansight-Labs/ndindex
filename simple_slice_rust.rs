@@ -1,9 +1,9 @@
 use pyo3::prelude::*;
-use pyo3::types::{PySlice, PyTuple, PyBool};
+use pyo3::types::{PySlice, PyTuple, PyBool, PyDict, PyType};
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::PyResult;
 
-#[pyclass(name = "SimpleSliceRust")]
+#[pyclass(name = "SimpleSliceRust", subclass)]
 struct SimpleSliceRust {
     _start: isize,
     _stop: isize,
@@ -18,6 +18,78 @@ impl SimpleSliceRust {
     #[new]
     #[pyo3(signature = (start, stop = None, step = None))]
     fn new(py: Python<'_>, start: Option<&PyAny>, stop: Option<&PyAny>, step: Option<&PyAny>) -> PyResult<Self> {
+        Self::new_impl(py, start, stop, step)
+    }
+
+    #[classmethod]
+    fn __init_subclass__(_cls: &PyType, _kwargs: Option<&PyDict>) -> PyResult<()> {
+        Ok(())
+    }
+
+    fn __init__(slf: &PyCell<Self>, start: Option<&PyAny>, stop: Option<&PyAny>, step: Option<&PyAny>) -> PyResult<()> {
+        let new_instance = Self::new_impl(slf.py(), start, stop, step)?;
+        slf.replace(new_instance);
+        Ok(())
+    }
+
+    #[getter]
+    fn start(&self, py: Python<'_>) -> PyObject {
+        if self._has_start {
+            self._start.into_py(py)
+        } else {
+            py.None()
+        }
+    }
+
+    #[getter]
+    fn stop(&self, py: Python<'_>) -> PyObject {
+        if self._has_stop {
+            self._stop.into_py(py)
+        } else {
+            py.None()
+        }
+    }
+
+    #[getter]
+    fn step(&self, py: Python<'_>) -> PyObject {
+        if self._has_step {
+            self._step.into_py(py)
+        } else {
+            py.None()
+        }
+    }
+
+    #[getter]
+    fn args(&self, py: Python<'_>) -> PyObject {
+        PyTuple::new(py, &[self.start(py), self.stop(py), self.step(py)]).into()
+    }
+
+    // #[getter]
+    // fn raw(&self, py: Python<'_>) -> PyResult<Py<PySlice>> {
+    //     let start = if self._has_start { Some(self._start) } else { None };
+    //     let stop = if self._has_stop { Some(self._stop) } else { None };
+    //     let step = if self._has_step { Some(self._step) } else { None };
+    //
+    //     Ok(PySlice::new(py, start, stop, step).into())
+    // }
+
+    fn __eq__(&self, other: &PyAny) -> PyResult<bool> {
+        if let Ok(other) = other.extract::<PyRef<SimpleSliceRust>>() {
+            Ok(self._start == other._start && self._stop == other._stop && self._step == other._step &&
+               self._has_start == other._has_start && self._has_stop == other._has_stop && self._has_step == other._has_step)
+        } else {
+            Ok(false)
+        }
+    }
+
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        let args_repr = PyTuple::new(py, &[self.start(py), self.stop(py), self.step(py)]).repr()?.extract::<String>()?;
+        Ok(format!("SimpleSliceRust{}", args_repr))
+    }
+}
+
+impl SimpleSliceRust {
+    fn new_impl(py: Python<'_>, start: Option<&PyAny>, stop: Option<&PyAny>, step: Option<&PyAny>) -> PyResult<Self> {
         if let Some(start) = start {
             if let Ok(slice) = start.extract::<PyRef<SimpleSliceRust>>() {
                 return Ok(Self {
@@ -31,7 +103,7 @@ impl SimpleSliceRust {
             }
 
             if let Ok(slice) = start.downcast::<PySlice>() {
-                return Self::new(py,
+                return Self::new_impl(py,
                     Some(slice.getattr("start")?),
                     Some(slice.getattr("stop")?),
                     Some(slice.getattr("step")?),
@@ -80,52 +152,6 @@ impl SimpleSliceRust {
             _has_stop,
             _has_step,
         })
-    }
-
-    #[getter]
-    fn start(&self, py: Python<'_>) -> PyObject {
-        if self._has_start {
-            self._start.into_py(py)
-        } else {
-            py.None()
-        }
-    }
-
-    #[getter]
-    fn stop(&self, py: Python<'_>) -> PyObject {
-        if self._has_stop {
-            self._stop.into_py(py)
-        } else {
-            py.None()
-        }
-    }
-
-    #[getter]
-    fn step(&self, py: Python<'_>) -> PyObject {
-        if self._has_step {
-            self._step.into_py(py)
-        } else {
-            py.None()
-        }
-    }
-
-    #[getter]
-    fn args(&self, py: Python<'_>) -> PyObject {
-        PyTuple::new(py, &[self.start(py), self.stop(py), self.step(py)]).into()
-    }
-
-    fn __eq__(&self, other: &PyAny) -> PyResult<bool> {
-        if let Ok(other) = other.extract::<PyRef<SimpleSliceRust>>() {
-            Ok(self._start == other._start && self._stop == other._stop && self._step == other._step &&
-               self._has_start == other._has_start && self._has_stop == other._has_stop && self._has_step == other._has_step)
-        } else {
-            Ok(false)
-        }
-    }
-
-    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
-        let args_repr = PyTuple::new(py, &[self.start(py), self.stop(py), self.step(py)]).repr()?.extract::<String>()?;
-        Ok(format!("SimpleSliceRust{}", args_repr))
     }
 }
 

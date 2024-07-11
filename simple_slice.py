@@ -5,7 +5,7 @@ import sys
 
 from simple_slice_cython import SimpleSliceCython
 from simple_slice_pybind11 import SimpleSlicePybind11
-# from simple_slice_rust import SimpleSliceRust
+from simple_slice_rust import SimpleSliceRust
 
 def asshape(shape, axis=None, *, allow_int=True, allow_negative=False):
     # from .integer import Integer
@@ -127,8 +127,8 @@ class SimpleSliceCythonSubclass(SimpleSliceCython):
 class SimpleSlicePybind11Subclass(SimpleSlicePybind11):
     pass
 
-# class SimpleSliceRustSubclass(SimpleSliceRust):
-#     pass
+class SimpleSliceRustSubclass(SimpleSliceRust):
+    pass
 
 def reduce(self, shape=None, *, axis=0, negative_int=False):
     start, stop, step = self.args
@@ -291,3 +291,4 @@ SimpleSlice.reduce = reduce
 SimpleSliceSubclass.reduce = reduce
 SimpleSliceCythonSubclass.reduce = reduce
 SimpleSlicePybind11Subclass.reduce = reduce
+SimpleSliceRustSubclass.reduce = reduce

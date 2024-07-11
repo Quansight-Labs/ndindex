@@ -1,5 +1,5 @@
 from ndindex import Slice
-from simple_slice import SimpleSlice, SimpleSliceSubclass, SimpleSliceCythonSubclass, SimpleSlicePybind11Subclass
+from simple_slice import SimpleSlice, SimpleSliceSubclass, SimpleSliceCythonSubclass, SimpleSlicePybind11Subclass, SimpleSliceRustSubclass
 from simple_slice_cython import SimpleSliceCython
 from simple_slice_pybind11 import SimpleSlicePybind11
 from simple_slice_rust import SimpleSliceRust
@@ -12,7 +12,9 @@ from pytest import raises, mark
                   [Slice, SimpleSlice, SimpleSliceCython, SimpleSlicePybind11,
                    SimpleSliceRust, SimpleSliceSubclass,
                    SimpleSliceCythonSubclass,
-                     SimpleSlicePybind11Subclass])
+                     SimpleSlicePybind11Subclass, SimpleSliceRustSubclass
+
+])
 def test_slice_args(SliceClass):
     # Test the behavior when not all three arguments are given
     # TODO: Incorporate this into the normal slice tests

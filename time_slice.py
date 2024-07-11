@@ -2,7 +2,7 @@ import timeit
 import random
 from ndindex import Slice
 from simple_slice import (SimpleSlice, SimpleSliceSubclass, SimpleSliceCythonSubclass,
-                          # SimpleSliceRustSubclass,
+                          SimpleSliceRustSubclass,
                           SimpleSlicePybind11Subclass)
 
 from simple_slice_cython import SimpleSliceCython
@@ -16,7 +16,7 @@ slice_classes = [Slice,
                  SimpleSlice, SimpleSliceSubclass,
                  SimpleSliceCython, SimpleSliceCythonSubclass,
                  SimpleSlicePybind11, SimpleSlicePybind11Subclass,
-                 SimpleSliceRust, # SimpleSliceRustSubclass,
+                 SimpleSliceRust, SimpleSliceRustSubclass,
                  ]
 slice_classes_without_reduce = [SimpleSliceCython, SimpleSlicePybind11,
                                 SimpleSliceRust]
