@@ -1,4 +1,4 @@
-from .ndindex import NDIndex, operator_index
+from .ndindex import NDIndexBase, operator_index
 from .subindex_helpers import subindex_slice
 from .shapetools import asshape
 
@@ -12,7 +12,9 @@ class default:
     """
     pass
 
-class Slice(NDIndex):
+from simple_slice_cython import SimpleSliceCython
+
+class Slice(SimpleSliceCython, NDIndexBase):
     """
     Represents a slice on an axis of an nd-array.
 
@@ -59,6 +61,9 @@ class Slice(NDIndex):
     """
     __slots__ = ()
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({', '.join(map(repr, self.args))})"
+
     def _typecheck(self, start, stop=default, step=None):
         if isinstance(start, Slice):
             return start.args
@@ -88,37 +93,6 @@ class Slice(NDIndex):
             return hash(self.raw)
         except TypeError: # pragma: no cover
             return hash(self.args)
-
-    @property
-    def raw(self):
-        return slice(*self.args)
-
-    @property
-    def start(self):
-        """
-        The start value of the slice.
-
-        Note that this may be an integer or `None`.
-        """
-        return self.args[0]
-
-    @property
-    def stop(self):
-        """
-        The stop of the slice.
-
-        Note that this may be an integer or `None`.
-        """
-        return self.args[1]
-
-    @property
-    def step(self):
-        """
-        The step of the slice.
-
-        Note that this may be a nonzero integer or `None`.
-        """
-        return self.args[2]
 
     def __len__(self):
         """
