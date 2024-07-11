@@ -2,17 +2,20 @@
 #include <pybind11/operators.h>
 #include <tuple>
 #include <stdexcept>
+#include <limits>
 
 namespace py = pybind11;
 
 class SimpleSlicePybind11 {
 private:
-    py::tuple args;
+    py::ssize_t _start;
+    py::ssize_t _stop;
+    py::ssize_t _step;
+    bool _has_start;
+    bool _has_stop;
+    bool _has_step;
 
     static py::ssize_t py_index(const py::handle& obj) {
-        if (obj.is_none()) {
-            throw py::type_error("Cannot convert None to integer index");
-        }
         if (py::isinstance<py::bool_>(obj)) {
             throw py::type_error("'bool' object cannot be interpreted as an integer");
         }
@@ -35,13 +38,19 @@ private:
 public:
     SimpleSlicePybind11(py::object start, py::object stop = py::none(), py::object step = py::none()) {
         if (py::isinstance<SimpleSlicePybind11>(start)) {
-            args = py::cast<SimpleSlicePybind11&>(start).args;
+            auto& other = start.cast<SimpleSlicePybind11&>();
+            _start = other._start;
+            _stop = other._stop;
+            _step = other._step;
+            _has_start = other._has_start;
+            _has_stop = other._has_stop;
+            _has_step = other._has_step;
             return;
         }
 
         if (py::isinstance<py::slice>(start)) {
             py::slice s = start.cast<py::slice>();
-            args = py::make_tuple(s.attr("start"), s.attr("stop"), s.attr("step"));
+            *this = SimpleSlicePybind11(s.attr("start"), s.attr("stop"), s.attr("step"));
             return;
         }
 
@@ -49,23 +58,31 @@ public:
             std::swap(start, stop);
         }
 
-        // Type checking
-        if (!start.is_none()) py_index(start);
-        if (!stop.is_none()) py_index(stop);
-        if (!step.is_none()) {
-            py::ssize_t step_value = py_index(step);
-            if (step_value == 0) {
-                throw py::value_error("slice step cannot be zero");
-            }
-        }
+        _has_start = !start.is_none();
+        _has_stop = !stop.is_none();
+        _has_step = !step.is_none();
 
-        args = py::make_tuple(start, stop, step);
+        _start = _has_start ? py_index(start) : 0;
+        _stop = _has_stop ? py_index(stop) : 0;
+        _step = _has_step ? py_index(step) : 1;
+
+        if (_has_step && _step == 0) {
+            throw py::value_error("slice step cannot be zero");
+        }
     }
 
-    py::object get_start() const { return args[0]; }
-    py::object get_stop() const { return args[1]; }
-    py::object get_step() const { return args[2]; }
-    py::tuple get_args() const { return args; }
+    py::object get_start() const { 
+        return _has_start ? py::cast(_start) : py::none();
+    }
+    py::object get_stop() const { 
+        return _has_stop ? py::cast(_stop) : py::none();
+    }
+    py::object get_step() const { 
+        return _has_step ? py::cast(_step) : py::none();
+    }
+    py::tuple get_args() const { 
+        return py::make_tuple(get_start(), get_stop(), get_step());
+    }
 
     py::object raw() const {
         return py::reinterpret_steal<py::object>(PySlice_New(
@@ -76,7 +93,8 @@ public:
     }
 
     bool operator==(const SimpleSlicePybind11& other) const {
-        return args.equal(other.args);
+        return _start == other._start && _stop == other._stop && _step == other._step &&
+               _has_start == other._has_start && _has_stop == other._has_stop && _has_step == other._has_step;
     }
 };
 
