@@ -126,3 +126,6 @@ cdef class SimpleSliceCython:
         if not isinstance(other, SimpleSliceCython):
             return False
         return self.args == other.args
+
+    def __ne__(self, other):
+        return not self == other
