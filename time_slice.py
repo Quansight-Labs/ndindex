@@ -12,10 +12,11 @@ from simple_slice_rust import SimpleSliceRust
 from IPython.core.magics.execution import _format_time
 
 
-slice_classes = [Slice, SimpleSlice, SimpleSliceSubclass, SimpleSliceCython,
-                 SimpleSlicePybind11, SimpleSliceRust,
-                 SimpleSliceCythonSubclass, SimpleSlicePybind11Subclass,
-                 # SimpleSliceRustSubclass,
+slice_classes = [Slice,
+                 SimpleSlice, SimpleSliceSubclass,
+                 SimpleSliceCython, SimpleSliceCythonSubclass,
+                 SimpleSlicePybind11, SimpleSlicePybind11Subclass,
+                 SimpleSliceRust, # SimpleSliceRustSubclass,
                  ]
 slice_classes_without_reduce = [SimpleSliceCython, SimpleSlicePybind11,
                                 SimpleSliceRust]
@@ -49,7 +50,7 @@ def bench_reduce_shape(SliceClass, inputs):
 
 def run_benchmark(name, func, SliceClass, *args):
     time = timeit.timeit(lambda: func(SliceClass, *args), number=1)
-    print(f"{name} - {SliceClass.__name__}: {_format_time(time/N_RUNS)}")
+    print(f"{SliceClass.__name__:<30}: {_format_time(time/N_RUNS)}")
 
 def main():
     print("Benchmarking SimpleSlice implementations")
