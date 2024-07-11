@@ -1,14 +1,26 @@
 import timeit
 import random
 from ndindex import Slice
-from simple_slice import SimpleSlice
+from simple_slice import (SimpleSlice, SimpleSliceSubclass, SimpleSliceCythonSubclass,
+                          # SimpleSliceRustSubclass,
+                          SimpleSlicePybind11Subclass)
+
 from simple_slice_cython import SimpleSliceCython
 from simple_slice_pybind11 import SimpleSlicePybind11
 from simple_slice_rust import SimpleSliceRust
 
 from IPython.core.magics.execution import _format_time
 
-slice_classes = [Slice, SimpleSlice, SimpleSliceCython, SimpleSlicePybind11, SimpleSliceRust]
+
+slice_classes_with_reduce = [Slice, SimpleSlice, SimpleSliceSubclass,
+                             SimpleSliceCythonSubclass,
+                             SimpleSlicePybind11Subclass,
+                             # SimpleSliceRustSubclass,
+                             ]
+slice_classes_without_reduce = [SimpleSliceCython, SimpleSlicePybind11,
+                                SimpleSliceRust]
+
+slice_classes = slice_classes_with_reduce + slice_classes_without_reduce
 
 N_RUNS = 1_000_000
 
@@ -27,9 +39,19 @@ def benchmark_args(SliceClass, n=N_RUNS):
     for _ in range(n):
         start, stop, step = s.args
 
+def bench_reduce(SliceClass, inputs):
+    for start, stop, step in inputs:
+        s = SliceClass(start, stop, step)
+        s.reduce()
+
+def bench_reduce_shape(SliceClass, inputs):
+    for start, stop, step in inputs:
+        s = SliceClass(start, stop, step)
+        s.reduce((150,))
+
 def run_benchmark(name, func, SliceClass, *args):
     time = timeit.timeit(lambda: func(SliceClass, *args), number=1)
-    print(f"{name} - {SliceClass.__module__}: {_format_time(time/N_RUNS)}")
+    print(f"{name} - {SliceClass.__name__}: {_format_time(time/N_RUNS)}")
 
 def main():
     print("Benchmarking SimpleSlice implementations")
@@ -44,6 +66,14 @@ def main():
     print("\nArgs Access:")
     for SliceClass in slice_classes:
         run_benchmark("Access", benchmark_args, SliceClass)
+
+    print("\nReduce:")
+    for SliceClass in slice_classes_with_reduce:
+        run_benchmark("Reduce", bench_reduce, SliceClass, inputs)
+
+    print("\nReduce with shape:")
+    for SliceClass in slice_classes_with_reduce:
+        run_benchmark("Reduce Shape", bench_reduce_shape, SliceClass, inputs)
 
 if __name__ == "__main__":
     main()
