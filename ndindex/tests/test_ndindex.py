@@ -28,20 +28,25 @@ def test_eq(idx):
     else:
         assert new.raw == index.raw
 
-    assert (new == index)
-    assert (new.raw == index)
-    assert (new == index.raw)
-    assert (index == new)
-    assert (index.raw == new)
-    assert (index == new.raw)
+    def assert_equal(a, b):
+        assert a == b
+        assert b == a
+        assert not (a != b)
+        assert not (b != a)
 
-    assert (index.raw == index)
+    def assert_not_equal(a, b):
+        assert a != b
+        assert b != a
+        assert not (a == b)
+        assert not (b == a)
+
+    assert_equal(new, index)
+    assert_equal(new.raw, index)
+    assert_equal(new, index.raw)
+
+    assert_equal(index.raw, index)
     assert hash(new) == hash(index)
-    assert (index == index.raw)
-    assert not (index == 'a')
-    assert not ('a' == index)
-    assert (index != 'a')
-    assert ('a' != index)
+    assert_not_equal(index, 'a')
 
     try:
         h = hash(idx)
