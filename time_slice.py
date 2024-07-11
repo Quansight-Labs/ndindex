@@ -12,15 +12,13 @@ from simple_slice_rust import SimpleSliceRust
 from IPython.core.magics.execution import _format_time
 
 
-slice_classes_with_reduce = [Slice, SimpleSlice, SimpleSliceSubclass,
-                             SimpleSliceCythonSubclass,
-                             SimpleSlicePybind11Subclass,
-                             # SimpleSliceRustSubclass,
-                             ]
+slice_classes = [Slice, SimpleSlice, SimpleSliceSubclass, SimpleSliceCython,
+                 SimpleSlicePybind11, SimpleSliceRust,
+                 SimpleSliceCythonSubclass, SimpleSlicePybind11Subclass,
+                 # SimpleSliceRustSubclass,
+                 ]
 slice_classes_without_reduce = [SimpleSliceCython, SimpleSlicePybind11,
                                 SimpleSliceRust]
-
-slice_classes = slice_classes_with_reduce + slice_classes_without_reduce
 
 N_RUNS = 1_000_000
 
@@ -68,11 +66,15 @@ def main():
         run_benchmark("Access", benchmark_args, SliceClass)
 
     print("\nReduce:")
-    for SliceClass in slice_classes_with_reduce:
+    for SliceClass in slice_classes:
+        if SliceClass in slice_classes_without_reduce:
+            continue
         run_benchmark("Reduce", bench_reduce, SliceClass, inputs)
 
     print("\nReduce with shape:")
-    for SliceClass in slice_classes_with_reduce:
+    for SliceClass in slice_classes:
+        if SliceClass in slice_classes_without_reduce:
+            continue
         run_benchmark("Reduce Shape", bench_reduce_shape, SliceClass, inputs)
 
 if __name__ == "__main__":
