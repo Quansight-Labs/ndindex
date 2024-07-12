@@ -41,10 +41,71 @@ private:
 
 public:
     SimpleSlicePybind11(py::handle start, py::handle stop = py::none(), py::handle step = py::none()) : _flags(0) {
-        // ... [constructor implementation remains the same]
+        if (py::isinstance<SimpleSlicePybind11>(start)) {
+            auto& other = start.cast<SimpleSlicePybind11&>();
+            _start = other._start;
+            _stop = other._stop;
+            _step = other._step;
+            _flags = other._flags;
+            return;
+        }
+
+        if (PySlice_Check(start.ptr())) {
+            PyObject *slice_start, *slice_stop, *slice_step;
+            PySlice_GetIndices(start.ptr(), PY_SSIZE_T_MAX, &_start, &_stop, &_step);
+            _flags = HAS_START | HAS_STOP | HAS_STEP;
+            return;
+        }
+
+        if (stop.is_none() && !start.is_none()) {
+            std::swap(start, stop);
+        }
+
+        if (!start.is_none()) {
+            _start = py_index(start);
+            _flags |= HAS_START;
+        }
+
+        if (!stop.is_none()) {
+            _stop = py_index(stop);
+            _flags |= HAS_STOP;
+        }
+
+        if (!step.is_none()) {
+            _step = py_index(step);
+            if (_step == 0) {
+                throw py::value_error("slice step cannot be zero");
+            }
+            _flags |= HAS_STEP;
+        } else {
+            _step = 1;
+        }
     }
 
-    // ... [other public methods remain the same]
+    py::object get_start() const { 
+        return _flags & HAS_START ? py::cast(_start) : py::none();
+    }
+    py::object get_stop() const { 
+        return _flags & HAS_STOP ? py::cast(_stop) : py::none();
+    }
+    py::object get_step() const { 
+        return _flags & HAS_STEP ? py::cast(_step) : py::none();
+    }
+    py::tuple get_args() const { 
+        return py::make_tuple(get_start(), get_stop(), get_step());
+    }
+
+    py::object raw() const {
+        return py::reinterpret_steal<py::object>(PySlice_New(
+            (_flags & HAS_START) ? PyLong_FromSsize_t(_start) : Py_None,
+            (_flags & HAS_STOP) ? PyLong_FromSsize_t(_stop) : Py_None,
+            (_flags & HAS_STEP) ? PyLong_FromSsize_t(_step) : Py_None
+        ));
+    }
+
+    bool operator==(const SimpleSlicePybind11& other) const {
+        return _start == other._start && _stop == other._stop && _step == other._step && _flags == other._flags;
+    }
 
     static void set_numpy_bool_type(PyObject* type) {
         numpy_bool_type = (PyTypeObject*)type;
