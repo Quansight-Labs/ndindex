@@ -17,6 +17,8 @@ private:
 
     static PyTypeObject* numpy_bool_type;
 
+    py::tuple _args;
+
     static inline py::ssize_t py_index(const py::handle& obj) {
         if (PyBool_Check(obj.ptr())) {
             throw py::type_error("'bool' object cannot be interpreted as an integer");
@@ -40,13 +42,15 @@ private:
     }
 
 public:
-    SimpleSlicePybind11(py::handle start, py::handle stop = py::none(), py::handle step = py::none()) : _flags(0) {
+    SimpleSlicePybind11(py::handle start, py::handle stop = py::none(), py::handle step = py::none())
+        : _flags(0) {
         if (py::isinstance<SimpleSlicePybind11>(start)) {
             auto& other = start.cast<SimpleSlicePybind11&>();
             _start = other._start;
             _stop = other._stop;
             _step = other._step;
             _flags = other._flags;
+            _args = other._args;
             return;
         }
 
@@ -80,19 +84,21 @@ public:
         } else {
             _step = 1;
         }
+
+        _args = py::make_tuple(start, stop, step);
     }
 
-    py::object get_start() const { 
+    py::object get_start() const {
         return _flags & HAS_START ? py::cast(_start) : py::none();
     }
-    py::object get_stop() const { 
+    py::object get_stop() const {
         return _flags & HAS_STOP ? py::cast(_stop) : py::none();
     }
-    py::object get_step() const { 
+    py::object get_step() const {
         return _flags & HAS_STEP ? py::cast(_step) : py::none();
     }
-    py::tuple get_args() const { 
-        return py::make_tuple(get_start(), get_stop(), get_step());
+    py::tuple get_args() const {
+        return _args;
     }
 
     py::object raw() const {
