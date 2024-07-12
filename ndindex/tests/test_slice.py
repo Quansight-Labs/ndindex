@@ -36,6 +36,34 @@ def test_slice_args():
     assert S.raw == slice(0, 1, 2)
     assert S.args == (S.start, S.stop, S.step)
 
+    class HasIndex:
+        def __init__(self, x):
+            self.x = x
+
+        def __index__(self):
+            return self.x
+
+    S = Slice(HasIndex(0), HasIndex(1), HasIndex(2))
+    assert S == Slice(0, 1, 2)
+    assert S.args == (0, 1, 2)
+    assert type(S.start) is int
+    assert type(S.stop) is int
+    assert type(S.step) is int
+    assert type(S.args[0]) is int
+    assert type(S.args[1]) is int
+    assert type(S.args[2]) is int
+
+    class HasInt:
+        def __init__(self, x):
+            self.x = x
+
+        def __int__(self):
+            return self.x
+
+    raises(TypeError, lambda: Slice(HasInt(0), None))
+    raises(TypeError, lambda: Slice(None, HasInt(0)))
+    raises(TypeError, lambda: Slice(None, None, HasInt(0)))
+
 def test_slice_exhaustive():
     for n in range(100):
         a = arange(n)
