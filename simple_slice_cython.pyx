@@ -9,7 +9,7 @@ from libc.stdint cimport int64_t
 import sys
 
 cdef extern from "Python.h":
-    int PyIndex_Check(object obj)
+    Py_ssize_t PyNumber_AsSsize_t(object obj, object exc) except? -1
     object PyNumber_Index(object obj)
     bint PyBool_Check(object obj)
     int64_t PyLong_AsLongLong(object obj) except? -1
@@ -31,16 +31,7 @@ cdef inline int64_t cy_operator_index(object idx) except? -1:
     if PyBool_Check(idx) or is_numpy_bool(idx):
         raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
 
-    if PyIndex_Check(idx):
-        result = PyNumber_Index(idx)
-        if result is None:
-            raise TypeError("'__index__' returned non-int")
-        return PyLong_AsLongLong(result)
-
-    result = PyNumber_Index(idx)
-    if result is None:
-        raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
-    return PyLong_AsLongLong(result)
+    return PyNumber_AsSsize_t(idx, IndexError)
 
 cdef class default:
     pass
