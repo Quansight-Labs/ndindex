@@ -27,16 +27,16 @@ def test_slice_args(SliceClass):
     raises(TypeError, lambda: SliceClass(bool_(True)))
 
     S = SliceClass(1)
-    assert S == SliceClass(S) == SliceClass(None, 1) == SliceClass(None, 1, None) == SliceClass(None, 1, None)
+    assert S == SliceClass(S) == SliceClass(slice(1)) == SliceClass(None, 1) == SliceClass(None, 1, None) == SliceClass(None, 1, None)
     # assert S.raw == slice(None, 1, None)
     assert S.args == (S.start, S.stop, S.step)
 
     S = SliceClass(0, 1)
-    assert S == SliceClass(S) == SliceClass(0, 1, None)
+    assert S == SliceClass(S) == SliceClass(slice(0, 1)) == SliceClass(0, 1, None)
     # assert S.raw == slice(0, 1, None)
     assert S.args == (S.start, S.stop, S.step)
 
     S = SliceClass(0, 1, 2)
-    assert S == SliceClass(S)
+    assert S == SliceClass(S) == SliceClass(slice(0, 1, 2))
     # assert S.raw == slice(0, 1, 2)
     assert S.args == (S.start, S.stop, S.step)
