@@ -7,42 +7,9 @@ import versioneer
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-def check_cython():
-    """
-    Check to see if Cython is installed and able to compile extensions (which
-    requires a C compiler and the Python headers to be installed).
-    Return True on success, False on failure.
-    """
-    argv_org = list(sys.argv)
-    try:
-        from Cython.Build import cythonize
-        sys.argv = argv_org[:1] + ["build_ext"]
-        setuptools.setup(name="foo", version="1.0.0",
-                         ext_modules=cythonize(
-                             ["ndindex/__init__.py"],
-                             language_level="3"))
-    except:
-        return False
-    finally:
-        sys.argv = argv_org
-    return True
-
-CYTHONIZE_NDINDEX = os.getenv("CYTHONIZE_NDINDEX")
-if CYTHONIZE_NDINDEX is None:
-    use_cython = check_cython()
-else:
-    try:
-        use_cython = bool(int(CYTHONIZE_NDINDEX))
-    except ValueError:
-        sys.exit("Acceptable values for CYTHONIZE_NDINDEX are '0' and '1', "
-                 "got: %r" % CYTHONIZE_NDINDEX)
-
-if use_cython:
-    from Cython.Build import cythonize
-    ext_modules = cythonize(["ndindex/*.py"],
-                            language_level="3")
-else:
-    ext_modules = []
+from Cython.Build import cythonize
+ext_modules = cythonize(["ndindex/*.pyx"],
+                        language_level="3")
 
 setuptools.setup(
     name="ndindex",
@@ -72,5 +39,3 @@ setuptools.setup(
     ],
     python_requires='>=3.8',
 )
-
-print("CYTHONIZE_NDINDEX: %r" % CYTHONIZE_NDINDEX)
