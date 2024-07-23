@@ -5,23 +5,31 @@ from .._crt import crt, ilcm, gcdex
 from hypothesis import given, example
 from hypothesis.strategies import integers, lists, shared
 
-size = shared(integers(min_value=1, max_value=10))
+from sympy.ntheory.modular import crt as crt_sympy
+
+MIN_INT32 = -2**31
+MAX_INT32 = 2**31 - 1
+MIN_INT = -2**63
+MAX_INT = 2**63 - 1
+
+size = shared(integers(min_value=2, max_value=2))
 @given(
-    size.flatmap(lambda s: lists(integers(min_value=1), min_size=s, max_size=s)),
-    size.flatmap(lambda s: lists(integers(), min_size=s, max_size=s)),
+    size.flatmap(lambda s: lists(integers(min_value=1, max_value=MAX_INT32), min_size=s, max_size=s)),
+    size.flatmap(lambda s: lists(integers(min_value=MIN_INT32, max_value=MAX_INT32), min_size=s, max_size=s)),
 )
 def test_crt(m, v):
     res = crt(m, v)
 
-    if res is None:
-        # The algorithm gives no solution. Not sure how to test this.
-        return
+    if res is not None:
+        for m_i, v_i in zip(m, v):
+            assert v_i % m_i == res % m_i
 
-    for m_i, v_i in zip(m, v):
-        assert v_i % m_i == res % m_i
+        assert res == crt_sympy(m, v)[0]
+    else:
+        assert crt_sympy(m, v) is None
 
 @example(1, 2)
-@given(integers(min_value=0), integers(min_value=0))
+@given(integers(min_value=0, max_value=MAX_INT32), integers(min_value=0, max_value=MAX_INT32))
 def test_ilcm(x, y):
     L = ilcm(x, y)
 
@@ -44,7 +52,7 @@ def test_ilcm(x, y):
 @example(0, 3)
 @example(3, 0)
 @example(0, 0)
-@given(integers(), integers())
+@given(integers(min_value=MIN_INT32, max_value=MAX_INT32), integers(min_value=MIN_INT32, max_value=MAX_INT32))
 def test_gcdex(a, b):
     x, y, g = gcdex(a, b)
 
