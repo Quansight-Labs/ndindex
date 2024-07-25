@@ -113,3 +113,5 @@ def subindex_slice(s_start, s_stop, s_step, i_start, i_stop, i_step):
     step = lcm//i_step # = s_step//igcd(s_step, i_step)
 
     return (start, stop, step)
+
+from .subindex_helpers_cython import ceiling

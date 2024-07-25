@@ -3,6 +3,7 @@ import sys
 import setuptools
 import versioneer
 
+import numpy as np
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -22,6 +23,7 @@ setuptools.setup(
     url="https://quansight-labs.github.io/ndindex/",
     packages=['ndindex', 'ndindex.tests'],
     ext_modules=ext_modules,
+    include_dirs=[np.get_include()],
     license="MIT",
     # NumPy is only required when using array indices
     extras_require={

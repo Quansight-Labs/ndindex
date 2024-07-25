@@ -89,3 +89,28 @@ cpdef long long ilcm(long a, long b):
     if a == 0 or b == 0:
         return 0
     return a // gcd(a, b) * b
+
+
+cdef long long _crt2(long long m1, long long m2, long long v1, long long v2,
+                    long long *n):
+    p = m1*m2
+    v = 0
+
+    e = p // m1
+    s, _, _ = gcdex(e, 1)
+    v += e*(v1*s % m1)
+
+    e = p // m2
+    s, _, _ = gcdex(e, m2)
+    v += e*(v2*s % m2)
+    n[0] = v % p
+
+    if v1 % m1 != n[0] % m1:
+        result = _solve_congruence([v1, v2], [m1, m2], n)
+        return result
+
+    if v2 % m2 != n[0] % m2:
+        result = _solve_congruence([v1, v2], [m1, m2], n)
+        return result
+
+    return 0
