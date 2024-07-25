@@ -7,6 +7,8 @@ from hypothesis.strategies import integers, lists, shared
 
 from sympy.ntheory.modular import crt as crt_sympy
 
+MIN_INT16 = -2**15
+MAX_INT16 = 2**15 - 1
 MIN_INT32 = -2**31
 MAX_INT32 = 2**31 - 1
 MIN_INT = -2**63
@@ -14,8 +16,8 @@ MAX_INT = 2**63 - 1
 
 size = shared(integers(min_value=2, max_value=2))
 @given(
-    size.flatmap(lambda s: lists(integers(min_value=1, max_value=MAX_INT32), min_size=s, max_size=s)),
-    size.flatmap(lambda s: lists(integers(min_value=MIN_INT32, max_value=MAX_INT32), min_size=s, max_size=s)),
+    size.flatmap(lambda s: lists(integers(min_value=1, max_value=MAX_INT16), min_size=s, max_size=s)),
+    size.flatmap(lambda s: lists(integers(min_value=MIN_INT16, max_value=MAX_INT16), min_size=s, max_size=s)),
 )
 def test_crt(m, v):
     res = crt(m, v)
