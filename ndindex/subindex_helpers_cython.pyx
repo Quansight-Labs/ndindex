@@ -26,17 +26,14 @@ cdef inline _where(cond, x, y):
     """
     return x if cond else y
 
-cdef packed struct slice_t:
-    np.int64_t x, y, z
-
 @cython.ufunc
-cdef np.ndarray[slice_t] subindex_slice(
-    cython.integral s_start,
-    cython.integral s_stop,
-    cython.integral s_step,
-    cython.integral i_start,
-    cython.integral i_stop,
-    cython.integral i_step):
+cdef (long, long, long) subindex_slice(
+    long s_start,
+    long s_stop,
+    long s_step,
+    long i_start,
+    long i_stop,
+    long i_step):
 
     cdef long long common
     # Chinese Remainder Theorem. We are looking for a solution to
