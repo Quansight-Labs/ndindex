@@ -269,5 +269,3 @@ def ilcm(a, b):
     if 0 in [a, b]:
         return 0
     return a // gcd(a, b) * b # since gcd(a,b) | a
-
-from ._crt_cython import ilcm, gcdex, solve_congruence
