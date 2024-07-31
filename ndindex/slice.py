@@ -276,6 +276,9 @@ class Slice(SimpleSliceCython, NDIndexBase):
         .BooleanArray.reduce
 
         """
+        if self._reduced and shape is None:
+            return self
+
         start, stop, step = self.args
 
         # Canonicalize with no shape
@@ -361,7 +364,7 @@ class Slice(SimpleSliceCython, NDIndexBase):
                 elif 0 <= start < -step:
                     step = -start - 1
         if shape is None:
-            return type(self)(start, stop, step)
+            return type(self)(start, stop, step, _reduced=True)
 
         # Further canonicalize with an explicit array shape
 
@@ -430,7 +433,7 @@ class Slice(SimpleSliceCython, NDIndexBase):
                 # first element. If that element isn't actually indexed, we
                 # prefer a nonnegative stop. Otherwise, stop will be -size - 1.
                 stop = start % -step - 1
-        return self.__class__(start, stop, step)
+        return self.__class__(start, stop, step, _reduced=True)
 
     def isvalid(self, shape):
         # The docstring for this method is on the NDIndex base class

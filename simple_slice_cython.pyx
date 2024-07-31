@@ -44,11 +44,12 @@ cdef class SimpleSliceCython:
     cdef bint _has_start
     cdef bint _has_stop
     cdef bint _has_step
+    cdef bint _reduced
 
-    def __cinit__(self, start, stop=default, step=None):
-        self._typecheck(start, stop, step)
+    def __cinit__(self, start, stop=default, step=None, _reduced=False):
+        self._typecheck(start, stop, step, _reduced)
 
-    cdef inline void _typecheck(self, object start, object stop, object step) except *:
+    cdef inline void _typecheck(self, object start, object stop, object step, object _reduced) except *:
         cdef object _start, _stop, _step
 
         if isinstance(start, SimpleSliceCython):
@@ -59,10 +60,11 @@ cdef class SimpleSliceCython:
             self._has_start = (<SimpleSliceCython>start)._has_start
             self._has_stop = (<SimpleSliceCython>start)._has_stop
             self._has_step = (<SimpleSliceCython>start)._has_step
+            self._reduced = _reduced
             return
 
         if isinstance(start, slice):
-            self._typecheck(start.start, start.stop, start.step)
+            self._typecheck(start.start, start.stop, start.step, _reduced)
             return
 
         if stop is default:
@@ -94,6 +96,8 @@ cdef class SimpleSliceCython:
 
         self.args = (_start, _stop, _step)
 
+        self._reduced = _reduced
+
     @property
     def raw(self):
         return slice(self.start, self.stop, self.step)
@@ -109,6 +113,10 @@ cdef class SimpleSliceCython:
     @property
     def step(self):
         return self.args[2]
+
+    @property
+    def _reduced(self):
+        return self._reduced
 
     def __repr__(self):
         return f"SimpleSliceCython{self.args}"
