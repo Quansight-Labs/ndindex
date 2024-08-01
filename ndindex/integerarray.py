@@ -1,6 +1,6 @@
 from .array import ArrayIndex
 from .shapetools import asshape
-from .subindex_helpers import subindex_slice
+from .subindex_helpers import subindex_slice_ufunc
 
 class IntegerArray(ArrayIndex):
     """
@@ -154,7 +154,7 @@ class IntegerArray(ArrayIndex):
             # See also Integer.as_subindex().
 
             s = self.array
-            start, stop, step = subindex_slice(s, s+1, 1,
+            start, stop, step = subindex_slice_ufunc(s, s+1, 1,
                                                index.start, index.stop, index.step)
             if (stop <= 0).all():
                 raise ValueError("Indices do not intersect")

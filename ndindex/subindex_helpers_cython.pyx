@@ -26,8 +26,7 @@ cdef inline _where(cond, x, y):
     """
     return x if cond else y
 
-@cython.ufunc
-cdef (long, long, long) subindex_slice(
+cpdef (long, long, long) subindex_slice(
     long s_start,
     long s_stop,
     long s_step,
@@ -59,3 +58,14 @@ cdef (long, long, long) subindex_slice(
     step = lcm//i_step # = s_step//igcd(s_step, i_step)
 
     return (start, stop, step)
+
+@cython.ufunc
+cdef (long, long, long) subindex_slice_ufunc(
+    long s_start,
+    long s_stop,
+    long s_step,
+    long i_start,
+    long i_stop,
+    long i_step):
+
+    return subindex_slice(s_start, s_stop, s_step, i_start, i_stop, i_step)
