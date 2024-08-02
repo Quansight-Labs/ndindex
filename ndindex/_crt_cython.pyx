@@ -86,6 +86,10 @@ cpdef solve_congruence(list[long long] V, list[long long] M):
     return n
 
 cpdef long long ilcm(long a, long b):
+    if a == 1:
+        return b
+    if b == 1:
+        return a
     if a == 0 or b == 0:
         return 0
     return a // gcd(a, b) * b
@@ -93,6 +97,13 @@ cpdef long long ilcm(long a, long b):
 
 cdef long long _crt2(long long m1, long long m2, long long v1, long long v2,
                     long long *n):
+    if m1 == 1:
+        n[0] = v1 % m2
+        return 0
+    if m2 == 1:
+        n[0] = v2 % m1
+        return 0
+
     p = m1*m2
     v = 0
 
