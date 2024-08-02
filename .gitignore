@@ -146,3 +146,6 @@ dmypy.json
 /scratch/
 
 .DS_Store
+
+*.c
+Cargo.lock
