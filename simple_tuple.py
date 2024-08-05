@@ -69,3 +69,7 @@ class SimpleTuple(ImmutableObject):
                 raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
 
         return tuple(newargs)
+
+    @property
+    def raw(self):
+        return tuple(i.raw for i in self.args)

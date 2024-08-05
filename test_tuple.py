@@ -1,8 +1,12 @@
 from itertools import product
 
-from simple_tuple import SimpleTuple as Tuple
+from ndindex import Tuple
 
-from pytest import raises
+from simple_tuple import SimpleTuple
+
+from simple_tuple_cython import SimpleTupleCython
+
+from pytest import raises, mark
 
 from hypothesis import given
 
@@ -10,29 +14,33 @@ from numpy import arange
 
 from ndindex.tests.helpers import iterslice, check_same, Tuples, short_shapes, prod
 
-def test_tuple_constructor():
+@mark.parametrize('TupleClass',
+                  [Tuple, SimpleTuple, SimpleTupleCython])
+def test_tuple_constructor(TupleClass):
     # Test things in the Tuple constructor that are not tested by the other
     # tests below.
-    raises(ValueError, lambda: Tuple((1, 2, 3)))
-    raises(ValueError, lambda: Tuple(0, (1, 2, 3)))
+    raises(ValueError, lambda: TupleClass((1, 2, 3)))
+    raises(ValueError, lambda: TupleClass(0, (1, 2, 3)))
 
     # Test NotImplementedError behavior for Tuples with arrays split up by
     # slices, ellipses, and newaxes.
-    raises(NotImplementedError, lambda: Tuple(0, slice(None), [0]))
-    raises(NotImplementedError, lambda: Tuple([0], slice(None), [0]))
-    raises(NotImplementedError, lambda: Tuple([0], slice(None), [0]))
-    raises(NotImplementedError, lambda: Tuple(0, ..., [0]))
-    raises(NotImplementedError, lambda: Tuple([0], ..., [0]))
-    raises(NotImplementedError, lambda: Tuple([0], ..., [0]))
-    raises(NotImplementedError, lambda: Tuple(0, None, [0]))
-    raises(NotImplementedError, lambda: Tuple([0], None, [0]))
-    raises(NotImplementedError, lambda: Tuple([0], None, [0]))
+    raises(NotImplementedError, lambda: TupleClass(0, slice(None), [0]))
+    raises(NotImplementedError, lambda: TupleClass([0], slice(None), [0]))
+    raises(NotImplementedError, lambda: TupleClass([0], slice(None), [0]))
+    raises(NotImplementedError, lambda: TupleClass(0, ..., [0]))
+    raises(NotImplementedError, lambda: TupleClass([0], ..., [0]))
+    raises(NotImplementedError, lambda: TupleClass([0], ..., [0]))
+    raises(NotImplementedError, lambda: TupleClass(0, None, [0]))
+    raises(NotImplementedError, lambda: TupleClass([0], None, [0]))
+    raises(NotImplementedError, lambda: TupleClass([0], None, [0]))
     # Make sure this doesn't raise
-    Tuple(0, slice(None), 0)
-    Tuple(0, ..., 0)
-    Tuple(0, None, 0)
+    TupleClass(0, slice(None), 0)
+    TupleClass(0, ..., 0)
+    TupleClass(0, None, 0)
 
-def test_tuple_exhaustive():
+@mark.parametrize('TupleClass',
+                  [Tuple, SimpleTuple, SimpleTupleCython])
+def test_tuple_exhaustive(TupleClass):
     # Exhaustive tests here have to be very limited because of combinatorial
     # explosion.
     a = arange(2*2*2).reshape((2, 2, 2))
@@ -56,9 +64,12 @@ def test_tuple_exhaustive():
                     # multiple invalid indices in the tuple, and for instance
                     # numpy may give an IndexError but we would give a
                     # TypeError because we check the type first.
-                    check_same(a, idx, same_exception=False)
+                    check_same(a, idx, same_exception=False,
+                               conversion_func=lambda x: TupleClass(*x))
 
+@mark.parametrize('TupleClass',
+                  [Tuple, SimpleTuple, SimpleTupleCython])
 @given(Tuples, short_shapes)
-def test_tuples_hypothesis(t, shape):
+def test_tuples_hypothesis(TupleClass, t, shape):
     a = arange(prod(shape)).reshape(shape)
-    check_same(a, t, same_exception=False)
+    check_same(a, t, same_exception=False, conversion_func=lambda x: TupleClass(*x))

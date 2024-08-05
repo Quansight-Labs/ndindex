@@ -8,7 +8,7 @@ ext_modules = [
         ["simple_slice_pybind11.cpp"],
         cxx_std=11,
     ),
-    *cythonize("simple_slice_cython.pyx"),
+    *cythonize(["simple_slice_cython.pyx", 'simple_tuple_cython.pyx']),
 ]
 
 setup(
