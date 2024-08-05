@@ -3,7 +3,7 @@ import random
 from ndindex import Tuple
 from simple_tuple import SimpleTuple
 
-from simple_tuple_cython import SimpleTupleCython
+from ndindex.simple_tuple_cython import SimpleTupleCython
 
 from IPython.core.magics.execution import _format_time
 

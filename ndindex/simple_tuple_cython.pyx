@@ -1,10 +1,5 @@
 import sys
 
-
-from ndindex import (ndindex, Integer, BooleanArray, Slice, Tuple, ellipsis,
-                     Newaxis, broadcast_shapes, BroadcastError)
-from ndindex.array import ArrayIndex
-
 cdef class SimpleTupleCython:
     cdef readonly tuple args
 
@@ -19,6 +14,18 @@ cdef class SimpleTupleCython:
         cdef bint has_array = False
         cdef bint has_boolean_scalar = False
 
+
+        from .ndindex import ndindex
+        from .array import ArrayIndex
+        from .ellipsis import ellipsis
+        from .newaxis import Newaxis
+        from .slice import Slice
+        from .integer import Integer
+        from .booleanarray import BooleanArray
+        from .integerarray import IntegerArray
+
+        from .shapetools import broadcast_shapes, BroadcastError
+
         # Check for numpy availability
         if 'numpy' in sys.modules:
             ndarray = sys.modules['numpy'].ndarray
@@ -31,7 +38,7 @@ cdef class SimpleTupleCython:
 
         for arg in args:
             newarg = ndindex(arg)
-            if isinstance(newarg, Tuple):
+            if isinstance(newarg, SimpleTupleCython):
                 if len(args) == 1:
                     raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call SimpleTupleCython(*args) instead of SimpleTupleCython(args)?")
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
@@ -81,4 +88,5 @@ cdef class SimpleTupleCython:
         return not self == other
 
 cdef bint _is_boolean_scalar(object idx):
+    from .booleanarray import BooleanArray
     return isinstance(idx, BooleanArray) and idx.shape == ()

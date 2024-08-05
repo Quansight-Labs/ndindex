@@ -4,7 +4,7 @@ from ndindex import Tuple
 
 from simple_tuple import SimpleTuple
 
-from simple_tuple_cython import SimpleTupleCython
+from ndindex.simple_tuple_cython import SimpleTupleCython
 
 from pytest import raises, mark
 
