@@ -394,6 +394,7 @@ def warnings_are_errors(f):
 @warnings_are_errors
 def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
                ndindex_func=lambda a, index: a[index.raw],
+               conversion_func=ndindex,
                same_exception=True, assert_equal=assert_equal):
     """
     Check that a raw index idx produces the same result on an array a before
@@ -444,8 +445,9 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
     except Exception as e:
         exception = e
 
+    index = '<conversion to ndindex object failed>'
     try:
-        index = ndindex(idx)
+        index = conversion_func(idx)
         a_ndindex = ndindex_func(a, index)
     except Exception as e:
         if not exception:
