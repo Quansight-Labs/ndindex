@@ -153,9 +153,11 @@ cdef class SimpleTupleCython:
         return f"SimpleTupleCython{self.args}"
 
     def __eq__(self, other):
-        if not isinstance(other, SimpleTupleCython):
-            return False
-        return self.args == other.args
+        if isinstance(other, tuple):
+            return self.args == other
+        elif isinstance(other, SimpleTupleCython):
+            return self.args == other.args
+        return False
 
     def __ne__(self, other):
         return not self == other
