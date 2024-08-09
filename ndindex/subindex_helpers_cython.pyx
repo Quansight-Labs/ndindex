@@ -1,15 +1,17 @@
+# cython: cdivision=True
+# cython: infer_types=True
+
 cimport cython
 
 from ._crt_cython cimport _crt2, ilcm
 
-cdef inline ceiling(a, b):
+cdef inline long ceiling(long a, long b):
     """
     Returns ceil(a/b)
     """
     return -(-a//b)
 
-
-cdef inline _smallest(x, a, m):
+cdef inline long _smallest(long x, long a, long m):
     """
     Gives the smallest integer >= x that equals a (mod m)
 
@@ -18,7 +20,7 @@ cdef inline _smallest(x, a, m):
     n = ceiling(x - a, m)
     return a + n*m
 
-cdef inline _where(cond, x, y):
+cdef inline long _where(bint cond, long x, long y):
     """
     Returns x if cond is True, y otherwise
     """

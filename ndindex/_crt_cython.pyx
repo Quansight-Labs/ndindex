@@ -1,3 +1,6 @@
+# cython: cdivision=True
+# cython: infer_types=True
+
 from math import gcd
 
 cpdef (long long, long long, long long) gcdex(long a, long b):
@@ -56,7 +59,7 @@ cdef long long gcdex_(long long a, long long b, long long *x, long long *y):
     return a
 
 cdef int _combine(long long *a1, long long *m1, long long a2, long long m2):
-    cdef long long inv_a, temp
+    cdef long long inv_a, temp, g, x, y, z
     x, y, z = m1[0], a2 - a1[0], m2
     g = gcd(x, y, z)
     x, y, z = x//g, y//g, z//g
