@@ -4,10 +4,6 @@
 # cython: wraparound=False
 # cython: initializedcheck=False
 
-from cpython.ref cimport PyObject
-from libc.stdint cimport int64_t
-from libc.stdlib cimport malloc, free
-
 import sys
 
 # Forward declarations
@@ -86,15 +82,9 @@ cdef int _is_boolean_scalar(object idx):
 
 cdef class SimpleTupleCython:
     cdef readonly tuple args
-    cdef PyObject** c_args
-    cdef Py_ssize_t n_args
 
     def __cinit__(self, *args):
         self._typecheck(args)
-
-    def __dealloc__(self):
-        if self.c_args is not NULL:
-            free(self.c_args)
 
     cdef inline void _typecheck(self, tuple args) except *:
         cdef:
@@ -109,8 +99,6 @@ cdef class SimpleTupleCython:
 
         _lazy_import()
 
-        self.n_args = len(args)
-
         # Check for numpy availability
         if 'numpy' in sys.modules:
             ndarray = sys.modules['numpy'].ndarray
@@ -121,11 +109,10 @@ cdef class SimpleTupleCython:
         # Check if any argument is an array-like object
         has_array = any(isinstance(i, (_ArrayIndex, list, ndarray, bool, bool_)) for i in args)
 
-        for i in range(self.n_args):
-            arg = args[i]
+        for arg in args:
             newarg = _ndindex(arg)
             if isinstance(newarg, SimpleTupleCython):
-                if self.n_args == 1:
+                if len(args) == 1:
                     raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call SimpleTupleCython(*args) instead of SimpleTupleCython(args)?")
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
@@ -157,15 +144,10 @@ cdef class SimpleTupleCython:
                 raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
 
         self.args = tuple(newargs)
-        self.c_args = <PyObject**>malloc(self.n_args * sizeof(PyObject*))
-        if self.c_args is NULL:
-            raise MemoryError()
-        for i in range(self.n_args):
-            self.c_args[i] = <PyObject*>newargs[i]
 
     @property
     def raw(self):
-        return tuple((<object>self.c_args[i]).raw for i in range(self.n_args))
+        return tuple(arg.raw for arg in self.args)
 
     def __repr__(self):
         return f"SimpleTupleCython{self.args}"
