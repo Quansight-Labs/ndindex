@@ -40,6 +40,7 @@ def main():
     print("Benchmarking SimpleTuple implementations")
     print("----------------------------------------")
 
+    print("\nGenerating Inputs")
     inputs = generate_inputs()
 
     print("\nObject Creation:")
