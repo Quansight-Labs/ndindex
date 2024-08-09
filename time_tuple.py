@@ -27,6 +27,11 @@ def benchmark_args(TupleClass, n=N_RUNS):
     for _ in range(n):
         s1, s2 = s.args
 
+def benchmark_raw(TupleClass, n=N_RUNS):
+    s = TupleClass(slice(0, 10, 1), slice(100, 200, 1))
+    for _ in range(n):
+        s.raw
+
 def run_benchmark(name, func, TupleClass, *args):
     time = timeit.timeit(lambda: func(TupleClass, *args), number=1)
     print(f"{TupleClass.__name__:<30}: {_format_time(time/N_RUNS)}")
@@ -44,6 +49,10 @@ def main():
     print("\nArgs Access:")
     for TupleClass in tuple_classes:
         run_benchmark("Access", benchmark_args, TupleClass)
+
+    print("\nRaw Access:")
+    for TupleClass in tuple_classes:
+        run_benchmark("Raw", benchmark_raw, TupleClass)
 
 if __name__ == "__main__":
     main()
