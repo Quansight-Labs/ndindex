@@ -94,7 +94,6 @@ cdef class SimpleTupleCython:
             int array_block_stop = 0
             int has_array = 0
             int has_boolean_scalar = 0
-            Py_ssize_t i
             object arg, newarg
 
         _lazy_import()
