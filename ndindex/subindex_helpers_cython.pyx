@@ -1,6 +1,4 @@
 cimport cython
-import numpy as np
-cimport numpy as np
 
 from ._crt_cython cimport _crt2, ilcm
 
