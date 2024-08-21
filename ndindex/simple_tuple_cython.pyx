@@ -129,6 +129,14 @@ cdef class SimpleTupleCython:
                 array_block_stop = 1
             elif isinstance(newarg, (_ArrayIndex, _Integer)):
                 if array_block_start and array_block_stop:
+                    # If the arrays in a tuple index are separated by a slice,
+                    # ellipsis, or newaxis, the behavior is that the
+                    # dimensions indexed by the array (and integer) indices
+                    # are added to the front of the final array shape. Travis
+                    # told me that he regrets implementing this behavior in
+                    # NumPy and that he wishes it were in error. So for now,
+                    # that is what we are going to do, unless it turns out
+                    # that we actually need it.
                     raise NotImplementedError("Array indices separated by slices, ellipses (...), or newaxes (None) are not supported")
 
         if newargs.count(_ellipsis) > 1:
@@ -140,6 +148,9 @@ cdef class SimpleTupleCython:
             try:
                 _broadcast_shapes(*[i.shape for i in arrays])
             except _BroadcastError:
+                # This matches the NumPy error message. The BroadcastError has
+                # a better error message, but it will be shown in the chained
+                # traceback.
                 raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
 
         self.args = tuple(newargs)
