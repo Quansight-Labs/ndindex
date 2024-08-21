@@ -17,6 +17,18 @@ class TimeSlice:
         except TypeError:
             pass
 
+    def time_args(self):
+        self.s1.args
+        self.s2.args
+
+    def time_start(self):
+        self.s1.start
+        self.s2.start
+
+    def time_raw(self):
+        self.s1.raw
+        self.s2.raw
+
     def time_reduce(self):
         self.s1.reduce()
         self.s2.reduce()
