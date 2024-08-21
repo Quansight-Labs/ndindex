@@ -1,5 +1,6 @@
 include versioneer.py
 include ndindex/_version.py
+include ndindex/*.pyx
 include LICENSE
 include pytest.ini
 include conftest.py
