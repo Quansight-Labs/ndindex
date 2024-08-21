@@ -29,6 +29,12 @@ jobs:
           else
               python -m pip install --upgrade numpy==${{ matrix.numpy-version }}.*
           fi
+      - name: Test Installation
+        run: |
+          python -m pip install .
+      - name: In-place build
+        run: |
+          python setup.py build_ext --inplace
       - name: Run Doctests
         run: |
           ./run_doctests
@@ -36,9 +42,6 @@ jobs:
         # version of matplotlib that requires NumPy 1.23. Easiest to just
         # skip this for now.
         if: matrix.numpy-version != 'dev' && matrix.python-version != '3.9' && matrix.numpy-version != '1.22'
-      - name: Test Installation
-        run: |
-          python -m pip install .
       - name: Run Slotscheck
         run: |
           python -m slotscheck ndindex
