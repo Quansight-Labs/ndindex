@@ -147,5 +147,6 @@ dmypy.json
 
 .DS_Store
 
-*.c
-Cargo.lock
+# Cython
+ndindex/*.c
+ndindex/*.html
