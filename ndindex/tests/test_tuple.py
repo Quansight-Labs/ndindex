@@ -9,15 +9,22 @@ from pytest import raises
 
 from ..ndindex import ndindex
 from ..tuple import Tuple
+from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..integerarray import IntegerArray
 from .helpers import check_same, Tuples, prod, short_shapes, iterslice, reduce_kwargs
 
 def test_tuple_constructor():
-    # Test things in the Tuple constructor that are not tested by the other
-    # tests below.
+    # Nested tuples are not allowed
     raises(ValueError, lambda: Tuple((1, 2, 3)))
     raises(ValueError, lambda: Tuple(0, (1, 2, 3)))
+    raises(ValueError, lambda: Tuple(Tuple(1, 2, 3)))
+    raises(ValueError, lambda: Tuple(0, Tuple(1, 2, 3)))
+
+    # Multiple ellipses in a tuple are not allowed
+    raises(ValueError, lambda: Tuple(..., 0, ...))
+    raises(ValueError, lambda: Tuple(0, ..., ...))
+    raises(ValueError, lambda: Tuple(..., ...))
 
     # Test NotImplementedError behavior for Tuples with arrays split up by
     # slices, ellipses, and newaxes.
@@ -30,6 +37,15 @@ def test_tuple_constructor():
     raises(NotImplementedError, lambda: Tuple(0, None, [0]))
     raises(NotImplementedError, lambda: Tuple([0], None, [0]))
     raises(NotImplementedError, lambda: Tuple([0], None, [0]))
+
+    # Test NotImplementedError for boolean scalars mixed with other arrays
+    Tuple(0, True, 0) # Doesn't raise
+    raises(NotImplementedError, lambda: Tuple([0], True, 0))
+    raises(NotImplementedError, lambda: Tuple(False, [0]))
+    raises(NotImplementedError, lambda: Tuple(False, IntegerArray([0]), 0))
+    raises(NotImplementedError, lambda: Tuple(False, 0, IntegerArray([0])))
+    raises(NotImplementedError, lambda: Tuple(True, BooleanArray([True])))
+
     # Make sure this doesn't raise
     Tuple(0, slice(None), 0)
     Tuple(0, ..., 0)
