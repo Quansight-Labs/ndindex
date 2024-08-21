@@ -17,6 +17,7 @@ def test_slice_args():
     raises(TypeError, lambda: slice())
     raises(TypeError, lambda: Slice())
     raises(TypeError, lambda: Slice(1.0))
+    raises(TypeError, lambda: Slice('1'))
     # See docstring of operator_index()
     raises(TypeError, lambda: Slice(True))
     raises(TypeError, lambda: Slice(bool_(True)))
