@@ -31,7 +31,7 @@ jobs:
           fi
       - name: Test Installation
         run: |
-          python -m pip install .
+          python -m pip install --verbose .
       - name: In-place build
         run: |
           python setup.py build_ext --inplace
