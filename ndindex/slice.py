@@ -1,6 +1,7 @@
-from .ndindex import NDIndexBase, operator_index
+from .ndindex import NDIndexBase
 from .subindex_helpers import subindex_slice, subindex_slice_ufunc
 from .shapetools import asshape
+from .simple_slice_cython import SimpleSliceCython
 
 class default:
     """
@@ -11,8 +12,6 @@ class default:
 
     """
     pass
-
-from simple_slice_cython import SimpleSliceCython
 
 class Slice(SimpleSliceCython, NDIndexBase):
     """

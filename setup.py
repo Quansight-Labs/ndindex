@@ -1,5 +1,3 @@
-import os
-import sys
 import setuptools
 import versioneer
 
@@ -10,7 +8,8 @@ with open("README.md", "r") as fh:
 
 from Cython.Build import cythonize
 ext_modules = cythonize(["ndindex/*.pyx"],
-                        language_level="3")
+                        language_level="3",
+)
 
 setuptools.setup(
     name="ndindex",
