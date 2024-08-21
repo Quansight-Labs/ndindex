@@ -22,9 +22,9 @@ def test_tuple_constructor():
     raises(ValueError, lambda: Tuple(0, Tuple(1, 2, 3)))
 
     # Multiple ellipses in a tuple are not allowed
-    raises(ValueError, lambda: Tuple(..., 0, ...))
-    raises(ValueError, lambda: Tuple(0, ..., ...))
-    raises(ValueError, lambda: Tuple(..., ...))
+    raises(IndexError, lambda: Tuple(..., 0, ...))
+    raises(IndexError, lambda: Tuple(0, ..., ...))
+    raises(IndexError, lambda: Tuple(..., ...))
 
     # Test NotImplementedError behavior for Tuples with arrays split up by
     # slices, ellipses, and newaxes.

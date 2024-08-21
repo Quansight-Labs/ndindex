@@ -108,8 +108,13 @@ cdef class SimpleTupleCython:
         # Check if any argument is an array-like object
         has_array = any(isinstance(i, (_ArrayIndex, list, ndarray, bool, bool_)) for i in args)
 
+        n_ellipses = 0
         for arg in args:
             newarg = _ndindex(arg)
+            if isinstance(newarg, _ellipsis):
+                n_ellipses += 1
+                if n_ellipses > 1:
+                    raise IndexError("an index can only have a single ellipsis ('...')")
             if isinstance(newarg, SimpleTupleCython):
                 if len(args) == 1:
                     raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call SimpleTupleCython(*args) instead of SimpleTupleCython(args)?")
@@ -139,8 +144,6 @@ cdef class SimpleTupleCython:
                     # that we actually need it.
                     raise NotImplementedError("Array indices separated by slices, ellipses (...), or newaxes (None) are not supported")
 
-        if newargs.count(_ellipsis) > 1:
-            raise IndexError("an index can only have a single ellipsis ('...')")
         if len(arrays) > 0:
             if has_boolean_scalar:
                 raise NotImplementedError("Tuples mixing boolean scalars (True or False) with arrays are not yet supported.")
