@@ -1,3 +1,4 @@
+Cython
 hypothesis
 matplotlib
 numpy
