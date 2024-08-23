@@ -1,5 +1,5 @@
 from .ndindex import NDIndexBase
-from .subindex_helpers import subindex_slice, subindex_slice
+from .subindex_helpers import subindex_slice
 from .shapetools import asshape
 from .simple_slice_cython import SimpleSliceCython
 

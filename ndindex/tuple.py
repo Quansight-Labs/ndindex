@@ -1,9 +1,8 @@
-import sys
 import itertools
 
 from .ndindex import NDIndexBase, ndindex
 from .subindex_helpers import subindex_slice
-from .shapetools import asshape, broadcast_shapes, BroadcastError
+from .shapetools import asshape, broadcast_shapes
 
 from .simple_tuple_cython import SimpleTupleCython
 
@@ -725,8 +724,6 @@ class Tuple(SimpleTupleCython, NDIndexBase):
 
 # Imports at the bottom to avoid circular import issues
 from .array import ArrayIndex
-from .ellipsis import ellipsis
-from .newaxis import Newaxis
 from .slice import Slice
 from .integer import Integer
 from .booleanarray import BooleanArray, _is_boolean_scalar
