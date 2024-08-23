@@ -127,27 +127,8 @@ def _crt(U, M):
 
     return v % p
 
-def _combine(a1, m1, a2, m2):
-    """Return the tuple (a, m) which satisfies the requirement
-    that n = a + i*m satisfy n = a1 + j*m1 and n = a2 = k*m2
 
-    References
-    ==========
-
-    .. [1] https://en.wikipedia.org/wiki/Method_of_successive_substitution
-    """
-    a, b, c = m1, a2 - a1, m2
-    g = gcd(a, b, c)
-    a, b, c = [i//g for i in [a, b, c]]
-    if a != 1:
-        inv_a, _, g = gcdex(a, c)
-        if g != 1:
-            return None
-        b *= inv_a
-    a, m = a1 + m1*b, m1*c
-    return a, m
-
-def solve_congruence(V, M):
+def solve_congruence(*remainder_modulus_pairs):
     """Compute the integer ``n`` that has the residual ``ai`` when it is
     divided by ``mi`` where the ``ai`` and ``mi`` are given as pairs to
     this function: ((a1, m1), (a2, m2), ...). If there is no solution,
@@ -183,9 +164,33 @@ def solve_congruence(V, M):
     5
 
     """
+    def combine(c1, c2):
+        """Return the tuple (a, m) which satisfies the requirement
+        that n = a + i*m satisfy n = a1 + j*m1 and n = a2 = k*m2.
+
+        References
+        ==========
+
+        .. [1] https://en.wikipedia.org/wiki/Method_of_successive_substitution
+        """
+        a1, m1 = c1
+        a2, m2 = c2
+        a, b, c = m1, a2 - a1, m2
+        g = gcd(a, b, c)
+        a, b, c = [i//g for i in [a, b, c]]
+        if a != 1:
+            inv_a, _, g = gcdex(a, c)
+            if g != 1:
+                return None
+            b *= inv_a
+        a, m = a1 + m1*b, m1*c
+        return a, m
+
+    rm = remainder_modulus_pairs
+
     rv = (0, 1)
-    for v, m in zip(V, M):
-        rv = _combine(rv[0], rv[1], v, m)
+    for rmi in rm:
+        rv = combine(rv, rmi)
         if rv is None:
             break
         n, m = rv
@@ -193,7 +198,7 @@ def solve_congruence(V, M):
     else:
         return n
 
-def crt(M, V, check=True):
+def crt(m, v, check=True):
     r"""Chinese Remainder Theorem.
 
     The moduli in m are assumed to be pairwise coprime.  The output
@@ -243,13 +248,11 @@ def crt(M, V, check=True):
     that there is no factor in common, a check that the result gives the
     indicated residuals is performed -- an O(n) operation.
     """
-    result = _crt(V, M)
+    result = _crt(v, m)
 
     if check:
-        for v, m in zip(V, M):
-            if v % m != result % m:
-                result = solve_congruence(V, M)
-                break
+        if not all(v % m == result % m for v, m in zip(v, m)):
+            result = solve_congruence(*list(zip(v, m)))
 
     return result
 

@@ -6,18 +6,10 @@ from hypothesis import given, example
 from hypothesis.strategies import integers, lists, shared
 
 from sympy.ntheory.modular import crt as crt_sympy
-
-MIN_INT16 = -2**15
-MAX_INT16 = 2**15 - 1
-MIN_INT32 = -2**31
-MAX_INT32 = 2**31 - 1
-MIN_INT = -2**63
-MAX_INT = 2**63 - 1
-
-size = shared(integers(min_value=2, max_value=2))
+size = shared(integers(min_value=1, max_value=10))
 @given(
-    size.flatmap(lambda s: lists(integers(min_value=1, max_value=MAX_INT16), min_size=s, max_size=s)),
-    size.flatmap(lambda s: lists(integers(min_value=MIN_INT16, max_value=MAX_INT16), min_size=s, max_size=s)),
+    size.flatmap(lambda s: lists(integers(min_value=1), min_size=s, max_size=s)),
+    size.flatmap(lambda s: lists(integers(), min_size=s, max_size=s)),
 )
 def test_crt(m, v):
     res = crt(m, v)
@@ -31,7 +23,7 @@ def test_crt(m, v):
         assert crt_sympy(m, v) is None
 
 @example(1, 2)
-@given(integers(min_value=0, max_value=MAX_INT32), integers(min_value=0, max_value=MAX_INT32))
+@given(integers(min_value=0), integers(min_value=0))
 def test_ilcm(x, y):
     L = ilcm(x, y)
 
@@ -54,7 +46,7 @@ def test_ilcm(x, y):
 @example(0, 3)
 @example(3, 0)
 @example(0, 0)
-@given(integers(min_value=MIN_INT32, max_value=MAX_INT32), integers(min_value=MIN_INT32, max_value=MAX_INT32))
+@given(integers(), integers())
 def test_gcdex(a, b):
     x, y, g = gcdex(a, b)
 

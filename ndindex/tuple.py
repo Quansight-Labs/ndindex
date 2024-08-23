@@ -2,7 +2,7 @@ import sys
 import itertools
 
 from .ndindex import NDIndexBase, ndindex
-from .subindex_helpers import subindex_slice_ufunc
+from .subindex_helpers import subindex_slice
 from .shapetools import asshape, broadcast_shapes, BroadcastError
 
 from .simple_tuple_cython import SimpleTupleCython
@@ -588,7 +588,7 @@ class Tuple(SimpleTupleCython, NDIndexBase):
                         raise NotImplementedError("IntegerArray.as_subindex(Slice) is only implemented for slices with nonnegative start and stop. Try calling reduce() with a shape first.")
 
                     s = self_arg.array
-                    start, stop, step = subindex_slice_ufunc(
+                    start, stop, step = subindex_slice(
                         s, s+1, 1, index_arg.start, index_arg.stop, index_arg.step)
                     if (stop <= 0).all():
                         raise ValueError("Indices do not intersect")

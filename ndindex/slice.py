@@ -1,5 +1,5 @@
 from .ndindex import NDIndexBase
-from .subindex_helpers import subindex_slice, subindex_slice_ufunc
+from .subindex_helpers import subindex_slice, subindex_slice
 from .shapetools import asshape
 from .simple_slice_cython import SimpleSliceCython
 
@@ -498,7 +498,7 @@ class Slice(SimpleSliceCython, NDIndexBase):
             idx = index.array
             if (idx < 0).any():
                 raise NotImplementedError("Slice.as_subindex(IntegerArray) is not yet implemented for arrays with negative values. Try calling reduce with a shape first.")
-            start, stop, step = subindex_slice_ufunc(s.start, s.stop, s.step,
+            start, stop, step = subindex_slice(s.start, s.stop, s.step,
                                                      idx, idx+1, 1)
             res = BooleanArray(start < stop)
 
