@@ -60,11 +60,6 @@ setuptools.setup(
     extras_require={
         "arrays": "numpy",
     },
-    tests_require=[
-        'numpy',
-        'pytest',
-        'hypothesis',
-    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
