@@ -5,14 +5,14 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Chunking" href="chunking.html" /><link rel="prev" title="Index Types" href="index-types.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>Shape Tools - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=16cf08d2" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=254c7fb8" />
     
     
@@ -166,19 +166,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -219,7 +206,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -378,13 +365,13 @@ array shapes.</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.iter_indices">
-<span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">iter_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/c025d3bdb99f77502bf880e93977b56f32f04e73/ndindex/shapetools.py#L109-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.iter_indices" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">iter_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/f905510f1df7bbf1b33c3b9a0c4faa88bbb54c51/ndindex/shapetools.py#L109-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.iter_indices" title="Link to this definition">¶</a></dt>
 <dd><p>Iterate indices for every element of an arrays of shape <code class="code docutils literal notranslate"><span class="pre">shapes</span></code>.</p>
 <p>Each shape in <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> should be a shape tuple, which are broadcast
 compatible along the non-skipped axes. Each iteration step will produce a
 tuple of indices, one for each shape, which would correspond to the same
 elements if the arrays of the given shapes were first broadcast together.</p>
-<p>This is a generalization of the NumPy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v2.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndindex()</span></code></a> function (which otherwise has no relation).
+<p>This is a generalization of the NumPy <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndindex.html#numpy.ndindex" title="(in NumPy v2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndindex()</span></code></a> function (which otherwise has no relation).
 <code class="code docutils literal notranslate"><span class="pre">np.ndindex()</span></code> only iterates indices for a single shape, whereas
 <code class="code docutils literal notranslate"><span class="pre">iter_indices()</span></code> supports generating indices for multiple broadcast
 compatible shapes at once. This is equivalent to first broadcasting the
@@ -481,9 +468,9 @@ include the final broadcasted shape as one of the shapes (the function
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ndindex.broadcast_shapes">
-<span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">broadcast_shapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/c025d3bdb99f77502bf880e93977b56f32f04e73/ndindex/shapetools.py#L44-L107"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.broadcast_shapes" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">broadcast_shapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/f905510f1df7bbf1b33c3b9a0c4faa88bbb54c51/ndindex/shapetools.py#L44-L107"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.broadcast_shapes" title="Link to this definition">¶</a></dt>
 <dd><p>Broadcast the input shapes <code class="code docutils literal notranslate"><span class="pre">shapes</span></code> to a single shape.</p>
-<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v2.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>, except is also supports skipping axes in the
+<p>This is the same as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_shapes.html#numpy.broadcast_shapes" title="(in NumPy v2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.broadcast_shapes()</span></code></a>, except is also supports skipping axes in the
 shape with <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> can be a tuple of integers which apply to all shapes, or a
 list of tuples of integers, one for each shape, which apply to each
@@ -520,7 +507,7 @@ index would be invalid), or <code class="code docutils literal notranslate"><spa
 values are incorrect).</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="ndindex.BroadcastError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BroadcastError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape2</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/c025d3bdb99f77502bf880e93977b56f32f04e73/ndindex/shapetools.py#L8-L23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.BroadcastError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">BroadcastError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape2</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/f905510f1df7bbf1b33c3b9a0c4faa88bbb54c51/ndindex/shapetools.py#L8-L23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.BroadcastError" title="Link to this definition">¶</a></dt>
 <dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> and
 <a class="reference internal" href="#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> when the input shapes are not broadcast
 compatible.</p>
@@ -528,7 +515,7 @@ compatible.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="ndindex.AxisError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">AxisError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/c025d3bdb99f77502bf880e93977b56f32f04e73/ndindex/shapetools.py#L25-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.AxisError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">AxisError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/f905510f1df7bbf1b33c3b9a0c4faa88bbb54c51/ndindex/shapetools.py#L25-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.AxisError" title="Link to this definition">¶</a></dt>
 <dd><p>Exception raised by <a class="reference internal" href="#ndindex.iter_indices" title="ndindex.iter_indices"><code class="xref py py-func docutils literal notranslate"><span class="pre">iter_indices()</span></code></a> and
 <a class="reference internal" href="#ndindex.broadcast_shapes" title="ndindex.broadcast_shapes"><code class="xref py py-func docutils literal notranslate"><span class="pre">broadcast_shapes()</span></code></a> when the <code class="code docutils literal notranslate"><span class="pre">skip_axes</span></code> argument is out of bounds.</p>
 <p>This is used instead of the NumPy exception of the same name so that
@@ -625,7 +612,7 @@ compatible.</p>
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>

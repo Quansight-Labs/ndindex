@@ -5,14 +5,14 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Boolean Array Indices" href="boolean-arrays.html" /><link rel="prev" title="newaxis" href="newaxis.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>Integer Array Indices - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=16cf08d2" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=254c7fb8" />
     
     
@@ -166,19 +166,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -219,7 +206,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -553,7 +540,7 @@ the next element, <code class="docutils literal notranslate"><span class="pre">1
 sample <span class="math notranslate nohighlight">\(k\)</span> elements from a 1-D array of size <span class="math notranslate nohighlight">\(n\)</span> with replacement, we can
 simply construct an a random integer index in the range <span class="math notranslate nohighlight">\([0, n)\)</span> with <span class="math notranslate nohighlight">\(k\)</span>
 elements (see the
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.integers.html#numpy.random.Generator.integers" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.integers()</span></code></a>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.integers.html#numpy.random.Generator.integers" title="(in NumPy v2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.integers()</span></code></a>
 documentation):<a class="footnote-reference brackets" href="#random-integers-footnote" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">])</span> <span class="c1"># as above</span>
@@ -567,7 +554,7 @@ documentation):<a class="footnote-reference brackets" href="#random-integers-foo
 </div>
 <p id="permutation-example">Another common use case of integer array indexing is to permute an array. An
 array can be randomly permuted with
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a>. But what if we want
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a>. But what if we want
 to permute two arrays with the same permutation? We can compute a permutation
 index and apply it to both arrays. For a 1-D array <code class="docutils literal notranslate"><span class="pre">a</span></code> of size <span class="math notranslate nohighlight">\(n\)</span>, a
 permutation index is just a permutation of the integer array index
@@ -799,7 +786,7 @@ dimension for each is in the indexing dimension.</strong></p>
 <code class="docutils literal notranslate"><span class="pre">idx1</span></code> into shape <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">1)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">3)</span></code> arrays, respectively. These then
 automatically broadcast together to give the desired outer index.</p>
 <p>This “insert size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimensions” operation can also be performed automatically
-with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ix_.html#numpy.ix_" title="(in NumPy v2.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ix_()</span></code></a> function.<a class="footnote-reference brackets" href="#ix-footnote" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
+with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ix_.html#numpy.ix_" title="(in NumPy v2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ix_()</span></code></a> function.<a class="footnote-reference brackets" href="#ix-footnote" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx0</span><span class="p">,</span> <span class="n">idx1</span><span class="p">)</span>
 <span class="go">(array([[1],</span>
 <span class="go">       [0]]), array([[2, 0, 1]]))</span>
@@ -892,7 +879,7 @@ index as in the example <a class="reference internal" href="#mixing-array-and-in
 <p>The primary point of this behavior is that you can use <code class="docutils literal notranslate"><span class="pre">...</span></code> at the beginning
 of an index to select the last axes of an array using integer array indices,
 or several <code class="docutils literal notranslate"><span class="pre">:</span></code>s to select some middle axes. This lets you do with indexing
-what you can also do with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.take.html#numpy.take" title="(in NumPy v2.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.take()</span></code></a> function.</p>
+what you can also do with the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.take.html#numpy.take" title="(in NumPy v2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.take()</span></code></a> function.</p>
 <p>To be sure though, this index could use any slice, not just <code class="docutils literal notranslate"><span class="pre">:</span></code>, and could
 also include newaxes. This behavior is mainly implemented for the sake of
 semantic completeness, although it could potentially allow combining two
@@ -935,7 +922,7 @@ logic.<a class="footnote-reference brackets" href="#ndindex-advanced-indexing-de
 <h2>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">¶</a></h2>
 <p>Based on the above sections, you should be able to complete the following
 exercise: How might you randomly permute a 2-D array using
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> and indexing, so
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> and indexing, so
 that each axis is permuted independently? This operation might correspond to
 multiplying the array by random <a class="reference external" href="https://en.wikipedia.org/wiki/Permutation_matrix">permutation
 matrices</a> on the left and
@@ -966,7 +953,7 @@ first row <code class="docutils literal notranslate"><span class="pre">[5,</span
 </pre></div>
 </div>
 <p class="sd-card-text">We can generate permutations for the two axes using
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> <a class="reference internal" href="#permutation-example"><span class="std std-ref">as
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.permutation.html#numpy.random.Generator.permutation" title="(in NumPy v2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.permutation()</span></code></a> <a class="reference internal" href="#permutation-example"><span class="std std-ref">as
 above</span></a>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="c1"># Seeded so this example reproduces</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx0</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
@@ -1020,6 +1007,8 @@ permutation matrices, using the same indices (but of course, simply permuting
 </details><p class="rubric">Footnotes</p>
 <!-- Footnotes are written inline above but markdown will put them here at the
 end of the document. -->
+</section>
+</section>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="integer-scalar-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
@@ -1042,7 +1031,7 @@ a 0-D array index into an <a class="reference internal" href="../../api/index-ty
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Note that <code class="docutils literal notranslate"><span class="pre">np.random</span></code> also supports this
 operation directly with
-<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.choice.html#numpy.random.Generator.choice" title="(in NumPy v2.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.choice()</span></code></a>.</p>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.choice.html#numpy.random.Generator.choice" title="(in NumPy v2.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.random.Generator.choice()</span></code></a>.</p>
 </aside>
 <aside class="footnote brackets" id="lists-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
@@ -1104,8 +1093,6 @@ with a wet fish” when he designed this.</p>
 request implementing it, but I’m not going to do it myself.</p>
 </aside>
 </aside>
-</section>
-</section>
 
         </article>
       </div>
@@ -1199,7 +1186,7 @@ request implementing it, but I’m not going to do it myself.</p>
 </div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
