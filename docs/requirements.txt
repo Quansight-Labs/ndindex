@@ -1,3 +1,4 @@
+Cython
 furo
 linkify-it-py
 matplotlib @ git+https://github.com/asmeurer/matplotlib.git@output-base-name
