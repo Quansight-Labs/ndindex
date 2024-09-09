@@ -50,7 +50,7 @@ class NDIndexConstructor:
 
     """
     def __getitem__(self, obj):
-        if isinstance(obj, NDIndexBase):
+        if isinstance(obj, NDIndexCommon):
             return obj
 
         if 'numpy' in sys.modules:
@@ -209,7 +209,12 @@ class ImmutableObject:
         # __hash__
         return hash(self.args)
 
-class NDIndexBase:
+class NDIndexCommon:
+    """
+    Definitions of common methods for :class:`NDIndex` subclasses.
+
+    Most of these are only here so that they can define a common docstring.
+    """
     __slots__ = ()
 
     def reduce(self, shape=None, *, negative_int=False):
@@ -606,7 +611,7 @@ class NDIndexBase:
         """
         return self.expand(shape).selected_indices(shape)
 
-class NDIndex(NDIndexBase, ImmutableObject):
+class NDIndex(NDIndexCommon, ImmutableObject):
     """
     Represents an index into an nd-array (i.e., a numpy array).
 
@@ -667,7 +672,7 @@ class NDIndex(NDIndexBase, ImmutableObject):
     # used by any present subclasses, because it is faster to implement __eq__
     # on each class specifically.
     def __eq__(self, other): # pragma: no cover
-        if not isinstance(other, NDIndexBase):
+        if not isinstance(other, NDIndexCommon):
             try:
                 other = ndindex(other)
                 return self == other

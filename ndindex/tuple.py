@@ -1,12 +1,12 @@
 import itertools
 
-from .ndindex import NDIndexBase, ndindex
+from .ndindex import NDIndexCommon, ndindex
 from .subindex_helpers import subindex_slice
 from .shapetools import asshape, broadcast_shapes
 
 from .simple_tuple_cython import SimpleTupleCython
 
-class Tuple(SimpleTupleCython, NDIndexBase):
+class Tuple(SimpleTupleCython, NDIndexCommon):
     """
     Represents a tuple of single-axis indices.
 

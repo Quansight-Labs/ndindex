@@ -1,4 +1,4 @@
-from .ndindex import NDIndexBase
+from .ndindex import NDIndexCommon
 from .subindex_helpers import subindex_slice
 from .shapetools import asshape
 from .simple_slice_cython import SimpleSliceCython
@@ -13,7 +13,7 @@ class default:
     """
     pass
 
-class Slice(SimpleSliceCython, NDIndexBase):
+class Slice(SimpleSliceCython, NDIndexCommon):
     """
     Represents a slice on an axis of an nd-array.
 
