@@ -496,6 +496,8 @@ def test_asshape():
     raises(TypeError, lambda: asshape(np.int64(1), allow_int=False))
     raises(IndexError, lambda: asshape((2, 3), 3))
 
+@example([(0,), ()], (0, 0))
+@example([(0, 1), (0,), ()], [(-1,), (0,), ()])
 @example([(5,)], (10,))
 @example([], [])
 @example([()], [])
@@ -521,13 +523,11 @@ def test_normalize_skip_axes(shapes, skip_axes):
             raises(AxisError, lambda: normalize_skip_axes(shapes, skip_axes))
             return
         _skip_axes = [(skip_axes,)]*len(shapes)
-        skip_len = 1
     elif isinstance(skip_axes, tuple):
         if not all(-min_dim <= s < min_dim for s in skip_axes):
             raises(AxisError, lambda: normalize_skip_axes(shapes, skip_axes))
             return
         _skip_axes = [skip_axes]*len(shapes)
-        skip_len = len(skip_axes)
     elif not skip_axes:
         # empty list will be interpreted as a single skip_axes tuple
         assert normalize_skip_axes(shapes, skip_axes) == [()]*len(shapes)
@@ -537,7 +537,6 @@ def test_normalize_skip_axes(shapes, skip_axes):
             raises(ValueError, lambda: normalize_skip_axes(shapes, skip_axes))
             return
         _skip_axes = skip_axes
-        skip_len = len(skip_axes[0])
 
     try:
         res = normalize_skip_axes(shapes, skip_axes)
@@ -566,7 +565,7 @@ def test_normalize_skip_axes(shapes, skip_axes):
 
     assert len(res) == len(shapes)
     for shape, new_skip_axes in zip(shapes, res):
-        assert len(new_skip_axes) == len(set(new_skip_axes)) == skip_len
+        assert len(new_skip_axes) == len(set(new_skip_axes))
         assert new_skip_axes == tuple(sorted(new_skip_axes))
         for i in new_skip_axes:
             assert i < 0
