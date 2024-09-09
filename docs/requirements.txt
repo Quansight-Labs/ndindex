@@ -3,8 +3,8 @@ furo
 linkify-it-py
 matplotlib @ git+https://github.com/asmeurer/matplotlib.git@output-base-name
 myst-parser
-packaging
 scikit-image
+setuptools
 sphinx
 sphinx-autobuild
 sphinx-copybutton
