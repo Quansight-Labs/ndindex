@@ -21,6 +21,7 @@ Base Classes
 
 .. autoclass:: ndindex.ndindex.NDIndex
    :members:
+   :inherited-members:
 
 .. autoclass:: ndindex.array.ArrayIndex
    :members:
