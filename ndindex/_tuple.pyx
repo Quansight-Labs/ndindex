@@ -48,25 +48,24 @@ cdef extern from *:
 cdef object _ndindex, _ArrayIndex, _Integer, _Slice, _BooleanArray, _IntegerArray, _ellipsis, _Newaxis
 cdef object _broadcast_shapes, _BroadcastError
 
-cdef void _lazy_import() nogil:
+cdef void _lazy_import():
     global _ndindex, _ArrayIndex, _Integer, _Slice, _BooleanArray, _IntegerArray, _ellipsis, _Newaxis
     global _broadcast_shapes, _BroadcastError
 
-    with gil:
-        if _ndindex is None:
-            from ndindex import ndindex, Integer, Slice, BooleanArray, IntegerArray, ellipsis, Newaxis
-            from ndindex.array import ArrayIndex
-            from ndindex.shapetools import broadcast_shapes, BroadcastError
-            _ndindex = ndindex
-            _ArrayIndex = ArrayIndex
-            _Integer = Integer
-            _Slice = Slice
-            _BooleanArray = BooleanArray
-            _IntegerArray = IntegerArray
-            _ellipsis = ellipsis
-            _Newaxis = Newaxis
-            _broadcast_shapes = broadcast_shapes
-            _BroadcastError = BroadcastError
+    if _ndindex is None:
+        from ndindex import ndindex, Integer, Slice, BooleanArray, IntegerArray, ellipsis, Newaxis
+        from ndindex.array import ArrayIndex
+        from ndindex.shapetools import broadcast_shapes, BroadcastError
+        _ndindex = ndindex
+        _ArrayIndex = ArrayIndex
+        _Integer = Integer
+        _Slice = Slice
+        _BooleanArray = BooleanArray
+        _IntegerArray = IntegerArray
+        _ellipsis = ellipsis
+        _Newaxis = Newaxis
+        _broadcast_shapes = broadcast_shapes
+        _BroadcastError = BroadcastError
 
 cdef int _is_boolean_scalar(object idx):
     cdef object BooleanArray
