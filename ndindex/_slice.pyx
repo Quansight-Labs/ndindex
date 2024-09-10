@@ -1,9 +1,3 @@
-# distutils: language = c
-# cython: language_level=3
-# cython: boundscheck=False
-# cython: wraparound=False
-# cython: initializedcheck=False
-
 from cpython cimport PyObject
 from libc.stdint cimport int64_t
 import sys

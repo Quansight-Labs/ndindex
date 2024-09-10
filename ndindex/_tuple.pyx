@@ -1,9 +1,3 @@
-# cython: language_level=3
-# distutils: language = c
-# cython: boundscheck=False
-# cython: wraparound=False
-# cython: initializedcheck=False
-
 import sys
 
 # Forward declarations
