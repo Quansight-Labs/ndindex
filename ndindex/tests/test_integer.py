@@ -23,6 +23,29 @@ def test_integer_args():
     raises(TypeError, lambda: Integer(True))
     raises(TypeError, lambda: Integer(bool_(True)))
 
+
+    class HasIndex:
+        def __init__(self, x):
+            self.x = x
+
+        def __index__(self):
+            return self.x
+
+    idx = Integer(HasIndex(0))
+    assert idx.args == (0,)
+    assert idx.raw == 0
+    assert type(idx.args[0]) is int
+    assert type(idx.raw) is int
+
+    class HasInt:
+        def __init__(self, x):
+            self.x = x
+
+        def __int__(self):
+            return self.x # pragma: no cover
+
+    raises(TypeError, lambda: Integer(HasInt(0)))
+
 def test_integer_exhaustive():
     a = arange(10)
     for i in range(-12, 12):

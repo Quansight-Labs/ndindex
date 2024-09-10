@@ -17,24 +17,53 @@ def test_slice_args():
     raises(TypeError, lambda: slice())
     raises(TypeError, lambda: Slice())
     raises(TypeError, lambda: Slice(1.0))
+    raises(TypeError, lambda: Slice('1'))
     # See docstring of operator_index()
     raises(TypeError, lambda: Slice(True))
     raises(TypeError, lambda: Slice(bool_(True)))
 
     S = Slice(1)
-    assert S == Slice(S) == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
+    assert S == Slice(S) == Slice(slice(1)) == Slice(None, 1) == Slice(None, 1, None) == Slice(None, 1, None)
     assert S.raw == slice(None, 1, None)
     assert S.args == (S.start, S.stop, S.step)
 
     S = Slice(0, 1)
-    assert S == Slice(S) == Slice(0, 1, None)
+    assert S == Slice(S) == Slice(slice(0, 1)) == Slice(0, 1, None)
     assert S.raw == slice(0, 1, None)
     assert S.args == (S.start, S.stop, S.step)
 
     S = Slice(0, 1, 2)
-    assert S == Slice(S)
+    assert S == Slice(S) == Slice(slice(0, 1, 2))
     assert S.raw == slice(0, 1, 2)
     assert S.args == (S.start, S.stop, S.step)
+
+    class HasIndex:
+        def __init__(self, x):
+            self.x = x
+
+        def __index__(self):
+            return self.x
+
+    S = Slice(HasIndex(0), HasIndex(1), HasIndex(2))
+    assert S == Slice(0, 1, 2)
+    assert S.args == (0, 1, 2)
+    assert type(S.start) is int
+    assert type(S.stop) is int
+    assert type(S.step) is int
+    assert type(S.args[0]) is int
+    assert type(S.args[1]) is int
+    assert type(S.args[2]) is int
+
+    class HasInt:
+        def __init__(self, x):
+            self.x = x
+
+        def __int__(self):
+            return self.x # pragma: no cover
+
+    raises(TypeError, lambda: Slice(HasInt(0), None))
+    raises(TypeError, lambda: Slice(None, HasInt(0)))
+    raises(TypeError, lambda: Slice(None, None, HasInt(0)))
 
 def test_slice_exhaustive():
     for n in range(100):
