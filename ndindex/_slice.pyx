@@ -131,9 +131,11 @@ cdef class _Slice:
         return f"_Slice{self.args}"
 
     def __eq__(self, other):
-        if not isinstance(other, _Slice):
-            return False
-        return self.args == other.args
+        if isinstance(other, slice):
+            return self.args == (other.start, other.stop, other.step)
+        elif isinstance(other, _Slice):
+            return self.args == other.args
+        return False
 
     def __ne__(self, other):
         return not self == other

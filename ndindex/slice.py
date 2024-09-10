@@ -530,13 +530,6 @@ class Slice(_Slice, NDIndexCommon):
             return False
         return l == 0
 
-    def __eq__(self, other):
-        if isinstance(other, slice):
-            return self.args == (other.start, other.stop, other.step)
-        elif isinstance(other, Slice):
-            return self.args == other.args
-        return False
-
     def selected_indices(self, shape, axis=None):
         if axis is None:
             yield from self.expand(shape).selected_indices(shape)
