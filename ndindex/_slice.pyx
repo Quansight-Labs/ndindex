@@ -98,14 +98,29 @@ cdef class _Slice:
 
     @property
     def start(self):
+        """
+        The start value of the slice.
+
+        Note that this may be an integer or `None`.
+        """
         return self.args[0]
 
     @property
     def stop(self):
+        """
+        The stop value of the slice.
+
+        Note that this may be an integer or `None`.
+        """
         return self.args[1]
 
     @property
     def step(self):
+        """
+        The step value of the slice.
+
+        Note that this may be an integer or `None`.
+        """
         return self.args[2]
 
     @property
