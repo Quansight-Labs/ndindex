@@ -38,6 +38,12 @@ def pytest_addoption(parser):
         help="disable the Hypothesis deadline",
     )
 
+    parser.addoption(
+        '--force-cov',
+        action='store_true',
+        default=False,
+        help='force coverage to be enabled',
+    )
 
 def pytest_configure(config):
     # Set Hypothesis max_examples.
@@ -57,6 +63,11 @@ def pytest_configure(config):
 
         hypothesis.settings.load_profile("ndindex-hypothesis-overridden")
 
+    if not config.getoption('--force-cov') and getattr(config, 'args', []) not in [[], ['ndindex'], ['ndindex/']]:
+        cov = config.pluginmanager.get_plugin('_cov')
+        cov.options.no_cov = True
+        if cov.cov_controller:
+            cov.cov_controller.pause()
 
 settings.register_profile('ndindex_hypothesis_profile', deadline=800)
 settings.load_profile('ndindex_hypothesis_profile')
