@@ -4,9 +4,9 @@ from .ndindex import NDIndexCommon, ndindex
 from .subindex_helpers import subindex_slice
 from .shapetools import asshape, broadcast_shapes
 
-from .simple_tuple_cython import SimpleTupleCython
+from ._tuple import _Tuple
 
-class Tuple(SimpleTupleCython, NDIndexCommon):
+class Tuple(_Tuple, NDIndexCommon):
     """
     Represents a tuple of single-axis indices.
 

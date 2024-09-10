@@ -36,7 +36,7 @@ cdef inline int64_t cy_operator_index(object idx) except? -1:
 cdef class default:
     pass
 
-cdef class SimpleSliceCython:
+cdef class _Slice:
     cdef readonly tuple args
     cdef int64_t _start
     cdef int64_t _stop
@@ -52,14 +52,14 @@ cdef class SimpleSliceCython:
     cdef inline void _typecheck(self, object start, object stop, object step, object _reduced) except *:
         cdef object _start, _stop, _step
 
-        if isinstance(start, SimpleSliceCython):
-            self.args = (<SimpleSliceCython>start).args
-            self._start = (<SimpleSliceCython>start)._start
-            self._stop = (<SimpleSliceCython>start)._stop
-            self._step = (<SimpleSliceCython>start)._step
-            self._has_start = (<SimpleSliceCython>start)._has_start
-            self._has_stop = (<SimpleSliceCython>start)._has_stop
-            self._has_step = (<SimpleSliceCython>start)._has_step
+        if isinstance(start, _Slice):
+            self.args = (<_Slice>start).args
+            self._start = (<_Slice>start)._start
+            self._stop = (<_Slice>start)._stop
+            self._step = (<_Slice>start)._step
+            self._has_start = (<_Slice>start)._has_start
+            self._has_stop = (<_Slice>start)._has_stop
+            self._has_step = (<_Slice>start)._has_step
             self._reduced = _reduced
             return
 
@@ -119,10 +119,10 @@ cdef class SimpleSliceCython:
         return self._reduced
 
     def __repr__(self):
-        return f"SimpleSliceCython{self.args}"
+        return f"_Slice{self.args}"
 
     def __eq__(self, other):
-        if not isinstance(other, SimpleSliceCython):
+        if not isinstance(other, _Slice):
             return False
         return self.args == other.args
 

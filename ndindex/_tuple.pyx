@@ -80,7 +80,7 @@ cdef int _is_boolean_scalar(object idx):
     BooleanArray = _BooleanArray
     return isinstance(idx, BooleanArray) and idx.shape == ()
 
-cdef class SimpleTupleCython:
+cdef class _Tuple:
     cdef readonly tuple args
 
     def __cinit__(self, *args):
@@ -115,9 +115,9 @@ cdef class SimpleTupleCython:
                 n_ellipses += 1
                 if n_ellipses > 1:
                     raise IndexError("an index can only have a single ellipsis ('...')")
-            if isinstance(newarg, SimpleTupleCython):
+            if isinstance(newarg, _Tuple):
                 if len(args) == 1:
-                    raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call SimpleTupleCython(*args) instead of SimpleTupleCython(args)?")
+                    raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call _Tuple(*args) instead of _Tuple(args)?")
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
             if isinstance(newarg, _ArrayIndex):
@@ -163,12 +163,12 @@ cdef class SimpleTupleCython:
         return tuple(arg.raw for arg in self.args)
 
     def __repr__(self):
-        return f"SimpleTupleCython{self.args}"
+        return f"_Tuple{self.args}"
 
     def __eq__(self, other):
         if isinstance(other, tuple):
             return self.args == other
-        elif isinstance(other, SimpleTupleCython):
+        elif isinstance(other, _Tuple):
             return self.args == other.args
         return False
 
