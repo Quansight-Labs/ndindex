@@ -60,17 +60,12 @@ setuptools.setup(
     extras_require={
         "arrays": "numpy",
     },
-    tests_require=[
-        'numpy',
-        'pytest',
-        'hypothesis',
-    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.9',
 )
 
 print("CYTHONIZE_NDINDEX: %r" % CYTHONIZE_NDINDEX)

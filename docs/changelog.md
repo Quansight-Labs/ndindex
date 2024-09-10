@@ -52,8 +52,6 @@
 - Rename the default git branch from `master` to `main`.
 
 
-### Minor Changes
-
 ## Version 1.7 (2023-04-20)
 
 ### Major Changes
@@ -80,7 +78,7 @@
 - New exceptions {class}`~.BroadcastError` and {class}`~.AxisError` which are
   used by {func}`~.iter_indices` and {func}`~.broadcast_shapes`.
 
-## Minor Changes
+### Minor Changes
 
 - The documentation theme has been changed to
   [Furo](https://pradyunsg.me/furo/), which has a more clean color scheme
