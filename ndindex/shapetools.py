@@ -482,6 +482,7 @@ def normalize_skip_axes(shapes, skip_axes):
         raise ValueError("skip_axes must be empty if there are no shapes")
 
     new_skip_axes = []
+    err = None
     for shape in shapes:
         s = tuple(sorted(ndindex(i).reduce(len(shape), negative_int=True, axiserror=True).raw for i in skip_axes))
         if len(s) != len(set(s)):
@@ -489,6 +490,7 @@ def normalize_skip_axes(shapes, skip_axes):
             # For testing
             err.skip_axes = skip_axes
             err.shape = shape
-            raise err
         new_skip_axes.append(s)
+    if err:
+        raise err
     return new_skip_axes
