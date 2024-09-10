@@ -59,7 +59,7 @@ def test_slice_args():
             self.x = x
 
         def __int__(self):
-            return self.x
+            return self.x # pragma: no cover
 
     raises(TypeError, lambda: Slice(HasInt(0), None))
     raises(TypeError, lambda: Slice(None, HasInt(0)))

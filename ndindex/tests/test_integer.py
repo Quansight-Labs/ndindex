@@ -42,7 +42,7 @@ def test_integer_args():
             self.x = x
 
         def __int__(self):
-            return self.x
+            return self.x # pragma: no cover
 
     raises(TypeError, lambda: Integer(HasInt(0)))
 
