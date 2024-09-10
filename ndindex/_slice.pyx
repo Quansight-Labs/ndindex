@@ -127,8 +127,8 @@ cdef class _Slice:
     def _reduced(self):
         return self._reduced
 
-    def __repr__(self):
-        return f"_Slice{self.args}"
+    # def __repr__(self):
+    #     return f"_Slice{self.args}"
 
     def __eq__(self, other):
         if isinstance(other, slice):

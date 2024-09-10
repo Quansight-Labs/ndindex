@@ -1,4 +1,5 @@
-import setuptools
+import os
+from setuptools import setup, Extension
 import versioneer
 
 import numpy as np
@@ -7,11 +8,28 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 from Cython.Build import cythonize
-ext_modules = cythonize(["ndindex/*.pyx"],
-                        language_level="3",
+
+CYTHON_COVERAGE = os.environ.get("CYTHON_COVERAGE", False)
+define_macros = []
+compiler_directives = {}
+if CYTHON_COVERAGE:
+    define_macros.append(("CYTHON_TRACE_NOGIL", "1"))
+    compiler_directives["linetrace"] = True
+
+ext_modules = cythonize([
+    Extension(
+        "ndindex._slice", ["ndindex/_slice.pyx"],
+        define_macros=define_macros,
+    ),
+    Extension(
+        "ndindex._tuple", ["ndindex/_tuple.pyx"],
+        define_macros=define_macros,
+    )],
+    language_level="3",
+    compiler_directives=compiler_directives,
 )
 
-setuptools.setup(
+setup(
     name="ndindex",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),

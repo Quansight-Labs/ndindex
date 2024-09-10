@@ -98,7 +98,7 @@ cdef class _Tuple:
             ndarray = sys.modules['numpy'].ndarray
             bool_ = sys.modules['numpy'].bool_
         else:
-            ndarray = bool_ = ()
+            ndarray = bool_ = () # pragma: no cover
 
         has_array = any(isinstance(i, (_ArrayIndex, list, ndarray, bool, bool_)) for i in args)
 
@@ -156,8 +156,8 @@ cdef class _Tuple:
     def raw(self):
         return tuple(arg.raw for arg in self.args)
 
-    def __repr__(self):
-        return f"_Tuple{self.args}"
+    # def __repr__(self):
+    #     return f"_Tuple{self.args}"
 
     def __eq__(self, other):
         if isinstance(other, tuple):
