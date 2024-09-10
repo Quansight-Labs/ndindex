@@ -94,7 +94,7 @@ cdef class _Slice:
 
     @property
     def raw(self):
-        return slice(self.start, self.stop, self.step)
+        return slice(*self.args)
 
     @property
     def start(self):
