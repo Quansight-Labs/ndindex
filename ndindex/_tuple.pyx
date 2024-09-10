@@ -48,6 +48,9 @@ cdef extern from *:
 cdef object _ndindex, _ArrayIndex, _Integer, _Slice, _BooleanArray, _IntegerArray, _ellipsis, _Newaxis
 cdef object _broadcast_shapes, _BroadcastError
 
+# We cannot just add these imports to the top because of circular import
+# issues. We can put them inside the constructor, but then they create a big
+# performance bottleneck.
 cdef void _lazy_import():
     global _ndindex, _ArrayIndex, _Integer, _Slice, _BooleanArray, _IntegerArray, _ellipsis, _Newaxis
     global _broadcast_shapes, _BroadcastError
@@ -91,14 +94,12 @@ cdef class _Tuple:
 
         _lazy_import()
 
-        # Check for numpy availability
         if 'numpy' in sys.modules:
             ndarray = sys.modules['numpy'].ndarray
             bool_ = sys.modules['numpy'].bool_
         else:
             ndarray = bool_ = ()
 
-        # Check if any argument is an array-like object
         has_array = any(isinstance(i, (_ArrayIndex, list, ndarray, bool, bool_)) for i in args)
 
         n_ellipses = 0
