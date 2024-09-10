@@ -43,7 +43,7 @@ cdef class _Slice:
     def __cinit__(self, start, stop=default, step=None, _reduced=False):
         self._typecheck(start, stop, step, _reduced)
 
-    cdef inline void _typecheck(self, object start, object stop, object step, object _reduced) except *:
+    cdef inline void _typecheck(self, object start, object stop, object step, bint _reduced) except *:
         cdef object _start, _stop, _step
 
         if isinstance(start, _Slice):
