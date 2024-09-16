@@ -1,7 +1,6 @@
 import os
 from setuptools import setup, Extension, Command
 import versioneer
-import numpy as np
 import shutil
 import glob
 
@@ -68,7 +67,6 @@ setup(
     url="https://quansight-labs.github.io/ndindex/",
     packages=['ndindex', 'ndindex.tests'],
     ext_modules=ext_modules,
-    include_dirs=[np.get_include()],
     license="MIT",
     # NumPy is only required when using array indices
     extras_require={
