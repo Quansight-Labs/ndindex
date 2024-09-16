@@ -1,8 +1,9 @@
 import os
-from setuptools import setup, Extension
+from setuptools import setup, Extension, Command
 import versioneer
-
 import numpy as np
+import shutil
+import glob
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -29,10 +30,37 @@ ext_modules = cythonize([
     compiler_directives=compiler_directives,
 )
 
+class CleanCommand(Command):
+    """Custom clean command to tidy up the project root."""
+    user_options = []
+    def initialize_options(self):
+        pass
+    def finalize_options(self):
+        pass
+    def run(self):
+        paths = [
+            './build',
+            './dist',
+            './*.egg-info',
+            './**/*.so',
+            './**/*.c',
+            './**/*.cpp',
+        ]
+        for path in paths:
+            for item in glob.glob(path, recursive=True):
+                print(f"Removing {item}")
+                if os.path.isdir(item):
+                    shutil.rmtree(item)
+                else:
+                    os.remove(item)
+
 setup(
     name="ndindex",
     version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
+    cmdclass={
+        **versioneer.get_cmdclass(),
+        'clean': CleanCommand
+    },
     author="Quansight Labs",
     description="A Python library for manipulating indices of ndarrays.",
     long_description=long_description,
