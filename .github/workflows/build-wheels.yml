@@ -18,11 +18,8 @@ jobs:
         uses: pypa/cibuildwheel@v2.21.0
         env:
           CIBW_TEST_COMMAND: "python -m 'import ndindex'"
-        #    ...
-        # with:
-        #   package-dir: .
-        #   output-dir: wheelhouse
-        #   config-file: "{package}/pyproject.toml"
+          # NumPy wheels don't exist for these platforms
+          CIBW_SKIP: "pp39-manylinux_i686"
 
       - uses: actions/upload-artifact@v4
         with:
