@@ -48,9 +48,9 @@ jobs:
     - name: Install dependencies
       run: python -m pip install -r requirements-dev.txt
 
-    - name: Build a wheel and a sdist
+    - name: Build an sdist
       run: |
-        PYTHONWARNINGS=error,default::DeprecationWarning python -m build .
+        PYTHONWARNINGS=error,default::DeprecationWarning python -m build --sdist .
 
     - name: Verify the distribution
       run: twine check --strict dist/*
@@ -67,10 +67,36 @@ jobs:
         name: dist-artifact
         path: dist
 
+  wait_for_wheels:
+    name: Wait for wheels
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Wait for build-wheels workflow
+      uses: lewagon/wait-on-check-action@v1.3.1
+      with:
+        ref: ${{ github.ref }}
+        check-name: 'Build wheels on ubuntu-latest'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        wait-interval: 10
+
+  download_wheels:
+    name: Download wheels
+    needs: wait_for_wheels
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        run-id: ${{ github.event.workflow_run.id }}
+        pattern: cibw-wheels-*
+        path: dist
+        merge-multiple: true
+
   publish:
     name: Publish Python distribution to (Test)PyPI
     if: github.event_name != 'pull_request' && github.repository == 'Quansight-Labs/ndindex'
-    needs: build
+    needs: [build, download_wheels]
     runs-on: ubuntu-latest
     # Mandatory for publishing with a trusted publisher
     # c.f. https://docs.pypi.org/trusted-publishers/using-a-publisher/
@@ -87,6 +113,13 @@ jobs:
       with:
         name: dist-artifact
         path: dist
+
+    - name: Download wheel artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: cibw-wheels-*
+        path: dist
+        merge-multiple: true
 
     - name: List all files
       run: ls -lh dist
