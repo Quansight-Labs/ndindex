@@ -50,7 +50,7 @@ jobs:
 
     - name: Build a wheel and a sdist
       run: |
-        CYTHONIZE_NDINDEX=0 PYTHONWARNINGS=error,default::DeprecationWarning python -m build .
+        PYTHONWARNINGS=error,default::DeprecationWarning python -m build .
 
     - name: Verify the distribution
       run: twine check --strict dist/*
