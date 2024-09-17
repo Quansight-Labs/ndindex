@@ -42,6 +42,7 @@ jobs:
         if: matrix.python-version != 3.12
       - name: In-place build
         run: |
+          python setup.py clean
           python setup.py build_ext --inplace
       - name: Run Doctests
         run: |
