@@ -32,18 +32,17 @@ jobs:
       - name: Test Installation
         run: |
           python -m pip install --verbose .
-      - name: In-place build
         # COVERAGE_CORE=sysmon does not work with Cython. Since coverage is
         # really slow without it (see
         # https://github.com/nedbat/coveragepy/issues/1665), just omit Cython
         # coverage in 3.12. Hopefully by the time it is our minimal version it
         # will work with Cython, or trace coverage will be faster again.
+      - name: Set CYTHON_COVERAGE=1
+        run: echo "CYTHON_COVERAGE=1" >> $GITHUB_ENV
+        if: matrix.python-version != 3.12
+      - name: In-place build
         run: |
-          if [[ ${{ matrix.python-version }} != '3.12' ]]; then
-            CYTHON_COVERAGE=1 python setup.py build_ext --inplace
-          else
-            python setup.py build_ext --inplace
-          fi
+          python setup.py build_ext --inplace
       - name: Run Doctests
         run: |
           ./run_doctests
