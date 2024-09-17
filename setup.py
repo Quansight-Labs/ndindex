@@ -13,6 +13,7 @@ CYTHON_COVERAGE = os.environ.get("CYTHON_COVERAGE", False)
 define_macros = []
 compiler_directives = {}
 if CYTHON_COVERAGE:
+    print("CYTHON_COVERAGE is set. Enabling Cython coverage support.")
     define_macros.append(("CYTHON_TRACE_NOGIL", "1"))
     compiler_directives["linetrace"] = True
 
