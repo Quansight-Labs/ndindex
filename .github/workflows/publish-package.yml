@@ -25,7 +25,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  build_sdist:
     name: Build Python distribution
     runs-on: ubuntu-latest
 
@@ -64,36 +64,33 @@ jobs:
         name: dist-artifact
         path: dist
 
-  wait_for_wheels:
-    name: Wait for wheels
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Wait for build-wheels workflow
-      uses: lewagon/wait-on-check-action@v1.3.1
-      with:
-        ref: ${{ github.ref }}
-        check-name: 'Build wheels on ubuntu-latest'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        wait-interval: 10
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # macos-13 is an intel runner, macos-14 is apple silicon
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 
-  download_wheels:
-    name: Download wheels
-    needs: wait_for_wheels
-    runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v4
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        run-id: ${{ github.event.workflow_run.id }}
-        pattern: cibw-wheels-*
-        path: dist
-        merge-multiple: true
+      - uses: actions/checkout@v4
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.21.0
+        with:
+          output-dir: dist/
+        env:
+          CIBW_TEST_COMMAND: 'python -c "import ndindex"'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
 
   publish:
     name: Publish Python distribution to (Test)PyPI
     if: github.event_name != 'pull_request' && github.repository == 'Quansight-Labs/ndindex'
-    needs: [build, download_wheels]
+    needs: [build, build_wheels]
     runs-on: ubuntu-latest
     # Mandatory for publishing with a trusted publisher
     # c.f. https://docs.pypi.org/trusted-publishers/using-a-publisher/
