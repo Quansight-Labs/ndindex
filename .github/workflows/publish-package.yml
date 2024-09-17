@@ -108,13 +108,6 @@ jobs:
         name: dist-artifact
         path: dist
 
-    - name: Download wheel artifacts
-      uses: actions/download-artifact@v4
-      with:
-        pattern: cibw-wheels-*
-        path: dist
-        merge-multiple: true
-
     - name: List all files
       run: ls -lh dist
 
