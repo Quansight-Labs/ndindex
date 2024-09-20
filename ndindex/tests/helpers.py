@@ -14,6 +14,7 @@ from hypothesis.strategies import (integers, none, one_of, lists, just,
                                    nothing, tuples as hypothesis_tuples)
 from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
                                     mbs, BroadcastableShapes, valid_tuple_axes)
+from hypothesis.errors import UnsatisfiedAssumption
 
 from ..ndindex import ndindex
 from ..shapetools import remove_indices, unremove_indices
@@ -48,7 +49,7 @@ shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < MAX_ARRAY_SIZE)
 
-_short_shapes = lambda n: tuples(integers(0, 10), min_size=n, max_size=32).filter(
+_short_shapes = lambda n: tuples(integers(0, 10), min_size=n).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
@@ -426,6 +427,15 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
         try:
             try:
                 a_raw = raw_func(a, idx)
+            except IndexError as e:
+                # It's not straightforward to avoid indexing too many
+                # dimensions in the strategy generation, because the total
+                # number of dimensions in the result array is not a trivial
+                # thing. Furthermore, some versions of NumPy limit this to 32
+                # and some limit it to 64.
+                if "number of dimensions must be within" in str(e):
+                    raise UnsatisfiedAssumption
+                raise
             except Warning as w:
                 # In NumPy < 1.23, this is a FutureWarning. In 1.23 the
                 # deprecation was removed and lists are always interpreted as
@@ -442,6 +452,8 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
             _, e_inner, _ = sys.exc_info()
         if e_inner:
             raise e_inner
+    except UnsatisfiedAssumption:
+        raise
     except Exception as e:
         exception = e
 
