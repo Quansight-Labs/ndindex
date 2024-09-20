@@ -19,7 +19,8 @@ class Tuple(_Tuple, NDIndexCommon):
     - :class:`IntegerArray`
     - :class:`BooleanArray`
 
-    (some of the above are not yet implemented)
+    See :doc:`../indexing-guide/multidimensional-indices/tuples` for a
+    description of the semantics of tuple indices.
 
     `Tuple(x1, x2, …, xn)` represents the index `a[x1, x2, …, xn]` or,
     equivalently, `a[(x1, x2, …, xn)]`. `Tuple()` with no arguments is the

@@ -19,6 +19,9 @@ class Integer(NDIndex):
     index directly. However, it is still recommended to use `raw` for
     consistency, as this only works for `Integer`.
 
+    See :doc:`../indexing-guide/integer-indices` for a description of the
+    semantics of integers as indices.
+
     .. note::
 
        `Integer` does *not* represent an integer, but rather an

@@ -41,10 +41,11 @@ class BooleanArray(ArrayIndex):
        integer array index in a tuple index, it is treated like
        `np.nonzero(idx)`.
 
-    A list of booleans may also be used in place of a boolean array. Note
-    that NumPy treats a direct list of integers as a tuple index, but this
-    behavior is deprecated and will be replaced with integer array indexing in
-    the future. ndindex always treats lists as arrays.
+    See :doc:`../indexing-guide/multidimensional-indices/boolean-arrays` for a
+    more complete description of the semantics of boolean array indices.
+
+    A list (or list of lists) of booleans may also be used in place of an
+    array.
 
     >>> from ndindex import BooleanArray
     >>> import numpy as np
