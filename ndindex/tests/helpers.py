@@ -14,6 +14,7 @@ from hypothesis.strategies import (integers, none, one_of, lists, just,
                                    nothing, tuples as hypothesis_tuples)
 from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
                                     mbs, BroadcastableShapes, valid_tuple_axes)
+from hypothesis.errors import UnsatisfiedAssumption
 
 from ..ndindex import ndindex
 from ..shapetools import remove_indices, unremove_indices
@@ -394,6 +395,7 @@ def warnings_are_errors(f):
 @warnings_are_errors
 def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
                ndindex_func=lambda a, index: a[index.raw],
+               conversion_func=ndindex,
                same_exception=True, assert_equal=assert_equal):
     """
     Check that a raw index idx produces the same result on an array a before
@@ -425,6 +427,15 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
         try:
             try:
                 a_raw = raw_func(a, idx)
+            except IndexError as e:
+                # It's not straightforward to avoid indexing too many
+                # dimensions in the strategy generation, because the total
+                # number of dimensions in the result array is not a trivial
+                # thing. Furthermore, some versions of NumPy limit this to 32
+                # and some limit it to 64.
+                if "number of dimensions must be within" in str(e): # pragma: no cover
+                    raise UnsatisfiedAssumption
+                raise
             except Warning as w:
                 # In NumPy < 1.23, this is a FutureWarning. In 1.23 the
                 # deprecation was removed and lists are always interpreted as
@@ -441,11 +452,14 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
             _, e_inner, _ = sys.exc_info()
         if e_inner:
             raise e_inner
+    except UnsatisfiedAssumption: # pragma: no cover
+        raise
     except Exception as e:
         exception = e
 
+    index = '<conversion to ndindex object failed>'
     try:
-        index = ndindex(idx)
+        index = conversion_func(idx)
         a_ndindex = ndindex_func(a, index)
     except Exception as e:
         if not exception:

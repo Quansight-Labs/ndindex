@@ -27,6 +27,10 @@ jobs:
             cd docs
             pip install -r requirements.txt
       - run:
+          name: In-place build
+          command: |
+            python setup.py build_ext --inplace
+      - run:
           name: Build docs
           no_output_timeout: 25m
           command: |

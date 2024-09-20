@@ -50,7 +50,7 @@ class NDIndexConstructor:
 
     """
     def __getitem__(self, obj):
-        if isinstance(obj, NDIndex):
+        if isinstance(obj, NDIndexCommon):
             return obj
 
         if 'numpy' in sys.modules:
@@ -209,80 +209,13 @@ class ImmutableObject:
         # __hash__
         return hash(self.args)
 
-class NDIndex(ImmutableObject):
+class NDIndexCommon:
     """
-    Represents an index into an nd-array (i.e., a numpy array).
+    Definitions of common methods for :class:`NDIndex` subclasses.
 
-    This is a base class for all ndindex types. All types that subclass this
-    class should redefine the following methods
-
-    - `_typecheck(self, *args)`. See the docstring of
-      :class:`ImmutableObject`.
-
-    - `raw` (a **@property** method) should return the raw index that can be
-      passed as an index to a numpy array.
-
-    In addition other methods on this should be re-defined as necessary. Some
-    methods have a default implementation on this class, which is sufficient
-    for some subclasses.
-
-    The methods `__init__` and `__eq__` should *not* be overridden. Equality
-    (and hashability) on `NDIndex` subclasses is determined by equality of
-    types and `.args`. Equivalent indices should not attempt to redefine
-    equality. Rather they should define canonicalization via `reduce()`.
-    `__hash__` is defined so that the hash matches the hash of `.raw`. If
-    `.raw` is unhashable, `__hash__` should be overridden to use
-    `hash(self.args)`.
-
-    See Also
-    ========
-
-    ImmutableObject
-
+    Most of these are only here so that they can define a common docstring.
     """
     __slots__ = ()
-
-    # TODO: Make NDIndex and ImmutableObject abstract base classes
-    @property
-    def raw(self):
-        """
-        Return the equivalent of `self` that can be used as an index
-
-        NumPy does not allow custom objects to be used as indices, with the
-        exception of integer indices, so to use an ndindex object as an
-        index, it is necessary to use `raw`.
-
-        >>> from ndindex import Slice
-        >>> import numpy as np
-        >>> a = np.arange(5)
-        >>> s = Slice(2, 4)
-        >>> a[s]
-        Traceback (most recent call last):
-        ...
-        IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
-        >>> a[s.raw]
-        array([2, 3])
-
-        """
-        raise NotImplementedError
-
-    # This is still here as a fallback implementation, but it isn't actually
-    # used by any present subclasses, because it is faster to implement __eq__
-    # on each class specifically.
-    def __eq__(self, other): # pragma: no cover
-        if not isinstance(other, NDIndex):
-            try:
-                other = ndindex(other)
-                return self == other
-            except IndexError:
-                return False
-        return super().__eq__(other)
-
-    def __hash__(self):
-        # Make the hash match the raw hash when the raw type is hashable.
-        # Note: subclasses where .raw is not hashable should define __hash__
-        # as hash(self.args)
-        return hash(self.raw)
 
     def reduce(self, shape=None, *, negative_int=False):
         """
@@ -677,6 +610,82 @@ class NDIndex(ImmutableObject):
             that intersect with a given index
         """
         return self.expand(shape).selected_indices(shape)
+
+class NDIndex(NDIndexCommon, ImmutableObject):
+    """
+    Represents an index into an nd-array (i.e., a numpy array).
+
+    This is a base class for all ndindex types. All types that subclass this
+    class should redefine the following methods
+
+    - `_typecheck(self, *args)`. See the docstring of
+      :class:`ImmutableObject`.
+
+    - `raw` (a **@property** method) should return the raw index that can be
+      passed as an index to a numpy array.
+
+    In addition other methods on this should be re-defined as necessary. Some
+    methods have a default implementation on this class, which is sufficient
+    for some subclasses.
+
+    The methods `__init__` and `__eq__` should *not* be overridden. Equality
+    (and hashability) on `NDIndex` subclasses is determined by equality of
+    types and `.args`. Equivalent indices should not attempt to redefine
+    equality. Rather they should define canonicalization via `reduce()`.
+    `__hash__` is defined so that the hash matches the hash of `.raw`. If
+    `.raw` is unhashable, `__hash__` should be overridden to use
+    `hash(self.args)`.
+
+    See Also
+    ========
+
+    ImmutableObject
+
+    """
+    __slots__ = ()
+
+    # TODO: Make NDIndex and ImmutableObject abstract base classes
+    @property
+    def raw(self):
+        """
+        Return the equivalent of `self` that can be used as an index
+
+        NumPy does not allow custom objects to be used as indices, with the
+        exception of integer indices, so to use an ndindex object as an
+        index, it is necessary to use `raw`.
+
+        >>> from ndindex import Slice
+        >>> import numpy as np
+        >>> a = np.arange(5)
+        >>> s = Slice(2, 4)
+        >>> a[s]
+        Traceback (most recent call last):
+        ...
+        IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+        >>> a[s.raw]
+        array([2, 3])
+
+        """
+        raise NotImplementedError
+
+    # This is still here as a fallback implementation, but it isn't actually
+    # used by any present subclasses, because it is faster to implement __eq__
+    # on each class specifically.
+    def __eq__(self, other): # pragma: no cover
+        if not isinstance(other, NDIndexCommon):
+            try:
+                other = ndindex(other)
+                return self == other
+            except IndexError:
+                return False
+        return super().__eq__(other)
+
+    def __hash__(self):
+        # Make the hash match the raw hash when the raw type is hashable.
+        # Note: subclasses where .raw is not hashable should define __hash__
+        # as hash(self.args)
+        return hash(self.raw)
+
 
 def operator_index(idx):
     """

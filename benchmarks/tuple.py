@@ -30,6 +30,16 @@ class TimeTuple:
         except IndexError:
             pass
 
+    def time_args(self):
+        self.t.args
+        self.t_arrays.args
+        self.t_boolean_scalars.args
+
+    def time_raw(self):
+        self.t.raw
+        self.t_arrays.raw
+        self.t_boolean_scalars.raw
+
     def time_reduce(self):
         self.t.reduce()
 

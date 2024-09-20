@@ -17,6 +17,9 @@ jobs:
           set -x
           set -e
           python -m pip install -r docs/requirements.txt
+      - name: In-place build
+        run: |
+          python setup.py build_ext --inplace
 
       - name: Build Docs
         run: |

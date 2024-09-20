@@ -1,6 +1,7 @@
-from .ndindex import NDIndex, operator_index
+from .ndindex import NDIndexCommon
 from .subindex_helpers import subindex_slice
 from .shapetools import asshape
+from ._slice import _Slice
 
 class default:
     """
@@ -12,7 +13,7 @@ class default:
     """
     pass
 
-class Slice(NDIndex):
+class Slice(_Slice, NDIndexCommon):
     """
     Represents a slice on an axis of an nd-array.
 
@@ -59,28 +60,8 @@ class Slice(NDIndex):
     """
     __slots__ = ()
 
-    def _typecheck(self, start, stop=default, step=None):
-        if isinstance(start, Slice):
-            return start.args
-        if isinstance(start, slice):
-            start, stop, step = start.start, start.stop, start.step
-
-        if stop is default:
-            start, stop = None, start
-
-        if step == 0:
-            raise ValueError("slice step cannot be zero")
-
-        if start is not None:
-            start = operator_index(start)
-        if stop is not None:
-            stop = operator_index(stop)
-        if step is not None:
-            step = operator_index(step)
-
-        args = (start, stop, step)
-
-        return args
+    def __repr__(self):
+        return f"{self.__class__.__name__}({', '.join(map(repr, self.args))})"
 
     def __hash__(self):
         # Slices are only hashable in Python 3.12+
@@ -88,37 +69,6 @@ class Slice(NDIndex):
             return hash(self.raw)
         except TypeError: # pragma: no cover
             return hash(self.args)
-
-    @property
-    def raw(self):
-        return slice(*self.args)
-
-    @property
-    def start(self):
-        """
-        The start value of the slice.
-
-        Note that this may be an integer or `None`.
-        """
-        return self.args[0]
-
-    @property
-    def stop(self):
-        """
-        The stop of the slice.
-
-        Note that this may be an integer or `None`.
-        """
-        return self.args[1]
-
-    @property
-    def step(self):
-        """
-        The step of the slice.
-
-        Note that this may be a nonzero integer or `None`.
-        """
-        return self.args[2]
 
     def __len__(self):
         """
@@ -325,6 +275,9 @@ class Slice(NDIndex):
         .BooleanArray.reduce
 
         """
+        if self._reduced and shape is None:
+            return self
+
         start, stop, step = self.args
 
         # Canonicalize with no shape
@@ -410,7 +363,7 @@ class Slice(NDIndex):
                 elif 0 <= start < -step:
                     step = -start - 1
         if shape is None:
-            return type(self)(start, stop, step)
+            return type(self)(start, stop, step, _reduced=True)
 
         # Further canonicalize with an explicit array shape
 
@@ -479,7 +432,7 @@ class Slice(NDIndex):
                 # first element. If that element isn't actually indexed, we
                 # prefer a nonnegative stop. Otherwise, stop will be -size - 1.
                 stop = start % -step - 1
-        return self.__class__(start, stop, step)
+        return self.__class__(start, stop, step, _reduced=True)
 
     def isvalid(self, shape):
         # The docstring for this method is on the NDIndex base class
@@ -546,7 +499,7 @@ class Slice(NDIndex):
             if (idx < 0).any():
                 raise NotImplementedError("Slice.as_subindex(IntegerArray) is not yet implemented for arrays with negative values. Try calling reduce with a shape first.")
             start, stop, step = subindex_slice(s.start, s.stop, s.step,
-                                               idx, idx+1, 1)
+                                                     idx, idx+1, 1)
             res = BooleanArray(start < stop)
 
             if not res.count_nonzero:
@@ -576,13 +529,6 @@ class Slice(NDIndex):
         except (TypeError, ValueError):
             return False
         return l == 0
-
-    def __eq__(self, other):
-        if isinstance(other, slice):
-            return self.args == (other.start, other.stop, other.step)
-        elif isinstance(other, Slice):
-            return self.args == other.args
-        return False
 
     def selected_indices(self, shape, axis=None):
         if axis is None:

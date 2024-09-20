@@ -44,9 +44,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
 """
 
-from functools import reduce
-from operator import mul
-from math import gcd
+from math import gcd, prod
 
 def gcdex(a, b):
     """Returns x, y, g such that g = x*a + y*b = gcd(a, b).
@@ -92,11 +90,6 @@ def gcdex(a, b):
         (a, b, r, s, x, y) = (b, c, x - q*r, y - q*s, r, s)
 
     return (x*x_sign, y*y_sign, a)
-
-
-# np.prod has overflow and math.prod is Python 3.8+ only
-def prod(seq):
-    return reduce(mul, seq, 1)
 
 def _crt(U, M):
     """
@@ -183,7 +176,7 @@ def solve_congruence(*remainder_modulus_pairs):
         a1, m1 = c1
         a2, m2 = c2
         a, b, c = m1, a2 - a1, m2
-        g = reduce(gcd, [a, b, c])
+        g = gcd(a, b, c)
         a, b, c = [i//g for i in [a, b, c]]
         if a != 1:
             inv_a, _, g = gcdex(a, c)

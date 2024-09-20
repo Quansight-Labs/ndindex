@@ -1,10 +1,12 @@
+Cython
 furo
 linkify-it-py
 matplotlib @ git+https://github.com/asmeurer/matplotlib.git@output-base-name
 myst-parser
 scikit-image
+setuptools
 sphinx
-sphinx-copybutton
-sphinx-reredirects
-sphinx-design
 sphinx-autobuild
+sphinx-copybutton
+sphinx-design
+sphinx-reredirects

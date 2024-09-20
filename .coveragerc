@@ -3,6 +3,7 @@ omit =
     ndindex/_version.py
     ndindex/tests/doctest.py
     ndindex/tests/test_no_dependencies.py
+plugins = Cython.Coverage
 
 [report]
 exclude_lines =

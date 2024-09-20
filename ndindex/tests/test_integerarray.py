@@ -100,6 +100,8 @@ def test_integerarray_reduce_hypothesis(idx, shape, kwargs):
 
 @example([], (1,))
 @example([0], (1, 0))
+@example(idx=empty((0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), dtype=intp),
+         shape=(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 @given(integer_arrays, one_of(short_shapes, integers(0, 10)))
 def test_integerarray_isempty_hypothesis(idx, shape):
     if isinstance(shape, int):
