@@ -21,7 +21,8 @@
 
 - Some fixes to incorrect usage of `__slots__`.
 
-- Raise an exception earlier for invalid index in {func}`~.num_subchunks`.
+- Raise an exception earlier for invalid index in
+  {any}`ChunkSize.num_subchunks()`.
 
 - The `CYTHONIZE_NDINDEX` environment variable for building has been removed,
   as Cython support is now required.
