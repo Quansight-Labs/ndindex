@@ -1,5 +1,41 @@
 # ndindex Changelog
 
+## Version 1.9 (2024-09-20)
+
+### Major Changes
+
+- ndindex now uses a C extension (using Cython). Currently the constructors
+  for {class}`~.Slice` and {class}`~.Tuple` have been Cythonized, meaning
+  constructing and using those classes is now much faster. In the future,
+  additional parts of ndindex will be Cythonized as performance needs dictate.
+  This does not have any user-facing changes to functionality.
+
+- Python 3.8 is no longer supported.
+
+- The documentation now includes a [documentation guide for all NumPy index
+  types](indexing-guide/index), extending the previous [guide for
+  slices](indexing-guide/slices). The slices guide has also been improved and
+  now has diagrams built using HTML/CSS instead of MathJAX.
+
+### Minor Changes
+
+- Some fixes to incorrect usage of `__slots__`.
+
+- Raise an exception earlier for invalid index in {func}`~.num_subchunks`.
+
+- The `CYTHONIZE_NDINDEX` environment variable for building has been removed,
+  as Cython support is now required.
+
+- Fix a compatibility issue with NumPy 2.0.
+
+- {func}`~.normalize_skip_axes` will now raise `AxisError` before `ValueError`
+  for non-unique axes.
+
+- Keep track of when a `Slice` has been reduced (with no shape) to avoid
+  recomputing it.
+
+- Various improvements in the tests.
+
 ## Version 1.8 (2024-02-15)
 
 ### Major Changes
