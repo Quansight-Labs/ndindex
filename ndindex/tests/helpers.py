@@ -433,7 +433,7 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
                 # number of dimensions in the result array is not a trivial
                 # thing. Furthermore, some versions of NumPy limit this to 32
                 # and some limit it to 64.
-                if "number of dimensions must be within" in str(e):
+                if "number of dimensions must be within" in str(e): # pragma: no cover
                     raise UnsatisfiedAssumption
                 raise
             except Warning as w:
@@ -452,7 +452,7 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
             _, e_inner, _ = sys.exc_info()
         if e_inner:
             raise e_inner
-    except UnsatisfiedAssumption:
+    except UnsatisfiedAssumption: # pragma: no cover
         raise
     except Exception as e:
         exception = e
