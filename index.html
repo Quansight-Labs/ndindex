@@ -426,25 +426,6 @@ don’t have to try to figure out all the different cases yourself. And due to
 <section id="installation">
 <span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
 <p>ndindex can be installed using pip (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ndindex</span></code>) or conda (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-f</span> <span class="pre">conda-forge</span> <span class="pre">ndindex</span></code>).</p>
-<section id="experimental-cythonization">
-<h3>Experimental Cythonization<a class="headerlink" href="#experimental-cythonization" title="Link to this heading">¶</a></h3>
-<p>When installing ndindex from source (using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>) all
-Python modules (except tests) will be Cythonized when Cython and a working
-compiler are installed. This can improve the general performance of ndindex.
-The environment variable <code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX</span></code> is used to explicitly control
-this default behavior:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX=0</span></code>: disables Cythonization (even if a
-working Cython environment is available).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX=1</span></code>: force Cythonization (will fail when Cython or a
-compiler isn’t present).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CYTHONIZE_NDINDEX</span></code> not set: the default behavior (Cythonize if Cython is
-installed and working).</p></li>
-</ul>
-<p>Cythonization is still experimental, and is only enabled for direct source
-installations. The pip and conda packages are not Cythonized. Future versions
-of ndindex may enable Cythonization for all installs.</p>
-</section>
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
@@ -764,10 +745,7 @@ Jupyter.</p>
             <ul>
 <li><a class="reference internal" href="#">ndindex</a><ul>
 <li><a class="reference internal" href="#motivation">Motivation</a></li>
-<li><a class="reference internal" href="#installation">Installation</a><ul>
-<li><a class="reference internal" href="#experimental-cythonization">Experimental Cythonization</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#features">Features</a></li>
 <li><a class="reference internal" href="#testing-and-correctness">Testing and correctness</a></li>
 <li><a class="reference internal" href="#benchmarks">Benchmarks</a></li>

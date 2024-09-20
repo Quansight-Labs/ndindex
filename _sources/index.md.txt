@@ -77,27 +77,6 @@ their limitations:
 ndindex can be installed using pip (`pip install ndindex`) or conda (`conda
 install -f conda-forge ndindex`).
 
-### Experimental Cythonization
-
-When installing ndindex from source (using `python setup.py install`) all
-Python modules (except tests) will be Cythonized when Cython and a working
-compiler are installed. This can improve the general performance of ndindex.
-The environment variable `CYTHONIZE_NDINDEX` is used to explicitly control
-this default behavior:
-
-- `CYTHONIZE_NDINDEX=0`: disables Cythonization (even if a
-  working Cython environment is available).
-
-- `CYTHONIZE_NDINDEX=1`: force Cythonization (will fail when Cython or a
-  compiler isn't present).
-
-- `CYTHONIZE_NDINDEX` not set: the default behavior (Cythonize if Cython is
-  installed and working).
-
-Cythonization is still experimental, and is only enabled for direct source
-installations. The pip and conda packages are not Cythonized. Future versions
-of ndindex may enable Cythonization for all installs.
-
 ## Features
 
 ndindex is still a work in progress. The following things are currently
