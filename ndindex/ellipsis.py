@@ -11,6 +11,9 @@ class ellipsis(NDIndex):
     after the ellipsis indexes the last axes of the array. A tuple index can
     have at most one ellipsis.
 
+    See :doc:`../indexing-guide/multidimensional-indices/ellipses` for more
+    details on the semantics of ellipsis indices.
+
     For example `a[(0, ..., -2)]` would index the first element on the first
     axis, the second-to-last element in the last axis, and include all the
     axes in between.

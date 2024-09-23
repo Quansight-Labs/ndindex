@@ -22,6 +22,9 @@ class Newaxis(NDIndex):
 
     Using `Newaxis().raw` as an index is equivalent to using `numpy.newaxis`.
 
+    See :doc:`../indexing-guide/multidimensional-indices/newaxis` for a
+    description of the semantics of newaxis.
+
     .. note::
 
        Unlike the NumPy `newaxis`, `Newaxis` is the type, not the object (the

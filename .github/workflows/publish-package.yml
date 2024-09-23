@@ -58,6 +58,9 @@ jobs:
     - name: List contents of sdist
       run: python -m tarfile --list dist/ndindex-*.tar.gz
 
+    - name: Get sdist filename
+      run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
+
     - name: Upload distribution artifact
       uses: actions/upload-artifact@v4
       with:
@@ -67,6 +70,7 @@ jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    needs: [build_sdist]
     strategy:
       matrix:
         # macos-13 is an intel runner, macos-14 is apple silicon
@@ -75,17 +79,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Download distribution artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifact
+          path: dist
+
+      - name: Get sdist filename
+        run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0
         with:
+          package-dir: ${{ env.SDIST_FILE }}
           output-dir: dist/
         env:
-          CIBW_TEST_COMMAND: 'python -c "import ndindex"'
+          CIBW_TEST_COMMAND: >
+              python -c "import ndindex; assert '1.' in ndindex.__version__"
 
       - uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-          path: ./wheelhouse/*.whl
+          path: ./dist/*.whl
 
   publish:
     name: Publish Python distribution to (Test)PyPI
@@ -105,8 +120,8 @@ jobs:
     - name: Download distribution artifact
       uses: actions/download-artifact@v4
       with:
-        name: dist-artifact
         path: dist
+        merge-multiple: true
 
     - name: List all files
       run: ls -lh dist

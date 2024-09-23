@@ -19,10 +19,11 @@ class IntegerArray(ArrayIndex):
     also broadcast. In general, an :any:`Integer` index semantically behaves
     the same as a scalar (`shape=()`) `IntegerArray`.
 
-    A list of integers may also be used in place of an integer array. Note
-    that NumPy treats a direct list of integers as a tuple index, but this
-    behavior is deprecated and will be replaced with integer array indexing in
-    the future. ndindex always treats lists as arrays.
+    A list (or list of lists) of integers may also be used in place of an
+    array.
+
+    See :doc:`../indexing-guide/multidimensional-indices/integer-arrays` for a
+    description of the semantics of integer array indices.
 
     >>> from ndindex import IntegerArray
     >>> import numpy as np
