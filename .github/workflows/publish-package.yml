@@ -82,6 +82,9 @@ jobs:
           name: dist-artifact
           path: dist
 
+      - name: List all files
+        run: ls -lh dist
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0
         with:
