@@ -1,6 +1,6 @@
 # ndindex Changelog
 
-## Version 1.9 (2024-09-20)
+## Version 1.9 (2024-09-23)
 
 ### Major Changes
 
