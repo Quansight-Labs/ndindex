@@ -58,6 +58,9 @@ jobs:
     - name: List contents of sdist
       run: python -m tarfile --list dist/ndindex-*.tar.gz
 
+    - name: Get sdist filename
+      run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
+
     - name: Upload distribution artifact
       uses: actions/upload-artifact@v4
       with:
@@ -82,13 +85,13 @@ jobs:
           name: dist-artifact
           path: dist
 
-      - name: List all files
-        run: ls -lh dist
+      - name: Get sdist filename
+        run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0
         with:
-          package-dir: dist/*.tar.gz
+          package-dir: ${{ env.SDIST_FILE }}
           output-dir: dist/
         env:
           CIBW_TEST_COMMAND: 'python -c "import ndindex"'
