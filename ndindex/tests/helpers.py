@@ -49,7 +49,7 @@ shapes = tuples(integers(0, 10)).filter(
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < MAX_ARRAY_SIZE)
 
-_short_shapes = lambda n: tuples(integers(0, 10), min_size=n).filter(
+_short_shapes = lambda n: tuples(integers(0, 10), min_size=n, max_size=32).filter(
              # numpy gives errors with empty arrays with large shapes.
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
