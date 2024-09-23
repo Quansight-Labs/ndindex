@@ -1,5 +1,10 @@
 # ndindex Changelog
 
+## Version 1.9.1 (2024-09-23)
+
+This version is identical to 1.9, but includes some fixes to the release
+scripts to ensure that wheels are properly uploaded to PyPI.
+
 ## Version 1.9 (2024-09-23)
 
 ### Major Changes
