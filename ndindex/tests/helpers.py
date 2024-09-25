@@ -1,9 +1,9 @@
 import sys
 from itertools import chain
 import warnings
-from functools import wraps
+from functools import wraps, partial
 
-from numpy import ndarray, intp, bool_, asarray, broadcast_shapes
+from numpy import ndarray, generic, intp, bool_, asarray, broadcast_shapes
 import numpy.testing
 
 from pytest import fail
@@ -373,7 +373,7 @@ def matmul_arrays_st(draw):
 
 reduce_kwargs = sampled_from([{}, {'negative_int': False}, {'negative_int': True}])
 
-def assert_equal(actual, desired, err_msg='', verbose=True):
+def assert_equal(actual, desired, allow_scalar_0d=False, err_msg='', verbose=True):
     """
     Assert that two objects are equal.
 
@@ -384,12 +384,18 @@ def assert_equal(actual, desired, err_msg='', verbose=True):
     - If the objects are tuples, recursively call assert_equal to support
       tuples of arrays.
 
-    - Require the types of actual and desired to be exactly the same.
+    - If allow_scalar_0d=True, scalars will be considered equal to equivalent
+      0-D arrays.
+
+    - Require the types of actual and desired to be exactly the same
+      (excepting for scalars when allow_scalar_0d=True).
 
     """
-    assert type(actual) is type(desired), err_msg or f"{type(actual)} != {type(desired)}"
+    if not (allow_scalar_0d and (isinstance(actual, generic)
+                                 or isinstance(desired, generic))):
+        assert type(actual) is type(desired), err_msg or f"{type(actual)} != {type(desired)}"
 
-    if isinstance(actual, ndarray):
+    if isinstance(actual, (ndarray, generic)):
         numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
                                    verbose=verbose)
         assert actual.shape == desired.shape, err_msg or f"{actual.shape} != {desired.shape}"
@@ -400,6 +406,8 @@ def assert_equal(actual, desired, err_msg='', verbose=True):
             assert_equal(i, j, err_msg=err_msg, verbose=verbose)
     else:
         assert actual == desired, err_msg
+
+assert_equal_allow_scalar_0d = partial(assert_equal, allow_scalar_0d=True)
 
 def warnings_are_errors(f):
     @wraps(f)

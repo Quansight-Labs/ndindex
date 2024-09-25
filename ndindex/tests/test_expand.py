@@ -9,7 +9,8 @@ from ..booleanarray import BooleanArray
 from ..integerarray import IntegerArray
 from ..integer import Integer
 from ..tuple import Tuple
-from .helpers import ndindices, check_same, short_shapes, prod
+from .helpers import (ndindices, check_same, short_shapes, prod,
+                      assert_equal_allow_scalar_0d)
 
 @example(True, (1,))
 @example((Ellipsis, array([[ True,  True]])), (1, 2))
@@ -41,7 +42,7 @@ def test_expand_hypothesis(idx, shape):
     index = ndindex(idx)
 
     check_same(a, index.raw, ndindex_func=lambda a, x: a[x.expand(shape).raw],
-               same_exception=False)
+               same_exception=False, assert_equal=assert_equal_allow_scalar_0d)
 
     try:
         expanded = index.expand(shape)
