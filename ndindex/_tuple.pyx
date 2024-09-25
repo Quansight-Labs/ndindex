@@ -111,7 +111,7 @@ cdef class _Tuple:
                     raise IndexError("an index can only have a single ellipsis ('...')")
             if isinstance(newarg, _Tuple):
                 if len(args) == 1:
-                    raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call _Tuple(*args) instead of _Tuple(args)?")
+                    raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call Tuple(*args) instead of Tuple(args)?")
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
             if isinstance(newarg, _ArrayIndex):
