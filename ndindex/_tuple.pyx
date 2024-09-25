@@ -152,6 +152,15 @@ cdef class _Tuple:
 
         self.args = tuple(newargs)
 
+    def __getnewargs__(self):
+        return self.args
+
+    def __setstate__(self, state):
+        pass
+
+    def __getstate__(self):
+        return ()
+
     @property
     def raw(self):
         return tuple(arg.raw for arg in self.args)

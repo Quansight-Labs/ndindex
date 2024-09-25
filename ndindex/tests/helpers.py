@@ -3,7 +3,7 @@ from itertools import chain
 import warnings
 from functools import wraps
 
-from numpy import intp, bool_, array, broadcast_shapes
+from numpy import ndarray, intp, bool_, asarray, broadcast_shapes
 import numpy.testing
 
 from pytest import fail
@@ -375,14 +375,31 @@ reduce_kwargs = sampled_from([{}, {'negative_int': False}, {'negative_int': True
 
 def assert_equal(actual, desired, err_msg='', verbose=True):
     """
-    Same as numpy.testing.assert_equal except it also requires the shapes and
-    dtypes to be equal.
+    Assert that two objects are equal.
+
+    - If the objects are ndarrays, this is the same as
+      numpy.testing.assert_equal except it also requires the shapes and dtypes
+      to be equal
+
+    - If the objects are tuples, recursively call assert_equal to support
+      tuples of arrays.
+
+    - Require the types of actual and desired to be exactly the same.
 
     """
-    numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
-                               verbose=verbose)
-    assert actual.shape == desired.shape, err_msg or f"{actual.shape} != {desired.shape}"
-    assert actual.dtype == desired.dtype, err_msg or f"{actual.dtype} != {desired.dtype}"
+    assert type(actual) is type(desired), err_msg or f"{type(actual)} != {type(desired)}"
+
+    if isinstance(actual, ndarray):
+        numpy.testing.assert_equal(actual, desired, err_msg=err_msg,
+                                   verbose=verbose)
+        assert actual.shape == desired.shape, err_msg or f"{actual.shape} != {desired.shape}"
+        assert actual.dtype == desired.dtype, err_msg or f"{actual.dtype} != {desired.dtype}"
+    elif isinstance(actual, tuple):
+        assert len(actual) == len(desired), err_msg
+        for i, j in zip(actual, desired):
+            assert_equal(i, j, err_msg=err_msg, verbose=verbose)
+    else:
+        assert actual == desired, err_msg
 
 def warnings_are_errors(f):
     @wraps(f)
@@ -441,7 +458,7 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
                 # deprecation was removed and lists are always interpreted as
                 # array indices.
                 if ("Using a non-tuple sequence for multidimensional indexing is deprecated" in w.args[0]): # pragma: no cover
-                    idx = array(idx, dtype=intp)
+                    idx = asarray(idx, dtype=intp)
                     a_raw = raw_func(a, idx)
                 elif "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
                     same_exception = False
