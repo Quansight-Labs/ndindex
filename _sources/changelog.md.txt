@@ -1,5 +1,12 @@
 # ndindex Changelog
 
+## Version 1.9.2 (2024-09-25)
+
+## Minor Changes
+
+- Fixes an issue with pickle and deepcopy serialization introduced in ndindex
+  1.9.
+
 ## Version 1.9.1 (2024-09-23)
 
 This version is identical to 1.9, but includes some fixes to the release
