@@ -1,19 +1,24 @@
 import inspect
 import warnings
+import copy
+import pickle
 
 import numpy as np
 
 from hypothesis import given, example, settings
+from hypothesis.strategies import sampled_from
 
 from pytest import raises
 
+from ..array import ArrayIndex
 from ..ndindex import ndindex
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..ellipsis import ellipsis
 from ..integerarray import IntegerArray
+from ..slice import Slice
+from ..tuple import Tuple
 from .helpers import ndindices, check_same, assert_equal
-
 
 @example(None)
 @example([1, 2])
@@ -22,31 +27,27 @@ def test_eq(idx):
     index = ndindex(idx)
     new = type(index)(*index.args)
 
-    if isinstance(new.raw, np.ndarray):
-        # trying to get a single value out of comparing two arrays requires all sorts of special handling, just let numpy do it
-        assert np.array_equal(new.raw, index.raw)
-    else:
-        assert new.raw == index.raw
+    assert_equal(new.raw, index.raw)
 
-    def assert_equal(a, b):
+    def check_eq(a, b):
         assert a == b
         assert b == a
         assert not (a != b)
         assert not (b != a)
 
-    def assert_not_equal(a, b):
+    def check_neq(a, b):
         assert a != b
         assert b != a
         assert not (a == b)
         assert not (b == a)
 
-    assert_equal(new, index)
-    assert_equal(new.raw, index)
-    assert_equal(new, index.raw)
+    check_eq(new, index)
+    check_eq(new.raw, index)
+    check_eq(new, index.raw)
 
-    assert_equal(index.raw, index)
+    check_eq(index.raw, index)
     assert hash(new) == hash(index)
-    assert_not_equal(index, 'a')
+    check_neq(index, 'a')
 
     try:
         h = hash(idx)
@@ -86,21 +87,24 @@ def test_ndindex(idx):
     assert index == idx
     assert ndindex[idx] == index
 
-    def test_raw_eq(idx, index):
-        if isinstance(idx, np.ndarray):
-            assert_equal(index.raw, idx)
-        elif isinstance(idx, list):
+    def assert_raw_eq(idx, index):
+        if isinstance(idx, (list, bool, np.bool_)):
+            assert isinstance(index, ArrayIndex)
             assert index.dtype in [np.intp, np.bool_]
             assert_equal(index.raw, np.asarray(idx, dtype=index.dtype))
+        elif isinstance(idx, np.integer):
+            assert type(index) is Integer
+            assert_equal(index.raw, int(idx))
         elif isinstance(idx, tuple):
-            assert type(index.raw) == type(idx)
-            assert len(index.raw) == len(idx)
+            assert type(index.raw) is tuple
+            assert len(idx) == len(index.raw)
             assert index.args == index.raw
-            for i, j in zip(idx, index.args):
-                test_raw_eq(i, j)
+            for i, j in zip(index.args, idx):
+                assert_raw_eq(j, i)
         else:
-            assert index.raw == idx
-    test_raw_eq(idx, index)
+            assert_equal(index.raw, idx)
+
+    assert_raw_eq(idx, index)
     assert ndindex(index.raw) == index
 
 def test_ndindex_invalid():
@@ -145,3 +149,40 @@ def test_repr_str(idx):
 
     # Str may not be re-creatable. Just test that it doesn't give an exception.
     str(index)
+
+# _Tuple does not serialize properly with protocols 0 and 1. Support could
+# probably be added if this is necessary.
+LOWEST_SUPPORTED_PROTOCOL = 2
+protocols = ["copy", "deepcopy"] + list(range(LOWEST_SUPPORTED_PROTOCOL, pickle.HIGHEST_PROTOCOL + 1))
+
+@given(ndindices, sampled_from(protocols))
+def test_serialization(idx, protocol):
+    index = ndindex(idx)
+
+    def serialize(index):
+        if protocol == "copy":
+            return copy.copy(index)
+        elif protocol == "deepcopy":
+            return copy.deepcopy(index)
+        else:
+            return pickle.loads(pickle.dumps(index, protocol=protocol))
+
+    roundtripped = serialize(index)
+    assert type(roundtripped) is type(index)
+    assert roundtripped == index
+    assert_equal(roundtripped.raw, index.raw)
+    assert_equal(roundtripped.args, index.args)
+
+    if isinstance(index, Slice):
+        assert index._reduced == roundtripped._reduced == False
+        s = index.reduce()
+        assert s._reduced == True
+        roundtripped_s = serialize(s)
+        assert roundtripped_s._reduced == True
+
+    if isinstance(index, Tuple):
+        assert all([i._reduced == False for i in index.args if isinstance(i, Slice)])
+        t = index.reduce()
+        assert all([i._reduced == True for i in t.args if isinstance(i, Slice)])
+        roundtripped_t = serialize(t)
+        assert all([i._reduced == True for i in roundtripped_t.args if isinstance(i, Slice)])

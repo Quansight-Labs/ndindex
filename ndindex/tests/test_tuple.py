@@ -12,7 +12,8 @@ from ..tuple import Tuple
 from ..booleanarray import BooleanArray
 from ..integer import Integer
 from ..integerarray import IntegerArray
-from .helpers import check_same, Tuples, prod, short_shapes, iterslice, reduce_kwargs
+from .helpers import (check_same, Tuples, prod, short_shapes, iterslice,
+                      reduce_kwargs, assert_equal_allow_scalar_0d)
 
 def test_tuple_constructor():
     # Nested tuples are not allowed
@@ -96,7 +97,7 @@ def test_ellipsis_index(t, shape):
         return a[ndindex((*index.raw[:index.ellipsis_index], ...,
                           *index.raw[index.ellipsis_index+1:])).raw]
 
-    check_same(a, t, ndindex_func=ndindex_func)
+    check_same(a, t, ndindex_func=ndindex_func, assert_equal=assert_equal_allow_scalar_0d)
 
 @example((True, 0, False), 1, {})
 @example((..., None), (), {})
@@ -109,8 +110,9 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape, kwargs):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(**kwargs).raw],
-               same_exception=False)
+    check_same(a, index.raw, ndindex_func=lambda a, x:
+               a[x.reduce(**kwargs).raw], same_exception=False,
+               assert_equal=assert_equal_allow_scalar_0d)
 
     reduced = index.reduce(**kwargs)
     if isinstance(reduced, Tuple):
@@ -143,8 +145,9 @@ def test_tuple_reduce_hypothesis(t, shape, kwargs):
 
     index = Tuple(*t)
 
-    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape, **kwargs).raw],
-               same_exception=False)
+    check_same(a, index.raw, ndindex_func=lambda a, x: a[x.reduce(shape,
+                                                                  **kwargs).raw], same_exception=False,
+               assert_equal=assert_equal_allow_scalar_0d)
 
     negative_int = kwargs.get('negative_int', False)
 
@@ -197,7 +200,8 @@ def test_tuple_reduce_explicit():
 
         a = arange(prod(shape)).reshape(shape)
         check_same(a, before.raw, ndindex_func=lambda a, x:
-                   a[x.reduce(shape).raw])
+                   a[x.reduce(shape).raw],
+                   assert_equal=assert_equal_allow_scalar_0d)
 
         # Idempotency
         assert reduced.reduce() == reduced

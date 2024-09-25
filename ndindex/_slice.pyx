@@ -92,6 +92,15 @@ cdef class _Slice:
 
         self._reduced = _reduced
 
+    def __getnewargs__(self):
+        return self.args
+
+    def __getstate__(self):
+        return self._reduced
+
+    def __setstate__(self, state):
+        self._reduced = state
+
     @property
     def raw(self):
         return slice(*self.args)

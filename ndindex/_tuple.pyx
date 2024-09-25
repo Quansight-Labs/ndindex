@@ -111,7 +111,7 @@ cdef class _Tuple:
                     raise IndexError("an index can only have a single ellipsis ('...')")
             if isinstance(newarg, _Tuple):
                 if len(args) == 1:
-                    raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call _Tuple(*args) instead of _Tuple(args)?")
+                    raise ValueError("tuples inside of tuple indices are not supported. Did you mean to call Tuple(*args) instead of Tuple(args)?")
                 raise ValueError("tuples inside of tuple indices are not supported. If you meant to use a fancy index, use a list or array instead.")
             newargs.append(newarg)
             if isinstance(newarg, _ArrayIndex):
@@ -151,6 +151,15 @@ cdef class _Tuple:
                 raise IndexError("shape mismatch: indexing arrays could not be broadcast together with shapes %s" % ' '.join([str(i.shape) for i in arrays]))
 
         self.args = tuple(newargs)
+
+    def __getnewargs__(self):
+        return self.args
+
+    def __setstate__(self, state):
+        pass
+
+    def __getstate__(self):
+        return ()
 
     @property
     def raw(self):
