@@ -1,5 +1,6 @@
 Cython
 furo
+intersphinx-registry
 linkify-it-py
 matplotlib @ git+https://github.com/asmeurer/matplotlib.git@output-base-name
 myst-parser
