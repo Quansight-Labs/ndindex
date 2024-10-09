@@ -46,10 +46,10 @@ plot_include_source = False
 plot_html_show_formats = False
 plot_formats = ['svg']
 
-intersphinx_mapping = {
-    'numpy': ('https://numpy.org/doc/stable/', None),
-    'pandas': ('https://pandas.pydata.org/docs/', None),
-}
+from intersphinx_registry import get_intersphinx_mapping
+intersphinx_mapping = get_intersphinx_mapping(
+    packages={"numpy", "pandas"},
+)
 # Require :external: to reference intersphinx. Prevents accidentally linking
 # to something from numpy.
 intersphinx_disabled_reftypes = ['*']
