@@ -176,7 +176,7 @@ both. -->
 .. plot::
    :context: reset
    :include-source: True
-   :output-base-name: function-plot
+   :image-basename: function-plot
    :alt: A plot of 4*x*np.sin(x) - x**2/4 - 2*x from -10 to 10. The curve crosses the x-axis several times at irregular intervals.
    :caption: Plot of :math:`y = 4x\sin(x) - \frac{x^2}{4} - 2x`
 
@@ -194,7 +194,7 @@ to do this is to select them using a mask:
 .. plot::
    :context: close-figs
    :include-source: True
-   :output-base-name: function-plot-masked
+   :image-basename: function-plot-masked
    :alt: A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis.
    :caption: Plot of :math:`y = 4x\sin(x) - \frac{x^2}{4} - 2x` where :math:`y > 0`
 
@@ -387,7 +387,7 @@ For example, say we have an image represented in
 .. plot::
    :context: reset
    :include-source: True
-   :output-base-name: astronaut
+   :image-basename: astronaut
    :alt: An image of an astronaut, which is represented as a shape (512, 512, 3) array.
 
    >>> def imshow(image, title):
@@ -410,7 +410,7 @@ value (the second value in the last dimension, which should always be between
 .. plot::
    :context: close-figs
    :include-source: True
-   :output-base-name: astronaut-saturated-
+   :image-basename: astronaut-saturated-
    :alt: An image of an astronaut with increased saturation. The lighter parts of the image appear washed out.
 
    >>> from skimage import color
@@ -429,7 +429,7 @@ saturation of only those pixels:
 .. plot::
    :context: close-figs
    :include-source: True
-   :output-base-name: astronaut-saturated-better
+   :image-basename: astronaut-saturated-better
    :alt: An image of an astronaut with increased saturation. The image does not appear washed out.
 
    >>> hsv_image = color.rgb2hsv(image)
