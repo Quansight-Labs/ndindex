@@ -5,9 +5,9 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="api/index.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>ndindex documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=16cf08d2" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6ad9bad0" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
@@ -438,7 +438,7 @@ classes to represent any valid index to a NumPy array.</p></li>
 <li><p>Classes do not canonicalize by default (the constructor only does basic type
 checking). Objects can be put into canonical form by calling
 <a class="reference internal" href="api/internal.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></span></a>.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Slice</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">Slice</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 <span class="go">Slice(None, 12, None)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
@@ -448,7 +448,7 @@ checking). Objects can be put into canonical form by calling
 <p><code class="docutils literal notranslate"><span class="pre">reduce()</span></code> can also be called with a <code class="docutils literal notranslate"><span class="pre">shape</span></code> argument.
 <a class="reference internal" href="api/internal.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">idx.reduce(shape)</span></code></span></a> reduces an index to an equivalent
 index over an array with the given shape.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">arange</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">arange</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="mi">10</span><span class="p">,))</span>
 <span class="go">Slice(2, 9, 1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -498,8 +498,8 @@ indices. Note that <code class="docutils literal notranslate"><span class="pre">
 <a class="reference internal" href="api/internal.html#ndindex.ndindex.NDIndex.reduce" title="ndindex.ndindex.NDIndex.reduce"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">idx1.reduce(shape)</span> <span class="pre">==</span> <span class="pre">idx2.reduce(shape)</span></code></span></a> (see above) to
 test if two indices index the same elements as each other (n.b. pure
 canonicalization is currently only guaranteed for slice indices).</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">array</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># This would fail with ValueError for a Python tuple containing an array</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="go">True</span>
@@ -536,7 +536,7 @@ called with a shape like <code class="docutils literal notranslate"><span class=
 <li><p><a class="reference internal" href="api/internal.html#ndindex.ndindex.NDIndex.expand" title="ndindex.ndindex.NDIndex.expand"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">idx.expand(shape)</span></code></span></a> expands an index so that it is as
 explicit as possible. An expanded index is always a <a class="reference internal" href="api/index-types.html#ndindex.Tuple" title="ndindex.Tuple"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">Tuple</span></code></span></a>
 where each indexed axis is indexed explicitly.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Tuple</span><span class="p">(</span><span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="o">...</span><span class="p">,</span> <span class="n">Slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span><span class="o">.</span><span class="n">expand</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="go">Tuple(slice(0, 10, 1), slice(0, 11, 1), slice(1, 12, 1))</span>
 </pre></div>
@@ -572,7 +572,7 @@ for re-indexing an index onto chunks of an array.</p>
 <li><p>The <a class="reference internal" href="api/chunking.html#ndindex.ChunkSize" title="ndindex.ChunkSize"><span class="xref myst py py-class"><code class="docutils literal notranslate"><span class="pre">ChunkSize</span></code></span></a> object abstracts splitting an array
 into uniform chunks and contains methods to compute things about these
 chunks:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkSize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">10001</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span><span class="o">.</span><span class="n">num_chunks</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -763,7 +763,7 @@ Jupyter.</p>
     </aside>
   </div>
 </div><script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>

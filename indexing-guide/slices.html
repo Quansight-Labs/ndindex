@@ -5,9 +5,9 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Multidimensional Indices" href="multidimensional-indices/index.html" /><link rel="prev" title="Integer Indices" href="integer-indices.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Slices - ndindex documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=16cf08d2" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6ad9bad0" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -515,7 +515,7 @@ they index.</p>
 <span class="go">[&#39;d&#39;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Empty slice</span>
 <span class="go">[]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(2, 2)</span>
@@ -669,7 +669,7 @@ That is to say, the <code class="docutils literal notranslate"><span class="pre"
 <p>Recall that for NumPy arrays, a slice always <a class="reference internal" href="#subarray"><span class="std std-ref">preserves the axis being
 sliced</span></a>. This applies even if the size of the resulting axis is 0 or
 1.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(2, 2)</span>
@@ -771,7 +771,7 @@ interval <span class="math notranslate nohighlight">\((\text{stop}, \text{start}
   </table>
 </div>
 <p>We might assume we would get</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="go">[&#39;e&#39;, &#39;d&#39;] # WRONG</span>
 </pre></div>
 </div>
@@ -1012,7 +1012,7 @@ imagine it to give the same incorrect subarray that we imagined before.</p>
 <div class="slice-diagram-not-selected"><b>THIS IS WRONG!</b></div>
 </div>
 <p>As before, we might assume we would get</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="go">[&#39;e&#39;, &#39;d&#39;] # WRONG</span>
 </pre></div>
 </div>
@@ -1654,7 +1654,7 @@ by manually parsing <code class="docutils literal notranslate"><span class="pre"
 the command line, including the filename. For example, <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">script.py</span> <span class="pre">arg1</span> <span class="pre">arg2</span></code> would have <code class="docutils literal notranslate"><span class="pre">sys.argv</span> <span class="pre">==</span> <span class="pre">['script.py',</span> <span class="pre">'arg1',</span> <span class="pre">'arg2']</span></code>. Suppose you want
 your script to do something special if it called as <code class="docutils literal notranslate"><span class="pre">myscript.py</span> <span class="pre">help</span></code>. You
 can do something like</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1662,14 +1662,14 @@ can do something like</p>
 <p>The problem with this code is that it fails if no command line arguments are
 passed, because <code class="docutils literal notranslate"><span class="pre">sys.argv[1]</span></code> will give an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code> for the out of bounds
 index 1. The most obvious fix is to add a length check:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>But another way would be to use a slice that gets the second element if there
 is one.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">]:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1681,7 +1681,7 @@ arguments, then <code class="docutils literal notranslate"><span class="pre">sys
 <code class="docutils literal notranslate"><span class="pre">==</span></code> check without raising an exception.</p>
 <p>If instead we want to only support exactly <code class="docutils literal notranslate"><span class="pre">myscript.py</span> <span class="pre">help</span></code> with no further
 arguments, we could modify the check just slightly:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">]:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1701,7 +1701,7 @@ in this way often only requires adding a <code class="docutils literal notransla
 slice that selects a single element instead of an integer index. For example,
 consider a function like</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrong for a = &#39;&#39;</span>
-<span class="k">def</span> <span class="nf">ends_in_punctuation</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ends_in_punctuation</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">,</span> <span class="s1">&#39;?&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -1711,7 +1711,7 @@ could simply change the <code class="docutils literal notranslate"><span class="
 consisting of the last character, but if <code class="docutils literal notranslate"><span class="pre">a</span></code> is empty it will be <code class="docutils literal notranslate"><span class="pre">''</span></code>. The
 <code class="docutils literal notranslate"><span class="pre">in</span></code> check will be correct either way.<a class="footnote-reference brackets" href="#string-check-footnote" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Better</span>
-<span class="k">def</span> <span class="nf">ends_in_punctuation</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ends_in_punctuation</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">,</span> <span class="s1">&#39;?&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -2938,7 +2938,7 @@ earlier.</p>
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

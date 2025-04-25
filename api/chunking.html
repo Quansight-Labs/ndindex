@@ -5,9 +5,9 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Internal API" href="internal.html" /><link rel="prev" title="Shape Tools" href="shapetools.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Chunking - ndindex documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=16cf08d2" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6ad9bad0" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -364,7 +364,7 @@ array. It contains methods for manipulating these chunks and indices on a
 chunked array.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ndindex.ChunkSize">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">ChunkSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/145c13cfb5b755d7de5288a1ee17d1914227c0d7/ndindex/chunking.py#L14-L461"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ndindex.</span></span><span class="sig-name descname"><span class="pre">ChunkSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/1409e14b9a4f6f9c761b76a5908c335ff2558498/ndindex/chunking.py#L14-L461"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize" title="Link to this definition">¶</a></dt>
 <dd><p>Represents a chunk size tuple.</p>
 <p>A chunk size is a tuple of length n where each element is either a
 positive integer or <code class="code docutils literal notranslate"><span class="pre">None</span></code>. It represents a chunking of an array with n
@@ -382,7 +382,7 @@ first chunk dimension, and <code class="code docutils literal notranslate"><span
 dimensions of a chunk. Also, the input to ChunkSize should be a tuple,
 just as with the <code class="code docutils literal notranslate"><span class="pre">tuple</span></code> constructor, even for single dimensional chunk
 sizes.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkSize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ChunkSize</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
 <span class="go">ChunkSize((20, 30, 40))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ChunkSize</span><span class="p">((</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,))</span>
@@ -406,7 +406,7 @@ testing or hashing on the ndindex type itself, not its <code class="code docutil
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ChunkSize.as_subchunks">
-<span class="sig-name descname"><span class="pre">as_subchunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_force_slow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/145c13cfb5b755d7de5288a1ee17d1914227c0d7/ndindex/chunking.py#L143-L298"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.as_subchunks" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">as_subchunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_force_slow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/1409e14b9a4f6f9c761b76a5908c335ff2558498/ndindex/chunking.py#L143-L298"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.as_subchunks" title="Link to this definition">¶</a></dt>
 <dd><p>Split an index <code class="code docutils literal notranslate"><span class="pre">idx</span></code> on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code> into subchunk indices.</p>
 <p>Yields indices <code class="code docutils literal notranslate"><span class="pre">c</span></code>, where <code class="code docutils literal notranslate"><span class="pre">c</span></code> is an index for the chunk that
 should be sliced. Only those <code class="code docutils literal notranslate"><span class="pre">c</span></code> for which <code class="code docutils literal notranslate"><span class="pre">idx</span></code> includes at least one
@@ -416,7 +416,7 @@ will give those elements of <code class="code docutils literal notranslate"><spa
 and together they give all the elements of <code class="code docutils literal notranslate"><span class="pre">a[idx]</span></code>. See also the
 docstring of <a class="reference internal" href="internal.html#ndindex.ndindex.NDIndex.as_subindex" title="ndindex.ndindex.NDIndex.as_subindex"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_subindex()</span></code></a>.</p>
 <p>This method is roughly equivalent to</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">as_subchunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">as_subchunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">as_subindex</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
@@ -432,7 +432,7 @@ docstring of <a class="reference internal" href="internal.html#ndindex.ndindex.N
 </pre></div>
 </div>
 <p>except it is more efficient.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span><span class="p">,</span> <span class="n">Tuple</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkSize</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
@@ -453,7 +453,7 @@ docstring of <a class="reference internal" href="internal.html#ndindex.ndindex.N
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ChunkSize.containing_block">
-<span class="sig-name descname"><span class="pre">containing_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/145c13cfb5b755d7de5288a1ee17d1914227c0d7/ndindex/chunking.py#L381-L461"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.containing_block" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">containing_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/1409e14b9a4f6f9c761b76a5908c335ff2558498/ndindex/chunking.py#L381-L461"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.containing_block" title="Link to this definition">¶</a></dt>
 <dd><p>Compute the index for the smallest contiguous block of chunks that
 contains <code class="code docutils literal notranslate"><span class="pre">idx</span></code> on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p>A block is a subset of an array that is contiguous in all dimensions
@@ -465,7 +465,7 @@ truncated to the shape).</p>
 <p>For example, given a chunk size of <code class="code docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">15)</span></code>, an example block might
 be <code class="code docutils literal notranslate"><span class="pre">(Slice(0,</span> <span class="pre">20),</span> <span class="pre">Slice(30,</span> <span class="pre">45))</span></code>. Such a block would be the smallest
 block that contains the index <code class="code docutils literal notranslate"><span class="pre">(Slice(0,</span> <span class="pre">12),</span> <span class="pre">40)</span></code>, for example.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkSize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="mi">40</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
@@ -493,7 +493,7 @@ block is contiguous.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ChunkSize.indices">
-<span class="sig-name descname"><span class="pre">indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/145c13cfb5b755d7de5288a1ee17d1914227c0d7/ndindex/chunking.py#L100-L141"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.indices" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/1409e14b9a4f6f9c761b76a5908c335ff2558498/ndindex/chunking.py#L100-L141"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.indices" title="Link to this definition">¶</a></dt>
 <dd><p>Yield a set of ndindex indices for the chunks on an array of shape <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">shape</span></code> should have the same number of dimensions as <code class="code docutils literal notranslate"><span class="pre">self</span></code>. If the
 shape is not a multiple of the chunk size, some chunks will be
@@ -501,7 +501,7 @@ truncated, so that <a class="reference internal" href="index-types.html#ndindex.
 be used to get the size of an indexed axis.</p>
 <p>For example, if <code class="code docutils literal notranslate"><span class="pre">a</span></code> has shape <code class="code docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">19)</span></code> and is chunked into chunks
 of shape <code class="code docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">5)</span></code>:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkSize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">chunk_size</span><span class="o">.</span><span class="n">indices</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">19</span><span class="p">)):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -523,11 +523,11 @@ of shape <code class="code docutils literal notranslate"><span class="pre">(5,</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ChunkSize.num_chunks">
-<span class="sig-name descname"><span class="pre">num_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/145c13cfb5b755d7de5288a1ee17d1914227c0d7/ndindex/chunking.py#L73-L98"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.num_chunks" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">num_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/1409e14b9a4f6f9c761b76a5908c335ff2558498/ndindex/chunking.py#L73-L98"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.num_chunks" title="Link to this definition">¶</a></dt>
 <dd><p>Give the number of chunks for the given <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p>This is the same as <code class="code docutils literal notranslate"><span class="pre">len(list(self.indices(shape)))</span></code>, but much faster.
 <code class="code docutils literal notranslate"><span class="pre">shape</span></code> must have the same number of dimensions as <code class="code docutils literal notranslate"><span class="pre">self</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkSize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># len(list(chunk_size.indices(shape))) would be very slow, as</span>
@@ -544,12 +544,12 @@ of shape <code class="code docutils literal notranslate"><span class="pre">(5,</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ndindex.ChunkSize.num_subchunks">
-<span class="sig-name descname"><span class="pre">num_subchunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/145c13cfb5b755d7de5288a1ee17d1914227c0d7/ndindex/chunking.py#L300-L379"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.num_subchunks" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">num_subchunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/Quansight-Labs/ndindex/blob/1409e14b9a4f6f9c761b76a5908c335ff2558498/ndindex/chunking.py#L300-L379"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndindex.ChunkSize.num_subchunks" title="Link to this definition">¶</a></dt>
 <dd><p>Give the number of chunks indexed by <code class="code docutils literal notranslate"><span class="pre">idx</span></code> on an array of shape
 <code class="code docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 <p>This is equivalent to <code class="code docutils literal notranslate"><span class="pre">len(list(self.as_subindex(idx,</span> <span class="pre">shape)))</span></code>, but
 more efficient.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndindex</span> <span class="kn">import</span> <span class="n">ChunkSize</span><span class="p">,</span> <span class="n">Tuple</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ndindex</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkSize</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">ChunkSize</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
@@ -651,7 +651,7 @@ more efficient.</p>
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

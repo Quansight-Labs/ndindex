@@ -5,9 +5,9 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Ellipses" href="ellipses.html" /><link rel="prev" title="What is an Array?" href="what-is-an-array.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Tuple Indices - ndindex documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=16cf08d2" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=6ad9bad0" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -372,7 +372,7 @@ or <a class="reference internal" href="newaxis.html"><span class="std std-doc">n
 shape <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">2,</span> <span class="pre">4)</span></code>. For simplicity, we’ll define <code class="docutils literal notranslate"><span class="pre">a</span></code> as a reshaped <code class="docutils literal notranslate"><span class="pre">arange</span></code>, so
 that each element is distinct and we can easily see which elements are
 selected.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
 <span class="go">array([[[ 0,  1,  2,  3],</span>
@@ -435,7 +435,7 @@ at the list of lists representation of <code class="docutils literal notranslate
 </pre></div>
 </div>
 <p>And indeed:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span> 
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
 <span class="go">np.int64(10)</span>
 </pre></div>
 </div>
@@ -470,7 +470,7 @@ gives us the first intermediate array we looked at:</p>
 <p>Now, it’s important to note a key point about tuple indices: <strong>the parentheses
 in a tuple index are completely optional.</strong> Instead of writing <code class="docutils literal notranslate"><span class="pre">a[(1,</span> <span class="pre">0,</span> <span class="pre">2)]</span></code>,
 we could simply write <code class="docutils literal notranslate"><span class="pre">a[1,</span> <span class="pre">0,</span> <span class="pre">2]</span></code>.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> 
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="go">np.int64(10)</span>
 </pre></div>
 </div>
@@ -479,7 +479,7 @@ automatically treats the index as a tuple. From here on, we will always omit
 the parentheses, as is common practice. Not only is this cleaner, but it is
 also important for another reason: syntactically, Python does not allow slices
 in a tuple index if the parentheses are included:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[(</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> 
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[(</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
   File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>
 <span class="w">    </span><span class="n">a</span><span class="p">[(</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
 <span class="w">        </span><span class="pm">^</span>
@@ -583,7 +583,7 @@ until now. Suppose we slice the first axis of <code class="docutils literal notr
 array and want to get the first element of the last row.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="go">np.int64(12)</span>
 </pre></div>
 </div>
@@ -596,7 +596,7 @@ array and want to get the first element of the last row.</p>
 instead</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="go">np.int64(4)</span>
 </pre></div>
 </div>
@@ -640,7 +640,7 @@ throughout a computation, even if one of them sometimes has size 1, simply
 because it means that you can index the array
 uniformly.<a class="footnote-reference brackets" href="#size-1-dimension-footnote" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> And this doesn’t apply just to
 indexing. Many NumPy functions reduce the number of dimensions of their output
-(for example, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="(in NumPy v2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.sum()</span></code></a>), but they have a <code class="docutils literal notranslate"><span class="pre">keepdims</span></code>
+(for example, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="(in NumPy v2.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.sum()</span></code></a>), but they have a <code class="docutils literal notranslate"><span class="pre">keepdims</span></code>
 argument to retain the dimension as a size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimension instead.</p>
 <p>There are two final facts about tuple indices that should be noted before we
 move on to the other basic index types. First, as we saw above,</p>
@@ -683,9 +683,9 @@ either, an empty tuple index <code class="docutils literal notranslate"><span cl
 single ellipsis <code class="docutils literal notranslate"><span class="pre">...</span></code> will always produce a 0-D array:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># scalar</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># 0-D array</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="p">[()]</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="p">[()]</span>
 <span class="go">np.int64(0)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[()]</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[()]</span>
 <span class="go">np.int64(0)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
 <span class="go">array(0)</span>
@@ -696,7 +696,7 @@ single ellipsis <code class="docutils literal notranslate"><span class="pre">...
 <p>This also applies for tuple indices that select a single element. If the
 tuple contains a (necessarily redundant) ellipsis, the result is a 0-D
 array. Otherwise, the result is a scalar. With the example array:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># scalar </span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># scalar</span>
 <span class="go">np.int64(10)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="c1"># 0-D array</span>
 <span class="go">array(10)</span>
@@ -769,7 +769,7 @@ differences between the scalars and 0-D arrays which are related to indexing.</p
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
