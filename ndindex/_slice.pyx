@@ -20,8 +20,6 @@ cdef inline bint is_numpy_bool(object obj):
     return _NUMPY_BOOL is not None and isinstance(obj, _NUMPY_BOOL)
 
 cdef inline int64_t cy_operator_index(object idx) except? -1:
-    cdef object result
-
     if PyBool_Check(idx) or is_numpy_bool(idx):
         raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
 
