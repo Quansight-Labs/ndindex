@@ -8,20 +8,20 @@ cdef extern from "Python.h":
     bint PyBool_Check(object obj)
     int64_t PyLong_AsLongLong(object obj) except? -1
 
+# Module scope, so implicitly thread safe
+# xref: https://github.com/Quansight-Labs/ndindex/pull/199#discussion_r2072395630
 cdef bint _NUMPY_IMPORTED = False
 cdef type _NUMPY_BOOL = None
+global _NUMPY_IMPORTED, _NUMPY_BOOL
+if not _NUMPY_IMPORTED:
+    if 'numpy' in sys.modules:
+        _NUMPY_BOOL = sys.modules['numpy'].bool_
+    _NUMPY_IMPORTED = True
 
 cdef inline bint is_numpy_bool(object obj):
-    global _NUMPY_IMPORTED, _NUMPY_BOOL
-    if not _NUMPY_IMPORTED:
-        if 'numpy' in sys.modules:
-            _NUMPY_BOOL = sys.modules['numpy'].bool_
-        _NUMPY_IMPORTED = True
     return _NUMPY_BOOL is not None and isinstance(obj, _NUMPY_BOOL)
 
 cdef inline int64_t cy_operator_index(object idx) except? -1:
-    cdef object result
-
     if PyBool_Check(idx) or is_numpy_bool(idx):
         raise TypeError(f"'{type(idx).__name__}' object cannot be interpreted as an integer")
 
