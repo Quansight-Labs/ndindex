@@ -27,7 +27,7 @@ def test_isvalid_hypothesis(idx, shape):
         except Warning as w:
             # check_same unconditionally turns this warning into raise
             # IndexError, so we have to handle it separately here.
-            if "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
+            if "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]: # pragma: no cover
                 return False
             raise # pragma: no cover
         except IndexError:

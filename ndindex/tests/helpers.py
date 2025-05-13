@@ -468,7 +468,7 @@ def check_same(a, idx, *, raw_func=lambda a, idx: a[idx],
                 if ("Using a non-tuple sequence for multidimensional indexing is deprecated" in w.args[0]): # pragma: no cover
                     idx = asarray(idx, dtype=intp)
                     a_raw = raw_func(a, idx)
-                elif "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]:
+                elif "Out of bound index found. This was previously ignored when the indexing result contained no elements. In the future the index error will be raised. This error occurs either due to an empty slice, or if an array has zero elements even before indexing." in w.args[0]: # pragma: no cover
                     same_exception = False
                     raise IndexError
                 else: # pragma: no cover
