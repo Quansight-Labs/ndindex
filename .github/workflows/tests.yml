@@ -5,18 +5,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13-dev']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']  # add 3.14-dev once numpy/skimage have wheels available
         # https://numpy.org/neps/nep-0029-deprecation_policy.html
         numpy-version: ['1.22', 'latest', 'dev']
         exclude:
           - python-version: '3.12'
             numpy-version: '1.22'
-          - python-version: '3.13-dev'
+          - python-version: '3.13'
+            numpy-version: '1.22'
+          - python-version: '3.14-dev'
             numpy-version: '1.22'
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Dependencies
@@ -24,6 +26,7 @@ jobs:
           set -x
           set -e
           python -m pip install -r requirements-dev.txt
+          python -m pip install -U setuptools
           if [[ ${{ matrix.numpy-version }} == 'latest' ]]; then
               python -m pip install --upgrade numpy
           elif [[ ${{ matrix.numpy-version }} == 'dev' ]]; then
@@ -31,24 +34,24 @@ jobs:
           else
               python -m pip install --upgrade numpy==${{ matrix.numpy-version }}.*
           fi
-      - name: Test Installation
-        run: |
-          python -m pip install --verbose .
+  
         # COVERAGE_CORE=sysmon does not work with Cython. Since coverage is
         # really slow without it (see
         # https://github.com/nedbat/coveragepy/issues/1665), just omit Cython
         # coverage in 3.12. Hopefully by the time it is our minimal version it
         # will work with Cython, or trace coverage will be faster again.
-      - name: Set CYTHON_COVERAGE=1
-        run: echo "CYTHON_COVERAGE=1" >> $GITHUB_ENV
-        if: matrix.python-version != '3.12' && matrix.python-version != '3.13-dev'
+      - name: Set CYTHON_COVERAGE=1 and install Cython 3.0
+        if: contains(fromJSON('["3.9", "3.10", "3.11"]'), matrix.python-version)
+        run: |
+          echo "CYTHON_COVERAGE=1" >> $GITHUB_ENV
+          # Cython 3.1.0 broke coverage usage, so install 3.0.x (see gh-203)
+          python -m pip install "Cython<3.1.0"
       - name: Disable Coverage Plugin
         run: sed -i '/plugins = Cython.Coverage/d' .coveragerc
-        if: matrix.python-version == '3.12' || matrix.python-version == '3.13-dev'
+        if: contains(fromJSON('["3.12", "3.13", "3.14-dev"]'), matrix.python-version)
       - name: In-place build
         run: |
-          python setup.py clean
-          python setup.py build_ext --inplace
+          python -m pip install --verbose -e . --no-build-isolation
       - name: Run Doctests
         run: |
           ./run_doctests
@@ -62,7 +65,7 @@ jobs:
       # Enable experimental faster sys.monitoring coverage for Python 3.12
       - name: Set COVERAGE_CORE=sysmon
         run: echo "COVERAGE_CORE=sysmon" >> $GITHUB_ENV
-        if: matrix.python-version == '3.12' || matrix.python-version == '3.13-dev'
+        if: contains(fromJSON('["3.12", "3.13", "3.14-dev"]'), matrix.python-version)
       - name: Run Tests
         run: |
           set -x
