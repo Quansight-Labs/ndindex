@@ -1,3 +1,6 @@
 [build-system]
 requires = ["setuptools", "cython", "versioneer"]
 build-backend = "setuptools.build_meta"
+[tool.cibuildwheel]
+enable = ["cpython-freethreading"]
+skip = "*t*_i686"
