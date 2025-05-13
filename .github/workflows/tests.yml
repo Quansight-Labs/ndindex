@@ -40,9 +40,12 @@ jobs:
         # https://github.com/nedbat/coveragepy/issues/1665), just omit Cython
         # coverage in 3.12. Hopefully by the time it is our minimal version it
         # will work with Cython, or trace coverage will be faster again.
-      - name: Set CYTHON_COVERAGE=1
-        run: echo "CYTHON_COVERAGE=1" >> $GITHUB_ENV
+      - name: Set CYTHON_COVERAGE=1 and install Cython 3.0
         if: contains(fromJSON('["3.9", "3.10", "3.11"]'), matrix.python-version)
+        run: |
+          echo "CYTHON_COVERAGE=1" >> $GITHUB_ENV
+          # Cython 3.1.0 broke coverage usage, so install 3.0.x (see gh-203)
+          python -m pip install "Cython<3.1.0"
       - name: Disable Coverage Plugin
         run: sed -i '/plugins = Cython.Coverage/d' .coveragerc
         if: contains(fromJSON('["3.12", "3.13", "3.14-dev"]'), matrix.python-version)
