@@ -4,6 +4,9 @@ import versioneer
 import shutil
 import glob
 
+from Cython.Compiler.Version import version as cython_version
+from packaging.version import Version
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -11,12 +14,17 @@ from Cython.Build import cythonize
 
 CYTHON_COVERAGE = os.environ.get("CYTHON_COVERAGE", False)
 define_macros = []
-compiler_directives = {}
+compiler_directives = dict()
+compiler_tenv = dict()
 if CYTHON_COVERAGE:
     print("CYTHON_COVERAGE is set. Enabling Cython coverage support.")
     define_macros.append(("CYTHON_TRACE_NOGIL", "1"))
     compiler_directives["linetrace"] = True
-
+if Version(cython_version) >= Version("3.1.0"):
+    compiler_directives["freethreading_compatible"] = True
+    compiler_tenv["CYTHON_FREE_THREADING"] = True
+else:
+    compiler_tenv["CYTHON_FREE_THREADING"] = False
 ext_modules = cythonize([
     Extension(
         "ndindex._slice", ["ndindex/_slice.pyx"],
@@ -25,9 +33,11 @@ ext_modules = cythonize([
     Extension(
         "ndindex._tuple", ["ndindex/_tuple.pyx"],
         define_macros=define_macros,
-    )],
+    )
+],
     language_level="3",
     compiler_directives=compiler_directives,
+    compile_time_env=compiler_tenv,
 )
 
 class CleanCommand(Command):
