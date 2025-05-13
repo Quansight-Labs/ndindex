@@ -9,6 +9,7 @@ pyflakes
 pytest
 pytest-cov
 pytest-doctestplus
+pytest-xdist
 pytest-flakes
 scikit-image
 slotscheck
