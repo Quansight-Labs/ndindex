@@ -1,3 +1,4 @@
+# distutils: language = c++
 import sys
 
 # Forward declarations
@@ -51,7 +52,7 @@ cdef object _broadcast_shapes, _BroadcastError
 # We cannot just add these imports to the top because of circular import
 # issues. We can put them inside the constructor, but then they create a big
 # performance bottleneck.
-cdef void _lazy_import():
+cdef void _lazy_import() noexcept with gil:
     global _ndindex, _ArrayIndex, _Integer, _Slice, _BooleanArray, _IntegerArray, _ellipsis, _Newaxis
     global _broadcast_shapes, _BroadcastError
 
@@ -70,9 +71,20 @@ cdef void _lazy_import():
         _broadcast_shapes = broadcast_shapes
         _BroadcastError = BroadcastError
 
+cdef bint CYTHON_FREE_THREADING
+
+IF CYTHON_FREE_THREADING:
+    from libcpp.mutex cimport once_flag, call_once
+    cdef once_flag _lazy_import_lock
+
+
 cdef int _is_boolean_scalar(object idx):
     cdef object BooleanArray
-    _lazy_import()
+    IF CYTHON_FREE_THREADING:
+        with nogil:
+            call_once(_lazy_import_lock, _lazy_import)
+    ELSE:
+        _lazy_import()
     BooleanArray = _BooleanArray
     return isinstance(idx, BooleanArray) and idx.shape == ()
 
@@ -92,7 +104,11 @@ cdef class _Tuple:
             int has_boolean_scalar = 0
             object arg, newarg
 
-        _lazy_import()
+        IF CYTHON_FREE_THREADING:
+            with nogil:
+                call_once(_lazy_import_lock, _lazy_import)
+        ELSE:
+            _lazy_import()
 
         if 'numpy' in sys.modules:
             ndarray = sys.modules['numpy'].ndarray
