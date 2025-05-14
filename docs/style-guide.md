@@ -14,7 +14,7 @@ This is a style guide for the ndindex documentation.
   `NDIndex` base class.
 - The plural of "index" is "indices". "Indexes" should only be used as a verb.
   For example, "in `a[i, j]`, the indices are `i` and `j`. They represent a
-  single tuple index `(i, j)`, which indexes the array `a`."
+  single tuple index `(i, j)` which indexes the array `a`."
 - The arguments of a slice should be referred to as "start", "stop", and
   "step", respectively. This matches the argument names and attributes of the
   `Slice` and `slice` objects.
