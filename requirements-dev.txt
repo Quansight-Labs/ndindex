@@ -1,6 +1,5 @@
 Cython
 setuptools
-versioneer
 hypothesis
 matplotlib
 numpy
