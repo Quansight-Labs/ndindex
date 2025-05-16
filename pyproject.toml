@@ -4,7 +4,6 @@ requires = [
     "setuptools; platform_python_implementation != 'PyPy'",
     "setuptools<72.2; platform_python_implementation == 'PyPy'",
     "cython",
-    "versioneer"
 ]
 build-backend = "setuptools.build_meta"
 
