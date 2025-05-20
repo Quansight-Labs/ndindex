@@ -1,16 +1,31 @@
+import importlib
 import os
 from setuptools import setup, Extension, Command
-import versioneer
 import shutil
 import glob
 
+from Cython.Build import cythonize
 from Cython.Compiler.Version import version as cython_version
 from packaging.version import Version
 
+
+def import_versioneer():
+    # Needed because the non-legacy build backend doesn't run in the local
+    # dir, and hence an absolute import of `./versioneer.py` won't work.
+    versioneer_path = os.path.join(os.path.dirname(__file__), 'versioneer.py')
+    spec = importlib.util.spec_from_file_location(
+        'versioneer', versioneer_path
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+versioneer = import_versioneer()
+
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
-
-from Cython.Build import cythonize
 
 CYTHON_COVERAGE = os.environ.get("CYTHON_COVERAGE", False)
 define_macros = []
