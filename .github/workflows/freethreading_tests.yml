@@ -8,7 +8,7 @@ jobs:
       - name: Install uv and set the python version
         uses: astral-sh/setup-uv@v6
         with:
-          version: "0.7.2"
+          version: "latest"
           python-version: 3.13t
           enable-cache: false
       - name: Set up Python
