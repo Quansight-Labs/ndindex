@@ -1,8 +1,15 @@
 # ndindex Changelog
 
+## Version 1.10.0 (2025-05-20)
+
+### Major Changes
+
+- Add support for free threaded builds of CPython (@HaoZeke, @rgommers,
+  @ngoldbaum).
+
 ## Version 1.9.2 (2024-09-25)
 
-## Minor Changes
+### Minor Changes
 
 - Fixes an issue with pickle and deepcopy serialization introduced in ndindex
   1.9.
