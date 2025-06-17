@@ -183,7 +183,7 @@ both. -->
    >>> import matplotlib.pyplot as plt
    >>> x = np.linspace(-10, 10, 10000) # 10000 evenly spaced points between -10 and 10
    >>> y = 4*x*np.sin(x) - x**2/4 - 2*x # our function
-   >>> plt.scatter(x, y, marker=',', s=1)
+   >>> plt.scatter(x, y, marker='.', s=1)
    <matplotlib.collections.PathCollection object at ...>
 
 If we want to show only those :math:`x` values that are positive, we could
@@ -198,7 +198,7 @@ to do this is to select them using a mask:
    :alt: A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis.
    :caption: Plot of :math:`y = 4x\sin(x) - \frac{x^2}{4} - 2x` where :math:`y > 0`
 
-   >>> plt.scatter(x[y > 0], y[y > 0], marker=',', s=1)
+   >>> plt.scatter(x[y > 0], y[y > 0], marker='.', s=1)
    <matplotlib.collections.PathCollection object at ...>
 
 ```
