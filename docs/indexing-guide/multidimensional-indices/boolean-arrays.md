@@ -249,8 +249,8 @@ For example:
 (2, 3, 4)
 >>> idx.shape # Matches the first two dimensions of a
 (2, 3)
->>> np.count_nonzero(idx) # The number of True elements in idx # doctest: +SKIPNP1
-np.int64(5)
+>>> int(np.count_nonzero(idx)) # The number of True elements in idx
+5
 >>> a[idx].shape # The (2, 3) in a.shape is replaced with count_nonzero(idx)
 (5, 4)
 ```
