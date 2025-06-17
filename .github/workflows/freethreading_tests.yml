@@ -15,14 +15,14 @@ jobs:
         run: uv python install
       - name: Install Dependencies
         run: |
-          uv pip install numpy pytest-cov pytest-timeout pytest-durations pytest-run-parallel sympy hypothesis
+          uv pip install --system numpy pytest-cov pytest-timeout pytest-durations pytest-run-parallel sympy hypothesis
       - name: Disable Coverage # see gh-198
         run: |
           sed -i '/plugins = Cython.Coverage/d' .coveragerc
           sed -i 's/addopts/\#addopts/' pytest.ini
       - name: Editable build
         run: |
-          uv pip install -v -e .
+          uv pip install --system -v -e .
       - name: Run Tests
         run: |
           set -xe
