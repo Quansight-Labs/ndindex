@@ -11,21 +11,26 @@ jobs:
           version: "latest"
           python-version: 3.13t
           enable-cache: false
-      - name: Set up Python
-        run: uv python install
+      - name: Create virtual environment
+        run: uv venv --python 3.13t
       - name: Install Dependencies
         run: |
-          uv pip install --system numpy pytest-cov pytest-timeout pytest-durations pytest-run-parallel sympy hypothesis
+          uv pip install numpy pytest-cov pytest-timeout pytest-durations pytest-run-parallel sympy hypothesis
       - name: Disable Coverage # see gh-198
         run: |
           sed -i '/plugins = Cython.Coverage/d' .coveragerc
           sed -i 's/addopts/\#addopts/' pytest.ini
       - name: Editable build
         run: |
-          uv pip install --system -v -e .
+          uv pip install -v -e .
+      - name: Verify free threading
+        run: |
+          uv run python --version --version
+          uv run python -c "import sys; print('sys._is_gil_enabled:', sys._is_gil_enabled())"
+          uv run python -c "import sysconfig; print('Py_GIL_DISABLED:', sysconfig.get_config_var('Py_GIL_DISABLED'))"
       - name: Run Tests
         run: |
           set -xe
-          uv run --no-project python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
-          uv run --no-project python -m pytest --parallel-threads=2 --iterations=2 -v -s \
+          uv run python -We:invalid -We::SyntaxWarning -m compileall -f -q ndindex/
+          uv run python -m pytest --parallel-threads=2 --iterations=2 -v -s \
                  --timeout=600 --durations=10 -m "not hypothesis and not thread_unsafe and not flakes"
