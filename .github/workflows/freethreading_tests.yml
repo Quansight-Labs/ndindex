@@ -23,12 +23,6 @@ jobs:
       - name: Editable build
         run: |
           uv pip install -v -e .
-      - name: Verify free threading
-        run: |
-          source .venv/bin/activate
-          python --version --version
-          python -c "import sys; print('sys._is_gil_enabled:', sys._is_gil_enabled())"
-          python -c "import sysconfig; print('Py_GIL_DISABLED:', sysconfig.get_config_var('Py_GIL_DISABLED'))"
       - name: Run Tests
         run: |
           set -xe
