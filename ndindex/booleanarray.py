@@ -101,7 +101,7 @@ class BooleanArray(ArrayIndex):
         2
         """
         from numpy import count_nonzero
-        return count_nonzero(self.array)
+        return int(count_nonzero(self.array))
 
     def _raise_indexerror(self, shape, axis=0):
         if len(shape) < self.ndim + axis:

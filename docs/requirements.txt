@@ -2,7 +2,7 @@ Cython
 furo
 intersphinx-registry
 linkify-it-py
-matplotlib @ git+https://github.com/asmeurer/matplotlib.git@output-base-name
+matplotlib @ git+https://github.com/matplotlib/matplotlib.git@main
 myst-parser
 scikit-image
 setuptools

@@ -176,14 +176,14 @@ both. -->
 .. plot::
    :context: reset
    :include-source: True
-   :image-basename: function-plot
+   :filename-prefix: function-plot
    :alt: A plot of 4*x*np.sin(x) - x**2/4 - 2*x from -10 to 10. The curve crosses the x-axis several times at irregular intervals.
    :caption: Plot of :math:`y = 4x\sin(x) - \frac{x^2}{4} - 2x`
 
    >>> import matplotlib.pyplot as plt
    >>> x = np.linspace(-10, 10, 10000) # 10000 evenly spaced points between -10 and 10
    >>> y = 4*x*np.sin(x) - x**2/4 - 2*x # our function
-   >>> plt.scatter(x, y, marker=',', s=1)
+   >>> plt.scatter(x, y, marker='.', s=1)
    <matplotlib.collections.PathCollection object at ...>
 
 If we want to show only those :math:`x` values that are positive, we could
@@ -194,11 +194,11 @@ to do this is to select them using a mask:
 .. plot::
    :context: close-figs
    :include-source: True
-   :image-basename: function-plot-masked
+   :filename-prefix: function-plot-masked
    :alt: A plot of only the parts of 4*x*np.sin(x) - x**2/4 - 2*x that are above the x-axis.
    :caption: Plot of :math:`y = 4x\sin(x) - \frac{x^2}{4} - 2x` where :math:`y > 0`
 
-   >>> plt.scatter(x[y > 0], y[y > 0], marker=',', s=1)
+   >>> plt.scatter(x[y > 0], y[y > 0], marker='.', s=1)
    <matplotlib.collections.PathCollection object at ...>
 
 ```
@@ -249,7 +249,7 @@ For example:
 (2, 3, 4)
 >>> idx.shape # Matches the first two dimensions of a
 (2, 3)
->>> np.count_nonzero(idx) # The number of True elements in idx
+>>> int(np.count_nonzero(idx)) # The number of True elements in idx
 5
 >>> a[idx].shape # The (2, 3) in a.shape is replaced with count_nonzero(idx)
 (5, 4)
@@ -387,7 +387,7 @@ For example, say we have an image represented in
 .. plot::
    :context: reset
    :include-source: True
-   :image-basename: astronaut
+   :filename-prefix: astronaut
    :alt: An image of an astronaut, which is represented as a shape (512, 512, 3) array.
 
    >>> def imshow(image, title):
@@ -410,7 +410,7 @@ value (the second value in the last dimension, which should always be between
 .. plot::
    :context: close-figs
    :include-source: True
-   :image-basename: astronaut-saturated-
+   :filename-prefix: astronaut-saturated-
    :alt: An image of an astronaut with increased saturation. The lighter parts of the image appear washed out.
 
    >>> from skimage import color
@@ -429,7 +429,7 @@ saturation of only those pixels:
 .. plot::
    :context: close-figs
    :include-source: True
-   :image-basename: astronaut-saturated-better
+   :filename-prefix: astronaut-saturated-better
    :alt: An image of an astronaut with increased saturation. The image does not appear washed out.
 
    >>> hsv_image = color.rgb2hsv(image)
