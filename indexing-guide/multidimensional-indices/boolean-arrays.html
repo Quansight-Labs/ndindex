@@ -412,8 +412,8 @@ left-hand side of an assignment.</p>
 the array itself with operators that return boolean arrays, such as relational
 operators (<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>), logical operators (<code class="docutils literal notranslate"><span class="pre">&amp;</span></code> (and),
 <code class="docutils literal notranslate"><span class="pre">|</span></code> (or), <code class="docutils literal notranslate"><span class="pre">~</span></code> (not), <code class="docutils literal notranslate"><span class="pre">^</span></code> (xor)), and boolean functions (e.g.,
-<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isnan.html#numpy.isnan" title="(in NumPy v2.2)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isnan()</span></code></a> or
-<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isinf.html#numpy.isinf" title="(in NumPy v2.2)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isinf()</span></code></a>).</p>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isnan.html#numpy.isnan" title="(in NumPy v2.3)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isnan()</span></code></a> or
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isinf.html#numpy.isinf" title="(in NumPy v2.3)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isinf()</span></code></a>).</p>
 <p>Consider an array of the integers from -10 to 10:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
@@ -495,7 +495,7 @@ both. -->
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span> <span class="c1"># 10000 evenly spaced points between -10 and 10</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span> <span class="c1"># our function</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
@@ -509,7 +509,7 @@ both. -->
 easily do this by modifying the <code class="docutils literal notranslate"><span class="pre">linspace</span></code> call that created <code class="docutils literal notranslate"><span class="pre">x</span></code>. But what
 if we want to show only those <span class="math notranslate nohighlight">\(y\)</span> values that are positive? The only way
 to do this is to select them using a mask:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
@@ -559,7 +559,7 @@ replaced, or the index will result in an <code class="docutils literal notransla
 <span class="go">(2, 3, 4)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># Matches the first two dimensions of a</span>
 <span class="go">(2, 3)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="c1"># The number of True elements in idx</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span> <span class="c1"># The number of True elements in idx</span>
 <span class="go">5</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># The (2, 3) in a.shape is replaced with count_nonzero(idx)</span>
 <span class="go">(5, 4)</span>
@@ -750,7 +750,7 @@ indices</span></a> worked. Indeed, there is a basic
 equivalence between the two:</p>
 <blockquote>
 <div><p><strong>A boolean array index <code class="docutils literal notranslate"><span class="pre">idx</span></code> is the same as if you replaced <code class="docutils literal notranslate"><span class="pre">idx</span></code> with the
-result of <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.nonzero(idx)</span></code></a> (unpacking
+result of <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.nonzero(idx)</span></code></a> (unpacking
 the tuple), using the rules for <a class="reference internal" href="integer-arrays.html"><span class="std std-doc">integer array indices</span></a>
 outlined previously.</strong></p>
 </div></blockquote>
@@ -791,7 +791,7 @@ element of the index, and then broadcasting them all to a common shape.</p>
 <p>The ndindex method
 <a class="reference internal" href="../../api/index-types.html#ndindex.Tuple.broadcast_arrays" title="ndindex.Tuple.broadcast_arrays"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">Tuple.broadcast_arrays()</span></code></span></a> (as well as
 <a class="reference internal" href="../../api/index-types.html#ndindex.Tuple.expand" title="ndindex.Tuple.expand"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">expand()</span></code></span></a>) will convert boolean array indices into
-integer array indices via <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nonzero()</span></code></a> and broadcast
+integer array indices via <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nonzero()</span></code></a> and broadcast
 array indices together into a canonical form.</p>
 </section>
 <section id="boolean-scalar-indices">
@@ -936,7 +936,7 @@ end of the document. -->
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="mask-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Not to be confused with <a class="reference external" href="https://numpy.org/doc/stable/reference/maskedarray.html" title="(in NumPy v2.2)"><span class="xref std std-doc">NumPy masked arrays</span></a>.</p>
+<p>Not to be confused with <a class="reference external" href="https://numpy.org/doc/stable/reference/maskedarray.html" title="(in NumPy v2.3)"><span class="xref std std-doc">NumPy masked arrays</span></a>.</p>
 </aside>
 <aside class="footnote brackets" id="indexing-assignment-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>

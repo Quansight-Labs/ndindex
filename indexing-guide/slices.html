@@ -2679,7 +2679,7 @@ endpoints included, this confusion would be impossible, because positive and
 negative steps would be symmetric in this regard.</p></li>
 <li><p>Half-open semantics are generally undesirable to apply to extensions to
 slicing on non-integer labels. For example, the pandas
-<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v2.2.3)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows slicing
+<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v2.3.0)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows slicing
 string labels (like <code class="docutils literal notranslate"><span class="pre">df.loc['a':'f']</span></code>), but this syntax always includes
 both ends. This is because when you slice on labels, you probably aren’t
 thinking about which label comes before or after the one you want, and
@@ -2737,7 +2737,7 @@ are just one type of <em>index</em>.</p>
 syntatically allowed by Python, but the built-in types (<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>,
 <code class="docutils literal notranslate"><span class="pre">str</span></code>) and NumPy arrays do not allow them. There are other libraries that
 make use of this feature. For instance, the Pandas
-<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v2.2.3)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows
+<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v2.3.0)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows
 slicing with strings corresponding to labels. The semantics of such
 extensions to slicing may not necessarily correspond to the semantics
 outlined in this guide.</p>
