@@ -89,7 +89,7 @@ jobs:
         run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.0
+        uses: pypa/cibuildwheel@v3.2.1
         with:
           package-dir: ${{ env.SDIST_FILE }}
           output-dir: dist/
@@ -139,7 +139,7 @@ jobs:
         print-hash: true
 
     - name: Create GitHub Release from a Tag
-      uses: softprops/action-gh-release@v2.3.4
+      uses: softprops/action-gh-release@v2.4.1
       if: startsWith(github.ref, 'refs/tags/')
       with:
           files: dist/*
