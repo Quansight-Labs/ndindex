@@ -11,8 +11,5 @@ build-backend = "setuptools.build_meta"
 enable = ["cpython-freethreading"]
 skip = "*t*_i686"
 
-[tool.cibuildwheel.linux]
-archs = ["x86_64", "aarch64"]
-
 [tool.cibuildwheel.macos]
 environment = { CXXFLAGS="-std=c++11" }
