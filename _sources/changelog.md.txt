@@ -1,5 +1,17 @@
 # ndindex Changelog
 
+## Version 1.10.1 (2025-XX-XX)
+
+### Minor Changes
+
+- Fix {any}`BooleanArray.count_nonzero()` to always return a Python `int` instead of a NumPy integer type, which could cause issues in some contexts.
+
+- Add Linux ARM64 wheel builds to PyPI.
+
+- Fix some doctests to work with recent versions of NumPy and to always pass regardless of environment.
+
+- This release includes compiled wheels for Python 3.14.
+
 ## Version 1.10.0 (2025-05-20)
 
 ### Major Changes
