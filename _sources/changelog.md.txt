@@ -1,6 +1,6 @@
 # ndindex Changelog
 
-## Version 1.10.1 (2025-XX-XX)
+## Version 1.10.1 (2025-11-19)
 
 ### Minor Changes
 
