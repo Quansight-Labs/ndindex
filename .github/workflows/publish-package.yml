@@ -101,7 +101,7 @@ jobs:
         run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.3.0
+        uses: pypa/cibuildwheel@v3.3.1
         with:
           package-dir: ${{ env.SDIST_FILE }}
           output-dir: dist/
