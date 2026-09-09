@@ -82,6 +82,8 @@ def test_indices_error():
 def test_num_chunks(chunk_size, shape):
     chunk_size = ChunkSize(chunk_size)
     assert chunk_size.num_chunks(shape) == len(list(chunk_size.indices(shape)))
+    if 0 in shape:
+        assert chunk_size.num_chunks(shape) == 0
 
 @given(chunk_sizes(), chunk_shapes)
 def test_indices(chunk_size, shape):
