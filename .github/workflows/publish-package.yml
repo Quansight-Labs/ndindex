@@ -82,6 +82,9 @@ jobs:
             cibw_archs: "aarch64"
           - os: windows-latest
             cibw_archs: "auto"
+          # Build native ARM64 wheels on a Windows ARM64 runner
+          - os: windows-11-arm
+            cibw_archs: "ARM64"
           # macos-15-intel is an intel runner, macos-14 is apple silicon
           - os: macos-15-intel
             cibw_archs: "auto"
