@@ -73,23 +73,15 @@ jobs:
     needs: [build_sdist]
     strategy:
       matrix:
-        include:
-          # Build native x86_64 wheels on x86_64 runner
-          - os: ubuntu-latest
-            cibw_archs: "x86_64"
-          # Build native aarch64 wheels on ARM64 runner
-          - os: ubuntu-24.04-arm
-            cibw_archs: "aarch64"
-          - os: windows-latest
-            cibw_archs: "auto"
-          # Build native ARM64 wheels on a Windows ARM64 runner
-          - os: windows-11-arm
-            cibw_archs: "ARM64"
+        # Each runner builds wheels for its native architecture(s)
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - windows-latest
+          - windows-11-arm
           # macos-15-intel is an intel runner, macos-14 is apple silicon
-          - os: macos-15-intel
-            cibw_archs: "auto"
-          - os: macos-14
-            cibw_archs: "auto"
+          - macos-15-intel
+          - macos-14
 
     steps:
       - uses: actions/checkout@v7
@@ -109,7 +101,6 @@ jobs:
           package-dir: ${{ env.SDIST_FILE }}
           output-dir: dist/
         env:
-          CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs }}
           CIBW_TEST_COMMAND: >
               python -c "import ndindex; assert '1.' in ndindex.__version__"
 
