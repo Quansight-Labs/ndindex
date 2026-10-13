@@ -93,6 +93,7 @@ jobs:
           path: dist
 
       - name: Get sdist filename
+        shell: bash
         run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
 
       - name: Build wheels
@@ -101,8 +102,9 @@ jobs:
           package-dir: ${{ env.SDIST_FILE }}
           output-dir: dist/
         env:
+          # Versioneer gives "0+untagged..." when it can't find a release tag
           CIBW_TEST_COMMAND: >
-              python -c "import ndindex; assert '1.' in ndindex.__version__"
+              python -c "import ndindex; assert not ndindex.__version__.startswith('0+'), ndindex.__version__"
 
       - uses: actions/upload-artifact@v7
         with:
