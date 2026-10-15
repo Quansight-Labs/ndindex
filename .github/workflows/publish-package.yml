@@ -58,9 +58,6 @@ jobs:
     - name: List contents of sdist
       run: python -m tarfile --list dist/ndindex-*.tar.gz
 
-    - name: Get sdist filename
-      run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
-
     - name: Upload distribution artifact
       uses: actions/upload-artifact@v7
       with:
@@ -73,20 +70,15 @@ jobs:
     needs: [build_sdist]
     strategy:
       matrix:
-        include:
-          # Build native x86_64 wheels on x86_64 runner
-          - os: ubuntu-latest
-            cibw_archs: "x86_64"
-          # Build native aarch64 wheels on ARM64 runner
-          - os: ubuntu-24.04-arm
-            cibw_archs: "aarch64"
-          - os: windows-latest
-            cibw_archs: "auto"
+        # Each runner builds wheels for its native architecture(s)
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - windows-latest
+          - windows-11-arm
           # macos-15-intel is an intel runner, macos-14 is apple silicon
-          - os: macos-15-intel
-            cibw_archs: "auto"
-          - os: macos-14
-            cibw_archs: "auto"
+          - macos-15-intel
+          - macos-14
 
     steps:
       - uses: actions/checkout@v7
@@ -98,7 +90,19 @@ jobs:
           path: dist
 
       - name: Get sdist filename
-        run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
+        shell: bash
+        # Fail here rather than letting an empty SDIST_FILE make cibuildwheel
+        # silently build from the (shallow, untagged) checkout instead.
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sdists=(dist/*.tar.gz)
+          if [ "${#sdists[@]}" -ne 1 ]; then
+            echo "Expected exactly one sdist in dist/, found: ${sdists[*]:-none}" >&2
+            ls -la dist/ >&2 || true
+            exit 1
+          fi
+          echo "SDIST_FILE=${sdists[0]}" >> "$GITHUB_ENV"
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.0
@@ -106,9 +110,9 @@ jobs:
           package-dir: ${{ env.SDIST_FILE }}
           output-dir: dist/
         env:
-          CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs }}
+          # Versioneer gives "0+untagged..." when it can't find a release tag
           CIBW_TEST_COMMAND: >
-              python -c "import ndindex; assert '1.' in ndindex.__version__"
+              python -c "import ndindex; assert not ndindex.__version__.startswith('0+'), ndindex.__version__"
 
       - uses: actions/upload-artifact@v7
         with:
