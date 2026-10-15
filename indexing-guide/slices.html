@@ -7,10 +7,10 @@
         <link rel="prefetch" href="../_static/ndindex_logo_white_bg.svg" as="image">
         <link rel="prefetch" href="../_static/ndindex_logo_dark_bg.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Slices - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6ad9bad0" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -500,11 +500,11 @@ will always produce a list, tuple, or string. This behavior is different from
 <a class="reference internal" href="integer-indices.html"><span class="doc std std-doc">integer indices</span></a>, which always remove the dimension that
 they index.</p>
 <p>For example</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># An element of the list</span>
-<span class="go">&#39;d&#39;</span>
+<span class="go">'d'</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="c1"># A sub-list</span>
-<span class="go">[&#39;d&#39;]</span>
+<span class="go">['d']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Empty slice</span>
 <span class="go">[]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -558,9 +558,9 @@ indexing</span></a>. However, note that although the <code class="docutils liter
     </tr>
   </table>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 </pre></div>
 </div>
 <p>Do not be worried if you find 0-based indexing hard to get used to, or if you
@@ -607,9 +607,9 @@ using it enough that you use it automatically without thinking about it.</p>
     </table>
   </div>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 </pre></div>
 </div>
 <p>The half-open nature of slices means that you must always remember that the
@@ -630,9 +630,9 @@ slice is likely wrong. Length calculations are more complicated when <code class
 example, <code class="docutils literal notranslate"><span class="pre">a[1:len(a)]</span></code> slices from the second element to the end of <code class="docutils literal notranslate"><span class="pre">a</span></code>
 (this is equivalent to <code class="docutils literal notranslate"><span class="pre">a[1:]</span></code>, see <a class="reference internal" href="#omitted"><span class="std std-ref">Omitted Entries</span></a>)</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
-<span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['b', 'c', 'd', 'e', 'f', 'g']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-<span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['b', 'c', 'd', 'e', 'f', 'g']</span>
 </pre></div>
 </div>
 </li>
@@ -640,9 +640,9 @@ example, <code class="docutils literal notranslate"><span class="pre">a[1:len(a)
 slice’s <code class="docutils literal notranslate"><span class="pre">start</span></code> the same as the previous slice’s <code class="docutils literal notranslate"><span class="pre">stop</span></code>. For example, for our
 list <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">a[2:3]</span> <span class="pre">+</span> <span class="pre">a[3:5]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">a[2:5]</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['c', 'd', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['c', 'd', 'e']</span>
 </pre></div>
 </div>
 <p>A common usage of this is to split a slice into two slices. For example, the
@@ -764,12 +764,12 @@ interval <span class="math notranslate nohighlight">\((\text{stop}, \text{start}
 </div>
 <p>We might assume we would get</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;e&#39;, &#39;d&#39;] # WRONG</span>
+<span class="go">['e', 'd'] # WRONG</span>
 </pre></div>
 </div>
 <p>Actually, what we really get is</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;f&#39;, &#39;e&#39;]</span>
+<span class="go">['f', 'e']</span>
 </pre></div>
 </div>
 <p>This is because the slice <code class="docutils literal notranslate"><span class="pre">5:3:-1</span></code> starts at index <code class="docutils literal notranslate"><span class="pre">5</span></code> and steps backwards to
@@ -1005,12 +1005,12 @@ imagine it to give the same incorrect subarray that we imagined before.</p>
 </div>
 <p>As before, we might assume we would get</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;e&#39;, &#39;d&#39;] # WRONG</span>
+<span class="go">['e', 'd'] # WRONG</span>
 </pre></div>
 </div>
 <p>but this is incorrect! What we really get is</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;f&#39;, &#39;e&#39;]</span>
+<span class="go">['f', 'e']</span>
 </pre></div>
 </div>
 <p>If you’ve ever espoused the “spaces between elements” way of thinking about
@@ -1149,7 +1149,7 @@ the dividers:</p>
 </div>
 <p>For example, <code class="docutils literal notranslate"><span class="pre">a[-4:-2]</span></code> will give <code class="docutils literal notranslate"><span class="pre">['d',</span> <span class="pre">'e']</span></code></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 </pre></div>
 </div>
 <p>However, it would be quite easy to get confused here, as the “other” way of
@@ -1225,7 +1225,7 @@ end starts at -1. So you might mistakenly imagine something like this:</p>
 <code class="docutils literal notranslate"><span class="pre">stop</span></code> with a negative <code class="docutils literal notranslate"><span class="pre">step</span></code>, things get even more confusing. Consider the
 slice <code class="docutils literal notranslate"><span class="pre">a[-2:-4:-1]</span></code>. This gives <code class="docutils literal notranslate"><span class="pre">['f',</span> <span class="pre">'e']</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;f&#39;, &#39;e&#39;]</span>
+<span class="go">['f', 'e']</span>
 </pre></div>
 </div>
 <p>To get this with the “spacers” idea, we have to use the above “wrong”
@@ -1476,15 +1476,15 @@ negative. <a class="reference internal" href="#half-open"><span class="std std-r
     </table>
   </div>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 </pre></div>
 </div>
 <p>If a negative <code class="docutils literal notranslate"><span class="pre">stop</span></code> indexes an element on or before a nonnegative <code class="docutils literal notranslate"><span class="pre">start</span></code>, the
@@ -1509,7 +1509,7 @@ Something like the following would work:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['b', 'c', 'd', 'e']</span>
 </pre></div>
 </div>
 <p>From our <a class="reference internal" href="#sanity-check"><span class="std std-ref">sanity check</span></a>, <code class="docutils literal notranslate"><span class="pre">mid</span> <span class="pre">+</span> <span class="pre">n//2</span> <span class="pre">-</span> <span class="pre">(mid</span> <span class="pre">-</span> <span class="pre">n//2)</span></code> does equal
@@ -1518,7 +1518,7 @@ now let us assume <code class="docutils literal notranslate"><span class="pre">n
 <p>However, let’s look at what happens when <code class="docutils literal notranslate"><span class="pre">n</span></code> is larger than the size of <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;g&#39;]</span>
+<span class="go">['g']</span>
 </pre></div>
 </div>
 <p>The result <code class="docutils literal notranslate"><span class="pre">['g']</span></code> is not the “middle eight elements of <code class="docutils literal notranslate"><span class="pre">a</span></code>.” What we likely
@@ -1545,10 +1545,10 @@ which case you could modify the expression to always be nonnegative.</p>
 manually clip with <code class="docutils literal notranslate"><span class="pre">max(mid</span> <span class="pre">-</span> <span class="pre">n//2,</span> <span class="pre">0)</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['b', 'c', 'd', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['a', 'b', 'c', 'd', 'e', 'f', 'g']</span>
 </pre></div>
 </div>
 <p>Or we could replace the <code class="docutils literal notranslate"><span class="pre">start</span></code> with a value that is always negative. This
@@ -1558,10 +1558,10 @@ But this does require thinking a bit about how to translate from 0-based
 indexing to −1-based indexing. In this example, the <code class="docutils literal notranslate"><span class="pre">start</span></code> becomes <code class="docutils literal notranslate"><span class="pre">-n//2</span> <span class="pre">-</span> <span class="pre">mid</span> <span class="pre">-</span> <span class="pre">1</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['b', 'c', 'd', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['a', 'b', 'c', 'd', 'e', 'f', 'g']</span>
 </pre></div>
 </div>
 <p>It’s a good idea to play around in an interpreter and check all the corner
@@ -1579,13 +1579,13 @@ is odd, clipping to all of <code class="docutils literal notranslate"><span clas
 <code class="docutils literal notranslate"><span class="pre">['d',</span> <span class="pre">'e']</span></code> instead of <code class="docutils literal notranslate"><span class="pre">['c',</span> <span class="pre">'d']</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mid</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['d', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mid</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;c&#39;, &#39;d&#39;, &#39;e&#39;]</span>
+<span class="go">['c', 'd', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mid</span><span class="p">:</span><span class="n">mid</span> <span class="o">+</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;]</span>
+<span class="go">['c', 'd', 'e', 'f']</span>
 </pre></div>
 </div>
 </div>
@@ -1601,16 +1601,16 @@ Instead, slice values <em>clip</em> to the bounds of the array.</p>
 <code class="docutils literal notranslate"><span class="pre">a</span></code>, they will clip to the bounds of <code class="docutils literal notranslate"><span class="pre">a</span></code>.</strong></p>
 </div></blockquote>
 <p>For example:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span>
-<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['a', 'b', 'c', 'd', 'e', 'f', 'g']</span>
 </pre></div>
 </div>
 <p>Here, <code class="docutils literal notranslate"><span class="pre">-100</span></code> is “clipped” to <code class="docutils literal notranslate"><span class="pre">-7</span></code>, the smallest possible negative start value
 that actually selects something, and <code class="docutils literal notranslate"><span class="pre">100</span></code> is clipped down to <code class="docutils literal notranslate"><span class="pre">7</span></code>, the
 smallest possible positive stop value that selects the last element.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
-<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['a', 'b', 'c', 'd', 'e', 'f', 'g']</span>
 </pre></div>
 </div>
 <p>Of course, if we actually wanted to just select everything, we could use
@@ -1618,9 +1618,9 @@ smallest possible positive stop value that selects the last element.</p>
 same slice can be used on lists or arrays that are smaller than the bounds of
 the slice, and it will just select “as much as it can.”</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># The second and third element</span>
-<span class="go">[&#39;b&#39;, &#39;c&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># There is no third element, so just the second</span>
-<span class="go">[&#39;b&#39;]</span>
+<span class="go">['b', 'c']</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># There is no third element, so just the second</span>
+<span class="go">['b']</span>
 </pre></div>
 </div>
 <p>This behavior can be useful, but it can also bite you. Usually you really do
@@ -1647,23 +1647,23 @@ the command line, including the filename. For example, <code class="docutils lit
 your script to do something special if it called as <code class="docutils literal notranslate"><span class="pre">myscript.py</span> <span class="pre">help</span></code>. You
 can do something like</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'help'</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Usage: myscript.py"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The problem with this code is that it fails if no command line arguments are
 passed, because <code class="docutils literal notranslate"><span class="pre">sys.argv[1]</span></code> will give an <code class="docutils literal notranslate"><span class="pre">IndexError</span></code> for the out of bounds
 index 1. The most obvious fix is to add a length check:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'help'</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Usage: myscript.py"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>But another way would be to use a slice that gets the second element if there
 is one.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">'help'</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Usage: myscript.py"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now if <code class="docutils literal notranslate"><span class="pre">sys.argv</span></code> has at least two elements, the slice <code class="docutils literal notranslate"><span class="pre">sys.argv[1:2]</span></code> will be
@@ -1674,8 +1674,8 @@ arguments, then <code class="docutils literal notranslate"><span class="pre">sys
 <p>If instead we want to only support exactly <code class="docutils literal notranslate"><span class="pre">myscript.py</span> <span class="pre">help</span></code> with no further
 arguments, we could modify the check just slightly:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: myscript.py&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">'help'</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Usage: myscript.py"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now <code class="docutils literal notranslate"><span class="pre">myscript.py</span> <span class="pre">help</span></code> would print the help message but <code class="docutils literal notranslate"><span class="pre">myscript.py</span> <span class="pre">help</span> <span class="pre">me</span></code>
@@ -1692,9 +1692,9 @@ both <a class="reference internal" href="integer-indices.html"><span class="doc 
 in this way often only requires adding a <code class="docutils literal notranslate"><span class="pre">:</span></code> to the index so that it is a
 slice that selects a single element instead of an integer index. For example,
 consider a function like</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrong for a = &#39;&#39;</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrong for a = ''</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">ends_in_punctuation</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">,</span> <span class="s1">&#39;?&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'.'</span><span class="p">,</span> <span class="s1">'!'</span><span class="p">,</span> <span class="s1">'?'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>This function is wrong for an empty string input: <code class="docutils literal notranslate"><span class="pre">ends_in_punctuation('')</span></code>
@@ -1704,7 +1704,7 @@ consisting of the last character, but if <code class="docutils literal notransla
 <code class="docutils literal notranslate"><span class="pre">in</span></code> check will be correct either way.<a class="footnote-reference brackets" href="#string-check-footnote" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Better</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">ends_in_punctuation</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">,</span> <span class="s1">&#39;?&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'.'</span><span class="p">,</span> <span class="s1">'!'</span><span class="p">,</span> <span class="s1">'?'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>This sort of trick may seem scary and magic, but once you have digested this
@@ -1794,7 +1794,7 @@ still <a class="reference internal" href="#clipping"><span class="std std-ref">c
 </table>
 </div>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">[&#39;a&#39;, &#39;d&#39;]</span>
+<span class="go">['a', 'd']</span>
 </pre></div>
 </div>
 <p>Note that the <code class="docutils literal notranslate"><span class="pre">start</span></code> index, <code class="docutils literal notranslate"><span class="pre">0</span></code>, is included, but the <code class="docutils literal notranslate"><span class="pre">stop</span></code> index, <code class="docutils literal notranslate"><span class="pre">6</span></code>
@@ -1874,7 +1874,7 @@ start index that is <span class="math notranslate nohighlight">\(1 \pmod{3}\)</s
 </table>
 </div>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">[&#39;b&#39;, &#39;e&#39;]</span>
+<span class="go">['b', 'e']</span>
 </pre></div>
 </div>
 <p>However, be careful, as this rule is <em>only</em> true when the <code class="docutils literal notranslate"><span class="pre">start</span></code> is
@@ -1897,9 +1897,9 @@ when the <a class="reference internal" href="#negative-steps"><span class="std s
 less than <code class="docutils literal notranslate"><span class="pre">len(a)</span></code>, the <code class="docutils literal notranslate"><span class="pre">step</span></code>ed values are computed as if the <code class="docutils literal notranslate"><span class="pre">start</span></code> were
 <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;a&#39;, &#39;c&#39;, &#39;e&#39;, &#39;g&#39;]</span>
+<span class="go">['a', 'c', 'e', 'g']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">101</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">[&#39;a&#39;, &#39;c&#39;, &#39;e&#39;, &#39;g&#39;]</span>
+<span class="go">['a', 'c', 'e', 'g']</span>
 </pre></div>
 </div>
 <p>Because of these two caveats, you must be careful when using negative <code class="docutils literal notranslate"><span class="pre">start</span></code>
@@ -1940,9 +1940,9 @@ negative <code class="docutils literal notranslate"><span class="pre">step</span
 every other slice we have seen so far, a negative <code class="docutils literal notranslate"><span class="pre">step</span></code> selects elements in
 reversed order relative to the original list. In fact, one of the most common
 uses of a negative <code class="docutils literal notranslate"><span class="pre">step</span></code> is the slice <code class="docutils literal notranslate"><span class="pre">a[::-1]</span></code>, which reverses the list:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;g&#39;, &#39;f&#39;, &#39;e&#39;, &#39;d&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;]</span>
+<span class="go">['g', 'f', 'e', 'd', 'c', 'b', 'a']</span>
 </pre></div>
 </div>
 <p>It is tempting therefore to think of a negative <code class="docutils literal notranslate"><span class="pre">step</span></code> as a “reversing”
@@ -1954,9 +1954,9 @@ is <em>always</em> what is <a class="reference internal" href="#half-open"><span
 <code class="docutils literal notranslate"><span class="pre">j</span></code>, we go from “<code class="docutils literal notranslate"><span class="pre">j</span></code> is not included” to “<code class="docutils literal notranslate"><span class="pre">i</span></code> is not included”. For example,
 as <a class="reference internal" href="#wrong-rule-1"><span class="std std-ref">before</span></a>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">[&#39;f&#39;, &#39;e&#39;]</span>
+<span class="go">['f', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">:</span><span class="mi">1</span><span class="p">]))</span> <span class="c1"># This is not the same thing</span>
-<span class="go">[&#39;e&#39;, &#39;d&#39;]</span>
+<span class="go">['e', 'd']</span>
 </pre></div>
 </div>
 <p>In the first case, index <code class="docutils literal notranslate"><span class="pre">3</span></code> is not included. In the second case, index <code class="docutils literal notranslate"><span class="pre">5</span></code> is
@@ -1965,7 +1965,7 @@ not included.</p>
 idea that <code class="docutils literal notranslate"><span class="pre">a[i:j:-1]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">reversed(a)[j:i]</span></code> (that is, that
 <code class="docutils literal notranslate"><span class="pre">step=-1</span></code> somehow “reverses and then swaps the <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code>”):</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">a</span><span class="p">))[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="c1"># Not the same as a[5:3:-1] as shown above</span>
-<span class="go">[&#39;d&#39;, &#39;c&#39;]</span>
+<span class="go">['d', 'c']</span>
 </pre></div>
 </div>
 <p>Once <code class="docutils literal notranslate"><span class="pre">a</span></code> is reversed, the indices <code class="docutils literal notranslate"><span class="pre">3</span></code> and <code class="docutils literal notranslate"><span class="pre">5</span></code> have nothing to do with the
@@ -1983,7 +1983,7 @@ think about the slice as starting at the <code class="docutils literal notransla
 behavior to steps greater than 1, again, keeping in mind that the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is
 not included.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">[&#39;g&#39;, &#39;d&#39;]</span>
+<span class="go">['g', 'd']</span>
 </pre></div>
 </div>
 <div class="slice-diagram">
@@ -2342,22 +2342,22 @@ is. Simply put, omitting the <code class="docutils literal notranslate"><span cl
         </tr>
     </table>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># From the beginning to index 3 (but not including index 3)</span>
-<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+<span class="go">['a', 'b', 'c']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="c1"># From index 3 to the end</span>
-<span class="go">[&#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['d', 'e', 'f', 'g']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># From the end to index 3 (but not including index 3), reversed</span>
-<span class="go">[&#39;g&#39;, &#39;f&#39;, &#39;e&#39;]</span>
+<span class="go">['g', 'f', 'e']</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># From index 3 to the beginning, reversed</span>
-<span class="go">[&#39;d&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;]</span>
+<span class="go">['d', 'c', 'b', 'a']</span>
 </pre></div>
 </div>
 <p>A slice with both <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">stop</span></code> omitted, <code class="docutils literal notranslate"><span class="pre">a[:]</span></code>, therefore is just all of
 <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[:]</span>
-<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;g&#39;]</span>
+<span class="go">['a', 'b', 'c', 'd', 'e', 'f', 'g']</span>
 </pre></div>
 </div>
 <p>If <code class="docutils literal notranslate"><span class="pre">a</span></code> is a <code class="docutils literal notranslate"><span class="pre">list</span></code>, this is a convenient way of creating a (shallow) copy of
@@ -2671,7 +2671,7 @@ endpoints included, this confusion would be impossible, because positive and
 negative steps would be symmetric in this regard.</p></li>
 <li><p>Half-open semantics are generally undesirable to apply to extensions to
 slicing on non-integer labels. For example, the pandas
-<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v2.3.3)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows slicing
+<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v3.0.6)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows slicing
 string labels (like <code class="docutils literal notranslate"><span class="pre">df.loc['a':'f']</span></code>), but this syntax always includes
 both ends. This is because when you slice on labels, you probably aren’t
 thinking about which label comes before or after the one you want, and
@@ -2729,7 +2729,7 @@ are just one type of <em>index</em>.</p>
 syntatically allowed by Python, but the built-in types (<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>,
 <code class="docutils literal notranslate"><span class="pre">str</span></code>) and NumPy arrays do not allow them. There are other libraries that
 make use of this feature. For instance, the Pandas
-<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v2.3.3)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows
+<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="(in pandas v3.0.6)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loc</span></code></a> attribute allows
 slicing with strings corresponding to labels. The semantics of such
 extensions to slicing may not necessarily correspond to the semantics
 outlined in this guide.</p>
@@ -2930,13 +2930,13 @@ earlier.</p>
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>
 </html>

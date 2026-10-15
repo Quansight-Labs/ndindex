@@ -7,10 +7,10 @@
         <link rel="prefetch" href="../../_static/ndindex_logo_white_bg.svg" as="image">
         <link rel="prefetch" href="../../_static/ndindex_logo_dark_bg.svg" as="image">
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Boolean Array Indices - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=6ad9bad0" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -404,8 +404,8 @@ left-hand side of an assignment.</p>
 the array itself with operators that return boolean arrays, such as relational
 operators (<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>), logical operators (<code class="docutils literal notranslate"><span class="pre">&amp;</span></code> (and),
 <code class="docutils literal notranslate"><span class="pre">|</span></code> (or), <code class="docutils literal notranslate"><span class="pre">~</span></code> (not), <code class="docutils literal notranslate"><span class="pre">^</span></code> (xor)), and boolean functions (e.g.,
-<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isnan.html#numpy.isnan" title="(in NumPy v2.3)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isnan()</span></code></a> or
-<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isinf.html#numpy.isinf" title="(in NumPy v2.3)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isinf()</span></code></a>).</p>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isnan.html#numpy.isnan" title="(in NumPy v2.5)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isnan()</span></code></a> or
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.isinf.html#numpy.isinf" title="(in NumPy v2.5)"><code class="xref py py-data docutils literal notranslate"><span class="pre">isinf()</span></code></a>).</p>
 <p>Consider an array of the integers from -10 to 10:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
@@ -487,7 +487,7 @@ both. -->
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span> <span class="c1"># 10000 evenly spaced points between -10 and 10</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span> <span class="c1"># our function</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
@@ -501,7 +501,7 @@ both. -->
 easily do this by modifying the <code class="docutils literal notranslate"><span class="pre">linspace</span></code> call that created <code class="docutils literal notranslate"><span class="pre">x</span></code>. But what
 if we want to show only those <span class="math notranslate nohighlight">\(y\)</span> values that are positive? The only way
 to do this is to select them using a mask:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">&lt;matplotlib.collections.PathCollection object at ...&gt;</span>
 </pre></div>
 </div>
@@ -668,14 +668,14 @@ select only along the inner “subarray” dimensions, and pretend like the oute
 <a class="reference external" href="https://scikit-image.org/">scikit-image</a> as a 3-D array:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">skimage.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">astronaut</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">image</span> <span class="o">=</span> <span class="n">astronaut</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">image</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(512, 512, 3)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;Original Image&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">"Original Image"</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
@@ -691,7 +691,7 @@ value (the second value in the last dimension, which should always be between
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hsv_image</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">hsv_image</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert back to RGB</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">saturated_image</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">hsv2rgb</span><span class="p">(</span><span class="n">hsv_image</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">saturated_image</span><span class="p">,</span> <span class="s2">&quot;Saturated Image (Naive)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">saturated_image</span><span class="p">,</span> <span class="s2">"Saturated Image (Naive)"</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
@@ -708,7 +708,7 @@ saturation of only those pixels:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hsv_image</span><span class="p">[</span><span class="n">high_sat_mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">hsv_image</span><span class="p">[</span><span class="n">high_sat_mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert back to RGB</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">enhanced_color_image</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">hsv2rgb</span><span class="p">(</span><span class="n">hsv_image</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">enhanced_color_image</span><span class="p">,</span> <span class="s2">&quot;Saturated Image (Better)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imshow</span><span class="p">(</span><span class="n">enhanced_color_image</span><span class="p">,</span> <span class="s2">"Saturated Image (Better)"</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
@@ -742,7 +742,7 @@ indices</span></a> worked. Indeed, there is a basic
 equivalence between the two:</p>
 <blockquote>
 <div><p><strong>A boolean array index <code class="docutils literal notranslate"><span class="pre">idx</span></code> is the same as if you replaced <code class="docutils literal notranslate"><span class="pre">idx</span></code> with the
-result of <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.nonzero(idx)</span></code></a> (unpacking
+result of <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">np.nonzero(idx)</span></code></a> (unpacking
 the tuple), using the rules for <a class="reference internal" href="integer-arrays.html"><span class="std std-doc">integer array indices</span></a>
 outlined previously.</strong></p>
 </div></blockquote>
@@ -783,7 +783,7 @@ element of the index, and then broadcasting them all to a common shape.</p>
 <p>The ndindex method
 <a class="reference internal" href="../../api/index-types.html#ndindex.Tuple.broadcast_arrays" title="ndindex.Tuple.broadcast_arrays"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">Tuple.broadcast_arrays()</span></code></span></a> (as well as
 <a class="reference internal" href="../../api/index-types.html#ndindex.Tuple.expand" title="ndindex.Tuple.expand"><span class="xref myst py py-meth"><code class="docutils literal notranslate"><span class="pre">expand()</span></code></span></a>) will convert boolean array indices into
-integer array indices via <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nonzero()</span></code></a> and broadcast
+integer array indices via <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nonzero()</span></code></a> and broadcast
 array indices together into a canonical form.</p>
 </section>
 <section id="boolean-scalar-indices">
@@ -928,7 +928,7 @@ end of the document. -->
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="mask-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Not to be confused with <a class="reference external" href="https://numpy.org/doc/stable/reference/maskedarray.html" title="(in NumPy v2.3)"><span class="xref std std-doc">NumPy masked arrays</span></a>.</p>
+<p>Not to be confused with <a class="reference external" href="https://numpy.org/doc/stable/reference/maskedarray.html" title="(in NumPy v2.5)"><span class="xref std std-doc">NumPy masked arrays</span></a>.</p>
 </aside>
 <aside class="footnote brackets" id="indexing-assignment-footnote" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
@@ -1070,13 +1070,13 @@ rules</span></a> apply even to dimensions of size <code class="docutils literal 
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>
 </html>

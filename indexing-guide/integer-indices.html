@@ -7,10 +7,10 @@
         <link rel="prefetch" href="../_static/ndindex_logo_white_bg.svg" as="image">
         <link rel="prefetch" href="../_static/ndindex_logo_dark_bg.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Integer Indices - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6ad9bad0" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -410,9 +410,9 @@ slice indexing, is that it is 0-based.</strong></p>
     </tr>
   </table>
 </div>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">&#39;d&#39;</span>
+<span class="go">'d'</span>
 </pre></div>
 </div>
 <p>0-based indexing is different from how people typically count things, which is
@@ -452,7 +452,7 @@ element of <code class="docutils literal notranslate"><span class="pre">a</span>
   </table>
 </div>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">&#39;e&#39;</span>
+<span class="go">'e'</span>
 </pre></div>
 </div>
 <p>An equivalent way to think about negative indices is that an index
@@ -463,7 +463,7 @@ with the size of the axis being sliced). For example, <code class="docutils lite
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="go">7</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">7</span> <span class="o">-</span> <span class="mi">3</span><span class="p">]</span>
-<span class="go">&#39;e&#39;</span>
+<span class="go">'e'</span>
 </pre></div>
 </div>
 <p>Therefore, negative indices are primarily a syntactic convenience that
@@ -508,10 +508,10 @@ always <a class="reference internal" href="slices.html#subarray"><span class="st
 <p id="strings-integer-indexing">The exception to this rule is when integer indexing a
 <code class="docutils literal notranslate"><span class="pre">str</span></code>, the result is also a <code class="docutils literal notranslate"><span class="pre">str</span></code>. This is because there is no <code class="docutils literal notranslate"><span class="pre">char</span></code> class in
 Python. A single character is just represented as a string of length 1.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;abc&#39;</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="go">&#39;a&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="go">&lt;class &#39;str&#39;&gt;</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">'abc'</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">'a'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="s1">'abc'</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">&lt;class 'str'&gt;</span>
 </pre></div>
 </div>
 <p>For NumPy arrays, an integer index always indexes a single axis of the array.
@@ -534,9 +534,9 @@ sliced</span></a>.</p>
 </div>
 <p>If <code class="docutils literal notranslate"><span class="pre">a</span></code> has only a single dimension, the result is a 0-D array, i.e., a single
 scalar element (just as if <code class="docutils literal notranslate"><span class="pre">a</span></code> were a list):</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">])</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-<span class="go">np.str_(&#39;d&#39;)</span>
+<span class="go">np.str_('d')</span>
 </pre></div>
 </div>
 <p>In general, the resulting array is a subarray corresponding to the <code class="docutils literal notranslate"><span class="pre">i</span></code>-th
@@ -665,8 +665,8 @@ axes directly, not “levels of nesting.”</p>
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>

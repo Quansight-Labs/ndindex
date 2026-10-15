@@ -7,10 +7,10 @@
         <link rel="prefetch" href="../../_static/ndindex_logo_white_bg.svg" as="image">
         <link rel="prefetch" href="../../_static/ndindex_logo_dark_bg.svg" as="image">
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Tuple Indices - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=6ad9bad0" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -472,7 +472,7 @@ the parentheses, as is common practice. Not only is this cleaner, but it is
 also important for another reason: syntactically, Python does not allow slices
 in a tuple index if the parentheses are included:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[(</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
-  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>
+  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>
 <span class="w">    </span><span class="n">a</span><span class="p">[(</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
 <span class="w">        </span><span class="pm">^</span>
 <span class="gr">SyntaxError</span>: <span class="n">invalid syntax</span>
@@ -615,7 +615,7 @@ resulting array has different properties. Namely, the index we used for <code cl
 will not work for it.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="gt">Traceback (most recent call last):</span>
-  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
 <span class="gr">IndexError</span>: <span class="n">too many indices for array: array is 2-dimensional, but 3 were</span>
 <span class="x">indexed</span>
 </pre></div>
@@ -632,7 +632,7 @@ throughout a computation, even if one of them sometimes has size 1, simply
 because it means that you can index the array
 uniformly.<a class="footnote-reference brackets" href="#size-1-dimension-footnote" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> And this doesn’t apply just to
 indexing. Many NumPy functions reduce the number of dimensions of their output
-(for example, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="(in NumPy v2.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.sum()</span></code></a>), but they have a <code class="docutils literal notranslate"><span class="pre">keepdims</span></code>
+(for example, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="(in NumPy v2.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.sum()</span></code></a>), but they have a <code class="docutils literal notranslate"><span class="pre">keepdims</span></code>
 argument to retain the dimension as a size <code class="docutils literal notranslate"><span class="pre">1</span></code> dimension instead.</p>
 <p>There are two final facts about tuple indices that should be noted before we
 move on to the other basic index types. First, as we saw above,</p>
@@ -761,13 +761,13 @@ differences between the scalars and 0-D arrays which are related to indexing.</p
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>
 </html>

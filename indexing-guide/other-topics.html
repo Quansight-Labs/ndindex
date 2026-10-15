@@ -7,10 +7,10 @@
         <link rel="prefetch" href="../_static/ndindex_logo_white_bg.svg" as="image">
         <link rel="prefetch" href="../_static/ndindex_logo_dark_bg.svg" as="image">
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Other Topics Relevant to Indexing - ndindex documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6ad9bad0" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -804,7 +804,7 @@ underlying arrays use Fortran ordering.</p>
 <span class="go">array([[0, 1, 2],</span>
 <span class="go">       [3, 4, 5],</span>
 <span class="go">       [6, 7, 8]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">'F'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a_f</span> <span class="c1"># a_f looks the same as a, but the internal memory is ordered differently</span>
 <span class="go">array([[0, 1, 2],</span>
 <span class="go">       [3, 4, 5],</span>
@@ -813,7 +813,7 @@ underlying arrays use Fortran ordering.</p>
 <span class="gp">... </span>    <span class="p">[</span><span class="kc">False</span><span class="p">,</span>  <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span> <span class="kc">True</span><span class="p">,</span>  <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">idx_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="c1"># It doesn&#39;t matter if the index array is Fortran-ordered either</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">'F'</span><span class="p">)</span> <span class="c1"># It doesn't matter if the index array is Fortran-ordered either</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="c1"># These are all the same</span>
 <span class="go">array([1, 3, 4])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a_f</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
@@ -873,7 +873,7 @@ In [3]: %timeit np.sum(a[0])
 In [4]: %timeit np.sum(a[..., 0])
 24.2 µs ± 1.29 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 
-In [5]: a_f = np.asarray(a, order=&#39;F&#39;)
+In [5]: a_f = np.asarray(a, order='F')
 
 In [6]: %timeit np.sum(a_f[0])
 26.3 µs ± 952 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
@@ -1022,8 +1022,8 @@ no mnemonic.</p>
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
