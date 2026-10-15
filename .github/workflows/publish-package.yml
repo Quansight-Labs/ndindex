@@ -58,9 +58,6 @@ jobs:
     - name: List contents of sdist
       run: python -m tarfile --list dist/ndindex-*.tar.gz
 
-    - name: Get sdist filename
-      run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
-
     - name: Upload distribution artifact
       uses: actions/upload-artifact@v7
       with:
@@ -94,7 +91,18 @@ jobs:
 
       - name: Get sdist filename
         shell: bash
-        run: echo "SDIST_FILE=$(ls dist/*.tar.gz)" >> $GITHUB_ENV
+        # Fail here rather than letting an empty SDIST_FILE make cibuildwheel
+        # silently build from the (shallow, untagged) checkout instead.
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sdists=(dist/*.tar.gz)
+          if [ "${#sdists[@]}" -ne 1 ]; then
+            echo "Expected exactly one sdist in dist/, found: ${sdists[*]:-none}" >&2
+            ls -la dist/ >&2 || true
+            exit 1
+          fi
+          echo "SDIST_FILE=${sdists[0]}" >> "$GITHUB_ENV"
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.0
