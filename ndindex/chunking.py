@@ -93,8 +93,6 @@ class ChunkSize(ImmutableObject, Sequence):
         """
         shape = asshape(shape)
         d = [ceiling(i, c) for i, c in zip(shape, self)]
-        if 0 in d:
-            return 1
         return prod(d)
 
     def indices(self, shape):
@@ -134,7 +132,7 @@ class ChunkSize(ImmutableObject, Sequence):
             raise ValueError("chunks dimensions must equal the array dimensions")
         d = [ceiling(i, c) for i, c in zip(shape, self)]
         if 0 in d:
-            yield Tuple(*[Slice(0, bool(i)*chunk_size, 1) for i, chunk_size in zip(d, self)]).expand(shape)
+            return
         for p in product(*[range(i) for i in d]):
             # p = (0, 0, 0), (0, 0, 1), ...
             yield Tuple(*[Slice(chunk_size*i, min(chunk_size*(i + 1), n), 1)
