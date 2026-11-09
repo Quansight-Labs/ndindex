@@ -7,16 +7,16 @@ jobs:
       matrix:
         python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
         # https://numpy.org/neps/nep-0029-deprecation_policy.html
-        numpy-version: ['1.22', 'latest', 'dev']
+        numpy-version: ['1.25', 'latest', 'dev']
         exclude:
           - python-version: '3.12'
-            numpy-version: '1.22'
+            numpy-version: '1.25'
           - python-version: '3.13'
-            numpy-version: '1.22'
+            numpy-version: '1.25'
           - python-version: '3.14'
-            numpy-version: '1.22'
+            numpy-version: '1.25'
           - python-version: '3.15'
-            numpy-version: '1.22'
+            numpy-version: '1.25'
       fail-fast: false
     steps:
       - uses: actions/checkout@v7
@@ -65,9 +65,9 @@ jobs:
         run: |
           ./run_doctests
         # The doctests require scikit-image, which does not yet have wheels
-        # for Python 3.15, and a version of matplotlib that requires NumPy
-        # 1.23. Easiest to just skip these for now.
-        if: matrix.numpy-version != 'dev' && matrix.python-version != '3.15' && matrix.numpy-version != '1.22'
+        # for Python 3.15. They are also only run against recent NumPy
+        # versions, not the minimum supported one.
+        if: matrix.numpy-version != 'dev' && matrix.python-version != '3.15' && matrix.numpy-version != '1.25'
       - name: Run Slotscheck
         run: |
           python -m slotscheck ndindex
