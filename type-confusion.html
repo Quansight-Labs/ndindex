@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=254c7fb8" />
     
@@ -525,8 +525,8 @@ returning a specific index type (unless it states that it does so in its
 docstring).</p></li>
 </ul>
 </section>
-<section id="tuple">
-<span id="type-confusion-tuples"></span><h2>Tuple<a class="headerlink" href="#tuple" title="Link to this heading">¶</a></h2>
+<section id="type-confusion-tuples">
+<span id="tuple"></span><h2>Tuple<a class="headerlink" href="#type-confusion-tuples" title="Link to this heading">¶</a></h2>
 <ul>
 <li><p><strong><a class="reference internal" href="api/index-types.html#ndindex.Tuple" title="ndindex.Tuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code></a> should not be thought of as a tuple.</strong> In particular,
 things like <code class="docutils literal notranslate"><span class="pre">idx[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">len(idx)</span></code> will not work if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is a <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>. If
@@ -560,8 +560,8 @@ want the ndindex type, or <code class="docutils literal notranslate"><span class
 </li>
 </ul>
 </section>
-<section id="ellipsis">
-<span id="type-confusion-ellipsis"></span><h2>ellipsis<a class="headerlink" href="#ellipsis" title="Link to this heading">¶</a></h2>
+<section id="type-confusion-ellipsis">
+<span id="ellipsis"></span><h2>ellipsis<a class="headerlink" href="#type-confusion-ellipsis" title="Link to this heading">¶</a></h2>
 <ul>
 <li><p>You should almost never use the ndindex <a class="reference internal" href="api/index-types.html#ndindex.ellipsis" title="ndindex.ellipsis"><code class="xref py py-class docutils literal notranslate"><span class="pre">ellipsis</span></code></a> class directly.
 Instead, <strong>use <code class="docutils literal notranslate"><span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">ndindex[...]</span></code></strong>. As noted above, all ndindex
@@ -809,8 +809,8 @@ array do not affect the ndindex objects.</p>
             <ul>
 <li><a class="reference internal" href="#">Type Confusion</a><ul>
 <li><a class="reference internal" href="#integer">Integer</a></li>
-<li><a class="reference internal" href="#tuple">Tuple</a></li>
-<li><a class="reference internal" href="#ellipsis">ellipsis</a></li>
+<li><a class="reference internal" href="#type-confusion-tuples">Tuple</a></li>
+<li><a class="reference internal" href="#type-confusion-ellipsis">ellipsis</a></li>
 <li><a class="reference internal" href="#newaxis">Newaxis</a></li>
 <li><a class="reference internal" href="#integerarray-and-booleanarray">IntegerArray and BooleanArray</a></li>
 </ul>
@@ -830,6 +830,6 @@ array do not affect the ndindex objects.</p>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="_static/design-tabs.js?v=fcb327ea"></script>
     </body>
 </html>

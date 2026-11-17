@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=254c7fb8" />
     
@@ -566,8 +566,8 @@ permutation</a> on <code class="docutils literal notranslate"><span class="pre">
 </pre></div>
 </div>
 </section>
-<section id="advanced-notes">
-<span id="integer-arrays-advanced-notes"></span><h2>Advanced Notes<a class="headerlink" href="#advanced-notes" title="Link to this heading">¶</a></h2>
+<section id="integer-arrays-advanced-notes">
+<span id="advanced-notes"></span><h2>Advanced Notes<a class="headerlink" href="#integer-arrays-advanced-notes" title="Link to this heading">¶</a></h2>
 <p>The information above provides the basic gist of integer array indexing, but
 there are also many subtleties and advanced behaviors involved with them. The
 subsections here are included for completeness; however, if you are a beginner
@@ -630,8 +630,8 @@ than <code class="docutils literal notranslate"><span class="pre">-size</span></
 </pre></div>
 </div>
 </section>
-<section id="broadcasting">
-<span id="integer-array-broadcasting"></span><h3>Broadcasting<a class="headerlink" href="#broadcasting" title="Link to this heading">¶</a></h3>
+<section id="integer-array-broadcasting">
+<span id="broadcasting"></span><h3>Broadcasting<a class="headerlink" href="#integer-array-broadcasting" title="Link to this heading">¶</a></h3>
 <blockquote>
 <div><p><strong>The integer arrays in an index must either be the same shape or be able to
 be <a class="reference internal" href="../other-topics.html#broadcasting"><span class="std std-ref">broadcast</span></a> together to the same shape.</strong></p>
@@ -838,8 +838,8 @@ assignment index, be careful to avoid duplicate entries in the index or, at
 the very least, ensure that duplicate entries are always assigned the same
 value.</p>
 </section>
-<section id="combining-integer-arrays-indices-with-basic-indices">
-<span id="integer-arrays-combined-with-basic-indices"></span><h3>Combining Integer Arrays Indices with Basic Indices<a class="headerlink" href="#combining-integer-arrays-indices-with-basic-indices" title="Link to this heading">¶</a></h3>
+<section id="integer-arrays-combined-with-basic-indices">
+<span id="combining-integer-arrays-indices-with-basic-indices"></span><h3>Combining Integer Arrays Indices with Basic Indices<a class="headerlink" href="#integer-arrays-combined-with-basic-indices" title="Link to this heading">¶</a></h3>
 <p>If any <a class="reference internal" href="../slices.html"><span class="std std-doc">slice</span></a>, <a class="reference internal" href="ellipses.html"><span class="std std-doc">ellipsis</span></a>, or
 <a class="reference internal" href="newaxis.html"><span class="std std-doc">newaxis</span></a> indices precede or follow all the
 <a class="reference internal" href="../integer-indices.html"><span class="doc std std-doc">integer</span></a> and integer array indices in an index, the two
@@ -1150,16 +1150,16 @@ request implementing it, but I’m not going to do it myself.</p>
             <ul>
 <li><a class="reference internal" href="#">Integer Array Indices</a><ul>
 <li><a class="reference internal" href="#use-cases">Use Cases</a></li>
-<li><a class="reference internal" href="#advanced-notes">Advanced Notes</a><ul>
+<li><a class="reference internal" href="#integer-arrays-advanced-notes">Advanced Notes</a><ul>
 <li><a class="reference internal" href="#negative-indices">Negative Indices</a></li>
 <li><a class="reference internal" href="#python-lists">Python Lists</a></li>
 <li><a class="reference internal" href="#bounds-checking">Bounds Checking</a></li>
-<li><a class="reference internal" href="#broadcasting">Broadcasting</a><ul>
+<li><a class="reference internal" href="#integer-array-broadcasting">Broadcasting</a><ul>
 <li><a class="reference internal" href="#outer-indexing">Outer Indexing</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#assigning-to-an-integer-array-index">Assigning to an Integer Array Index</a></li>
-<li><a class="reference internal" href="#combining-integer-arrays-indices-with-basic-indices">Combining Integer Arrays Indices with Basic Indices</a></li>
+<li><a class="reference internal" href="#integer-arrays-combined-with-basic-indices">Combining Integer Arrays Indices with Basic Indices</a></li>
 <li><a class="reference internal" href="#integer-array-indices-separated-by-basic-indices">Integer Array Indices Separated by Basic Indices</a></li>
 </ul>
 </li>
@@ -1181,7 +1181,7 @@ request implementing it, but I’m not going to do it myself.</p>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>

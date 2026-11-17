@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=254c7fb8" />
     
@@ -461,8 +461,8 @@ will always use integers. Like <a class="reference internal" href="intro.html"><
 <strong>the result of a slice is never based on the values of the elements, but
 rather on the position of the elements in the list.</strong><a class="footnote-reference brackets" href="#dict-footnote" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
 </section>
-<section id="points-of-confusion">
-<span id="slices-points-of-confusion"></span><h2>Points of Confusion<a class="headerlink" href="#points-of-confusion" title="Link to this heading">¶</a></h2>
+<section id="slices-points-of-confusion">
+<span id="points-of-confusion"></span><h2>Points of Confusion<a class="headerlink" href="#slices-points-of-confusion" title="Link to this heading">¶</a></h2>
 <p>Before running through this guide, ensure you have a solid understanding of
 how integer indexing works.. See the previous section, <a class="reference internal" href="integer-indices.html"><span class="doc std std-doc">Integer Indices</span></a>.</p>
 <p>Now, let us come back to slices. The full definition of a slice could be
@@ -696,8 +696,8 @@ simple, and is always right, regardless of what the values of <code class="docut
 or <code class="docutils literal notranslate"><span class="pre">step</span></code> are (the only exception is if the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is omitted, in which case,
 the rule obviously doesn’t apply as-is, and so you can fallback to <a class="reference internal" href="#omitted"><span class="std std-ref">the rule
 about omitted <code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">stop</span></code></span></a>).</p>
-<section id="wrong-rule-1-a-slice-a-start-stop-slices-the-half-open-interval-text-start-text-stop">
-<span id="wrong-rule-1"></span><h5>Wrong Rule 1: “A slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> slices the half-open interval <span class="math notranslate nohighlight">\([\text{start}, \text{stop})\)</span>.”<a class="headerlink" href="#wrong-rule-1-a-slice-a-start-stop-slices-the-half-open-interval-text-start-text-stop" title="Link to this heading">¶</a></h5>
+<section id="wrong-rule-1">
+<span id="wrong-rule-1-a-slice-a-start-stop-slices-the-half-open-interval-text-start-text-stop"></span><h5>Wrong Rule 1: “A slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> slices the half-open interval <span class="math notranslate nohighlight">\([\text{start}, \text{stop})\)</span>.”<a class="headerlink" href="#wrong-rule-1" title="Link to this heading">¶</a></h5>
 <p>(or equivalently, “a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> selects the elements <span class="math notranslate nohighlight">\(i\)</span> such that
 <span class="math notranslate nohighlight">\(\text{start} &lt;= i &lt; \text{stop}\)</span>”)</p>
 <p>This is <em>only</em> the case if the <code class="docutils literal notranslate"><span class="pre">step</span></code> is positive. It also isn’t directly true
@@ -816,8 +816,8 @@ translateY(-12px) translateX(3px)">&minus;1</div></td>
 </table>
 </div>
 </section>
-<section id="wrong-rule-2-a-slice-works-like-range">
-<span id="wrong-rule-2"></span><h5>Wrong Rule 2: “A slice works like <code class="docutils literal notranslate"><span class="pre">range()</span></code>.”<a class="headerlink" href="#wrong-rule-2-a-slice-works-like-range" title="Link to this heading">¶</a></h5>
+<section id="wrong-rule-2">
+<span id="wrong-rule-2-a-slice-works-like-range"></span><h5>Wrong Rule 2: “A slice works like <code class="docutils literal notranslate"><span class="pre">range()</span></code>.”<a class="headerlink" href="#wrong-rule-2" title="Link to this heading">¶</a></h5>
 <p>There are many similarities between the behaviors of slices and the behavior
 of <code class="docutils literal notranslate"><span class="pre">range()</span></code>. However, they are not exactly the same. A slice
 <code class="docutils literal notranslate"><span class="pre">a[start:stop:step]</span></code> only acts like <code class="docutils literal notranslate"><span class="pre">range(start,</span> <span class="pre">stop,</span> <span class="pre">step)</span></code> if the <code class="docutils literal notranslate"><span class="pre">start</span></code>
@@ -852,8 +852,8 @@ range would be huge.</p>
 <code class="docutils literal notranslate"><span class="pre">range</span></code> objects should not be used to compute things about slices. If you want
 to do that, use <a class="reference internal" href="../index.html"><span class="doc std std-doc">ndindex</span></a>.</p>
 </section>
-<section id="wrong-rule-3-slices-index-the-spaces-between-the-elements-of-the-list">
-<span id="wrong-rule-3"></span><h5>Wrong Rule 3: “Slices index the spaces between the elements of the list.”<a class="headerlink" href="#wrong-rule-3-slices-index-the-spaces-between-the-elements-of-the-list" title="Link to this heading">¶</a></h5>
+<section id="wrong-rule-3">
+<span id="wrong-rule-3-slices-index-the-spaces-between-the-elements-of-the-list"></span><h5>Wrong Rule 3: “Slices index the spaces between the elements of the list.”<a class="headerlink" href="#wrong-rule-3" title="Link to this heading">¶</a></h5>
 <p>This is a very common rule that is taught for both slices and integer
 indexing. The reasoning goes as follows: 0-based indexing is confusing, where
 the first element of a list is indexed by 0, the second by 1, and so on.
@@ -1405,8 +1405,8 @@ better way to think about things, especially as you gain practice in counting
 starting at 0. As long as you apply the rule “the <code class="docutils literal notranslate"><span class="pre">stop</span></code> is not included,” you
 will get the correct results.</p>
 </section>
-<section id="wrong-rule-4-the-stop-of-a-slice-a-start-stop-is-1-based">
-<span id="wrong-rule-4"></span><h5>Wrong Rule 4: “The <code class="docutils literal notranslate"><span class="pre">stop</span></code> of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is 1-based.”<a class="headerlink" href="#wrong-rule-4-the-stop-of-a-slice-a-start-stop-is-1-based" title="Link to this heading">¶</a></h5>
+<section id="wrong-rule-4">
+<span id="wrong-rule-4-the-stop-of-a-slice-a-start-stop-is-1-based"></span><h5>Wrong Rule 4: “The <code class="docutils literal notranslate"><span class="pre">stop</span></code> of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is 1-based.”<a class="headerlink" href="#wrong-rule-4" title="Link to this heading">¶</a></h5>
 <p>You might try to get clever and say <code class="docutils literal notranslate"><span class="pre">a[3:5]</span></code> indexes from the 3rd element with
 0-based indexing to the 5th element with 1-based indexing. Don’t do this. It
 is confusing. Moreover, this rule must necessarily be reversed for negative
@@ -2054,8 +2054,8 @@ not included.</p>
 </pre></div>
 </div>
 </section>
-<section id="omitted-entries">
-<span id="omitted"></span><h3>Omitted Entries<a class="headerlink" href="#omitted-entries" title="Link to this heading">¶</a></h3>
+<section id="omitted">
+<span id="omitted-entries"></span><h3>Omitted Entries<a class="headerlink" href="#omitted" title="Link to this heading">¶</a></h3>
 <p>The final point of confusion is omitted entries.<a class="footnote-reference brackets" href="#omitted-none-footnote" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a></p>
 <p><strong>The best way to think about omitted entries is just that, as omitted
 entries.</strong> That is, for a slice like <code class="docutils literal notranslate"><span class="pre">a[:i]</span></code>, think of it as the <code class="docutils literal notranslate"><span class="pre">start</span></code> being
@@ -2897,15 +2897,15 @@ earlier.</p>
 <li><a class="reference internal" href="#">Slices</a><ul>
 <li><a class="reference internal" href="#what-is-a-slice">What is a slice?</a></li>
 <li><a class="reference internal" href="#rules">Rules</a></li>
-<li><a class="reference internal" href="#points-of-confusion">Points of Confusion</a><ul>
+<li><a class="reference internal" href="#slices-points-of-confusion">Points of Confusion</a><ul>
 <li><a class="reference internal" href="#subarray">Subarray</a></li>
 <li><a class="reference internal" href="#based">0-based</a></li>
 <li><a class="reference internal" href="#half-open">Half-open</a><ul>
 <li><a class="reference internal" href="#wrong-ways-of-thinking-about-half-open-semantics">Wrong Ways of Thinking about Half-open Semantics</a><ul>
-<li><a class="reference internal" href="#wrong-rule-1-a-slice-a-start-stop-slices-the-half-open-interval-text-start-text-stop">Wrong Rule 1: “A slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> slices the half-open interval <span class="math notranslate nohighlight">\([\text{start}, \text{stop})\)</span>.”</a></li>
-<li><a class="reference internal" href="#wrong-rule-2-a-slice-works-like-range">Wrong Rule 2: “A slice works like <code class="docutils literal notranslate"><span class="pre">range()</span></code>.”</a></li>
-<li><a class="reference internal" href="#wrong-rule-3-slices-index-the-spaces-between-the-elements-of-the-list">Wrong Rule 3: “Slices index the spaces between the elements of the list.”</a></li>
-<li><a class="reference internal" href="#wrong-rule-4-the-stop-of-a-slice-a-start-stop-is-1-based">Wrong Rule 4: “The <code class="docutils literal notranslate"><span class="pre">stop</span></code> of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is 1-based.”</a></li>
+<li><a class="reference internal" href="#wrong-rule-1">Wrong Rule 1: “A slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> slices the half-open interval <span class="math notranslate nohighlight">\([\text{start}, \text{stop})\)</span>.”</a></li>
+<li><a class="reference internal" href="#wrong-rule-2">Wrong Rule 2: “A slice works like <code class="docutils literal notranslate"><span class="pre">range()</span></code>.”</a></li>
+<li><a class="reference internal" href="#wrong-rule-3">Wrong Rule 3: “Slices index the spaces between the elements of the list.”</a></li>
+<li><a class="reference internal" href="#wrong-rule-4">Wrong Rule 4: “The <code class="docutils literal notranslate"><span class="pre">stop</span></code> of a slice <code class="docutils literal notranslate"><span class="pre">a[start:stop]</span></code> is 1-based.”</a></li>
 </ul>
 </li>
 </ul>
@@ -2914,7 +2914,7 @@ earlier.</p>
 <li><a class="reference internal" href="#clipping">Clipping</a></li>
 <li><a class="reference internal" href="#steps">Steps</a></li>
 <li><a class="reference internal" href="#negative-steps">Negative Steps</a></li>
-<li><a class="reference internal" href="#omitted-entries">Omitted Entries</a></li>
+<li><a class="reference internal" href="#omitted">Omitted Entries</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#soapbox">Soapbox</a></li>
@@ -2935,7 +2935,7 @@ earlier.</p>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>

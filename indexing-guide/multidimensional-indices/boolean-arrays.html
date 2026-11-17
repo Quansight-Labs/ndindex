@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=254c7fb8" />
     
@@ -534,8 +534,8 @@ cross-validation like <code class="docutils literal notranslate"><span class="pr
 <p>As <a class="reference internal" href="integer-arrays.html#integer-arrays-advanced-notes"><span class="std std-ref">with integer array indices</span></a>, the above
 section provides the basic gist of boolean array indexing, but there are some
 advanced semantics described below, which can be skipped by new NumPy users.</p>
-<section id="result-shape">
-<span id="boolean-array-result-shape"></span><h3>Result Shape<a class="headerlink" href="#result-shape" title="Link to this heading">¶</a></h3>
+<section id="boolean-array-result-shape">
+<span id="result-shape"></span><h3>Result Shape<a class="headerlink" href="#boolean-array-result-shape" title="Link to this heading">¶</a></h3>
 <blockquote>
 <div><p><strong>A boolean array index will remove as many dimensions as the index has, and
 replace them with a single flat dimension, which has size equal to the
@@ -582,8 +582,8 @@ evaluating them, such as
 Array</a>, may have limited or no
 support for boolean array indexing.</p>
 </section>
-<section id="result-order">
-<span id="boolean-array-c-order"></span><h3>Result Order<a class="headerlink" href="#result-order" title="Link to this heading">¶</a></h3>
+<section id="boolean-array-c-order">
+<span id="result-order"></span><h3>Result Order<a class="headerlink" href="#boolean-array-c-order" title="Link to this heading">¶</a></h3>
 <blockquote>
 <div><p><strong>The order of the elements selected by a boolean array index <code class="docutils literal notranslate"><span class="pre">idx</span></code>
 corresponds to the elements being iterated in C order.</strong></p>
@@ -786,8 +786,8 @@ element of the index, and then broadcasting them all to a common shape.</p>
 integer array indices via <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.nonzero.html#numpy.nonzero" title="(in NumPy v2.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nonzero()</span></code></a> and broadcast
 array indices together into a canonical form.</p>
 </section>
-<section id="boolean-scalar-indices">
-<span id="d-boolean-index"></span><h3>Boolean Scalar Indices<a class="headerlink" href="#boolean-scalar-indices" title="Link to this heading">¶</a></h3>
+<section id="d-boolean-index">
+<span id="boolean-scalar-indices"></span><h3>Boolean Scalar Indices<a class="headerlink" href="#d-boolean-index" title="Link to this heading">¶</a></h3>
 <p>A 0-dimensional boolean index (i.e., just the scalar <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>) is a
 little special. The <a class="reference internal" href="#nonzero-equivalence"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">np.nonzero</span></code> rule</span></a> stated above does
 not actually apply. This is because <code class="docutils literal notranslate"><span class="pre">np.nonzero</span></code> exhibits odd behavior with
@@ -1051,11 +1051,11 @@ rules</span></a> apply even to dimensions of size <code class="docutils literal 
             <ul>
 <li><a class="reference internal" href="#">Boolean Array Indices</a><ul>
 <li><a class="reference internal" href="#advanced-notes">Advanced Notes</a><ul>
-<li><a class="reference internal" href="#result-shape">Result Shape</a></li>
-<li><a class="reference internal" href="#result-order">Result Order</a></li>
+<li><a class="reference internal" href="#boolean-array-result-shape">Result Shape</a></li>
+<li><a class="reference internal" href="#boolean-array-c-order">Result Order</a></li>
 <li><a class="reference internal" href="#masking-a-subset-of-dimensions">Masking a Subset of Dimensions</a></li>
 <li><a class="reference internal" href="#nonzero-equivalence"><code class="docutils literal notranslate"><span class="pre">nonzero()</span></code> Equivalence</a></li>
-<li><a class="reference internal" href="#boolean-scalar-indices">Boolean Scalar Indices</a></li>
+<li><a class="reference internal" href="#d-boolean-index">Boolean Scalar Indices</a></li>
 </ul>
 </li>
 </ul>
@@ -1075,7 +1075,7 @@ rules</span></a> apply even to dimensions of size <code class="docutils literal 
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
     <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "AMS"}}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>
