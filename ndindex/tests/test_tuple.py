@@ -133,6 +133,7 @@ def test_tuple_reduce_no_shape_hypothesis(t, shape, kwargs):
 @example((0, 1, ..., 2, 3), (2, 3, 4, 5, 6, 7), {})
 @example((0, slice(None), ..., slice(None), 3), (2, 3, 4, 5, 6, 7), {})
 @example((0, ..., slice(None)), (2, 3, 4, 5, 6, 7), {})
+@example((..., slice(None), slice(None), slice(0, 2), 0), (2, 3, 5, 2), {})
 @example((slice(None, None, -1),), (2,), {})
 @example((..., slice(None, None, -1),), (2, 3, 4), {})
 @example((..., False, slice(None)), 0, {})

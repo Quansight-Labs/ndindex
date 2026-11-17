@@ -304,9 +304,8 @@ class Tuple(_Tuple, NDIndexCommon):
             # Remove redundant slices
             axis = len(shape) - len(endargs) + end_offset
             for i, s in enumerate(endargs):
-                axis += i
                 if (isinstance(s, Slice)
-                    and s == Slice(0, shape[axis], 1)):
+                    and s == Slice(0, shape[axis + i], 1)):
                     i += 1
                     continue
                 else:
