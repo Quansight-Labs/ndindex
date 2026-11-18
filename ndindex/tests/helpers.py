@@ -18,6 +18,9 @@ from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
 from hypothesis.errors import UnsatisfiedAssumption
 
 from ..ndindex import ndindex
+from ..booleanarray import BooleanArray
+from ..slice import Slice
+from ..tuple import Tuple
 from ..shapetools import remove_indices, unremove_indices
 from .._crt import prod
 
@@ -160,10 +163,18 @@ def _integer_arrays_for_axis(draw, axis=0, shapes=short_shapes):
 integer_arrays = _usually(_integer_arrays_for_axis(), _arbitrary_integer_arrays)
 
 @composite
-def _tuples_for_shape(draw, shapes=short_shapes):
+def _tuples_for_shape(draw, shapes=short_shapes, *,
+                      slices_st=_nonzero_step_slices, slice_axes=(),
+                      allow_ellipsis=True, allow_newaxis=True,
+                      allow_boolean_scalars=True):
     """
     Generate a tuple index that is valid for an array with the shape drawn
     from `shapes`.
+
+    `slices_st` is the strategy to use for the slices in the tuple. The axes
+    in `slice_axes` are only indexed by slices. If `allow_ellipsis`,
+    `allow_newaxis`, or `allow_boolean_scalars` are False, the tuple will not
+    have any of that type of index.
     """
     shape = draw(shapes)
     ndim = len(shape)
@@ -173,7 +184,7 @@ def _tuples_for_shape(draw, shapes=short_shapes):
     # the axes [a, ndim) are not indexed. Index every axis about half the
     # time, since otherwise most tuples would only have a few arguments.
     n_skipped = draw(one_of(just(0), integers(0, ndim)))
-    has_ellipsis = draw(booleans())
+    has_ellipsis = allow_ellipsis and draw(booleans())
     a = draw(integers(0, ndim - n_skipped)) if has_ellipsis else ndim - n_skipped
     b = a + n_skipped
 
@@ -200,10 +211,14 @@ def _tuples_for_shape(draw, shapes=short_shapes):
         # anywhere in the tuple.
         nonlocal block
         while True:
-            kinds = ['newaxis']
-            if (has_arrays and not block_closed
+            kinds = []
+            if allow_newaxis:
+                kinds.append('newaxis')
+            if (allow_boolean_scalars and has_arrays and not block_closed
                 and block in [None, 'integer', 'boolean scalar']):
                 kinds.append('boolean scalar')
+            if not kinds:
+                break
             kind = draw(_usually(none(), sampled_from(kinds)))
 
             if kind == 'newaxis':
@@ -224,17 +239,18 @@ def _tuples_for_shape(draw, shapes=short_shapes):
             n = shape[axis]
             in_block = has_arrays and not block_closed
             kinds = ['slice']
-            if n != 0 and (in_block or not has_arrays):
-                kinds.append('integer')
-            if in_block and block in [None, 'integer', 'integer array']:
-                kinds.append('integer array')
-            if in_block and block in [None, 'integer']:
-                kinds.append('boolean array')
+            if axis not in slice_axes:
+                if n != 0 and (in_block or not has_arrays):
+                    kinds.append('integer')
+                if in_block and block in [None, 'integer', 'integer array']:
+                    kinds.append('integer array')
+                if in_block and block in [None, 'integer']:
+                    kinds.append('boolean array')
             kind = draw(sampled_from(kinds))
 
             if kind == 'slice':
                 close_block()
-                args.append(draw(_nonzero_step_slices))
+                args.append(draw(slices_st))
                 axis += 1
             elif kind == 'integer':
                 if has_arrays and block is None:
@@ -248,7 +264,8 @@ def _tuples_for_shape(draw, shapes=short_shapes):
             else:
                 block = 'boolean array'
                 # A boolean array indexes as many axes as it has dimensions
-                n_axes = draw(integers(1, stop - axis))
+                max_stop = min([stop] + [i for i in slice_axes if i > axis])
+                n_axes = draw(integers(1, max_stop - axis))
                 x = draw(arrays(bool_, shape[axis:axis + n_axes]))
                 # Empty lists do not keep their shape or dtype
                 if x.size != 0 and draw(booleans()):
@@ -295,6 +312,60 @@ ndindices = one_of(
     integer_arrays,
     boolean_arrays,
 ).filter(_doesnt_raise)
+
+# Indices for testing idx1.as_subindex(idx2). as_subindex() is not implemented
+# for every type of index. In particular, it isn't implemented for ellipses,
+# newaxes, or boolean scalars, and it is only implemented for slices that
+# have a positive step and a nonnegative start and stop (as is always the
+# case after calling reduce() with a shape). Furthermore, for each axis, it is
+# only implemented if at least one of idx1 and idx2 indexes that axis with a
+# slice. Most pairs of indices from ndindices are not like this, especially if
+# they are tuples, for which every argument has to be implemented. So most of
+# the time, generate indices that as_subindex() is implemented for.
+
+def _non_slice_axes(index):
+    """
+    The axes that index indexes with something other than a slice.
+
+    This is only correct for indices of the type that as_subindex() is
+    implemented for.
+    """
+    axes = set()
+    axis = 0
+    for arg in index.args if isinstance(index, Tuple) else (index,):
+        # A boolean array indexes as many axes as it has dimensions
+        ndim = arg.ndim if isinstance(arg, BooleanArray) else 1
+        if not isinstance(arg, Slice):
+            axes.update(range(axis, axis + ndim))
+        axis += ndim
+    return axes
+
+@composite
+def _as_subindex_implemented_indices(draw, idx1=None, shapes=short_shapes):
+    """
+    Generate an index of the type that as_subindex() is implemented for, which
+    is valid for an array with the shape drawn from `shapes`.
+
+    If `idx1` is given, it should be a strategy. Then the index will be such
+    that `idx1.as_subindex(index)` is implemented, if `idx1` is itself an
+    index of the type that as_subindex() is implemented for.
+    """
+    shape = draw(shapes)
+    slice_axes = ()
+    if idx1 is not None:
+        slice_axes = _non_slice_axes(ndindex(draw(idx1)))
+    idx = draw(_tuples_for_shape(
+        just(shape), slices_st=slices(step=one_of(none(), integers(1, 10))),
+        slice_axes=slice_axes, allow_ellipsis=False, allow_newaxis=False,
+        allow_boolean_scalars=False))
+    return ndindex(idx).reduce(shape).raw
+
+# as_subindex_indices1 is shared so that as_subindex_indices2 can depend on it
+as_subindex_indices1 = shared(
+    _usually(_as_subindex_implemented_indices(), ndindices),
+    key='as_subindex_indices1')
+as_subindex_indices2 = _usually(
+    _as_subindex_implemented_indices(as_subindex_indices1), ndindices)
 
 # Note: We could use something like this:
 
