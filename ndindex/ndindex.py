@@ -405,7 +405,7 @@ class NDIndexCommon:
         `i.as_subindex(j)` produces an index `k` such that `a[j][k]` gives all of
         the elements of `a[j]` that are also in `a[i]`.
 
-        If `a[j]` is a subset of `a[i]`, then `a[j][k] == a[i]`. Otherwise,
+        If `a[i]` is a subset of `a[j]`, then `a[j][k] == a[i]`. Otherwise,
         `a[j][k] == a[i & j]`, where `i & j` is the intersection of `i` and
         `j`, that is, the elements of `a` that are indexed by both `i` and
         `j`.
@@ -429,8 +429,8 @@ class NDIndexCommon:
 
         `as_subindex` can be seen as the left-inverse of composition, that is,
         if `a[i] = a[j][k]`, then `k = i.as_subindex(j)`, so that `k "="
-        (j^-1)[i]` (this only works as a true inverse if `j` is a subset of
-        `i`).
+        (j^-1)[i]` (this only works as a true inverse if `i` is a subset of
+        `j`).
 
         Note that due to symmetry, `a[j][i.as_subindex(j)]` and
         `a[i][j.as_subindex(i)]` will give the same subarrays of `a`, which
