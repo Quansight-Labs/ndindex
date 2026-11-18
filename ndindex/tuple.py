@@ -625,6 +625,8 @@ class Tuple(_Tuple, NDIndexCommon):
                 if len(boolean_arrays) > 1:
                     from numpy import logical_and
                     new_array = BooleanArray(logical_and.reduce([i.array for i in boolean_arrays]))
+                    if new_array.isempty():
+                        raise ValueError("Indices do not intersect")
                 else:
                     new_array = boolean_arrays[0]
                 new_args2 = []

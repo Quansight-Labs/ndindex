@@ -49,6 +49,8 @@ from .helpers import ndindices, prod, short_shapes, assert_equal, warnings_are_e
 @example(slice(0, 5), 2, 10)
 @example(0, (slice(None, 0, None), Ellipsis), 1)
 @example(0, (slice(1, 2),), 1)
+@example((slice(0, 1), slice(0, 1)), (array([0, 1]), array([1, 0])), (2, 3))
+@example((array([0, 1]), array([1, 0])), (slice(0, 1), slice(0, 1)), (2, 3))
 @given(ndindices, ndindices, one_of(integers(0, 100), short_shapes))
 @warnings_are_errors
 def test_as_subindex_hypothesis(idx1, idx2, shape):
