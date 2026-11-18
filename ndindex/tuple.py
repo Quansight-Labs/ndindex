@@ -634,11 +634,12 @@ class Tuple(_Tuple, NDIndexCommon):
                         raise ValueError("Indices do not intersect")
                 else:
                     new_array = boolean_arrays[0]
-                if new_array.ndim > 0 and new_array.array.all():
+                if new_array.ndim > 1 and new_array.array.all():
                     # Every element of the arrays in index is in self, so
                     # there is nothing to mask out. A boolean array would
                     # flatten the dimensions of the arrays, so use slices
-                    # instead, which keep them.
+                    # instead, which keep them. If the arrays only have one
+                    # dimension there is nothing to flatten.
                     new_arrays = [Slice(None)]*new_array.ndim
                 else:
                     new_arrays = [new_array]
