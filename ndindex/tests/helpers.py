@@ -8,7 +8,7 @@ import numpy.testing
 
 from pytest import fail
 
-from hypothesis import assume, note
+from hypothesis import assume, note, reject
 from hypothesis.strategies import (integers, none, one_of, lists, just,
                                    builds, shared, composite, sampled_from,
                                    booleans,
@@ -364,8 +364,29 @@ def _as_subindex_implemented_indices(draw, idx1=None, shapes=short_shapes):
 as_subindex_indices1 = shared(
     _usually(_as_subindex_implemented_indices(), ndindices),
     key='as_subindex_indices1')
-as_subindex_indices2 = _usually(
-    _as_subindex_implemented_indices(as_subindex_indices1), ndindices)
+
+@composite
+def _as_subindex_indices2(draw):
+    idx1 = draw(as_subindex_indices1)
+    idx2 = draw(_usually(_as_subindex_implemented_indices(as_subindex_indices1),
+                         ndindices))
+    # Only generate pairs of indices that as_subindex() is implemented for.
+    # This way, the test does not have to allow NotImplementedError, which
+    # would also allow it for the explicit examples.
+    try:
+        ndindex(idx1).as_subindex(ndindex(idx2))
+    except NotImplementedError:
+        reject()
+    except Exception:
+        # The test makes the same call, so it will get the same exception.
+        # ValueError means the indices do not intersect, which the test
+        # checks. Any other exception will fail the test. We let the test
+        # raise it instead of raising it here because Hypothesis does not
+        # show the falsifying example for an exception from a strategy.
+        pass
+    return idx2
+
+as_subindex_indices2 = _as_subindex_indices2()
 
 # Note: We could use something like this:
 

@@ -38,8 +38,8 @@ from .helpers import (as_subindex_indices1, as_subindex_indices2, prod,
 @example(slice(0, 0), 9007199254741193, 1)
 @example((0,), (slice(1, 2),), 3)
 @example(slice(0, 10), slice(5, 15), 20)
-@example((), (slice(None, None, -1),), (2,))
-@example((), (..., slice(None, None, -1),), (2,))
+@example((), (slice(None, None, -1),), (2,)).xfail(raises=NotImplementedError)
+@example((), (..., slice(None, None, -1),), (2,)).xfail(raises=NotImplementedError)
 @example((slice(0, 1),), (2,), (3,))
 @example((slice(0, 5), slice(0, 5)), (slice(3, 10), slice(3, 10)), (20, 20))
 @example((slice(0, 5), slice(0, 5)), (1, 1), (10, 10))
@@ -76,11 +76,13 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
     except ValueError: # pragma: no cover
         assume(False)
 
+    # NotImplementedError is not allowed here. The strategies only generate
+    # indices that as_subindex() is implemented for. If it isn't implemented
+    # for an explicit example, the example must be marked with
+    # .xfail(raises=NotImplementedError).
     empty = False
     try:
         Subindex = index1.as_subindex(index2)
-    except NotImplementedError:
-        return
     except ValueError as e:
         assert "do not intersect" in e.args[0]
         empty = True
