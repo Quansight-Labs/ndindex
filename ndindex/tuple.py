@@ -680,6 +680,35 @@ class Tuple(_Tuple, NDIndexCommon):
                     else:
                         new_args2.append(arg)
                 new_args = new_args2
+
+            # A boolean array index is equivalent to its nonzero() integer
+            # arrays, which NumPy broadcasts together with every other integer
+            # array in the index. But the boolean array here masks the
+            # integer arrays of index, whereas the integer arrays come from
+            # self and index different axes. The two are independent, so we
+            # need every combination of them, not the broadcasted
+            # combination. To get this, replace the boolean array with its
+            # nonzero() arrays, with additional dimensions so that they
+            # broadcast against the integer arrays like an outer index.
+            mask_i = [i for i, arg in enumerate(new_args)
+                      if isinstance(arg, BooleanArray) and arg.ndim > 0]
+            array_i = [i for i, arg in enumerate(new_args)
+                       if isinstance(arg, IntegerArray) and arg.ndim > 0]
+            if mask_i and array_i:
+                mask_first = mask_i[0] < array_i[0]
+                ndim = new_args[array_i[0]].ndim
+                new_args2 = []
+                for i, arg in enumerate(new_args):
+                    if i in mask_i:
+                        for nz in arg.array.nonzero():
+                            if mask_first:
+                                nz = nz.reshape(nz.shape + (1,)*ndim)
+                            new_args2.append(IntegerArray(nz))
+                    elif i in array_i and not mask_first:
+                        new_args2.append(IntegerArray(arg.array[..., None]))
+                    else:
+                        new_args2.append(arg)
+                new_args = new_args2
             return Tuple(*new_args)
         raise NotImplementedError(f"Tuple.as_subindex() is not implemented for type '{type(index).__name__}")
 
