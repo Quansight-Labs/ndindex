@@ -19,6 +19,8 @@ from hypothesis.errors import UnsatisfiedAssumption
 
 from ..ndindex import ndindex
 from ..booleanarray import BooleanArray
+from ..integer import Integer
+from ..integerarray import IntegerArray
 from ..slice import Slice
 from ..tuple import Tuple
 from ..shapetools import remove_indices, unremove_indices
@@ -360,16 +362,34 @@ def _as_subindex_implemented_indices(draw, idx1=None, shapes=short_shapes):
         allow_boolean_scalars=False))
     return ndindex(idx).reduce(shape).raw
 
+def _no_large_integers(idx):
+    """
+    Return whether every integer in idx is at most MAX_ARRAY_SIZE in absolute
+    value.
+
+    as_subindex() does not handle integers that are close to sys.maxsize,
+    because adding to them or multiplying them overflows. An integer that
+    large is never a valid index for any of the arrays in the tests anyway,
+    which all have fewer than MAX_ARRAY_SIZE elements.
+    """
+    index = ndindex(idx)
+    return all(((asarray(arg.raw) >= -MAX_ARRAY_SIZE)
+                & (asarray(arg.raw) <= MAX_ARRAY_SIZE)).all()
+               for arg in (index.args if isinstance(index, Tuple) else (index,))
+               if isinstance(arg, (Integer, IntegerArray)))
+
+_as_subindex_arbitrary_indices = ndindices.filter(_no_large_integers)
+
 # as_subindex_indices1 is shared so that as_subindex_indices2 can depend on it
 as_subindex_indices1 = shared(
-    _usually(_as_subindex_implemented_indices(), ndindices),
+    _usually(_as_subindex_implemented_indices(), _as_subindex_arbitrary_indices),
     key='as_subindex_indices1')
 
 @composite
 def _as_subindex_indices2(draw):
     idx1 = draw(as_subindex_indices1)
     idx2 = draw(_usually(_as_subindex_implemented_indices(as_subindex_indices1),
-                         ndindices))
+                         _as_subindex_arbitrary_indices))
     # Only generate pairs of indices that as_subindex() is implemented for.
     # This way, the test does not have to allow NotImplementedError, which
     # would also allow it for the explicit examples.
