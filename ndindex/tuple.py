@@ -602,8 +602,13 @@ class Tuple(_Tuple, NDIndexCommon):
                     subindex = self_arg.as_subindex(index_arg)
                     if isinstance(subindex, Tuple):
                         assert subindex == ()
-                        subindex # Workaround https://github.com/nedbat/coveragepy/issues/1029
-                        continue
+                        if not isinstance(index_arg, IntegerArray):
+                            continue
+                        # Every element of index_arg is in self_arg. Use an
+                        # all True mask so that it can be combined with the
+                        # masks from the other arrays in index below.
+                        from numpy import ones
+                        subindex = BooleanArray(ones(index_arg.shape, dtype=bool))
                     if isinstance(subindex, BooleanArray):
                         boolean_arrays.append(subindex)
                     new_args.append(subindex)
@@ -629,12 +634,20 @@ class Tuple(_Tuple, NDIndexCommon):
                         raise ValueError("Indices do not intersect")
                 else:
                     new_array = boolean_arrays[0]
+                if new_array.ndim > 0 and new_array.array.all():
+                    # Every element of the arrays in index is in self, so
+                    # there is nothing to mask out. A boolean array would
+                    # flatten the dimensions of the arrays, so use slices
+                    # instead, which keep them.
+                    new_arrays = [Slice(None)]*new_array.ndim
+                else:
+                    new_arrays = [new_array]
                 new_args2 = []
                 first = True
                 for arg in new_args:
                     if arg in boolean_arrays:
                         if first:
-                            new_args2.append(new_array)
+                            new_args2.extend(new_arrays)
                             first = False
                     else:
                         new_args2.append(arg)
