@@ -1,12 +1,13 @@
 from pytest import raises
 
-from numpy import array, arange, isin, unique, intp
+from numpy import array, arange, asarray, bincount, isin, intp
 
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
 from ..integerarray import IntegerArray
+from ..slice import Slice
 from ..tuple import Tuple
 from .helpers import ndindices, prod, short_shapes, assert_equal, warnings_are_errors
 
@@ -106,14 +107,26 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
     else:
         asubindex = a2[Subindex.raw]
 
-        if (isinstance(index2, IntegerArray)
-            or (isinstance(index2, Tuple)
-                and any(isinstance(i, IntegerArray) for i in index2.args))):
-            # isin(x, y) has the same shape as x. If idx2 has an integer array
-            # it may index the same element more than once, but idx1 will not.
-            assert_equal(unique(asubindex.flatten()), unique(a1[isin(a1, a2)]))
-        else:
+        # asubindex should have exactly the elements of a2 that are also in
+        # a1. An index with an integer array can index the same element more
+        # than once, in which case asubindex has that element once for each
+        # time it is in a1 and for each time it is in a2.
+        def counts(x):
+            return bincount(asarray(x).flatten(), minlength=a.size)
+        assert_equal(counts(asubindex), counts(a1)*counts(a2))
+
+        index2_args = index2.args if isinstance(index2, Tuple) else (index2,)
+        if not any(isinstance(i, IntegerArray) for i in index2_args):
+            # isin(x, y) has the same shape as x. If idx2 does not have an
+            # integer array, the elements are in the same order as in a1.
             assert_equal(asubindex.flatten(), a1[isin(a1, a2)])
+
+        if (all(isinstance(i, Slice) for i in index2_args)
+            and a1.size != 0 and isin(a1, a2).all()):
+            # If idx2 only has slices, a2 has the same dimensions as a. Then
+            # if a1 is a subarray of a2, asubindex is exactly a1, including
+            # the shape. (a[()] is a scalar but a[...] is a 0-D array.)
+            assert_equal(asubindex, a1, allow_scalar_0d=True)
 
         try:
             subindex2 = index2.as_subindex(index1)
