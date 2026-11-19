@@ -57,6 +57,9 @@ from .helpers import (as_subindex_indices1, as_subindex_indices2, prod,
          array([[[0, 0], [0, 0]]]),
          (1, 2, 2))
 @example((slice(0, 2), array([0, 1])), (array([0, 1]),), (2, 3))
+@example((slice(0, 2), slice(0, 3), array([0, 2])),
+         (array([0, 1]), slice(0, 3), slice(0, 4)),
+         (2, 3, 4))
 @example((slice(0, 2), array([0, 1])), (array([0, 1, 2]),), (3, 3))
 @example((array([0, 1]), slice(0, 2)), (slice(0, 2), array([0, 1, 2])), (3, 3))
 @example((slice(None, 2), array([[[0, 0, 0]], [[0, 0, 0]], [[0, 0, 0]]]), slice(None)),
