@@ -38,8 +38,6 @@ from .helpers import (as_subindex_indices1, as_subindex_indices2, prod,
 @example(slice(0, 0), 9007199254741193, 1)
 @example((0,), (slice(1, 2),), 3)
 @example(slice(0, 10), slice(5, 15), 20)
-@example((), (slice(None, None, -1),), (2,)).xfail(raises=NotImplementedError)
-@example((), (..., slice(None, None, -1),), (2,)).xfail(raises=NotImplementedError)
 @example((slice(0, 1),), (2,), (3,))
 @example((slice(0, 5), slice(0, 5)), (slice(3, 10), slice(3, 10)), (20, 20))
 @example((slice(0, 5), slice(0, 5)), (1, 1), (10, 10))
@@ -79,9 +77,9 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
         assume(False)
 
     # NotImplementedError is not allowed here. The strategies only generate
-    # indices that as_subindex() is implemented for. If it isn't implemented
-    # for an explicit example, the example must be marked with
-    # .xfail(raises=NotImplementedError).
+    # indices that as_subindex() is implemented for. Explicit examples that
+    # as_subindex() is not implemented for should go in
+    # test_as_subindex_notimplemented() instead.
     empty = False
     try:
         Subindex = index1.as_subindex(index2)
@@ -140,3 +138,17 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
             return
         asubindex2 = a1[subindex2.raw]
         assert_equal(asubindex2, asubindex)
+
+def test_as_subindex_notimplemented():
+    # (idx1, idx2) for which idx1.as_subindex(idx2) is not implemented
+    tests = [
+        # Slices with a negative step
+        ((), (slice(None, None, -1),)),
+        ((), (..., slice(None, None, -1),)),
+    ]
+
+    for idx1, idx2 in tests:
+        index1 = ndindex(idx1)
+        index2 = ndindex(idx2)
+        with raises(NotImplementedError):
+            index1.as_subindex(index2)
