@@ -405,10 +405,10 @@ class NDIndexCommon:
         `i.as_subindex(j)` produces an index `k` such that `a[j][k]` gives all of
         the elements of `a[j]` that are also in `a[i]`.
 
-        If `a[i]` is a subset of `a[j]`, then `a[j][k] == a[i]`. Otherwise,
-        `a[j][k] == a[i & j]`, where `i & j` is the intersection of `i` and
-        `j`, that is, the elements of `a` that are indexed by both `i` and
-        `j`.
+        If `a[i]` is a nonempty subset of `a[j]` and `j` is a slice or a tuple
+        of slices, then `a[j][k] == a[i]`. Otherwise, `a[j][k] == a[i & j]`,
+        where `i & j` is the intersection of `i` and `j`, that is, the
+        elements of `a` that are indexed by both `i` and `j`.
 
         For example, in the below diagram, `i` and `j` index a subset of the
         array `a`. `k = i.as_subindex(j)` is an index on `a[j]` that gives the
