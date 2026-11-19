@@ -52,6 +52,7 @@ from .helpers import (as_subindex_indices1, as_subindex_indices2, prod,
 @example(0, (slice(1, 2),), 1)
 @example((slice(0, 1), slice(0, 1)), (array([0, 1]), array([1, 0])), (2, 3))
 @example((array([0, 1]), array([1, 0])), (slice(0, 1), slice(0, 1)), (2, 3))
+@example((slice(0, 0), slice(None, None, -1)), slice(0, 2), (2, 3))
 @example(slice(None, 5), array([[0]]), 1)
 @example([[0, 1], [0, 0]], slice(0, 10), 20)
 @example((slice(None, 1), array([[[0, 0], [0, 0]]]), slice(None)),
@@ -124,11 +125,13 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
             # integer array, the elements are in the same order as in a1.
             assert_equal(asubindex.flatten(), a1[isin(a1, a2)])
 
-        if (all(isinstance(i, Slice) for i in index2_args)
-            and a1.size != 0 and isin(a1, a2).all()):
+        if all(isinstance(i, Slice) for i in index2_args) and (
+                a2.shape == a.shape or (a1.size != 0 and isin(a1, a2).all())):
             # If idx2 only has slices, a2 has the same dimensions as a. Then
             # if a1 is a subarray of a2, asubindex is exactly a1, including
-            # the shape. (a[()] is a scalar but a[...] is a 0-D array.)
+            # the shape. If a1 is empty, we can only tell that it is a
+            # subarray of a2 if a2 is all of a. (a[()] is a scalar but a[...]
+            # is a 0-D array.)
             assert_equal(asubindex, a1, allow_scalar_0d=True)
 
         try:
