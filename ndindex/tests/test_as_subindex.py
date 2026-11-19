@@ -1,14 +1,15 @@
 from pytest import raises
 
-from numpy import array, arange, isin, unique, intp
+from numpy import array, arange, asarray, bincount, isin, intp
 
 from hypothesis import given, assume, example
-from hypothesis.strategies import integers, one_of
 
 from ..ndindex import ndindex
 from ..integerarray import IntegerArray
+from ..slice import Slice
 from ..tuple import Tuple
-from .helpers import ndindices, prod, short_shapes, assert_equal, warnings_are_errors
+from .helpers import (as_subindex_indices1, as_subindex_indices2, prod,
+                      short_shapes, assert_equal, warnings_are_errors)
 
 @example((slice(0, 8), slice(0, 9), slice(0, 10)),
          ([2, 5, 6, 7], slice(1, 9, 1), slice(5, 10, 1)),
@@ -37,8 +38,6 @@ from .helpers import ndindices, prod, short_shapes, assert_equal, warnings_are_e
 @example(slice(0, 0), 9007199254741193, 1)
 @example((0,), (slice(1, 2),), 3)
 @example(slice(0, 10), slice(5, 15), 20)
-@example((), (slice(None, None, -1),), (2,))
-@example((), (..., slice(None, None, -1),), (2,))
 @example((slice(0, 1),), (2,), (3,))
 @example((slice(0, 5), slice(0, 5)), (slice(3, 10), slice(3, 10)), (20, 20))
 @example((slice(0, 5), slice(0, 5)), (1, 1), (10, 10))
@@ -49,7 +48,24 @@ from .helpers import ndindices, prod, short_shapes, assert_equal, warnings_are_e
 @example(slice(0, 5), 2, 10)
 @example(0, (slice(None, 0, None), Ellipsis), 1)
 @example(0, (slice(1, 2),), 1)
-@given(ndindices, ndindices, one_of(integers(0, 100), short_shapes))
+@example((slice(0, 1), slice(0, 1)), (array([0, 1]), array([1, 0])), (2, 3))
+@example((array([0, 1]), array([1, 0])), (slice(0, 1), slice(0, 1)), (2, 3))
+@example((slice(0, 0), slice(None, None, -1)), slice(0, 2), (2, 3))
+@example(slice(None, 5), array([[0]]), 1)
+@example([[0, 1], [0, 0]], slice(0, 10), 20)
+@example((slice(None, 1), array([[[0, 0], [0, 0]]]), slice(None)),
+         array([[[0, 0], [0, 0]]]),
+         (1, 2, 2))
+@example((slice(0, 2), array([0, 1])), (array([0, 1]),), (2, 3))
+@example((slice(0, 2), slice(0, 3), array([0, 2])),
+         (array([0, 1]), slice(0, 3), slice(0, 4)),
+         (2, 3, 4))
+@example((slice(0, 2), array([0, 1])), (array([0, 1, 2]),), (3, 3))
+@example((array([0, 1]), slice(0, 2)), (slice(0, 2), array([0, 1, 2])), (3, 3))
+@example((slice(None, 2), array([[[0, 0, 0]], [[0, 0, 0]], [[0, 0, 0]]]), slice(None)),
+         array([True, True, True]),
+         (3, 1, 3))
+@given(as_subindex_indices1, as_subindex_indices2, short_shapes)
 @warnings_are_errors
 def test_as_subindex_hypothesis(idx1, idx2, shape):
     if isinstance(shape, int):
@@ -63,11 +79,13 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
     except ValueError: # pragma: no cover
         assume(False)
 
+    # NotImplementedError is not allowed here. The strategies only generate
+    # indices that as_subindex() is implemented for. Explicit examples that
+    # as_subindex() is not implemented for should go in
+    # test_as_subindex_notimplemented() instead.
     empty = False
     try:
         Subindex = index1.as_subindex(index2)
-    except NotImplementedError:
-        return
     except ValueError as e:
         assert "do not intersect" in e.args[0]
         empty = True
@@ -94,14 +112,28 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
     else:
         asubindex = a2[Subindex.raw]
 
-        if (isinstance(index2, IntegerArray)
-            or (isinstance(index2, Tuple)
-                and any(isinstance(i, IntegerArray) for i in index2.args))):
-            # isin(x, y) has the same shape as x. If idx2 has an integer array
-            # it may index the same element more than once, but idx1 will not.
-            assert_equal(unique(asubindex.flatten()), unique(a1[isin(a1, a2)]))
-        else:
+        # asubindex should have exactly the elements of a2 that are also in
+        # a1. An index with an integer array can index the same element more
+        # than once, in which case asubindex has that element once for each
+        # time it is in a1 and for each time it is in a2.
+        def counts(x):
+            return bincount(asarray(x).flatten(), minlength=a.size)
+        assert_equal(counts(asubindex), counts(a1)*counts(a2))
+
+        index2_args = index2.args if isinstance(index2, Tuple) else (index2,)
+        if not any(isinstance(i, IntegerArray) for i in index2_args):
+            # isin(x, y) has the same shape as x. If idx2 does not have an
+            # integer array, the elements are in the same order as in a1.
             assert_equal(asubindex.flatten(), a1[isin(a1, a2)])
+
+        if all(isinstance(i, Slice) for i in index2_args) and (
+                a2.shape == a.shape or (a1.size != 0 and isin(a1, a2).all())):
+            # If idx2 only has slices, a2 has the same dimensions as a. Then
+            # if a1 is a subarray of a2, asubindex is exactly a1, including
+            # the shape. If a1 is empty, we can only tell that it is a
+            # subarray of a2 if a2 is all of a. (a[()] is a scalar but a[...]
+            # is a 0-D array.)
+            assert_equal(asubindex, a1, allow_scalar_0d=True)
 
         try:
             subindex2 = index2.as_subindex(index1)
@@ -109,3 +141,17 @@ def test_as_subindex_hypothesis(idx1, idx2, shape):
             return
         asubindex2 = a1[subindex2.raw]
         assert_equal(asubindex2, asubindex)
+
+def test_as_subindex_notimplemented():
+    # (idx1, idx2) for which idx1.as_subindex(idx2) is not implemented
+    tests = [
+        # Slices with a negative step
+        ((), (slice(None, None, -1),)),
+        ((), (..., slice(None, None, -1),)),
+    ]
+
+    for idx1, idx2 in tests:
+        index1 = ndindex(idx1)
+        index2 = ndindex(idx2)
+        with raises(NotImplementedError):
+            index1.as_subindex(index2)

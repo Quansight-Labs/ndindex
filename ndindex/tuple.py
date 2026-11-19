@@ -602,8 +602,13 @@ class Tuple(_Tuple, NDIndexCommon):
                     subindex = self_arg.as_subindex(index_arg)
                     if isinstance(subindex, Tuple):
                         assert subindex == ()
-                        subindex # Workaround https://github.com/nedbat/coveragepy/issues/1029
-                        continue
+                        if not isinstance(index_arg, IntegerArray):
+                            continue
+                        # Every element of index_arg is in self_arg. Use an
+                        # all True mask so that it can be combined with the
+                        # masks from the other arrays in index below.
+                        from numpy import ones
+                        subindex = BooleanArray(ones(index_arg.shape, dtype=bool))
                     if isinstance(subindex, BooleanArray):
                         boolean_arrays.append(subindex)
                     new_args.append(subindex)
@@ -625,14 +630,29 @@ class Tuple(_Tuple, NDIndexCommon):
                 if len(boolean_arrays) > 1:
                     from numpy import logical_and
                     new_array = BooleanArray(logical_and.reduce([i.array for i in boolean_arrays]))
+                    if new_array.isempty():
+                        raise ValueError("Indices do not intersect")
                 else:
                     new_array = boolean_arrays[0]
+                if new_array.array.all() and (
+                        new_array.ndim > 1
+                        or any(start.ndim > 0 for start, stop in integer_arrays)):
+                    # Every element of the arrays in index is in self, so
+                    # there is nothing to mask out. A boolean array would
+                    # flatten the dimensions of the arrays, so use slices
+                    # instead, which keep them. If the arrays only have one
+                    # dimension there is nothing to flatten, but a boolean
+                    # array cannot be separated from the integer arrays from
+                    # self by a slice, whereas a slice can.
+                    new_arrays = [Slice(None)]*new_array.ndim
+                else:
+                    new_arrays = [new_array]
                 new_args2 = []
                 first = True
                 for arg in new_args:
                     if arg in boolean_arrays:
                         if first:
-                            new_args2.append(new_array)
+                            new_args2.extend(new_arrays)
                             first = False
                     else:
                         new_args2.append(arg)
@@ -662,6 +682,35 @@ class Tuple(_Tuple, NDIndexCommon):
                         if new_args2[-1].isempty():
                             raise ValueError("Indices do not intersect")
                         i += 1
+                    else:
+                        new_args2.append(arg)
+                new_args = new_args2
+
+            # A boolean array index is equivalent to its nonzero() integer
+            # arrays, which NumPy broadcasts together with every other integer
+            # array in the index. But the boolean array here masks the
+            # integer arrays of index, whereas the integer arrays come from
+            # self and index different axes. The two are independent, so we
+            # need every combination of them, not the broadcasted
+            # combination. To get this, replace the boolean array with its
+            # nonzero() arrays, with additional dimensions so that they
+            # broadcast against the integer arrays like an outer index.
+            mask_i = [i for i, arg in enumerate(new_args)
+                      if isinstance(arg, BooleanArray) and arg.ndim > 0]
+            array_i = [i for i, arg in enumerate(new_args)
+                       if isinstance(arg, IntegerArray) and arg.ndim > 0]
+            if mask_i and array_i:
+                mask_first = mask_i[0] < array_i[0]
+                ndim = new_args[array_i[0]].ndim
+                new_args2 = []
+                for i, arg in enumerate(new_args):
+                    if i in mask_i:
+                        for nz in arg.array.nonzero():
+                            if mask_first:
+                                nz = nz.reshape(nz.shape + (1,)*ndim)
+                            new_args2.append(IntegerArray(nz))
+                    elif i in array_i and not mask_first:
+                        new_args2.append(IntegerArray(arg.array[..., None]))
                     else:
                         new_args2.append(arg)
                 new_args = new_args2

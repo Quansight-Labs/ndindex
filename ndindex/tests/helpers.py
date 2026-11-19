@@ -8,15 +8,21 @@ import numpy.testing
 
 from pytest import fail
 
-from hypothesis import assume, note
+from hypothesis import assume, note, reject
 from hypothesis.strategies import (integers, none, one_of, lists, just,
                                    builds, shared, composite, sampled_from,
+                                   booleans,
                                    nothing, tuples as hypothesis_tuples)
 from hypothesis.extra.numpy import (arrays, mutually_broadcastable_shapes as
                                     mbs, BroadcastableShapes, valid_tuple_axes)
 from hypothesis.errors import UnsatisfiedAssumption
 
 from ..ndindex import ndindex
+from ..booleanarray import BooleanArray
+from ..integer import Integer
+from ..integerarray import IntegerArray
+from ..slice import Slice
+from ..tuple import Tuple
 from ..shapetools import remove_indices, unremove_indices
 from .._crt import prod
 
@@ -54,13 +60,40 @@ _short_shapes = lambda n: tuples(integers(0, 10), min_size=n, max_size=32).filte
              # See https://github.com/numpy/numpy/issues/15753
              lambda shape: prod([i for i in shape if i]) < SHORT_MAX_ARRAY_SIZE)
 
-# short_shapes should be used in place of shapes in any test function that
-# uses ndindices, boolean_arrays, or tuples
+# short_shapes is the shape of the array that is being indexed. It should be
+# used in place of shapes in any test function that uses ndindices,
+# integer_arrays, boolean_arrays, or Tuples.
+#
+# short_shapes is a shared() strategy, meaning every strategy in a given test
+# that draws from it gets the same shape. The index strategies below make use
+# of this to generate indices that are usually valid for an array of that
+# shape. An index that is generated independently of the shape is only valid
+# by chance, which is rare for anything but the simplest indices (for example,
+# a tuple index is only valid if every one of its arguments is in bounds for
+# its corresponding axis and the arguments don't index too many axes). That
+# would mean that we wouldn't test much behavior other than IndexError for
+# more complicated indices.
+#
+# The index strategies still sometimes generate indices that are independent
+# of the shape, so that every combination of index and shape can be generated,
+# including invalid ones. Compatible combinations are just the common case.
 short_shapes = shared(_short_shapes(0))
+
+def _usually(common, rare):
+    """
+    Draw from the strategy `common` most of the time and from `rare` the rest
+    of the time.
+
+    Failing examples shrink towards `common`.
+    """
+    return sampled_from([common]*7 + [rare]).flatmap(lambda strategy: strategy)
+
+# Indices that are generated independently of the shape of the array that is
+# being indexed.
 
 _integer_arrays = arrays(intp, short_shapes)
 integer_scalars = arrays(intp, ()).map(lambda x: x[()])
-integer_arrays = one_of(integer_scalars, _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
+_arbitrary_integer_arrays = one_of(integer_scalars, _integer_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
 
 # We need to make sure shapes for boolean arrays are generated in a way that
 # makes them related to the test array shape. Otherwise, it will be very
@@ -78,6 +111,190 @@ _boolean_arrays = arrays(bool_, one_of(subsequences(short_shapes), short_shapes)
 boolean_scalars = arrays(bool_, ()).map(lambda x: x[()])
 boolean_arrays = one_of(boolean_scalars, _boolean_arrays.flatmap(lambda x: one_of(just(x), just(x.tolist()))))
 
+_arbitrary_tuple_args = one_of(ellipses(), ints(), slices(), newaxes(),
+                               _arbitrary_integer_arrays, boolean_arrays)
+_arbitrary_tuples = tuples(_arbitrary_tuple_args)
+
+# Indices that are valid for an array with shape short_shapes.
+
+_nonzero_step_slices = slices(step=one_of(none(), ints().filter(lambda i: i != 0)))
+
+@composite
+def _ints_for_axis(draw, axis=0, shapes=short_shapes):
+    """
+    Generate an integer index that is in bounds for the given axis of the
+    shape drawn from `shapes`.
+
+    If there is no such index, an arbitrary integer is generated.
+    """
+    shape = draw(shapes)
+    if len(shape) <= axis or shape[axis] == 0:
+        return draw(ints())
+    return draw(integers(-shape[axis], shape[axis] - 1))
+
+@composite
+def _integer_arrays_for_axis(draw, axis=0, shapes=short_shapes):
+    """
+    Generate an integer array index that is in bounds for the given axis of
+    the shape drawn from `shapes`.
+
+    The array either has that same shape or is 0-D, so that every
+    integer array generated for a given test is broadcast compatible with the
+    others. If there is no such index, an arbitrary integer array is
+    generated.
+    """
+    shape = draw(shapes)
+    if len(shape) <= axis:
+        return draw(_arbitrary_integer_arrays)
+
+    n = shape[axis]
+    if n == 0:
+        # Only an empty array can index an axis of size 0. An array with the
+        # same shape as the array being indexed is always empty here.
+        return draw(arrays(intp, shape))
+
+    array_shape = draw(sampled_from([shape, ()]))
+    x = draw(arrays(intp, array_shape, elements=integers(-n, n - 1)))
+    if array_shape == () and draw(booleans()):
+        return x[()]
+    # Empty lists do not keep their shape
+    if x.size != 0 and draw(booleans()):
+        return x.tolist()
+    return x
+
+integer_arrays = _usually(_integer_arrays_for_axis(), _arbitrary_integer_arrays)
+
+@composite
+def _tuples_for_shape(draw, shapes=short_shapes, *,
+                      slices_st=_nonzero_step_slices, slice_axes=(),
+                      allow_ellipsis=True, allow_newaxis=True,
+                      allow_boolean_scalars=True):
+    """
+    Generate a tuple index that is valid for an array with the shape drawn
+    from `shapes`.
+
+    `slices_st` is the strategy to use for the slices in the tuple. The axes
+    in `slice_axes` are only indexed by slices. If `allow_ellipsis`,
+    `allow_newaxis`, or `allow_boolean_scalars` are False, the tuple will not
+    have any of that type of index.
+    """
+    shape = draw(shapes)
+    ndim = len(shape)
+
+    # The arguments before the ellipsis index the axes [0, a) and the
+    # arguments after it index the axes [b, ndim). If there is no ellipsis,
+    # the axes [a, ndim) are not indexed. Index every axis about half the
+    # time, since otherwise most tuples would only have a few arguments.
+    n_skipped = draw(one_of(just(0), integers(0, ndim)))
+    has_ellipsis = allow_ellipsis and draw(booleans())
+    a = draw(integers(0, ndim - n_skipped)) if has_ellipsis else ndim - n_skipped
+    b = a + n_skipped
+
+    # If a tuple has arrays, all the arrays and integers must be in a single
+    # contiguous block, which cannot mix boolean scalars with other arrays
+    # (see the Tuple constructor). Furthermore, the arrays in the block must
+    # all be broadcast compatible, so we only generate a single boolean array.
+    # block is the kind of the block so far, or None if it hasn't been started
+    # yet. The block is closed once it is followed by a slice, ellipsis, or
+    # newaxis.
+    has_arrays = draw(booleans())
+    block = None
+    block_closed = False
+
+    args = []
+
+    def close_block():
+        nonlocal block_closed
+        if block is not None:
+            block_closed = True
+
+    def nonindexing_args():
+        # Newaxes and boolean scalars do not index any axes, so they can go
+        # anywhere in the tuple.
+        nonlocal block
+        while True:
+            kinds = []
+            if allow_newaxis:
+                kinds.append('newaxis')
+            if (allow_boolean_scalars and has_arrays and not block_closed
+                and block in [None, 'integer', 'boolean scalar']):
+                kinds.append('boolean scalar')
+            if not kinds:
+                break
+            kind = draw(_usually(none(), sampled_from(kinds)))
+
+            if kind == 'newaxis':
+                close_block()
+                args.append(None)
+            elif kind == 'boolean scalar':
+                block = 'boolean scalar'
+                args.append(draw(boolean_scalars))
+            else:
+                break
+
+    def index_axes(start, stop):
+        nonlocal block
+        axis = start
+        while axis < stop:
+            nonindexing_args()
+
+            n = shape[axis]
+            in_block = has_arrays and not block_closed
+            kinds = ['slice']
+            if axis not in slice_axes:
+                if n != 0 and (in_block or not has_arrays):
+                    kinds.append('integer')
+                if in_block and block in [None, 'integer', 'integer array']:
+                    kinds.append('integer array')
+                if in_block and block in [None, 'integer']:
+                    kinds.append('boolean array')
+            kind = draw(sampled_from(kinds))
+
+            if kind == 'slice':
+                close_block()
+                args.append(draw(slices_st))
+                axis += 1
+            elif kind == 'integer':
+                if has_arrays and block is None:
+                    block = 'integer'
+                args.append(draw(integers(-n, n - 1)))
+                axis += 1
+            elif kind == 'integer array':
+                block = 'integer array'
+                args.append(draw(_integer_arrays_for_axis(axis, just(shape))))
+                axis += 1
+            else:
+                block = 'boolean array'
+                # A boolean array indexes as many axes as it has dimensions
+                max_stop = min([stop] + [i for i in slice_axes if i > axis])
+                n_axes = draw(integers(1, max_stop - axis))
+                x = draw(arrays(bool_, shape[axis:axis + n_axes]))
+                # Empty lists do not keep their shape or dtype
+                if x.size != 0 and draw(booleans()):
+                    x = x.tolist()
+                args.append(x)
+                axis += n_axes
+        nonindexing_args()
+
+    index_axes(0, a)
+    if has_ellipsis:
+        close_block()
+        args.append(...)
+        index_axes(b, ndim)
+
+    return tuple(args)
+
+@composite
+def _almost_valid_tuples(draw):
+    """
+    Generate a valid tuple index with some arbitrary arguments inserted into
+    it.
+    """
+    args = list(draw(_tuples_for_shape()))
+    for arg in draw(lists(_arbitrary_tuple_args, min_size=1, max_size=2)):
+        args.insert(draw(integers(0, len(args))), arg)
+    return tuple(args)
+
 def _doesnt_raise(idx):
     try:
         ndindex(idx)
@@ -85,11 +302,11 @@ def _doesnt_raise(idx):
         return False
     return True
 
-Tuples = tuples(one_of(ellipses(), ints(), slices(), newaxes(),
-                       integer_arrays, boolean_arrays)).filter(_doesnt_raise)
+Tuples = _usually(_tuples_for_shape(),
+                  one_of(_almost_valid_tuples(), _arbitrary_tuples)).filter(_doesnt_raise)
 
 ndindices = one_of(
-    ints(),
+    _usually(_ints_for_axis(), ints()),
     slices(),
     ellipses(),
     newaxes(),
@@ -97,6 +314,99 @@ ndindices = one_of(
     integer_arrays,
     boolean_arrays,
 ).filter(_doesnt_raise)
+
+# Indices for testing idx1.as_subindex(idx2). as_subindex() is not implemented
+# for every type of index. In particular, it isn't implemented for ellipses,
+# newaxes, or boolean scalars, and it is only implemented for slices that
+# have a positive step and a nonnegative start and stop (as is always the
+# case after calling reduce() with a shape). Furthermore, for each axis, it is
+# only implemented if at least one of idx1 and idx2 indexes that axis with a
+# slice. Most pairs of indices from ndindices are not like this, especially if
+# they are tuples, for which every argument has to be implemented. So most of
+# the time, generate indices that as_subindex() is implemented for.
+
+def _non_slice_axes(index):
+    """
+    The axes that index indexes with something other than a slice.
+
+    This is only correct for indices of the type that as_subindex() is
+    implemented for.
+    """
+    axes = set()
+    axis = 0
+    for arg in index.args if isinstance(index, Tuple) else (index,):
+        # A boolean array indexes as many axes as it has dimensions
+        ndim = arg.ndim if isinstance(arg, BooleanArray) else 1
+        if not isinstance(arg, Slice):
+            axes.update(range(axis, axis + ndim))
+        axis += ndim
+    return axes
+
+@composite
+def _as_subindex_implemented_indices(draw, idx1=None, shapes=short_shapes):
+    """
+    Generate an index of the type that as_subindex() is implemented for, which
+    is valid for an array with the shape drawn from `shapes`.
+
+    If `idx1` is given, it should be a strategy. Then the index will be such
+    that `idx1.as_subindex(index)` is implemented, if `idx1` is itself an
+    index of the type that as_subindex() is implemented for.
+    """
+    shape = draw(shapes)
+    slice_axes = ()
+    if idx1 is not None:
+        slice_axes = _non_slice_axes(ndindex(draw(idx1)))
+    idx = draw(_tuples_for_shape(
+        just(shape), slices_st=slices(step=one_of(none(), integers(1, 10))),
+        slice_axes=slice_axes, allow_ellipsis=False, allow_newaxis=False,
+        allow_boolean_scalars=False))
+    return ndindex(idx).reduce(shape).raw
+
+def _no_large_integers(idx):
+    """
+    Return whether every integer in idx is at most MAX_ARRAY_SIZE in absolute
+    value.
+
+    as_subindex() does not handle integers that are close to sys.maxsize,
+    because adding to them or multiplying them overflows. An integer that
+    large is never a valid index for any of the arrays in the tests anyway,
+    which all have fewer than MAX_ARRAY_SIZE elements.
+    """
+    index = ndindex(idx)
+    return all(((asarray(arg.raw) >= -MAX_ARRAY_SIZE)
+                & (asarray(arg.raw) <= MAX_ARRAY_SIZE)).all()
+               for arg in (index.args if isinstance(index, Tuple) else (index,))
+               if isinstance(arg, (Integer, IntegerArray)))
+
+_as_subindex_arbitrary_indices = ndindices.filter(_no_large_integers)
+
+# as_subindex_indices1 is shared so that as_subindex_indices2 can depend on it
+as_subindex_indices1 = shared(
+    _usually(_as_subindex_implemented_indices(), _as_subindex_arbitrary_indices),
+    key='as_subindex_indices1')
+
+@composite
+def _as_subindex_indices2(draw):
+    idx1 = draw(as_subindex_indices1)
+    idx2 = draw(_usually(_as_subindex_implemented_indices(as_subindex_indices1),
+                         _as_subindex_arbitrary_indices))
+    # Only generate pairs of indices that as_subindex() is implemented for.
+    # This way, the test does not have to allow NotImplementedError, which
+    # would also allow it for the explicit examples.
+    try:
+        ndindex(idx1).as_subindex(ndindex(idx2))
+    except NotImplementedError:
+        reject()
+    except Exception:
+        # The test makes the same call, so it will get the same exception.
+        # ValueError means the indices do not intersect, which the test
+        # checks. Any other exception will fail the test. We let the test
+        # raise it instead of raising it here because Hypothesis does not
+        # show the falsifying example for an exception from a strategy.
+        pass
+    return idx2
+
+as_subindex_indices2 = _as_subindex_indices2()
 
 # Note: We could use something like this:
 

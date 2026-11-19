@@ -505,6 +505,13 @@ class Slice(_Slice, NDIndexCommon):
             if not res.count_nonzero:
                 raise ValueError("Indices do not intersect")
 
+            if res.ndim > 1 and res.array.all():
+                # Every element of index is in self, so there is nothing to
+                # mask out. A boolean array would flatten the dimensions of
+                # index, so use an empty tuple instead, which keeps them. If
+                # index only has one dimension there is nothing to flatten.
+                return Tuple()
+
             return res
 
         if not isinstance(index, Slice):
